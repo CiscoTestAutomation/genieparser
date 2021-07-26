@@ -91,8 +91,9 @@ class RunBashTop(RunBashTopSchema):
         ret_dict = {}
 
         # top - 15:39:21 up 3 days, 21:35,  1 user,  load average: 0.69, 1.11, 1.21
+        # top - 19:10:21 up 18 min,  2 users,  load average: 6.11, 3.33, 2.27
         p1 = re.compile(
-            r'^\s*top\s+-\s+(?P<time>\S+)\s+up\s+(?P<up>[\s\w,]+\d+:\d+),\s+(?P<user>\d)\s+user,\s+load\s+average:\s+(?P<one_min>\d+\.\d+),\s+(?P<five_mins>\d+\.\d+),\s+(?P<fifteen_mins>\d+\.\d+)'
+            r'^\s*top\s+-\s+(?P<time>\S+)\s+up\s+(?P<up>.*),\s+(?P<user>\d)\s+user(s)?,\s+load\s+average:\s+(?P<one_min>\d+\.\d+),\s+(?P<five_mins>\d+\.\d+),\s+(?P<fifteen_mins>\d+\.\d+)'
         )
 
         # Tasks: 187 total,   2 running, 185 sleeping,   0 stopped,   0 zombie

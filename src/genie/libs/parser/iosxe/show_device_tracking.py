@@ -3,6 +3,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or
 
+from genie.libs.parser.utils.common import Common
 
 # ==================================
 # Schema for:
@@ -1153,11 +1154,12 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
         probe_info = re.compile(r'^(?P<protocol>(PROBE_\S+))\s+(?P<message>(.*))?')
 
         # Device-tracking:    NDP      NS  [10]
-        dropped_message_info = re.compile(r'^(?P<feature>((?!reason)\S+)):\s+(?P<protocol>(\S+))'
+        # Flooding Suppress:  NDP      NS  [36]
+        dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
                                           r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
 
         #   DHCPv6_REQUEST_NAK[1]
-        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR)))$')
+        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
 
         capture_list = [
             ndp_info,
@@ -1167,6 +1169,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             acd_dad_info,
             probe_info,
             dropped_message_info,
+            fault_info,
         ]
 
         for line in out.splitlines():
@@ -1635,7 +1638,7 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict[key] = {}
                 continue
 
-            # REACHABLE  : 2
+            # REACHABLE  : 1
             match = table_entry_capture.match(line)
             if match:
                 groups = match.groupdict()
@@ -1647,7 +1650,7 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict[key][name] = value
                 continue
 
-            # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic
+            # macDB has 1 entries for mac dead.beef.0001,vlan 38, 0 dynamic
             match = table_info_capture.match(line)
             if match:
                 groups = match.groupdict()
@@ -1661,11 +1664,11 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict['dynamic_count'] = dynamic_count
                 continue
 
-            # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
+            # S   9.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
             match = entry_capture.match(line)
             if match:
                 groups = match.groupdict()
-                entry_counter += 1
+                entry_counter += 0
 
                 dev_code = groups['dev_code']
                 network_layer_address = groups['network_layer_address']
@@ -1705,6 +1708,215 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
 
         return device_tracking_database_mac_details_dict
 
+# ========================
+# Schema for:
+#   * 'show device-tracking counters interface {interface}'
+# ========================
+class ShowDeviceTrackingCountersInterfaceSchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking counters interface {interface}'
+    '''
+
+    schema = {
+        "interface": {
+            str: {
+                "message_type": {
+                    str: {
+                        Optional("protocols"): {
+                            Optional("acd_dad"): int,
+                            Optional(Or("ndp","dhcpv6","arp","dhcpv4","probe_send","probe_reply")): {
+                                Any(): int,
+                            },
+                        },
+                    },
+                    "dropped": {
+                        Optional("feature"): {
+                            Any(): {
+                                "protocol": str,
+                                "message": str,
+                                "dropped": int,
+                            },
+                        },
+                    },
+                    "faults": list,
+                },
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking counters interface {interface}'
+# ========================
+class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSchema):
+    '''Parser for:
+        * 'show device-tracking counters interface {interface}'
+    '''
+
+    cli_command = 'show device-tracking counters interface {interface}'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        device_tracking_counters_interface_dict = {}
+        message_key = ''
+
+        # Received messages on Twe1/0/42:
+        p1 = re.compile(r'^Received\s+messages\s+on\s+\S+:$')
+
+        # Received Broadcast/Multicast messages on Twe1/0/42:
+        p2 = re.compile(r'^Received\s+Broadcast/Multicast\s+messages\s+on\s+\S+:$')
+
+        # Bridged messages from Twe1/0/42:
+        p3 = re.compile(r'^Bridged\s+messages\s+from\s+\S+:$')
+
+        # Broadcast/Multicast converted to unicast messages from Twe1/0/42:
+        p4 = re.compile(r'^Broadcast/Multicast\s+converted\s+to\s+unicast\s+messages\s+from\s+\S+:$')
+
+        # Probe message on Twe1/0/42:
+        p5 = re.compile(r'^Probe\s+message\s+on\s+\S+:$')
+
+        # Limited Broadcast to Local message on Twe1/0/42:
+        p6 = re.compile(r'^Limited\s+Broadcast\s+to\s+Local\s+message\s+on\s+\S+:$')
+
+        # Dropped messages on Twe1/0/42:
+        p7 = re.compile(r'^Dropped\s+messages\s+on\s+\S+:$')
+
+        # Faults on Twe1/0/42:
+        p8 = re.compile(r'^Faults\s+on\s+\S+:$')
+
+        # NDP             RS[70160] NS[20760] NA[14]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # PROBE_SEND      NS[19935] REQ[3]
+        # PROBE_REPLY     NA[14]
+        p9 = re.compile(r'^(?P<protocol>(NDP|DHCPv6|ARP|DHCPv4|PROBE_\S+))\s+(?P<message>(.*))?')
+
+        # ACD&DAD         --[20760]
+        p10 = re.compile(r'^(?P<protocol>(ACD&DAD))\s+\S+\[(?P<message>(\d+))\]?$')
+
+        # Flooding Suppress:  NDP      NS  [35]
+        p11 = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
+                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+
+        # DHCPv6_REBIND_NAK[3]
+        p12 = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            if not device_tracking_counters_interface_dict:
+                intf = Common.convert_intf_name(interface)
+                message_dict = device_tracking_counters_interface_dict.setdefault('interface', {}) \
+                                                                      .setdefault(intf, {}) \
+                                                                      .setdefault('message_type', {})
+
+            m = p1.match(line)
+            if m:
+                message_key = "received"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                message_key = "received_broadcast_multicast"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                message_key = "bridged"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p4.match(line)
+            if m:
+                message_key = "broadcast_multicast_to_unicast"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p5.match(line)
+            if m:
+                message_key = "probe"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p6.match(line)
+            if m:
+                message_key = "limited_broadcast_to_local"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            m = p7.match(line)
+            if m:
+                dropped_dict = message_dict.setdefault('dropped', {})
+                continue
+
+            m = p8.match(line)
+            if m:
+                faults_list = message_dict.setdefault('faults', [])
+                continue
+
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                protocol = groups['protocol'].lower()
+                messages = groups['message'].split()
+                packet_dict = message_dict.setdefault(message_key, {}).setdefault('protocols', {}) \
+                                          .setdefault(protocol, {})
+                packet_capture = re.compile(r'^(?P<packet>(\S+))\[(?P<num>(\d+))\]$')
+                for message in messages:
+                    m1 = packet_capture.match(message)
+                    if m1:
+                        packet_groups = m1.groupdict()
+                        packet = packet_groups['packet'].lower()
+                        num = packet_groups['num']
+                        packet_dict[packet] = int(num)
+                continue
+
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                protocol = groups['protocol'].lower().replace('&', '_')
+                message = groups['message']
+                packet_dict = message_dict.setdefault(message_key, {}).setdefault('protocols', {})
+                packet_dict[protocol] = int(message)
+                continue
+
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                feature = groups['feature'].replace('&', '_')
+                feature_dict = dropped_dict.setdefault('feature', {}).setdefault(feature, {})
+                del groups['feature']
+
+                for key, value in groups.items():
+                    if value.isdigit():
+                        feature_dict[key] = int(value)
+                    else:
+                        key = key.lower()
+                        feature_dict[key] = value.lower()
+                continue
+
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                message = groups['fault']
+                faults_list.append(message)
+                continue
+
+        return device_tracking_counters_interface_dict
+
+
 # ====================================================
 # Schema for 'show device-tracking events'
 # ====================================================
@@ -1717,7 +1929,7 @@ class ShowDeviceTrackingEventsSchema(MetaParser):
                 "events": {
                     int: {
                     "event_type": str,
-                    Optional('event_name'): str, 
+                    Optional('event_name'): str,
                     Optional('prev_state'): str,
                     Optional('state'): str,
                     Optional('fsm_name'): str,
@@ -1733,6 +1945,7 @@ class ShowDeviceTrackingEventsSchema(MetaParser):
             }
         }
 
+
 # =============================================
 # Parser for 'show device-tracking events'
 # =============================================
@@ -1746,26 +1959,26 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
             output = self.device.execute(self.cli_command)
         else:
             output = output
-        
-        #fsm_run event 
+
+        #fsm_run event
         #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
         p1 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+FSM\s+(?P<fsm_name>.*)\s+running\s+for\s+event\s+(?P<event_name>(?<=event\s{1})\S+)\s+in\s+state\s+(?P<event_state>.+)$')
-        
-        #fsm_transition event 
+
+        #fsm_transition event
         #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
         p2 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+Transition\s+from\s+(?P<prev_state>.+)\s+to\s+(?P<state>.+)\s+upon\s+event\s+(?P<event_name>.+)$')
-        
+
         #bt_entry event
         #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
         #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
-        p3 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s(?P<entry_state>.+origin)\s+(?P<mac_addr_type>.+)\sMAC\s+(?P<mac_addr>([\w\d]{4}\.*){3})\s+(?P<ip_addr_type>\S+)\s+(?P<ip_addr>[\w\d\.:]+)$')    
-        
+        p3 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s(?P<entry_state>.+origin)\s+(?P<mac_addr_type>.+)\sMAC\s+(?P<mac_addr>([\w\d]{4}\.*){3})\s+(?P<ip_addr_type>\S+)\s+(?P<ip_addr>[\w\d\.:]+)$')
+
         parser_dict = {}
         ssid_event_no_dict = {}
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
             m1 = p1.match(line)
             if m1:
@@ -1777,7 +1990,7 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
                 events = ssid_obj.setdefault("events", {})
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
-        
+
                 event = {
                         'ssid': ssid,
                         'event_type': 'fsm_run',
@@ -1785,11 +1998,11 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
                         'fsm_name': m1.groupdict()['fsm_name'],
                         'timestamp': timestamp
                     }
-                
+
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
-            
+
             #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
             m2 = p2.match(line)
             if m2:
@@ -1799,10 +2012,10 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
 
                 ssid_obj = ssids.setdefault(ssid, {})
                 events = ssid_obj.setdefault("events", {})
-                
+
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
-                
+
                 event = {
                     'ssid': ssid,
                     'event_type': 'fsm_transition',
@@ -1811,11 +2024,11 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
                     'prev_state': m2.groupdict()['prev_state'],
                     'timestamp': timestamp
                 }
-                
+
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
-                    
+
             #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
             #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
             m3 = p3.match(line)
@@ -1826,14 +2039,14 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
 
                 ssid_obj = ssids.setdefault(ssid, {})
                 events = ssid_obj.setdefault("events", {})
-                
+
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
-        
+
                 mac_addr_type = (m3.groupdict()['mac_addr_type']).lower()
                 mac_addr_type+="_mac"
                 ip_addr_type = (m3.groupdict()['ip_addr_type']).lower()
-                
+
                 event = {
                     'ssid': ssid,
                     'event_type': 'bt_entry',
@@ -1842,12 +2055,13 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
                     ip_addr_type: m3.groupdict()['ip_addr'],
                     'timestamp': timestamp
                     }
-                
+
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
 
         return parser_dict
+
 
 # ====================================================
 # Schema for 'show device-tracking features
@@ -1865,6 +2079,7 @@ class ShowDeviceTrackingFeaturesSchema(MetaParser):
         }
     }
 
+
 # =============================================
 # Parser for 'show device-tracking features'
 # =============================================
@@ -1874,16 +2089,16 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
     cli_command = 'show device-tracking features'
 
     def cli(self, output=None):
-        
+
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output = output
 
         # Feature name   priority state
-        # RA guard          192   READY 
+        # RA guard          192   READY
         # Device-tracking   128   READY
-        # Source guard       32   READY 
+        # Source guard       32   READY
         p1 = re.compile(r'(?P<feature>.+[^ ])\s+(?P<priority>\d+)\s+(?P<state>\w+)')
 
         parser_dict = {}
@@ -1892,9 +2107,9 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
             line = line.strip()
 
             # Feature name   priority state
-            # RA guard          192   READY 
+            # RA guard          192   READY
             # Device-tracking   128   READY
-            # Source guard       32   READY 
+            # Source guard       32   READY
             m = p1.match(line)
             if m:
                 features = parser_dict.setdefault('features', {})

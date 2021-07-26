@@ -1,0 +1,46 @@
+ FiveGigabitEthernet1/0/48
+
+  Service-policy output: PWRED-CHILD
+
+    Class-map: CWRED (match-any)
+      0 packets
+      Match:  dscp ef (46)
+      Match:  dscp af11 (10)
+      Match:  dscp 1
+      Queueing
+
+      (total drops) 0
+      (bytes output) 197438313055
+      bandwidth 20% (200000 kbps)
+
+AFD WRED STATS BEGIN
+Virtual Class   min/max        Transmit                      Random drop                 AFD Weight
+
+
+     0          10 / 20        (Byte)65284071936             0                           12
+                               (Pkts)68692637637             0
+        dscp : 1
+
+
+     1          20 / 30        (Byte)65807437056             0                           21
+                               (Pkts)68696726426             0
+        dscp : 10
+
+
+     2          30 / 40        (Byte)66346804063             0                           29
+                               (Pkts)68700945419             0
+        dscp : 46
+
+     Total Drops(Bytes)   : 0
+
+     Total Drops(Packets) : 0
+AFD WRED STATS END
+
+
+    Class-map: class-default (match-any)
+      0 packets
+      Match: any
+
+
+      (total drops) 0
+      (bytes output) 3392
