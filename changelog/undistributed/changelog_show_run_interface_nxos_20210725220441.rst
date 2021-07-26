@@ -10,3 +10,4 @@
                 * vrf member test-vrf
             * show running-config interface
             * show running-config | section ^interface
+            * Added new tests in the test_show_interface file
