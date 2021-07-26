@@ -3130,70 +3130,118 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         if output is None:
             if interface:
                 cmd = self.cli_command[0].format(interface=interface)
-            elif 'section ^interface' in self.cli_command:
-                cmd = self.cli_command[1]
             else:
-                cmd = self.cli_command[2]
+                if 'section ^interface' in self.cli_command:
+                    cmd = self.cli_command[1]
+                else:
+                    cmd = self.cli_command[2]
             # Execute command
-            output = self.device.execute(cmd)
-            out = output
+            out = self.device.execute(cmd)
         else:
             out = output
         # Init vars
         ret_dict = {}
         interface_dict = {}
 
+        # interface nve1
+        # interface Ethernet1/1
+        p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
+
+        # no shutdown
+        p2 = re.compile(r'^\s*no shutdown$')
+
+        # host-reachability protocol bgp
+        p3 = re.compile(r'^\s*host-reachability protocol +(?P<protocol>[a-zA-Z]+)$')
+
+        # source-interface loopback1
+        p4 = re.compile(r'^\s*source-interface +(?P<src_intf>[a-zA-Z0-9\-]+)$')
+
+        # member vni 8100
+        # member vni 9100 associate-vrf
+        # member vni 2001201-2001300
+        p5 = re.compile(r'^\s*member vni +(?P<vni>[0-9\-]+)( +(?P<associate_vrf>[a-zA-Z\-]+))?$')
+
+        # mcast-group 225.0.1.25
+        p6 = re.compile(r'^\s*mcast-group +(?P<ip>[0-9\.]+)$')
+
+        # suppress-arp
+        p7 = re.compile(r'^\s*suppress-arp$')
+
+        # switchport
+        p8 = re.compile(r'^switchport$')
+
+        # switchport mode trunk
+        p9 = re.compile(r'^switchport +mode +(?P<mode>\S+)$')
+
+        # switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+        p10 = re.compile(r'^switchport +trunk +allowed +vlan +(?P<trunk_vlans>\S+)$')
+
+        # switchport trunk native vlan x
+        p10_1 = re.compile(r'^switchport +trunk +native +vlan +(?P<trunk_native_vlan>\S+)$')
+
+        # switchport access vlan x
+        p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
+
+        # channel-group 1 mode active
+        p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
+
+        # speed 1000
+        p12 = re.compile(r'^speed +(?P<speed>\d+)$')
+
+        # duplex full
+        p13 = re.compile(r'^duplex +(?P<duplex>\S+)$')
+
+        # description DeviceA-description
+        p14 = re.compile(r'^description +(?P<description>.+)$')
+
+        # vpc ID, for port-channels only
+        p15 = re.compile(r'^vpc +(?P<vpc>\S+)$')
+
+        # mtu 1500
+        p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
+
+        # ip address 10.10.6.73/30
+        p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
+
+        # vrf member TEST
+        p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
+
+        # no switchport
+        p19 = re.compile(r'^no switchport$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # interface nve1
             # interface Ethernet1/1
-            p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['intf_name'])
-
                 interface_dict = ret_dict.setdefault('interface', {}). \
                     setdefault(interface, {})
-
                 continue
 
-            # no shutdown
-            p2 = re.compile(r'^\s*no shutdown$')
             m = p2.match(line)
             if m:
                 interface_dict['shutdown'] = False
-
                 continue
 
-            # host-reachability protocol bgp
-            p3 = re.compile(r'^\s*host-reachability protocol +(?P<protocol>[a-zA-Z]+)$')
             m = p3.match(line)
             if m:
                 interface_dict['host_reachability_protocol'] = \
                     str(m.groupdict()['protocol'])
-
                 continue
 
-            # source-interface loopback1
-            p4 = re.compile(r'^\s*source-interface +(?P<src_intf>[a-zA-Z0-9\-]+)$')
             m = p4.match(line)
             if m:
                 interface_dict['source_interface'] = \
                     str(m.groupdict()['src_intf'])
-
                 continue
 
-            # member vni 8100
-            # member vni 9100 associate-vrf
-            # member vni 2001201-2001300
-            p5 = re.compile(r'^\s*member vni +(?P<vni>[0-9\-]+)( +(?P<associate_vrf>[a-zA-Z\-]+))?$')
             m = p5.match(line)
             if m:
-
                 if 'member_vni' not in interface_dict:
                     interface_dict['member_vni'] = {}
-
                 vni = str(m.groupdict()['vni'])
 
                 if '-' in vni:
@@ -3208,64 +3256,45 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                     if m.groupdict()['associate_vrf']:
                         interface_dict['member_vni'][str(memb)]['associate_vrf'] = \
                             True
-
                 continue
 
-            # mcast-group 225.0.1.25
-            p6 = re.compile(r'^\s*mcast-group +(?P<ip>[0-9\.]+)$')
             m = p6.match(line)
             if m:
-
                 for memb in members:
                     interface_dict['member_vni'][str(memb)]['mcast_group'] = \
                         str(m.groupdict()['ip'])
-
                 continue
 
-            # suppress-arp
-            p7 = re.compile(r'^\s*suppress-arp$')
             m = p7.match(line)
             if m:
-
                 for memb in members:
                     interface_dict['member_vni'][str(memb)]['suppress_arp'] = \
                         True
-
                 continue
 
-            # switchport
-            p8 = re.compile(r'^switchport$')
             m = p8.match(line)
             if m:
                 interface_dict.update({'switchport': True})
                 continue
 
-            # switchport mode trunk
-            p9 = re.compile(r'^switchport +mode +(?P<mode>\S+)$')
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'switchport_mode': group['mode']})
                 continue
 
-            # switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
-            p10 = re.compile(r'^switchport +trunk +allowed +vlan +(?P<trunk_vlans>\S+)$')
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'trunk_vlans': group['trunk_vlans']})
                 continue
 
-            # switchport trunk native vlan x
-            p10_1 = re.compile(r'^switchport +trunk +native +vlan +(?P<trunk_native_vlan>\S+)$')
             m = p10_1.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'trunk_native_vlan': group['trunk_native_vlan']})
                 continue
 
-            # switchport access vlan x
-            p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
             m = p10_2.match(line)
             if m:
                 group = m.groupdict()
@@ -3273,8 +3302,6 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 interface_dict.update({'access_vlan': group['access_vlan']})
                 continue
 
-            # channel-group 1 mode active
-            p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -3283,61 +3310,45 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 port_channel_dict.update({'port_channel_mode': group['mode']})
                 continue
 
-            # speed 1000
-            p12 = re.compile(r'^speed +(?P<speed>\d+)$')
             m = p12.match(line)
             if m:
                 interface_dict.update({'speed': int(m.groupdict()['speed'])})
                 continue
 
-            # duplex full
-            p13 = re.compile(r'^duplex +(?P<duplex>\S+)$')
             m = p13.match(line)
             if m:
                 interface_dict.update({'duplex': m.groupdict()['duplex']})
                 continue
 
-            # description DeviceA-description
-            p14 = re.compile(r'^description +(?P<description>.+)$')
             m = p14.match(line)
             if m:
                 interface_dict.update({'description': m.groupdict()['description']})
                 continue
 
-            # vpc ID, for port-channels only
-            p15 = re.compile(r'^vpc +(?P<vpc>\S+)$')
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'vpc': group['vpc']})
                 continue
 
-            # mtu 1500
-            p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'mtu': int(group['mtu'])})
                 continue
 
-            # ip address 10.10.6.73/30
-            p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
             m = p17.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'ip_address': group['ip_address']})
                 continue
 
-            # vrf member TEST
-            p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'vrf_member': group['vrf_member']})
                 continue
 
-            # no switchport
-            p19 = re.compile(r'^no switchport$')
             m = p19.match(line)
             if m:
                 interface_dict.update({'switchport': False})
