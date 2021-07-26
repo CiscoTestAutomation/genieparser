@@ -44,6 +44,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp egress-engineering'
     * 'show bgp all all nexthops'
     * 'show bgp {address_family} {ip_address} brief'
+    * 'show bgp {address_family} {ip_address} bestpath-compare'
 """
 
 # Python
@@ -7458,6 +7459,270 @@ class ShowBgpBrief(ShowBgpBriefSchema):
                     'locprf': int(group['locprf']),
                     'weight': int(group['weight']),
                     'path': group['path']
+                })
+                continue
+
+        return ret_dict
+
+
+
+# ======================================================================
+# Schema for 'show bgp {address_family} {ip_address} bestpath-compare'
+# ======================================================================
+class ShowBgpBestpathCompareSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp {address_family} {ip_address} bestpath-compare'
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'network': {
+                            Any(): {
+                                Optional('versions'): {
+                                    Optional('brib/rib'): int,
+                                    Optional('send_tbl_ver'): int,
+                                    Optional('process'): str
+                                },
+                                Optional('paths'): {
+                                    Optional('available_paths'): int,
+                                    Optional('best_path'): int,
+                                    Optional(Any()):{
+                                        Optional('update_groups'): ListOf(str),
+                                        Optional('next_hop'): str,
+                                        Optional('gateway'): str,
+                                        Optional('originator'): str,
+                                        Optional('metric'): int,
+                                        Optional('localpref'): int,
+                                        Optional('weight'): int,
+                                        Optional('status_codes'): str,
+                                        Optional('origin_codes'): str,
+                                        Optional('received_path_id'): int,
+                                        Optional('local_path_id'): int,
+                                        Optional('version'): int,
+                                        Optional('origin_as_validity'): str
+                                    }
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================================
+# Parser for 'show bgp {address_family} {ip_address} bestpath-compare'
+# ======================================================================
+class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
+    '''Parser for:
+        * 'show bgp {address_family} {ip_address} bestpath-compare'
+    '''
+
+    cli_command = ['show bgp {address_family} {ip_address} bestpath-compare']
+
+    def cli(self, address_family, ip_address, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0].\
+                                      format(address_family=address_family,\
+                                      ip_address=ip_address))
+        else:
+            out = output
+
+        # Initialize dictionary
+        ret_dict = {}
+        next_line_update_group = False
+
+        # Speaker                  5           5
+        p1 = re.compile('^(?P<process>\w+)\s+(?P<brib_rib>\d+)\s+(?P<send_tbl_ver>\d+)$')
+
+        # Paths: (2 available, best #1)
+        p2 = re.compile('^Paths: +\((?P<available_paths>\d+) +available\, '
+                        '+best +\#(?P<best_path>\d+)\)$')
+
+        # Path #1: Received by speaker 0
+        p3 = re.compile('^Path+ #(?P<path_num>\d+).*$')
+
+        # Advertised IPv4 Unicast paths to update-groups (with more than one peer):
+        p4 = re.compile('^.*(?P<group2>update-groups).*$')
+
+        # Not advertised to any peer
+        p5 = re.compile(r'^Not +advertised +to +any +peer$')
+
+        # 0.1 0.3
+        p6 = re.compile('^(?P<group1>[\d\.]+)(?: +(?P<group2>[\d\.]+))$')
+
+        # 108.10.0.2 from 108.10.0.2 (192.68.33.108)
+        p7 = re.compile('^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
+                        '+\((?P<originator>[0-9\.]+)\))$')
+
+        # Origin IGP, metric 0, localpref 100, weight 100, valid, external, best, group-best
+        p8 = re.compile('^Origin +(?P<origin>[a-zA-Z]+),(?: '
+                        '+metric (?P<metric>[0-9]+),?)?(?: '
+                        '+localpref (?P<localpref>[0-9]+),?)?(?: '
+                        '+weight (?P<weight>[0-9]+),?)?(?: '
+                        '+(?P<valid>valid?,))?(?: '
+                        '+(?P<state>(internal|external|local)\,?))?(\,)?(?: '
+                        '(?P<best>best))?(\,)?(?: (?P<group_best>group-best))?$')
+
+        #  Received Path ID 0, Local Path ID 0, version 0
+        p9 = re.compile('^Received Path ID (?P<received_path_id>(\d+)), Local Path ID '
+                        '(?P<local_path_id>(\d+)), version (?P<version>(\d+))$')
+
+        # Origin-AS validity: (disabled)
+        p10 = re.compile('^Origin-AS validity: \((?P<origin_as_validity>\w+)\)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  Speaker                  5           5
+            m = p1.match(line)
+            if m:
+                # define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {})
+
+                # define def_dict dictionary and assigned to vrf_dict
+                def_dict = vrf_dict.setdefault('default', {})
+
+                # define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family', {}) \
+                          .setdefault(address_family, {})
+
+                # define net_dict and assigned to af_dict dictionary
+                net_dict = af_dict.setdefault('network', {}) \
+                           .setdefault(ip_address, {})
+
+                group = m.groupdict()
+
+                # define ver_dict and assigned to net_dict dictionary
+                ver_dict = net_dict.setdefault('versions', {})
+
+                ver_dict.update({
+                    'process': group['process'],
+                    'brib/rib': int(group['brib_rib']),
+                    'send_tbl_ver': int(group['send_tbl_ver'])
+                })
+                continue
+
+            # Paths: (2 available, best #1)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                paths_dict = net_dict.setdefault('paths', {})
+                paths_dict.update({
+                    'available_paths': int(group['available_paths']),
+                    'best_path': int(group['best_path'])
+                })
+                continue
+
+            # Path #1: Received by speaker 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                path = 'Path ' + group['path_num']
+                each_path_dict = paths_dict.setdefault(path,{})
+                continue
+
+            #  Advertised IPv4 Unicast paths to update-groups (with more than one peer):
+            m = p4.match(line)
+            if m:
+                next_line_update_group = True
+                continue
+
+            # Not advertised to any peer
+            m = p5.match(line)
+            if m:
+                next_line_update_group = False
+                continue
+
+            # 0.1 0.3
+            m = p6.match(line)
+            if m and next_line_update_group:
+                group = m.groupdict()
+                if group['group2']:
+                    update_group = []
+                    for item in group:
+                        update_group.append(group[item])
+                        # in-place sort is more efficient
+                        update_group.sort()
+                else:
+                    update_group = group['group1']
+                next_line_update_group = False
+
+                try:
+                    if update_group:
+                        each_path_dict['update_groups'] = update_group
+                except Exception:
+                    pass
+
+                continue
+
+            #  108.10.0.2 from 108.10.0.2 (192.68.33.108)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                each_path_dict.update({
+                    'next_hop': group['next_hop'],
+                    'gateway': group['gateway'],
+                    'originator': group['originator']
+                })
+                continue
+
+            # Origin IGP, metric 0, localpref 100, valid, external
+            # Origin IGP, metric 0, localpref 100, weight 100, valid, external, best, group-best
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                status_codes = ''
+                if group['metric']:
+                    each_path_dict['metric'] = int(group['metric'])
+                if group['localpref']:
+                    each_path_dict['localpref'] = int(group['localpref'])
+                if group['weight']:
+                    each_path_dict['weight'] = int(group['weight'])
+
+                if group['origin']:
+                    origin = str(group['origin'])
+                    if origin == 'incomplete':
+                        each_path_dict['origin_codes'] = '?'
+                    elif origin == 'EGP':
+                        each_path_dict['origin_codes'] = 'e'
+                    else:
+                        each_path_dict['origin_codes'] = 'i'
+
+                if group['valid']:
+                    status_codes += '*'
+                if group['best']:
+                    status_codes = status_codes.rstrip()
+                    status_codes += '>'
+                if group['state']:
+                    state = group['state']
+                    if state == 'internal':
+                        status_codes += 'i'
+                each_path_dict['status_codes'] = status_codes
+                continue
+
+            # Received Path ID 0, Local Path ID 0, version 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                each_path_dict.update({
+                    'received_path_id': int(group['received_path_id']),
+                    'local_path_id': int(group['local_path_id']),
+                    'version': int(group['version'])
+                })
+                continue
+
+            # Origin-AS validity: (disabled)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                each_path_dict.update({
+                    'origin_as_validity': group['origin_as_validity']
                 })
                 continue
 
