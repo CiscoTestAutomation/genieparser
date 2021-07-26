@@ -28,23 +28,23 @@ class ShowTcpDetailPcbAllSchema(MetaParser):
                 'socket_status': int,
                 'established_datetime': str,
                 'tcp_connection_data': {
-                    'PCB': str,
-                    'SO': str,
-                    'TCPCB': str,
-                    'VRFID': str,
+                    'pcb': str,
+                    'so': str,
+                    'tcpcb': str,
+                    'vrfid': str,
                     'pak_prio': str,
-                    'TOS': int,
-                    'TTL': int,
-                    'Hash_index': int,
+                    'tos': int,
+                    'ttl': int,
+                    'hash_index': int,
                     'local_host': str,
                     'local_port': int,
                     'local_app_pid': int,
                     'foreign_host': str,
                     'foreign_port': int,
                     'local_api': {
-                        'PID': int,
-                        'Instance': int,
-                        'SPL_ID': int
+                        'pid': int,
+                        'instance': int,
+                        'spl_id': int
                     }
                 },
                 'current_queue': {
@@ -115,103 +115,103 @@ class ShowTcpDetailPcbAllSchema(MetaParser):
                     'rcvadv': int
                 },
                 'round_trip_delay': {
-                    'SRTT_ms': int,
-                    'RTTO_ms': int,
-                    'RTV_ms': int,
-                    'KRTT_ms': int,
-                    'minRTT_ms': int,
-                    'maxRTT_ms': int
+                    'srtt_ms': int,
+                    'rtto_ms': int,
+                    'rtv_ms': int,
+                    'krtt_ms': int,
+                    'min_rtt_ms': int,
+                    'max_rtt_ms': int
                 },
                 'times': {
-                    'ACK_hold_ms': int,
-                    'Keepalive_sec': int,
-                    'SYN_waittime_sec': int,
-                    'Giveup_ms': int,
-                    'Retransmission_retries': int,
-                    'Retransmit_forever': bool,
-                    'Connect_retries_remaining': int,
-                    'Connect_retry_interval_sec': int
+                    'ack_hold_ms': int,
+                    'keepalive_sec': int,
+                    'syn_waittime_sec': int,
+                    'giveup_ms': int,
+                    'retransmission_retries': int,
+                    'retransmit_forever': bool,
+                    'connect_retries_remaining': int,
+                    'connect_retry_interval_sec': int
                 },
                 'flags': {
-                    'State': str,
-                    'Feature': str,
-                    'Request': str
+                    'state': str,
+                    'feature': str,
+                    'request': str
                 },
-                'Datagrams': {
-                    'MSS_bytes': int,
-                    'peer_MSS_bytes': int,
-                    'min_MSS_bytes': int,
-                    'max_MSS_bytes': int
+                'datagrams': {
+                    'mss_bytes': int,
+                    'peer_mss_bytes': int,
+                    'min_mss_bytes': int,
+                    'max_mss_bytes': int
                 },
-                'Window_Scales': {
-                    'RCV': int,
-                    'SND': int,
-                    'Request_RCV': int,
-                    'Request_SND': int
+                'window_scales': {
+                    'rcv': int,
+                    'snd': int,
+                    'request_rcv': int,
+                    'request_snd': int
                 },
-                'Timestamp_option': {
+                'timestamp_option': {
                     'recent': int,
                     'recent_age': int,
-                    'last_ACK_sent': int
+                    'last_ack_sent': int
                 },
-                'Sack_Blocks': {
+                'sack_blocks': {
                     'start': str,
                     'end': str
                 },
-                'Sack_Holes': {
+                'sack_holes': {
                     'start': str,
                     'end': str,
                     'dups': str,
                     'rxmit': str
                 },
-                'Socket_options': {
-                    Optional('SO_REUSEADDR'): bool,
-                    Optional('SO_REUSEPORT'): bool,
-                    Optional('SO_NBIO'): bool
+                'socket_options': {
+                    Optional('so_reuseaddr'): bool,
+                    Optional('so_reuseport'): bool,
+                    Optional('so_nbio'): bool
                 },
-                'Socket_States': {
-                    Optional('SS_ISCONNECTED'): bool,
-                    Optional('SS_PRIV'): bool
+                'socket_states': {
+                    Optional('ss_isconnected'): bool,
+                    Optional('ss_priv'): bool
                 },
-                'Socket_Receive_Buffer_States': {
-                    Optional('SB_DEL_WAKEUP'): bool
+                'socket_receive_buffer_states': {
+                    Optional('sb_del_wakeup'): bool
                 },
-                'Socket_Send_Buffer_States': {
-                    Optional('SB_DEL_WAKEUP'): bool
+                'socket_send_buffer_states': {
+                    Optional('sb_del_wakeup'): bool
                 },
-                'Socket_Receive_Buffer': {
+                'socket_receive_buffer': {
                     'watermarks': {
                         'low': int,
                         'high': str
                     }
                 },
-                'Socket_Send_Buffer': {
+                'socket_send_buffer': {
                     'watermarks': {
                         'low': int,
                         'high': str
                     },
                     Optional('notify_threshold'): int
                 },
-                'Socket_Misc_Info': {
-                    'RCV_data_size': int,
-                    'SO_QLen': int,
-                    'SO_Q0Len': int,
-                    'SO_QLimit': int,
-                    'SO_Error': int,
-                    'SO_Auto_Rearm': int
+                'socket_misc_info': {
+                    'rcv_data_size': int,
+                    'so_qlen': int,
+                    'so_q0len': int,
+                    'so_qlimit': int,
+                    'so_error': int,
+                    'so_auto_rearm': int
                 },
-                'PDU_Information': {
-                    'PDU_Buffer': int,
-                    'FIB_Lookup_Cache': {
-                        'IFH': str,
-                        'PD_CTX': {
-                            'Size': int,
-                            'Data': str
+                'pdu_information': {
+                    'pdu_buffer': int,
+                    'fib_lookup_cache': {
+                        'ifh': str,
+                        'pd_ctx': {
+                            'size': int,
+                            'data': str
                         },
-                        'Num_Labels': int,
-                        'Label_Stack': int
+                        'num_labels': int,
+                        'label_stack': int
                     },
-                    'Num_Peers_With_Authentication': int
+                    'num_peers_with_authentication': int
                 }
 
             }
@@ -241,14 +241,14 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
         # Connection state is ESTAB, I/O status: 0, socket status: 0
         p1 = re.compile(r'^Connection state is (?P<connection_state>\S+),'
-                        r' ?(I\/O status: (?P<io_status>\d+))?,'
-                        r' ?(socket status: ?(?P<socket_status>\d+))?$')
+                        r' *(I\/O status: (?P<io_status>\d+))?,'
+                        r' *(socket status: *(?P<socket_status>\d+))?$')
 
         # Established at Mon Jul 12 09:44:25 2021
         p2 = re.compile(r'^Established at (?P<established_datetime>.+)$')
 
         # PCB 0x00007f553800d8f8, SO 0x7f5538008698, TCPCB 0x7f5538008b58, vrfid 0x60000000,
-        p3 = re.compile(r'^PCB (?P<pcb>\w+)?, ?((SO (?P<so>\w+))?,)? ?((TCPCB (?P<tcpcb>\w+))?,)? ?((vrfid (?P<vrfid>\w+))?,)?$')
+        p3 = re.compile(r'^PCB (?P<pcb>\w+)?, *((SO (?P<so>\w+))?,)? *((TCPCB (?P<tcpcb>\w+))?,)? *((vrfid (?P<vrfid>\w+))?,)?$')
 
         # Pak Prio: Medium, TOS: 192, TTL: 1, Hash index: 26
         p4 = re.compile(r'^(Pak Prio: (?P<pak_prio>\w+),)? '
@@ -270,15 +270,15 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
         # Current send queue size in bytes: 0 (max 24576)
         p8 = re.compile(r'^Current send queue size in bytes: (?P<send_queue_size_bytes>\d+)'
-                        r' ?(\(max (?P<send_max_bytes>\d+)\))?$')
+                        r' *(\(max (?P<send_max_bytes>\d+)\))?$')
 
         # Current receive queue size in bytes: 0 (max 32768)  mis-ordered: 0 bytes
-        p9 = re.compile(r'^Current receive queue size in bytes: (?P<receive_queue_size_bytes>\d+) ?'
+        p9 = re.compile(r'^Current receive queue size in bytes: (?P<receive_queue_size_bytes>\d+) *'
                         r'(\(max (?P<receive_max_bytes>\d+)\))?( +)?'
-                        r'(mis-ordered: ?(?P<receive_mis_ordered_bytes>\d+) ? bytes)?$')
+                        r'(mis-ordered: *(?P<receive_mis_ordered_bytes>\d+) * bytes)?$')
 
         # Current receive queue size in packets: 0 (max 0)
-        p10 = re.compile(r'^Current receive queue size in packets: (?P<receive_queue_packages>\d+) ?'
+        p10 = re.compile(r'^Current receive queue size in packets: (?P<receive_queue_packages>\d+) *'
                          r'(\(max (?P<receive_max_packages>\d+)\))?$')
 
         # Timer          Starts    Wakeups         Next(msec)
@@ -325,17 +325,17 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
                          r'(?P<throttle_next_msec>\d+)$')
 
         #    iss: 1042166212  snduna: 1042166346  sndnxt: 1042166346
-        p20 = re.compile(r'^( +)?iss: (?P<iss_sequence>\d+)( +)?'
+        p20 = re.compile(r'  *iss: (?P<iss_sequence>\d+)( +)?'
                          r'(snduna: (?P<snduna_sequence>\d+))?( +)?'
                          r'(sndnxt: (?P<sndnxt_sequence>\d+))?$')
 
         #    sndmax: 1042166346  sndwnd: 32739       sndcwnd: 2880
-        p21 = re.compile(r'^( +)?sndmax: (?P<sndmax_sequence>\d+)( +)?'
+        p21 = re.compile(r'  *sndmax: (?P<sndmax_sequence>\d+)( +)?'
                          r'(sndwnd: (?P<sndwnd_sequence>\d+))?( +)?'
                          r'(sndcwnd: (?P<sndcwnd_sequence>\d+))?$')
 
         #    irs: 309426134   rcvnxt: 309426287   rcvwnd: 32701   rcvadv: 309458988
-        p22 = re.compile(r'^( +)?irs: (?P<irs_sequence>\d+)( +)?'
+        p22 = re.compile(r'  *irs: (?P<irs_sequence>\d+)( +)?'
                          r'(rcvnxt: (?P<rcvnxt_sequence>\d+))?( +)?'
                          r'(rcvwnd: (?P<rcvwnd_sequence>\d+))?( +)?'
                          r'(rcvadv: (?P<rcvadv_sequence>\d+))?$')
@@ -374,20 +374,20 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
         p30 = re.compile(r'^Request flags: (?P<request_flags>.+)$')
 
         # Datagrams (in bytes): MSS 1440, peer MSS 1440, min MSS 1440, max MSS 1440
-        p31 = re.compile(r'^Datagrams (\(in bytes\))?: (MSS (?P<mss>\d+))?,? ?'
-                         r'(peer MSS (?P<peer_mss>\d+))?,? ?'
-                         r'(min MSS (?P<min_mss>\d+))?,? ?'
+        p31 = re.compile(r'^Datagrams (\(in bytes\))?: (MSS (?P<mss>\d+))?,? *'
+                         r'(peer MSS (?P<peer_mss>\d+))?,? *'
+                         r'(min MSS (?P<min_mss>\d+))?,? *'
                          r'(max MSS (?P<max_mss>\d+))?$')
 
         # Window scales: rcv 0, snd 0, request rcv 0, request snd 0
-        p32 = re.compile(r'^Window scales: (rcv (?P<rcv>\d+))?,? ?'
-                         r'(snd (?P<snd>\d+))?,? ?'
-                         r'(request rcv (?P<request_rcv>\d+))?,? ?'
+        p32 = re.compile(r'^Window scales: (rcv (?P<rcv>\d+))?,? *'
+                         r'(snd (?P<snd>\d+))?,? *'
+                         r'(request rcv (?P<request_rcv>\d+))?,? *'
                          r'(request snd (?P<request_snd>\d+))?$')
 
         # Timestamp option: recent 0, recent age 0, last ACK sent 0
-        p33 = re.compile(r'^Timestamp option: (recent (?P<recent>\d+))?,? ?'
-                         r'(recent age (?P<recent_age>\d+))?,? ?'
+        p33 = re.compile(r'^Timestamp option: (recent (?P<recent>\d+))?,? *'
+                         r'(recent age (?P<recent_age>\d+))?,? *'
                          r'(last ACK sent (?P<last_ACK_sent>\d+))?$')
 
         # Sack blocks {start, end}: none
@@ -398,12 +398,12 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
         p35 = re.compile(r'^Sack holes {start, end, dups, rxmit}: (?P<holes_start_end>\.+)$')
 
         # Socket options: SO_REUSEADDR, SO_REUSEPORT, SO_NBIO
-        p36 = re.compile(r'^Socket options: ((?P<so_reuseaddr>\w+))?,? ?'
-                         r'((?P<so_reuseport>\w+))?,? ?'
-                         r'(?P<so_nbio>\w+),? ?')
+        p36 = re.compile(r'^Socket options: ((?P<so_reuseaddr>\w+))?,? *'
+                         r'((?P<so_reuseport>\w+))?,? *'
+                         r'(?P<so_nbio>\w+),? *')
 
         # Socket states: SS_ISCONNECTED, SS_PRIV
-        p37 = re.compile(r'^Socket states: ((?P<ss_isconnected>\w+))?,? ?'
+        p37 = re.compile(r'^Socket states: ((?P<ss_isconnected>\w+))?,? *'
                          r'((?P<ss_priv>\w+))?$')
 
         # Socket receive buffer states: SB_DEL_WAKEUP
@@ -417,17 +417,17 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
         # Socket send buffer   : Low/High watermark 2048/24576, Notify threshold 0
         p41 = re.compile(r'^Socket send buffer +: '
-                         r'(Low\/High watermark (?P<send_low_high_watermark>\S+))?,? ?'
+                         r'(Low\/High watermark (?P<send_low_high_watermark>\S+))?,? *'
                          r'(Notify threshold (?P<send_notify_threshold>\d+))?$')
 
         # Socket misc info     : Rcv data size (sb_cc) 0, so_qlen 0,
         p42 = re.compile(r'^Socket misc info +: (Rcv data size \(sb_cc\) '
-                         r'(?P<rcv_data_size>\d+))?,? ?'
+                         r'(?P<rcv_data_size>\d+))?,? *'
                          r'(so_qlen (?P<misc_so_qlen>\d+))?$')
 
         #           so_q0len 0, so_qlimit 0, so_error 0
-        p43 = re.compile(r'^ +so_q0len (?P<so_q0len>\d+),? ?'
-                         r'(so_qlimit (?P<so_qlimit>\d+))?,? ?'
+        p43 = re.compile(r'^ +so_q0len (?P<so_q0len>\d+),? *'
+                         r'(so_qlimit (?P<so_qlimit>\d+))?,? *'
                          r'(so_error (?P<so_error>\d+))?$')
 
         #            so_auto_rearm 1
@@ -446,17 +446,16 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
                          r'(data: (?P<pd_ctx_data>.+))?$')
 
         # Num Labels: 0  Label Stack: 0
-        p48 = re.compile(r'^( +)?Num Labels: (?P<num_label>\d+)( +)?(Label Stack: (?P<lable_stack>\d+))?$')
+        p48 = re.compile(r'  *Num Labels: (?P<num_label>\d+)( +)?(Label Stack: (?P<lable_stack>\d+))?$')
 
         # Num of peers with authentication info: 0
-        p49 = re.compile(r'^( +)?Num of peers with authentication info: (?P<num_peer_with_auth>\d+)$')
+        p49 = re.compile(r'  *Num of peers with authentication info: (?P<num_peer_with_auth>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # Connection state is ESTAB, I/O status: 0, socket status: 0
             m = p1.match(line)
-
             if m:
                 group = m.groupdict()
                 if group['connection_state']:
@@ -472,14 +471,12 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Established at Mon Jul 12 09:44:25 2021
             m = p2.match(line)
-
             if m:
                 group = m.groupdict()
                 temp_data.setdefault('established_datetime', group['established_datetime'])
 
             # PCB 0x00007f553800d8f8, SO 0x7f5538008698, TCPCB 0x7f5538008b58, vrfid 0x60000000,
             m = p3.match(line)
-
             if m:
                 group = m.groupdict()
                 top_key = ret_dict.setdefault('pcb_address', {})
@@ -490,16 +487,16 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
                 pcb_key.setdefault('established_datetime', temp_data['established_datetime'])
 
                 tcp_conn_data = pcb_key.setdefault('tcp_connection_data', {})
-                tcp_conn_data['PCB'] = group['pcb']
+                tcp_conn_data['pcb'] = group['pcb']
 
                 if group['so']:
-                    tcp_conn_data['SO'] = group['so']
+                    tcp_conn_data['so'] = group['so']
 
                 if group['tcpcb']:
-                    tcp_conn_data['TCPCB'] = group['tcpcb']
+                    tcp_conn_data['tcpcb'] = group['tcpcb']
 
                 if group['vrfid']:
-                    tcp_conn_data['VRFID'] = group['vrfid']
+                    tcp_conn_data['vrfid'] = group['vrfid']
 
                 temp_data.clear()
 
@@ -507,7 +504,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Pak Prio: Medium, TOS: 192, TTL: 1, Hash index: 26
             m = p4.match(line)
-
             if m:
                 group = m.groupdict()
 
@@ -515,19 +511,18 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
                     tcp_conn_data['pak_prio'] = group['pak_prio']
 
                 if group['tos']:
-                    tcp_conn_data['TOS'] = int(group['tos'])
+                    tcp_conn_data['tos'] = int(group['tos'])
 
                 if group['ttl']:
-                    tcp_conn_data['TTL'] = int(group['ttl'])
+                    tcp_conn_data['ttl'] = int(group['ttl'])
 
                 if group['hash_index']:
-                    tcp_conn_data['Hash_index'] = int(group['hash_index'])
+                    tcp_conn_data['hash_index'] = int(group['hash_index'])
 
                 continue
 
             # Local host: 2000:108:10::1, Local port: 179 (Local App PID: 11298)
             m = p5.match(line)
-
             if m:
                 group = m.groupdict()
 
@@ -544,7 +539,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Foreign host: 2000:108:10::2, Foreign port: 56357
             m = p6.match(line)
-
             if m:
                 group = m.groupdict()
 
@@ -558,26 +552,24 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # (Local App PID/instance/SPL_APP_ID: 11298/1/0)
             m = p7.match(line)
-
             if m:
                 group = m.groupdict()
                 local_api = tcp_conn_data.setdefault('local_api', {})
                 if '/' in group['local_instance_spl']:
                     lis_data = group['local_instance_spl'].split('/')
 
-                    local_api.setdefault('PID', int(lis_data[0]))
+                    local_api.setdefault('pid', int(lis_data[0]))
 
                     if lis_data[1]:
-                        local_api.setdefault('Instance', int(lis_data[1]))
+                        local_api.setdefault('instance', int(lis_data[1]))
 
                     if lis_data[2]:
-                        local_api.setdefault('SPL_ID', int(lis_data[2]))
+                        local_api.setdefault('spl_id', int(lis_data[2]))
 
                 continue
 
             # Current send queue size in bytes: 0 (max 24576)
             m = p8.match(line)
-
             if m:
                 group = m.groupdict()
                 current_queue = pcb_key.setdefault('current_queue', {})
@@ -592,7 +584,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Current receive queue size in bytes: 0 (max 32768)  mis-ordered: 0 bytes
             m = p9.match(line)
-
             if m:
                 group = m.groupdict()
                 current_queue_receive = current_queue.setdefault('receive', {})
@@ -609,7 +600,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Current receive queue size in packets: 0 (max 0)
             m = p10.match(line)
-
             if m:
                 group = m.groupdict()
 
@@ -622,7 +612,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Timer          Starts    Wakeups         Next(msec)
             m = p11.match(line)
-
             if m:
                 event_timer = pcb_key.setdefault('event_timers', {})
 
@@ -630,7 +619,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Retrans             3          0                0
             m = p12.match(line)
-
             if m:
                 group = m.groupdict()
                 retruns = event_timer.setdefault('retrans', {})
@@ -648,7 +636,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # SendWnd             0          0                0
             m = p13.match(line)
-
             if m:
                 group = m.groupdict()
                 sendwnd = event_timer.setdefault('sendWnd', {})
@@ -666,7 +653,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # timewait             0          0                0
             m = p14.match(line)
-
             if m:
                 group = m.groupdict()
                 timewait = event_timer.setdefault('timewait', {})
@@ -684,7 +670,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # AckHold             4          3                0
             m = p15.match(line)
-
             if m:
 
                 group = m.groupdict()
@@ -703,7 +688,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # keepalive             1          0                0
             m = p16.match(line)
-
             if m:
                 group = m.groupdict()
                 keepalive = event_timer.setdefault('keepalive', {})
@@ -721,7 +705,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # pmtuager             0          0                0
             m = p17.match(line)
-
             if m:
                 group = m.groupdict()
                 pmtuager = event_timer.setdefault('pmtuager', {})
@@ -739,7 +722,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # giveup             1          0                0
             m = p18.match(line)
-
             if m:
                 group = m.groupdict()
                 giveup = event_timer.setdefault('giveup', {})
@@ -757,7 +739,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # throttle             1          0                0
             m = p19.match(line)
-
             if m:
                 group = m.groupdict()
                 giveup = event_timer.setdefault('throttle', {})
@@ -775,7 +756,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # iss: 1042166212  snduna: 1042166346  sndnxt: 1042166346
             m = p20.match(line)
-
             if m:
                 group = m.groupdict()
                 sequence_numbers = pcb_key.setdefault('sequence_numbers', {})
@@ -793,10 +773,8 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # sndmax: 1042166346  sndwnd: 32739       sndcwnd: 2880
             m = p21.match(line)
-
             if m:
                 group = m.groupdict()
-                sequence_numbers = pcb_key.setdefault('sequence_numbers', {})
 
                 if group['sndmax_sequence']:
                     sequence_numbers['sndmax'] = int(group['sndmax_sequence'])
@@ -808,12 +786,11 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
                     sequence_numbers['sndcwnd'] = int(group['sndcwnd_sequence'])
 
                 continue
+
             # irs: 309426134   rcvnxt: 309426287   rcvwnd: 32701   rcvadv: 309458988
             m = p22.match(line)
-
             if m:
                 group = m.groupdict()
-                sequence_numbers = pcb_key.setdefault('sequence_numbers', {})
 
                 if group['irs_sequence']:
                     sequence_numbers['irs'] = int(group['irs_sequence'])
@@ -831,106 +808,99 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # SRTT: 28 ms,  RTTO: 300 ms,  RTV: 214 ms,  KRTT: 0 ms
             m = p23.match(line)
-
             if m:
                 group = m.groupdict()
                 round_trip_delay = pcb_key.setdefault('round_trip_delay', {})
 
                 if group['srtt_round_trips']:
-                    round_trip_delay['SRTT_ms'] = int(group['srtt_round_trips'])
+                    round_trip_delay['srtt_ms'] = int(group['srtt_round_trips'])
 
                 if group['rtto_round_trips']:
-                    round_trip_delay['RTTO_ms'] = int(group['rtto_round_trips'])
+                    round_trip_delay['rtto_ms'] = int(group['rtto_round_trips'])
 
                 if group['rtv_round_trips']:
-                    round_trip_delay['RTV_ms'] = int(group['rtv_round_trips'])
+                    round_trip_delay['rtv_ms'] = int(group['rtv_round_trips'])
 
                 if group['krtt_round_trips']:
-                    round_trip_delay['KRTT_ms'] = int(group['krtt_round_trips'])
+                    round_trip_delay['krtt_ms'] = int(group['krtt_round_trips'])
 
                 continue
 
             # minRTT: 2 ms,  maxRTT: 213 ms
             m = p24.match(line)
-
             if m:
                 group = m.groupdict()
 
                 if group['minrtt_round_trips']:
-                    round_trip_delay['SRTT_ms'] = int(group['minrtt_round_trips'])
+                    round_trip_delay['min_rtt_ms'] = int(group['minrtt_round_trips'])
 
                 if group['maxrtt_round_trips']:
-                    round_trip_delay['RTTO_ms'] = int(group['maxrtt_round_trips'])
+                    round_trip_delay['max_rtt_ms'] = int(group['maxrtt_round_trips'])
 
                 continue
 
             # ACK hold time: 200 ms, Keepalive time: 0 sec, SYN waittime: 30 sec
             m = p25.match(line)
-
             if m:
                 group = m.groupdict()
                 times = pcb_key.setdefault('times', {})
 
                 if group['ack_holdtime_ms']:
-                    times['ACK_hold_ms'] = int(group['ack_holdtime_ms'])
+                    times['ack_hold_ms'] = int(group['ack_holdtime_ms'])
 
                 if group['keepalive_time_sec']:
-                    times['Keepalive_sec'] = int(group['keepalive_time_sec'])
+                    times['keepalive_sec'] = int(group['keepalive_time_sec'])
 
                 if group['syn_waittime_sec']:
-                    times['SYN_waittime_sec'] = int(group['syn_waittime_sec'])
+                    times['syn_waittime_sec'] = int(group['syn_waittime_sec'])
 
                 continue
 
             # Giveup time: 0 ms, Retransmission retries: 0, Retransmit forever: FALSE
             m = p26.match(line)
-
             if m:
 
                 group = m.groupdict()
 
                 if group['giveup_time_ms']:
-                    times['Giveup_ms'] = int(group['giveup_time_ms'])
+                    times['giveup_ms'] = int(group['giveup_time_ms'])
 
                 if group['retransmission_retries']:
-                    times['Retransmission_retries'] = int(group['retransmission_retries'])
+                    times['retransmission_retries'] = int(group['retransmission_retries'])
 
                 if group['retransmit_forever']:
                     if group['retransmit_forever'] == "True":
-                        times['Retransmit_forever'] = True
+                        times['retransmit_forever'] = True
                     else:
-                        times['Retransmit_forever'] = False
+                        times['retransmit_forever'] = False
 
                 continue
 
             # Connect retries remaining: 0, connect retry interval: 0 secs
             m = p27.match(line)
-
             if m:
                 group = m.groupdict()
 
                 if group['connect_retries_remaining']:
-                    times['Connect_retries_remaining'] = int(group['connect_retries_remaining'])
+                    times['connect_retries_remaining'] = int(group['connect_retries_remaining'])
 
                 if group['connect_retry_interval']:
-                    times['Connect_retry_interval_sec'] = int(group['connect_retry_interval'])
+                    times['connect_retry_interval_sec'] = int(group['connect_retry_interval'])
 
                 continue
 
             # State flags: none
             m = p28.match(line)
-
             if m:
                 group = m.groupdict()
                 flags = pcb_key.setdefault('flags', {})
 
-                flags['State'] = group['states_flags']
+                flags['state'] = group['states_flags']
 
                 continue
 
             # Feature flags: Win Scale, Nagle
             m = p29.match(line)
-
             if m:
                 group = m.groupdict()
 
@@ -940,177 +910,166 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Request flags: Win Scale
             m = p30.match(line)
-
             if m:
                 group = m.groupdict()
-                flags['Request'] = group['request_flags']
+                flags['request'] = group['request_flags']
 
                 continue
 
             # Datagrams (in bytes): MSS 1440, peer MSS 1440, min MSS 1440, max MSS 1440
             m = p31.match(line)
-
             if m:
                 group = m.groupdict()
-                Datagrams = pcb_key.setdefault('Datagrams', {})
+                datagrams = pcb_key.setdefault('datagrams', {})
 
                 if group['mss']:
-                    Datagrams['MSS_bytes'] = int(group['mss'])
+                    datagrams['mss_bytes'] = int(group['mss'])
 
                 if group['peer_mss']:
-                    Datagrams['peer_MSS_bytes'] = int(group['peer_mss'])
+                    datagrams['peer_mss_bytes'] = int(group['peer_mss'])
 
                 if group['min_mss']:
-                    Datagrams['min_MSS_bytes'] = int(group['min_mss'])
+                    datagrams['min_mss_bytes'] = int(group['min_mss'])
 
                 if group['max_mss']:
-                    Datagrams['max_MSS_bytes'] = int(group['max_mss'])
+                    datagrams['max_mss_bytes'] = int(group['max_mss'])
 
                 continue
 
             # Window scales: rcv 0, snd 0, request rcv 0, request snd 0
             m = p32.match(line)
-
             if m:
                 group = m.groupdict()
-                Window_Scales = pcb_key.setdefault('Window_Scales', {})
+                window_scales = pcb_key.setdefault('window_scales', {})
 
                 if group['rcv']:
-                    Window_Scales['RCV'] = int(group['rcv'])
+                    window_scales['rcv'] = int(group['rcv'])
 
                 if group['snd']:
-                    Window_Scales['SND'] = int(group['snd'])
+                    window_scales['snd'] = int(group['snd'])
 
                 if group['request_rcv']:
-                    Window_Scales['Request_RCV'] = int(group['request_rcv'])
+                    window_scales['request_rcv'] = int(group['request_rcv'])
 
                 if group['request_snd']:
-                    Window_Scales['Request_SND'] = int(group['request_snd'])
+                    window_scales['request_snd'] = int(group['request_snd'])
 
                 continue
 
             # Timestamp option: recent 0, recent age 0, last ACK sent 0
             m = p33.match(line)
-
             if m:
                 group = m.groupdict()
-                Timestamp_option = pcb_key.setdefault('Timestamp_option', {})
+                timestamp_option = pcb_key.setdefault('timestamp_option', {})
 
                 if group['recent']:
-                    Timestamp_option['recent'] = int(group['recent'])
+                    timestamp_option['recent'] = int(group['recent'])
 
                 if group['recent_age']:
-                    Timestamp_option['recent_age'] = int(group['recent_age'])
+                    timestamp_option['recent_age'] = int(group['recent_age'])
 
-                if group['last_ACK_sent']:
-                    Timestamp_option['last_ACK_sent'] = int(group['last_ACK_sent'])
+                if group['last_ack_sent']:
+                    timestamp_option['last_ack_sent'] = int(group['last_ack_sent'])
 
                 continue
 
             # Sack blocks {start, end}: none
             # Sack blocks {start, end}: 100/200
             m = p34.match(line)
-
             if m:
                 group = m.groupdict()
-                Sack_Blocks = pcb_key.setdefault('Sack_Blocks', {})
+                sack_blocks = pcb_key.setdefault('sack_blocks', {})
 
                 if isinstance(group['blocks_start_end'], str):
-                    Sack_Blocks['start'] = group['blocks_start_end']
-                    Sack_Blocks['end'] = group['blocks_start_end']
+                    sack_blocks['start'] = group['blocks_start_end']
+                    sack_blocks['end'] = group['blocks_start_end']
                 else:
                     star_end = group['blocks_start_end'].split('/', 1)
-                    Sack_Blocks['start'] = star_end[0]
-                    Sack_Blocks['end'] = star_end[1]
+                    sack_blocks['start'] = star_end[0]
+                    sack_blocks['end'] = star_end[1]
 
                 continue
 
             # Sack holes {start, end, dups, rxmit}: none
             # Sack holes {start, end}: 100/200/300/400
             m = p35.match(line)
-
             if m:
                 group = m.groupdict()
-                Sack_Holes = pcb_key.setdefault('Sack_Holes', {})
+                sack_holes = pcb_key.setdefault('sack_holes', {})
 
                 if isinstance(group['holes_start_end'], str):
-                    Sack_Holes['start'] = group['holes_start_end']
-                    Sack_Holes['end'] = group['holes_start_end']
-                    Sack_Holes['dups'] = group['holes_start_end']
-                    Sack_Holes['rxmit'] = group['holes_start_end']
+                    sack_holes['start'] = group['holes_start_end']
+                    sack_holes['end'] = group['holes_start_end']
+                    sack_holes['dups'] = group['holes_start_end']
+                    sack_holes['rxmit'] = group['holes_start_end']
                 else:
-                    Sack_Holes_data = group['blocks_start_end'].split('/')
-                    Sack_Holes['start'] = Sack_Holes_data[0]
-                    Sack_Holes['end'] = Sack_Holes_data[1]
-                    Sack_Holes['dups'] = Sack_Holes_data[2]
-                    Sack_Holes['rxmit'] = Sack_Holes_data[4]
+                    sack_holes_data = group['blocks_start_end'].split('/')
+                    sack_holes['start'] = sack_holes_data[0]
+                    sack_holes['end'] = sack_holes_data[1]
+                    sack_holes['dups'] = sack_holes_data[2]
+                    sack_holes['rxmit'] = sack_holes_data[4]
 
                 continue
 
             # Socket options: SO_REUSEADDR, SO_REUSEPORT, SO_NBIO
             m = p36.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_options = pcb_key.setdefault('Socket_options', {})
+                socket_options = pcb_key.setdefault('socket_options', {})
 
                 if group['so_reuseaddr']:
-                    Socket_options['SO_REUSEADDR'] = True
+                    socket_options['so_reuseaddr'] = True
 
                 if group['so_reuseport']:
-                    Socket_options['SO_REUSEPORT'] = True
+                    socket_options['so_reuseport'] = True
 
                 if group['so_nbio']:
-                    Socket_options['SO_NBIO'] = True
+                    socket_options['so_nbio'] = True
 
                 continue
 
             # Socket states: SS_ISCONNECTED, SS_PRIV
             m = p37.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_States = pcb_key.setdefault('Socket_States', {})
+                socket_states = pcb_key.setdefault('socket_states', {})
 
                 if group['ss_isconnected']:
-                    Socket_States['SS_ISCONNECTED'] = True
+                    socket_states['ss_isconnected'] = True
 
                 if group['ss_priv']:
-                    Socket_States['SS_PRIV'] = True
+                    socket_states['ss_priv'] = True
 
                 continue
 
             # Socket receive buffer states: SB_DEL_WAKEUP
             m = p38.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_Receive_Buffer_States = pcb_key.setdefault('Socket_Receive_Buffer_States', {})
+                socket_receive_buffer_states = pcb_key.setdefault('socket_receive_buffer_states', {})
 
                 if group['receive_buffer_states']:
-                    Socket_Receive_Buffer_States['SB_DEL_WAKEUP'] = True
+                    socket_receive_buffer_states['sb_del_wakeup'] = True
 
                 continue
 
             # Socket send buffer states: SB_DEL_WAKEUP
             m = p39.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_Send_Buffer_States = pcb_key.setdefault('Socket_Send_Buffer_States', {})
+                socket_send_buffer_states = pcb_key.setdefault('socket_send_buffer_states', {})
 
                 if group['send_buffer_states']:
-                    Socket_Send_Buffer_States['SB_DEL_WAKEUP'] = True
+                    socket_send_buffer_states['sb_del_wakeup'] = True
 
                 continue
 
             # Socket receive buffer: Low/High watermark 1/32768
             m = p40.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_Receive_Buffer = pcb_key.setdefault('Socket_Receive_Buffer', {})
-                receive_watermark = Socket_Receive_Buffer.setdefault('watermarks', {})
+                socket_receive_buffer = pcb_key.setdefault('socket_receive_buffer', {})
+                receive_watermark = socket_receive_buffer.setdefault('watermarks', {})
 
                 receive_watermark_data = group['receive_buffer'].split('/')
                 receive_watermark['low'] = int(receive_watermark_data[0])
@@ -1120,93 +1079,86 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             # Socket send buffer   : Low/High watermark 2048/24576, Notify threshold 0
             m = p41.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_Send_Buffer = pcb_key.setdefault('Socket_Send_Buffer', {})
-                send_watermark = Socket_Send_Buffer.setdefault('watermarks', {})
+                socket_send_buffer = pcb_key.setdefault('socket_send_buffer', {})
+                send_watermark = socket_send_buffer.setdefault('watermarks', {})
 
                 send_watermark_data = group['send_low_high_watermark'].split('/')
                 send_watermark['low'] = int(send_watermark_data[0])
                 send_watermark['high'] = send_watermark_data[1]
 
                 if group['send_notify_threshold']:
-                    Socket_Send_Buffer['notify_threshold'] = int(group['send_notify_threshold'])
+                    socket_send_buffer['notify_threshold'] = int(group['send_notify_threshold'])
 
                 continue
 
             # Socket misc info     : Rcv data size (sb_cc) 0, so_qlen 0,
             m = p42.match(line)
-
             if m:
                 group = m.groupdict()
-                Socket_Misc_Info = pcb_key.setdefault('Socket_Misc_Info', {})
+                socket_misc_info = pcb_key.setdefault('socket_misc_info', {})
 
                 if group['rcv_data_size']:
-                    Socket_Misc_Info['RCV_data_size'] = int(group['rcv_data_size'])
+                    socket_misc_info['rcv_data_size'] = int(group['rcv_data_size'])
 
                 if group['misc_so_qlen']:
-                    Socket_Misc_Info['SO_QLen'] = int(group['misc_so_qlen'])
+                    socket_misc_info['so_qlen'] = int(group['misc_so_qlen'])
 
                 continue
 
             #          so_q0len 0, so_qlimit 0, so_error 0
             m = p43.match(line)
-
             if m:
                 group = m.groupdict()
 
                 if group['so_q0len']:
-                    Socket_Misc_Info['SO_Q0Len'] = int(group['so_q0len'])
+                    socket_misc_info['so_q0len'] = int(group['so_q0len'])
 
                 if group['so_qlimit']:
-                    Socket_Misc_Info['SO_QLimit'] = int(group['so_qlimit'])
+                    socket_misc_info['so_qlimit'] = int(group['so_qlimit'])
 
                 if group['so_error']:
-                    Socket_Misc_Info['SO_Error'] = int(group['so_error'])
+                    socket_misc_info['so_error'] = int(group['so_error'])
 
                 continue
 
             #               so_auto_rearm 1
             m = p44.match(line)
-
             if m:
                 group = m.groupdict()
 
                 if group['so_auto_rearm']:
-                    Socket_Misc_Info['SO_Auto_Rearm'] = int(group['so_auto_rearm'])
+                    socket_misc_info['so_auto_rearm'] = int(group['so_auto_rearm'])
 
                 continue
 
             # PDU information:
             m = p45.match(line)
-
             if m:
-                PUD_info = pcb_key.setdefault('PDU_Information', {})
+                pud_info = pcb_key.setdefault('pdu_information', {})
 
                 continue
 
             #     #PDU's in buffer: 0
             m = p46.match(line)
-
             if m:
                 group = m.groupdict()
-                PUD_info.setdefault('PDU_Buffer', int(group['pdu_in_buffer']))
+                pud_info.setdefault('pdu_buffer', int(group['pdu_in_buffer']))
 
                 continue
 
             # FIB Lookup Cache:  IFH: 0x1000058  PD ctx: size: 8  data: 0x0 0xa6fe66ce
             m = p47.match(line)
-
             if m:
                 group = m.groupdict()
-                fib_cache = PUD_info.setdefault('FIB_Lookup_Cache', {})
+                fib_cache = PUD_info.setdefault('fib_lookup_cache', {})
 
                 if group['fib_ifh']:
-                    fib_cache['IFH'] = group['fib_ifh']
+                    fib_cache['ifh'] = group['fib_ifh']
 
                 if group['pd_ctx_size'] or group['pd_ctx_data']:
-                    pd_ctx = fib_cache.setdefault('PD_CTX', {})
+                    pd_ctx = fib_cache.setdefault('pd_ctx', {})
                     pd_ctx['size'] = int(group['pd_ctx_size'])
                     pd_ctx['data'] = group['pd_ctx_data']
 
@@ -1214,24 +1166,22 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
 
             #   Num Labels: 0  Label Stack: 0
             m = p48.match(line)
-
             if m:
                 group = m.groupdict()
 
                 if group['num_label']:
-                    fib_cache['Num_Labels'] = int(group['num_label'])
+                    fib_cache['num_labels'] = int(group['num_label'])
 
                 if group['lable_stack']:
-                    fib_cache['Label_Stack'] = int(group['lable_stack'])
+                    fib_cache['label_stack'] = int(group['lable_stack'])
 
                 continue
 
             #   Num of peers with authentication info: 0
             m = p49.match(line)
-
             if m:
                 group = m.groupdict()
-                PUD_info['Num_Peers_With_Authentication'] = int(group['num_peer_with_auth'])
+                pud_info['num_peers_with_authentication'] = int(group['num_peer_with_auth'])
 
                 continue
 
