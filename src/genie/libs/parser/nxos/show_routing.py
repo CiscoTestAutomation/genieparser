@@ -1000,7 +1000,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                     route_dict.update({'tag': int(groups['tag'])})
 
         self.sort_next_hop_list(result_dict)
-        print(result_dict)
         return result_dict
 
 
