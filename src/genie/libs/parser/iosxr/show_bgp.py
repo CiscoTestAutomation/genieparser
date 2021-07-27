@@ -7482,15 +7482,19 @@ class ShowBgpBestpathCompareSchema(MetaParser):
                         'network': {
                             Any(): {
                                 Optional('versions'): {
-                                    Optional('brib/rib'): int,
-                                    Optional('send_tbl_ver'): int,
-                                    Optional('process'): str
+                                    Optional('process'):{
+                                        Optional(Any()):{
+                                            Optional('brib/rib'): int,
+                                            Optional('send_tbl_ver'): int,
+                                        }
+                                    },
                                 },
+                                Optional('last_modified'): str,
+                                Optional('available_paths'): int,
+                                Optional('best_path'): int,
                                 Optional('paths'): {
-                                    Optional('available_paths'): int,
-                                    Optional('best_path'): int,
                                     Optional(Any()):{
-                                        Optional('update_groups'): ListOf(str),
+                                        Optional('paths_to_update_groups'): ListOf(str),
                                         Optional('next_hop'): str,
                                         Optional('gateway'): str,
                                         Optional('originator'): str,
@@ -7528,7 +7532,7 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
         if output is None:
             out = self.device.execute(self.cli_command[0].\
                                       format(address_family=address_family,\
-                                      ip_address=ip_address))
+                                             ip_address=ip_address))
         else:
             out = output
 
@@ -7539,28 +7543,33 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
         # Speaker                  5           5
         p1 = re.compile('^(?P<process>\w+)\s+(?P<brib_rib>\d+)\s+(?P<send_tbl_ver>\d+)$')
 
+        # Last Modified: Mar  9 02:23:41.504 for 00:00:35
+        p2 = re.compile('^Last +Modified: (?P<last_modified>.*)$')
+
         # Paths: (2 available, best #1)
-        p2 = re.compile('^Paths: +\((?P<available_paths>\d+) +available\, '
+        p3 = re.compile('^Paths: +\((?P<available_paths>\d+) +available\, '
                         '+best +\#(?P<best_path>\d+)\)$')
 
         # Path #1: Received by speaker 0
-        p3 = re.compile('^Path+ #(?P<path_num>\d+).*$')
+        p4 = re.compile('^Path+ #(?P<path_num>\d+).*$')
 
         # Advertised IPv4 Unicast paths to update-groups (with more than one peer):
-        p4 = re.compile('^.*(?P<group2>update-groups).*$')
+        p5 = re.compile('^.*(?P<group2>update-groups).*$')
 
         # Not advertised to any peer
-        p5 = re.compile(r'^Not +advertised +to +any +peer$')
+        p6 = re.compile(r'^Not +advertised +to +any +peer$')
 
+        # 0.1
         # 0.1 0.3
-        p6 = re.compile('^(?P<group1>[\d\.]+)(?: +(?P<group2>[\d\.]+))$')
+        # 0.1 0.3 0.5
+        p7 = re.compile('^(?P<group1>[\d\.]+)\s?(?P<group2>[\d\.]+)\s(?P<group3>[\d\.]+)$')
 
         # 108.10.0.2 from 108.10.0.2 (192.68.33.108)
-        p7 = re.compile('^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
+        p8 = re.compile('^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
                         '+\((?P<originator>[0-9\.]+)\))$')
 
         # Origin IGP, metric 0, localpref 100, weight 100, valid, external, best, group-best
-        p8 = re.compile('^Origin +(?P<origin>[a-zA-Z]+),(?: '
+        p9 = re.compile('^Origin +(?P<origin>[a-zA-Z]+),(?: '
                         '+metric (?P<metric>[0-9]+),?)?(?: '
                         '+localpref (?P<localpref>[0-9]+),?)?(?: '
                         '+weight (?P<weight>[0-9]+),?)?(?: '
@@ -7569,11 +7578,11 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
                         '(?P<best>best))?(\,)?(?: (?P<group_best>group-best))?$')
 
         #  Received Path ID 0, Local Path ID 0, version 0
-        p9 = re.compile('^Received Path ID (?P<received_path_id>(\d+)), Local Path ID '
+        p10 = re.compile('^Received Path ID (?P<received_path_id>(\d+)), Local Path ID '
                         '(?P<local_path_id>(\d+)), version (?P<version>(\d+))$')
 
         # Origin-AS validity: (disabled)
-        p10 = re.compile('^Origin-AS validity: \((?P<origin_as_validity>\w+)\)$')
+        p11 = re.compile('^Origin-AS validity: \((?P<origin_as_validity>\w+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -7596,73 +7605,78 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
                            .setdefault(ip_address, {})
 
                 group = m.groupdict()
+                process = group['process']
 
                 # define ver_dict and assigned to net_dict dictionary
                 ver_dict = net_dict.setdefault('versions', {})
 
-                ver_dict.update({
-                    'process': group['process'],
+                # define process_dict and assigned to ver_dict dictionary
+                process_dict = ver_dict.setdefault('process', {}).\
+                                        setdefault(process, {})
+
+                process_dict.update({
                     'brib/rib': int(group['brib_rib']),
                     'send_tbl_ver': int(group['send_tbl_ver'])
                 })
                 continue
 
-            # Paths: (2 available, best #1)
+            # Last Modified: Mar  9 02:23:41.504 for 00:00:35
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-
-                paths_dict = net_dict.setdefault('paths', {})
-                paths_dict.update({
-                    'available_paths': int(group['available_paths']),
-                    'best_path': int(group['best_path'])
-                })
+                net_dict.update({'last_modified': group['last_modified']})
                 continue
 
-            # Path #1: Received by speaker 0
+            # Paths: (2 available, best #1)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                path = 'Path ' + group['path_num']
+                net_dict.update({
+                    'available_paths': int(group['available_paths']),
+                    'best_path': int(group['best_path'])
+                })
+                #Initialize paths_dict
+                paths_dict = net_dict.setdefault('paths', {})
+                continue
+
+            # Path #1: Received by speaker 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                path = int(group['path_num'])
                 each_path_dict = paths_dict.setdefault(path,{})
                 continue
 
             #  Advertised IPv4 Unicast paths to update-groups (with more than one peer):
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 next_line_update_group = True
                 continue
 
             # Not advertised to any peer
-            m = p5.match(line)
+            m = p6.match(line)
             if m:
                 next_line_update_group = False
                 continue
 
+            # 0.1
             # 0.1 0.3
-            m = p6.match(line)
+            # 0.1 0.3 0.5
+            m = p7.match(line)
             if m and next_line_update_group:
-                group = m.groupdict()
-                if group['group2']:
-                    update_group = []
-                    for item in group:
-                        update_group.append(group[item])
-                        # in-place sort is more efficient
-                        update_group.sort()
-                else:
-                    update_group = group['group1']
+                group = m.group()
+                update_group = group.split(" ")
                 next_line_update_group = False
 
                 try:
                     if update_group:
-                        each_path_dict['update_groups'] = update_group
+                        each_path_dict['paths_to_update_groups'] = update_group
                 except Exception:
                     pass
-
                 continue
 
             #  108.10.0.2 from 108.10.0.2 (192.68.33.108)
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 each_path_dict.update({
@@ -7674,7 +7688,7 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
 
             # Origin IGP, metric 0, localpref 100, valid, external
             # Origin IGP, metric 0, localpref 100, weight 100, valid, external, best, group-best
-            m = p8.match(line)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
                 status_codes = ''
@@ -7707,7 +7721,7 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
                 continue
 
             # Received Path ID 0, Local Path ID 0, version 0
-            m = p9.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
                 each_path_dict.update({
@@ -7718,12 +7732,11 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
                 continue
 
             # Origin-AS validity: (disabled)
-            m = p10.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 each_path_dict.update({
                     'origin_as_validity': group['origin_as_validity']
                 })
                 continue
-
         return ret_dict
