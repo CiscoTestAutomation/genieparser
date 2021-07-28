@@ -451,7 +451,6 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
         times = None
         flags = None
         pud_info = None
-        # fib_cache = None
         tcp_conn_data = None
         socket_misc_info = None
         for line in out.splitlines():
