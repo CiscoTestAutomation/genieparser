@@ -34,6 +34,11 @@ expected_output = {
                                     "hold_sec": 20,
                                     "next_hello_sent": 2.848,
                                 },
+                                "tracked_objects": {
+                                    1: {
+                                        "object_name": 1
+                                    }
+                                },
                                 "virtual_mac_address": "0000.0cff.909f",
                                 "virtual_mac_address_mac_in_use": True,
                             }

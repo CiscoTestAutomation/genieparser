@@ -1,0 +1,37 @@
+PathList ID                   : 2
+PathList Type                 : MPLS_IR
+Ethernet Segment              : 0000.0000.0000.0000.0000
+Path Count                    : 1
+Paths                         : [IR]16@3.3.3.1
+
+PathList ID                   : 3
+PathList Type                 : MPLS_UC
+Ethernet Segment              : 0000.0000.0000.0000.0000
+Path Count                    : 1
+Paths                         : [MAC]16@2.2.2.1
+
+PathList ID                   : 4
+PathList Type                 : MPLS_IR
+Ethernet Segment              : 0000.0000.0000.0000.0000
+Path Count                    : 1
+Paths                         : [IR]17@2.2.2.1
+
+PathList ID                   : 5
+PathList Type                 : EAD_ES
+Ethernet Segment              : 03AA.BB00.0000.0200.0001
+Path Count                    : 2
+Paths                         : [None]16@3.3.3.1
+                              : [None]16@4.4.4.1
+          
+PathList ID                   : 6
+PathList Type                 : MPLS_IR
+Ethernet Segment              : 0000.0000.0000.0000.0000
+Path Count                    : 1
+Paths                         : [IR]16@4.4.4.1
+          
+PathList ID                   : 12
+PathList Type                 : MPLS_UC
+Ethernet Segment              : 03AA.BB00.0000.0200.0001
+Path Count                    : 2
+Paths                         : [MAC]17@3.3.3.1
+                              : [EVI]17@4.4.4.1

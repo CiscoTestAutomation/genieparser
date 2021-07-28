@@ -1,0 +1,19 @@
+Bundle-Ether4.1296 - IPv4 Group 1296 (version 2)
+  Local state is Active, priority 110, may preempt
+  Hellotime 3000 msec holdtime 10000 msec
+  Next hello sent in 2.594
+  Minimum delay 30 sec, reload delay 60 sec
+  Hot standby IP address is 10.229.254.158 configured
+  Active router is local
+  Standby router is unknown expired
+  Standby virtual mac address is 0000.0c9f.f510, state is active
+  4 state changes, last state change 10w4d
+  State change history:
+  Apr 15 00:12:19.913 WITA Init     -> Listen   Delay timer expired
+  Apr 15 00:12:29.915 WITA Listen   -> Speak    Active timer expired
+  Apr 15 00:12:39.917 WITA Speak    -> Standby  Standby timer expired
+  Apr 15 00:12:39.917 WITA Standby  -> Active   Active timer expired
+  Last coup sent:       Never
+  Last coup received:   Never
+  Last resign sent:     Never
+  Last resign received: Never
