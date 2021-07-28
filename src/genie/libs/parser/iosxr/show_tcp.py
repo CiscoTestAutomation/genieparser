@@ -64,42 +64,7 @@ class ShowTcpDetailPcbAllSchema(MetaParser):
                     }
                 },
                 'event_timers': {
-                    'retrans': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'sendWnd': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'timewait': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'ackhold': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'keepalive': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'pmtuager': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'giveup': {
-                        'starts': int,
-                        'wakeups': int,
-                        'next_msec': int
-                    },
-                    'throttle': {
+                    Any(): {
                         'starts': int,
                         'wakeups': int,
                         'next_msec': int
