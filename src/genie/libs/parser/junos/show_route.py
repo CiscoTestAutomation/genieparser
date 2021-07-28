@@ -3141,7 +3141,7 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
         p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
 
         # Nexthop: 10.64.4.4
-        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
+        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9a-f.:]+)$')
 
         # Localpref: 100
         p5 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')
@@ -3297,14 +3297,14 @@ class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerA
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # * 192.168.115.0/24 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\* )?(?P<rt_destination>[0-9.:]+)(\/(?P<rt_prefix_length>\d+))? +'
+        p2 = re.compile(r'^(?P<active_tag>\* )?(?P<rt_destination>[0-9a-f.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
         p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
 
         # Nexthop: 10.64.4.4
-        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
+        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9a-f.:]+)$')
 
         # Localpref: 100
         p5 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')
