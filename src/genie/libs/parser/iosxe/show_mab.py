@@ -39,7 +39,8 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
     """
     Parser for show mab all details
     """
-
+    cli_command = 'show mab all details'
+    
     def cli(self, output = None):
 
         cmd = 'show mab all details'
@@ -64,7 +65,7 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
         client_dict = {}
 
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
