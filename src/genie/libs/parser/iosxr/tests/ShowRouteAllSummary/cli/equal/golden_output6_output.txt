@@ -1,0 +1,39 @@
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        7          1          0           1984         
+local                            8          0          0           1984         
+static                           0          0          0           0            
+ospf 65000                       5          0          0           1352         
+bgp 65000.65000                  6174       5          0           1532392      
+dagr                             0          0          0           0            
+Total                            6194       6          0           1537712      
+
+
+IPv4 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        7          1          0           2176         
+connected l2tpv3_xconnect        0          0          0           0            
+local                            8          0          0           2176         
+static                           2          0          0           544          
+ospf 65000                       7          0          0           2176         
+bgp 65000.65000                  36         5          1           11288        
+local-srv6 bgp-65000.65000       0          0          0           0            
+Total                            60         6          1           18360        
+
+
+IPv6 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0    
