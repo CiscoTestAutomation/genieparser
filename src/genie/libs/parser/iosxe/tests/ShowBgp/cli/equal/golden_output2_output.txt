@@ -1,0 +1,20 @@
+show bgp ipv6 unicast summary
+BGP router identifier 94.140.160.20, local AS number 8368
+BGP table version is 2615, main routing table version 2615
+33 network entries using 5544 bytes of memory
+134 path entries using 13936 bytes of memory
+11/11 BGP path/bestpath attribute entries using 1760 bytes of memory
+166 BGP rrinfo entries using 3984 bytes of memory
+30 BGP AS-PATH entries using 752 bytes of memory
+14 BGP community entries using 352 bytes of memory
+578 BGP extended community entries using 14064 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 40392 total bytes of memory
+BGP activity 150920/135992 prefixes, 1608817/1575019 paths, scan interval 60 secs
+
+Neighbor V AS MsgRcvd MsgSent TblVer InQ OutQ Up/Down State/PfxRcd
+2001:4C40:0:FFFF:95:171:160:10
+4 8368 113986 122655 2615 0 0 11w0d 67
+2001:4C40:0:FFFF:95:171:160:20
+4 8368 111875 122625 2615 0 0 11w0d 67

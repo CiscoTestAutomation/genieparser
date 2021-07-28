@@ -1,0 +1,16 @@
+                IPv4                  IPv6
+State   Sessions Slaves Total  Sessions Slaves Total
+-----   -------- ------ -----  -------- ------ -----
+ALL            2      0     2         0      0     0
+ACTIVE         1      0     1         0      0     0
+STANDBY        0      0     0         0      0     0
+SPEAK          0      0     0         0      0     0
+LISTEN         0      0     0         0      0     0
+LEARN          0      0     0         0      0     0
+INIT           1      0     1         0      0     0
+2    HSRP IPv4 interfaces    (1    up, 1    down)
+0    HSRP IPv6 interfaces    (0    up, 0    down)
+2    Virtual IPv4 addresses  (1    active, 1    inactive)
+0    Virtual IPv6 addresses  (0    active, 0    inactive)
+3    Tracked Objects    (1    up, 2    down)
+0    BFD sessions       (0    up, 0    down, 0    inactive)

@@ -1,0 +1,5 @@
+ESI                      Port       Redundancy Mode DF Time SH Label
+------------------------ ---------- --------------- ------- --------
+03AA.AABB.BBCC.CC00.0001 Et0/2      single-active   3       16
+03AA.BBCC.DDEE.FF00.0002 Et0/3      all-active      3       17
+

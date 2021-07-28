@@ -1,0 +1,9 @@
+Source guard policy test1 configuration:
+  trusted
+  validate prefix
+  validate address
+  permit link-local
+  deny global-autoconf
+Policy test1 is applied on the following targets:
+Target               Type  Policy               Feature        Target range
+Twe1/0/42            PORT  test1                Source guard   vlan all

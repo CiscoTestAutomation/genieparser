@@ -1,0 +1,6 @@
+EVI   VLAN  Ether Tag  Remote MAC Local MAC  Dup MAC
+----- ----- ---------- ---------- ---------- ----------
+1     11    0          1          0          0
+2     12    0          0          0          0
+
+Total                  1          0          0
