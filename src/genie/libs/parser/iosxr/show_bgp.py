@@ -7559,10 +7559,8 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
         # Not advertised to any peer
         p6 = re.compile(r'^Not +advertised +to +any +peer$')
 
-        # 0.1
         # 0.1 0.3
-        # 0.1 0.3 0.5
-        p7 = re.compile('^(?P<group1>[\d\.]+)\s?(?P<group2>[\d\.]+)\s(?P<group3>[\d\.]+)$')
+        p7 = re.compile('^(?P<group1>[\d\.]+)(?: +(?P<group2>[\d\.]+))$')
 
         # 108.10.0.2 from 108.10.0.2 (192.68.33.108)
         p8 = re.compile('^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
@@ -7659,9 +7657,7 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
                 next_line_update_group = False
                 continue
 
-            # 0.1
             # 0.1 0.3
-            # 0.1 0.3 0.5
             m = p7.match(line)
             if m and next_line_update_group:
                 group = m.group()
