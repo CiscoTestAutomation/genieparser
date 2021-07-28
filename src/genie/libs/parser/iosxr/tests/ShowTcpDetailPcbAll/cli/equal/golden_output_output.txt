@@ -1,12 +1,11 @@
-
 ==============================================================
 Connection state is ESTAB, I/O status: 0, socket status: 0
-Established at Mon Jul 12 09:44:29 2021
+Established at Mon Jul 12 09:44:25 2021
 
-PCB 0x00007f5538008e58, SO 0x7f5538013b78, TCPCB 0x7f5538014038, vrfid 0x60000000,
-Pak Prio: Medium, TOS: 192, TTL: 255, Hash index: 535
-Local host: 2000:109:10::1, Local port: 179 (Local App PID: 11298)
-Foreign host: 2000:109:10::2, Foreign port: 19490
+PCB 0x00007f553800d8f8, SO 0x7f5538008698, TCPCB 0x7f5538008b58, vrfid 0x60000000,
+Pak Prio: Medium, TOS: 192, TTL: 1, Hash index: 26
+Local host: 2000:108:10::1, Local port: 179 (Local App PID: 11298)
+Foreign host: 2000:108:10::2, Foreign port: 56357
 (Local App PID/instance/SPL_APP_ID: 11298/1/0)
 
 Current send queue size in bytes: 0 (max 24576)
@@ -23,12 +22,12 @@ PmtuAger            0          0                0
 GiveUp              0          0                0
 Throttle            0          0                0
 
-   iss: 1042166212  snduna: 1042166346  sndnxt: 1042166346
-sndmax: 1042166346  sndwnd: 32739       sndcwnd: 2880
-   irs: 309426134   rcvnxt: 309426287   rcvwnd: 32701   rcvadv: 309458988
+   iss: 2552699488  snduna: 2552699622  sndnxt: 2552699622
+sndmax: 2552699622  sndwnd: 32739       sndcwnd: 2880
+   irs: 3293391238  rcvnxt: 3293391391  rcvwnd: 32701   rcvadv: 3293424092
 
-SRTT: 28 ms,  RTTO: 300 ms,  RTV: 214 ms,  KRTT: 0 ms
-minRTT: 2 ms,  maxRTT: 213 ms
+SRTT: 34 ms,  RTTO: 300 ms,  RTV: 208 ms,  KRTT: 0 ms
+minRTT: 11 ms,  maxRTT: 202 ms
 
 ACK hold time: 200 ms, Keepalive time: 0 sec, SYN waittime: 30 sec
 Giveup time: 0 ms, Retransmission retries: 0, Retransmit forever: FALSE
@@ -57,6 +56,6 @@ Socket misc info     : Rcv data size (sb_cc) 0, so_qlen 0,
 
 PDU information:
  #PDU's in buffer: 0
-FIB Lookup Cache:  IFH: 0x1000068  PD ctx: size: 8  data: 0x0 0xdb62b927
+FIB Lookup Cache:  IFH: 0x1000058  PD ctx: size: 8  data: 0x0 0xa6fe66ce
   Num Labels: 0  Label Stack:
 Num of peers with authentication info: 0
