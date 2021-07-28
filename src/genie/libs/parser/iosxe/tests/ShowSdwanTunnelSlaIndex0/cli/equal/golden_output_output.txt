@@ -1,0 +1,21 @@
+show sdwan tunnel sla index 0
+tunnel sla-class 0
+ sla-name    __all_tunnels__
+ sla-loss    0
+ sla-latency 0
+ sla-jitter  0
+                                     SRC    DST    REMOTE       T LOCAL   T REMOTE  MEAN  MEAN     MEAN    SLA CLASS                                                                    
+PROTO  SRC IP        DST IP          PORT   PORT   SYSTEM IP    COLOR     COLOR     LOSS  LATENCY  JITTER  INDEX      SLA CLASS NAME                                                    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ipsec  10.91.243.31  10.91.254.211   12346  12346  10.91.252.6  private1  private1  0     32       3       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  10.91.243.31  10.91.254.212   12346  12346  10.91.252.7  private1  private1  0     32       3       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  10.91.243.31  10.91.254.227   12346  12346  10.91.252.8  private1  private1  0     26       3       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  10.91.243.31  10.91.254.228   12346  12346  10.91.252.9  private1  private1  0     26       3       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.1.2   10.55.14.29     12426  12346  10.91.252.6  3g        3g        0     34       5       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.1.2   10.55.14.31     12426  12346  10.91.252.7  3g        3g        0     35       7       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.1.2   10.228.123.61   12426  12346  10.91.252.8  3g        3g        0     36       5       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.1.2   10.228.123.63   12426  12346  10.91.252.9  3g        3g        0     36       6       0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.2.2   10.55.14.28     12386  12346  10.91.252.6  lte       lte       0     38       10      0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.2.2   10.55.14.30     12386  12346  10.91.252.7  lte       lte       0     38       11      0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.2.2   10.228.123.60   12386  12346  10.91.252.8  lte       lte       0     39       10      0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
+ipsec  192.168.2.2   10.228.123.62   12386  12346  10.91.252.9  lte       lte       0     40       11      0,1,2,3,4  __all_tunnels__, Bulk-Data, Scavenger, Transactional-Data, Voice  
