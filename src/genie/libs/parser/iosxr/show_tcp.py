@@ -453,8 +453,8 @@ class ShowTcpDetailPcbAll(ShowTcpDetailPcbAllSchema):
         pud_info = None
         tcp_conn_data = None
         socket_misc_info = None
+
         for line in out.splitlines():
-            # import pdb; pdb.set_trace()
             line = line.strip()
 
             if not line:
