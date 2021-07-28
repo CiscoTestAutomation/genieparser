@@ -86,7 +86,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                              ' +[rR]outing +[tT]able +for +VRF '
-                            '+(?P<vrf>[a-zA-Z0-9\"]+)$')
+                            '+(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -989,3 +989,140 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
                 continue
 
         return result_dict
+
+
+# ===================================
+# Parser for 'show ip mroute summary vrf all'
+# ===================================
+
+class ShowIpMrouteSummarySchema(MetaParser):
+    """Schema for show ip mroute summary vrf all"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'count_multicast_starg': int,
+                        'count_multicast_sg': int,
+                        'count_multicast_starg_prefix': int,
+                        'count_multicast_total': int,
+                        'group_count': int,
+                        'avg_source_per_group': float,
+                        'groups': {
+                            Any(): {
+                                'source_count': int,
+                                'source': {
+                                    Any(): {
+                                        'packets': int,
+                                        'bytes': int,
+                                        'aps': int,
+                                        'pps': int,
+                                        'bitrate': float,
+                                        'bitrate_unit': str,
+                                        'oifs': int
+                                    },
+                                },
+                            }
+                        },
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
+    """parser for:
+        show ip mroute summary
+        show ip mroute summary vrf <vrf>
+        show ip mroute summary vrf all"""
+
+    cli_command = ['show ip mroute summary vrf {vrf}',
+                   'show ip mroute summary']
+    def cli(self, vrf="default", output=None):
+        if vrf != 'default':
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        mroute_dict = {}
+        #IP Multicast Routing Table for VRF "vxlan-1001" 
+        p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                         ' +[rR]outing +[tT]able +for +VRF '
+                         '+(?P<vrf>\S+)$')
+        # Total number of (*,G) routes: 34
+        p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        # Total number of (S,G) routes: 17
+        p3 = re.compile(r'^\s*Total +number +of +\(S,G\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        # Total number of routes: 51
+        p4 = re.compile(r'^\s*Total +number +of +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        #Total number of (*,G-prefix) routes: 0
+        p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        #Group count: 41, rough average sources per group: 3.0
+        p6 = re.compile(r'^\s*Group +count: +(?P<count>[0-9]+),'
+                        r' +rough +average +sources +per +group: +(?P<avg_count>[0-9.]+)$')
+        #Group: 225.0.0.2/32, Source count: 3
+        p7 = re.compile(r'^\s*Group: +(?P<group_ip>\S+), +Source count: +(?P<src_count>[0-9]+)$')
+        #100.100.100.5   1743         88893           51    0         27.200  bps  1
+        #(*,G)           0            0               0     0         0.000   bps  2
+        p8 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
+                        r'(?P<bitrate>[0-9.]+) +bps +(?P<oifs>[0-9]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf = vrf.replace('"',"")
+                address_family = m.groupdict()['address_family'].lower()
+                address_family += 'v4'
+                address_family_dict = mroute_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('address_family', {}).setdefault(address_family, {})
+                continue
+            m = p2.match(line)
+            if m:
+                count_multicast_starg = m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_starg', int(count_multicast_starg))
+                continue
+            m = p3.match(line)
+            if m:
+                count_multicast_sg = m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_sg', int(count_multicast_sg))
+                continue
+            m = p4.match(line)
+            if m:
+                count_multicast_total = m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_total', int(count_multicast_total))
+                continue
+            m = p5.match(line)
+            if m:
+                count_multicast_starg_prefix = m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_starg_prefix', int(count_multicast_starg_prefix))
+                continue
+            m = p6.match(line)
+            if m:
+                address_family_dict.setdefault('group_count', int(m.groupdict()['count']))
+                address_family_dict.setdefault('avg_source_per_group', float(m.groupdict()['avg_count']))
+                continue
+            m = p7.match(line)
+            if m:
+                group_ip = m.groupdict()['group_ip']
+                source_count = m.groupdict()['src_count']
+                group_dict = address_family_dict.setdefault('groups',{}).setdefault(group_ip,{})
+                group_dict.update({'source_count': int(source_count)})    
+                continue
+            m = p8.match(line)
+            if m:
+                src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
+                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': float(m.groupdict()['bitrate']),'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
+                continue
+        return mroute_dict

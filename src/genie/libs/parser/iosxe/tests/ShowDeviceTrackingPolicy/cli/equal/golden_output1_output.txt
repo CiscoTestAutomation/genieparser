@@ -1,0 +1,10 @@
+Device-tracking policy test configuration:
+  security-level guard
+  device-role node
+  NOT gleaning from Neighbor Discovery
+  NOT gleaning from DHCP6
+  NOT gleaning from ARP
+  NOT gleaning from DHCP4
+  NOT gleaning from protocol unkn
+Policy test is applied on the following targets:
+Target               Type  Policy               Feature        Target range

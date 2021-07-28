@@ -608,9 +608,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         # Known via "ospf 3", distance 110, metric 32001, type extern 1
-        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +'
-                r'(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?'
-                r'(, +type +(?P<type>[\S\s]+))?(, +candidate +default +path)?$')
+        # Known via "isis RAN", distance 115, metric 101, candidate default path, type level-2
+        p6 = re.compile(r'^Known +via +"(?P<known_via>[\w ]+)", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                        r'( \(connected\))?(, +candidate +default +path)?(, +type +(?P<type>.+))?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -837,6 +837,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "bgp 65161", distance 20, metric 0, candidate default path
             # Known via "ospf 3", distance 110, metric 32001, type extern 1
+            # Known via "isis RAN", distance 115, metric 101, candidate default path, type level-2
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -993,7 +994,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 if group['to_network']:
                     gw_dict.update({'to_network': group['to_network']})
-        
+
         return ret_dict
 
 
@@ -1468,14 +1469,14 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # VRF: VRF_NAME
         p1 = re.compile(r'^VRF: (?P<vrf>.*)')
         # IPv4 Unicast:
         p2 = re.compile(r'(?P<address_family>^IPv.*)+:')
         # connected                        0          0          0           0
         p3 = re.compile(
-            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9(\-|\_)]+)* * +('
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9\.(\-|\_)]+)* * +('
             r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
 
         ret_dict = {}

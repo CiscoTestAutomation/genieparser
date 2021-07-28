@@ -1,0 +1,10 @@
+expected_output = {'current-eta-records': 0,
+ 'excess-packets-received': 60,
+ 'excess-syn-received': 0,
+ 'total-eta-fnf': 2,
+ 'total-eta-idp': 2,
+ 'total-eta-records': 4,
+ 'total-eta-splt': 2,
+ 'total-packets-out-of-order': 0,
+ 'total-packets-received': 80,
+ 'total-packets-retransmitted': 0}
