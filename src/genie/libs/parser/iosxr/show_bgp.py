@@ -2673,10 +2673,18 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     sub_dict['link_state'] = m.groupdict()['link_state']
                 sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
 
-                # Default the values - overwritten if configured
-                sub_dict['local_as_no_prepend'] = False
-                sub_dict['local_as_replace_as'] = False
-                sub_dict['local_as_dual_as'] = False
+                if m.groupdict()['local_as_no_prepend']:
+                    sub_dict['local_as_no_prepend'] = True
+                else:
+                    sub_dict['local_as_no_prepend'] = False
+                if m.groupdict()['local_as_replace_as']:
+                    sub_dict['local_as_replace_as'] = True
+                else:
+                    sub_dict['local_as_replace_as'] = False
+                if m.groupdict()['local_as_dual_as']:
+                    sub_dict['local_as_dual_as'] = True
+                else:
+                    sub_dict['local_as_dual_as'] = False
                 continue
 
             # Remote router ID 10.1.5.5
