@@ -2378,8 +2378,9 @@ class ShowPlatform(ShowPlatformSchema):
         # --------- ------------------- --------------------- -----------------
         # 0         ASR1000-SIP40       ok                    00:33:53
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
-        p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
-                        r'(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+        # F0                            ok, active            00:09:23
+        # P1        Unknown             N/A                   never
+        p6 = re.compile(r'^(?P<slot>[a-zA-Z0-9]+)(\/(?P<subslot>\d+))?( +(?P<name>[a-zA-Z0-9\-\_/+]+))? +(?P<state>\w+(\, \w+)?(/\w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
         p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
