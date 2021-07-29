@@ -33,6 +33,13 @@ IOS parsers for the following show commands:
     * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> producer <producer> mac-address <mac_addr> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> producer <producer> mac-address <mac_addr> esi <esi> detail
+    * show l2route evpn imet detail
+    * show l2route evpn imet origin-rtr <origin-ip> detail
+    * show l2route evpn imet producer <prod> detail
+    * show l2route evpn imet producer <prod> origin-rtr <origin-ip> detail
+    * show l2route evpn imet topology <evi>:<etag> detail
+    * show l2route evpn imet topology <evi>:<etag> producer <prod> detail
+    * show l2route evpn imet topology <evi>:<etag> producer <prod> origin-rtr <origin-ip> detail
 
 
 Copyright (c) 2021 by Cisco Systems, Inc.
@@ -40,6 +47,7 @@ All rights reserved.
 
 '''
 import re
+from typing import Counter
 
 # genie
 from genie.metaparser import MetaParser
@@ -321,3 +329,221 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
                 continue
 
         return parser_dict
+
+# =============================================
+# Schema for 'show l2route evpn imet detail'
+# =============================================
+class ShowL2routeEvpnImetDetailSchema(MetaParser):
+    """ Schema for show l2route evpn imet detail
+                   show l2route evpn imet origin-rtr <origin-ip> detail
+                   show l2route evpn imet producer <prod> detail
+                   show l2route evpn imet producer <prod> origin-rtr <origin-ip> detail
+                   show l2route evpn imet topology <evi>:<etag> detail
+                   show l2route evpn imet topology <evi>:<etag> producer <prod> detail
+                   show l2route evpn imet topology <evi>:<etag> producer <prod> origin-rtr <origin-ip> detail
+
+    """
+
+    schema = {
+        'evi': {
+            Any(): {
+                'producer': {
+                    Any(): {
+                        'origin_router_ip': {
+                            Any(): {
+                                'eth_tag': int,
+                                'router_eth_tag': int,
+                                'tunnel_id': {
+                                    Any(): {
+                                        'tunnel_flags': int,
+                                        'tunnel_type': str,
+                                        'tunnel_labels': int,
+                                    }
+                                },
+                                'multi_proxy': str,
+                                'next_hops':ListOf(
+                                    {
+                                        'next_hop': str
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show l2route evpn imet detail'
+# =============================================
+class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
+    """ Schema for show l2route evpn imet detail
+                   show l2route evpn imet origin-rtr <origin-ip> detail
+                   show l2route evpn imet producer <prod> detail
+                   show l2route evpn imet producer <prod> origin-rtr <origin-ip> detail
+                   show l2route evpn imet topology <evi>:<etag> detail
+                   show l2route evpn imet topology <evi>:<etag> producer <prod> detail
+                   show l2route evpn imet topology <evi>:<etag> origin-rtr <origin-ip> detail
+                   show l2route evpn imet topology <evi>:<etag> producer <prod> origin-rtr <origin-ip> detail
+
+    """
+
+    cli_commands = [
+        'show l2route evpn imet detail',
+        'show l2route evpn imet origin-rtr {origin_ip} detail',
+        'show l2route evpn imet producer {prod} detail',
+        'show l2route evpn imet producer {prod} origin-rtr {origin_ip} detail',
+        'show l2route evpn imet topology {evi_etag} detail',
+        'show l2route evpn imet topology {evi_etag} producer {prod} detail',
+        'show l2route evpn imet topology {evi_etag} origin-rtr {origin_ip} detail',
+        'show l2route evpn imet topology {evi_etag} producer {prod} origin-rtr {origin_ip} detail'
+    ]
+
+    def cli(self, output=None, origin_ip=None, prod=None, evi=None, etag=None):
+        if not output:
+            cli_command = 'show l2route evpn imet'
+            if evi:
+                if etag:
+                    evi_etag = "{}:{}".format(evi,etag)
+                    cli_command += ' topology {evi_etag}'.format(evi_etag=evi_etag)
+            if prod:
+                cli_command += ' producer'.format(prod=prod)
+            if origin_ip:
+                cli_command += ' origin-rtr'.format(origin_ip=origin_ip)
+            cli_command += ' detail'
+
+            cli_output = self.device.execute(cli_command)
+        else:
+            cli_output = output
+
+        # start regex statement complies
+
+        #EVPN Instance:            1
+        p1 = re.compile(r'^EVPN Instance:\s+(?P<evi>\d+)$')
+
+        #Ethernet Tag:             0
+        p2 = re.compile(r'^Ethernet Tag:\s+(?P<eth_tag>\d+)$')
+
+        #Producer Name:            BGP
+        p3 = re.compile(r'Producer Name:\s+(?P<producer>\w+)$')
+
+        #Router IP Addr:           3.3.3.2
+        p4 = re.compile(r'Router IP Addr:\s+(?P<origin_ip>[0-9a-fA-F\.:]+)$')
+
+        #Route Ethernet Tag:       0
+        p5 = re.compile(r'Route Ethernet Tag:\s+(?P<r_eth_tag>\d+)$')
+
+        #Tunnel ID:                3.3.3.2
+        p6 = re.compile(r'Tunnel ID:\s+(?P<tun_id>[0-9a-fA-F\.:]+)$')
+
+        #Tunnel Type:              Ingress Replication
+        p7 = re.compile(r'Tunnel Type:\s+(?P<tun_type>\w+)$')
+
+        #Tunnel Labels:            20011
+        p8 = re.comiple(r'Tunnel Labels:\s+(?P<tun_labels>\d+)$')
+
+        #Tunnel Flags:             0
+        p9 = re.compile(r'Tunnel Flags:\s+(?P<tun_flag>\d+)$')
+
+        #Multicast Proxy:          IGMP
+        p10 = re.compile(r'Multicast Proxy:\s+(?P<multi_proxy>\w+)$')
+
+        #Next Hop(s):              V:20011 3.3.3.2
+        #Next Hop(s):              N/A
+        p11 = re.compile(r'[Next Hop\(s\):]+\s+(?P<next_hop>[\w\d\s.:()/]+)$')
+
+        parser_dict = {}
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #EVPN Instance
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi = int(group['evi'])
+                evi_list = parser_dict.setdefault('evi',{})
+                evis = evi_list.setdefault(evi,{})
+                continue
+
+            #Ethernet Tag
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                eth_tag = int(group['eth_tag'])
+                continue
+
+            #Producer Name
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                producer_list = evis.setdefault('producer', {})
+                producers = producer_list.setdefault(group['producer'], {})
+                continue
+
+            #Router IP Addr
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                router_ips = producers.setdefault('origin_router_ip', {})
+                origins_rtr_ip = router_ips.setdefault(group['origin_ip'], {})
+                next_hops = origins_rtr_ip.setdefault('next_hops', [])
+                tunnel_info = origins_rtr_ip.setdefult('tunnel_id', {})
+                origins_rtr_ip.update({'eth_tag': eth_tag})
+                continue
+
+            #Route Ethernet Tag:
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                origins_rtr_ip.update({'r_eth_tag': int(group['r_eth_tag'] ) } )
+                continue
+
+            #Tunnel ID:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_id = tunnel_info.setdefault(group['tun_id'], {})
+                continue
+
+            #Tunnel Type:
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_id.update({'tunnel_type': str(group['tun_type']) })
+                continue
+
+            #Tunnel Labels:
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_id.update({'tunnel_labels': str(group['tun_labels'])})
+                continue
+
+            #Tunnel Flags:
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_id.update({'tunnel_labels': int(group['tun_flag'])})
+                continue
+
+            #Multicast Proxy:
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                origins_rtr_ip.update({'multi_proxy': str(group['multi_proxy'])})
+                continue
+
+            #Next Hop(s):
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                next_hops_dict = {}
+                next_hops_dict.update({'next_hop': group('next_hop')})
+                next_hops.append(next_hops_dict)
+                continue
+
+        return (parser_dict)
