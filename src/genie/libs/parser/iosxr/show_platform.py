@@ -1335,6 +1335,16 @@ class ShowRedundancy(ShowRedundancySchema):
                 if 'standby' in str(m.groupdict()['role']).lower():
                     redundancy_dict['node'][node]['standby_node'] = str(m.groupdict()['node'])
                 continue
+            
+            # Partner node (0/RP1/CPU0) is in STANDBY role (eXR)
+            p3_2 =  re.compile(r'\s*Partner *node'
+                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                ' *(?P<role>[a-zA-Z]+) *role$')
+            m = p3_2.match(line)
+            if m:
+                if 'standby' in str(m.groupdict()['role']).lower():
+                    redundancy_dict['node'][node]['standby_node'] = str(m.groupdict()['node'])
+                continue
 
             # Process Redundancy Partner (0/RSP0/CPU0) is in BACKUP role
             p3_3 =  re.compile(r'\s*Process *Redundancy *Partner'
