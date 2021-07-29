@@ -1,0 +1,11 @@
+        Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link 
+        (Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+        (S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+        (Pf):Permanently-Frozen
+
+        Topology    Mac Address    Prod   Flags         Seq No     Next-Hops      
+        ----------- -------------- ------ ------------- ---------- ----------------
+        100         fa16.3eff.2a0c BGP    SplRcv        0          10.166.1.1       
+        100         fa16.3eff.6b31 Local  L,            0          Eth1/4         
+        1000        5e01.80ff.0209 VXLAN  Rmac          0          10.166.1.1
+        20          aabb.000b.0021 BGP    Rcv           0          2.2.2.2 (Label: 200020)
