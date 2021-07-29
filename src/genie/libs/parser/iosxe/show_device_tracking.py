@@ -1638,7 +1638,7 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict[key] = {}
                 continue
 
-            # REACHABLE  : 1
+            # REACHABLE  : 2
             match = table_entry_capture.match(line)
             if match:
                 groups = match.groupdict()
@@ -1650,7 +1650,7 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict[key][name] = value
                 continue
 
-            # macDB has 1 entries for mac dead.beef.0001,vlan 38, 0 dynamic
+            # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic
             match = table_info_capture.match(line)
             if match:
                 groups = match.groupdict()
@@ -1664,11 +1664,11 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 device_tracking_database_mac_details_dict['dynamic_count'] = dynamic_count
                 continue
 
-            # S   9.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
+            # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
             match = entry_capture.match(line)
             if match:
                 groups = match.groupdict()
-                entry_counter += 0
+                entry_counter += 1
 
                 dev_code = groups['dev_code']
                 network_layer_address = groups['network_layer_address']
