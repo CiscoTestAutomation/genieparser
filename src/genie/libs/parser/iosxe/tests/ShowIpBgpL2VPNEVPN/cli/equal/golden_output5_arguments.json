@@ -1,0 +1,6 @@
+{
+    "address_family": "l2vpn evpn",
+    "rt": "1",
+    "esi": "03AABB00000002000001",
+    "eti": "0"
+}

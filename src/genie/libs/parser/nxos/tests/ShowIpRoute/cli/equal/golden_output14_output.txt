@@ -1,0 +1,20 @@
+S1-P1-L101# show ip route vrf tn-L2-PBR:vrf-L2-PBR
+IP Route Table for VRF "tn-L2-PBR:vrf-L2-PBR"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+    *via 10.11.200.98%overlay-1, [1/0], 02w00d, static, tag 4294967294
+192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
+    *via 192.168.1.1, vlan60, [0/0], 02w00d, local, local
+192.168.100.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+    *via 10.11.200.98%overlay-1, [1/0], 02w00d, static, tag 4294967294
+192.168.100.1/32, ubest/mbest: 1/0, attached, pervasive
+    *via 192.168.100.1, vlan14, [0/0], 02w00d, local, local
+192.168.254.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+    *via 10.11.200.98%overlay-1, [1/0], 02w00d, static, tag 4294967294
+192.168.254.1/32, ubest/mbest: 1/0, attached, pervasive
+    *via 192.168.254.1, vlan39, [0/0], 02w00d, local, local
+S1-P1-L101#

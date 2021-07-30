@@ -1,0 +1,71 @@
+Macsec detail info for Port:3
+**********************************************
+Port:3, Subport:11, Tx SC index:0
+**********************************************
+Prev AN: 3, Cur AN: 0
+sci:f87a41252702008b
+SA index: 50331759, vport index: 2, rule index: 1
+key_len: 16
+hashkey_len: 16
+bypass: 0
+nextPn: 1
+conf_offset: 0
+encrypt: 1
+vlan: 1
+end_station: 0
+scb: 0
+cipher: GCM_AES_128
+Delay protection: 0
+Delay protection: 0
+
+**********************************************
+Port:3, Subport:12, Tx SC index:0
+**********************************************
+Prev AN: 3, Cur AN: 0
+sci:f87a41252702008c
+SA index: 50331723, vport index: 3, rule index: 2
+key_len: 16
+hashkey_len: 16
+bypass: 0
+nextPn: 1
+conf_offset: 0
+encrypt: 1
+vlan: 1
+end_station: 0
+scb: 0
+cipher: GCM_AES_128
+Delay protection: 0
+
+**********************************************
+Port:3, Subport:11, Rx SC index:0
+**********************************************
+Prev AN: 3, Cur AN: 0
+sci:ecce1346f902008c
+SA index: 33554545, vport index: 2, rule index: 1
+key_len: 16
+hashkey_len: 16
+bypass: 0
+nextPn: 0
+conf_offset: 0
+replay_protect: 1
+replay_window_size: 0
+decrypt_frames: 1
+validate_frames: 1
+cipher: GCM_AES_128
+
+**********************************************
+Port:3, Subport:12, Rx SC index:0
+**********************************************
+Prev AN: 3, Cur AN: 0
+sci:ecce1346f902008d
+SA index: 33554542, vport index: 3, rule index: 2
+key_len: 16
+hashkey_len: 16
+bypass: 0
+nextPn: 0
+conf_offset: 0
+replay_protect: 1
+replay_window_size: 0
+decrypt_frames: 1
+validate_frames: 1
+cipher: GCM_AES_128

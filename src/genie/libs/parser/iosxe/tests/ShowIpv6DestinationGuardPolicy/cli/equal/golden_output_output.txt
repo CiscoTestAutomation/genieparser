@@ -1,0 +1,8 @@
+Destination guard policy poll configuration: 
+  enforcement stressed
+Policy poll is applied on the following targets: 
+Target               Type  Policy               Feature        Target range
+Twe1/0/1             PORT  poll                 Destination Guard vlan all
+vlan 5               VLAN  poll                 Destination Guard vlan all
+vlan 38              VLAN  poll                 Destination Guard vlan all
+vlan 39              VLAN  poll                 Destination Guard vlan all

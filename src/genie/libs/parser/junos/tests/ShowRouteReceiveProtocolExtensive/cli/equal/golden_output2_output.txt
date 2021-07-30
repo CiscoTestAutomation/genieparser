@@ -1,0 +1,10 @@
+
+    inet6.0: 18 destinations, 22 routes (18 active, 0 holddown, 0 hidden)
+    2001:db8:100::/48 (3 entries, 2 announced)
+        Accepted
+        Nexthop: 2001:db8:100::1
+        Localpref: 100
+        AS path: I
+
+    inet6.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+    

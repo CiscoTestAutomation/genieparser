@@ -1,0 +1,6 @@
+MAC                    Interface  vlan       prlvl      state            Time left        Policy           Input_index
+dead.beef.0001         Twe1/0/42  39         NO TRUST   MAC-STALE        N/A              49      
+5c5a.c791.d69f         Vl39       39         TRUSTED    MAC-REACHABLE    N/A              dna_policy       108     
+0050.56b0.babc         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    41 s             test1            49      
+0050.56b0.afed         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    21 s             test1            49      
+000a.000b.000c         Twe1/0/1   100        NO TRUST   MAC-DOWN         N/A              8       

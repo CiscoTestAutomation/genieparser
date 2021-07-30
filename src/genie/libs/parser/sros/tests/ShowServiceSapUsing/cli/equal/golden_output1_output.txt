@@ -1,0 +1,127 @@
+
+===============================================================================
+Service Access Points
+===============================================================================
+PortId                          SvcId      Ing.  Ing.    Egr.  Egr.   Adm  Opr
+                                           QoS   Fltr    QoS   Fltr
+-------------------------------------------------------------------------------
+2/1/6:10.*                      10         1     none    1     none   Up   Up
+2/1/2:8.1                       181        1     none    1     none   Up   Down
+2/1/2:3101.3101                 1121       3501  none    3501  none   Up   Down
+2/1/6:4000.1                    1121       1     none    1     none   Up   Up
+2/1/6:3101.*                    1121       4503  none    4503  none   Up   Up
+2/1/6:4000.2                    1122       1     none    1     none   Up   Up
+2/1/6:3999.1                    1221       1     none    1     none   Up   Up
+2/1/6:101.2                     1230       1     none    1     none   Up   Up
+2/1/6:4000.101                  2121       1     none    1     none   Up   Up
+2/1/6:3999.101                  2221       1     none    1     none   Up   Up
+1/2/1:391.*                     4092       1     none    1     none   Up   Up
+1/2/1:4092.*                    4092       1     none    1     none   Up   Up
+2/1/6:4092.*                    4092       1     none    1     none   Up   Up
+2/2/1:1001                      5051       1     none    1     none   Up   Down
+2/2/1:1002                      5051       1     none    1     none   Up   Down
+2/1/7:2990                      10010      1     none    1     none   Up   Down
+2/1/7:3990                      10010      1     none    1     none   Up   Down
+2/1/8:980                       10010      3511  none    3511  none   Up   Down
+2/1/7:2991                      10011      1     none    1     none   Up   Down
+2/1/7:3991                      10011      1     none    1     none   Up   Down
+2/1/8:981                       10011      3511  none    3511  none   Up   Down
+2/1/7:2992                      10012      1     none    1     none   Up   Down
+2/1/7:3992                      10012      1     none    1     none   Up   Down
+2/1/8:982                       10012      3511  none    3511  none   Up   Down
+2/1/7:2993                      10013      1     none    1     none   Up   Down
+2/1/7:3993                      10013      1     none    1     none   Up   Down
+2/1/8:983                       10013      3511  none    3511  none   Up   Down
+2/1/7:2994                      10014      1     none    1     none   Up   Down
+2/1/7:3994                      10014      1     none    1     none   Up   Down
+2/1/8:984                       10014      3511  none    3511  none   Up   Down
+2/1/7:2995                      10015      1     none    1     none   Up   Down
+2/1/7:3995                      10015      1     none    1     none   Up   Down
+2/1/8:985                       10015      3511  none    3511  none   Up   Down
+2/1/7:2996                      10016      1     none    1     none   Up   Down
+2/1/7:3996                      10016      1     none    1     none   Up   Down
+2/1/8:986                       10016      3511  none    3511  none   Up   Down
+2/1/7:2997                      10017      1     none    1     none   Up   Down
+2/1/7:3997                      10017      1     none    1     none   Up   Down
+2/1/8:987                       10017      3511  none    3511  none   Up   Down
+2/1/7:2998                      10018      1     none    1     none   Up   Down
+2/1/7:3998                      10018      1     none    1     none   Up   Down
+2/1/8:988                       10018      3511  none    3511  none   Up   Down
+2/1/7:2999                      10019      1     none    1     none   Up   Down
+2/1/7:3999                      10019      1     none    1     none   Up   Down
+2/1/8:989                       10019      3511  none    3511  none   Up   Down
+2/1/7:2888                      10020      1     none    1     none   Up   Down
+2/1/7:3888                      10020      1     none    1     none   Up   Down
+2/1/8:888                       10020      3511  none    3511  none   Up   Down
+2/1/4:100                       30001      1     none    1     none   Up   Up
+1/2/1:380.*                     40001      1     ip4     1     none   Up   Up
+2/1/4:741                       40001      1     none    1     none   Up   Up
+2/1/6:3000.100                  40001      1     none    1     none   Up   Up
+2/1/6:3117.*                    40001      3515  none    3515  none   Up   Up
+3/1/5                           40001      1     none    1     none   Up   Down
+1/1/1:100                       42001      1     none    4201  none   Up   Up
+2/1/8:4004                      42001      1     none    3512  none   Up   Down
+2/2/1:4006                      42001      1     none    1     none   Up   Down
+2/1/8:4010                      52001      1     ip4     1     ip4    Up   Down
+2/1/6:3331.1                    91009      1     none    1     none   Up   Up
+2/1/6:3332.1                    91009      1     none    1     none   Up   Up
+2/1/6:11.*                      100001     1     none    1     none   Up   Down
+2/1/1:100.200                   100100     1     none    1     none   Up   Down
+1/2/1:888.888                   100101     1     none    1     none   Up   Down
+2/1/1:999.1                     100101     1     none    1     none   Up   Down
+2/1/1:120.5                     100101     1     none    3507  none   Up   Down
+2/1/1:99.99                     100101     10001 none    10001 none   Up   Down
+2/1/1:100.100                   100101     10001 none    10001 none   Up   Down
+2/1/1:100.101                   100101     10001 none    10001 none   Up   Down
+2/1/1:100.199                   100101     3504  none    3504  none   Up   Down
+1/2/1:3993.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:3994.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:3995.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:3996.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:3997.1                    100201     3501  ip4     3501  ip4    Up   Up
+1/2/1:3998.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:3999.1                    100201     3501  none    3501  none   Up   Up
+1/2/1:4000.1                    100201     3501  none    3501  none   Up   Up
+2/1/8:995                       100201     3511  ip4     3511  none   Up   Down
+1/2/1:3993.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3994.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3995.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3996.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3997.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3998.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:3999.2                    100202     3501  none    3501  none   Up   Up
+1/2/1:4000.2                    100202     3501  none    3501  none   Up   Up
+2/1/8:994                       100202     3511  ip4     3511  none   Up   Down
+2/2/1:802                       100202     1     none    1     none   Up   Down
+2/1/8:999                       100204     3511  none    3511  none   Up   Down
+2/1/8:998                       100205     3511  none    3511  none   Up   Down
+2/1/8:997                       100401     3511  none    3511  none   Up   Down
+2/1/8:996                       100402     3511  none    3511  none   Up   Down
+2/1/2:3975.1                    100702     3501  none    3501  none   Up   Down
+2/1/2:1.2                       100702     3501  none    3501  none   Up   Down
+1/2/1:3000.1                    101199     1     none    1     none   Up   Up
+2/1/2:9.1                       189901     3501  none    3501  none   Up   Down
+2/1/2:9.2                       189901     3501  none    3501  none   Up   Down
+2/1/2:9.3                       189901     3501  none    3501  none   Up   Down
+2/1/2:9.4                       189901     3501  none    3501  none   Up   Down
+1/2/1:3993.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3994.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3995.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3996.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3997.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3998.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:3999.101                  200201     3502  none    3502  none   Up   Up
+1/2/1:4000.101                  200201     3502  none    3502  none   Up   Up
+2/1/2:100.100                   500100     1     none    1     none   Up   Down
+3/1/4:4000.101                  4810101    1     none    1     none   Up   Up
+3/1/4:4000.201                  4810102    1     none    1     none   Up   Up
+2/1/6:151.1                     91034501   1     none    1     none   Up   Up
+2/1/9:4002.1                    540020001  1     none    1     none   Up   Down
+2/1/10:4002.1                   540020001  1     none    1     none   Up   Down
+2/1/9:4002.2                    540020002  1     none    1     none   Up   Down
+2/1/10:4002.2                   540020002  1     none    1     none   Up   Down
+-------------------------------------------------------------------------------
+Number of SAPs : 115
+-------------------------------------------------------------------------------
+===============================================================================
+        

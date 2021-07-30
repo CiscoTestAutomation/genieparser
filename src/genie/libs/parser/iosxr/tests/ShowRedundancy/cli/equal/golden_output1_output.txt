@@ -1,0 +1,21 @@
+Redundancy information for node 0/RP0/CPU0:
+==========================================
+Node 0/RP0/CPU0 is in ACTIVE role
+Partner node (0/RP1/CPU0) is in STANDBY role
+Standby node in 0/RP1/CPU0 is ready
+Standby node in 0/RP1/CPU0 is NSR-ready
+
+Reload and boot info
+----------------------
+A99-RP3-32G reloaded Fri Jun 11 01:50:09 2021: 3 weeks, 5 days, 9 hours, 8 minutes ago
+Active node booted Fri Jun 11 01:50:09 2021: 3 weeks, 5 days, 9 hours, 8 minutes ago
+Standby node boot Fri Jun 11 01:54:14 2021: 3 weeks, 5 days, 9 hours, 4 minutes ago
+Standby node last went not ready Fri Jun 11 02:06:13 2021: 3 weeks, 5 days, 8 hours, 52 minutes ago
+Standby node last went ready Fri Jun 11 02:06:13 2021: 3 weeks, 5 days, 8 hours, 52 minutes ago
+Standby node last went not NSR-ready Fri Jun 11 01:51:22 2021: 3 weeks, 5 days, 9 hours, 7 minutes ago
+Standby node last went NSR-ready Fri Jun 11 02:00:49 2021: 3 weeks, 5 days, 8 hours, 57 minutes ago
+There have been 0 switch-overs since reload
+
+Active node reload "CARD_SHUTDOWN"
+Standby node reload "CARD_SHUTDOWN "
+

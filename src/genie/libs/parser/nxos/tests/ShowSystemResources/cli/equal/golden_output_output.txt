@@ -1,0 +1,11 @@
+R3_nx# show system resources
+Load average:   1 minute: 0.34   5 minutes: 0.40   15 minutes: 0.66
+Processes   :   901 total, 2 running
+CPU states  :   2.11% user,   11.64% kernel,   86.24% idle
+        CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
+        CPU1 states  :   1.04% user,   9.37% kernel,   89.58% idle
+Memory usage:   5873172K total,   4189652K used,   1683520K free
+Kernel vmalloc:   0K total,   0K free
+Kernel buffers:   144876K Used
+Kernel cached :   2296916K Used
+Current memory status: OK
