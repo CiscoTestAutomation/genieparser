@@ -6,6 +6,8 @@ expected_output = {
         "0": {
             "other": {
                 "C8300-1N1S-4G2X": {
+                    "cpld_ver": "19041222",
+                    "fw_ver": "20190618",
                     "insert_time": "1w5d",
                     "name": "C8300-1N1S-4G2X",
                     "slot": "0",
@@ -34,6 +36,8 @@ expected_output = {
         "1": {
             "other": {
                 "C8300-1N1S-4G2X": {
+                    "cpld_ver": "19041222",
+                    "fw_ver": "20190618",
                     "insert_time": "1w5d",
                     "name": "C8300-1N1S-4G2X",
                     "slot": "1",
@@ -44,6 +48,8 @@ expected_output = {
         "F0": {
             "other": {
                 "C8300-1N1S-4G2X": {
+                    "cpld_ver": "19041222",
+                    "fw_ver": "20190618",
                     "insert_time": "1w5d",
                     "name": "C8300-1N1S-4G2X",
                     "slot": "F0",
@@ -84,6 +90,8 @@ expected_output = {
         "R0": {
             "other": {
                 "C8300-1N1S-4G2X": {
+                    "cpld_ver": "19041222",
+                    "fw_ver": "20190618",
                     "insert_time": "1w5d",
                     "name": "C8300-1N1S-4G2X",
                     "slot": "R0",

@@ -93,6 +93,18 @@ expected_output = {
                 }
             }
         },
+        "4": {
+            "other": {
+                "": {
+                    "cpld_ver": "N/A",
+                    "fw_ver": "N/A",
+                    "insert_time": "2d00h",
+                    "name": "",
+                    "slot": "4",
+                    "state": "unknown"
+                }
+            }
+        },
         "F0": {
             "other": {
                 "ASR1000-ESP20": {
