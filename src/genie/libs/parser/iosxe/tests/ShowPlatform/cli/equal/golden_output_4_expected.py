@@ -20,6 +20,18 @@ expected_output = {
                 }
             }
         },
+        "F0": {
+            "other": {
+                "": {
+                    "cpld_ver": "19052734",
+                    "fw_ver": "15.6(42r)S",
+                    "insert_time": "1w4d",
+                    "name": "",
+                    "slot": "F0",
+                    "state": "ok, active"
+                }
+            }
+        },
         "P0": {
             "other": {
                 "A900-PWR550-A": {
