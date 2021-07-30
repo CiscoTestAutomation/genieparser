@@ -1,4 +1,4 @@
-''' show_l2route_evpn_mac.py
+''' show_l2route.py
 
 IOS parsers for the following show commands:
 
@@ -389,7 +389,7 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
 
     """
 
-    cli_commands = [
+    cli_command = [
         'show l2route evpn imet detail',
         'show l2route evpn imet origin-rtr {origin_ip} detail',
         'show l2route evpn imet producer {prod} detail',

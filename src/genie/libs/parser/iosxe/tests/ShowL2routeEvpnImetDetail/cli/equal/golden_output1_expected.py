@@ -2,107 +2,127 @@
 # All rights reserved.
 
 expected_output = {"evi": {
-                        2: {
+                        1: {
                             "producer": {
                                 "BGP": {
-                                    "host_ips": {
-                                        "192.168.12.254": {
-                                            "esi": "0000.0000.0000.0000.0000",
+                                    "origin_router_ip": {
+                                        "2.2.2.2": {
                                             "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "0012.0012.0012",
-                                            "mac_rt_flags": "BInt(Brm)Dgr",
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "2.2.2.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20011,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
                                             "next_hops": [
                                                 {
-                                                    "next_hop": "L:16 2.2.2.1"
+                                                    "next_hop": "V:20011 2.2.2.2"
                                                 }
                                             ],
-                                            "seq_number": 0
                                         },
-                                        "2001:12::254": {
-                                            "esi": "0000.0000.0000.0000.0000",
+                                        "3.3.3.2": {
                                             "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "0012.0012.0012",
-                                            "mac_rt_flags": "BInt(Brm)Dgr",
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "3.3.3.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20011,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
                                             "next_hops": [
                                                 {
-                                                    "next_hop": "L:16 2.2.2.1"
+                                                    "next_hop": "V:20011 3.3.3.2"
                                                 }
                                             ],
-                                            "seq_number": 0
-                                        },
-                                        "FE80::A8BB:CCFF:FE82:2800": {
-                                            "esi": "03AA.BB00.0000.0200.0001",
-                                            "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "aabb.cc82.2800",
-                                            "mac_rt_flags": "Int(Brm)",
-                                            "next_hops": [
-                                                {
-                                                    "next_hop": "L:17 4.4.4.1(proxy)"
-                                                }
-                                            ],
-                                            "seq_number": 0
-                                        },
-                                        "FE80::A8BB:FF:FE12:2": {
-                                            "esi": "0000.0000.0000.0000.0000",
-                                            "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "aabb.0012.0002",
-                                            "mac_rt_flags": "B()",
-                                            "next_hops": [
-                                                {
-                                                    "next_hop": "L:16 2.2.2.1"
-                                                }
-                                            ],
-                                            "seq_number": 0
                                         }
                                     }
                                 },
                                 "L2VPN": {
-                                    "host_ips": {
-                                        "192.168.12.254": {
-                                            "esi": "0000.0000.0000.0000.0000",
+                                    "origin_router_ip": {
+                                        "1.1.1.2": {
                                             "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "0012.0012.0012",
-                                            "mac_rt_flags": "Int(Brm)Dgl",
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "1.1.1.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20011,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
                                             "next_hops": [
                                                 {
-                                                    "next_hop": "BD12:0"
-                                                },
-                                                {
-                                                    "next_hop": "L:17 4.4.4.1"
+                                                    "next_hop": "N/A"
                                                 }
                                             ],
-                                            "seq_number": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        2: {
+                            "producer": {
+                                "BGP": {
+                                    "origin_router_ip": {
+                                        "2.2.2.2": {
+                                            "eth_tag": 0,
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "2.2.2.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20012,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
+                                            "next_hops": [
+                                                {
+                                                    "next_hop": "V:20012 2.2.2.2"
+                                                }
+                                            ],
                                         },
-                                        "2001:12::254": {
-                                            "esi": "0000.0000.0000.0000.0000",
+                                        "3.3.3.2": {
                                             "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "0012.0012.0012",
-                                            "mac_rt_flags": "Int(Brm)Dgl",
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "3.3.3.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20012,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
                                             "next_hops": [
                                                 {
-                                                    "next_hop": "BD12:0"
+                                                    "next_hop": "V:20012 3.3.3.2"
                                                 }
                                             ],
-                                            "seq_number": 0
-                                        },
-                                        "FE80::A8BB:CCFF:FE82:2800": {
-                                            "esi": "03AA.BB00.0000.0200.0001",
+                                        }
+                                    }
+                                },
+                                "L2VPN": {
+                                    "origin_router_ip": {
+                                        "1.1.1.2": {
                                             "eth_tag": 0,
-                                            "label_2": 0,
-                                            "mac_addr": "aabb.cc82.2800",
-                                            "mac_rt_flags": "B(Brm)",
+                                            "router_eth_tag": 0,
+                                            'tunnel_id': {
+                                                "1.1.1.2": {
+                                                    'tunnel_flags': 0,
+                                                    'tunnel_type': "Ingress Replication",
+                                                    'tunnel_labels': 20012,
+                                                }
+                                            },
+                                            "multi_proxy": "IGMP",
                                             "next_hops": [
                                                 {
-                                                    "next_hop": "Et1/0:12"
+                                                    "next_hop": "N/A"
                                                 }
                                             ],
-                                            "seq_number": 0
                                         }
                                     }
                                 }
