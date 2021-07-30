@@ -209,9 +209,9 @@ class ShowVersion(ShowVersionSchema):
         p26 = re.compile(r'^Model +Revision +Number +: '
                          r'+(?P<model_rev_num>\S+)$')
 
-        # Motherboard Revision Number        : 4
+        # Motherboard Revision Number        : A4
         p27 = re.compile(r'^Motherboard +Revision +Number +: '
-                         r'+(?P<mb_rev_num>\d+)$')
+                         r'+(?P<mb_rev_num>\S+)$')
 
         # Model Number                       : C9500-32QC 
         p28 = re.compile(r'^Model +Number +: +(?P<model_num>\S+)$')
@@ -927,6 +927,102 @@ class ShowPlatform(ShowPlatformSchema):
                 continue
 
         return platform_dict
+
+
+# ============================================================
+#  Schema for 'show platform software fed active ifm mappings'
+# ============================================================
+class ShowPlatformIfmMappingSchema(MetaParser):
+    """Schema for show platform software fed switch active ifm mappings"""
+    
+    schema = {'interface':
+                 {Any(): 
+                     {'IF_ID': str,
+                      'Inst': str,     
+                      'Asic': str,
+                      'Core': str,
+                      'Port': str,  					
+                      'SubPort': str,
+                      'Mac' : str,
+                      'Cntx': str,
+                      'LPN' : str,
+                      'GPN' : str,
+                      'Type': str,
+                      'Active': str,  				
+                    }                
+                },
+            }
+
+
+# ============================================================
+#  Parser for 'show platform software fed active ifm mappings'
+# ============================================================
+class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
+
+    """ Parser for show platform software fed switch active ifm mappings"""
+
+    cli_command = ['show platform software fed {switch} {state} ifm mappings','show platform software fed active ifm mappings']
+
+    def cli(self, switch="", state="", output=None):
+       
+        if output is None:
+            if switch and state:
+                cmd = self.cli_command[0].format(switch=switch,state=state)            
+            else:
+                cmd = self.cli_command[1]
+         
+            # Execute command to get output from device	 
+            out = self.device.execute(cmd)            
+        else:
+            out = output
+
+        # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y  
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<ifId>\S+) +(?P<inst>\d+) +(?P<asic>\d+) +(?P<core>\d+) +(?P<port>\d+) +(?P<sbPort>\d+) +(?P<mac>\d+) +(?P<cntx>\d+) +(?P<lpn>\d+) +(?P<gpn>\d+) +(?P<type>\w+) +(?P<act>\w+)$') 	
+        
+        # initial variables
+        ret_dict = {}
+        
+        for line in out.splitlines():
+            line = line.strip()
+            if not line: 
+                continue
+
+            # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y
+            m = p1.match(line)
+            if m:
+                group    = m.groupdict()		
+                intfId   = group['interface']
+                ifId     = group['ifId']
+                instance = group['inst']
+                asic     = group['asic']
+                core     = group['core']
+                port     = group['port']
+                subPort  = group['sbPort']
+                mac      = group['mac']
+                cntx     = group['cntx']
+                lpn      = group['lpn']
+                gpn      = group['gpn']
+                typ     = group['type']
+                active   = group['act']  				
+        
+                final_dict = ret_dict.setdefault('interface',{}).setdefault(intfId,{})
+        
+                final_dict['IF_ID']   = ifId					
+                final_dict['Inst']    = instance
+                final_dict['Asic']    = asic 
+                final_dict['Core']    = core
+                final_dict['Port']    = port
+                final_dict['SubPort'] = subPort
+                final_dict['Mac']     = mac 
+                final_dict['Cntx']    = cntx 
+                final_dict['LPN']     = lpn 
+                final_dict['GPN']     = gpn 
+                final_dict['Type']    = typ
+                final_dict['Active']  = active  				
+                continue            
+            
+        return ret_dict
+
 
 # ========================================
 # Parser for 'show platform software'

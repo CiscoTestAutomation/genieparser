@@ -1,0 +1,59 @@
+Bridge group: foo_group, bridge-domain: foo_bd, id: 0, state: up, ShgId: 0
+VPWS Mode
+MTU: 1500
+ACs: 1 (0 up), VFIs: 1, PWs: 2 (2 up)
+List of ACs:
+    AC: GigabitEthernet0/5/1/4, state is admin down
+    Type Ethernet      MTU 1500; XC ID 1; interworking none
+    Static MAC addresses:
+    Statistics:
+        packet totals: receive 0,send 0
+        byte totals: receive 0,send 0
+List of VFIs:
+    VFI foo_vfi
+    PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
+        PW class not set
+        Encapsulation MPLS, protocol LDP
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ------------------------------
+        Label        16001                          16001
+        Group ID     unassigned                     unknown
+        Interface    siva/vfi                       siva/vfi
+        MTU          1500                           1500
+        Control word enabled                        enabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x2
+                     (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x3                            0x3
+                     (control word)                 (control word)
+                     (router alert label)           (router alert label)
+        ------------ ------------------------------ ------------------------------
+        Create time: 25/06/2007 05:29:42 (2w0d ago)
+        Last time status changed: 27/06/2007 06:50:35 (1w5d ago)
+    Static MAC addresses:
+    PW: neighbor 10.4.1.1, PW ID 2, state is up ( established )
+        PW class not set
+        Encapsulation MPLS, protocol LDP
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ------------------------------
+        Label        16002                          16002
+        Group ID     unassigned                     unknown
+        Interface    siva/vfi                       siva/vfi
+        MTU          1500                           1500
+        Control word enabled                        enabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x2
+                    (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x3                            0x3
+                    (control word)                 (control word)
+                    (router alert label)           (router alert label)
+        ------------ ------------------------------ ------------------------------
+        Create time: 25/06/2007 05:29:42 (2w0d ago)
+        Last time status changed: 27/06/2007 06:50:35 (1w5d ago)
+    Static MAC addresses:
+    Statistics:
+        drops: illegal VLAN 0, illegal length 0

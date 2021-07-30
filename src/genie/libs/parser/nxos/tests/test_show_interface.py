@@ -5,8 +5,7 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 # Genie
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowVrfAllInterface,
@@ -21,1628 +20,11 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowIpInterfaceBriefVrfAll,
                                                    ShowInterfaceDescription,
                                                    ShowInterfaceStatus,
-                                                   ShowInterfaceCapabilities, 
-                                                   ShowInterfaceTransceiver, 
+                                                   ShowInterfaceCapabilities,
+                                                   ShowInterfaceTransceiver,
                                                    ShowInterfaceTransceiverDetails,
                                                    ShowInterfaceFec,
                                                    ShowInterfaceHardwareMap)
-
-#############################################################################
-# unitest For Show Interface
-#############################################################################
-
-
-class TestShowInterface(unittest.TestCase):
-    device = Device(name='aDevice')
-    maxDiff = None
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output1 = {
-        'Ethernet2/1':
-            {'auto_mdix': 'off',
-            'auto_negotiate': False,
-            'admin_state': 'up',
-            'bandwidth': 768,
-            'beacon': 'off',
-            'counters':
-                {'in_bad_etype_drop': 0,
-                'in_broadcast_pkts': 0,
-                'in_crc_errors': 0,
-                'in_discard': 0,
-                'in_errors': 0,
-                'in_if_down_drop': 0,
-                'in_ignored': 0,
-                'in_jumbo_packets': 0,
-                'in_mac_pause_frames': 0,
-                'in_multicast_pkts': 0,
-                'in_no_buffer': 0,
-                'in_octets': 0,
-                'in_overrun': 0,
-                'in_oversize_frame': 0,
-                'in_pkts': 0,
-                'in_runts': 0,
-                'in_short_frame': 0,
-                'in_storm_suppression_packets': 0,
-                'in_underrun': 0,
-                'in_unicast_pkts': 0,
-                'in_unknown_protos': 0,
-                'in_watchdog': 0,
-                'in_with_dribble': 0,
-                'last_clear': 'never',
-                'out_babble': 0,
-                'out_broadcast_pkts': 0,
-                'out_collision': 0,
-                'out_deferred': 0,
-                'out_discard': 0,
-                'out_errors': 0,
-                'out_jumbo_packets': 0,
-                'out_late_collision': 0,
-                'out_lost_carrier': 0,
-                'out_mac_pause_frames': 0,
-                'out_multicast_pkts': 0,
-                'out_no_carrier': 0,
-                'out_octets': 0,
-                'out_pkts': 0,
-                'out_unicast_pkts': 0,
-                'rate':
-                    {'in_rate': 0,
-                    'in_rate_bps': 0,
-                   'in_rate_pkts': 0,
-                   'in_rate_pps': 0,
-                   'load_interval': 0,
-                   'out_rate': 0,
-                   'out_rate_bps': 0,
-                   'out_rate_pkts': 0,
-                   'out_rate_pps': 0},
-                'rx': True,
-                'tx': True},
-            'delay': 3330,
-            'dedicated_interface': True,
-            'description': 'desc-1',
-            'duplex_mode': 'full',
-            'efficient_ethernet': 'n/a',
-            'enabled': True,
-            'encapsulations':
-                {'encapsulation': 'arpa'},
-            'ethertype': '0x8100',
-            'flow_control':
-                {'receive': False, 'send': False},
-            'interface_reset': 1,
-            'ipv4':
-                {'10.4.4.4/24':
-                    {'ip': '10.4.4.4',
-                    'prefix_length': '24',
-                    'route_tag': '10',
-                    'secondary': True}},
-            'last_link_flapped': '00:00:29',
-            'link_state': 'up',
-            'mac_address': 'aaaa.bbff.8888',
-            'medium': 'broadcast',
-            'mtu': 1600,
-            'oper_status': 'up',
-            'port_channel':
-                {'port_channel_member': False},
-            'phys_address': '5254.00ff.8506',
-            'port_mode': 'routed',
-            'port_speed': '1000',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'switchport_monitor': 'off',
-            'txload': '1/255',
-            'types': '10/100/1000 Ethernet'},
-        'Ethernet2/1.10':
-            {'auto_mdix': 'off',
-            'admin_state': 'down',
-            'bandwidth': 768,
-            'delay': 10,
-            'dedicated_interface': True,
-            'enabled': False,
-            'encapsulations':
-                {'encapsulation': 'dot1q',
-                'first_dot1q': '10'},
-            'ethertype': '0x8100',
-            'link_state': 'down',
-            'mac_address': '5254.00ff.8534',
-            'medium': 'broadcast',
-            'mtu': 1600,
-            'oper_status': 'down',
-            'port_channel':
-                {'port_channel_member': False},
-            'parent_interface': 'Ethernet2/1',
-            'phys_address': '5254.00ff.8506',
-            'port_mode': 'routed',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'txload': '1/255',
-            'types': '10/100/1000 Ethernet'},
-        'Ethernet2/1.20':
-            {'auto_mdix': 'off',
-            'admin_state': 'up',
-            'bandwidth': 768,
-            'delay': 10,
-            'dedicated_interface': True,
-            'enabled': True,
-            'encapsulations':
-                {'encapsulation': 'dot1q',
-                'first_dot1q': '20'},
-            'ethertype': '0x8100',
-            'link_state': 'up',
-            'mac_address': '5254.00ff.8534',
-            'medium': 'p2p',
-            'mtu': 1600,
-            'oper_status': 'up',
-            'port_channel':
-                {'port_channel_member': False},
-            'parent_interface': 'Ethernet2/1',
-            'phys_address': '5254.00ff.8506',
-            'port_mode': 'routed',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'txload': '1/255',
-            'types': '10/100/1000 Ethernet'},
-        'Ethernet2/2':
-            {'auto_mdix': 'off',
-            'auto_negotiate': False,
-            'admin_state': 'up',
-            'bandwidth': 1000000,
-            'beacon': 'off',
-            'counters':
-                {'in_bad_etype_drop': 0,
-                'in_broadcast_pkts': 0,
-                'in_crc_errors': 0,
-                'in_discard': 0,
-                'in_errors': 0,
-                'in_if_down_drop': 0,
-                'in_ignored': 0,
-                'in_jumbo_packets': 0,
-                'in_mac_pause_frames': 0,
-                'in_multicast_pkts': 0,
-                'in_no_buffer': 0,
-                'in_octets': 0,
-                'in_overrun': 0,
-                'in_oversize_frame': 0,
-                'in_pkts': 0,
-                'in_runts': 0,
-                'in_short_frame': 0,
-                'in_storm_suppression_packets': 0,
-                'in_underrun': 0,
-                'in_unicast_pkts': 0,
-                'in_unknown_protos': 0,
-                'in_watchdog': 0,
-                'in_with_dribble': 0,
-                'last_clear': 'never',
-                'out_babble': 0,
-                'out_broadcast_pkts': 0,
-                'out_collision': 0,
-                'out_deferred': 0,
-                'out_discard': 0,
-                'out_errors': 0,
-                'out_jumbo_packets': 0,
-                'out_late_collision': 0,
-                'out_lost_carrier': 0,
-                'out_mac_pause_frames': 0,
-                'out_multicast_pkts': 0,
-                'out_no_carrier': 0,
-                'out_octets': 0,
-                'out_pkts': 0,
-                'out_unicast_pkts': 0,
-                'rate':
-                    {'in_rate': 0,
-                    'in_rate_bps': 0,
-                    'in_rate_pkts': 0,
-                    'in_rate_pps': 0,
-                    'load_interval': 0,
-                    'out_rate': 0,
-                    'out_rate_bps': 0,
-                    'out_rate_pkts': 0,
-                    'out_rate_pps': 0},
-                'rx': True,
-                'tx': True},
-            'delay': 10,
-            'dedicated_interface': True,
-            'duplex_mode': 'full',
-            'efficient_ethernet': 'n/a',
-            'enabled': True,
-            'encapsulations':
-                {'encapsulation': 'arpa'},
-            'ethertype': '0x8100',
-            'flow_control':
-                {'receive': False, 'send': False},
-            'interface_reset': 1,
-            'last_link_flapped': '00:07:28',
-            'link_state': 'up',
-            'mac_address': '5254.00ff.62da',
-            'medium': 'broadcast',
-            'mtu': 1500,
-            'oper_status': 'up',
-            'port_channel':
-                {'port_channel_member': False},
-            'phys_address': '5254.00ff.62da',
-            'port_mode': 'trunk',
-            'port_speed': '1000',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'switchport_monitor': 'off',
-            'txload': '1/255',
-            'types': '10/100/1000 Ethernet'},
-        'mgmt0':
-            {'auto_mdix': 'off',
-            'auto_negotiate': True,
-            'admin_state': 'up',
-            'bandwidth': 1000000,
-            'counters':
-                { 'in_multicast_pkts': 2,
-                  'in_unicast_pkts': 0,
-                  'in_broadcast_pkts': 4,
-                'in_pkts': 2,
-                  'in_octets': 4726,
-                  'rate':
-                    {'in_rate': 0,
-                    'in_rate_pkts': 0,
-                    'load_interval': 1,
-                    'out_rate': 24,
-                    'out_rate_pkts': 0},
-                  'rx': True,
-                  'tx': True},
-            'delay': 10,
-            'duplex_mode': 'full',
-            'enabled': True,
-            'encapsulations':
-                {'encapsulation': 'arpa'},
-            'ethertype': '0x0000',
-            'link_state': 'up',
-            'mac_address': '5254.00ff.9c38',
-            'medium': 'broadcast',
-            'mtu': 1500,
-            'oper_status': 'up',
-            'port_channel':
-                {'port_channel_member': False},
-            'phys_address': '5254.00ff.9c38',
-            'port_mode': 'routed',
-            'port_speed': '1000',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'txload': '1/255',
-            'types': 'Ethernet'},
-        'Ethernet1/1':
-            {'bandwidth': 10000000,
-            'beacon': 'off',
-            'counters':
-                {'in_bad_etype_drop': 0,
-                'in_broadcast_pkts': 0,
-                'in_crc_errors': 0,
-                'in_discard': 0,
-                'in_errors': 0,
-                'in_if_down_drop': 0,
-                'in_ignored': 0,
-                'in_mac_pause_frames': 0,
-                'in_multicast_pkts': 260,
-                'in_no_buffer': 0,
-                'in_octets': 35017,
-                'in_overrun': 0,
-                'in_oversize_frame': 0,
-                'in_pkts': 260,
-                'in_runts': 0,
-                'in_short_frame': 0,
-                'in_underrun': 0,
-                'in_unicast_pkts': 0,
-                'in_unknown_protos': 0,
-                'in_watchdog': 0,
-                'in_with_dribble': 0,
-                'last_clear': '13:44:29',
-                'out_babble': 0,
-                'out_broadcast_pkts': 0,
-                'out_collision': 0,
-                'out_deferred': 0,
-                'out_discard': 0,
-                'out_errors': 0,
-                'out_jumbo_packets': 0,
-                'out_late_collision': 0,
-                'out_lost_carrier': 0,
-                'out_mac_pause_frames': 0,
-                'out_multicast_pkts': 0,
-                'out_no_carrier': 0,
-                'out_octets': 0,
-                'out_pkts': 0,
-                'out_unicast_pkts': 0,
-                'rate':
-                    {'in_rate': 0,
-                    'in_rate_bps': 0,
-                    'in_rate_pkts': 0,
-                    'in_rate_pps': 0,
-                    'load_interval': 30,
-                    'out_rate': 0,
-                    'out_rate_bps': 0,
-                    'out_rate_pkts': 0,
-                    'out_rate_pps': 0},
-                'rx': True,
-                'tx': True},
-            'delay': 10,
-            'dedicated_interface': True,
-            'description': 'Connection to pe1',
-            'duplex_mode': 'auto',
-            'enabled': True,
-            'encapsulations': {'encapsulation': 'arpa'},
-            'ethertype': '0x8100',
-            'flow_control': {'receive': False, 'send': False},
-            'interface_reset': 0,
-            'ipv4': {'10.229.1.112/16': {'ip': '10.229.1.112',
-                                         'prefix_length': '16'}},
-            'last_link_flapped': '13:23:37',
-            'link_state': 'down',
-            'mac_address': '002a.6aff.4571',
-            'medium': 'broadcast',
-            'mtu': 1500,
-            'oper_status': 'down',
-            'media_type': '10G',
-            'phys_address': '002a.6aff.451d',
-            'port_channel': {'port_channel_member': False},
-            'port_speed': '10',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'switchport_monitor': 'off',
-            'txload': '1/255',
-            'types': '1000/10000 Ethernet'},
-        'nve1':
-            {'enabled': True,
-             'link_state': 'up',
-            'oper_status': 'up',
-            'port_channel':
-                {'port_channel_member': False}}}
-
-    golden_output1 = {'execute.return_value': '''
-        mgmt0 is up
-          admin state is up
-          Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
-          MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
-          reliability 255/255, txload 1/255, rxload 1/255
-          Encapsulation ARPA, medium is broadcast
-          Port mode is routed
-          full-duplex, 1000 Mb/s
-          Auto-Negotiation is turned on
-          Auto-mdix is turned off
-          EtherType is 0x0000
-          1 minute input rate 0 bits/sec, 0 packets/sec
-          1 minute output rate 24 bits/sec, 0 packets/sec
-          Rx
-            2 input packets 0 unicast packets 2 multicast packets
-            0 broadcast packets 168 bytes
-          Tx
-            22 output packets 0 unicast packets 18 multicast packets
-            4 broadcast packets 4726 bytes
-        Ethernet2/1 is up
-            admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
-              Description: desc-1
-              Internet Address is 10.4.4.4/24 secondary tag 10
-              MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation ARPA, medium is broadcast
-              Port mode is routed
-              full-duplex, 1000 Mb/s
-              Beacon is turned off
-              Auto-Negotiation is turned off
-              Input flow-control is off, output flow-control is off
-              Auto-mdix is turned off
-              Switchport monitor is off
-              EtherType is 0x8100
-              EEE (efficient-ethernet) : n/a
-              Last link flapped 00:00:29
-              Last clearing of "show interface" counters never
-              1 interface resets
-              Load-Interval #1: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              Load-Interval #2: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              RX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 input packets  0 bytes
-                0 jumbo packets  0 storm suppression packets
-                0 runts  0 giants  0 CRC/FCS  0 no buffer
-                0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-                0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-                0 input with dribble  0 input discard
-                0 Rx pause
-              TX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 output packets  0 bytes
-                0 jumbo packets
-                0 output error  0 collision  0 deferred  0 late collision
-                0 lost carrier  0 no carrier  0 babble  0 output discard
-                0 Tx pause
-        Ethernet2/1.10 is down (Administratively down)
-            admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
-              MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation 802.1Q Virtual LAN, Vlan ID 10, medium is broadcast
-              Port mode is routed
-              Auto-mdix is turned off
-              EtherType is 0x8100
-        Ethernet2/1.20 is up
-            admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
-              MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
-              Port mode is routed
-              Auto-mdix is turned off
-              EtherType is 0x8100
-        Ethernet2/2 is up
-            admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.62da (bia 5254.00ff.62da)
-              MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation ARPA, medium is broadcast
-              Port mode is trunk
-              full-duplex, 1000 Mb/s
-              Beacon is turned off
-              Auto-Negotiation is turned off
-              Input flow-control is off, output flow-control is off
-              Auto-mdix is turned off
-              Switchport monitor is off
-              EtherType is 0x8100
-              EEE (efficient-ethernet) : n/a
-              Last link flapped 00:07:28
-              Last clearing of "show interface" counters never
-              1 interface resets
-              Load-Interval #1: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              Load-Interval #2: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              RX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 input packets  0 bytes
-                0 jumbo packets  0 storm suppression packets
-                0 runts  0 giants  0 CRC/FCS  0 no buffer
-                0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-                0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-                0 input with dribble  0 input discard
-                0 Rx pause
-              TX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 output packets  0 bytes
-                0 jumbo packets
-                0 output error  0 collision  0 deferred  0 late collision
-                0 lost carrier  0 no carrier  0 babble  0 output discard
-                0 Tx pause
-        Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
-         Dedicated Interface
-
-          Hardware: 1000/10000 Ethernet, address: 002a.6aff.4571 (bia 002a.6aff.451d)
-          Description: Connection to pe1
-          Internet Address is 10.229.1.112/16
-          MTU 1500 bytes,  BW 10000000 Kbit, DLY 10 usec
-          reliability 255/255, txload 1/255, rxload 1/255
-          Encapsulation ARPA, medium is broadcast
-          auto-duplex, 10 Gb/s, media type is 10G
-          Beacon is turned off
-          Input flow-control is off, output flow-control is off
-          Rate mode is dedicated
-          Switchport monitor is off
-          EtherType is 0x8100
-          Last link flapped 13:23:37
-          Last clearing of "show interface" counters 13:44:29
-          0 interface resets
-          30 seconds input rate 0 bits/sec, 0 packets/sec
-          30 seconds output rate 0 bits/sec, 0 packets/sec
-          Load-Interval #2: 5 minute (300 seconds)
-            input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-          RX
-            0 unicast packets  260 multicast packets  0 broadcast packets
-            260 input packets  35017 bytes
-            0 jumbo packets  0 storm suppression bytes
-            0 runts  0 giants  0 CRC  0 no buffer
-            0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-            0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-            0 input with dribble  0 input discard
-            0 Rx pause
-          TX
-            0 unicast packets  0 multicast packets  0 broadcast packets
-            0 output packets  0 bytes
-            0 jumbo packets
-            0 output error  0 collision  0 deferred  0 late collision
-            0 lost carrier  0 no carrier  0 babble 0 output discard
-            0 Tx pause
-        nve1 is up
-          Hardware: NVE
-          BW 0 Kbit,
-        '''}
-
-    golden_parsed_output2 = {
-        "Vlan1": {
-          "link_state": "down",
-          "autostate": True,
-          "rxload": "1/255",
-          "line_protocol": "down",
-          "txload": "1/255",
-          "oper_status": "down",
-          'port_channel': {'port_channel_member': False},
-          "enabled": False,
-          "mtu": 1500,
-          "encapsulations": {
-               "encapsulation": "arpa"
-          },
-          "bandwidth": 1000000,
-          "reliability": "255/255",
-          "delay": 10
-       },
-       "Vlan200": {
-            "link_state": "down",
-            "autostate": True,
-            "rxload": "1/255",
-            "line_protocol": "down",
-            "txload": "1/255",
-            "oper_status": "down",
-            'port_channel': {'port_channel_member': False},
-            "enabled": True,
-            "mtu": 1500,
-            "encapsulations": {
-                 "encapsulation": "arpa"
-            },
-            "bandwidth": 1000000,
-            "reliability": "255/255",
-            "delay": 10}}
-
-    golden_output2 = {'execute.return_value': '''
-        Vlan1 is down (Administratively down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.29ff.f8a2
-            MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
-
-            reliability 255/255, txload 1/255, rxload 1/255
-            Encapsulation ARPA, loopback not set
-            Keepalive not supported
-            ARP type: ARPA
-            Last clearing of "show interface" counters never
-            L3 in Switched:
-            ucast: 0 pkts, 0 bytes
-
-        Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.29ff.f8a2
-            MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
-
-            reliability 255/255, txload 1/255, rxload 1/255
-            Encapsulation ARPA, loopback not set
-            Keepalive not supported
-            ARP type: ARPA
-            Last clearing of "show interface" counters never
-            L3 in Switched:
-            ucast: 0 pkts, 0 bytes
-        '''}
-
-    golden_output3 = {'execute.return_value': '''
-        Ethernet1/6 is down (Link not connected)
-        admin state is up, Dedicated Interface
-          Hardware: 100/1000/10000 Ethernet, address: 000c.29ff.e5fd (bia 000c.29ff.e5fd)
-          MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
-          reliability 255/255, txload 1/255, rxload 1/255
-          Encapsulation ARPA, medium is broadcast
-          Port mode is access
-          auto-duplex, auto-speed
-          Beacon is turned off
-          Auto-Negotiation is turned on, FEC mode is Auto
-          Input flow-control is off, output flow-control is off
-          Auto-mdix is turned off
-          Switchport monitor is off
-          EtherType is 0x8100
-          EEE (efficient-ethernet) : n/a
-          Last link flapped never
-          Last clearing of "show interface" counters never
-          0 interface resets
-          30 seconds input rate 0 bits/sec, 0 packets/sec
-          30 seconds output rate 0 bits/sec, 0 packets/sec
-          Load-Interval #2: 5 minute (300 seconds)
-            input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-          RX
-            0 unicast packets  0 multicast packets  0 broadcast packets
-            0 input packets  0 bytes
-            0 jumbo packets  0 storm suppression packets
-            0 runts  0 giants  0 CRC  0 no buffer
-            0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-            0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-            0 input with dribble  0 input discard
-            0 Rx pause
-          TX
-            0 unicast packets  0 multicast packets  0 broadcast packets
-            0 output packets  0 bytes
-            0 jumbo packets
-            0 output error  0 collision  0 deferred  0 late collision
-            0 lost carrier  0 no carrier  0 babble  0 output discard
-            0 Tx pause
-        '''}
-
-    golden_parsed_output3 = {'Ethernet1/6': {'admin_state': 'up',
-                 'auto_mdix': 'off',
-                 'bandwidth': 10000000,
-                 'beacon': 'off',
-                 'counters': {'in_bad_etype_drop': 0,
-                              'in_broadcast_pkts': 0,
-                              'in_crc_errors': 0,
-                              'in_discard': 0,
-                              'in_errors': 0,
-                              'in_if_down_drop': 0,
-                              'in_ignored': 0,
-                              'in_jumbo_packets': 0,
-                              'in_mac_pause_frames': 0,
-                              'in_multicast_pkts': 0,
-                              'in_no_buffer': 0,
-                              'in_octets': 0,
-                              'in_overrun': 0,
-                              'in_oversize_frame': 0,
-                              'in_pkts': 0,
-                              'in_runts': 0,
-                              'in_short_frame': 0,
-                              'in_storm_suppression_packets': 0,
-                              'in_underrun': 0,
-                              'in_unicast_pkts': 0,
-                              'in_unknown_protos': 0,
-                              'in_watchdog': 0,
-                              'in_with_dribble': 0,
-                              'last_clear': 'never',
-                              'out_babble': 0,
-                              'out_broadcast_pkts': 0,
-                              'out_collision': 0,
-                              'out_deferred': 0,
-                              'out_discard': 0,
-                              'out_errors': 0,
-                              'out_jumbo_packets': 0,
-                              'out_late_collision': 0,
-                              'out_lost_carrier': 0,
-                              'out_mac_pause_frames': 0,
-                              'out_multicast_pkts': 0,
-                              'out_no_carrier': 0,
-                              'out_octets': 0,
-                              'out_pkts': 0,
-                              'out_unicast_pkts': 0,
-                              'rate': {'in_rate': 0,
-                                       'in_rate_bps': 0,
-                                       'in_rate_pkts': 0,
-                                       'in_rate_pps': 0,
-                                       'load_interval': 30,
-                                       'out_rate': 0,
-                                       'out_rate_bps': 0,
-                                       'out_rate_pkts': 0,
-                                       'out_rate_pps': 0},
-                              'rx': True,
-                              'tx': True},
-                 'dedicated_interface': True,
-                 'delay': 10,
-                 'efficient_ethernet': 'n/a',
-                 'enabled': True,
-                 'encapsulations': {'encapsulation': 'arpa'},
-                 'ethertype': '0x8100',
-                 'flow_control': {'receive': False, 'send': False},
-                 'interface_reset': 0,
-                 'last_link_flapped': 'never',
-                 'link_state': 'down',
-                 'mac_address': '000c.29ff.e5fd',
-                 'medium': 'broadcast',
-                 'mtu': 1500,
-                 'oper_status': 'down',
-                 'phys_address': '000c.29ff.e5fd',
-                 'port_channel': {'port_channel_member': False},
-                 'port_mode': 'access',
-                 'reliability': '255/255',
-                 'rxload': '1/255',
-                 'switchport_monitor': 'off',
-                 'txload': '1/255',
-                 'types': '100/1000/10000 Ethernet'}}
-    golden_output_custom = {'execute.return_value': '''
-      Ethernet2/1 is up (XCVR not inserted)
-            admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
-              Description: desc-1
-              Internet Address is 10.4.4.4/24 secondary tag 10
-              MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation ARPA, medium is broadcast
-              Port mode is routed
-              full-duplex, 1000 Mb/s
-              Beacon is turned off
-              Auto-Negotiation is turned off
-              Input flow-control is off, output flow-control is off
-              Auto-mdix is turned off
-              Switchport monitor is off
-              EtherType is 0x8100
-              EEE (efficient-ethernet) : n/a
-              Last link flapped 00:00:29
-              Last clearing of "show interface" counters never
-              1 interface resets
-              Load-Interval #1: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              Load-Interval #2: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              RX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 input packets  0 bytes
-                0 jumbo packets  0 storm suppression packets
-                0 runts  0 giants  0 CRC/FCS  0 no buffer
-                0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-                0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-                0 input with dribble  0 input discard
-                0 Rx pause
-              TX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 output packets  0 bytes
-                0 jumbo packets
-                0 output error  0 collision  0 deferred  0 late collision
-                0 lost carrier  0 no carrier  0 babble  0 output discard
-                0 Tx pause
-        '''}
-    golden_parsed_output_custom = {
-        'Ethernet2/1':
-            {'auto_mdix': 'off',
-             'auto_negotiate': False,
-             'admin_state': 'up',
-             'bandwidth': 768,
-             'beacon': 'off',
-             'counters':
-                 {'in_bad_etype_drop': 0,
-                  'in_broadcast_pkts': 0,
-                  'in_crc_errors': 0,
-                  'in_discard': 0,
-                  'in_errors': 0,
-                  'in_if_down_drop': 0,
-                  'in_ignored': 0,
-                  'in_jumbo_packets': 0,
-                  'in_mac_pause_frames': 0,
-                  'in_multicast_pkts': 0,
-                  'in_no_buffer': 0,
-                  'in_octets': 0,
-                  'in_overrun': 0,
-                  'in_oversize_frame': 0,
-                  'in_pkts': 0,
-                  'in_runts': 0,
-                  'in_short_frame': 0,
-                  'in_storm_suppression_packets': 0,
-                  'in_underrun': 0,
-                  'in_unicast_pkts': 0,
-                  'in_unknown_protos': 0,
-                  'in_watchdog': 0,
-                  'in_with_dribble': 0,
-                  'last_clear': 'never',
-                  'out_babble': 0,
-                  'out_broadcast_pkts': 0,
-                  'out_collision': 0,
-                  'out_deferred': 0,
-                  'out_discard': 0,
-                  'out_errors': 0,
-                  'out_jumbo_packets': 0,
-                  'out_late_collision': 0,
-                  'out_lost_carrier': 0,
-                  'out_mac_pause_frames': 0,
-                  'out_multicast_pkts': 0,
-                  'out_no_carrier': 0,
-                  'out_octets': 0,
-                  'out_pkts': 0,
-                  'out_unicast_pkts': 0,
-                  'rate':
-                      {'in_rate': 0,
-                       'in_rate_bps': 0,
-                       'in_rate_pkts': 0,
-                       'in_rate_pps': 0,
-                       'load_interval': 0,
-                       'out_rate': 0,
-                       'out_rate_bps': 0,
-                       'out_rate_pkts': 0,
-                       'out_rate_pps': 0},
-                  'rx': True,
-                  'tx': True},
-             'delay': 3330,
-             'dedicated_interface': True,
-             'description': 'desc-1',
-             'duplex_mode': 'full',
-             'efficient_ethernet': 'n/a',
-             'enabled': True,
-             'encapsulations':
-                 {'encapsulation': 'arpa'},
-             'ethertype': '0x8100',
-             'flow_control':
-                 {'receive': False, 'send': False},
-             'interface_reset': 1,
-             'ipv4':
-                 {'10.4.4.4/24':
-                      {'ip': '10.4.4.4',
-                       'prefix_length': '24',
-                       'route_tag': '10',
-                       'secondary': True}},
-             'last_link_flapped': '00:00:29',
-             'link_state': 'up',
-             'mac_address': 'aaaa.bbff.8888',
-             'medium': 'broadcast',
-             'mtu': 1600,
-             'oper_status': 'up',
-             'port_channel':
-                 {'port_channel_member': False},
-             'phys_address': '5254.00ff.8506',
-             'port_mode': 'routed',
-             'port_speed': '1000',
-             'reliability': '255/255',
-             'rxload': '1/255',
-             'switchport_monitor': 'off',
-             'txload': '1/255',
-             'types': '10/100/1000 Ethernet'},
-    }
-
-    golden_output_4 = {'execute.return_value': '''\
-      show interface
-
-      mgmt0 is up
-      admin state is up,
-        Hardware: GigabitEthernet, address: 80e0.1dff.6bae (bia 80e0.1dff.6bae)
-        Internet Address is 10.154.64.17/23
-        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
-        reliability 255/255, txload 1/255, rxload 1/255
-        Encapsulation ARPA, medium is broadcast
-        full-duplex, 1000 Mb/s
-        Auto-Negotiation is turned on
-        Auto-mdix is turned off
-        EtherType is 0x0000
-        1 minute input rate 13408 bits/sec, 16 packets/sec
-        1 minute output rate 51208 bits/sec, 17 packets/sec
-        Rx
-          607382344 input packets 445986207 unicast packets 132485585 multicast packets
-          28910552 broadcast packets 63295517997 bytes
-        Tx
-          449637617 output packets 447789202 unicast packets 1848405 multicast packets
-          10 broadcast packets 141467913935 bytes
-
-      Ethernet1/1 is up
-      admin state is up, Dedicated Interface
-        Belongs to Po302
-        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6bb6 (bia 80e0.1dff.6bb6)
-        Description: << GENIE GIG 0/0/1 >>
-        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
-        reliability 255/255, txload 1/255, rxload 4/255
-        Encapsulation ARPA, medium is broadcast
-        Port mode is access
-        full-duplex, 1000 Mb/s, media type is 1G
-        Beacon is turned off
-        Auto-Negotiation is turned on
-        Input flow-control is off, output flow-control is off
-        Auto-mdix is turned off
-        Rate mode is dedicated
-        Switchport monitor is off
-        EtherType is 0x8100
-        EEE (efficient-ethernet) : n/a
-        Last link flapped 3d22h
-        Last clearing of "show interface" counters never
-        9 interface resets
-        30 seconds input rate 17542088 bits/sec, 1904 packets/sec
-        30 seconds output rate 1575520 bits/sec, 477 packets/sec
-        Load-Interval #2: 5 minute (300 seconds)
-          input rate 17.40 Mbps, 1.86 Kpps; output rate 1.95 Mbps, 469 pps
-        RX
-          525266408025 unicast packets  128283847 multicast packets  14 broadcast packets
-          525394691886 input packets  157262428316065 bytes
-          0 jumbo packets  0 storm suppression packets
-          0 runts  0 giants  0 CRC  0 no buffer
-          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-          0 input with dribble  0 input discard
-          0 Rx pause
-        TX
-          568365811507 unicast packets  103573671 multicast packets  10009 broadcast packets
-          568469395187 output packets  604413238507323 bytes
-          0 jumbo packets
-          0 output error  0 collision  0 deferred  0 late collision
-          0 lost carrier  0 no carrier  0 babble  1535 output discard
-          0 Tx pause
-
-      Ethernet1/15 is down (Administratively down)
-      admin state is down, Dedicated Interface
-        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6cc3 (bia 80e0.1dff.6cc3)
-        Description: << LINK TO GENIE PACKET CAPTURE >>
-        MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
-        reliability 255/255, txload 1/255, rxload 1/255
-        Encapsulation ARPA, medium is broadcast
-        Port mode is access
-        auto-duplex, auto-speed, media type is 10G
-        Beacon is turned off
-        Auto-Negotiation is turned on
-        Input flow-control is off, output flow-control is off
-        Auto-mdix is turned off
-        Rate mode is dedicated
-        Switchport monitor is off
-        EtherType is 0x8100
-        EEE (efficient-ethernet) : n/a
-        Last link flapped 82week(s) 6day(s)
-        Last clearing of "show interface" counters never
-        16 interface resets
-        30 seconds input rate 0 bits/sec, 0 packets/sec
-        30 seconds output rate 0 bits/sec, 0 packets/sec
-        Load-Interval #2: 5 minute (300 seconds)
-          input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-        RX
-          30893435 unicast packets  33488177 multicast packets  139092473555 broadcast packets
-          139156855167 input packets  8908513989496 bytes
-          38749 jumbo packets  0 storm suppression packets
-          0 runts  0 giants  0 CRC  0 no buffer
-          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-          0 input with dribble  0 input discard
-          0 Rx pause
-        TX
-          757262383558 unicast packets  1012356 multicast packets  16 broadcast packets
-          757263395930 output packets  634405170787968 bytes
-          24175356863 jumbo packets
-          0 output error  0 collision  0 deferred  0 late collision
-          0 lost carrier  0 no carrier  0 babble  169893674 output discard
-          0 Tx pause
-
-      '''
-    }
-
-    golden_parsed_output_4 = {
-        'Ethernet1/1': {'admin_state': 'up',
-                        'auto_mdix': 'off',
-                        'auto_negotiate': True,
-                        'bandwidth': 1000000,
-                        'beacon': 'off',
-                        'counters': {'in_bad_etype_drop': 0,
-                                     'in_broadcast_pkts': 14,
-                                     'in_crc_errors': 0,
-                                     'in_discard': 0,
-                                     'in_errors': 0,
-                                     'in_if_down_drop': 0,
-                                     'in_ignored': 0,
-                                     'in_jumbo_packets': 0,
-                                     'in_mac_pause_frames': 0,
-                                     'in_multicast_pkts': 128283847,
-                                     'in_no_buffer': 0,
-                                     'in_octets': 157262428316065,
-                                     'in_overrun': 0,
-                                     'in_oversize_frame': 0,
-                                     'in_pkts': 525394691886,
-                                     'in_runts': 0,
-                                     'in_short_frame': 0,
-                                     'in_storm_suppression_packets': 0,
-                                     'in_underrun': 0,
-                                     'in_unicast_pkts': 525266408025,
-                                     'in_unknown_protos': 0,
-                                     'in_watchdog': 0,
-                                     'in_with_dribble': 0,
-                                     'last_clear': 'never',
-                                     'out_babble': 0,
-                                     'out_broadcast_pkts': 10009,
-                                     'out_collision': 0,
-                                     'out_deferred': 0,
-                                     'out_discard': 1535,
-                                     'out_errors': 0,
-                                     'out_jumbo_packets': 0,
-                                     'out_late_collision': 0,
-                                     'out_lost_carrier': 0,
-                                     'out_mac_pause_frames': 0,
-                                     'out_multicast_pkts': 103573671,
-                                     'out_no_carrier': 0,
-                                     'out_octets': 604413238507323,
-                                     'out_pkts': 568469395187,
-                                     'out_unicast_pkts': 568365811507,
-                                     'rate': {'in_rate': 17542088,
-                                              'in_rate_pkts': 1904,
-                                              'load_interval': 30,
-                                              'out_rate': 1575520,
-                                              'out_rate_pkts': 477},
-                                     'rx': True,
-                                     'tx': True},
-                        'dedicated_interface': True,
-                        'delay': 10,
-                        'description': '<< GENIE GIG 0/0/1 >>',
-                        'duplex_mode': 'full',
-                        'efficient_ethernet': 'n/a',
-                        'enabled': True,
-                        'encapsulations': {'encapsulation': 'arpa'},
-                        'ethertype': '0x8100',
-                        'flow_control': {'receive': False, 'send': False},
-                        'interface_reset': 9,
-                        'last_link_flapped': '3d22h',
-                        'link_state': 'up',
-                        'mac_address': '80e0.1dff.6bb6',
-                        'media_type': '1G',
-                        'medium': 'broadcast',
-                        'mtu': 1500,
-                        'oper_status': 'up',
-                        'phys_address': '80e0.1dff.6bb6',
-                        'port_channel': {'port_channel_int': 'Port-channel302',
-                                         'port_channel_member': True},
-                        'port_mode': 'access',
-                        'port_speed': '1000',
-                        'reliability': '255/255',
-                        'rxload': '4/255',
-                        'switchport_monitor': 'off',
-                        'txload': '1/255',
-                        'types': '1000/10000 Ethernet'},
-        'Ethernet1/15': {'admin_state': 'down',
-                         'auto_mdix': 'off',
-                         'auto_negotiate': True,
-                         'bandwidth': 10000000,
-                         'beacon': 'off',
-                         'counters': {'in_bad_etype_drop': 0,
-                                      'in_broadcast_pkts': 139092473555,
-                                      'in_crc_errors': 0,
-                                      'in_discard': 0,
-                                      'in_errors': 0,
-                                      'in_if_down_drop': 0,
-                                      'in_ignored': 0,
-                                      'in_jumbo_packets': 38749,
-                                      'in_mac_pause_frames': 0,
-                                      'in_multicast_pkts': 33488177,
-                                      'in_no_buffer': 0,
-                                      'in_octets': 8908513989496,
-                                      'in_overrun': 0,
-                                      'in_oversize_frame': 0,
-                                      'in_pkts': 139156855167,
-                                      'in_runts': 0,
-                                      'in_short_frame': 0,
-                                      'in_storm_suppression_packets': 0,
-                                      'in_underrun': 0,
-                                      'in_unicast_pkts': 30893435,
-                                      'in_unknown_protos': 0,
-                                      'in_watchdog': 0,
-                                      'in_with_dribble': 0,
-                                      'last_clear': 'never',
-                                      'out_babble': 0,
-                                      'out_broadcast_pkts': 16,
-                                      'out_collision': 0,
-                                      'out_deferred': 0,
-                                      'out_discard': 169893674,
-                                      'out_errors': 0,
-                                      'out_jumbo_packets': 24175356863,
-                                      'out_late_collision': 0,
-                                      'out_lost_carrier': 0,
-                                      'out_mac_pause_frames': 0,
-                                      'out_multicast_pkts': 1012356,
-                                      'out_no_carrier': 0,
-                                      'out_octets': 634405170787968,
-                                      'out_pkts': 757263395930,
-                                      'out_unicast_pkts': 757262383558,
-                                      'rate': {'in_rate': 0,
-                                               'in_rate_bps': 0,
-                                               'in_rate_pkts': 0,
-                                               'in_rate_pps': 0,
-                                               'load_interval': 30,
-                                               'out_rate': 0,
-                                               'out_rate_bps': 0,
-                                               'out_rate_pkts': 0,
-                                               'out_rate_pps': 0},
-                                      'rx': True,
-                                      'tx': True},
-                         'dedicated_interface': True,
-                         'delay': 10,
-                         'description': '<< LINK TO GENIE PACKET CAPTURE >>',
-                         'duplex_mode': 'auto',
-                         'efficient_ethernet': 'n/a',
-                         'enabled': False,
-                         'encapsulations': {'encapsulation': 'arpa'},
-                         'ethertype': '0x8100',
-                         'flow_control': {'receive': False, 'send': False},
-                         'interface_reset': 16,
-                         'last_link_flapped': '82week(s) 6day(s)',
-                         'link_state': 'down',
-                         'mac_address': '80e0.1dff.6cc3',
-                         'media_type': '10G',
-                         'medium': 'broadcast',
-                         'mtu': 1500,
-                         'oper_status': 'down',
-                         'phys_address': '80e0.1dff.6cc3',
-                         'port_channel': {'port_channel_member': False},
-                         'port_mode': 'access',
-                         'port_speed': 'auto-speed',
-                         'reliability': '255/255',
-                         'rxload': '1/255',
-                         'switchport_monitor': 'off',
-                         'txload': '1/255',
-                         'types': '1000/10000 Ethernet'},
-        'mgmt0': {'admin_state': 'up',
-                  'auto_mdix': 'off',
-                  'auto_negotiate': True,
-                  'bandwidth': 1000000,
-                  'counters': {
-                    'in_multicast_pkts': 132485585,
-                    'in_unicast_pkts': 445986207,
-                    'in_broadcast_pkts': 10,
-                    'in_pkts': 607382344,
-                    'in_octets': 141467913935,
-                    'in_unicast_pkts': 445986207,
-                    'rate': {'in_rate': 13408,
-                                        'in_rate_pkts': 16,
-                                        'load_interval': 1,
-                                        'out_rate': 51208,
-                                        'out_rate_pkts': 17},
-                    'rx': True,
-                    'tx': True},
-                  'delay': 10,
-                  'duplex_mode': 'full',
-                  'enabled': True,
-                  'encapsulations': {'encapsulation': 'arpa'},
-                  'ethertype': '0x0000',
-                  'ipv4': {'10.154.64.17/23': {'ip': '10.154.64.17',
-                                               'prefix_length': '23'}},
-                  'link_state': 'up',
-                  'mac_address': '80e0.1dff.6bae',
-                  'medium': 'broadcast',
-                  'mtu': 1500,
-                  'oper_status': 'up',
-                  'phys_address': '80e0.1dff.6bae',
-                  'port_channel': {'port_channel_member': False},
-                  'port_speed': '1000',
-                  'reliability': '255/255',
-                  'rxload': '1/255',
-                  'txload': '1/255',
-                  'types': 'GigabitEthernet'
-                }
-    }
-
-    golden_output_5 = {'execute.return_value': '''
-        abc-defg# show int eth1/10
-
-        Ethernet1/10 is down (Link not connected)
-
-        admin state is up, Dedicated Interface
-
-          Hardware: 100/1000/10000 Ethernet, address: 1234.12ff.df07 (bia 1234.12ff.df07)
-    '''}
-
-    golden_parsed_output_5 = {
-        'Ethernet1/10': {
-            'admin_state': 'up',
-            'dedicated_interface': True,
-            'enabled': True,
-            'link_state': 'down',
-            'mac_address': '1234.12ff.df07',
-            'oper_status': 'down',
-            'phys_address': '1234.12ff.df07',
-            'port_channel': {
-                'port_channel_member': False,
-            },
-            'types': '100/1000/10000 Ethernet',
-        },
-    }
-
-    golden_output_6 = {'execute.return_value': '''
-        show interface
-        Ethernet1/1 is down (SFP validation failed)
-         Dedicated Interface
-
-          Hardware: 1000/10000 Ethernet, address: 8c60.4fff.ea8f (bia 8c60.4fff.ea8f)
-          MTU 1500 bytes,  BW 10000000 Kbit,, BW 10000000 Kbit, DLY 10 usec
-          reliability 255/255, txload 1/255, rxload 1/255
-          Encapsulation ARPA, medium is broadcast
-          Port mode is access
-          auto-duplex, 10 Gb/s, media type is 1G
-          Beacon is turned off
-          Input flow-control is off, output flow-control is off
-          Rate mode is dedicated
-          Switchport monitor is off
-          EtherType is 0x8100
-          Last link flapped never
-          Last clearing of "show interface" counters never
-          0 interface resets
-          30 seconds input rate 0 bits/sec, 0 packets/sec
-          30 seconds output rate 0 bits/sec, 0 packets/sec
-          Load-Interval #2: 5 minute (300 seconds)
-            input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-          RX
-            0 unicast packets  0 multicast packets  0 broadcast packets
-            0 input packets  0 bytes
-            0 jumbo packets  0 storm suppression bytes
-            0 runts  0 giants  0 CRC  0 no buffer
-            0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-            0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-            0 input with dribble  0 input discard
-            0 Rx pause
-          TX
-            0 unicast packets  0 multicast packets  0 broadcast packets
-            0 output packets  0 bytes
-            0 jumbo packets
-            0 output error  0 collision  0 deferred  0 late collision
-            0 lost carrier  0 no carrier  0 babble 0 output discard
-            0 Tx pause
-    '''}
-    golden_parsed_output_6 = {
-        'Ethernet1/1': {
-            'bandwidth': 10000000,
-            'beacon': 'off',
-            'counters': {
-                'in_bad_etype_drop': 0,
-                'in_broadcast_pkts': 0,
-                'in_crc_errors': 0,
-                'in_discard': 0,
-                'in_errors': 0,
-                'in_if_down_drop': 0,
-                'in_ignored': 0,
-                'in_mac_pause_frames': 0,
-                'in_multicast_pkts': 0,
-                'in_no_buffer': 0,
-                'in_octets': 0,
-                'in_overrun': 0,
-                'in_oversize_frame': 0,
-                'in_pkts': 0,
-                'in_runts': 0,
-                'in_short_frame': 0,
-                'in_underrun': 0,
-                'in_unicast_pkts': 0,
-                'in_unknown_protos': 0,
-                'in_watchdog': 0,
-                'in_with_dribble': 0,
-                'last_clear': 'never',
-                'out_babble': 0,
-                'out_broadcast_pkts': 0,
-                'out_collision': 0,
-                'out_deferred': 0,
-                'out_discard': 0,
-                'out_errors': 0,
-                'out_jumbo_packets': 0,
-                'out_late_collision': 0,
-                'out_lost_carrier': 0,
-                'out_mac_pause_frames': 0,
-                'out_multicast_pkts': 0,
-                'out_no_carrier': 0,
-                'out_octets': 0,
-                'out_pkts': 0,
-                'out_unicast_pkts': 0,
-                'rate': {
-                    'in_rate': 0,
-                    'in_rate_bps': 0,
-                    'in_rate_pkts': 0,
-                    'in_rate_pps': 0,
-                    'load_interval': 30,
-                    'out_rate': 0,
-                    'out_rate_bps': 0,
-                    'out_rate_pkts': 0,
-                    'out_rate_pps': 0,
-                },
-                'rx': True,
-                'tx': True,
-            },
-            'dedicated_interface': True,
-            'delay': 10,
-            'duplex_mode': 'auto',
-            'enabled': True,
-            'encapsulations': {
-                'encapsulation': 'arpa',
-            },
-            'ethertype': '0x8100',
-            'flow_control': {
-                'receive': False,
-                'send': False,
-            },
-            'interface_reset': 0,
-            'last_link_flapped': 'never',
-            'link_state': 'down',
-            'mac_address': '8c60.4fff.ea8f',
-            'media_type': '1G',
-            'medium': 'broadcast',
-            'mtu': 1500,
-            'oper_status': 'down',
-            'phys_address': '8c60.4fff.ea8f',
-            'port_channel': {
-                'port_channel_member': False,
-            },
-            'port_mode': 'access',
-            'port_speed': '10',
-            'reliability': '255/255',
-            'rxload': '1/255',
-            'switchport_monitor': 'off',
-            'txload': '1/255',
-            'types': '1000/10000 Ethernet',
-        },
-    }
-
-    golden_output_7 = {'execute.return_value': """
-
-        Vlan88 is up, line protocol is up, autostate enabled
-            Hardware is EtherSVI, address is  000c.29ff.f8a2
-            MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
-            reliability 255/255, txload 1/255, rxload 1/255
-            Encapsulation ARPA, loopback not set
-            Keepalive not supported
-            ARP type: ARPA
-            Last clearing of "show interface" counters never
-            L3 in Switched:
-            ucast: 0 pkts, 0 bytes
-
-        port-channel233 is down (No operational members)
-            admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
-              Description: desc-1
-              Internet Address is 10.4.4.4/24 secondary tag 10
-              MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
-              reliability 255/255, txload 1/255, rxload 1/255
-              Encapsulation ARPA, medium is broadcast
-              Port mode is routed
-              full-duplex, 1000 Mb/s
-              Beacon is turned off
-              Auto-Negotiation is turned off
-              Input flow-control is off, output flow-control is off
-              Auto-mdix is turned off
-              Switchport monitor is off
-              EtherType is 0x8100
-              EEE (efficient-ethernet) : n/a
-              Last link flapped 00:00:29
-              Last clearing of "show interface" counters never
-              1 interface resets
-              Load-Interval #1: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              Load-Interval #2: 0 seconds
-                0 seconds input rate 0 bits/sec, 0 packets/sec
-                0 seconds output rate 0 bits/sec, 0 packets/sec
-                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
-              RX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 input packets  0 bytes
-                0 jumbo packets  0 storm suppression packets
-                0 runts  0 giants  0 CRC/FCS  0 no buffer
-                0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-                0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-                0 input with dribble  0 input discard
-                0 Rx pause
-              TX
-                0 unicast packets  0 multicast packets  0 broadcast packets
-                0 output packets  0 bytes
-                0 jumbo packets
-                0 output error  0 collision  0 deferred  0 late collision
-                0 lost carrier  0 no carrier  0 babble  0 output discard
-                0 Tx pause
-    """}
-
-    golden_parsed_output_7 = {
-           "Vlan88":{
-              "port_channel":{
-                 "port_channel_member":False
-              },
-              "link_state":"up",
-              "enabled":True,
-              "oper_status":"up",
-              "line_protocol":"up",
-              "autostate":True,
-              "delay":10,
-              "mtu":1500,
-              "bandwidth":1000000,
-              "reliability":"255/255",
-              "txload":"1/255",
-              "rxload":"1/255",
-              "encapsulations":{
-                 "encapsulation":"arpa"
-              }
-           },
-           "port-channel233":{
-              "port_channel":{
-                 "port_channel_member":False
-              },
-              "link_state":"down",
-              "enabled":True,
-              "oper_status":"down",
-              "admin_state":"up",
-              "dedicated_interface":True,
-              "types":"10/100/1000 Ethernet",
-              "mac_address":"aaaa.bbff.8888",
-              "phys_address":"5254.00ff.8506",
-              "description":"desc-1",
-              "ipv4":{
-                 "10.4.4.4/24":{
-                    "ip":"10.4.4.4",
-                    "prefix_length":"24",
-                    "secondary":True,
-                    "route_tag":"10"
-                 }
-              },
-              "delay":3330,
-              "mtu":1600,
-              "bandwidth":768,
-              "reliability":"255/255",
-              "txload":"1/255",
-              "rxload":"1/255",
-              "encapsulations":{
-                 "encapsulation":"arpa"
-              },
-              "medium":"broadcast",
-              "port_mode":"routed",
-              "duplex_mode":"full",
-              "port_speed":"1000",
-              "beacon":"off",
-              "auto_negotiate":False,
-              "flow_control":{
-                 "receive":False,
-                 "send":False
-              },
-              "auto_mdix":"off",
-              "switchport_monitor":"off",
-              "ethertype":"0x8100",
-              "efficient_ethernet":"n/a",
-              "last_link_flapped":"00:00:29",
-              "interface_reset":1,
-              "counters":{
-                 "rate":{
-                    "load_interval":0,
-                    "in_rate":0,
-                    "in_rate_pkts":0,
-                    "out_rate":0,
-                    "out_rate_pkts":0,
-                    "in_rate_bps":0,
-                    "in_rate_pps":0,
-                    "out_rate_bps":0,
-                    "out_rate_pps":0
-                 },
-                 "rx":True,
-                 "in_unicast_pkts":0,
-                 "in_multicast_pkts":0,
-                 "in_broadcast_pkts":0,
-                 "last_clear":"never",
-                 "in_pkts":0,
-                 "in_octets":0,
-                 "in_jumbo_packets":0,
-                 "in_storm_suppression_packets":0,
-                 "in_runts":0,
-                 "in_oversize_frame":0,
-                 "in_crc_errors":0,
-                 "in_no_buffer":0,
-                 "in_errors":0,
-                 "in_short_frame":0,
-                 "in_overrun":0,
-                 "in_underrun":0,
-                 "in_ignored":0,
-                 "in_watchdog":0,
-                 "in_bad_etype_drop":0,
-                 "in_unknown_protos":0,
-                 "in_if_down_drop":0,
-                 "in_with_dribble":0,
-                 "in_discard":0,
-                 "in_mac_pause_frames":0,
-                 "tx":True,
-                 "out_unicast_pkts":0,
-                 "out_multicast_pkts":0,
-                 "out_broadcast_pkts":0,
-                 "out_pkts":0,
-                 "out_octets":0,
-                 "out_jumbo_packets":0,
-                 "out_errors":0,
-                 "out_collision":0,
-                 "out_deferred":0,
-                 "out_late_collision":0,
-                 "out_lost_carrier":0,
-                 "out_no_carrier":0,
-                 "out_babble":0,
-                 "out_discard":0,
-                 "out_mac_pause_frames":0
-              }
-           }
-        }
-
-    golden_output_8 = {'execute.return_value': """
-
-    Vlan420 is up, line protocol is up, autostate enabled
-    Hardware is EtherSVI, address is 1234.5678.90ab
-    Description: VLAN information Internet Address is 10.10.10.1/24
-    MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
-
-    reliability 255/255, txload 1/255, rxload 1/255
-    Encapsulation ARPA, loopback not set
-    Keepalive not supported
-    ARP type: ARPA
-    Last clearing of "show interface" counters never
-    L3 in Switched:
-    ucast: 0 pkts, 0 bytes
-
-    """}
-
-    golden_parsed_output_8 = {
-        "Vlan420": {
-            "port_channel": {
-                "port_channel_member": False
-            },
-            "link_state": "up",
-            "oper_status": "up",
-            "enabled": True,
-            "line_protocol": "up",
-            "autostate": True,
-            "description": "VLAN information",
-            "ipv4": {
-                "10.10.10.1/24": {
-                    "ip": "10.10.10.1",
-                    "prefix_length": "24"
-                }
-            },
-            "delay": 10,
-            "mtu": 1500,
-            "bandwidth": 1000000,
-            "reliability": "255/255",
-            "txload": "1/255",
-            "rxload": "1/255",
-            "encapsulations": {
-                "encapsulation": "arpa"
-            }
-        }
-    }
-
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        interface_obj = ShowInterface(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = interface_obj.parse()
-
-    def test_golden1(self):
-        self.device = Mock(**self.golden_output1)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output1)
-
-    def test_golden2(self):
-        self.device = Mock(**self.golden_output2)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output2)
-
-    def test_golden3(self):
-        self.device = Mock(**self.golden_output3)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output3)
-
-    def test_golden_custom(self):
-        self.device = Mock(**self.golden_output_custom)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse(interface='Ethernet2/1')
-        self.assertEqual(parsed_output, self.golden_parsed_output_custom)
-
-    def test_golden_4(self):
-        self.device = Mock(**self.golden_output_4)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_4)
-
-    def test_golden_5(self):
-        self.device = Mock(**self.golden_output_5)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
-
-    def test_golden_6(self):
-        self.device = Mock(**self.golden_output_6)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_6)
-    
-    def test_golden_7(self):
-        self.device = Mock(**self.golden_output_7)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_7)
-    
-
-    def test_golden_7(self):
-        self.device = Mock(**self.golden_output_7)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_7)
-
-
-    def test_golden_7(self):
-        self.device = Mock(**self.golden_output_7)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_7)
-
-    def test_golden_8(self):
-        self.device = Mock(**self.golden_output_8)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 
 # #############################################################################
@@ -1650,156 +32,156 @@ class TestShowInterface(unittest.TestCase):
 # #############################################################################
 
 class TestShowVrfAllInterface(unittest.TestCase):
-
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'Ethernet2/1': {'site_of_origin': '--', 'vrf': 'VRF1', 'vrf_id': 3},
- 'Ethernet2/1.10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/1.20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet2/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/1': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/2': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/3': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet3/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/1': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/2': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/3': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Ethernet4/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'Null0': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
- 'mgmt0': {'site_of_origin': '--', 'vrf': 'management', 'vrf_id': 2}}
+    golden_parsed_output = {
+        'Ethernet2/1': {'site_of_origin': '--', 'vrf': 'VRF1', 'vrf_id': 3},
+        'Ethernet2/1.10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/1.20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet2/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/1': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/2': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/3': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet3/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/1': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/10': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/11': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/12': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/13': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/14': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/15': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/16': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/17': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/18': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/19': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/2': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/20': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/21': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/22': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/23': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/24': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/25': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/26': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/27': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/28': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/29': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/3': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/30': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/31': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/32': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/33': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/34': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/35': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/36': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/37': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/38': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/39': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/4': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/40': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/41': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/42': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/43': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/44': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/45': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/46': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/47': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/48': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/5': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/6': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/7': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/8': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Ethernet4/9': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'Null0': {'site_of_origin': '--', 'vrf': 'default', 'vrf_id': 1},
+        'mgmt0': {'site_of_origin': '--', 'vrf': 'management', 'vrf_id': 2}}
 
     golden_output = {'execute.return_value': '''
 
@@ -1952,10 +334,10 @@ class TestShowVrfAllInterface(unittest.TestCase):
     mgmt0                     management                           2  --
 
         '''}
-    golden_parsed_output_custom={
+    golden_parsed_output_custom = {
         'Ethernet2/1': {'site_of_origin': '--', 'vrf': 'VRF1', 'vrf_id': 3}
     }
-    golden_output_custom={'execute.return_value': '''
+    golden_output_custom = {'execute.return_value': '''
      Interface                 VRF-Name                        VRF-ID  Site-of-Origin
     Ethernet2/1               VRF1                                 3  --
     '''}
@@ -1971,14 +353,14 @@ class TestShowVrfAllInterface(unittest.TestCase):
         vrf_all_interface_obj = ShowVrfAllInterface(device=self.device)
         parsed_output = vrf_all_interface_obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_custom(self):
         self.device = Mock(**self.golden_output_custom)
         vrf_all_interface_obj = ShowVrfAllInterface(device=self.device)
         parsed_output = vrf_all_interface_obj.parse(vrf='VRF1', interface='Ethernet2/1')
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output_custom)
+        self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
 
 # #############################################################################
@@ -1987,7 +369,6 @@ class TestShowVrfAllInterface(unittest.TestCase):
 
 
 class TestShowInterfaceSwitchport(unittest.TestCase):
-
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -1995,42 +376,42 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     golden_parsed_output_1 = {
         'Ethernet2/2':
             {'access_vlan': 1,
-            'access_vlan_mode': 'default',
-            'admin_priv_vlan_primary_host_assoc': 'none',
-            'admin_priv_vlan_primary_mapping': 'none',
-            'admin_priv_vlan_secondary_host_assoc': 'none',
-            'admin_priv_vlan_secondary_mapping': 'none',
-            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
-            'admin_priv_vlan_trunk_native_vlan': 'none',
-            'admin_priv_vlan_trunk_normal_vlans': 'none',
-            'admin_priv_vlan_trunk_private_vlans': 'none',
-            'native_vlan': 1,
-            'native_vlan_mode': 'default',
-            'operational_private_vlan': 'none',
-            'switchport_mode': 'trunk',
-            'switchport_monitor': 'Not enabled',
-            'switchport_status': 'enabled',
-            'switchport_enable': True,
-            'trunk_vlans': '100,300'},
+             'access_vlan_mode': 'default',
+             'admin_priv_vlan_primary_host_assoc': 'none',
+             'admin_priv_vlan_primary_mapping': 'none',
+             'admin_priv_vlan_secondary_host_assoc': 'none',
+             'admin_priv_vlan_secondary_mapping': 'none',
+             'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+             'admin_priv_vlan_trunk_native_vlan': 'none',
+             'admin_priv_vlan_trunk_normal_vlans': 'none',
+             'admin_priv_vlan_trunk_private_vlans': 'none',
+             'native_vlan': 1,
+             'native_vlan_mode': 'default',
+             'operational_private_vlan': 'none',
+             'switchport_mode': 'trunk',
+             'switchport_monitor': 'Not enabled',
+             'switchport_status': 'enabled',
+             'switchport_enable': True,
+             'trunk_vlans': '100,300'},
         'Ethernet2/3':
             {'access_vlan': 100,
-            'access_vlan_mode': 'Vlan not created',
-            'admin_priv_vlan_primary_host_assoc': 'none',
-            'admin_priv_vlan_primary_mapping': 'none',
-            'admin_priv_vlan_secondary_host_assoc': 'none',
-            'admin_priv_vlan_secondary_mapping': 'none',
-            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
-            'admin_priv_vlan_trunk_native_vlan': 'none',
-            'admin_priv_vlan_trunk_normal_vlans': 'none',
-            'admin_priv_vlan_trunk_private_vlans': 'none',
-            'native_vlan': 1,
-            'native_vlan_mode': 'default',
-            'operational_private_vlan': 'none',
-            'switchport_mode': 'access',
-            'switchport_monitor': 'Not enabled',
-            'switchport_status': 'enabled',
-            'switchport_enable': True,
-            'trunk_vlans': '1-4094'}}
+             'access_vlan_mode': 'Vlan not created',
+             'admin_priv_vlan_primary_host_assoc': 'none',
+             'admin_priv_vlan_primary_mapping': 'none',
+             'admin_priv_vlan_secondary_host_assoc': 'none',
+             'admin_priv_vlan_secondary_mapping': 'none',
+             'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+             'admin_priv_vlan_trunk_native_vlan': 'none',
+             'admin_priv_vlan_trunk_normal_vlans': 'none',
+             'admin_priv_vlan_trunk_private_vlans': 'none',
+             'native_vlan': 1,
+             'native_vlan_mode': 'default',
+             'operational_private_vlan': 'none',
+             'switchport_mode': 'access',
+             'switchport_monitor': 'Not enabled',
+             'switchport_status': 'enabled',
+             'switchport_enable': True,
+             'trunk_vlans': '1-4094'}}
 
     golden_output_1 = {'execute.return_value': '''
         Name: Ethernet2/2
@@ -2070,23 +451,23 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     golden_parsed_output_2 = {
         'port-channel662':
             {'access_vlan': 1,
-            'access_vlan_mode': 'default',
-            'admin_priv_vlan_primary_host_assoc': 'none',
-            'admin_priv_vlan_primary_mapping': 'none',
-            'admin_priv_vlan_secondary_host_assoc': 'none',
-            'admin_priv_vlan_secondary_mapping': 'none',
-            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
-            'admin_priv_vlan_trunk_native_vlan': 'none',
-            'admin_priv_vlan_trunk_normal_vlans': 'none',
-            'admin_priv_vlan_trunk_private_vlans': 'none',
-            'native_vlan': 3967,
-            'native_vlan_mode': 'Vlan not created',
-            'operational_private_vlan': 'none',
-            'switchport_enable': True,
-            'switchport_mode': 'trunk',
-            'switchport_monitor': 'Not enabled',
-            'switchport_status': 'enabled',
-            'trunk_vlans': '2600-26507,2610,2620,2630,2640,2690,2698-2699'}}
+             'access_vlan_mode': 'default',
+             'admin_priv_vlan_primary_host_assoc': 'none',
+             'admin_priv_vlan_primary_mapping': 'none',
+             'admin_priv_vlan_secondary_host_assoc': 'none',
+             'admin_priv_vlan_secondary_mapping': 'none',
+             'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+             'admin_priv_vlan_trunk_native_vlan': 'none',
+             'admin_priv_vlan_trunk_normal_vlans': 'none',
+             'admin_priv_vlan_trunk_private_vlans': 'none',
+             'native_vlan': 3967,
+             'native_vlan_mode': 'Vlan not created',
+             'operational_private_vlan': 'none',
+             'switchport_enable': True,
+             'switchport_mode': 'trunk',
+             'switchport_monitor': 'Not enabled',
+             'switchport_status': 'enabled',
+             'trunk_vlans': '2600-26507,2610,2620,2630,2640,2690,2698-2699'}}
 
     golden_output_2 = {'execute.return_value': '''
         Name: port-channel662
@@ -2107,26 +488,26 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
           Administrative private-vlan trunk private VLANs: none
           Operational private-vlan: none
         '''}
-    golden_parsed_output_custom= {
+    golden_parsed_output_custom = {
         'Ethernet2/2':
             {'access_vlan': 1,
-            'access_vlan_mode': 'default',
-            'admin_priv_vlan_primary_host_assoc': 'none',
-            'admin_priv_vlan_primary_mapping': 'none',
-            'admin_priv_vlan_secondary_host_assoc': 'none',
-            'admin_priv_vlan_secondary_mapping': 'none',
-            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
-            'admin_priv_vlan_trunk_native_vlan': 'none',
-            'admin_priv_vlan_trunk_normal_vlans': 'none',
-            'admin_priv_vlan_trunk_private_vlans': 'none',
-            'native_vlan': 1,
-            'native_vlan_mode': 'default',
-            'operational_private_vlan': 'none',
-            'switchport_mode': 'trunk',
-            'switchport_monitor': 'Not enabled',
-            'switchport_status': 'enabled',
-            'switchport_enable': True,
-            'trunk_vlans': '100,300'},
+             'access_vlan_mode': 'default',
+             'admin_priv_vlan_primary_host_assoc': 'none',
+             'admin_priv_vlan_primary_mapping': 'none',
+             'admin_priv_vlan_secondary_host_assoc': 'none',
+             'admin_priv_vlan_secondary_mapping': 'none',
+             'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+             'admin_priv_vlan_trunk_native_vlan': 'none',
+             'admin_priv_vlan_trunk_normal_vlans': 'none',
+             'admin_priv_vlan_trunk_private_vlans': 'none',
+             'native_vlan': 1,
+             'native_vlan_mode': 'default',
+             'operational_private_vlan': 'none',
+             'switchport_mode': 'trunk',
+             'switchport_monitor': 'Not enabled',
+             'switchport_status': 'enabled',
+             'switchport_enable': True,
+             'trunk_vlans': '100,300'},
     }
     golden_output_custom = {'execute.return_value': '''
             Name: Ethernet2/2
@@ -2147,15 +528,16 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
               Operational private-vlan: none
               '''}
     golden_parsed_output_disabled = {
-        'Ethernet1/1':{
+        'Ethernet1/1': {
             'switchport_status': 'disabled',
             'switchport_enable': False,
         }
     }
-    golden_output_disabled={'execute.return_value': '''
+    golden_output_disabled = {'execute.return_value': '''
     Name: Ethernet1/1
         Switchport: Disabled
     '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_switchport_obj = ShowInterfaceSwitchport(device=self.device1)
@@ -2191,68 +573,84 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_disabled)
 
 
-
-
 class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface':
                                 {'Eth5/48.106':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.6.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.6.1'},
                                  'Lo3':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.205.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.205.1'},
                                  'Po1.102':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.70.2'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.70.2'},
                                  'Lo11':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.151.1'},
                                  'Vlan23':
-                                    {'vlan_id':
-                                        {'23':
-                                            {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.186.1'}}},
+                                     {'vlan_id':
+                                          {'23':
+                                               {'interface_status': 'protocol-up/link-up/admin-up',
+                                                'ip_address': '192.168.186.1'}}},
                                  'Eth5/48.101':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.1.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.1.1'},
                                  'Eth5/48.102':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.2.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.2.1'},
                                  'Eth5/48.105':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.5.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.5.1'},
                                  'Lo2':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.51.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.51.1'},
                                  'Lo1':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.154.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.154.1'},
                                  'Eth6/22':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.145.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.145.1'},
                                  'Po1.101':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.2'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.151.2'},
                                  'Lo10':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.64.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.64.1'},
                                  'Po1.103':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.246.2'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.246.2'},
                                  'Eth5/48.100':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.0.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.0.1'},
                                  'Po2.107':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.66.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.66.1'},
                                  'Eth5/48.103':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.3.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.3.1'},
                                  'tunnel-te12':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': 'unnumbered(loopback0)'},
                                  'Eth5/48.110':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.10.1'},
+                                     {'interface_status': 'protocol-down/link-down/admin-up',
+                                      'ip_address': '10.81.10.1'},
                                  'Po2.103':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.19.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.19.1'},
                                  'Lo0':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.4.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.4.1'},
                                  'Po2.101':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.135.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.135.1'},
                                  'Po2.100':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.196.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': '192.168.196.1'},
                                  'tunnel-te11':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up',
+                                      'ip_address': 'unnumbered(loopback0)'},
                                  'Po2.102':
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.76.1'},
+                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.76.1'},
                                  'Eth5/48.104':
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.4.1'}
-                                }
+                                     {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.4.1'}
+                                 }
                             }
 
     golden_output = {'execute.return_value': '''
@@ -2293,7 +691,7 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowIpInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -2308,12 +706,13 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface':
                                 {'Vlan98':
-                                    {'vlan_id':
-                                        {'98':
-                                            {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '192.168.234.1'}
-                                        }
-                                    }
-                                }
+                                     {'vlan_id':
+                                          {'98':
+                                               {'interface_status': 'protocol-down/link-down/admin-up',
+                                                'ip_address': '192.168.234.1'}
+                                           }
+                                      }
+                                 }
                             }
 
     golden_output = {'execute.return_value': '''
@@ -2324,13 +723,14 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowIpInterfaceBriefPipeVlan(device=self.device)
         parsed_output = intf_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         intf_obj = ShowIpInterfaceBriefPipeVlan(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
 
 # ====================================
 # Unit test for 'show interface brief'
@@ -2345,51 +745,51 @@ class TestShowInterfaceBrief(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'interface':
-                              {'ethernet':
-                                {'Ethernet1/1': {'mode': 'routed',
-                                            'port_ch': '--',
-                                            'reason': 'none',
-                                            'speed': '1000(D)',
-                                            'status': 'up',
-                                            'type': 'eth',
-                                            'vlan': '--'},
-                                 'Ethernet1/3': {'mode': 'access',
-                                            'port_ch': '--',
-                                            'reason': 'Administratively '
-                                                      'down',
-                                            'speed': 'auto(D)',
-                                            'status': 'down',
-                                            'type': 'eth',
-                                            'vlan': '1'},
-                                 'Ethernet1/6': {'mode': 'access',
-                                            'port_ch': '--',
-                                            'reason': 'Link not '
-                                                      'connected',
-                                            'speed': 'auto(D)',
-                                            'status': 'down',
-                                            'type': 'eth',
-                                            'vlan': '1'}},
-                              'loopback':
-                                {'Loopback0':
-                                  {'description': '--',
-                                   'status': 'up'}},
-                              'port':
-                                {'mgmt0':
-                                  {'ip_address': '172.25.143.76',
-                                   'mtu': 1500,
-                                   'speed': '1000',
-                                   'status': 'up',
-                                   'vrf': '--'}},
-                              'port_channel':
-                                {'Port-channel8':
-                                  {'mode': 'access',
-                                   'protocol': 'none',
-                                   'reason': 'No operational '
-                                             'members',
-                                   'speed': 'auto(I)',
-                                   'status': 'down',
-                                   'type': 'eth',
-                                   'vlan': '1'}}}}
+                                {'ethernet':
+                                     {'Ethernet1/1': {'mode': 'routed',
+                                                      'port_ch': '--',
+                                                      'reason': 'none',
+                                                      'speed': '1000(D)',
+                                                      'status': 'up',
+                                                      'type': 'eth',
+                                                      'vlan': '--'},
+                                      'Ethernet1/3': {'mode': 'access',
+                                                      'port_ch': '--',
+                                                      'reason': 'Administratively '
+                                                                'down',
+                                                      'speed': 'auto(D)',
+                                                      'status': 'down',
+                                                      'type': 'eth',
+                                                      'vlan': '1'},
+                                      'Ethernet1/6': {'mode': 'access',
+                                                      'port_ch': '--',
+                                                      'reason': 'Link not '
+                                                                'connected',
+                                                      'speed': 'auto(D)',
+                                                      'status': 'down',
+                                                      'type': 'eth',
+                                                      'vlan': '1'}},
+                                 'loopback':
+                                     {'Loopback0':
+                                          {'description': '--',
+                                           'status': 'up'}},
+                                 'port':
+                                     {'mgmt0':
+                                          {'ip_address': '172.25.143.76',
+                                           'mtu': 1500,
+                                           'speed': '1000',
+                                           'status': 'up',
+                                           'vrf': '--'}},
+                                 'port_channel':
+                                     {'Port-channel8':
+                                          {'mode': 'access',
+                                           'protocol': 'none',
+                                           'reason': 'No operational '
+                                                     'members',
+                                           'speed': 'auto(I)',
+                                           'status': 'down',
+                                           'type': 'eth',
+                                           'vlan': '1'}}}}
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-3 # show interface brief
@@ -2434,14 +834,14 @@ class TestShowInterfaceBrief(unittest.TestCase):
     golden_parsed_output2 = {
         'interface':
             {'ethernet':
-                {'Ethernet1/1':
-                    {'mode': 'routed',
-                    'port_ch': '--',
-                    'reason': 'none',
-                    'speed': '1000(D)',
-                    'status': 'up',
-                    'type': 'eth',
-                    'vlan': '--'}}}}
+                 {'Ethernet1/1':
+                      {'mode': 'routed',
+                       'port_ch': '--',
+                       'reason': 'none',
+                       'speed': '1000(D)',
+                       'status': 'up',
+                       'type': 'eth',
+                       'vlan': '--'}}}}
 
     golden_output3 = {'execute.return_value': '''
 
@@ -2776,7 +1176,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
@@ -2817,31 +1217,31 @@ class TestShowRunInterface(unittest.TestCase):
 
     golden_parsed_output = {'interface':
                                 {'nve1':
-                                    {'host_reachability_protocol': 'bgp',
-                                     'member_vni':
-                                        {'8100': {'mcast_group': '225.0.1.11'},
-                                         '8101': {'mcast_group': '225.0.1.12'},
-                                         '8103': {'mcast_group': '225.0.1.13'},
-                                         '8105': {'mcast_group': '225.0.1.16'},
-                                         '8106': {'mcast_group': '225.0.1.17'},
-                                         '8107': {'mcast_group': '225.0.1.18'},
-                                         '8108': {'mcast_group': '225.0.1.19'},
-                                         '8109': {'mcast_group': '225.0.1.20'},
-                                         '8110': {'mcast_group': '225.0.1.21'},
-                                         '8111': {'mcast_group': '225.0.1.22'},
-                                         '8112': {'mcast_group': '225.0.1.23'},
-                                         '8113': {'mcast_group': '225.0.1.24'},
-                                         '8114': {'mcast_group': '225.0.1.25'},
-                                         '9100': {'associate_vrf': True},
-                                         '9105': {'associate_vrf': True},
-                                         '9106': {'associate_vrf': True},
-                                         '9107': {'associate_vrf': True},
-                                         '9108': {'associate_vrf': True},
-                                         '9109': {'associate_vrf': True}
-                                        },
-                                    'shutdown': False,
-                                    'source_interface': 'loopback1'}
-                                }
+                                     {'host_reachability_protocol': 'bgp',
+                                      'member_vni':
+                                          {'8100': {'mcast_group': '225.0.1.11'},
+                                           '8101': {'mcast_group': '225.0.1.12'},
+                                           '8103': {'mcast_group': '225.0.1.13'},
+                                           '8105': {'mcast_group': '225.0.1.16'},
+                                           '8106': {'mcast_group': '225.0.1.17'},
+                                           '8107': {'mcast_group': '225.0.1.18'},
+                                           '8108': {'mcast_group': '225.0.1.19'},
+                                           '8109': {'mcast_group': '225.0.1.20'},
+                                           '8110': {'mcast_group': '225.0.1.21'},
+                                           '8111': {'mcast_group': '225.0.1.22'},
+                                           '8112': {'mcast_group': '225.0.1.23'},
+                                           '8113': {'mcast_group': '225.0.1.24'},
+                                           '8114': {'mcast_group': '225.0.1.25'},
+                                           '9100': {'associate_vrf': True},
+                                           '9105': {'associate_vrf': True},
+                                           '9106': {'associate_vrf': True},
+                                           '9107': {'associate_vrf': True},
+                                           '9108': {'associate_vrf': True},
+                                           '9109': {'associate_vrf': True}
+                                           },
+                                      'shutdown': False,
+                                      'source_interface': 'loopback1'}
+                                 }
                             }
 
     golden_output = {'execute.return_value': '''
@@ -2951,7 +1351,7 @@ class TestShowRunInterface(unittest.TestCase):
                 'switchport_mode': 'trunk',
                 'trunk_vlans': '1-99,101-199,201-1399,1401-4094',
                 'trunk_native_vlan': '330',
-                'port_channel':{
+                'port_channel': {
                     'port_channel_mode': 'active',
                     'port_channel_int': '1',
                 },
@@ -2976,7 +1376,7 @@ class TestShowRunInterface(unittest.TestCase):
           channel-group 1 mode active
           no shutdown
     '''
-    }
+                       }
 
     # show running-config interface Eth1/4
     golden_output_3 = {'execute.return_value': '''
@@ -3024,24 +1424,23 @@ class TestShowRunInterface(unittest.TestCase):
         },
     }
 
-
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='nve1')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='nve1')
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='Ethernet1/1')
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -3053,35 +1452,34 @@ class TestShowRunInterface(unittest.TestCase):
         self.device = Mock(**self.golden_output_3)
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='Ethernet1/4')
-        self.assertEqual(parsed_output,self.golden_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='port-channel10')
-        self.assertEqual(parsed_output,self.golden_parsed_output_4)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 class TestShowNveInterface(unittest.TestCase):
-
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'interface':
                                 {'nve1':
-                                    {'state': 'Up',
-                                    'encapsulation': 'VXLAN',
-                                    'source_interface':
-                                        {'loopback1':
-                                            {'secondary': '0.0.0.0',
-                                             'primary': '10.9.0.1'}
-                                        },
-                                    'vpc_capability':
-                                        {'VPC-VIP-Only':
-                                            {'notified': False}
-                                        }
-                                    }
-                                }
+                                     {'state': 'Up',
+                                      'encapsulation': 'VXLAN',
+                                      'source_interface':
+                                          {'loopback1':
+                                               {'secondary': '0.0.0.0',
+                                                'primary': '10.9.0.1'}
+                                           },
+                                      'vpc_capability':
+                                          {'VPC-VIP-Only':
+                                               {'notified': False}
+                                           }
+                                      }
+                                 }
                             }
 
     golden_output = {'execute.return_value': '''\
@@ -3107,13 +1505,13 @@ class TestShowNveInterface(unittest.TestCase):
         Nve Mcast Src node last notif sent: None
         Nve MultiSite Src node last notif sent: None
     '''
-    }
+                     }
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowNveInterface(device=self.device)
         parsed_output = obj.parse(interface='nve1')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -3122,115 +1520,9 @@ class TestShowNveInterface(unittest.TestCase):
             parsed_output = obj.parse(interface='nve1')
 
 
-class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
-
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output = {
-        'interface':
-            {'Eth1/1.1':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.4.1'},
-             'Eth1/1.2':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.154.1'},
-             'Eth1/1.4':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.106.1'},
-             'Eth1/2.1':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.154.1'},
-             'Eth1/2.2':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.51.1'},
-             'Eth1/2.4':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '192.168.9.1'},
-             'Lo0':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.1.1.1'},
-             'Lo1':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.81.1.1'},
-             'Vlan100':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.51.1.1'},
-             'Vlan101':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.154.1.1'},
-             'Vlan200':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.76.1.1'},
-             'mgmt0':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.255.5.169'}
-            }
-        }
-
-    golden_output = {'execute.return_value': '''\
-        N95_1# show ip interface brief vrf all
-
-        IP Interface Status for VRF "default"(1)
-        Interface            IP Address      Interface Status
-        Vlan100              10.51.1.1        protocol-up/link-up/admin-up
-        Vlan101              10.154.1.1        protocol-up/link-up/admin-up
-        Lo0                  10.1.1.1       protocol-up/link-up/admin-up
-        Eth1/1.1             192.168.4.1       protocol-up/link-up/admin-up
-        Eth1/1.2             192.168.154.1       protocol-up/link-up/admin-up
-        Eth1/1.4             192.168.106.1       protocol-up/link-up/admin-up
-        Eth1/2.1             192.168.154.1       protocol-up/link-up/admin-up
-        Eth1/2.2             192.168.51.1       protocol-up/link-up/admin-up
-        Eth1/2.4             192.168.9.1       protocol-up/link-up/admin-up
-
-        IP Interface Status for VRF "management"(2)
-        Interface            IP Address      Interface Status
-        mgmt0                10.255.5.169    protocol-up/link-up/admin-up
-
-        IP Interface Status for VRF "VRF1"(3)
-        Interface            IP Address      Interface Status
-        Vlan200              10.76.1.1        protocol-up/link-up/admin-up
-        Lo1                  10.81.1.1       protocol-up/link-up/admin-up
-    '''
-    }
-
-    golden_parsed_output_pipe = {
-        'interface':
-            {'mgmt0':
-                {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '10.255.5.169'}
-            }
-        }
-
-    golden_output_pipe = {'execute.return_value': '''\
-        N95_1# show ip interface brief vrf all | i 10.255.5.169
-        mgmt0                10.255.5.169    protocol-up/link-up/admin-up
-    '''
-    }
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden_pipe(self):
-        self.device = Mock(**self.golden_output_pipe)
-        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
-        parsed_output = obj.parse(ip='10.255.5.169')
-        self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
-
 #############################################################################
 # unittest For show interface description
 #############################################################################
-
-
 class test_show_interface_description(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -3397,7 +1689,6 @@ class test_show_interface_description(unittest.TestCase):
         Eth1/1        eth    10G     --
     '''}
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfaceDescription(device=self.device)
@@ -3409,14 +1700,14 @@ class test_show_interface_description(unittest.TestCase):
         obj = ShowInterfaceDescription(device=self.device)
         parsed_output = obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_interface(self):
         self.device = Mock(**self.golden_interface_output)
         obj = ShowInterfaceDescription(device=self.device)
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
 
 #############################################################################
@@ -3752,290 +2043,290 @@ class test_show_interface_status(unittest.TestCase):
             '''}
 
     golden_parsed_output_4 = {
-          "interfaces": {
+        "interfaces": {
             "mgmt0": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "1G"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "1G"
             },
             "Ethernet1/1": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/2": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/3": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/4": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/5": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/6": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/7": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/8": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/9": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/10": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/11": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/12": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/13": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/14": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/15": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/16": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/17": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/18": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/19": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/20": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/21": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/22": {
-              "status": "sfpabsent",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/23": {
-              "status": "out-of-ser",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "40G",
-              "type": "QSFP-40G-SR-BD"
+                "status": "out-of-ser",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "40G",
+                "type": "QSFP-40G-SR-BD"
             },
             "Ethernet1/24": {
-              "status": "notconnect",
-              "vlan": "trunk",
-              "duplex_code": "full",
-              "port_speed": "inherit",
-              "type": "QSFP-40G-SR-BD"
+                "status": "notconnect",
+                "vlan": "trunk",
+                "duplex_code": "full",
+                "port_speed": "inherit",
+                "type": "QSFP-40G-SR-BD"
             },
             "Ethernet1/25": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/25.1": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/26": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/26.2": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/27": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/27.3": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/28": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/28.4": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/29": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/29.5": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/30": {
-              "status": "sfpabsent",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "sfpabsent",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/30.6": {
-              "status": "parentdown",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "inherit"
+                "status": "parentdown",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "inherit"
             },
             "Ethernet1/31": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "100G",
-              "type": "QSFP-40/100-SRBD"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "100G",
+                "type": "QSFP-40/100-SRBD"
             },
             "Ethernet1/31.21": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "100G",
-              "type": "QSFP-40/100-SRBD"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "100G",
+                "type": "QSFP-40/100-SRBD"
             },
             "Ethernet1/32": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "100G",
-              "type": "QSFP-40/100-SRBD"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "100G",
+                "type": "QSFP-40/100-SRBD"
             },
             "Ethernet1/32.22": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "full",
-              "port_speed": "100G",
-              "type": "QSFP-40/100-SRBD"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "full",
+                "port_speed": "100G",
+                "type": "QSFP-40/100-SRBD"
             },
             "Loopback0": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "auto"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "auto"
             },
             "Loopback1": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "auto"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "auto"
             },
             "Loopback1023": {
-              "status": "connected",
-              "vlan": "routed",
-              "duplex_code": "auto"
+                "status": "connected",
+                "vlan": "routed",
+                "duplex_code": "auto"
             },
-            "Tunnel7": { "status": "up", "reason": "no-reason" },
-            "Tunnel8": { "status": "up", "reason": "no-reason" },
-            "Tunnel36": { "status": "up", "reason": "no-reason" },
-            "Tunnel37": { "status": "up", "reason": "no-reason" },
-            "Tunnel38": { "status": "up", "reason": "no-reason" },
-            "Tunnel39": { "status": "up", "reason": "no-reason" },
-            "Tunnel40": { "status": "up", "reason": "no-reason" },
-            "Tunnel41": { "status": "up", "reason": "no-reason" },
-            "Tunnel42": { "status": "up", "reason": "no-reason" },
-            "Tunnel43": { "status": "up", "reason": "no-reason" },
-            "Tunnel44": { "status": "up", "reason": "no-reason" },
-            "Tunnel45": { "status": "up", "reason": "no-reason" },
-            "Tunnel46": { "status": "up", "reason": "no-reason" },
-            "Tunnel47": { "status": "up", "reason": "no-reason" }
-          }
+            "Tunnel7": {"status": "up", "reason": "no-reason"},
+            "Tunnel8": {"status": "up", "reason": "no-reason"},
+            "Tunnel36": {"status": "up", "reason": "no-reason"},
+            "Tunnel37": {"status": "up", "reason": "no-reason"},
+            "Tunnel38": {"status": "up", "reason": "no-reason"},
+            "Tunnel39": {"status": "up", "reason": "no-reason"},
+            "Tunnel40": {"status": "up", "reason": "no-reason"},
+            "Tunnel41": {"status": "up", "reason": "no-reason"},
+            "Tunnel42": {"status": "up", "reason": "no-reason"},
+            "Tunnel43": {"status": "up", "reason": "no-reason"},
+            "Tunnel44": {"status": "up", "reason": "no-reason"},
+            "Tunnel45": {"status": "up", "reason": "no-reason"},
+            "Tunnel46": {"status": "up", "reason": "no-reason"},
+            "Tunnel47": {"status": "up", "reason": "no-reason"}
         }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -4078,6 +2369,7 @@ class test_show_interface_status(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+
 # ===========================================
 # Unit test for 'show interface capabilities'
 # ===========================================
@@ -4087,7 +2379,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output={'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         Ethernet1/4
             Model:                 N9K-C93108TC-EX
             Type (Non SFP):        10g
@@ -4118,14 +2410,14 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             Breakout capable:      no
             MACSEC capable:        no
         '''
-    }
+                     }
 
-    golden_parsed_output= {
+    golden_parsed_output = {
         "Ethernet1/4": {
             "model": "N9K-C93108TC-EX",
             "sfp": False,
             "type": "10g",
-            "speed": [100,1000,10000],
+            "speed": [100, 1000, 10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -4153,8 +2445,6 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "macsec_capable": "no",
         }
     }
-
-
 
     golden_output_1 = {'execute.return_value': '''
         Ethernet1/1/1
@@ -4247,14 +2537,14 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             Breakout capable:      yes
             MACSEC capable:        no
         '''
-    }
+                       }
 
     golden_parsed_output_1 = {
         "Ethernet1/1/1": {
             "model": "N9K-C9236C",
             "sfp": True,
             "type": "QSFP-100G-CR4",
-            "speed": [1000,10000],
+            "speed": [1000, 10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -4285,7 +2575,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C93108TC-EX",
             "sfp": False,
             "type": "10g",
-            "speed": [100,1000,10000],
+            "speed": [100, 1000, 10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -4316,7 +2606,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C9236C",
             "sfp": True,
             "type": "QSFP-100G-AOC1M",
-            "speed": [1000,10000,25000,40000,50000,100000],
+            "speed": [1000, 10000, 25000, 40000, 50000, 100000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -4345,8 +2635,6 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
         },
     }
 
-
-
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -4370,6 +2658,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
 
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+
 # ===========================================
 # Unit test for 'show interface transceiver'
 # ===========================================
@@ -4379,7 +2668,7 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output={'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         Ethernet1/4
             transceiver is present
             type is QSFP-40G-CR4
@@ -4395,22 +2684,22 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             cisco product id is QSFP-H40G-CU3M
             cisco version id is V03
         '''
-    }
+                     }
 
-    golden_parsed_output= {
-            'Ethernet1/4': {'cis_part_number': '37-1317-03',
-                 'cis_product_id': 'QSFP-H40G-CU3M',
-                 'cis_version_id': 'V03',
-                 'cisco_id': '13',
-                 'name': 'CISCO-TYCO',
-                 'nominal_bitrate': 10300,
-                 'part_number': '2821248-5',
-                 'revision': 'D',
-                 'serial_number': 'TED2318K229-B',
-                 'transceiver_present': True,
-                 'transceiver_type': 'QSFP-40G-CR4'
-            }
-        }
+    golden_parsed_output = {
+        'Ethernet1/4': {'cis_part_number': '37-1317-03',
+                        'cis_product_id': 'QSFP-H40G-CU3M',
+                        'cis_version_id': 'V03',
+                        'cisco_id': '13',
+                        'name': 'CISCO-TYCO',
+                        'nominal_bitrate': 10300,
+                        'part_number': '2821248-5',
+                        'revision': 'D',
+                        'serial_number': 'TED2318K229-B',
+                        'transceiver_present': True,
+                        'transceiver_type': 'QSFP-40G-CR4'
+                        }
+    }
 
     golden_output_1 = {'execute.return_value': '''
         Ethernet1/2
@@ -4440,38 +2729,38 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             CMIS version is  4
         
         '''
-    }
+                       }
 
     golden_parsed_output_1 = {
-            'Ethernet1/2': {'advertising_code': 'Passive Cu',
-                 'cable_attenuation': '0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 '
-                                      'GHz',
-                 'cable_length': 2.0,
-                 'cis_part_number': '37-1843-01',
-                 'cis_product_id': 'QDD-400-CU2M',
-                 'cis_version_id': 'V01',
-                 'cisco_id': '0x18',
-                 'clei': 'CMPQAGSCAA',
-                 'cmis_ver': 4,
-                 'date_code': '20031400',
-                 'far_end_lanes': '8 lanes aaaaaaaa',
-                 'host_electrical_intf': '200GAUI-4 C2M (Annex 120E)',
-                 'max_power': 1.5,
-                 'media_interface': 'copper cable unequalized',
-                 'name': 'CISCO-LEONI',
-                 'near_end_lanes': 'none',
-                 'nominal_bitrate': 425000,
-                 'part_number': 'L45593-K218-C20',
-                 'power_class': '1 (1.5 W maximum)',
-                 'revision': '00',
-                 'serial_number': 'LCC2411GC93-A',
-                 'vendor_oui': 'a8b0ae',
-                 'transceiver_present': True,
-                 'transceiver_type': 'QSFP-DD-400G-COPPER'
-            }
+        'Ethernet1/2': {'advertising_code': 'Passive Cu',
+                        'cable_attenuation': '0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 '
+                                             'GHz',
+                        'cable_length': 2.0,
+                        'cis_part_number': '37-1843-01',
+                        'cis_product_id': 'QDD-400-CU2M',
+                        'cis_version_id': 'V01',
+                        'cisco_id': '0x18',
+                        'clei': 'CMPQAGSCAA',
+                        'cmis_ver': 4,
+                        'date_code': '20031400',
+                        'far_end_lanes': '8 lanes aaaaaaaa',
+                        'host_electrical_intf': '200GAUI-4 C2M (Annex 120E)',
+                        'max_power': 1.5,
+                        'media_interface': 'copper cable unequalized',
+                        'name': 'CISCO-LEONI',
+                        'near_end_lanes': 'none',
+                        'nominal_bitrate': 425000,
+                        'part_number': 'L45593-K218-C20',
+                        'power_class': '1 (1.5 W maximum)',
+                        'revision': '00',
+                        'serial_number': 'LCC2411GC93-A',
+                        'vendor_oui': 'a8b0ae',
+                        'transceiver_present': True,
+                        'transceiver_type': 'QSFP-DD-400G-COPPER'
+                        }
     }
 
-    golden_output_2={'execute.return_value': '''
+    golden_output_2 = {'execute.return_value': '''
         Ethernet1/1
             transceiver is present
             type is QSFP-DD-400G-COPPER
@@ -4582,7 +2871,7 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
             media interface advertising code is 400GBASE-DR4 (Cl 124)
         '''
-    }
+                       }
 
     golden_parsed_output_2 = {
         "Ethernet1/1": {
@@ -4695,7 +2984,6 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
         },
     }
 
-
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -4737,7 +3025,7 @@ class TestShowInterfaceFec(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output={'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         --------------------------------------------------------------------------------
         Name          Ifindex       Admin-fec Oper-fec  Status    Speed   Type
         --------------------------------------------------------------------------------
@@ -4752,7 +3040,7 @@ class TestShowInterfaceFec(unittest.TestCase):
         Eth1/9        0x1a001000    auto      auto      disabled  auto    QSFP-40G-CR4
         Eth1/10       0x1a001200    auto      auto      disabled  auto    QSFP-40G-CR4
         '''
-    }
+                     }
 
     golden_parsed_output = {
         "Eth1/1": {
@@ -4837,8 +3125,6 @@ class TestShowInterfaceFec(unittest.TestCase):
         },
     }
 
-
-
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -4851,7 +3137,7 @@ class TestShowInterfaceFec(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowInterfaceFec(device=self.device)
         parsed_output = obj.parse()
-        
+
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
@@ -4864,7 +3150,7 @@ class TestShowInterfaceHardwareMap(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output={'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         -------------------------------------------------------------------------------------------------------
         Name       Ifindex  Smod Unit HPort FPort NPort VPort Slice SPort SrcId MacId MacSP VIF  Block BlkSrcID
         -------------------------------------------------------------------------------------------------------
@@ -4891,7 +3177,7 @@ class TestShowInterfaceHardwareMap(unittest.TestCase):
         Po105      16000068 0    0    7     0     54914 8     0     0     0     -1    -1    1543 0     0
         Po130      16000081 0    0    8     0     54914 9     0     0     0     -1    -1    1544 0     0
         '''
-    }
+                     }
 
     golden_parsed_output = {
         "Ethernet1/1/1": {
@@ -5202,7 +3488,6 @@ class TestShowInterfaceHardwareMap(unittest.TestCase):
         },
     }
 
-
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -5215,9 +3500,9 @@ class TestShowInterfaceHardwareMap(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowInterfaceHardwareMap(device=self.device)
         parsed_output = obj.parse()
-        #import pprint 
-        #pprint.pprint(parsed_output)
-        
+        # import pprint
+        # pprint.pprint(parsed_output)
+
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

@@ -1,0 +1,23 @@
+[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
+[Fri Jun 18 22:14:40.000] SSID 1 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+[Fri Jun 18 22:14:40.000] SSID 1 Transition from CREATING to READY upon event ACTIVE_REGISTER
+[Fri Jun 25 19:52:11.000] SSID 2 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+[Fri Jun 25 19:52:11.000] SSID 2 Transition from CREATING to READY upon event ACTIVE_REGISTER
+[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+[Wed Jun 30 17:03:14.000] SSID 1 FSM Binding table running for event LLA_RCV in state CREATING
+[Wed Jun 30 17:03:14.000] SSID 0 FSM sisf_mac_fsm running for event MAC_ACTIVITY in state MAC-STALE
+[Wed Jun 30 17:03:14.000] SSID 0 Transition from MAC-STALE to MAC-REACHABLE upon event MAC_ACTIVITY
+[Wed Jun 30 17:03:14.000] SSID 1 Transition from CREATING to REACHABLE upon event LLA_RCV
+[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+[Wed Jun 30 17:08:14.000] SSID 1000000 FSM sisf_mac_fsm running for event MAC_T1  in state MAC-REACHABLE
+[Wed Jun 30 17:08:14.000] SSID 1000000 Transition from MAC-REACHABLE to MAC-VERIFY upon event MAC_T1 
+[Wed Jun 30 17:08:14.000] SSID 1000000 FSM sisf_mac_fsm running for event MAC_R2 in state MAC-VERIFY
+[Wed Jun 30 17:08:14.000] SSID 1000000 Transition from MAC-VERIFY to MAC-STALE upon event MAC_R2
+[Wed Jun 30 17:08:24.000] SSID 1 FSM Binding table running for event T2_REACHABLE_TIMER in state REACHABLE
+[Wed Jun 30 17:08:24.000] SSID 1 FSM Binding table running for event INACTIVE in state REACHABLE
+[Wed Jun 30 17:08:24.000] SSID 1 Transition from REACHABLE to STALE upon event INACTIVE
+[Wed Jun 30 17:08:24.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+[Thu Jul 01 19:08:15.000] SSID 1000000 FSM sisf_mac_fsm running for event MAC_T3 in state MAC-STALE
+[Thu Jul 01 19:08:15.000] SSID 1000000 FSM sisf_mac_fsm running for event MAC_R2 in state MAC-STALE
+[Thu Jul 01 19:08:16.000] SSID 1000000 FSM sisf_mac_fsm running for event MAC_T5 in state MAC-STALE

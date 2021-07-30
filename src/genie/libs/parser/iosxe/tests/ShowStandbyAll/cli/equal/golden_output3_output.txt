@@ -1,0 +1,169 @@
+BDI3071 - Group 71
+  State is Active
+    2 state changes, last state change 1y47w
+  Virtual IP address is 10.198.158.46
+  Active virtual MAC address is 0000.0c07.ac47 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac47 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.112 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.158.45, priority 90 (expires in 9.728 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3071-71" (default)
+BDI3121 - Group 121
+  State is Active
+    2 state changes, last state change 1y47w
+  Virtual IP address is 10.198.109.30
+  Active virtual MAC address is 0000.0c07.ac79 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac79 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.152 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.109.29, priority 90 (expires in 11.136 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3121-121" (default)
+BDI3122 - Group 122
+  State is Active
+    2 state changes, last state change 1y47w
+  Virtual IP address is 10.196.246.30
+  Active virtual MAC address is 0000.0c07.ac7a (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac7a (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.904 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.196.246.29, priority 90 (expires in 9.648 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3122-122" (default)
+BDI3201 - Group 21
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.30
+  Active virtual MAC address is 0000.0c07.ac15 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac15 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.392 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.29, priority 90 (expires in 7.904 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3201-21" (default)
+BDI3202 - Group 22
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.62
+  Active virtual MAC address is 0000.0c07.ac16 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac16 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.440 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.61, priority 90 (expires in 9.360 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3202-22" (default)
+BDI3203 - Group 23
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.94
+  Active virtual MAC address is 0000.0c07.ac17 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac17 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.432 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.93, priority 90 (expires in 8.576 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3203-23" (default)
+BDI3204 - Group 24
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.126
+  Active virtual MAC address is 0000.0c07.ac18 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac18 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.800 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.125, priority 90 (expires in 9.776 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3204-24" (default)
+BDI3205 - Group 25
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.158
+  Active virtual MAC address is 0000.0c07.ac19 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac19 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.088 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.157, priority 90 (expires in 9.136 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3205-25" (default)
+BDI3206 - Group 26
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.190
+  Active virtual MAC address is 0000.0c07.ac1a (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac1a (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.512 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.189, priority 90 (expires in 10.064 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3206-26" (default)
+BDI3207 - Group 27
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.222
+  Active virtual MAC address is 0000.0c07.ac1b (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac1b (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.520 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.221, priority 90 (expires in 9.952 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3207-27" (default)
+BDI3208 - Group 28
+  State is Active
+    40 state changes, last state change 12w0d
+  Virtual IP address is 10.198.107.254
+  Active virtual MAC address is 0000.0c07.ac1c (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac1c (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.536 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.198.107.253, priority 90 (expires in 10.448 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3208-28" (default)
+BDI3531 - Group 31
+  State is Active
+    1 state change, last state change 1y47w
+  Virtual IP address is 10.5.148.254
+  Active virtual MAC address is 0000.0c07.ac1f (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac1f (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 0.288 secs
+  Authentication MD5, key-string
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.5.148.253, priority 90 (expires in 9.248 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3531-31" (default)
+ran-pag-bawen.1#

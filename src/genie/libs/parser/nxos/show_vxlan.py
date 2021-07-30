@@ -1747,6 +1747,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
                         Optional('multisite_ingress_replication_optimized'): bool,
+                        Optional('ingress_replication_protocol_bgp'): bool,
                         Optional('mcast_group'): str,
                         Optional('suppress_arp'): bool,
                         Optional('vni_type'): str,
@@ -1823,6 +1824,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p15 = re.compile(r'^global +mcast-group +(?P<address>[\d\.]+) +(?P<layer>L2|L3)')
         #   multisite ingress-replication optimized
         p16 = re.compile(r'^multisite +ingress-replication +optimized$')
+        #   ingress-replication protocol bgp
+        p17 = re.compile(r'^ingress-replication +protocol +bgp$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -1961,6 +1964,13 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'multisite_ingress_replication_optimized': True})
+                continue
+
+            m = p17.match(line)
+            if m:
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'ingress_replication_protocol_bgp': True})
                 continue
 
         return result_dict

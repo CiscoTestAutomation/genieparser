@@ -1,0 +1,11 @@
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left       
+macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic 
+S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s           
+S   10.10.10.10                              dead.beef.0001         Twe1/0/42  38         0100       4173mn     STALE     try 0 N/A

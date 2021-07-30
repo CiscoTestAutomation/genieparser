@@ -485,6 +485,8 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('source_protocol_status'): str,
                                 Optional('attached'): bool,
                                 Optional('active'): bool,
+                                Optional('direct'): bool,
+                                Optional('pervasive'): bool,
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {  # interface  if there is no next_hop
@@ -513,6 +515,7 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('stale'): bool,
                                             Optional('evpn'): bool,
                                             Optional('segid'): int,
+                                            Optional('asymmetric'): bool,
                                             Optional('tunnelid'): str,
                                             Optional('encap'): str,
                                         },
@@ -710,10 +713,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
         # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
         # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
+        # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+        # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
+
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +'
                         r'(?P<ubest_mbest>[\d\/]+)( +time)?)?((?P<ubest>\d+) '
                         r'+ucast +next-hops, +(?P<mbest>\d+) +mcast +next-hops)?'
-                        r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?$')
+                        r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?'
+                        r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
@@ -727,12 +734,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
         # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
         # *via 2001:db8:626b:2101::3/128, [200/7], 01:51:32, bgp-10001, internal, tag 20001
+        # *via 100.100.100.1%default, [200/0], 01:25:26, bgp-1000, internal, tag 3000, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN
         p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\/\%\!\#\$\*\+\-\;\=\@\^\_\{\}]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
                         r'( +\((?P<hidden>hidden)\))?'
                         r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid: +(?P<segid>\d+))?,?'
+                        r'( +\((?P<asymmetric>Asymmetric)\))?'
                         r'( +tunnelid: +(?P<tunnelid>[0-9x]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
 
         #    tag 100
@@ -765,11 +774,16 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
             # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
             # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
+            # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+            # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 route = groups['route']
                 active = True
+                direct = False
+                pervasive = False
+
                 index = 1
 
                 if groups['ubest_mbest']:
@@ -785,6 +799,12 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if groups['attached']:
                     attached = True if 'attached' in groups['attached'] else False
+
+                if groups['direct']:
+                    direct = True if 'direct' in groups['direct'] else False
+
+                if groups['pervasive']:
+                    pervasive = True if 'pervasive' in groups['pervasive'] else False
 
                 # if vrf:
                 if 'vrf' not in result_dict:
@@ -804,6 +824,12 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['attached']:
                     route_dict.update({'attached': attached})
 
+                if direct:
+                    route_dict.update({'direct': direct})
+
+                if pervasive:
+                    route_dict.update({'pervasive': pervasive})
+
                 continue
 
             # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
@@ -816,6 +842,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
             # **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
+            # *via 100.100.100.1%default, [200/0], 01:25:26, bgp-1000, internal, tag 3000, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -938,6 +965,11 @@ class ShowIpRoute(ShowIpRouteSchema):
                     segid = groups['segid']
                     if segid:
                         index_dict['segid'] = int(segid)
+
+                    asymmetric = True if groups.get('asymmetric') else False
+
+                    if asymmetric:
+                        index_dict['asymmetric'] = asymmetric
 
                     tunnelid = groups['tunnelid']
                     if tunnelid:

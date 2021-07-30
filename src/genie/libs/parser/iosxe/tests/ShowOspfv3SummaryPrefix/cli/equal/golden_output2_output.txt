@@ -1,0 +1,6 @@
+          OSPFv3 65001 address-family ipv6 (router-id 1.1.1.1)
+
+2003:0:1::/48       Metric 20, External metric type 2, Tag 0
+4004:0:1::/48       Metric 20, External metric type 2, Tag 0
+5005:0:1::/48       Metric <unreachable>
+6006:0:1::/48       Metric <unreachable>

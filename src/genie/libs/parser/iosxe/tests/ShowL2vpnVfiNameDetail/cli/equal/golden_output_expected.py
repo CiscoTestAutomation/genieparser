@@ -1,0 +1,13 @@
+expected_output = {'bridge-domain': 1000,
+ 'interfaces': {'pseudowire11': {'peer-address': '192.168.255.2',
+                                 's': 'Y',
+                                 'vc-id': 1000},
+                'pseudowire22': {'peer-address': '192.168.255.3',
+                                 's': 'Y',
+                                 'vc-id': 1000}},
+ 'pseudo-port-intf': 'pseudowire100007',
+ 'signaling': 'LDP',
+ 'state': 'up',
+ 'type': 'multipoint',
+ 'vfi-name': 'vpls',
+ 'vpn-id': 1000}
