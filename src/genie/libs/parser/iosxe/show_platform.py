@@ -2382,17 +2382,15 @@ class ShowPlatform(ShowPlatformSchema):
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
         # F0                            ok, active            00:09:23
         # P1        Unknown             N/A                   never
-        p6 = re.compile(r'^(?P<slot>[a-zA-Z0-9]+)(\/(?P<subslot>\d+))?( +(?P<name>[a-zA-Z0-9\-\_/+]+))? +(?P<state>\w+(\, \w+)?(/\w+)?) +(?P<insert_time>[\w\.\:]+)$')
+        p6 = re.compile(r'^(?P<slot>[a-zA-Z0-9]+)(\/(?P<subslot>\d+))?( +(?P<name>[a-zA-Z0-9\-\_/+]+))? +(?P<state>(?!\d+|unknown)\w+(\, \w+)?(/\w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
-        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
-                          r' +(?P<insert_time>[\w\.\:]+)$')
+        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
         # 0         00200800            16.2(1r)
-        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
-                        r'(?P<fireware_ver>[\w\.\(\)\/]+)$')
+        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +(?P<fireware_ver>[\w\.\(\)\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2590,6 +2588,7 @@ class ShowPlatform(ShowPlatformSchema):
                 fw_ver = m.groupdict()['fireware_ver']
                 cpld_ver = m.groupdict()['cpld_version']
                 slot = m.groupdict()['slot']
+                
                 if 'slot' not in platform_dict:
                     continue
                 if slot not in platform_dict['slot']:
