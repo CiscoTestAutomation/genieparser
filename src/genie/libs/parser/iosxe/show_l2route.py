@@ -426,32 +426,32 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
         p2 = re.compile(r'^Ethernet Tag:\s+(?P<eth_tag>\d+)$')
 
         #Producer Name:            BGP
-        p3 = re.compile(r'Producer Name:\s+(?P<producer>\w+)$')
+        p3 = re.compile(r'^Producer Name:\s+(?P<producer>\w+)$')
 
         #Router IP Addr:           3.3.3.2
-        p4 = re.compile(r'Router IP Addr:\s+(?P<origin_ip>[0-9a-fA-F\.:]+)$')
+        p4 = re.compile(r'^Router IP Addr:\s+(?P<origin_ip>[0-9a-fA-F\.:]+)$')
 
         #Route Ethernet Tag:       0
-        p5 = re.compile(r'Route Ethernet Tag:\s+(?P<r_eth_tag>\d+)$')
-
-        #Tunnel ID:                3.3.3.2
-        p6 = re.compile(r'Tunnel ID:\s+(?P<tun_id>[0-9a-fA-F\.:]+)$')
-
-        #Tunnel Type:              Ingress Replication
-        p7 = re.compile(r'Tunnel Type:\s+(?P<tun_type>\w+)$')
-
-        #Tunnel Labels:            20011
-        p8 = re.comiple(r'Tunnel Labels:\s+(?P<tun_labels>\d+)$')
+        p5 = re.compile(r'^Route Ethernet Tag:\s+(?P<r_eth_tag>\d+)$')
 
         #Tunnel Flags:             0
-        p9 = re.compile(r'Tunnel Flags:\s+(?P<tun_flag>\d+)$')
+        p6 = re.compile(r'^Tunnel Flags:\s+(?P<tun_flag>\d+)$')
+
+        #Tunnel Type:              Ingress Replication
+        p7 = re.compile(r'^Tunnel Type:\s+(?P<tun_type>.*)$')
+
+        #Tunnel Labels:            20011
+        p8 = re.compile(r'^Tunnel Labels:\s+(?P<tun_labels>\d+)$')
+
+        #Tunnel ID:                3.3.3.2
+        p9 = re.compile(r'^Tunnel ID:\s+(?P<tun_id>[0-9a-fA-F\.:]+)$')
 
         #Multicast Proxy:          IGMP
-        p10 = re.compile(r'Multicast Proxy:\s+(?P<multi_proxy>\w+)$')
+        p10 = re.compile(r'^Multicast Proxy:\s+(?P<multi_proxy>\w+)$')
 
         #Next Hop(s):              V:20011 3.3.3.2
         #Next Hop(s):              N/A
-        p11 = re.compile(r'[Next Hop\(s\):]+\s+(?P<next_hop>[\w\d\s.:()/]+)$')
+        p11 = re.compile(r'^[Next Hop\(s\):]+\s+(?P<next_hop>[\w\d\s.:()/]+)$')
 
         parser_dict = {}
 
@@ -491,7 +491,6 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
                 router_ips = producers.setdefault('origin_router_ip', {})
                 origins_rtr_ip = router_ips.setdefault(group['origin_ip'], {})
                 next_hops = origins_rtr_ip.setdefault('next_hops', [])
-                tunnel_info = origins_rtr_ip.setdefult('tunnel_id', {})
                 origins_rtr_ip.update({'eth_tag': eth_tag})
                 continue
 
@@ -499,35 +498,40 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                origins_rtr_ip.update({'r_eth_tag': int(group['r_eth_tag'] ) } )
+                origins_rtr_ip.update({'router_eth_tag': int(group['r_eth_tag'] ) } )
                 continue
 
-            #Tunnel ID:
+            #Tunnel Flags:
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                tunnel_id = tunnel_info.setdefault(group['tun_id'], {})
+                tun_flag = int(group['tun_flag'])
                 continue
 
             #Tunnel Type:
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                tunnel_id.update({'tunnel_type': str(group['tun_type']) })
+                tun_type = str(group['tun_type'])
                 continue
 
             #Tunnel Labels:
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                tunnel_id.update({'tunnel_labels': str(group['tun_labels'])})
+                tun_labels = int(group['tun_labels'])
                 continue
 
-            #Tunnel Flags:
+            #Tunnel ID:
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                tunnel_id.update({'tunnel_labels': int(group['tun_flag'])})
+                tun_id = group['tun_id']
+                tunnel_info = origins_rtr_ip.setdefault('tunnel_id', {})
+                tunnel_id = tunnel_info.setdefault(tun_id, {})
+                tunnel_id.update({'tunnel_flags': tun_flag})
+                tunnel_id.update({'tunnel_type': tun_type})
+                tunnel_id.update({'tunnel_labels': tun_labels})
                 continue
 
             #Multicast Proxy:
@@ -542,8 +546,7 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
             if m:
                 group = m.groupdict()
                 next_hops_dict = {}
-                next_hops_dict.update({'next_hop': group('next_hop')})
+                next_hops_dict.update({'next_hop': group['next_hop']})
                 next_hops.append(next_hops_dict)
                 continue
-
         return (parser_dict)
