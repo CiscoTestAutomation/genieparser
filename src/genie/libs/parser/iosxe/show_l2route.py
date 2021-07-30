@@ -47,7 +47,6 @@ All rights reserved.
 
 '''
 import re
-from typing import Counter
 
 # genie
 from genie.metaparser import MetaParser
