@@ -2664,6 +2664,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
             
             # Remote AS 200, local AS 100, external link
+            # Remote AS 200, local AS 100, no-prepend, replace-as, dual-as, external link
             m = p3.match(line)
             if m:
                 sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
