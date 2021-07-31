@@ -1,0 +1,5 @@
+License Usage:
+License                 Entitlement Tag               Count Status
+-----------------------------------------------------------------------------
+network-advantage       (C9300-48 Network Advan...)       1 IN USE
+dna-advantage           (C9300-48 DNA Advantage)          1 IN USE

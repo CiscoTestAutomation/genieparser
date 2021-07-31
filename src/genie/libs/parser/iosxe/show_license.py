@@ -178,3 +178,69 @@ class ShowLicenseUdi(ShowLicenseUdiSchema):
             ''' 
 
         return ret_dict
+
+# ----------------------
+# =================
+# Schema for:
+#  * 'show license summary'
+# =================
+class ShowLicenseSummarySchema(MetaParser):
+    """Schema for show license udi"""
+    schema = {
+        'license_usage': {
+            Any(): {
+                'entitlement': str,
+                'count': str,
+                'status': str,
+            }
+        }
+    }
+
+# =================
+# Parser for:
+#  * 'show license summary'
+# =================
+class ShowLicenseSummary(ShowLicenseSummarySchema):
+    """Parser for show license summary"""
+    cli_command = 'show license summary'
+    
+    """
+    License Usage:
+      License                 Entitlement Tag               Count Status
+      -----------------------------------------------------------------------------
+      network-advantage       (C9300-48 Network Advan...)       1 IN USE
+      dna-advantage           (C9300-48 DNA Advantage)          1 IN USE
+    """
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        license_summ_dict = {}
+        
+        result_dict = {}
+
+        # license entitlement count status
+        p0 = re.compile(r"^(?P<license>network-\w+|dna-\w+)\s+(?P<entitlement>\(\w+-\d+\s\w+\s\w+.+\))\s+(?P<count>\d+)\s+(?P<status>.+)$")
+
+        ret_dict={}
+        for line in out.splitlines():
+            line=line.strip()
+
+            # udi line
+            m=p0.match(line)
+            if m:
+                if 'license_usage' not in license_summ_dict:
+                    result_dict = license_summ_dict.setdefault('license_usage', {})
+                license = m.groupdict()['license']
+                entitlement = m.groupdict()['entitlement']
+                count = m.groupdict()['count']
+                status = m.groupdict()['status']
+                result_dict[license] = {}
+                result_dict[license]['entitlement'] = entitlement
+                result_dict[license]['count'] = count
+                result_dict[license]['status'] = status
+                continue
+        return license_summ_dict
