@@ -31441,7 +31441,7 @@ class TestShowBgpNeighbors(unittest.TestCase):
         Fri Nov  1 21:31:51.172 UTC
 
         BGP neighbor is 10.4.1.1
-        Remote AS 65000, local AS 65000, internal link
+        Remote AS 65000, local AS 65000, no-prepend, replace-as, dual-as, internal link
         Remote router ID 10.4.1.1
         BGP state = Established, up for 1w1d
         NSR State: None
