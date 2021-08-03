@@ -24,27 +24,27 @@ IPsec microcode  : CNlite-MC-IPSECm-MAIN-2.06
  6: Int: Not used            : irq 5
 
 Licensed features for this platform:
-	Maximum Physical Interfaces       : Unlimited      perpetual
-	Maximum VLANs                     : 150            perpetual
-	Inside Hosts                      : Unlimited      perpetual
-	Failover                          : Active/Active  perpetual
-	VPN-DES                           : Enabled        perpetual
-	VPN-3DES-AES                      : Enabled        perpetual
-	Security Contexts                 : 10             perpetual
-	GTP/GPRS                          : Enabled        perpetual
-	AnyConnect Premium Peers          : 2              perpetual
-	AnyConnect Essentials             : Disabled       perpetual
-	Other VPN Peers                   : 750            perpetual
-	Total VPN Peers                   : 750            perpetual
-	Shared License                    : Enabled        perpetual
- 	Shared AnyConnect Premium Peers : 12000          perpetual
-	AnyConnect for Mobile             : Disabled       perpetual
-	AnyConnect for Cisco VPN Phone    : Disabled       perpetual
-	Advanced Endpoint Assessment      : Disabled       perpetual
-	UC Phone Proxy Sessions           : 12             62 days
-	Total UC Proxy Sessions           : 12             62 days
-	Botnet Traffic Filter             : Enabled        646 days
-	Intercompany Media Engine         : Disabled       perpetual
+ Maximum Physical Interfaces       : Unlimited      perpetual
+ Maximum VLANs                     : 150            perpetual
+ Inside Hosts                      : Unlimited      perpetual
+ Failover                          : Active/Active  perpetual
+ VPN-DES                           : Enabled        perpetual
+ VPN-3DES-AES                      : Enabled        perpetual
+ Security Contexts                 : 10             perpetual
+ GTP/GPRS                          : Enabled        perpetual
+ AnyConnect Premium Peers          : 2              perpetual
+ AnyConnect Essentials             : Disabled       perpetual
+ Other VPN Peers                   : 750            perpetual
+ Total VPN Peers                   : 750            perpetual
+ Shared License                    : Enabled        perpetual
+  Shared AnyConnect Premium Peers : 12000          perpetual
+ AnyConnect for Mobile             : Disabled       perpetual
+ AnyConnect for Cisco VPN Phone    : Disabled       perpetual
+ Advanced Endpoint Assessment      : Disabled       perpetual
+ UC Phone Proxy Sessions           : 12             62 days
+ Total UC Proxy Sessions           : 12             62 days
+ Botnet Traffic Filter             : Enabled        646 days
+ Intercompany Media Engine         : Disabled       perpetual
 This platform has a Base license.
 The flash permanent activation key is the SAME as the running permanent key.
 Active Timebased Activation Key:

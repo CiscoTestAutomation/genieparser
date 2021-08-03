@@ -59,30 +59,10 @@ class ShowVersionSchema(MetaParser):
             Optional('entitlement'): str,
             Optional('mem_allocation'): str,
             Optional('licensed_features'): {
-                Optional('max_physical_interfaces'): str,
-                Optional('max_vlans'): int,
-                Optional('inside_hosts'): str,
-                Optional('failover'): str,
-                Optional('crypto_des'): str,
-                Optional('crypto_3des_aes'): str,
-                Optional('security_contexts'): int,
-                Optional('gtp_gprs'): str,
-                Optional('carrier'): str,
-                Optional('anyconnect_premium_peers'): int,
-                Optional('anyconnect_essentials'): str,
-                Optional('other_vpn_peers'): int,
-                Optional('total_vpn_peers'): int,
-                Optional('anyconnect_for_mobile'): str,
-                Optional('anyconnect_for_cisco_vpn_phone'): str,
-                Optional('advanced_endpoint_assessment'): str,
-                Optional('uc_phone_proxy_sessions'): int,
-                Optional('total_uc_proxy_sessions'): int,
-                Optional('shared_license'): str,
-                Optional('shared_anyconnect_premium_peers'): int,
-                Optional('total_tls_proxy_sessions'): int,
-                Optional('botnet_traffic_filter'): str,
-                Optional('cluster'): str,
-                Optional('intercompany_media_engine'): str
+                Any(): {
+                    Optional('status'): str,
+                    Optional('time_remaining'): str
+                }
             },
             'serial_number': str,
             Optional('image_type'): str,
@@ -112,18 +92,17 @@ class ShowVersion(ShowVersionSchema):
         version_dict = {}
 
         # Cisco Adaptive Security Appliance Software Version 9.8(4)10
-        p0 = re.compile(r'^.+ Software Version (?P<asa_version>[\S]+)')
+        p0 = re.compile(r'^.+ Software Version (?P<asa_version>\S+)')
 
         # Firepower Extensible Operating System Version 2.2(2.121)
-        p1 = re.compile(r'^.+System Version (?P<firepower_version>[\S]+)')
+        p1 = re.compile(r'^.+System Version (?P<firepower_version>\S+)')
 
         # Device Manager Version 7.8(2)
-        p2 = re.compile(r'^.+Manager Version (?P<asdm_version>[\S]+)')
+        p2 = re.compile(r'^.+Manager Version (?P<asdm_version>\S+)')
 
         # Compiled on Tue 20-Aug-19 12:46 PDT by builders
         # Compiled on Thu 20-Jan-12 04:05 by builders
-        p3 = re.compile(
-            r'^Compiled on (?P<compiled_date>\w{3} \S+ \d{1,2}:\d{1,2}.+) by (?P<compiled_by>\w+)')
+        p3 = re.compile(r'^Compiled on (?P<compiled_date>.+) by (?P<compiled_by>\w+)')
 
         # System image file is "boot:/asa984-10-smp-k8.bin"
         p4 = re.compile(r'^System image.+"(?P<system_image>\S+)"')
@@ -161,8 +140,8 @@ class ShowVersion(ShowVersionSchema):
         # 7: Ext: GigabitEthernet0/6  : address is 5001.0003.0007, irq 10
         p11 = re.compile(r'^\s*(?P<intf_number>\d+): '
                          r'Ext: (?P<interface>[\w\/\.\-]+)\s*: address is '
-                         r'(?P<mac_addr>[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}), '
-                         r'irq (?P<intf_irq>\d{1,2})')
+                         r'(?P<mac_addr>[\w\.]+), '
+                         r'irq (?P<intf_irq>\d+)')
 
         # 5: Int: Not used            : irq 11
         # 6: Int: Not used            : irq 5
@@ -181,59 +160,66 @@ class ShowVersion(ShowVersionSchema):
         # *Memory resource allocation is more than the permitted limit.
         p15 = re.compile(r'^(?P<mem_allocation>\*Memory.+)')
 
-        # Maximum VLANs                     : 150
-        p16 = re.compile(r'^Maximum [Vv][Ll][Aa][Nn][Ss]\s*: (?P<max_vlans>\d+)')
+        # Maximum VLANs                     : 50
+        # Maximum VLANs                     : 150       perpetual
+        p16 = re.compile(r'^Maximum [Vv][Ll][Aa][Nn][Ss]\s*: (?P<max_vlans>\d+)(\s+(?P<time_remaining>\S+))?')
 
         # Inside Hosts                      : Unlimited
-        p17 = re.compile(r'^Inside [Hh]osts\s*: (?P<inside_hosts>\S+)')
+        # Inside Hosts                      : Unlimited      perpetual
+        p17 = re.compile(r'^Inside [Hh]osts\s*: (?P<inside_hosts>\S+)(\s+(?P<time_remaining>\S+))?')
 
         # Failover                          : Active/Standby
-        # Failover                          : Active/Active
-        p18 = re.compile(r'^Failover\s*: (?P<failover>\S+)')
+        # Failover                          : Active/Active     perpetual
+        p18 = re.compile(r'^Failover\s*: (?P<failover>\S+)(\s+(?P<time_remaining>\S+))?')
 
         # Encryption-DES                    : Enabled
         # VPN-DES                           : Enabled        perpetual
-        p19 = re.compile(r'^(Encryption|VPN)-DES\s*: (?P<crypto_des>\S+)')
+        p19 = re.compile(r'^(Encryption|VPN)-DES\s*: (?P<crypto_des>\S+)(\s+(?P<time_remaining>\S+))?')
 
         # Encryption-3DES-AES                    : Enabled
         # VPN-3DES-AES                           : Enabled        perpetual
-        p20 = re.compile(r'^(Encryption|VPN)-3DES-AES\s*: (?P<crypto_3des_aes>\S+)')
+        p20 = re.compile(r'^(Encryption|VPN)-3DES-AES\s*: (?P<crypto_3des_aes>\S+)(\s+(?P<time_remaining>\S+))?')
 
-        # Security Contexts                 : 10
-        p21 = re.compile(r'^Security Contexts\s*: (?P<security_contexts>\d+)')
+        # Security Contexts                 : 10        perpetual
+        p21 = re.compile(r'^Security Contexts\s*: (?P<security_contexts>\d+)(\s+(?P<time_remaining>\S+))?')
 
         # Carrier                           : Disabled
         p22 = re.compile(r'^Carrier\s*: (?P<carrier>\S+)')
 
         # AnyConnect Premium Peers          : 2
-        p23 = re.compile(r'^Any[Cc]onnect Premium Peers\s*: (?P<anyconnect_premium_peers>\d+)')
+        # AnyConnect Premium Peers          : 2              perpetual
+        p23 = re.compile(r'^Any[Cc]onnect Premium Peers\s*: (?P<anyconnect_premium_peers>\d+)(\s+(?P<time_remaining>\S+))?')
 
         # AnyConnect Essentials             : Disabled
-        p24 = re.compile(r'^Any[Cc]onnect Essentials\s*: (?P<anyconnect_essentials>\S+)')
+        # AnyConnect Essentials             : Disabled       perpetual
+        p24 = re.compile(r'^Any[Cc]onnect Essentials\s*: (?P<anyconnect_essentials>\S+)(\s+(?P<time_remaining>\S+))?')
 
         # Other VPN Peers                   : 250
-        p25 = re.compile(r'^Other VPN Peers\s*: (?P<other_vpn_peers>\d+)')
+        # Other VPN Peers                   : 750            perpetual
+        p25 = re.compile(r'^Other VPN Peers\s*: (?P<other_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?')
 
         # Total VPN Peers                   : 250
-        p26 = re.compile(r'^Total VPN Peers\s*: (?P<total_vpn_peers>\d+)')
+        # Total VPN Peers                   : 750            perpetual
+        p26 = re.compile(r'^Total VPN Peers\s*: (?P<total_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?')
 
         # AnyConnect for Mobile             : Disabled
-        p27 = re.compile(r'^Any[Cc]onnect for Mobile\s*: (?P<anyconnect_for_mobile>\S+)')
+        p27 = re.compile(r'^Any[Cc]onnect for Mobile\s*: (?P<anyconnect_for_mobile>\S+)(\s+(?P<time_remaining>.+))?')
 
         # AnyConnect for Cisco VPN Phone    : Disabled
-        p28 = re.compile(r'^Any[Cc]onnect for Cisco VPN Phone\s*: (?P<anyconnect_for_cisco_vpn_phone>\S+)')
+        p28 = re.compile(r'^Any[Cc]onnect for Cisco VPN Phone\s*: (?P<anyconnect_for_cisco_vpn_phone>\S+)(\s+(?P<time_remaining>.+))?')
 
         # Advanced Endpoint Assessment      : Disabled
-        p29 = re.compile(r'^Advanced Endpoint Assessment\s*: (?P<advanced_endpoint_assessment>\S+)')
+        # Advanced Endpoint Assessment      : Disabled       perpetual
+        p29 = re.compile(r'^Advanced Endpoint Assessment\s*: (?P<advanced_endpoint_assessment>\S+)(\s+(?P<time_remaining>.+))?')
 
         # Shared License                    : Disabled
-        p30 = re.compile(r'^Shared License\s*: (?P<shared_license>\S+)')
+        p30 = re.compile(r'^Shared License\s*: (?P<shared_license>\S+)(\s+(?P<time_remaining>.+))?')
 
         # Total TLS Proxy Sessions          : 2 
         p31 = re.compile(r'^Total TLS Proxy Sessions\s*: (?P<total_tls_proxy_sessions>\d+)')
 
         # Botnet Traffic Filter             : Enabled
-        p32 = re.compile(r'^Botnet Traffic Filter\s*: (?P<botnet_traffic_filter>\S+)')
+        p32 = re.compile(r'^Botnet Traffic Filter\s*: (?P<botnet_traffic_filter>\S+)(\s+(?P<time_remaining>.+))?')
 
         # Cluster                           : Disabled
         p33 = re.compile(r'^Cluster\s*: (?P<cluster>\S+)')
@@ -251,6 +237,9 @@ class ShowVersion(ShowVersionSchema):
         p37 = re.compile(r'^Configuration last.+by (?P<last_modified_by>\S+) at '
                          r'(?P<last_modified_date>[\d:\.]+.+)')
 
+        # Configuration has not been modified since last system restart.
+        p37_1 = re.compile(r'^(?P<last_modified_date>Configuration has not been modified since last system restart.+)')
+
         # Encryption hardware device : Cisco ASA-55x0 on-board accelerator (revision 0x0)
         p38 = re.compile(r'^\s*Encryption.+:\s+(?P<encryption_device>.+)')
 
@@ -264,22 +253,22 @@ class ShowVersion(ShowVersionSchema):
         p41 = re.compile(r'^\s*[Ii][Pp][Ss][Ee][Cc].+\s*:\s+(?P<ipsec_microcode>.+)')
 
         # GTP/GPRS                          : Enabled        perpetual
-        p42 = re.compile(r'^\s*GTP.+: (?P<gtp_gprs>\S+)')
+        p42 = re.compile(r'^\s*GTP.+: (?P<gtp_gprs>\S+)\s+(?P<time_remaining>\S+)')
 
         # Maximum Physical Interfaces       : Unlimited      perpetual
-        p43 = re.compile(r'^[Mm]aximum [Pp]hysical [Ii]nterfaces\s*: (?P<max_physical_interfaces>\S+)')
+        p43 = re.compile(r'^[Mm]aximum [Pp]hysical [Ii]nterfaces\s*: (?P<max_physical_interfaces>\S+)\s+(?P<time_remaining>\S+)')
 
         # Shared AnyConnect Premium Peers : 12000          perpetual
-        p44 = re.compile(r'^\s*Shared [Aa]ny[Cc]onnect.+: (?P<shared_anyconnect_premium_peers>\d+)')
+        p44 = re.compile(r'^\s*Shared [Aa]ny[Cc]onnect.+: (?P<shared_anyconnect_premium_peers>\d+)\s+(?P<time_remaining>\S+)')
 
         # UC Phone Proxy Sessions           : 12             62 days
-        p45 = re.compile(r'^UC Phone.+: (?P<uc_phone_proxy_sessions>\d+)')
+        p45 = re.compile(r'^UC Phone.+: (?P<uc_phone_proxy_sessions>\d+)\s+(?P<time_remaining>.+)')
 
         # Total UC Proxy Sessions           : 12             62 days
-        p46 = re.compile(r'^UC Phone.+: (?P<total_uc_proxy_sessions>\d+)')
+        p46 = re.compile(r'^Total UC Proxy.+: (?P<total_uc_proxy_sessions>\d+)\s+(?P<time_remaining>.+)')
 
         # Intercompany Media Engine         : Disabled       perpetual
-        p47 = re.compile(r'^Intercompany.+: (?P<intercompany_media_engine>\S+)')
+        p47 = re.compile(r'^Intercompany.+: (?P<intercompany_media_engine>\S+)\s+(?P<time_remaining>.+)')
 
 
         for line in out.splitlines():
@@ -448,22 +437,34 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['mem_allocation'] = mem_allocation
                 continue
 
-            # Maximum VLANs                     : 150
+            # Maximum VLANs                     : 50
+            # Maximum VLANs                     : 150       perpetual
             m = p16.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['max_vlans'] = \
-                        int(m.groupdict()['max_vlans'])
+                if 'max_vlans' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['max_vlans'] = {}
+                version_dict['version']['licensed_features']['max_vlans']['status'] = \
+                        m.groupdict()['max_vlans']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['max_vlans']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Inside Hosts                      : Unlimited
+            # Inside Hosts                      : Unlimited      perpetual
             m = p17.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['inside_hosts'] = \
+                if 'inside_hosts' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['inside_hosts'] = {}
+                version_dict['version']['licensed_features']['inside_hosts']['status'] = \
                         m.groupdict()['inside_hosts']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['inside_hosts']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
 
             # Failover                          : Active/Standby
             # Failover                          : Active/Active
@@ -471,8 +472,13 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['failover'] = \
+                if 'failover' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['failover'] = {}
+                version_dict['version']['licensed_features']['failover']['status'] = \
                         m.groupdict()['failover']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['failover']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Encryption-DES                    : Enabled
@@ -481,8 +487,13 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['crypto_des'] = \
+                if 'crypto_des' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['crypto_des'] = {}
+                version_dict['version']['licensed_features']['crypto_des']['status'] = \
                         m.groupdict()['crypto_des']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['crypto_des']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Encryption-3DES-AES                    : Enabled
@@ -491,8 +502,13 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['crypto_3des_aes'] = \
+                if 'crypto_3des_aes' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['crypto_3des_aes'] = {}
+                version_dict['version']['licensed_features']['crypto_3des_aes']['status'] = \
                         m.groupdict()['crypto_3des_aes']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['crypto_3des_aes']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Security Contexts                 : 10
@@ -500,8 +516,13 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['security_contexts'] = \
-                        int(m.groupdict()['security_contexts'])
+                if 'security_contexts' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['security_contexts'] = {}
+                version_dict['version']['licensed_features']['security_contexts']['status'] = \
+                        m.groupdict()['security_contexts']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['security_contexts']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Carrier                           : Disabled
@@ -509,80 +530,130 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['carrier'] = \
+                if 'carrier' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['carrier'] = {}
+                version_dict['version']['licensed_features']['carrier']['status'] = \
                         m.groupdict()['carrier']
                 continue
 
             # AnyConnect Premium Peers          : 2
+            # AnyConnect Premium Peers          : 2              perpetual
             m = p23.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['anyconnect_premium_peers'] = \
-                        int(m.groupdict()['anyconnect_premium_peers'])
+                if 'anyconnect_premium_peers' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['anyconnect_premium_peers'] = {}
+                version_dict['version']['licensed_features']['anyconnect_premium_peers']['status'] = \
+                        m.groupdict()['anyconnect_premium_peers']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['anyconnect_premium_peers']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # AnyConnect Essentials             : Disabled
+            # AnyConnect Essentials             : Disabled       perpetual
             m = p24.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['anyconnect_essentials'] = \
+                if 'anyconnect_essentials' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['anyconnect_essentials'] = {}
+                version_dict['version']['licensed_features']['anyconnect_essentials']['status'] = \
                         m.groupdict()['anyconnect_essentials']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['anyconnect_essentials']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Other VPN Peers                   : 250
+            # Other VPN Peers                   : 750            perpetual
             m = p25.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['other_vpn_peers'] = \
-                        int(m.groupdict()['other_vpn_peers'])
+                if 'other_vpn_peers' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['other_vpn_peers'] = {}
+                version_dict['version']['licensed_features']['other_vpn_peers']['status'] = \
+                        m.groupdict()['other_vpn_peers']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['other_vpn_peers']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Total VPN Peers                   : 250
+            # Total VPN Peers                   : 750            perpetual
             m = p26.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['total_vpn_peers'] = \
-                        int(m.groupdict()['total_vpn_peers'])
+                if 'total_vpn_peers' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['total_vpn_peers'] = {}
+                version_dict['version']['licensed_features']['total_vpn_peers']['status'] = \
+                        m.groupdict()['total_vpn_peers']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['total_vpn_peers']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # AnyConnect for Mobile             : Disabled
+            # AnyConnect for Mobile             : Disabled       perpetual
             m = p27.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['anyconnect_for_mobile'] = \
+                if 'anyconnect_for_mobile' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['anyconnect_for_mobile'] = {}
+                version_dict['version']['licensed_features']['anyconnect_for_mobile']['status'] = \
                         m.groupdict()['anyconnect_for_mobile']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['anyconnect_for_mobile']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # AnyConnect for Cisco VPN Phone    : Disabled
+            # AnyConnect for Cisco VPN Phone    : Disabled       perpetual
             m = p28.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
-                    version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone'] = \
+                    m.groupdict()['anyconnect_for_cisco_vpn_phone']
+                if 'anyconnect_for_cisco_vpn_phone' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone'] = {}
+                version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone']['status'] = \
                         m.groupdict()['anyconnect_for_cisco_vpn_phone']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Advanced Endpoint Assessment      : Disabled
+            # Advanced Endpoint Assessment      : Disabled       perpetual
             m = p29.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['advanced_endpoint_assessment'] = \
+                if 'advanced_endpoint_assessment' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['advanced_endpoint_assessment'] = {}
+                version_dict['version']['licensed_features']['advanced_endpoint_assessment']['status'] = \
                         m.groupdict()['advanced_endpoint_assessment']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['advanced_endpoint_assessment']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Shared License                    : Disabled
+            # Shared License                    : Enabled        perpetual
             m = p30.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['shared_license'] = \
+                if 'shared_license' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['shared_license'] = {}
+                version_dict['version']['licensed_features']['shared_license']['status'] = \
                         m.groupdict()['shared_license']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['shared_license']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Total TLS Proxy Sessions          : 2 
@@ -590,17 +661,25 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['total_tls_proxy_sessions'] = \
-                        int(m.groupdict()['total_tls_proxy_sessions'])
+                if 'total_tls_proxy_sessions' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['total_tls_proxy_sessions'] = {}
+                version_dict['version']['licensed_features']['total_tls_proxy_sessions']['status'] = \
+                        m.groupdict()['total_tls_proxy_sessions']
                 continue
 
             # Botnet Traffic Filter             : Enabled
+            # Botnet Traffic Filter             : Enabled        646 days
             m = p32.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['botnet_traffic_filter'] = \
+                if 'botnet_traffic_filter' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['botnet_traffic_filter'] = {}
+                version_dict['version']['licensed_features']['botnet_traffic_filter']['status'] = \
                         m.groupdict()['botnet_traffic_filter']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['botnet_traffic_filter']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
 
             # Cluster                           : Disabled
@@ -608,7 +687,9 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['cluster'] = \
+                if 'cluster' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['cluster'] = {}
+                version_dict['version']['licensed_features']['cluster']['status'] = \
                         m.groupdict()['cluster']
                 continue
 
@@ -635,11 +716,20 @@ class ShowVersion(ShowVersionSchema):
 
             # Configuration last modified by enable_15 at 20:39:39.869 UTC Mon Jun 7 2021
             m = p37.match(line)
+            # Configuration has not been modified since last system restart.
+            m2 = p37_1.match(line)
             if m:
                 last_modified_by = m.groupdict()['last_modified_by']
                 last_modified_date = m.groupdict()['last_modified_date']
                 version_dict['version']['last_modified_by'] = last_modified_by
                 version_dict['version']['last_modified_date'] = last_modified_date
+            elif m2:
+                # We get here if the config hasn't been changed since last restart
+                last_modified_by = ''
+                last_modified_date = m2.groupdict()['last_modified_date']
+                version_dict['version']['last_modified_by'] = last_modified_by
+                version_dict['version']['last_modified_date'] = last_modified_date
+
                 continue
 
             # Encryption hardware device : Cisco ASA-55x0 on-board accelerator (revision 0x0)
@@ -678,53 +768,89 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['ipsec_microcode']
                 continue
 
-            # GTP/GPRS                          : Enabled
+            # GTP/GPRS                          : Enabled       perpetual
             m = p42.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['gtp_gprs'] = \
+                if 'gtp_gprs' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['gtp_gprs'] = {}
+                version_dict['version']['licensed_features']['gtp_gprs']['status'] = \
                         m.groupdict()['gtp_gprs']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['gtp_gprs']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
                 continue
+
 
             # Maximum Physical Interfaces
             m = p43.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['max_physical_interfaces'] = \
+                if 'max_physical_interfaces' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['max_physical_interfaces'] = {}
+                version_dict['version']['licensed_features']['max_physical_interfaces']['status'] = \
                         m.groupdict()['max_physical_interfaces']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['max_physical_interfaces']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
+                continue
 
             #  Shared AnyConnect Premium Peers : 12000          perpetual
             m = p44.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['shared_anyconnect_premium_peers'] = \
-                        int(m.groupdict()['shared_anyconnect_premium_peers'])
+                if 'shared_anyconnect_premium_peers' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['shared_anyconnect_premium_peers'] = {}
+                version_dict['version']['licensed_features']['shared_anyconnect_premium_peers']['status'] = \
+                        m.groupdict()['shared_anyconnect_premium_peers']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['shared_anyconnect_premium_peers']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
+                continue
 
             # UC Phone Proxy Sessions           : 12             62 days
             m = p45.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['uc_phone_proxy_sessions'] = \
-                        int(m.groupdict()['uc_phone_proxy_sessions'])
+                if 'uc_phone_proxy_sessions' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['uc_phone_proxy_sessions'] = {}
+                version_dict['version']['licensed_features']['uc_phone_proxy_sessions']['status'] = \
+                        m.groupdict()['uc_phone_proxy_sessions']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['uc_phone_proxy_sessions']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
+                continue
                 
             # Total UC Proxy Sessions           : 12             62 days
             m = p46.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['total_uc_proxy_sessions'] = \
-                        int(m.groupdict()['total_uc_proxy_sessions'])
+                if 'total_uc_proxy_sessions' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['total_uc_proxy_sessions'] = {}
+                version_dict['version']['licensed_features']['total_uc_proxy_sessions']['status'] = \
+                        m.groupdict()['total_uc_proxy_sessions']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['total_uc_proxy_sessions']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
+                continue
 
             # Intercompany Media Engine         : Disabled       perpetual 
             m = p47.match(line)
             if m:
                 if 'licensed_features' not in version_dict['version']:
                     version_dict['version']['licensed_features'] = {}
-                version_dict['version']['licensed_features']['intercompany_media_engine'] = \
+                if 'total_phone_proxy_sessions' not in version_dict['version']['licensed_features']:
+                    version_dict['version']['licensed_features']['intercompany_media_engine'] = {}
+                version_dict['version']['licensed_features']['intercompany_media_engine']['status'] = \
                         m.groupdict()['intercompany_media_engine']
+                if m.groupdict()['time_remaining'] is not None:
+                    version_dict['version']['licensed_features']['intercompany_media_engine']['time_remaining'] = \
+                        m.groupdict()['time_remaining']
+                continue
 
         return version_dict
