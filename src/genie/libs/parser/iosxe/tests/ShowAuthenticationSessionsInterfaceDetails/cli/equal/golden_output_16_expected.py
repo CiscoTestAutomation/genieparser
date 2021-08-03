@@ -18,15 +18,18 @@ expected_output = {
                         },
                     },
                     "method_status": {
-                        "dot1x": {"method": "dot1x", "state": "Authc " "Success"},
-                        "mab": {"method": "mab", "state": "Authc " "Failed"},
+                        "dot1x": {"method": "dot1x", "state": "Authc Success"},
+                        "mab": {"method": "mab", "state": "Authc Failed"},
                     },
                     "oper_control_dir": "both",
                     "oper_host_mode": "multi-auth",
-                    "restart_timeout": "60s, Remaining: 44s",
+                    "restart_timeout": {
+                        "remaining": 44,
+                        "timeout": 60
+                    },
                     "session_timeout": {"type": "N/A"},
                     "status": "Authorized",
-                    "unauth_timeout": {"remaining": "5s", "timeout": "10s"},
+                    "unauth_timeout": {"remaining": 5, "timeout": 10},
                     "user_name": "rreddyc",
                 }
             }
