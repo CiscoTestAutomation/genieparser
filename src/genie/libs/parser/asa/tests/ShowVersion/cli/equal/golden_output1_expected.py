@@ -70,24 +70,61 @@ expected_output = {
         'license_mode': 'Smart Licensing',
         'license_state': 'Unlicensed',
         'licensed_features': {
-            'advanced_endpoint_assessment': 'Disabled',
-            'anyconnect_essentials': 'Disabled',
-            'anyconnect_for_cisco_vpn_phone': 'Disabled',
-            'anyconnect_for_mobile': 'Disabled',
-            'anyconnect_premium_peers': 2,
-            'botnet_traffic_filter': 'Enabled',
-            'carrier': 'Disabled',
-            'cluster': 'Disabled',
-            'crypto_3des_aes': 'Enabled',
-            'crypto_des': 'Enabled',
-            'failover': 'Active/Standby',
-            'inside_hosts': 'Unlimited',
-            'max_vlans': 50,
-            'other_vpn_peers': 250,
-            'security_contexts': 0,
-            'shared_license': 'Disabled',
-            'total_tls_proxy_sessions': 2,
-            'total_vpn_peers': 250},
+            'advanced_endpoint_assessment': {
+                'status': 'Disabled'
+            },
+            'anyconnect_essentials': {
+                'status': 'Disabled'
+            },
+            'anyconnect_for_cisco_vpn_phone': {
+                'status': 'Disabled'
+            },
+            'anyconnect_for_mobile': {
+                'status': 'Disabled'
+            },
+            'anyconnect_premium_peers': {
+                'status': '2'
+            },
+            'botnet_traffic_filter': {
+                'status': 'Enabled'
+            },
+            'carrier': {
+                'status': 'Disabled'
+            },
+            'cluster': {
+                'status': 'Disabled'
+            },
+            'crypto_3des_aes': {
+                'status': 'Enabled'
+            },
+            'crypto_des': {
+                'status': 'Enabled'
+            },
+            'failover': {
+                'status': 'Active/Standby'
+            },
+            'inside_hosts': {
+                'status': 'Unlimited'
+            },
+            'max_vlans': {
+                'status': '50'
+            },
+            'other_vpn_peers': {
+                'status': '250'
+            },
+            'security_contexts': {
+                'status': '0'
+            },
+            'shared_license': {
+                'status': 'Disabled'
+            },
+            'total_tls_proxy_sessions': {
+                'status': '2'
+            },
+            'total_vpn_peers': {
+                'status': '250'
+            },
+        },
         'mem_allocation': '*Memory resource allocation is more than the '
                                'permitted limit.',
         'mem_size': '2048 MB',

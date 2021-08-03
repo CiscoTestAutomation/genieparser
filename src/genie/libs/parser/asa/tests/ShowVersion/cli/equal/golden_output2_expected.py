@@ -64,27 +64,90 @@ expected_output = {
             },
         },
         'licensed_features': {
-            'max_physical_interfaces': 'Unlimited',
-            'max_vlans': 150,
-            'inside_hosts': 'Unlimited',
-            'failover': 'Active/Active',
-            'crypto_des': 'Enabled',
-            'crypto_3des_aes': 'Enabled',
-            'security_contexts': 10,
-            'gtp_gprs': 'Enabled',
-            'anyconnect_essentials': 'Disabled',
-            'anyconnect_premium_peers': 2,
-            'other_vpn_peers': 750,
-            'total_vpn_peers': 750,
-            'shared_license': 'Enabled',
-            'shared_anyconnect_premium_peers': 12000,
-            'anyconnect_for_mobile': 'Disabled',
-            'anyconnect_for_cisco_vpn_phone': 'Disabled',
-            'advanced_endpoint_assessment': 'Disabled',
-            'uc_phone_proxy_sessions': 12,
-            'total_uc_proxy_sessions': 12,
-            'botnet_traffic_filter': 'Enabled',
-            'intercompany_media_engine': 'Disabled'
+            'max_physical_interfaces': {
+                'status': 'Unlimited',
+                'time_remaining': 'perpetual'
+            },
+            'max_vlans': {
+                'status': '150',
+                'time_remaining': 'perpetual'
+            },
+            'inside_hosts': {
+                'status': 'Unlimited',
+                'time_remaining': 'perpetual'
+            },
+            'failover': {
+                'status': 'Active/Active',
+                'time_remaining': 'perpetual'
+            },
+            'crypto_des': {
+                'status': 'Enabled',
+                'time_remaining': 'perpetual'
+            },
+            'crypto_3des_aes': {
+                'status': 'Enabled',
+                'time_remaining': 'perpetual'
+            },
+            'security_contexts': { 
+                'status': '10',
+                'time_remaining': 'perpetual'
+            },
+            'gtp_gprs': {
+                'status': 'Enabled',
+                'time_remaining': 'perpetual'
+            },
+            'anyconnect_essentials': {
+                'status': 'Disabled',
+                'time_remaining': 'perpetual'
+            },
+            'anyconnect_premium_peers': {
+                'status': '2',
+                'time_remaining': 'perpetual'
+            },
+            'other_vpn_peers': {
+                'status': '750',
+                'time_remaining': 'perpetual'
+            },
+            'total_vpn_peers': {
+                'status': '750',
+                'time_remaining': 'perpetual'
+            },
+            'shared_license': {
+                'status': 'Enabled',
+                'time_remaining': 'perpetual'
+            },
+            'shared_anyconnect_premium_peers': {
+                'status': '12000',
+                'time_remaining': 'perpetual'
+            },
+            'anyconnect_for_mobile': {
+                'status': 'Disabled',
+                'time_remaining': 'perpetual'
+            },
+            'anyconnect_for_cisco_vpn_phone': {
+                'status': 'Disabled',
+                'time_remaining': 'perpetual'
+            },
+            'advanced_endpoint_assessment': {
+                'status': 'Disabled',
+                'time_remaining': 'perpetual'
+            },
+            'uc_phone_proxy_sessions': {
+                'status': '12',
+                'time_remaining': '62 days'
+            },
+            'total_uc_proxy_sessions': {
+                'status': '10',
+                'time_remaining': '62 days'
+            },
+            'botnet_traffic_filter': {
+                'status': 'Enabled',
+                'time_remaining': '646 days'
+            },
+            'intercompany_media_engine': {
+                'status': 'Disabled',
+                'time_remaining': 'perpetual'
+            },
         },
         'serial_number': 'JMX0938K0C0',
         'last_modified_by': 'docs',
