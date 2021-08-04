@@ -4,12 +4,15 @@ IOSXE parsers for the following show commands:
 
     * show l2fib path-list {id}
     * show l2fib path-list detail
+    * show l2fib bridge-domain <bd_id> port
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
 '''
 
 import re
+
+from pyparsing import Optional
 
 # genie
 from genie.metaparser import MetaParser
@@ -130,3 +133,72 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
                 continue
 
         return parser_dict
+
+# ====================================================
+# Schema for 'show l2fib bridge-domain <bd_id> port'
+# ====================================================
+class ShowL2fibBdPortSchema(MetaParser):
+    """ Schema for show l2fib bridge-domain <bd-id> port """
+
+    schema = {
+        'port_type': Any(),
+        'interface_id': Any(),
+        'pl_id': ListOf(
+            {
+                Any(): {
+                    'pl_count': int,
+                    'pl_type': str,
+                    'pl_desc': Any()
+                }
+            }
+        )
+    }
+
+# ==================================================
+# Parser for 'show l2fib bridge-domain <bd_id> port'
+# ==================================================
+class ShowL2fibBdPort(ShowL2fibBdPortSchema):
+    """ Parser for show l2fib bridge-domain {bd_id} port """
+
+    cli_command = [ 'show l2fib bridge-domain {bd_id} port']
+
+    def cli(self, output=None, bd_id=None):
+        if output is None:
+            cli_output = self.device.execute(self.cli_command[0].format(bd_id=bd_id))
+        else:
+            cli_output = output
+
+    #BD_PORT   Et0/2:12
+    p1 = re.compile(r'^(?P<port_type>BD_PORT)\s+(?P<interface>[\w:\/]+)$')
+
+    #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
+    p2 = re.compile(r'^(?<type>\w+)\s+PL:(?P<pl_id>\d+)\((?P<pl_count>\d+)\)'
+                    r'\s+T:(?P<pl_type>\w+)\s+(?P<pl_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
+
+    parser_dict = {}
+
+    for line in cli_output.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        #BD_PORT   Et0/2:12
+        m = p1.match(line)
+        if m:
+            group = m.groupdict()
+            port_type = group['port_type']
+            interface_id = group['interface']
+            parser_dict.update({'port_type': port_type})
+            parser_dict.update({'interface_id': interface_id})
+
+        m = p2.match(line)
+        if m:
+            group = m.groupdict()
+            pl_entry = parser_dict.setdefault('pl_id', [])
+            pl_id = {}
+            pl_id.update({
+                group['pl_id']: {
+                    
+                }
+            })
+            
