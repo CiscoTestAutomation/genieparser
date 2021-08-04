@@ -8676,7 +8676,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
 
         #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
         p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:\(+'
-                        r'(?P<nobj>[\S\s]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
+                        r'(?P<nobj>[\w\, ]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
 
         #modify_cnt:1 backwalk_cnt:2
         p2 = re.compile(r'^modify_cnt:+(?P<modify_cnt>\d+)\s+'
@@ -8744,16 +8744,11 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
         #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
         p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)$')
 
-        #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
-        p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
-                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
-                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)+  }$')
-
         #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
-        p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
-                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
-                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)\s+IPv4:+\s+'
-                         r'(?P<IPv4>[\d\.]+)\s+\}$')
+        p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+) +{link_type:(?P<link_type>\w+) +ifnum:(?P<ifnum>\w+), +adj:(?P<adj>\w+), +si: +(?P<si>\w+) +}$')
+
+        #ADJ:objid:137 {link_type:IP ifnum:0x36, adj:0x63000036, si: 0x7f02737a2348  IPv4:     172.16.25.2 }
+        p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+) +{link_type:(?P<link_type>\w+) +ifnum:(?P<ifnum>\w+), +adj:(?P<adj>\w+), +si: +(?P<si>\w+) +IPv4: +(?P<IPv4>[\d\.]+) +}$')
 
         #LENTRY:label:75 not found...
         p20 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\snot +found\S+$')
