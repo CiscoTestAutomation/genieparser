@@ -1,5 +1,5 @@
 
-GigabitEthernet1/0/1 - Group 0 (version 2)
+Port-channel1 - Group 0 (version 2)
   State is Active
     8 state changes, last state change 1w0d
     Track object 1 (unknown)

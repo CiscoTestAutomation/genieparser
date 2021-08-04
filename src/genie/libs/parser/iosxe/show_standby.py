@@ -405,7 +405,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
         standby_all_dict = {}
 
         # Ethernet4/1 - Group 0 (version 2)
-        p1 = re.compile(r'(?P<intf>[\w\/\.]+) +\- +Group +(?P<group>\d+)'
+        p1 = re.compile(r'(?P<intf>[\w\/\.\-]+) +\- +Group +(?P<group>\d+)'
                         r' *(?:\(version +(?P<version>\d+)\))?$')
 
         # State is Active
