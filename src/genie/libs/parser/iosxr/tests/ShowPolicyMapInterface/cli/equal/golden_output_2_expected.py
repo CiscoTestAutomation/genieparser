@@ -15,7 +15,14 @@ expected_output = {
                                         },
                                         "transmitted": "N/A",
                                         "total_dropped": "N/A",
-                                    }
+                                    },
+                                    "queueing_statistics": {
+                                        "queue_id": 44,
+                                        "high_watermark": "0/0",
+                                        "inst_queue_len": "0/0",
+                                        "avg_queue_len": "0/0",
+                                        "taildropped": "0/0",
+                                    },
                                 },
                                 "class-default": {
                                     "classification_statistics": {

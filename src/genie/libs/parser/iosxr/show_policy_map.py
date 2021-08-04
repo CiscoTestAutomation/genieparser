@@ -26,23 +26,29 @@ class ShowPolicyMapInterfaceSchema(MetaParser):
     '''
 
     schema = {
-        Any(): {
-            Optional('service_policy'): {
-                Any():{
-                    Optional('policy_status'): str,
-                    Optional('policy_name'): {
-                        Any(): {
-                            Optional('class'): {
-                                Optional(Any()):
-                                {
-                                    Optional('classification_statistics'):{
-                                        Optional('matched'):{
-                                            Optional('packets/bytes'): str,
-                                            Optional('rate/kbps'): int
+        'interface':{
+            Any(): {
+                Optional('service_policy'): {
+                    Any():{
+                        Optional('policy_status'): str,
+                        Optional('policy_name'): {
+                            Any(): {
+                                Optional('class'): {
+                                    Optional(Any()):
+                                    {
+                                        Optional('classification_statistics'):{
+                                            Optional('matched'): Any(),
+                                            Optional('transmitted'): Any(),
+                                            Optional('total_dropped'): Any()
+                                       },
+                                        Optional('queueing_statistics'): {
+                                            Optional('queue_id'): int,
+                                            Optional('high_watermark'): str,
+                                            Optional('inst_queue_len'): str,
+                                            Optional('avg_queue_len'): str,
+                                            Optional('taildropped'): str,
                                         },
-                                        Optional('transmitted'): Any(),
-                                        Optional('total_dropped'): Any()
-                                   }
+                                    }
                                 }
                             }
                         }
@@ -89,20 +95,39 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
         # Class cap
         p5 = re.compile('^Class +(?P<class_name>\D+)$')
 
+        # Matched             : N / A
+        p6 = re.compile('^Matched\s+: +(?P<matched>[\D\s]+)$')
+
         # Matched             :                 638/42108                10
-        p6 =  re.compile('^Matched\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p7 =  re.compile('^Matched\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
 
         # Transmitted         : N / A
-        p7 = re.compile('^Transmitted\s+: +(?P<transmitted>[\D\s]+)$')
+        p8 = re.compile('^Transmitted\s+: +(?P<transmitted>[\D\s]+)$')
 
         # Transmitted             :                 638/42108                10
-        p8 =  re.compile('^Transmitted\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p9 =  re.compile('^Transmitted\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
 
         # Total Dropped       : N/A
-        p9 = re.compile('^Total Dropped\s+: +(?P<total_dropped>[\D\s]+)$')
+        p10 = re.compile('^Total Dropped\s+: +(?P<total_dropped>[\D\s]+)$')
 
         # Total Dropped             :                 638/42108                10
-        p10 = re.compile('^Total Dropped\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p11 = re.compile('^Total Dropped\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+
+        # Queue ID                             : 44
+        p12 = re.compile('^Queue ID\s+: +(?P<queue_id>[\d]+)$')
+
+        # High watermark  (bytes)/(ms)         : 0/0
+        p13 = re.compile('^High +watermark[\S\D]+:\s+(?P<high_watermark>[\d\S]+)$')
+
+        # Inst-queue-len  (bytes)/(ms)         : 0/0
+        p14 = re.compile('^Inst-queue-len[\S\D]+:\s+(?P<inst_queue_len>[\d\S]+)$')
+
+        # Avg-queue-len   (bytes)/(ms)         : 0/0
+        p15 = re.compile('^Avg-queue-len[\S\D]+:\s+(?P<avg_queue_len>[\d\S]+)$')
+
+        # Taildropped(packets/bytes)           : 0/0
+        p16 = re.compile('^Taildropped[\S\D]+:\s+(?P<taildropped>[\d\S]+)$')
+
 
         for line in out.splitlines():
             line = line.strip()
@@ -113,12 +138,13 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 group = m.group()
 
                 # define interface_dict dictionary
-                interface_dict = ret_dict.setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
 
                 # define serv_policy_dict dictionary and set to 'service_policy'
                 serv_policy_dict = interface_dict.setdefault('service_policy', {}).\
-                                    setdefault('input', {}). \
-                                    setdefault('policy_status', 'Service Policy not installed')
+                    setdefault('input', {}). \
+                    setdefault('policy_status', 'Service Policy not installed')
 
                 continue
 
@@ -129,7 +155,8 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 input = group['input']
 
                 # define interface_dict dictionary
-                interface_dict = ret_dict.setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
 
                 # define serv_policy_dict dictionary and set to 'service_policy'
                 serv_policy_dict = interface_dict.setdefault('service_policy', {}). \
@@ -145,7 +172,8 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 group = m.group()
 
                 # define interface_dict dictionary
-                interface_dict = ret_dict.setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
 
                 # define serv_policy_dict dictionary and set to 'service_policy'
                 serv_policy_dict = interface_dict.setdefault('service_policy', {}). \
@@ -161,10 +189,11 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 output = group['output']
 
                 # define interface_dict dictionary
-                interface_dict = ret_dict.setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
 
                 # define serv_policy_dict dictionary and set to 'service_policy'
-                serv_policy_dict = interface_dict.setdefault('service_policy'). \
+                serv_policy_dict = interface_dict.setdefault('service_policy', {}). \
                     setdefault('output', {})
 
                 # define name_dict dictionary and assigned to serv_policy_dict
@@ -182,11 +211,18 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 #Initialize Classification statistics
                 class_stat_dict = class_dict.setdefault('classification_statistics', {})
 
-            # Matched             :                 638/42108                10
+            # Matched             : N / A
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                class_stat_dict.update({
+                    'matched': group['matched']
+                })
 
+            # Matched             :                 638/42108                10
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
                 match_dict = class_stat_dict.setdefault('matched', {})
                 match_dict.update({
                     'packets/bytes': group['packets_bytes'],
@@ -194,7 +230,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 })
 
             # Transmitted         : N / A
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 class_stat_dict.update({
@@ -202,7 +238,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 })
 
             # Transmitted             :                 638/42108                10
-            m = p8.match(line)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
 
@@ -213,7 +249,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 })
 
             # Total Dropped       : N/A
-            m = p9.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
                 class_stat_dict.update({
@@ -221,7 +257,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 })
 
             # Total Dropped             :                 638/42108                10
-            m = p10.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 total_dict = class_stat_dict.setdefault('total_dropped', {})
@@ -229,5 +265,38 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                     'packets/bytes': group['packets_bytes'],
                     'rate/kbps': int(group['rate_kbps'])
                 })
+
+            # Queue ID                             : 44
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+
+                # Initialize Queueing statistics
+                queue_stat_dict = class_dict.setdefault('queueing_statistics', {})
+                queue_stat_dict.update({'queue_id': int(group['queue_id'])})
+
+            # High watermark  (bytes)/(ms)         : 0/0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({'high_watermark': group['high_watermark']})
+
+            # Inst-queue-len  (bytes)/(ms)         : 0/0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({'inst_queue_len': group['inst_queue_len']})
+
+            # Avg-queue-len   (bytes)/(ms)         : 0/0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({'avg_queue_len': group['avg_queue_len']})
+
+            # Taildropped(packets/bytes)           : 0/0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({'taildropped': group['taildropped']})
 
         return ret_dict
