@@ -420,7 +420,7 @@ class ShowStackPowerDetail(ShowStackPowerDetailSchema):
     def cli(self,output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
                     
@@ -502,19 +502,19 @@ class ShowStackPowerDetail(ShowStackPowerDetailSchema):
                 continue
             
             # Stack mode: Power sharing
-            elif p3.match(line):
+            if p3.match(line):
                 match = p3.match(line)
                 stack_dict_3['stack_mode'] = match.group('stack_mode')
                 continue
 
             # Stack topology: Standalone            
-            elif p4.match(line):
+            if p4.match(line):
                 match = p4.match(line)
                 stack_dict_3['stack_topology'] = match.group('stack_topology')
                 continue
             
              # Switch 1 
-            elif p5.match(line):
+            if p5.match(line):
                 match = p5.match(line)
                 switch = match.group()
                 switch = int(switch[-1])
@@ -525,55 +525,55 @@ class ShowStackPowerDetail(ShowStackPowerDetailSchema):
                 continue
 
             # Power budget: 1100
-            elif p6.match(line):
+            if p6.match(line):
                 match = p6.match(line)
                 stack_dict_5['power_budget'] = int(match.group('power_budget'))
                 continue
 
             # Power allocated: 243
-            elif p7.match(line):
+            if p7.match(line):
                 match = p7.match(line)
                 stack_dict_5['power_allocated'] = int(match.group('power_allocated'))
                 continue
                 
             # Low port priority value: 22
-            elif p8.match(line):
+            if p8.match(line):
                 match = p8.match(line)
                 stack_dict_5['low_port_priority_value'] = int(match.group('low_port_priority_value'))
                 continue
                 
             # High port priority value: 13
-            elif p9.match(line):
+            if p9.match(line):
                 match = p9.match(line)
                 stack_dict_5['high_port_priority_value'] = int(match.group('high_port_priority_value'))
                 continue
             
             # Switch priority value: 4
-            elif p10.match(line):
+            if p10.match(line):
                 match = p10.match(line)
                 stack_dict_5['switch_priority_value'] = int(match.group('switch_priority_value'))
                 continue
 
             # Port 1 status: Not connected   
-            elif p11.match(line):
+            if p11.match(line):
                 match = p11.match(line)
                 stack_dict_5['port_1_status'] = match.group('port_1_status')
                 continue
                 
             #Port 2 status: Not connected
-            elif p12.match(line):
+            if p12.match(line):
                 match = p12.match(line)
                 stack_dict_5['port_2_status'] = match.group('port_2_status')
                 continue
                 
             # Neighbor on port 1: 0000.0000.0000
-            elif p13.match(line):
+            if p13.match(line):
                 match = p13.match(line)
                 stack_dict_5['neighbor_on_port_1'] = match.group('neighbor_on_port_1')
                 continue
                 
             # Neighbor on port 2: 0000.0000.0000
-            elif p14.match(line):
+            if p14.match(line):
                 match = p14.match(line)
                 stack_dict_5['neighbor_on_port_2'] = match.group('neighbor_on_port_2')
                 continue
