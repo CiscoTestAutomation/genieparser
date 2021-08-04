@@ -200,6 +200,8 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 name_dict = serv_policy_dict.setdefault('policy_name', {}).\
                             setdefault(output, {})
 
+                continue
+
             # Class cap
             m = p5.match(line)
             if m:
@@ -210,6 +212,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
 
                 #Initialize Classification statistics
                 class_stat_dict = class_dict.setdefault('classification_statistics', {})
+                continue
 
             # Matched             : N / A
             m = p6.match(line)
@@ -218,6 +221,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 class_stat_dict.update({
                     'matched': group['matched']
                 })
+                continue
 
             # Matched             :                 638/42108                10
             m = p7.match(line)
@@ -228,6 +232,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                     'packets/bytes': group['packets_bytes'],
                     'rate/kbps': int(group['rate_kbps'])
                 })
+                continue
 
             # Transmitted         : N / A
             m = p8.match(line)
@@ -236,6 +241,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 class_stat_dict.update({
                     'transmitted': group['transmitted']
                 })
+                continue
 
             # Transmitted             :                 638/42108                10
             m = p9.match(line)
@@ -247,6 +253,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                     'packets/bytes': group['packets_bytes'],
                     'rate/kbps': int(group['rate_kbps'])
                 })
+                continue
 
             # Total Dropped       : N/A
             m = p10.match(line)
@@ -255,6 +262,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 class_stat_dict.update({
                     'total_dropped': group['total_dropped']
                 })
+                continue
 
             # Total Dropped             :                 638/42108                10
             m = p11.match(line)
@@ -265,6 +273,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                     'packets/bytes': group['packets_bytes'],
                     'rate/kbps': int(group['rate_kbps'])
                 })
+                continue
 
             # Queue ID                             : 44
             m = p12.match(line)
@@ -274,29 +283,34 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                 # Initialize Queueing statistics
                 queue_stat_dict = class_dict.setdefault('queueing_statistics', {})
                 queue_stat_dict.update({'queue_id': int(group['queue_id'])})
+                continue
 
             # High watermark  (bytes)/(ms)         : 0/0
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 queue_stat_dict.update({'high_watermark': group['high_watermark']})
+                continue
 
             # Inst-queue-len  (bytes)/(ms)         : 0/0
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 queue_stat_dict.update({'inst_queue_len': group['inst_queue_len']})
+                continue
 
             # Avg-queue-len   (bytes)/(ms)         : 0/0
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 queue_stat_dict.update({'avg_queue_len': group['avg_queue_len']})
+                continue
 
             # Taildropped(packets/bytes)           : 0/0
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 queue_stat_dict.update({'taildropped': group['taildropped']})
+                continue
 
         return ret_dict
