@@ -1,0 +1,20 @@
+R5-asr1k-11#show isis topology flex-algo 129
+
+Tag 1:
+IS-IS TID 0 paths to level-1 routers
+Flex-algo 129
+System Id            Metric     Next-Hop             Interface   SNPA
+R1-asr1k-43          33554428   R3-asr1k-53          Gi0/1/4     c014.fe84.b306 
+R3-asr1k-53          16777214   R3-asr1k-53          Gi0/1/4     c014.fe84.b306 
+R5-asr1k-11          --
+R6-asr1k-20          16777214   R6-asr1k-20          Gi0/0/2     3c57.31c1.fb32 
+                                R6-asr1k-20          Gi0/0/3     3c57.31c1.fb33 
+
+IS-IS TID 0 paths to level-2 routers
+Flex-algo 129
+System Id            Metric     Next-Hop             Interface   SNPA
+R1-asr1k-43          33554428   R3-asr1k-53          Gi0/1/4     c014.fe84.b306 
+R3-asr1k-53          16777214   R3-asr1k-53          Gi0/1/4     c014.fe84.b306 
+R5-asr1k-11          --
+R6-asr1k-20          16777214   R6-asr1k-20          Gi0/0/2     3c57.31c1.fb32 
+                                R6-asr1k-20          Gi0/0/3     3c57.31c1.fb33 

@@ -6,7 +6,9 @@ IOSXE parsers for the following show commands:
     * show isis hostname
     * show isis lsp-log
     * show isis database detail
-
+    * show isis node
+    * show isis topology 
+    * show isis topology {flex_algo}
 """
 
 # Python
@@ -898,5 +900,142 @@ class ShowIsisNode(ShowIsisNodeSchema):
                 ret_dict["tag"][tag]["level"][level]["hosts"][host].setdefault("flex_algo", {}).setdefault(flex_algo, {})
                 ret_dict["tag"][tag]["level"][level]["hosts"][host]["flex_algo"][flex_algo] = flex_dict
                 continue 
+
+        return ret_dict
+
+class ShowIsisTopologySchema(MetaParser):
+    """Schema for show isis topology 
+                  show isis topology flex-algo {flex_id}"""
+    schema = {
+        "tag": {
+            Any() : {
+                Optional("level"): {
+                    Any(): {
+                        Optional("flex_algo"): int,
+                        "hosts": {
+                            Any(): { 
+                                Optional("metric"): int,
+                                Optional("interface"): {
+                                    Any(): {
+                                        "next_hop": str,
+                                        "snpa": str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+class ShowIsisTopology(ShowIsisTopologySchema):
+    '''Parser for show isis topology
+                  show isis topology flex-algo {flex_id}'''
+
+    cli_command = ['show isis topology',
+                   'show isis topology flex-algo {flex_id}']
+
+    def cli(self, flex_id="", output=None):
+        if output is None:
+            if flex_id:
+                out = self.device.execute(self.cli_command[1].format(flex_id=flex_id))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Tag 1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # IS-IS TID 0 paths to level-1 routers
+        p2 = re.compile(r'^.+paths to level-(?P<level>\d).+$')
+
+        # Flex-algo 129
+        p3 = re.compile(r'^Flex-algo\s+(?P<flex_algo>\d+)$')
+
+        # R1-asr1k-43          --
+        p4 = re.compile(r'^(?P<system_id>\S+)\s+(?P<metric>--+)$')
+
+        # R2-asr1k-33          10         R2-asr1k-33          Gi0/0/2     c47d.4f12.e020 
+        p5 = re.compile(r'^(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+[/\d]+)\s+(?P<snpa>[\w\d]{4}.[\w\d]{4}.[\w\d]{4})$')
+        
+        #                                 R2-asr1k-33          Gi0/0/3     c47d.4f12.e021 
+        p6 = re.compile(r'^(?P<next_hop>\S+)\s+(?P<interface>\w+[/\d]+)\s+(?P<snpa>[\w\d]{4}.[\w\d]{4}.[\w\d]{4})$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag = group["tag"]
+                ret_dict.setdefault("tag", {}).setdefault(tag, {})
+                continue 
+
+            # IS-IS TID 0 paths to level-1 routers
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                level = int(group["level"])
+                ret_dict["tag"][tag].setdefault("level", {}).setdefault(level, {}).setdefault("hosts", {})
+                continue
+
+            # Flex-algo 129
+            if flex_id:
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    ret_dict["tag"][tag]["level"][level]["flex_algo"] = int(group["flex_algo"])
+                    continue
+            
+            # R1-asr1k-43          --
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                system_id = group["system_id"]
+                ret_dict["tag"][tag]["level"][level]["hosts"].setdefault(system_id, {})
+                continue
+            
+            # R2-asr1k-33          10         R2-asr1k-33          Gi0/0/2     c47d.4f12.e020 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                system_id = group["system_id"]
+                metric = group["metric"]
+                intrf = group["interface"]
+                next_hop = group["next_hop"]
+                snpa = group["snpa"]
+
+                system_dict = {
+                    "metric": int(metric),
+                    "interface": {
+                        intrf : {
+                            "next_hop": next_hop,
+                            "snpa": snpa
+                        }
+                    }
+                }
+
+                ret_dict["tag"][tag]["level"][level]["hosts"].setdefault(system_id, system_dict)
+                continue
+
+            #                                 R2-asr1k-33          Gi0/0/3     c47d.4f12.e021 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intrf = group["interface"]
+                next_hop = group["next_hop"]
+                snpa = group["snpa"]
+                if intrf not in ret_dict["tag"][tag]["level"][level]["hosts"][system_id]["interface"]:
+                    intf_dict = {
+                        "next_hop": next_hop,
+                        "snpa": snpa
+                    }
+                    ret_dict["tag"][tag]["level"][level]["hosts"][system_id]["interface"].setdefault(intrf, intf_dict)
+                continue
 
         return ret_dict
