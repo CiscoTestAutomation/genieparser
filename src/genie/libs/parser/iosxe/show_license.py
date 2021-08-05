@@ -204,13 +204,6 @@ class ShowLicenseSummary(ShowLicenseSummarySchema):
     """Parser for show license summary"""
     cli_command = 'show license summary'
     
-    """
-    License Usage:
-      License                 Entitlement Tag               Count Status
-      -----------------------------------------------------------------------------
-      network-advantage       (C9300-48 Network Advan...)       1 IN USE
-      dna-advantage           (C9300-48 DNA Advantage)          1 IN USE
-    """
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -222,8 +215,9 @@ class ShowLicenseSummary(ShowLicenseSummarySchema):
         
         result_dict = {}
 
-        # license entitlement count status
-        p0 = re.compile(r"^(?P<license>network-\w+|dna-\w+)\s+(?P<entitlement>\(\w+-\d+\s\w+\s\w+.+\))\s+(?P<count>\d+)\s+(?P<status>.+)$")
+        # network-advantage       (C9300-48 Network Advan...)       1 IN USE
+        # dna-advantage           (C9300-48 DNA Advantage)          1 IN USE
+        p0 = re.compile(r"^(?P<license>[\w-]+)\s+\((?P<entitlement>.+)\)\s+(?P<count>\d+)\s+(?P<status>.+)$")
 
         ret_dict={}
         for line in out.splitlines():
