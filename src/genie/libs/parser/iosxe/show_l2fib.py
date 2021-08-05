@@ -142,9 +142,9 @@ class ShowL2fibBdPortSchema(MetaParser):
     schema = {
         Any(): {
             'type': str,
-            'is_pathlist': bool,
+            'is_path_list': bool,
             Optional('port'): str,
-            Optional('pathlist'): {
+            Optional('path_list'): {
                 'id': str,
                 'path_count': str,
                 'type': str,
@@ -190,7 +190,7 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
                 parser_dict.update({
                     interface_id: {
                         'type': port_type,
-                        'is_pathlist': False,
+                        'is_path_list': False,
                         'port': interface_id
                     }
                 })
@@ -203,8 +203,8 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
                 parser_dict.update({
                     group['path_list_desc']: {
                         'type': group['type'],
-                        'is_pathlist': True,
-                        'pathlist': {
+                        'is_path_list': True,
+                        'path_list': {
                             'id': group['path_list_id'],
                             'path_count': group['path_list_count'],
                             'type': group['path_list_type'],
