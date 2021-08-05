@@ -9,5 +9,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Modified ShowDeviceTrackingPolicies:
-        * Fix parsing of faults
-        * Fix parsing of dropped message to account for more cases
+        * Added options for specified VLAN or Interface
