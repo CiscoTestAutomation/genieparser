@@ -4,7 +4,7 @@ IOSXE parsers for the following show commands:
 
     * show l2fib path-list {id}
     * show l2fib path-list detail
-    * show l2fib bridge-domain <bd_id> port
+    * show l2fib bridge-domain {bd_id} port
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -12,11 +12,10 @@ All rights reserved.
 
 import re
 
-from pyparsing import Optional
 
 # genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, ListOf
+from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 
 
 # ====================================================
@@ -135,19 +134,21 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
         return parser_dict
 
 # ====================================================
-# Schema for 'show l2fib bridge-domain <bd_id> port'
+# Schema for 'show l2fib bridge-domain {bd_id} port'
 # ====================================================
 class ShowL2fibBdPortSchema(MetaParser):
-    """ Schema for show l2fib bridge-domain <bd-id> port """
+    """ Schema for show l2fib bridge-domain {bd-id} port """
 
     schema = {
-        'port_type': Any(),
-        'interface_id': Any(),
-        'pl_id': {
-            Any(): {
-                'pl_count': int,
-                'pl_type': str,
-                'pl_desc': Any()
+        Any(): {
+            'type': str,
+            'is_pathlist': bool,
+            Optional('port'): str,
+            Optional('pathlist'): {
+                'id': str,
+                'path_count': str,
+                'type': str,
+                'description': str
             }
         }
     }
@@ -170,8 +171,8 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
         p1 = re.compile(r'^(?P<port_type>BD_PORT)\s+(?P<interface>[\w:\/]+)$')
 
         #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
-        p2 = re.compile(r'^(?P<type>\w+)\s+PL:(?P<pl_id>\d+)\((?P<pl_count>\d+)\)'
-                        r'\s+T:(?P<pl_type>\w+)\s+(?P<pl_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
+        p2 = re.compile(r'^(?P<type>\w+)\s+PL:(?P<path_list_id>\d+)\((?P<path_list_count>\d+)\)'
+                        r'\s+T:(?P<path_list_type>\w+)\s+(?P<path_list_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
 
         parser_dict = {}
 
@@ -184,24 +185,32 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                port_type = str(group['port_type'])
-                interface_id = str(group['interface'])
-                parser_dict.update({'port_type': port_type})
-                parser_dict.update({'interface_id': interface_id})
-
+                port_type = group['port_type']
+                interface_id = group['interface']
+                parser_dict.update({
+                    interface_id: {
+                        'type': port_type,
+                        'is_pathlist': False,
+                        'port': interface_id
+                    }
+                })
+                continue
 
             #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                pl_id = parser_dict.setdefault('pl_id', {})
-
-                pl_id.update({
-                    int(group['pl_id']): {
-                        'pl_count': int(group['pl_count']),
-                        'pl_type': str(group['pl_type']),
-                        'pl_desc': str(group['pl_desc'])
+                parser_dict.update({
+                    group['path_list_desc']: {
+                        'type': group['type'],
+                        'is_pathlist': True,
+                        'pathlist': {
+                            'id': group['path_list_id'],
+                            'path_count': group['path_list_count'],
+                            'type': group['path_list_type'],
+                            'description': group['path_list_desc']
+                        }
                     }
                 })
-
+                continue
         return parser_dict

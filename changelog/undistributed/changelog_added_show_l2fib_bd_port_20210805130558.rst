@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowL2fibBdPort:
-        * show l2fib bridge-domain {bd_id} port
+        * show l2fib bridge-domain <bd_id> port
