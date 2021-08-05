@@ -143,15 +143,13 @@ class ShowL2fibBdPortSchema(MetaParser):
     schema = {
         'port_type': Any(),
         'interface_id': Any(),
-        'pl_id': ListOf(
-            {
-                Any(): {
-                    'pl_count': int,
-                    'pl_type': str,
-                    'pl_desc': Any()
-                }
+        'pl_id': {
+            Any(): {
+                'pl_count': int,
+                'pl_type': str,
+                'pl_desc': Any()
             }
-        )
+        }
     }
 
 # ==================================================
@@ -168,37 +166,42 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
         else:
             cli_output = output
 
-    #BD_PORT   Et0/2:12
-    p1 = re.compile(r'^(?P<port_type>BD_PORT)\s+(?P<interface>[\w:\/]+)$')
-
-    #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
-    p2 = re.compile(r'^(?<type>\w+)\s+PL:(?P<pl_id>\d+)\((?P<pl_count>\d+)\)'
-                    r'\s+T:(?P<pl_type>\w+)\s+(?P<pl_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
-
-    parser_dict = {}
-
-    for line in cli_output.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-
         #BD_PORT   Et0/2:12
-        m = p1.match(line)
-        if m:
-            group = m.groupdict()
-            port_type = group['port_type']
-            interface_id = group['interface']
-            parser_dict.update({'port_type': port_type})
-            parser_dict.update({'interface_id': interface_id})
+        p1 = re.compile(r'^(?P<port_type>BD_PORT)\s+(?P<interface>[\w:\/]+)$')
 
-        m = p2.match(line)
-        if m:
-            group = m.groupdict()
-            pl_entry = parser_dict.setdefault('pl_id', [])
-            pl_id = {}
-            pl_id.update({
-                group['pl_id']: {
-                    
-                }
-            })
-            
+        #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
+        p2 = re.compile(r'^(?P<type>\w+)\s+PL:(?P<pl_id>\d+)\((?P<pl_count>\d+)\)'
+                        r'\s+T:(?P<pl_type>\w+)\s+(?P<pl_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
+
+        parser_dict = {}
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #BD_PORT   Et0/2:12
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_type = str(group['port_type'])
+                interface_id = str(group['interface'])
+                parser_dict.update({'port_type': port_type})
+                parser_dict.update({'interface_id': interface_id})
+
+
+            #VXLAN_REP PL:1191(1) T:VXLAN_REP [IR]20012:2.2.2.2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                pl_id = parser_dict.setdefault('pl_id', {})
+
+                pl_id.update({
+                    int(group['pl_id']): {
+                        'pl_count': int(group['pl_count']),
+                        'pl_type': str(group['pl_type']),
+                        'pl_desc': str(group['pl_desc'])
+                    }
+                })
+
+        return parser_dict
