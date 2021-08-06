@@ -145,8 +145,8 @@ class ShowL2fibBdPortSchema(MetaParser):
             'is_path_list': bool,
             Optional('port'): str,
             Optional('path_list'): {
-                'id': str,
-                'path_count': str,
+                'id': int,
+                'path_count': int,
                 'type': str,
                 'description': str
             }
@@ -205,8 +205,8 @@ class ShowL2fibBdPort(ShowL2fibBdPortSchema):
                         'type': group['type'],
                         'is_path_list': True,
                         'path_list': {
-                            'id': group['path_list_id'],
-                            'path_count': group['path_list_count'],
+                            'id': int(group['path_list_id']),
+                            'path_count': int(group['path_list_count']),
                             'type': group['path_list_type'],
                             'description': group['path_list_desc']
                         }

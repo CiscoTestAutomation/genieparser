@@ -8,8 +8,8 @@ expected_output = {
         'type':'VXLAN_REP',
         'is_path_list': True,
         'path_list': {
-            'id': '1190',
-            'path_count': '1',
+            'id': 1190,
+            'path_count': 1,
             'type': 'VXLAN_REP',
             'description': '[IR]20011:2.2.2.2'
         }
@@ -18,8 +18,8 @@ expected_output = {
         'type':'VXLAN_REP',
         'is_path_list': True,
         'path_list': {
-            'id': '1183',
-            'path_count': '1',
+            'id': 1183,
+            'path_count': 1,
             'type': 'VXLAN_REP',
             'description': '[IR]20011:3.3.3.2'
         }
