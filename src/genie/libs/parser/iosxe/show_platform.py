@@ -2380,18 +2380,17 @@ class ShowPlatform(ShowPlatformSchema):
         # --------- ------------------- --------------------- -----------------
         # 0         ASR1000-SIP40       ok                    00:33:53
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
-        p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
-                        r'(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+        # F0                            ok, active            00:09:23
+        # P1        Unknown             N/A                   never
+        p6 = re.compile(r'^(?P<slot>[a-zA-Z0-9]+)(\/(?P<subslot>\d+))?( +(?P<name>[a-zA-Z0-9\-\_/+]+))? +(?P<state>(?!\d+|unknown)\w+(\, \w+)?(/\w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
-        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
-                          r' +(?P<insert_time>[\w\.\:]+)$')
+        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
         # 0         00200800            16.2(1r)
-        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
-                        r'(?P<fireware_ver>[\w\.\(\)\/]+)$')
+        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +(?P<fireware_ver>[\w\.\(\)\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2482,104 +2481,103 @@ class ShowPlatform(ShowPlatformSchema):
                 slot = m.groupdict()['slot']
                 subslot = m.groupdict()['subslot']
                 name = m.groupdict()['name']
-                if not name:
-                    continue
+                if name:
 
-                # subslot
-                if subslot:
-                    try:
-                        # no-slot-type output:
-                        # Slot      Type                State                 Insert time (ago)
+                    # subslot
+                    if subslot:
+                        try:
+                            # no-slot-type output:
+                            # Slot      Type                State                 Insert time (ago)
 
-                        # --------- ------------------- --------------------- -----------------
+                            # --------- ------------------- --------------------- -----------------
 
-                        # 0/2      A900-IMA8Z          ok                    1w4d
+                            # 0/2      A900-IMA8Z          ok                    1w4d
 
+                            if 'slot' not in platform_dict:
+                                platform_dict['slot'] = {}
+                            if slot not in platform_dict['slot']:
+                                platform_dict['slot'][slot] = {}
+                            # if slot not in platform_dict['slot']:
+                            #     continue
+
+                            slot_items = platform_dict['slot'][slot].items()
+
+                            # for no-slot-type output
+                            if not slot_items:
+                                if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                                    if 'R' in slot:
+                                        lc_type = 'rp'
+                                    elif re.match(r'^\d+', slot):
+                                        lc_type = 'lc'
+                                    else:
+                                        lc_type = 'other'
+                                elif re.match(r'^ASR\d+-RP\d+', name):
+                                    lc_type = 'rp'
+                                elif re.match(r'^CSR\d+V', name):
+                                    if 'R' in slot:
+                                        lc_type = 'rp'
+                                    else:
+                                        lc_type = 'other'
+                                else:
+                                    lc_type = 'other'
+
+                                if lc_type not in platform_dict['slot'][slot]:
+                                    platform_dict['slot'][slot][lc_type] = {}
+
+                                if name not in platform_dict['slot'][slot][lc_type]:
+                                    platform_dict['slot'][slot][lc_type][name] = {}
+                                sub_dict = platform_dict['slot'][slot][lc_type][name]
+                                sub_dict['slot'] = slot
+
+                            # Add subslot
+                            for key, value in slot_items:
+                                for key, last in value.items():
+                                    if 'subslot' not in last:
+                                        last['subslot'] = {}
+                                    if subslot not in last['subslot']:
+                                        last['subslot'][subslot] = {}
+                                    if name not in last['subslot'][subslot]:
+                                        last['subslot'][subslot][name] = {}
+                                    sub_dict = last['subslot'][subslot][name]
+                            sub_dict['subslot'] = subslot
+
+                        # KeyError: 'slot'
+                        except Exception:
+                            continue
+                    else:
                         if 'slot' not in platform_dict:
                             platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
                             platform_dict['slot'][slot] = {}
-                        # if slot not in platform_dict['slot']:
-                        #     continue
-
-                        slot_items = platform_dict['slot'][slot].items()
-
-                        # for no-slot-type output
-                        if not slot_items:
-                            if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
-                                if 'R' in slot:
-                                    lc_type = 'rp'
-                                elif re.match(r'^\d+', slot):
-                                    lc_type = 'lc'
-                                else:
-                                    lc_type = 'other'
-                            elif re.match(r'^ASR\d+-RP\d+', name):
+                        if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                            if 'R' in slot:
                                 lc_type = 'rp'
-                            elif re.match(r'^CSR\d+V', name):
-                                if 'R' in slot:
-                                    lc_type = 'rp'
-                                else:
-                                    lc_type = 'other'
+                            elif re.match(r'^\d+', slot):
+                                lc_type = 'lc'
                             else:
                                 lc_type = 'other'
-
-                            if lc_type not in platform_dict['slot'][slot]:
-                                platform_dict['slot'][slot][lc_type] = {}
-
-                            if name not in platform_dict['slot'][slot][lc_type]:
-                                platform_dict['slot'][slot][lc_type][name] = {}
-                            sub_dict = platform_dict['slot'][slot][lc_type][name]
-                            sub_dict['slot'] = slot
-
-                        # Add subslot
-                        for key, value in slot_items:
-                            for key, last in value.items():
-                                if 'subslot' not in last:
-                                    last['subslot'] = {}
-                                if subslot not in last['subslot']:
-                                    last['subslot'][subslot] = {}
-                                if name not in last['subslot'][subslot]:
-                                    last['subslot'][subslot][name] = {}
-                                sub_dict = last['subslot'][subslot][name]
-                        sub_dict['subslot'] = subslot
-
-                    # KeyError: 'slot'
-                    except Exception:
-                        continue
-                else:
-                    if 'slot' not in platform_dict:
-                        platform_dict['slot'] = {}
-                    if slot not in platform_dict['slot']:
-                        platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
-                        if 'R' in slot:
+                        elif re.match(r'^ASR\d+-RP\d+', name):
                             lc_type = 'rp'
-                        elif re.match(r'^\d+', slot):
-                            lc_type = 'lc'
+                        elif re.match(r'^CSR\d+V', name):
+                            if 'R' in slot:
+                                lc_type = 'rp'
+                            else:
+                                lc_type = 'other'
                         else:
                             lc_type = 'other'
-                    elif re.match(r'^ASR\d+-RP\d+', name):
-                        lc_type = 'rp'
-                    elif re.match(r'^CSR\d+V', name):
-                        if 'R' in slot:
-                            lc_type = 'rp'
-                        else:
-                            lc_type = 'other'
-                    else:
-                        lc_type = 'other'
 
-                    if lc_type not in platform_dict['slot'][slot]:
-                        platform_dict['slot'][slot][lc_type] = {}
+                        if lc_type not in platform_dict['slot'][slot]:
+                            platform_dict['slot'][slot][lc_type] = {}
 
-                    if name not in platform_dict['slot'][slot][lc_type]:
-                        platform_dict['slot'][slot][lc_type][name] = {}
-                    sub_dict = platform_dict['slot'][slot][lc_type][name]
-                    sub_dict['slot'] = slot
+                        if name not in platform_dict['slot'][slot][lc_type]:
+                            platform_dict['slot'][slot][lc_type][name] = {}
+                        sub_dict = platform_dict['slot'][slot][lc_type][name]
+                        sub_dict['slot'] = slot
 
-                sub_dict['name'] = name
-                sub_dict['state'] = m.groupdict()['state'].strip()
-                sub_dict['insert_time'] = m.groupdict()['insert_time']
-                continue
+                    sub_dict['name'] = name
+                    sub_dict['state'] = m.groupdict()['state'].strip()
+                    sub_dict['insert_time'] = m.groupdict()['insert_time']
+                    continue
 
             # Slot      CPLD Version        Firmware Version
             # --------- ------------------- ---------------------------------------
@@ -2589,6 +2587,7 @@ class ShowPlatform(ShowPlatformSchema):
                 fw_ver = m.groupdict()['fireware_ver']
                 cpld_ver = m.groupdict()['cpld_version']
                 slot = m.groupdict()['slot']
+                
                 if 'slot' not in platform_dict:
                     continue
                 if slot not in platform_dict['slot']:
