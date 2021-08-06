@@ -1,0 +1,16 @@
+RP/0/RP0/CPU0:F17-ASR9922#show policy-map interface TenGigE0/2/0/3
+Sat Mar 27 10:52:35.948 JST
+TenGigE0/2/0/3 direction input: Service Policy not installed
+
+TenGigE0/2/0/3 output: cap
+
+Class cap
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                 638/42108                10
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
