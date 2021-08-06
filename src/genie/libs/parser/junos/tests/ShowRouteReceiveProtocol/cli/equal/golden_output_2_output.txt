@@ -1,7 +1,5 @@
 
-        show route receive-protocol bgp 2001:db8:7fc5:ca45::4
 
-        inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
 
         inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
         Prefix                  Nexthop              MED     Lclpref    AS path
@@ -31,4 +29,7 @@
                                 2001:db8:7fc5:ca45::3             100        I
         2001:db8:7fc5:9a4b::4/128
         *                         2001:db8:7fc5:ca45::4             100        I
-    
+        * 2001:db8:22::/48        2001:db8:7fc5:ca45::2 1000               65509 I
+        * 2001:db8:a280::/48      2001:db8:7fc5:ca45::2 1000               65509 I
+        * 2001:db8:6880::/48     2001:db8:7fc5:ca45::2 1000      100         65509 I
+        * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2           100      65509 I
