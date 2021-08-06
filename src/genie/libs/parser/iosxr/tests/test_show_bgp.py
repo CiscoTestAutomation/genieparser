@@ -31361,9 +31361,9 @@ class TestShowBgpNeighbors(unittest.TestCase):
                                 "remote_as": 65000,
                                 "link_state": "internal link",
                                 "local_as_as_no": 65000,
-                                "local_as_no_prepend": False,
-                                "local_as_replace_as": False,
-                                "local_as_dual_as": False,
+                                "local_as_no_prepend": True,
+                                "local_as_replace_as": True,
+                                "local_as_dual_as": True,
                                 "router_id": "10.4.1.1",
                                 "session_state": "established",
                                 "up_time": "1w1d",
@@ -31441,7 +31441,7 @@ class TestShowBgpNeighbors(unittest.TestCase):
         Fri Nov  1 21:31:51.172 UTC
 
         BGP neighbor is 10.4.1.1
-        Remote AS 65000, local AS 65000, internal link
+        Remote AS 65000, local AS 65000, no-prepend, replace-as, dual-as, internal link
         Remote router ID 10.4.1.1
         BGP state = Established, up for 1w1d
         NSR State: None
