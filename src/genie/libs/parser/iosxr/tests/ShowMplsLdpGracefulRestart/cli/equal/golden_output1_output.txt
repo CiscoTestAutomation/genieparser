@@ -1,6 +1,9 @@
-RP/0/RP0/CPU0:F17-ASR9922#show mpls ldp nsr summary
-Sat Mar 27 14:09:03.042 JST
+RP/0/RP0/CPU0:F141-ASR9912#show mpls ldp graceful-restart
+Wed Mar 24 21:21:13.215 JST
 
-Sessions:
-   Total: 1, NSR-eligible: 1, Sync-ed: 1
-      (1 Oper)
+  Forwarding State Hold timer : Not Running
+  GR Neighbors                : 1
+
+   Neighbor ID      Up  Connect Count  Liveness Timer      Recovery Timer
+   ---------------  --  -------------  ------------------  ------------------
+   17.17.17.17      Y        4                -                   -
