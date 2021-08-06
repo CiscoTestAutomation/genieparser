@@ -1,0 +1,121 @@
+R1-asr1k-43#show isis node
+
+Tag 1:
+
+ISIS level-1 node information for R1-asr1k-43.00
+  IP router ID: 1.1.1.1 (LSP #0)
+  IP interface address: 1.1.1.1 (LSP #0)
+  Adj-sid from R1-asr1k-43.00 to R3-asr1k-53
+    adj-sid 16  (LSP #0)
+  LSP index: 38
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-1 node information for R3-asr1k-53.00
+  IP router ID: 3.3.3.3 (LSP #0)
+  IP interface address: 3.3.3.3 (LSP #0)
+  Adj-sid from R3-asr1k-53.00 to R1-asr1k-43
+    adj-sid 372  (LSP #1)
+  Adj-sid from R3-asr1k-53.00 to R5-asr1k-11
+    adj-sid 125  (LSP #1)
+  LSP index: 36
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-1 node information for R5-asr1k-11.00
+  IP router ID: 5.5.5.5 (LSP #0)
+  IP interface address: 5.5.5.5 (LSP #0)
+  Adj-sid from R5-asr1k-11.00 to R3-asr1k-53
+    adj-sid 16  (LSP #0)
+  Adj-sid from R5-asr1k-11.00 to R6-asr1k-20
+    adj-sid 55  (LSP #1)
+    adj-sid 57  (LSP #1)
+  LSP index: 4
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-1 node information for R6-asr1k-20.00
+  IP router ID: 6.6.6.6 (LSP #0)
+  IP interface address: 6.6.6.6 (LSP #0)
+  Adj-sid from R6-asr1k-20.00 to R5-asr1k-11
+    adj-sid 238  (LSP #0)
+    adj-sid 240  (LSP #0)
+  LSP index: 16
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+Tag 1:
+
+ISIS level-2 node information for R1-asr1k-43.00
+  IP router ID: 1.1.1.1 (LSP #0)
+  IP interface address: 1.1.1.1 (LSP #0)
+  Adj-sid from R1-asr1k-43.00 to R3-asr1k-53
+    adj-sid 17  (LSP #0)
+  LSP index: 39
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #1)
+  SR Flex Algorithm 128,129
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-2 node information for R3-asr1k-53.00
+  IP router ID: 3.3.3.3 (LSP #0)
+  IP interface address: 3.3.3.3 (LSP #0)
+  Adj-sid from R3-asr1k-53.00 to R1-asr1k-43
+    adj-sid 373  (LSP #0)
+  Adj-sid from R3-asr1k-53.00 to R5-asr1k-11
+    adj-sid 227  (LSP #4)
+  LSP index: 37
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-2 node information for R5-asr1k-11.00
+  IP router ID: 5.5.5.5 (LSP #0)
+  IP interface address: 5.5.5.5 (LSP #0)
+  Adj-sid from R5-asr1k-11.00 to R3-asr1k-53
+    adj-sid 17  (LSP #0)
+  Adj-sid from R5-asr1k-11.00 to R6-asr1k-20
+    adj-sid 56  (LSP #1)
+    adj-sid 58  (LSP #1)
+  LSP index: 11
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #0)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131
+
+ISIS level-2 node information for R6-asr1k-20.00
+  IP router ID: 6.6.6.6 (LSP #0)
+  IP interface address: 6.6.6.6 (LSP #0)
+  Adj-sid from R6-asr1k-20.00 to R5-asr1k-11
+    adj-sid 239  (LSP #1)
+    adj-sid 241  (LSP #1)
+  LSP index: 21
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: No, Strict-SPF capable: No (LSP #2)
+  SR Flex Algorithm 128,129
+  Flex algorithm:128 Metric-Type:IGP Alg-type:SPF Priority:131
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:131

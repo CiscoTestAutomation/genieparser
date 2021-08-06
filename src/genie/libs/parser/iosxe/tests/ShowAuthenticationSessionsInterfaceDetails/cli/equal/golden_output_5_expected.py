@@ -24,7 +24,6 @@ expected_output = {
                     "oper_control_dir": "in",
                     "oper_host_mode": "single-host",
                     "periodic_acct_timeout": "N/A",
-                    "restart_timeout": "N/A",
                     "session_timeout": {
                         "remaining": "31799s",
                         "timeout": "43200s",

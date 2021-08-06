@@ -1,0 +1,63 @@
+asr1k-34#show isis node
+
+Tag 1:
+
+ISIS level-1 node information for asr1k-34.00
+  IP router ID: 1.1.1.1 (LSP #0)
+  IP interface address: 1.1.1.1 (LSP #0)
+  IP PQ address: 1.1.1.1
+  IP prefix SID: 11, R:0 N:1 P:0 E:0 V:0 L:0
+  IP strict-SPF SID: 111, R:0 N:1 P:0 E:0 V:0 L:0
+  Adj-sid from asr1k-34.00 to asr1k-25
+    adj-sid 36  (LSP #0)
+  Adj-sid from asr1k-34.00 to asr1k-23
+    adj-sid 29  (LSP #0)
+  LSP index: 1
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+
+ISIS level-1 node information for asr1k-25.00
+  IP router ID: 3.3.3.3 (LSP #0)
+  IP interface address: 3.3.3.3 (LSP #0)
+  IP PQ address: 3.3.3.3
+  IP prefix SID: 31, R:0 N:1 P:0 E:0 V:0 L:0
+  IP strict-SPF SID: 131, R:0 N:1 P:0 E:0 V:0 L:0
+  Adj-sid from asr1k-25.00 to asr1k-34
+    adj-sid 17  (LSP #0)
+  Adj-sid from asr1k-25.00 to ncs-3
+    adj-sid 16  (LSP #0)
+  LSP index: 2
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+
+ISIS level-1 node information for ncs-nm-1.00
+  IP router ID: 4.4.4.4 (LSP #0)
+  IP interface address: 4.4.4.4 (LSP #0)
+  IP PQ address: 4.4.4.4
+  IP prefix SID: 41, R:0 N:1 P:0 E:0 V:0 L:0
+  IP strict-SPF SID: 141, R:0 N:1 P:0 E:0 V:0 L:0
+  Adj-sid from ncs-nm-1.00 to asr1k-23
+    adj-sid 24001  (LSP #0)
+  LSP index: 5
+  SRGB start[0]: 100000, SRGB range[0]: 30001 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+  SR end-point: 4.4.4.4
+   Policy: Tunnel65536 ifnum 23 metric 0 flag 0
+
+ISIS level-1 node information for ncs-3.00
+  IP router ID: 5.5.5.5 (LSP #0)
+  IP interface address: 5.5.5.5 (LSP #0)
+  IP PQ address: 5.5.5.5
+  IP prefix SID: 51, R:0 N:1 P:0 E:0 V:0 L:0
+  IP strict-SPF SID: 151, R:0 N:1 P:0 E:0 V:0 L:0
+  Adj-sid from ncs-3.00 to asr1k-25
+    adj-sid 24001  (LSP #0)
+  LSP index: 3
+  SRGB start[0]: 100000, SRGB range[0]: 30001 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+  SR end-point: 5.5.5.5
+   Policy: Tunnel65537 ifnum 24 metric 0 flag 0

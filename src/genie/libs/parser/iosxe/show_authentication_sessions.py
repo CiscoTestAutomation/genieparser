@@ -165,10 +165,13 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('user_name'): str,
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
-                        Optional('restart_timeout'): str,
+                        Optional('restart_timeout'): {
+                            Optional('timeout'): int,
+                            Optional('remaining'): int,
+                        },
                         Optional('unauth_timeout'): {
-                            Optional('timeout'): str,
-                            Optional('remaining'): str,
+                            Optional('timeout'): int,
+                            Optional('remaining'): int,
                         },
                         Optional('session_uptime'): str,
                         'status': str,
@@ -302,10 +305,10 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         p12 = re.compile(r'^Server +Policies\:$')
 
         # Restart timeout:  60s, Remaining: 44s
-        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<restart_timeout>.*)')
+        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<timeout>\w+)s(\s*,\s*Remaining\s*:\s*(?P<remaining>\w+)s)?')
 
         # Unauth timeout:  10s, Remaining: 5s
-        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)(\s*,\s*Remaining\s*:\s*(?P<remaining>\w*))?')
+        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)s(\s*,\s*Remaining\s*:\s*(?P<remaining>\w+)s)?')
 
         # initial return dictionary
         ret_dict = {}
@@ -382,14 +385,17 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # Restart timeout:  10s, Remaining: 5s
             m13 = p13.match(line)
             if m13:
-                mac_dict.update(m13.groupdict())
+                restart_dict = mac_dict.setdefault('restart_timeout', {})
+                restart_dict.update({'timeout': int(m13.group('timeout'))})
+                restart_dict.update({'remaining': int(m13.group('remaining'))})
                 continue
 
             # Unauth timeout:  60s, Remaining: 44s
             m14 = p14.match(line)
             if m14:
                 unauth_dict = mac_dict.setdefault('unauth_timeout', {})
-                unauth_dict.update(m14.groupdict())
+                unauth_dict.update({'timeout': int(m14.group('timeout'))})
+                unauth_dict.update({'remaining': int(m14.group('remaining'))})
                 continue
 
             # match these lines:
