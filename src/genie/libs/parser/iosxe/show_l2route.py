@@ -41,6 +41,26 @@ IOS parsers for the following show commands:
     * show l2route evpn imet topology <evi>:<etag> producer <prod> detail
     * show l2route evpn imet topology <evi>:<etag> producer <prod> origin-rtr <origin-ip> detail
     * show l2route evpn mac ip
+    * show l2route evpn mac ip esi <esi>
+    * show l2route evpn mac ip mac-address <macaddr>
+    * show l2route evpn mac ip mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip next-hop <next-hop>
+    * show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip producer <prod>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip topology <evi:etag>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip topology <evi>
+    * show l2route evpn mac ip topology <evi> producer <prod>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -556,7 +576,29 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
 # Schema for 'show l2route evpn mac ip'
 # =============================================
 class ShowL2routeEvpnMacIpSchema(MetaParser):
-    """ Schema for show l2route evpn mac ip """
+    """ Schema for show l2route evpn mac ip
+                   show l2route evpn mac ip esi <esi>
+                   show l2route evpn mac ip mac-address <macaddr>
+                   show l2route evpn mac ip mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip next-hop <next-hop>
+                   show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip producer <prod>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip topology <evi:etag>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip topology <evi>
+                   show l2route evpn mac ip topology <evi> producer <prod>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+
+    """
 
     schema = {
         'evi': {
@@ -583,11 +625,54 @@ class ShowL2routeEvpnMacIpSchema(MetaParser):
 # =============================================
 class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
 
-    cli_command = ['show l2route evpn mac ip']
+    cli_command = [
+        'show l2route evpn mac ip',
+        'show l2route evpn mac ip esi {esi}',
+        'show l2route evpn mac ip mac-address {macaddr}',
+        'show l2route evpn mac ip mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip next-hop {next_hop}',
+        'show l2route evpn mac ip next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip producer {prod}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip topology {evi_etag}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip topology {evi}',
+        'show l2route evpn mac ip topology {evi} producer {prod}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}'
+        ]
 
-    def cli (self, output=None):
+    def cli (self, output=None, esi=None, macaddr=None, next_hop=None, prod=None, evi=None, etag=None):
         if not output:
-            cli_output = self.device.execute(self.cli_command[0])
+            cli_command = 'show l2route evpn mac ip'
+
+            if esi:
+                esi_tag = ' esi'.format(esi=esi)
+                cli_command += esi_tag
+            if macaddr:
+                macaddr_tag = ' mac-address'.format(macaddr=macaddr)
+                cli_command += macaddr_tag
+            if next_hop:
+                next_hop_tag = ' next-hop'.format(next_hop=next_hop)
+                cli_command += next_hop_tag
+            if prod:
+                prod_tag = ' producer'.format(prod=prod)
+                cli_command += prod_tag
+            if evi:
+                if etag:
+                    evi_etag = "{}:{}".format(evi,etag)
+                    cli_command += " topology {evi_etag}".format(evi_etag=evi_etag)
+                else:
+                    cli_command += " topology {evi}".format(evi=evi)
+
+            cli_output = self.device.execute(cli_command)
         else:
             cli_output = output
 
