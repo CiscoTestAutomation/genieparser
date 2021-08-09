@@ -1689,14 +1689,14 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I   
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+) '
                         r'+(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? '
-                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\S))$')
 
         # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2 1000               65509 I
         # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2 1000     100       65509 I
         # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2          100       65509 I
         p2_1 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\w\:]+\/[\d]+) '
                           r'+(?P<to>\S+) (((?P<med>\d+)? +)(?P<local_preference>\d+)?)? '
-                          r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')
+                          r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\S))$')
 
         # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
