@@ -9,6 +9,8 @@ IOSXE parsers for the following show commands:
     * show isis node
     * show isis topology 
     * show isis topology {flex_algo}
+    * show isis flex-algo
+    * show isis flex-algo {flex_algo}
 """
 
 # Python
@@ -1037,5 +1039,268 @@ class ShowIsisTopology(ShowIsisTopologySchema):
                     }
                     ret_dict["tag"][tag]["level"][level]["hosts"][system_id]["interface"].setdefault(intrf, intf_dict)
                 continue
+
+        return ret_dict
+
+class ShowIsisFlexAlgoSchema(MetaParser):
+    '''schema for show isis flex-algo'''
+    schema = {
+        "tag": {
+            Any(): {
+                Optional("count"): int, 
+                Optional("flex_algo"): {
+                    Any(): {
+                        "level": {
+                            Any(): {
+                                'def_priority': int,
+                                'def_source': str,
+                                'def_equal_to_local': bool,
+                                'def_metric_type': str,
+                                Optional('def_prefix_metric'): bool,
+                                'disabled': bool,
+                                "microloop_avoidance_timer_running": bool,
+                                Optional("def_include_all_affinity"): type([]),
+                                Optional("def_include_any_affinity"): type([]),
+                                Optional("def_exclude_any_affinity"): type([]),
+
+                            }
+                        },
+                        'local_priority': int,
+                        'frr_disabled': bool,
+                        'microloop_avoidance_disabled': bool
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
+    '''parser for show isis flex-algo
+                  show isis flex-algo {flex_id}'''
+
+    cli_command = ['show isis flex-algo',
+                   'show isis flex-algo {flex_id}']
+
+    def cli(self, flex_id="", output=None):
+        if output is None:
+            if flex_id:
+                out = self.device.execute(self.cli_command[1].format(flex_id=flex_id))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+        exclude_any, include_any, include_all = False, False, False
+
+        # Tag 1:
+        p1 = re.compile(r'^Tag\s+(?P<tag>\S+):$')
+
+        #  Flex-Algo count: 3
+        p2 = re.compile(r'^count:\s+(?P<count>\d+)$')
+
+        # Flex-Algo 128: 
+        p3 = re.compile(r'^Flex-Algo\s+(?P<flex_algo>\d+):$')
+
+        # IS-IS Level-1
+        p4 = re.compile(r'^IS-IS Level-(?P<level>\d+)$')
+
+        # Definition Priority: 131
+        p5 = re.compile(r'^Definition Priority:\s+(?P<def_priority>\d+)$')
+
+        # Definition Source: R6-asr1k-20.00
+        p6 = re.compile(r'^Definition Source:\s+(?P<def_source>\S+)$')
+
+        # Definition Equal to Local: Yes
+        p7 = re.compile(r'^Definition Equal to Local:\s+(?P<def_equal>Yes|No)$')
+
+        # Definition Metric Type: IGP
+        p8 = re.compile(r'^Definition Metric Type:\s+(?P<def_metric_type>\S+)$')
+
+        # Definition Flex-Algo Prefix Metric: Yes
+        p9 = re.compile(r'^Definition Flex-Algo Prefix Metric:\s+(?P<def_flex_prefix_metric>Yes|No)$')
+
+        # Disabled: No
+        p10 = re.compile(r'^Disabled:\s(?P<disabled>Yes|No)$')
+
+        # Microloop Avoidance Timer Running: No
+        p11 = re.compile(r'^Microloop Avoidance Timer Running:\s+(?P<microloop_avoidance_timer>Yes|No)$')
+
+        #    Local Priority: 128
+        p12 = re.compile(r'^Local Priority:\s+(?P<local_priority>\d+)$')
+
+        #    FRR Disabled: No
+        p13 = re.compile(r'^FRR Disabled:\s+(?P<frr_disabled>Yes|No)$')
+
+        #    Microloop Avoidance Disabled: No
+        p14 = re.compile(r'^Microloop Avoidance Disabled:\s+(?P<microloop_avoidance_disabled>Yes|No)$')
+
+        # Definition Exclude-any Affinity:
+        p15 = re.compile(r'^Definition Exclude-any Affinity:$')
+
+        # Definition Include-any Affinity:
+        p16 = re.compile(r'^Definition Include-any Affinity:$')
+        
+        # Definition Include-all Affinity:
+        p17 = re.compile(r'^Definition Include-all Affinity:$')
+
+        # 0x00000000 0x00000000 0x00000000 0x00000000 
+        p18 = re.compile(r'^(?P<hex_val>0x\d{8})(\s+(?P<hex_val2>0x\d{8}))?(\s+(?P<hex_val3>0x\d{8}))?(\s+(?P<hex_val4>0x\d{8}))?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag = group["tag"]
+                ret_dict.setdefault("tag", {}).setdefault(tag, {}).setdefault("flex_algo", {})
+                continue 
+
+            #  Flex-Algo count: 3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag]["count"] = int(group["count"])
+                continue 
+
+            # Flex-Algo 128: 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flex_algo = group["flex_algo"]
+                ret_dict["tag"][tag].setdefault("flex_algo", {}).setdefault(flex_algo, {})
+                ret_dict["tag"][tag]["flex_algo"][flex_algo].setdefault("level", {})
+                continue 
+
+            # IS-IS Level-1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                level = group["level"]
+                ret_dict["tag"][tag]["flex_algo"][flex_algo].setdefault("level", {}).setdefault(level, {})
+                continue 
+
+            # Definition Priority: 131
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                        ["level"][level]['def_priority']) = int(group["def_priority"])
+                continue 
+
+            # Definition Source: R6-asr1k-20.00
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]['def_source']) = group["def_source"]
+                continue 
+
+            # Definition Equal to Local: Yes
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]['def_equal_to_local']) = (group["def_equal"] == "Yes")
+                continue 
+            
+            # Definition Metric Type: IGP
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]['def_metric_type']) = group["def_metric_type"]
+                continue 
+
+            # Definition Flex-Algo Prefix Metric: Yes
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]['def_prefix_metric']) = (group["def_flex_prefix_metric"] == "Yes")
+                exclude_any, include_all, include_any = False, False, False
+                continue 
+
+            # Disabled: No
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]['disabled']) = (group["disabled"] == "Yes")
+                exclude_any, include_all, include_any = False, False, False
+                continue 
+
+            # Microloop Avoidance Timer Running: No
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ["level"][level]
+                         ['microloop_avoidance_timer_running']) = (group["microloop_avoidance_timer"] == "Yes")
+                continue 
+
+            #    Local Priority: 128
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]
+                        ["flex_algo"][flex_algo]['local_priority']) = int(group["local_priority"])
+                continue 
+
+            #    FRR Disabled: No
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]
+                         ["flex_algo"][flex_algo]['frr_disabled']) = (group["frr_disabled"] == "Yes")
+                continue 
+
+            #    Microloop Avoidance Disabled: No
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                         ['microloop_avoidance_disabled']) = (group["microloop_avoidance_disabled"] == "Yes")
+                continue 
+
+            # Definition Exclude-any Affinity:
+            m = p15.match(line)
+            if m:
+                exclude_any, include_all, include_any = True, False, False
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                        ["level"][level]["def_exclude_any_affinity"]) = []
+                continue 
+            
+            # Definition Include-any Affinity:
+            m = p16.match(line)
+            if m:
+                exclude_any, include_all, include_any = False, False, True
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                        ["level"][level]["def_include_any_affinity"]) = []
+                continue 
+
+            # Definition Include-all Affinity:
+            m = p17.match(line)
+            if m:
+                exclude_any, include_all, include_any = False, True, False
+                (ret_dict["tag"][tag]["flex_algo"][flex_algo]
+                        ["level"][level]["def_include_all_affinity"]) = []
+                continue 
+
+            # 0x00000000 0x00000000 0x00000000 0x00000000 
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                hex_vals = [val for val in group.values() if val]
+                if exclude_any:
+                    ret_dict["tag"][tag]["flex_algo"][flex_algo]["level"][level]["def_exclude_any_affinity"].extend(hex_vals)
+                elif include_all:
+                    ret_dict["tag"][tag]["flex_algo"][flex_algo]["level"][level]["def_include_all_affinity"].extend(hex_vals)
+                elif include_any:
+                    ret_dict["tag"][tag]["flex_algo"][flex_algo]["level"][level]["def_include_any_affinity"].extend(hex_vals)
+                continue 
 
         return ret_dict
