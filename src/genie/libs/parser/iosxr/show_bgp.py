@@ -5012,7 +5012,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         p5 = re.compile(r'^\s*VRF +ID: +(?P<vrf_id>(\S+))$')
 
         # BGP router identifier 10.4.1.1, local AS number 100
-        # BGP router identifier 10.4.1.1, local AS number 65100.65100
+        # BGP router identifier 10.10.10.108, local AS number 65108.65108
         p6 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
                         r' +local +AS +number +(?P<local_as>([\d\.]+))$')
 
@@ -5062,7 +5062,6 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                            r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
-        # 2219             0 200 33299 51178 47751 {27016} 65100.65100 e
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
                            r' +(?P<path>[0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
@@ -5079,8 +5078,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        # *>i10.169.2.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} 65100.65100 e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+        # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                          r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))?'
                          r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
@@ -5160,11 +5159,12 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # BGP router identifier 10.4.1.1, local AS number 100
+            # BGP router identifier 10.10.10.108, local AS number 65108.65108
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 af_dict['router_identifier'] = group['router_identifier']
-                #af_dict['local_as'] = group['local_as']
+              
                 try:
                     af_dict['local_as']= int(group['local_as'])
                 except:
@@ -5290,6 +5290,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
             # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+            # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
             m = p16.match(line)
             if m:
                 group = m.groupdict()
