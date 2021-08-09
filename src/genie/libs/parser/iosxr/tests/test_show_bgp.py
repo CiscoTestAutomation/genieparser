@@ -9966,7 +9966,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                     "generic_scan_interval": "60",
                     "instance_number": "0",
                     "local_as": "65108.65108",
-                    "non_stop_routing": true,
+                    "non_stop_routing": True,
                     "nsr_initial_init_ver_status": "reached",
                     "nsr_initial_initsync_version": "2",
                     "nsr_issu_sync_group_versions": "0/0",
