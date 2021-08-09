@@ -7,6 +7,7 @@
 * 'show sdwan bfd history'
 * 'show sdwan bfd sessions'
 * 'show sdwan bfd summary'
+* 'show sdwan control summary'
 * 'show sdwan control connections'
 * 'show sdwan control local-properties'
 * 'show sdwan ipsec inbound-connections'
