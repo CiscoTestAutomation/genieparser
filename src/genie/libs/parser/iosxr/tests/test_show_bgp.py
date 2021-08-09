@@ -9955,6 +9955,124 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         """
     }
 
+    golden_parsed_output6 = {
+        "instance": {
+            "default": {
+            "vrf": {
+                "default": {
+                "address_family": {
+                    "ipv4 unicast": {
+                    "bgp_table_version": 12,
+                    "generic_scan_interval": "60",
+                    "instance_number": "0",
+                    "local_as": "65108.65108",
+                    "non_stop_routing": true,
+                    "nsr_initial_init_ver_status": "reached",
+                    "nsr_initial_initsync_version": "2",
+                    "nsr_issu_sync_group_versions": "0/0",
+                    "prefix": {
+                        "10.10.10.0/24": {
+                        "index": {
+                            1: {
+                            "locprf": "0",
+                            "next_hop": "0.0.0.0",
+                            "origin_codes": "?",
+                            "status_codes": "*>",
+                            "weight": "32768"
+                            },
+                            2: {
+                            "next_hop": "10.10.10.107",
+                            "origin_codes": "?",
+                            "status_codes": "*"
+                            }
+                        }
+                        },
+                        "10.7.7.7/32": {
+                        "index": {
+                            1: {
+                            "next_hop": "10.10.10.107",
+                            "origin_codes": "?",
+                            "status_codes": "*>"
+                            }
+                        }
+                        },
+                        "10.8.8.8/32": {
+                        "index": {
+                            1: {
+                            "locprf": "0",
+                            "next_hop": "0.0.0.0",
+                            "origin_codes": "?",
+                            "status_codes": "*>",
+                            "weight": "32768"
+                            }
+                        }
+                        },
+                        "192.168.52.0/24": {
+                        "index": {
+                            1: {
+                            "locprf": "0",
+                            "next_hop": "0.0.0.0",
+                            "origin_codes": "?",
+                            "status_codes": "*>",
+                            "weight": "32768"
+                            },
+                            2: {
+                            "next_hop": "10.10.10.107",
+                            "origin_codes": "?",
+                            "status_codes": "*"
+                            }
+                        }
+                        }
+                    },
+                    "processed_paths": 6,
+                    "processed_prefix": 4,
+                    "rd_version": 12,
+                    "router_identifier": "10.10.10.108",
+                    "scan_interval": 60,
+                    "table_id": "0xe0000000",
+                    "table_state": "active"
+                    }
+                }
+                }
+            }
+            }
+        }
+      }
+
+    golden_output6 = {
+        "execute.return_value": """
+            BGP instance 0: 'default'
+            =========================
+
+            Address Family: IPv4 Unicast
+            ----------------------------
+
+            BGP router identifier 10.10.10.108, local AS number 65108.65108
+            BGP generic scan interval 60 secs
+            Non-stop routing is enabled
+            BGP table state: Active
+            Table ID: 0xe0000000   RD version: 12
+            BGP main routing table version 12
+            BGP NSR Initial initsync version 2 (Reached)
+            BGP NSR/ISSU Sync-Group versions 0/0
+            BGP scan interval 60 secs
+
+            Status codes: s suppressed, d damped, h history, * valid, > best
+                        i - internal, r RIB-failure, S stale, N Nexthop-discard
+            Origin codes: i - IGP, e - EGP, ? - incomplete
+            Network            Next Hop            Metric LocPrf Weight Path
+            *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+            *> 10.8.8.8/32        0.0.0.0                  0         32768 ?
+            *> 10.10.10.0/24      0.0.0.0                  0         32768 ?
+            *                     10.10.10.107             0             0 65107.65107 ?
+            *> 192.168.52.0/24    0.0.0.0                  0         32768 ?
+            *                     10.10.10.107             0             0 65107.65107 ?
+
+            Processed 4 prefixes, 6 paths
+        """
+
+    }
+
     def test_empty1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpInstanceAllAll(device=self.device)
@@ -9996,6 +10114,12 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = obj.parse(vrf_type="vrf")
         self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+    def test_golden6(self):
+        self.device = Mock(**self.golden_output6)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
 
 
 # =============================================
