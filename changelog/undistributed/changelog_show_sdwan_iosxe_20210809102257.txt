@@ -1,0 +1,32 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Put all the following commands in a common file called show_sdwan:
+		* 'show sdwan appqoe aoim-statistics'
+		* 'show sdwan appqoe tcpopt status'
+		* 'show sdwan appqoe nat-statistics'
+		* 'show sdwan appqoe rm-resources'
+		* 'show sdwan appqoe flow all'
+		* 'show sdwan bfd history'
+		* 'show sdwan bfd sessions'
+		* 'show sdwan bfd summary'
+		* 'show sdwan control connections'
+		* 'show sdwan control local-properties'
+		* 'show sdwan ipsec inbound-connections'
+		* 'show sdwan ipsec outbound-connections'
+		* 'show sdwan ipsec local-sa <WORD>'
+		* 'show sdwan omp summary'
+		* 'show sdwan omp peers'
+		* 'show sdwan omp tlocs'
+		* 'show sdwan omp tloc-paths'
+		* 'show sdwan policy ipv6 access-list-associations'
+		* 'show sdwan policy access-list-associations'
+		* 'show sdwan policy access-list-counters'
+		* 'show sdwan policy ipv6 access-list-counters'
+		* 'show sdwan reboot history'
+		* 'show sdwan software'
+		* 'show sdwan system status'
+		* 'show sdwan version'
+		* 'show sdwan zonebfwdp sessions'
+		* 'show sdwan zbfw zonepair-statistics'
