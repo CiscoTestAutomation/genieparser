@@ -593,15 +593,15 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
 
         #  EVI       ETag  Prod    Mac Address         Host IP                Next Hop(s)
         # The header has 2 starting spaces
-        p1 = re.compile(r'^\s+EVI\s+ETag\s+Prod\s+Mac Address\s+Host IP\s+Next Hop\(s\)$')
+        p1 = re.compile(r'^EVI\s+ETag\s+Prod\s+Mac Address\s+Host IP\s+Next Hop\(s\)$')
 
         #    1          0   BGP 0011.0011.0011  192.168.11.254            V:20011 3.3.3.2
         #    1          0 L2VPN aabb.0011.0011 FE80::A8BB:FF:FE11:11 \
-        p2 = re.compile(r'^\s+(?P<evi>\d+)\s+(?P<eth_tag>\d+)\s+(?P<producer>\w+)\s+(?P<mac_addr>[0-9a-fA-F.]+)'
+        p2 = re.compile(r'^(?P<evi>\d+)\s+(?P<eth_tag>\d+)\s+(?P<producer>\w+)\s+(?P<mac_addr>[0-9a-fA-F.]+)'
                         r'\s+(?P<host_ip>[0-9a-fA-F.:]+)\s+(?P<next_hop>.+)$')
 
         # Et0/1:11
-        p3 = re.compile(r'^\s+(?P<next_hop>.+)$')
+        p3 = re.compile(r'^(?P<next_hop>.+)$')
 
         parser_dict = {}
         header_found = False
@@ -627,7 +627,7 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
                 evis = parser_dict.setdefault('evi', {})
                 evi_list = evis.setdefault(int(group['evi']), {})
 
-                producers = evis.setdefault('producer', {})
+                producers = evi_list.setdefault('producer', {})
                 producers_list = producers.setdefault( group['producer'], {} )
 
                 host_ip = producers_list.setdefault( 'host_ip' , {} )
@@ -669,5 +669,4 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
 
         if not header_found:
             return ({})
-
         return (parser_dict)
