@@ -30,3 +30,27 @@
 		* 'show sdwan version'
 		* 'show sdwan zonebfwdp sessions'
 		* 'show sdwan zbfw zonepair-statistics'
+		* 'show sdwan tunnel sla index 0'
+	* Put all the following commands in a common file called show_flow:
+		* show flow monitor {flow_monitor_name} statistics
+	* Put all the following commands in a common file called show_ip:
+		* show ip vrf
+		* show ip vrf <vrf>
+		* show ip vrf detail
+		* show ip vrf detial <vrf>
+		* show ip sla summary
+		* show ip nbar classification socket-cache <number_of_sockets>
+		* show ip nbar version
+		* show ip nat translations
+		* show ip nat translations verbose
+		* show ip nat statistics
+		* show ip dhcp database
+		* show ip dhcp snooping database
+		* show ip dhcp snooping database detail
+	* Put all the following commands in a common file called show_redundancy:
+		* show redundancy application group {group_id}
+		* show redundancy application group all
+
+* NXOS
+	* Put all the following commands in a common file called show_system:
+		* 'show system internal processes memory'

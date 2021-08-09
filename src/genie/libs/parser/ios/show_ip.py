@@ -22,7 +22,7 @@ from genie.metaparser.util.schemaengine import (Schema,
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-from genie.libs.parser.iosxe.show_ip_nat import (ShowIpNatTranslations 
+from genie.libs.parser.iosxe.show_ip import (ShowIpNatTranslations 
                                                 as ShowIpNatTranslationsIosxe,
                                                 ShowIpNatStatistics 
                                                 as ShowIpNatStatisticsIosxe)

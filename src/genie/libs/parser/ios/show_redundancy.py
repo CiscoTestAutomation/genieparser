@@ -10,7 +10,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
-from genie.libs.parser.iosxe.show_redundancy_application_group \
+from genie.libs.parser.iosxe.show_redundancy \
     import ShowRedundancyApplicationGroup as ShowRedundancyApplicationGroup_iosxe
 
 
