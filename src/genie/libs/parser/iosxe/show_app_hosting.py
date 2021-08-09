@@ -3,13 +3,17 @@
 IOSXE parsers for the following show commands:
     * show app-hosting list
     * show app-hosting infra
+    * show app-hosting detail appid meraki
 '''
 
 # Metaparser
 from genie.metaparser import MetaParser
 import genie.parsergen as pg
 import re
+from genie.metaparser.util.schemaengine import Any, Optional
 
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 # ===========================================
 # Schema for 'show app-hosting infra'
