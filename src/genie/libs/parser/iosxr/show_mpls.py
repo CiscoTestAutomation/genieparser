@@ -2487,8 +2487,12 @@ class ShowMplsLdpIgpSyncSchema(MetaParser):
                     Any(): {
                         Optional('sync'): {
                         Optional('status'): str,
-                        Optional('peers'): str,
-                        Optional('delay'): str
+                        Optional('delay'): str,
+                        Optional('peers'):{
+                            Any():{
+                                Optional('graceful_restart'): bool
+                            }
+                          }
                         }
                     },
                 },
@@ -2518,16 +2522,16 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         p1 = re.compile(r'^(?P<interface>[\w]+[\/\d]+):$')
 
         # VRF: 'default' (0x60000000)
-        p2 = re.compile(r'^VRF:\s+(?P<vrf>\'[\w]+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$')
+        p2 = re.compile(r'^VRF:\s+\'(?P<vrf>\S+)\'\s+\((?P<vrf_index>.+)\)$')
 
         # Sync delay: Disabled
         p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\S+)$')
 
         # Sync status: Ready
-        p4 = re.compile(r'^Sync +status:\s+(?P<status>[\S\D]+)$')
+        p4 = re.compile(r'^Sync +status:\s+(?P<status>.+)$')
 
         # 63.63.63.63:0   (GR)
-        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})[\s\S]+$')
+        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s+?(?P<gr_flag>\(GR\))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2573,7 +2577,12 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
             if m:
                 group = m.groupdict()
                 peers = group['peers']
-                sync_dict.update({'peers': peers})
+                peers_dict = sync_dict.setdefault('peers', {}).\
+                    setdefault(peers, {})
+
+                if group['gr_flag']:
+                    gr_flag = True
+                    peers_dict.update({'graceful_restart': gr_flag})
                 continue
 
         return ret_dict
@@ -2620,14 +2629,14 @@ class ShowMplsLdpGracefulRestart(ShowMplsLdpGracefulRestartSchema):
         ret_dict = {}
 
         # Forwarding State Hold timer : Not Running
-        p1 = re.compile(r'^Forwarding +State +Hold +timer\s+:\s+(?P<state_hold_timer>[\D\d]+)$')
+        p1 = re.compile(r'^Forwarding +State +Hold +timer\s+:\s+(?P<state_hold_timer>.+)$')
 
         # GR Neighbors                : 1
-        p2 = re.compile(r'^GR +Neighbors\s+:\s+(?P<gr_neighbors>[\D\d]+)$')
+        p2 = re.compile(r'^GR +Neighbors\s+:\s+(?P<gr_neighbors>.+)$')
 
         # 17.17.17.17      Y        4                -                   -
         # 17.17.17.17      Y        4                5                   6
-        p3 = re.compile(r'^(?P<neighbor_id>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<up>\D)\s+'
+        p3 = re.compile(r'^(?P<neighbor_id>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<up>\w+)\s+'
                         r'(?P<connect_count>[\d\-]+)\s+(?P<liveness_timer>[\d\-]+)\s+'
                         r'(?P<recovery_timer>[\d\-]+)$')
 
@@ -2679,7 +2688,8 @@ class ShowMplsLdpNsrSummarySchema(MetaParser):
             'total': int,
             'nsr_eligible': int,
             'sync_ed': int,
-            'oper': int
+            Optional('oper'): int,
+            Optional('ready'): int
         }
     }
 
@@ -2705,6 +2715,8 @@ class ShowMplsLdpNsrSummary(ShowMplsLdpNsrSummarySchema):
         # (1 Oper)
         p2 = re.compile(r'^\((?P<oper>\d+)\s+Oper\)$')
 
+        # (1 Ready)
+        p3 = re.compile(r'^\((?P<ready>\d+)\s+Ready\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2726,6 +2738,13 @@ class ShowMplsLdpNsrSummary(ShowMplsLdpNsrSummarySchema):
             if m:
                 group = m.groupdict()
                 sessions_dict.update({'oper': int(group['oper'])})
+                continue
+
+            # (1 Ready)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sessions_dict.update({'ready': int(group['ready'])})
                 continue
 
         return ret_dict

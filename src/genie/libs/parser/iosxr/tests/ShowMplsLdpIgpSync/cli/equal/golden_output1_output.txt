@@ -7,6 +7,7 @@ HundredGigE0/0/0/0:
   Sync status: Ready
     Peers:
       63.63.63.63:0   (GR)
+      63.63.63.65:0   (GR)
 
 TenGigE0/2/0/0:
   VRF: 'default' (0x60000000)
