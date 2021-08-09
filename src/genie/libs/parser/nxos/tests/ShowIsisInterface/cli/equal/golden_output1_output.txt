@@ -1,0 +1,36 @@
+IS-IS process: 1 VRF: default
+Ethernet1/1, Interface status: protocol-up/link-up/admin-up
+  IP address: 9.9.9.1, IP subnet: 9.9.9.0/24
+  IPv6 routing is disabled
+  Level1
+    No auth type and keychain
+    Auth check set
+  Level2
+    No auth type and keychain
+    Auth check set
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L1-2
+  Prefix suppress is disabled globally on interface Ethernet1/1
+  Level 1
+    Address-family IPv4 Advertise Passive only is disabled
+    Address-family IPv6 Advertise Passive only is disabled
+  Level 2
+    Address-family IPv4 Advertise Passive only is disabled
+    Address-family IPv6 Advertise Passive only is disabled
+  BFD IPv4 is locally disabled for Interface Ethernet1/1
+  BFD IPv6 is locally disabled for Interface Ethernet1/1
+  MTR is disabled
+  LSP interval: 33 ms, MTU: 1500
+  MTU check OFF on LAN interface level-1
+  MTU check OFF on LAN interface level-2
+  Level-1 Designated IS: uut1
+  Level-2 Designated IS: uut1
+  Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
+  1              40      0     10 00:00:05       3   3       0.233358
+  2              40      0     10 00:00:05       3   3       0.408937
+  Level  Adjs   AdjsUp Pri  Circuit ID         Since
+  1         1        1  64  uut1.01          * 00:00:05
+  2         1        1  64  uut1.01          * 00:00:05
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        40      no   UP    UP       yes      DN       no
+    2  0        40      no   UP    UP       yes      DN       no

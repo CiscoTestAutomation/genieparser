@@ -13,7 +13,6 @@ expected_output = {
                     "oper_host_mode": "multi-auth",
                     "oper_control_dir": "both",
                     "session_timeout": {"type": "N/A"},
-                    "restart_timeout": "N/A",
                     "common_session_id": "0A7820020000413CCCE37640",
                     "acct_session_id": "0x00007EAF",
                     "handle": "0x7100056D",

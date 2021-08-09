@@ -1083,11 +1083,11 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         r' +(?P<transfer_pathid>[0-9x]+)$')
 
         # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
-        p10 = re.compile(r'^EVPN +ESI\: +(?P<evpn_esi>[0-9]+)\,'
-                         r' +Gateway +Address\: +'
-                         r'(?P<gateway_address>[a-zA-Z0-9\.\:]+)\,'
-                         r' +local vtep\: +(?P<local_vtep>[a-zA-Z0-9\.\:]+)'
-                         r'\, +[L|l]abel +(?P<label>[0-9]+)$')
+        # EVPN ESI: 00000000000000000000, Label1 2000101
+        p10 = re.compile(r'^EVPN +ESI\: +(?P<evpn_esi>[0-9]+)\,\s+'
+                         r'(Gateway +Address\:\s+(?P<gateway_address>[a-zA-Z0-9\.\:]+)\,\s+)?'
+                         r'(local vtep\: +(?P<local_vtep>[a-zA-Z0-9\.\:]+)\,\s+)?'
+                         r'[L|l]abel\d* +(?P<label>[0-9]+)$')
 
         # Local vxlan vtep:
         # Local irb vxlan vtep
@@ -1766,6 +1766,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
+            # EVPN ESI: 00000000000000000000, Label1 2000101
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -1773,7 +1774,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     subdict['evpn'] = {}
 
                 for i in ['evpn_esi', 'local_vtep', 'gateway_address']:
-                    subdict['evpn'][i] = group[i]
+                    if group[i]:
+                        subdict['evpn'][i] = group[i]
 
                 subdict['evpn']['label'] = int(group['label'])
                 continue

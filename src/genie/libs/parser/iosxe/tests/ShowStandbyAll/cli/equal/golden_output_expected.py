@@ -1,5 +1,5 @@
 expected_output = {
-    "GigabitEthernet1/0/1": {
+    "Port-channel1": {
         "address_family": {
             "ipv4": {
                 "version": {
@@ -47,7 +47,7 @@ expected_output = {
                 }
             }
         },
-        "interface": "GigabitEthernet1/0/1",
+        "interface": "Port-channel1",
         "redirects_disable": False,
         "use_bia": False,
     },
