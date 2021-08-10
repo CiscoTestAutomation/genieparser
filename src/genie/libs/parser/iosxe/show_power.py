@@ -26,6 +26,7 @@ class ShowStackPowerSchema(MetaParser):
     """Schema for 
         * show stack-power
         * show stack-power budgeting
+        * show stack-power detail
     """
 
     schema = {
@@ -36,9 +37,27 @@ class ShowStackPowerSchema(MetaParser):
                 'total_power': int,
                 'reserved_power': int,
                 'allocated_power': int,
-                'unused_power': int,
+                Optional('unused_power'): int,
+                Optional('available_power'): int,
                 'switch_num': int,
                 'power_supply_num': int,
+                Optional('power_stack_detail'):{  
+                    'stack_mode': str,
+                    'stack_topology': str,
+                    'switch': {
+                        Any(): {
+                            'power_budget': int,
+                            'power_allocated': int,
+                            'low_port_priority_value': int,
+                            'high_port_priority_value': int,
+                            'switch_priority_value': int,
+                            'port_1_status': str,
+                            'port_2_status': str,
+                            'neighbor_on_port_1': str,
+                            'neighbor_on_port_2': str,
+                        },
+                    },
+                },    
                 Optional('switches'): {
                     Any(): {
                         'power_supply_a': int,
@@ -377,41 +396,8 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
 
         return ret_dict
 
-class ShowStackPowerDetailSchema(MetaParser):
-    """Schema for show stack-power detail """
-    schema = {
-        'power_stack': {
-            Any(): {
-                'mode': str,
-                'topology': str,
-                'total_power': int,
-                'reserved_power': int,
-                'allocated_power': int,
-                'available_power': int,
-                'switch_num': int,
-                'power_supply_num': int,
-                'power_stack_detail':{  
-                    'stack_mode': str,
-                    'stack_topology': str,
-                    'switch': {
-                        Any(): {
-                            'power_budget': int,
-                            'power_allocated': int,
-                            'low_port_priority_value': int,
-                            'high_port_priority_value': int,
-                            'switch_priority_value': int,
-                            'port_1_status': str,
-                            'port_2_status': str,
-                            'neighbor_on_port_1': str,
-                            'neighbor_on_port_2': str,
-                        },   
-                    },
-                },
-            },    
-        },
-    }
-
-class ShowStackPowerDetail(ShowStackPowerDetailSchema):
+   
+class ShowStackPowerDetail(ShowStackPowerSchema):
     """Parser for 
         * show stack-power detail
     """
