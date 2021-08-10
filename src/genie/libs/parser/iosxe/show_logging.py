@@ -250,6 +250,7 @@ class ShowLogging(ShowLoggingSchema):
         p19 = re.compile(r'^Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
 
         ret_dict = {}
+        logging_dict = {}
         for line in out.splitlines():
 
             line = line.strip()
