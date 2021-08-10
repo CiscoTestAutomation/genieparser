@@ -48,7 +48,7 @@ class ShowVersionSchema(MetaParser):
                 Optional('ipsec_microcode'): str,
             },
             Optional('interfaces'): {
-                Any(): {
+                int: {
                     Optional('interface'): str,
                     Optional('mac_addr'): str,
                     Optional('intf_irq'): int,
@@ -138,14 +138,14 @@ class ShowVersion(ShowVersionSchema):
         # 5: Ext: GigabitEthernet0/4  : address is 5001.0003.0005, irq 11
         # 6: Ext: GigabitEthernet0/5  : address is 5001.0003.0006, irq 10
         # 7: Ext: GigabitEthernet0/6  : address is 5001.0003.0007, irq 10
-        p11 = re.compile(r'^\s*(?P<intf_number>\d+): '
+        p11 = re.compile(r'^(?P<intf_number>\d+): '
                          r'Ext: (?P<interface>[\w\/\.\-]+)\s*: address is '
                          r'(?P<mac_addr>[\w\.]+), '
                          r'irq (?P<intf_irq>\d+)')
 
         # 5: Int: Not used            : irq 11
         # 6: Int: Not used            : irq 5
-        p11_1 = re.compile(r'^\s*(?P<intf_number>\d+): Int: (?P<interface>[\w ]+)\s*: '
+        p11_1 = re.compile(r'^(?P<intf_number>\d+): Int: (?P<interface>[\w ]+)\s*: '
                            r'irq (?P<intf_irq>\d{1,2})')
 
         # License mode: Smart Licensing
@@ -381,7 +381,7 @@ class ShowVersion(ShowVersionSchema):
             # 7: Ext: GigabitEthernet0/6  : address is 5001.0003.0007, irq 10
             m = p11.match(line)
             if m:
-                intf_number = m.groupdict()['intf_number']
+                intf_number = int(m.groupdict()['intf_number'])
                 if 'interfaces' not in version_dict['version']:
                     version_dict['version']['interfaces'] = {}
                 if intf_number not in version_dict['version']['interfaces']:
@@ -398,7 +398,7 @@ class ShowVersion(ShowVersionSchema):
             # 6: Int: Not used            : irq 5
             m = p11_1.match(line)
             if m:
-                intf_number = m.groupdict()['intf_number']
+                intf_number = int(m.groupdict()['intf_number'])
                 if 'interfaces' not in version_dict['version']:
                     version_dict['version']['interfaces'] = {}
                 if intf_number not in version_dict['version']['interfaces']:

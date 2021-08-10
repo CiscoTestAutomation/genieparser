@@ -29,36 +29,36 @@ expected_output = {
         'hostname': 'asa3',
         'uptime': '3 days 3 hours',
         'interfaces': {
-            '0': {
+            0: {
                 'interface': 'GigabitEthernet0/0',
                 'intf_irq': 9,
                 'mac_addr': '0013.c480.82ce'
             },
-            '1': {
+            1: {
                 'interface': 'GigabitEthernet0/1',
                 'intf_irq': 9,
                 'mac_addr': '0013.c480.82cf'
             },
-            '2': {
+            2: {
                 'interface': 'GigabitEthernet0/2',
                 'intf_irq': 9,
                 'mac_addr': '0013.c480.82d0'
             },
-            '3': {
+            3: {
                 'interface': 'GigabitEthernet0/3',
                 'intf_irq': 9,
                 'mac_addr': '0013.c480.82d1'
             },
-            '4': {
+            4: {
                 'interface': 'Management0/0',
                 'intf_irq': 11,
                 'mac_addr': '0013.c480.82cd'
             },
-            '5': {
+            5: {
                 'interface': 'Not used',
                 'intf_irq': 11
             },
-            '6': {
+            6: {
                 'interface': 'Not used',
                 'intf_irq': 5
             },

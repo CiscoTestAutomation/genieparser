@@ -23,42 +23,42 @@ expected_output = {
         'hostname': 'NETLAB-ASA-01',
         'image_type': 'Release',
         'interfaces': {
-            '0': {
+            0: {
                 'interface': 'Management0/0',
                 'intf_irq': 11,
                 'mac_addr': '5001.0003.0000'
             },
-            '1': {
+            1: {
                 'interface': 'GigabitEthernet0/0',
                 'intf_irq': 11,
                 'mac_addr': '5001.0003.0001'
             },
-            '2': {
+            2: {
                 'interface': 'GigabitEthernet0/1',
                 'intf_irq': 10,
                 'mac_addr': '5001.0003.0002'
             },
-            '3': {
+            3: {
                 'interface': 'GigabitEthernet0/2',
                 'intf_irq': 10,
                 'mac_addr': '5001.0003.0003'
             },
-            '4': {
+            4: {
                 'interface': 'GigabitEthernet0/3',
                 'intf_irq': 11,
                 'mac_addr': '5001.0003.0004'
             },
-            '5': {
+            5: {
                 'interface': 'GigabitEthernet0/4',
                 'intf_irq': 11,
                 'mac_addr': '5001.0003.0005'
             },
-            '6': {
+            6: {
                 'interface': 'GigabitEthernet0/5',
                 'intf_irq': 10,
                 'mac_addr': '5001.0003.0006'
             },
-            '7': {
+            7: {
                 'interface': 'GigabitEthernet0/6',
                 'intf_irq': 10,
                 'mac_addr': '5001.0003.0007'
