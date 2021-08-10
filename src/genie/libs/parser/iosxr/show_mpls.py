@@ -14,6 +14,9 @@ IOSXR parsers for the following show commands:
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
     * 'show mpls forwarding vrf {vrf}'
+    * 'show mpls ldp igp sync'
+    * 'show mpls ldp graceful-restart'
+    * 'show mpls ldp nsr summary'
 '''
 
 # Python
@@ -2464,6 +2467,284 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 oor_state_dict['oor-memory'] = group['oor_memory_value']
+                continue
+
+        return ret_dict
+
+
+# ================================================
+#   Show mpls ldp igp sync
+# ================================================
+class ShowMplsLdpIgpSyncSchema(MetaParser):
+    """
+    Schema for show mpls ldp igp sync
+    """
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('vrf_index'): str,
+                'interfaces': {
+                    Any(): {
+                        Optional('sync'): {
+                        Optional('status'): str,
+                        Optional('delay'): str,
+                        Optional('peers'):{
+                            Any():{
+                                Optional('graceful_restart'): bool
+                            }
+                          }
+                        }
+                    },
+                },
+            },
+        }
+    }
+
+class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
+    """
+        Parser for show mpls ldp igp sync
+    """
+    cli_command = ['show mpls ldp igp sync']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # Vrf is default
+        vrf = "default"
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # HundredGigE0/0/0/0:
+        p1 = re.compile(r'^(?P<interface>[\w]+[\/\d]+):$')
+
+        # VRF: 'default' (0x60000000)
+        p2 = re.compile(r'^VRF:\s+\'(?P<vrf>\S+)\'\s+\((?P<vrf_index>.+)\)$')
+
+        # Sync delay: Disabled
+        p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\S+)$')
+
+        # Sync status: Ready
+        p4 = re.compile(r'^Sync +status:\s+(?P<status>.+)$')
+
+        # 63.63.63.63:0   (GR)
+        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s+?(?P<gr_flag>\(GR\))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+
+            # HundredGigE0/0/0/0:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                continue
+
+            # VRF: 'default' (0x60000000)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                vrf_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {})
+                interface_dict = vrf_dict.setdefault('interfaces', {}). \
+                    setdefault(interface, {})
+                vrf_dict.update({'vrf_index': group['vrf_index']})
+                continue
+
+            # Sync delay: Disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sync_dict = interface_dict.setdefault('sync', {})
+                sync_dict.update({'delay': group['delay']})
+                continue
+
+            # Sync status: Ready
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                sync_status_dict = sync_dict.setdefault('status', status)
+                continue
+
+            # 63.63.63.63:0   (GR)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                peers = group['peers']
+                peers_dict = sync_dict.setdefault('peers', {}).\
+                    setdefault(peers, {})
+
+                if group['gr_flag']:
+                    gr_flag = True
+                    peers_dict.update({'graceful_restart': gr_flag})
+                continue
+
+        return ret_dict
+
+
+# ================================================
+#   show mpls ldp graceful-restart
+# ================================================
+class ShowMplsLdpGracefulRestartSchema(MetaParser):
+    """
+    Schema for show mpls ldp graceful-restart
+    """
+    schema = {
+        'vrf': {
+            'default': {
+                'forwarding_state_hold_timer': str,
+                'gr_neighbors': int,
+                'neighbor_id': {
+                    Any(): {
+                        Optional('up'): str,
+                        Optional('connect_count'): str,
+                        Optional('liveness_timer'): str,
+                        Optional('recovery_timer'): str
+                        }
+                    },
+                },
+            },
+        }
+
+
+class ShowMplsLdpGracefulRestart(ShowMplsLdpGracefulRestartSchema):
+    """
+        Parser for show mpls ldp graceful-restart
+    """
+    cli_command = ['show mpls ldp graceful-restart']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Forwarding State Hold timer : Not Running
+        p1 = re.compile(r'^Forwarding +State +Hold +timer\s+:\s+(?P<state_hold_timer>.+)$')
+
+        # GR Neighbors                : 1
+        p2 = re.compile(r'^GR +Neighbors\s+:\s+(?P<gr_neighbors>.+)$')
+
+        # 17.17.17.17      Y        4                -                   -
+        # 17.17.17.17      Y        4                5                   6
+        p3 = re.compile(r'^(?P<neighbor_id>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<up>\w+)\s+'
+                        r'(?P<connect_count>[\d\-]+)\s+(?P<liveness_timer>[\d\-]+)\s+'
+                        r'(?P<recovery_timer>[\d\-]+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Forwarding State Hold timer : Not Running
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault('default', {})
+                vrf_dict.update({'forwarding_state_hold_timer': group['state_hold_timer']})
+                continue
+
+            # GR Neighbors                : 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict.update({'gr_neighbors': int(group['gr_neighbors'])})
+
+            # 17.17.17.17      Y        4                -                   -
+            # 17.17.17.17      Y        4                5                   6
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict = vrf_dict.setdefault('neighbor_id', {}).\
+                    setdefault(group['neighbor_id'], {})
+
+                neighbor_dict.update({
+                    'up': group['up'],
+                    'connect_count': group['connect_count'],
+                    'liveness_timer': group['liveness_timer'],
+                    'recovery_timer': group['recovery_timer']
+                })
+
+        return ret_dict
+
+# ================================================
+#   show mpls ldp nsr summary
+# ================================================
+class ShowMplsLdpNsrSummarySchema(MetaParser):
+    """
+    Schema for show mpls ldp nsr summary
+    """
+    schema = {
+        'sessions': {
+            'total': int,
+            'nsr_eligible': int,
+            'sync_ed': int,
+            Optional('oper'): int,
+            Optional('ready'): int
+        }
+    }
+
+class ShowMplsLdpNsrSummary(ShowMplsLdpNsrSummarySchema):
+    """
+        Parser for show mpls ldp nsr summary
+    """
+    cli_command = ['show mpls ldp nsr summary']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Total: 1, NSR-eligible: 1, Sync-ed: 1
+        p1 = re.compile(r'^Total:\s+(?P<total>\d+)\,\s+NSR-eligible:\s+'
+                        r'(?P<nsr_eligible>\d+)\,\s+Sync-ed:\s+(?P<sync_ed>\d+)$')
+
+        # (1 Oper)
+        p2 = re.compile(r'^\((?P<oper>\d+)\s+Oper\)$')
+
+        # (1 Ready)
+        p3 = re.compile(r'^\((?P<ready>\d+)\s+Ready\)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total: 1, NSR-eligible: 1, Sync-ed: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                sessions_dict = ret_dict.setdefault('sessions', {})
+                sessions_dict.update({
+                 'total': int(group['total']),
+                 'nsr_eligible': int(group['nsr_eligible']),
+                 'sync_ed': int(group['sync_ed'])
+                })
+                continue
+
+            # (1 Oper)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sessions_dict.update({'oper': int(group['oper'])})
+                continue
+
+            # (1 Ready)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sessions_dict.update({'ready': int(group['ready'])})
                 continue
 
         return ret_dict
