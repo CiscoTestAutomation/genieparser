@@ -18,5 +18,3 @@
 - [ ] I have updated the changelog.
 - [ ] I have updated the documentation (If applicable).
 - [ ] I have added tests to cover my changes (If applicable).
-- [ ] All new and existing tests passed.
-- [ ] All new code passed compilation.
