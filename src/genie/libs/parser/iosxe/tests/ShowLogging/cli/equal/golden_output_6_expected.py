@@ -1,6 +1,5 @@
 expected_output = {
     "logs": [
-        "show logging",
         "TLS Profiles:"
     ],
     "syslog_logging": {
