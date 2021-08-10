@@ -1,0 +1,8 @@
+R1-asr1k-43#show isis rib flex-algo 131
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+Flex-algo 131
