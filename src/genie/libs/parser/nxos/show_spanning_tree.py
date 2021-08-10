@@ -532,6 +532,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                             Optional('port_type'): str,
                             'link_type': str,
                             Optional('internal'): bool,
+                            Optional('peer_type'): str,
                             Optional('root_guard'): bool,
                             Optional('pvst_simulation'): bool,
                             'counters': {
@@ -638,8 +639,9 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 
         p15_1 = re.compile(r'^The +port +type +is +(?P<port_type>[\S]+)$')
 
-        p16 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+)'
-                         r'(?: +by +default(?:, +(?P<internal>\S+))?)?$')
+        p16 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+) ?(by default)?'
+                         r',? ?(?P<internal>[I|i]nternal)?'
+                         r',? ?(Peer is (?P<peer_type>\S+))?$')
 
         p17 = re.compile(r'^PVST\s+Simulation\s+is\s+'
                          r'(?P<pvst_simulation>\w+)\s+by\s+default$')
@@ -698,7 +700,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 availability = False if 'detected flag not set' in line.lower() else True
                 inst_dict['topology_detected_flag'] = availability
                 continue
-            
+
             # Number of topology changes 0 last change occurred 142:22:13 ago
             m = p5.match(line)
             if m:
@@ -720,7 +722,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 time_dict['topology_change'] = int(m.groupdict()['topology_change'])
                 time_dict['notification'] = int(m.groupdict()['notification'])
                 continue
-            
+
             # hello 10, max age 40, forward delay 30
             m = p7.match(line)
             if m:
@@ -728,7 +730,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 time_dict['max_age'] = int(m.groupdict()['max_age'])
                 time_dict['forwarding_delay'] = int(m.groupdict()['forwarding_delay'])
                 continue
-            
+
             # Timers: hello 0, topology change 0, notification 0
             m = p8.match(line)
             if m:
@@ -747,7 +749,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict['port_num'] = int(m.groupdict()['port_num'])
                 intf_dict['status'] = m.groupdict()['status']
                 continue
-            
+
             #ce Inconsistent, VPC Peer-link Inconsistent)
             m = p9_1.match(line)
             if m:
@@ -773,7 +775,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict['designated_root_priority'] = int(m.groupdict()['designated_root_priority'])
                 intf_dict['designated_root_address'] = m.groupdict()['designated_root_address']
                 continue
-            
+
             # Designated bridge has priority 61440, address 4055.3926.d8c
             m = p12.match(line)
             if m:
@@ -806,7 +808,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict['number_of_forward_transitions'] = int(m.groupdict()\
                     ['number_of_forward_transitions'])
                 continue
-            
+
             # The port type is network
             m = p15_1.match(line)
             if m:
@@ -819,11 +821,15 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 intf_dict['link_type'] = m.groupdict()['link_type']
                 if m.groupdict()['internal'] == None:
-                    internal_bool = False 
+                    internal_bool = False
                 else:
                     internal_bool = True
 
                 intf_dict['internal'] = internal_bool
+
+                if m.groupdict()['peer_type']:
+                    peer_type = m.groupdict()['peer_type']
+                    intf_dict['peer_type'] = peer_type
                 continue
 
             # Root guard is enabled

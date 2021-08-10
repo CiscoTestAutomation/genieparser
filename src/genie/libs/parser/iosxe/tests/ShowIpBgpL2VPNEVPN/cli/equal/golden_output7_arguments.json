@@ -1,0 +1,6 @@
+{
+    "address_family": "l2vpn evpn",
+    "rt": "3",
+    "eti": "0",
+    "ip": "40.0.07"
+}

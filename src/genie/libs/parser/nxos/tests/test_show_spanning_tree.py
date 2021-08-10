@@ -531,7 +531,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
        Timers: message age 0, forward delay 0, hold 0
        Number of transitions to forwarding state: 0
        The port type is network
-       Link type is point-to-point by default, Internal
+       Link type is point-to-point by default, Internal, Peer is STP
        PVST Simulation is enabled by default
        BPDU: sent 110, received 0
         '''}
@@ -587,6 +587,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                             'number_of_forward_transitions': 0,
                             'link_type': 'point-to-point',
                             'internal': True,
+                            'peer_type': 'STP',
                             'pvst_simulation': True,
                             'counters': {
                                 'bpdu_sent': 110,

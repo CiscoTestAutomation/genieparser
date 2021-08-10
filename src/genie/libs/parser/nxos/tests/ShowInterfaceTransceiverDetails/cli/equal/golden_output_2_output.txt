@@ -1,0 +1,88 @@
+Ethernet1/63
+    transceiver is present
+    type is QSFP-DD-400G-DR4
+    name is CISCO-INNOLIGHT
+    part number is T-DP4CNH-NCI
+    revision is 2B
+    serial number is INL24173669
+    nominal bitrate is 425000 MBit/sec per channel
+    cisco id is 0x18
+    cisco part number is 10-3320-01
+    cisco product id is QDD-400G-DR4-S
+    cisco version id is V01
+    firmware version is 204.154
+    Link length SMF is 0.5 km
+    Nominal transmitter wavelength is 1311.00 nm
+    Wavelength tolerance is 6.500 nm
+    host lane count is 8
+    media lane count is 4
+    max module temperature is 75 deg C
+    min module temperature is 0 deg C
+    min operational voltage is 3.14 V
+    vendor OUI is 447c7f
+    date code is 200422
+    clei code is CMUIAUPCAA
+    power class is 6 (12.0 W maximum)
+    max power is 12.00 W
+    near-end lanes used none
+    far-end lane code for 8 lanes Undefined
+    media interface is 1310 nm EML
+    Advertising code is Optical Interfaces: SMF
+    Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+    media interface advertising code is 400GBASE-DR4 (Cl 124)
+
+Lane Number:1 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:2 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:3 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:4 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning

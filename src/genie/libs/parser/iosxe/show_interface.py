@@ -11,6 +11,8 @@
     * show interfaces <interface>
     * show ipv6 interface
     * show interfaces accounting
+    * show interfaces link
+    * show interfaces {interface} link
     * show interfaces status
     * show interfaces transceiver
     * show interfaces {interface} transceiver
@@ -297,11 +299,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # auto-duplex, 10 Gb/s, media type is 10G
         # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
         # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
+        # Full-duplex, 10Gb/s, media type is 100/1000/2.5G/5G/10GBaseTX
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
                          r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
-                         r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
+                         r'*(?P<media_type>[\w\/\-\. ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -3276,6 +3279,82 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
         return ret_dict
+
+# ====================================================
+#  schema for show interfaces link
+# ====================================================
+class ShowInterfacesLinkSchema(MetaParser):
+    """Schema for:
+        show interfaces link
+        show interfaces {interface} link"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'down_time': str,
+                Optional('up_time'): str,
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for show interfaces link
+# ====================================================
+class ShowInterfacesLink(ShowInterfacesLinkSchema):
+    """parser for 
+            * show interfaces link
+            * show interfaces {interface} link
+        """
+
+    cli_command = ['show interfaces link',
+                   'show interfaces {interface} link']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port           Name               Down Time      Up Time
+        # Gi1/0/1        Foo                 00:00:00       4w5d
+        # Gi1/0/2        foo bar             00:07:00
+                
+        p1 = re.compile(r'^(?P<interface>\S+)'
+                        r'(?:(?P<name>.+?(?=(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))))?'
+                        r'(?P<down_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))'
+                        r'(?:\s+(?P<up_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2})))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+        
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interface']), {})
+                
+                name_val = group['name'].strip()
+                if len(name_val):
+                    intf_dict['name'] = name_val
+
+                keys = ['down_time',
+                        'up_time']
+
+                for k in keys:
+                    if group[k]:
+                        intf_dict[k] = group[k].strip()
+                continue
+
+        return result_dict
 
 
 # ====================================================

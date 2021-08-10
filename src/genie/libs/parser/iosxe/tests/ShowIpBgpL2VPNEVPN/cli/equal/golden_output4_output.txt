@@ -1,0 +1,138 @@
+CGW78-c9500-12#show ip bgp l2vpn evpn route-type 6
+BGP routing table entry for [6][20.0.101.1:51][0][32][15.10.10.1][32][225.0.0.51][32][20.0.101.1]/27, version 652975
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD v3, exclude
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD invalid version
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      IGMP/MLD v3, exclude
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD invalid version
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [6][20.0.101.1:76][0][32][15.10.10.26][32][225.0.0.76][32][20.0.101.1]/27, version 652976
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD v3, exclude
+      Extended Community: RT:23456:200076 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD invalid version
+      Extended Community: RT:150:200076 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      IGMP/MLD v3, exclude
+      Extended Community: RT:23456:200076 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      IGMP/MLD invalid version
+      Extended Community: RT:150:200076 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [6][30.0.107.78:60][0][0][*][0][*][32][30.0.107.78]/19, version 1515
+Paths: (1 available, best #1, table evi_60)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (30.1.107.78)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: RT:23456:200060 ENCAP:8
+      Local irb vxlan vtep:
+        vrf:vrf100, l3-vni:3000100
+        local router mac:AC3A.6767.049F
+        core-irb interface:Vlan2100
+        vtep-ip:30.0.107.78
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 16:10:29 UTC
+BGP routing table entry for [6][30.0.107.78:61][0][0][*][0][*][32][30.0.107.78]/19, version 1573
+Paths: (1 available, best #1, table evi_61)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (30.1.107.78)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: RT:23456:200061 ENCAP:8
+      Local irb vxlan vtep:
+        vrf:vrf100, l3-vni:3000100
+        local router mac:AC3A.6767.049F
+        core-irb interface:Vlan2100
+        vtep-ip:30.0.107.78
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 16:10:29 UTC
+BGP routing table entry for [6][30.0.107.78:78][0][32][15.10.10.28][32][225.0.0.78][32][20.0.101.1]/27, version 655375
+Paths: (1 available, best #1, table evi_78)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [6][20.0.101.1:78][0][32][15.10.10.28][32][225.0.0.78][32][20.0.101.1]/27 (global)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      IGMP/MLD v3, exclude
+      Extended Community: RT:23456:200078 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [6][30.0.107.78:79][0][0][*][32][225.0.0.79][32][20.0.101.2]/23, version 655452
+Paths: (1 available, best #1, table evi_79)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [6][20.0.101.2:79][0][0][*][32][225.0.0.79][32][20.0.101.2]/23 (global)
+    20.0.101.2 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      IGMP/MLD v2
+      Extended Community: RT:23456:200079 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [6][30.0.107.78:93][0][0][*][32][225.0.0.93][32][20.0.101.2]/23, version 655466
+Paths: (1 available, best #1, table evi_93)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [6][20.0.101.2:93][0][0][*][32][225.0.0.93][32][20.0.101.2]/23 (global)
+    20.0.101.2 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      IGMP/MLD v2
+      Extended Community: RT:23456:200093 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC

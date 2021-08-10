@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
     * 'show policy-map interface',
+    * 'show policy-map type control subscriber binding <policymap name>',
 '''
 
 # Python
@@ -306,7 +307,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('extended_limit'): int,
                                         Optional('bandwidth_remaining_ratio'): int,
                                         Optional('conformed'): {
-                                            'packets': int,
+                                            Optional('packets'): int,
                                             'bytes': int,
                                             'bps': int,
                                             Optional('actions'): {
@@ -314,7 +315,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             }
                                         },
                                         Optional('exceeded'): {
-                                            'packets': int,
+                                            Optional('packets'): int,
                                             'bytes': int,
                                             'bps': int,
                                             Optional('actions'): {
@@ -329,6 +330,22 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                 Any(): Or(bool, str),
                                             }
                                         },
+                                    },
+                                    Optional('afd_wred_stats'): {
+                                        'virtual_class': {
+                                            Any(): {
+                                                'dscp': int,
+                                                'min': int,
+                                                'max': int,
+                                                'transmit_bytes': int,
+                                                'transmit_packets': int,
+                                                'random_drop_bytes': int,
+                                                'random_drop_packets': int,
+                                                'afd_weight': int
+                                            }
+                                        },
+                                        'total_drops_bytes': int,
+                                        'total_drops_packets': int
                                     },
                                 },
                             },
@@ -391,10 +408,11 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         queue_stats = 0
         priority_dict = {}
         priority_level_status = False
+
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
-        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
                          'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
 
         # Port-channel1: Service Group 1
@@ -420,7 +438,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p2_1_1 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
 
         # 8 packets, 800 bytes
-        p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
+        p3 = re.compile(r'^(?P<packets>(\d+)) packets(, (?P<bytes>(\d+)) +bytes)?')
+
+        # 8 packets
+        p3_1 = re.compile(r'^(?P<packets>(\d+)) packets')
 
         # 5 minute offered rate 0000 bps, drop rate 0000 bps
         p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
@@ -461,11 +482,18 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # conformed 8 packets, 800 bytes; actions:
         p8 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
 
+        # conformed 800 bytes; actions:
+        p8_0 = re.compile(r'^conformed +(?P<bytes>\d+) bytes; actions:$')
+
         # conformed 15 packets, 6210 bytes; action:transmit
         p8_1 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
                           r' action:(?P<action>(\w+))$')
+
         # exceeded 0 packets, 0 bytes; actions:
         p9 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
+
+        # exceeded 0 bytes; actions:
+        p9_0 = re.compile(r'^exceeded +(?P<bytes>\d+) bytes; actions:$')
 
         # exceeded 5 packets, 5070 bytes; action:drop
         p9_1 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
@@ -492,7 +520,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # set-mpls-exp-imposition-transmit 7
         # set-dscp-transmit ef
         # filter 'Queueing' and 'random-detect'
-        p12 = re.compile(r'^(?![Qr])(?P<action>[\w\-]+)( +(?P<value>[\w]+))?$')
+        # set-dscp-transmit dscp table policed-dscp
+        p12 = re.compile(r'^(?![Qr])(?P<action>drop|transmit|start|set-qos-transmit|set-mpls-exp-imposition-transmit|set-dscp-transmit|filter)( +(?P<value>.+))?$')
 
         # QoS Set
         p13 = re.compile(r'^QoS +Set+$')
@@ -628,12 +657,28 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # bandwidth remaining 70%
         p40 = re.compile(r'^bandwidth +remaining +(?P<bandwidth_remaining_percent>(\d+))%$')
-        
+
         # Priority: Strict, b/w exceed drops: 0
         p41 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
         # cos 5
         p42 = re.compile(r'^(?P<key>cos)\s+(?P<value>\d+)$')
+
+        # Virtual Class   min/max        Transmit                     Random drop                 AFD Weight
+        # 0          10 / 20        (Byte)33459183360             27374016                     12
+        p43 = re.compile(r'^(?P<virtual_class>\d+)\s+(?P<min>\d+)\s*/\s*(?P<max>\d+)\s+\(Byte\)(?P<tx_bytes>\d+)\s+(?P<random_drop_bytes>\d+)\s+(?P<afd_weight>\d+)\s*$')
+
+        #                                (Pkts)68692637637             0
+        p44 = re.compile(r'^\(Pkts\)(?P<tx_packets>\d+)\s+(?P<random_drop_packets>\d+)')
+
+        #         dscp : 1
+        p45 = re.compile(r'^dscp\s*:\s*(?P<dscp>\d+)$')
+
+        #     Total Drops(Bytes)   : 0
+        p46 = re.compile(r'^Total Drops\(Bytes\)\s*:\s*(?P<total_drops_bytes>\d+)$')
+
+        #     Total Drops(Packets) : 0
+        p47 = re.compile(r'^Total Drops\(Packets\)\s*:\s*(?P<total_drops_packets>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -697,7 +742,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
                                                   setdefault(class_map, {})
                 class_map_dict['match_evaluation'] = class_match.replace('(', '').replace(')', '')
-
                 continue
 
             # queue stats for all priority classes:
@@ -721,9 +765,18 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 group = m.groupdict()
                 packets = group['packets'].strip()
-                bytes = group['bytes'].strip()
                 class_map_dict['packets'] = int(packets)
-                class_map_dict['bytes'] = int(bytes)
+                if 'bytes' in group and group['bytes']:
+                    bytes = group['bytes'].strip()
+                    class_map_dict['bytes'] = int(bytes)
+                continue
+
+            # 8 packets
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                packets = group['packets'].strip()
+                class_map_dict['packets'] = int(packets)
                 continue
 
             # 5 minute offered rate 0000 bps, drop rate 0000 bps
@@ -821,6 +874,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 conf_action_dict = conformed_dict.setdefault('actions', {})
                 continue
 
+            # conformed 0 bytes; actions:
+            m = p8_0.match(line)
+            if m:
+                conformed_line = True
+                exceeded_line = False
+                violated_line = False
+                conformed_dict = police_dict.setdefault('conformed', {})
+                conformed_dict['bytes'] = int(m.groupdict()['bytes'])
+                conf_action_dict = conformed_dict.setdefault('actions', {})
+                continue
+
             # conformed 15 packets, 6210 bytes; action:transmit
             m = p8_1.match(line)
             if m:
@@ -840,6 +904,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 exceeded_line = True
                 exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['packets'] = int(m.groupdict()['packets'])
+                exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
+                exc_action_dict = exceeded_dict.setdefault('actions', {})
+                continue
+
+            # exceeded 0 bytes; actions:
+            m = p9_0.match(line)
+            if m:
+                conformed_line = False
+                violated_line = False
+                exceeded_line = True
+                exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
                 exc_action_dict = exceeded_dict.setdefault('actions', {})
                 continue
@@ -1241,7 +1316,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
-                
+
             # Priority: Strict, b/w exceed drops: 0
             m = p41.match(line)
             if m:
@@ -1249,7 +1324,45 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 pri_dict['type'] = m.groupdict()['type']
                 pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
                 continue
-                
+
+            # Virtual Class   min/max        Transmit                     Random drop                 AFD Weight
+            # 0          10 / 20        (Byte)33459183360             27374016                     12
+            m = p43.match(line)
+            if m:
+                afd_wred_dict = class_map_dict.setdefault('afd_wred_stats', {})
+                afc_wred_vc_dict = afd_wred_dict.setdefault('virtual_class', {}).setdefault(int(m.groupdict()['virtual_class']), {})
+                afc_wred_vc_dict['min'] = int(m.groupdict()['min'])
+                afc_wred_vc_dict['max'] = int(m.groupdict()['max'])
+                afc_wred_vc_dict['transmit_bytes'] = int(m.groupdict()['tx_bytes'])
+                afc_wred_vc_dict['random_drop_bytes'] = int(m.groupdict()['random_drop_bytes'])
+                afc_wred_vc_dict['afd_weight'] = int(m.groupdict()['afd_weight'])
+                continue
+
+            #                                (Pkts)68692637637             0
+            m = p44.match(line)
+            if m:
+                afc_wred_vc_dict['transmit_packets'] = int(m.groupdict()['tx_packets'])
+                afc_wred_vc_dict['random_drop_packets'] = int(m.groupdict()['random_drop_packets'])
+                continue
+
+            #         dscp : 1
+            m = p45.match(line)
+            if m:
+                afc_wred_vc_dict['dscp'] = int(m.groupdict()['dscp'])
+                continue
+
+            #     Total Drops(Bytes)   : 0
+            m = p46.match(line)
+            if m:
+                afd_wred_dict['total_drops_bytes'] = int(m.groupdict()['total_drops_bytes'])
+                continue
+
+            #     Total Drops(Packets) : 0
+            m = p47.match(line)
+            if m:
+                afd_wred_dict['total_drops_packets'] = int(m.groupdict()['total_drops_packets'])
+                continue
+
         return ret_dict
 
 
@@ -1328,7 +1441,7 @@ class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
                    'show policy-map interface {interface} input'
                    ]
 
-    def cli(self, interface, class_name='', output=None):
+    def cli(self, interface='', class_name='', output=None):
 
         if output is None:
             # Build command
@@ -2072,5 +2185,63 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 class_map_dict['queue_limit_packets'] = int(m.groupdict()['queue_limit_packets'])
                 continue
+
+        return ret_dict
+        
+
+#================================================================================
+#Schema for :
+#   * "show policy-map type control subscriber binding <policymap name>" 
+#================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
+    '''Schema for :
+    * "show policy-map type control subscriber binding <policymap name>" '''  
+    
+    schema = {
+        "policy_map_name" : str,
+        "interfaces_list" : list,
+    }
+
+
+#=================================================================================
+#Parser for:
+#   * "show policy-map type control subscriber binding <policymap name>" 
+# ================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
+    '''Parser for :
+    *"show policy-map type control subscriber binding <policymap name>" '''
+      
+    cli_command = ['show policy-map type control subscriber binding {policy_map_name}']           
+
+    def cli(self,policy_map_name="",output=None):      
+        if output is None:
+            cmd = self.cli_command[0].format(policy_map_name=policy_map_name)
+            output = self.device.execute(cmd)          
+        
+        ret_dict = {}
+
+        #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
+        p1 = re.compile('^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
+
+        #                                                 Gi1/1/1
+        p2 = re.compile('^(?P<int>[\w\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # PMAP_DefaultWiredDot1xClosedAuth_1X_MAB         Gi1/0/1
+            # dot1x_group                                     Gi1/0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_map_name'] = group['pname']
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
+                continue
+        
+            # Gi1/1/1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
 
         return ret_dict

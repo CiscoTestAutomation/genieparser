@@ -1,0 +1,29 @@
+TenGigabitEthernet1/0/2 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is 682c.7b3f.f002 (bia 682c.7b3f.f002)
+  Description: Nothing
+  MTU 9000 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 10Gb/s, media type is 100/1000/2.5G/5G/10GBaseTX
+  input flow-control is on, output flow-control is unsupported
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input never, output 00:00:00, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  30 second input rate 16000 bits/sec, 17 packets/sec
+  30 second output rate 0 bits/sec, 0 packets/sec
+     8022334658 packets input, 697880865309 bytes, 0 no buffer
+     Received 12774 broadcasts (12712 multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 watchdog, 12712 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     97135086285 packets output, 143406430963466 bytes, 0 underruns
+     0 output errors, 0 collisions, 2 interface resets
+     0 unknown protocol drops
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier, 0 pause output
+     0 output buffer failures, 0 output buffers swapped out

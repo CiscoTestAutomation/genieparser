@@ -1,0 +1,12 @@
+Vlan420 is up, line protocol is up, autostate enabled
+    Hardware is EtherSVI, address is 1234.5678.90ab
+    Description: VLAN information Internet Address is 10.10.10.1/24
+    MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+
+    reliability 255/255, txload 1/255, rxload 1/255
+    Encapsulation ARPA, loopback not set
+    Keepalive not supported
+    ARP type: ARPA
+    Last clearing of "show interface" counters never
+    L3 in Switched:
+    ucast: 0 pkts, 0 bytes
