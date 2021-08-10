@@ -200,11 +200,13 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
                 else:
                     cli_cmd += ' topology {evi}'.format(evi=evi)
             if producer:
-                cli_cmd += ' producer'.format(producer=producer)
+                cli_cmd += ' producer {producer}'.format(producer=producer)
+            if next_hop:
+                cli_cmd += ' next-hop {next_hop}'.format(next_hop=next_hop)
             if mac_addr:
-                cli_cmd += ' mac-address'.format(mac_addr=mac_addr)
+                cli_cmd += ' mac-address {mac_addr}'.format(mac_addr=mac_addr)
             if esi:
-                cli_cmd += ' esi'.format(esi=esi)
+                cli_cmd += ' esi {esi}'.format(esi=esi)
             cli_cmd += ' detail'
 
             cli_output = self.device.execute(cli_cmd)
@@ -407,9 +409,9 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
                     evi_etag = "{}:{}".format(evi,etag)
                     cli_command += ' topology {evi_etag}'.format(evi_etag=evi_etag)
             if prod:
-                cli_command += ' producer'.format(prod=prod)
+                cli_command += ' producer {prod}'.format(prod=prod)
             if origin_ip:
-                cli_command += ' origin-rtr'.format(origin_ip=origin_ip)
+                cli_command += ' origin-rtr {origin_ip}'.format(origin_ip=origin_ip)
             cli_command += ' detail'
 
             cli_output = self.device.execute(cli_command)
