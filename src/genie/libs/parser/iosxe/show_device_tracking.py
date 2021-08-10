@@ -2287,22 +2287,8 @@ class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
         device_tracking_messages_dict = {}
 
         # [Wed Jul 21 20:31:23.000] VLAN 1, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
-        # [Wed Jul 21 20:31:23.000] VLAN 1, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
-        # [Wed Jul 21 20:31:23.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: ARP::REP, 10.0.0.1, 
-        # [Wed Jul 21 20:31:23.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: ARP::REP, 10.0.0.1, 
-        # [Wed Jul 21 20:31:23.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
-        # [Wed Jul 21 20:31:23.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
-        # [Wed Jul 21 20:31:25.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: ARP::REP, 10.0.0.1, 
         # [Wed Jul 21 20:31:25.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, Packet ignored. 
-        # [Wed Jul 21 20:31:26.000] VLAN 10, From Et0/0 NDP::NS, FE80::A8BB:CCFF:FE00:100, 
-        # [Wed Jul 21 20:31:26.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REQ, 192.168.23.3, Packet ignored. 
         # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet accepted but not forwarded
-        # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 NDP::NS, A::1, 
-        # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 NDP::NS, 10::1, 
-        # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::RA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet not authorized on port
-        # [Wed Jul 21 20:31:28.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, A::1, Drop reason=Packet accepted but not forwarded
-        # [Wed Jul 21 20:31:28.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, 10::1, Drop reason=Packet accepted but not forwarded
-        # [Wed Jul 21 20:31:30.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::RA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet not authorized on port
 
         message_capture = re.compile(
             r"^\[(?P<timestamp>(\S+\s\S+\s\d+\s\S+))\]"

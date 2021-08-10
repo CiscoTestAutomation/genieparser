@@ -8,7 +8,6 @@ expected_output = {
                 "protocol": "ARP::REP",
                 "ip": "192.168.23.3",
                 "ignored": False,
-                #Optional("drop_reason"): str,
             },
             2: {
                 "timestamp": "Wed Jul 21 20:31:23.000",
