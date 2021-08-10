@@ -4385,7 +4385,7 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema, ShowB
 
     def cli(self, vrf_type='all', neighbor='', vrf='all', instance='all', address_family='', route_type='routes', output=None):
         return super().cli(neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
-            route_type='routes', vrf=vrf, instance=instance, output=output)
+            route_type=route_type, vrf=vrf, instance=instance, output=output)
 
 
 # ====================================================
