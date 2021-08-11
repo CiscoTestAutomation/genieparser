@@ -219,7 +219,6 @@ class ShowLicenseSummary(ShowLicenseSummarySchema):
         # dna-advantage           (C9300-48 DNA Advantage)          1 IN USE
         p0 = re.compile(r"^(?P<license>[\w-]+)\s+\((?P<entitlement>.+)\)\s+(?P<count>\d+)\s+(?P<status>.+)$")
 
-        ret_dict={}
         for line in out.splitlines():
             line=line.strip()
 
