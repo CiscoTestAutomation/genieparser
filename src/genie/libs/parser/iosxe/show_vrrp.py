@@ -77,8 +77,8 @@ class ShowVrrpSchema(MetaParser):
                         Optional('auth_text'): str,
                         'master_router_ip': str,
                         Optional('master_router'): str,
-                        'master_router_priority': int,
-                        'master_advertisement_interval_secs': float,
+                        'master_router_priority': Or(int, str),
+                        'master_advertisement_interval_secs': Or(float, str),
                         Optional('master_advertisement_expiration_secs'): float,
                         'master_down_interval_secs': Or(float, str),
                         Optional('flags'): str,
@@ -105,8 +105,8 @@ class ShowVrrpSchema(MetaParser):
                                 Optional('auth_text'): str,
                                 'master_router_ip': str,
                                 Optional('master_router'): str,
-                                'master_router_priority': int,
-                                'master_advertisement_interval_secs': float,
+                                'master_router_priority': Or(int, str),
+                                'master_advertisement_interval_secs': Or(float, str),
                                 Optional('master_advertisement_expiration_secs'): float,
                                 'master_down_interval_secs': Or(float, str),
                                 Optional('flags'): str
@@ -157,16 +157,18 @@ class ShowVrrp(ShowVrrpSchema):
         p1 = re.compile(
             r'^(?P<interface>[\w,\.\/]+)\s+-\s+Group\s(?P<group_number>\d+)(\s+-\s+Address-Family\s+(?P<address_family>IPv4|IPv6))?$')
 
-        #State is Master
-        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT))$')
+        # State is Master
+        # State is INIT (No Primary virtual IP address configured)
+        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT)).*$')
 
         # State duration 8 mins 40.214 secs
         p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
 
         # Virtual IP address is 10.2.0.10
         # Virtual IP address is FE80::1
-        p3 = re.compile(r'^Virtual +IP +address is (?P<vir_ip>[\w\.\:]+)$')
-
+        # Virtual IP address is no address
+        p3 = re.compile(r'^Virtual +IP +address is (?P<vir_ip>[\w\.\:]+.*)$')
+    
         # Virtual secondary IP addresses:
         p4 = re.compile(r'^Virtual\ssecondary\sIP\saddresses:$')
 
@@ -216,6 +218,10 @@ class ShowVrrp(ShowVrrpSchema):
         p17 = re.compile(
             r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +(?P<interval_unit>\w+)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?$')
 
+        # Master Advertisement interval is unknown
+        p17_2 = re.compile(
+            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\w,\.]+)$')
+
         # Master Down interval is 9.609 sec
         # Master Down interval is unknown
         p18 = re.compile(
@@ -223,8 +229,9 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Master Router is 192.168.1.233, priority is 120
         # Master Router is FE80::2A3:D1FF:FE45:BEC5, priority is 150
+        # Master Router is unknown, priority is unknown
         p19 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+)+, +priority +is (?P<digit>\d+)$')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+)+, +priority +is +(?P<priority>\w+)$')
 
         # FLAGS: 1/1
         p20 = re.compile(r'^FLAGS:\s+(?P<flags>[\d\/]+)$')
@@ -422,6 +429,14 @@ class ShowVrrp(ShowVrrpSchema):
 
                 continue
 
+            # Master Advertisement interval is unknown
+            m = p17_2.match(line)
+            if m:
+                group = m.groupdict()
+                vrrp_dict.update({'master_advertisement_interval_secs': 
+                                  group['mast_adv_interval']})
+
+
             # Master Down interval is 9.609 sec
             # Master Down interval is unknown
             m = p18.match(line)
@@ -436,13 +451,18 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
             # Master Router is 192.168.1.233, priority is 120
+            # Master Router is unknown, priority is unknown
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_router_ip': str(group['mast_ip_addr'])})
+                    {'master_router_ip': group['mast_ip_addr']})
+                try:
+                    priority = int(group['priority'])
+                except ValueError:
+                    priority = group['priority']
                 vrrp_dict.update(
-                    {'master_router_priority': int(group['digit'])})
+                    {'master_router_priority': priority})
                 continue
 
             # FLAGS: 1/1
