@@ -609,9 +609,9 @@ class ShowL2routeEvpnMacIpSchema(MetaParser):
                             Any(): {
                                 'eth_tag': int,
                                 'mac_addr': str,
-                                'next_hops': ListOf({
-                                    'next_hop': str
-                                })
+                                'next_hops': ListOf(
+                                    str
+                                )
                             }
                         }
                     }
@@ -654,30 +654,24 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
             cli_command = 'show l2route evpn mac ip'
 
             if esi:
-                esi_tag = ' esi'.format(esi=esi)
-                cli_command += esi_tag
+                cli_command += ' esi {esi}'.format(esi=esi)
             if macaddr:
-                macaddr_tag = ' mac-address'.format(macaddr=macaddr)
-                cli_command += macaddr_tag
+                cli_command += ' mac-address {macaddr}'.format(macaddr=macaddr)
             if next_hop:
-                next_hop_tag = ' next-hop'.format(next_hop=next_hop)
-                cli_command += next_hop_tag
+                cli_command += ' next-hop {next_hop}'.format(next_hop=next_hop)
             if prod:
-                prod_tag = ' producer'.format(prod=prod)
-                cli_command += prod_tag
+                cli_command += ' producer {prod}'.format(prod=prod)
             if evi:
                 if etag:
-                    evi_etag = "{}:{}".format(evi,etag)
-                    cli_command += " topology {evi_etag}".format(evi_etag=evi_etag)
+                    cli_command += ' topology {evi}:{etag}'.format(evi,etag)
                 else:
-                    cli_command += " topology {evi}".format(evi=evi)
+                    cli_command += ' topology {evi}'.format(evi=evi)
 
             cli_output = self.device.execute(cli_command)
         else:
             cli_output = output
 
         #  EVI       ETag  Prod    Mac Address         Host IP                Next Hop(s)
-        # The header has 2 starting spaces
         p1 = re.compile(r'^EVI\s+ETag\s+Prod\s+Mac Address\s+Host IP\s+Next Hop\(s\)$')
 
         #    1          0   BGP 0011.0011.0011  192.168.11.254            V:20011 3.3.3.2
@@ -721,13 +715,10 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
                 if group['next_hop'] != '\\':
                     host_ip_list.update({
                         'eth_tag': int(group['eth_tag']),
-                        'mac_addr': group['mac_addr'],
-                        'next_hops': [
-                            {
-                                'next_hop': group['next_hop']
-                            }
-                        ]
+                        'mac_addr': group['mac_addr']
                     })
+                    next_hops = host_ip_list.setdefault('next_hops', [])
+                    next_hops.append(group['next_hop'])
                 else:
                     eth_tag = int(group['eth_tag'])
                     mac_addr = group['mac_addr']
@@ -742,13 +733,10 @@ class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
                 if next_hop_in_newline:
                     host_ip_list.update({
                         'eth_tag': eth_tag,
-                        'mac_addr': mac_addr,
-                        'next_hops': [
-                            {
-                                'next_hop': group['next_hop']
-                            }
-                        ]
+                        'mac_addr': mac_addr
                     })
+                    next_hops = host_ip_list.setdefault('next_hops', [])
+                    next_hops.append(group['next_hop'])
                 next_hop_in_newline = False
                 continue
 

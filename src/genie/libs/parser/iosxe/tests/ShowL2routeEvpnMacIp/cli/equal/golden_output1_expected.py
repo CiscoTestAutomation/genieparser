@@ -10,36 +10,28 @@ expected_output = {"evi": {
                                             "eth_tag": 0,
                                             "mac_addr": "0011.0011.0011",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20011 3.3.3.2"
-                                                }
+                                                "V:20011 3.3.3.2"
                                             ]
                                         },
                                         "2001:11::254": {
                                             "eth_tag": 0,
                                             "mac_addr": "0011.0011.0011",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20011 3.3.3.2"
-                                                }
+                                                "V:20011 3.3.3.2"
                                             ]
                                         },
                                         "192.168.11.31": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0011.0031",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20011 3.3.3.2"
-                                                }
+                                                "V:20011 3.3.3.2"
                                             ]
                                         },
                                         "FE80::A8BB:FF:FE11:31": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0011.0031",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20011 3.3.3.2"
-                                                }
+                                                "V:20011 3.3.3.2"
                                             ]
                                         }
                                     }
@@ -50,18 +42,14 @@ expected_output = {"evi": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0011.0011",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "Et0/1:11"
-                                                }
+                                                "Et0/1:11"
                                             ]
                                         },
                                         "FE80::A8BB:FF:FE11:11": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0011.0011",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "Et0/1:11"
-                                                }
+                                                "Et0/1:11"
                                             ]
                                         }
                                     }
@@ -76,36 +64,28 @@ expected_output = {"evi": {
                                             "eth_tag": 0,
                                             "mac_addr": "0012.0012.0012",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20012 3.3.3.2"
-                                                }
+                                                "V:20012 3.3.3.2"
                                             ]
                                         },
                                         "2001:12::254": {
                                             "eth_tag": 0,
                                             "mac_addr": "0012.0012.0012",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20012 3.3.3.2"
-                                                }
+                                                "V:20012 3.3.3.2"
                                             ]
                                         },
                                         "192.168.12.22": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0012.0022",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20012 2.2.2.2"
-                                                }
+                                                "V:20012 2.2.2.2"
                                             ]
                                         },
                                         "FE80::A8BB:FF:FE12:22": {
                                             "eth_tag": 0,
                                             "mac_addr": "aabb.0012.0022",
                                             "next_hops": [
-                                                {
-                                                    "next_hop": "V:20012 2.2.2.2"
-                                                }
+                                                "V:20012 2.2.2.2"
                                             ]
                                         }
                                     }
