@@ -536,11 +536,20 @@ class ShowDeviceTrackingPoliciesSchema(MetaParser):
 class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
     """ Parser for show device-tracking policies """
 
-    cli_command = 'show device-tracking policies'
+    cli_command = ['show device-tracking policies',
+                   'show device-tracking policies interface {interface}',
+                   'show device-tracking policies vlan {vlan}',
+    ]
 
-    def cli(self, output=None):
+    def cli(self, interface='', vlan='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif vlan:
+                cmd = self.cli_command[2].format(vlan=vlan)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2241,3 +2250,90 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
                 continue
 
         return device_tracking_database_mac_details_dict
+
+# ==================================
+# Schema for:
+#  * 'show device-tracking messages'
+# ==================================
+class ShowDeviceTrackingMessagesSchema(MetaParser):
+    schema = {
+        'entries': {
+            int: {
+                "timestamp": str,
+                "vlan": int,
+                "interface": str,
+                Optional("mac"): str,
+                "protocol": str,
+                "ip": str,
+                "ignored": bool,
+                Optional("drop_reason"): str,
+            }
+        }
+    }
+
+# ==================================
+# Parser for:
+#  * 'show device-tracking messages'
+# ==================================
+class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
+    cli_command = "show device-tracking messages"
+
+    def cli(self, output=None):
+        if output == None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        device_tracking_messages_dict = {}
+
+        # [Wed Jul 21 20:31:23.000] VLAN 1, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
+        # [Wed Jul 21 20:31:25.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, Packet ignored. 
+        # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet accepted but not forwarded
+
+        message_capture = re.compile(
+            r"^\[(?P<timestamp>(\S+\s\S+\s\d+\s\S+))\]"
+            r"\s+VLAN (?P<vlan>\d+),"
+            r"\s+From (?P<interface>\S+)"
+            r"(\s+MAC (?P<mac>([a-f0-9]+\.[a-f0-9]+\.[a-f0-9]+)):)?"
+            r"\s+(?P<protocol>([a-zA-Z]+::[a-zA-Z]+)),"
+            r"\s+(?P<ip>(\d+\.\d+\.\d+\.\d+)|(([A-F0-9]+:+)+[A-F0-9]+)),"
+            r"(\s+(?P<ignored>(Packet ignored))\.)?"
+            r"(\s+Drop reason=(?P<drop_reason>.*))?$"
+        )
+
+        entry_counter = 0
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::RA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet not authorized on port
+            match = message_capture.match(line)
+            if match:
+                entry_counter += 1
+                groups = match.groupdict()
+
+                timestamp = groups['timestamp']
+                vlan = int(groups['vlan'])
+                interface = groups['interface']
+                protocol = groups['protocol']
+                ip = groups['ip']
+
+                entry_dict = device_tracking_messages_dict.setdefault('entries', {}).setdefault(entry_counter, {})
+                entry_dict['timestamp'] = timestamp
+                entry_dict['vlan'] = vlan
+                entry_dict['interface'] = interface
+                entry_dict['protocol'] = protocol
+                entry_dict['ip'] = ip
+
+                if groups['mac']:
+                    entry_dict['mac'] = groups['mac']
+                if groups['ignored']:
+                    entry_dict['ignored'] = True
+                else:
+                    entry_dict['ignored'] = False
+                if groups['drop_reason']:
+                    entry_dict['drop_reason'] = groups['drop_reason']
+                continue
+
+        return device_tracking_messages_dict
