@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowSdwanControlSummary:
+  * Added ShowSdwanControlSummary:
       * show sdwan control summary
