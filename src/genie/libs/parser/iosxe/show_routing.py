@@ -1953,7 +1953,10 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('isis', {})
-                vrf_rs_dict['isis'][instance].update(group)
+                if instance:
+                    vrf_rs_dict['isis'][instance].update(group)
+                else:
+                    vrf_rs_dict['isis'].update(group)
                 continue
 
             #   External: 0 Internal: 0 Local: 0
