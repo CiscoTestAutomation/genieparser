@@ -1,20 +1,13 @@
-## Description
-<!--- Describe your changes in detail -->
+## Required checklist:
+<!--- When creating a PR, all these boxes must be completed unless otherwise specified! -->
+- [ ] **I confirm this change is not a new feature.** (Eg, open-sourcing this code will not leak information Cisco customers)
+- [ ] **I confirm this change is not an internal Cisco-only feature.**
+- [ ] This PR contains a changelog.
+- [ ] This PR contains a link to the documentation PR. (If applicable)
+- [ ] This PR contains tests to cover my changes. (If applicable)
 
-## Motivation and Context
-<!--- Why is this change required? What problem does it solve? -->
+## Description
+<!--- Describe your changes in detail. Why is this change required? What problem does it solve? Include images if that helps. -->
 
 ## Impact (If any)
-<!--- If there is any negative impact - what is it? -->
-
-## Screenshots:
-<!--- Provide screenshots of tests/compile/demo/etc -->
-
-## Checklist:
-<!--- This is meant more as a personal checklist so we don't forgot important steps! -->
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-- [ ] I have updated the changelog.
-- [ ] I have updated the documentation (If applicable).
-- [ ] I have added tests to cover my changes (If applicable).
-- [ ] All new and existing tests passed.
-- [ ] All new code passed compilation.
+<!--- Is there any negative impact this PR could cause? Breaking users etc -->

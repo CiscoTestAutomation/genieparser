@@ -1,0 +1,61 @@
+==============================================================
+Connection state is ESTAB, I/O status: 0, socket status: 0
+Established at Mon Jul 12 09:44:25 2021
+
+PCB 0x00007f553800d8f8, SO 0x7f5538008698, TCPCB 0x7f5538008b58, vrfid 0x60000000,
+Pak Prio: Medium, TOS: 192, TTL: 1, Hash index: 26
+Local host: 2000:108:10::1, Local port: 179 (Local App PID: 11298)
+Foreign host: 2000:108:10::2, Foreign port: 56357
+(Local App PID/instance/SPL_APP_ID: 11298/1/0)
+
+Current send queue size in bytes: 0 (max 24576)
+Current receive queue size in bytes: 0 (max 32768)  mis-ordered: 0 bytes
+Current receive queue size in packets: 0 (max 0)
+
+Timer          Starts    Wakeups         Next(msec)
+Retrans             3          0                0
+SendWnd             0          0                0
+TimeWait            0          0                0
+AckHold             4          3                0
+KeepAlive           1          0                0
+PmtuAger            0          0                0
+GiveUp              0          0                0
+Throttle            0          0                0
+
+   iss: 2552699488  snduna: 2552699622  sndnxt: 2552699622
+sndmax: 2552699622  sndwnd: 32739       sndcwnd: 2880
+   irs: 3293391238  rcvnxt: 3293391391  rcvwnd: 32701   rcvadv: 3293424092
+
+SRTT: 34 ms,  RTTO: 300 ms,  RTV: 208 ms,  KRTT: 0 ms
+minRTT: 11 ms,  maxRTT: 202 ms
+
+ACK hold time: 200 ms, Keepalive time: 0 sec, SYN waittime: 30 sec
+Giveup time: 0 ms, Retransmission retries: 0, Retransmit forever: FALSE
+Connect retries remaining: 0, connect retry interval: 0 secs
+
+State flags: none
+Feature flags: Win Scale, Nagle
+Request flags: Win Scale
+
+Datagrams (in bytes): MSS 1440, peer MSS 1440, min MSS 1440, max MSS 1440
+
+Window scales: rcv 0, snd 0, request rcv 0, request snd 0
+Timestamp option: recent 0, recent age 0, last ACK sent 0
+Sack blocks {start, end}: none
+Sack holes {start, end, dups, rxmit}: none
+
+Socket options: SO_REUSEADDR, SO_REUSEPORT, SO_NBIO
+Socket states: SS_ISCONNECTED, SS_PRIV
+Socket receive buffer states: SB_DEL_WAKEUP
+Socket send buffer states: SB_DEL_WAKEUP
+Socket receive buffer: Low/High watermark 1/32768
+Socket send buffer   : Low/High watermark 2048/24576, Notify threshold 0
+Socket misc info     : Rcv data size (sb_cc) 0, so_qlen 0,
+                       so_q0len 0, so_qlimit 0, so_error 0
+                       so_auto_rearm 1
+
+PDU information:
+ #PDU's in buffer: 0
+FIB Lookup Cache:  IFH: 0x1000058  PD ctx: size: 8  data: 0x0 0xa6fe66ce
+  Num Labels: 0  Label Stack:
+Num of peers with authentication info: 0

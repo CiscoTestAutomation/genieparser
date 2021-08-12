@@ -1,0 +1,69 @@
+show processes isis
+        Wed Oct  9 20:56:33.874 UTC
+                          Job Id: 1011
+                             PID: 10711
+                    Process name: isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
+                      Instance #: 1
+                      Version ID: 00.00.0000
+                         Respawn: ON
+                   Respawn count: 1
+                    Last started: Fri Oct  4 15:47:07 2019
+                   Process state: Run
+                   Package state: Normal
+               Started on config: cfg/gl/isis/instance/test/ord_A/running
+                   Process group: v4-routing
+                            core: COPY
+                       Max. core: 0
+                       Placement: Placeable
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
+                           Ready: 18.220s
+                       Available: 18.536s
+                Process cpu time: 134.740 user, 40.880 kernel, 175.620 total
+        JID    TID  Stack  pri  state        NAME             rt_pri
+        1011   10711    0K  20   Sleeping     Management       0
+        1011   11198    0K  20   Sleeping     lwm_debug_threa  0
+        1011   11199    0K  20   Sleeping     isis             0
+        1011   11201    0K  20   Sleeping     lwm_service_thr  0
+        1011   11202    0K  20   Sleeping     qsm_service_thr  0
+        1011   11218    0K  20   Sleeping     aaa_tty_th       0
+        1011   11219    0K  20   Sleeping     aaa_util_th      0
+        1011   11221    0K  20   Sleeping     aaa_client_th    0
+        1011   11232    0K  20   Sleeping     aaa_login_th     0
+        1011   11233    0K  20   Sleeping     isis             0
+        1011   11236    0K  20   Sleeping     isis             0
+        1011   11283    0K  20   Sleeping     chkpt_evm        0
+        1011   11284    0K  20   Sleeping     isis             0
+        1011   11298    0K  20   Sleeping     isis             0
+        1011   11308    0K  20   Sleeping     isis             0
+        1011   11311    0K  20   Sleeping     lspv_lib ISIS    0
+        1011   11312    0K  20   Sleeping     async            0
+        1011   11315    0K  20   Sleeping     Hello            0
+        1011   11316    0K  20   Sleeping     Update           0
+        1011   11317    0K  20   Sleeping     SR-MPLS          0
+        1011   11318    0K  20   Sleeping     NSR              0
+        1011   11319    0K  20   Sleeping     LSD sync client  0
+        1011   11320    0K  20   Sleeping     telemetry_evtli  0
+        1011   11980    0K  20   Sleeping     Decision         0
+        1011   11985    0K  20   Sleeping     TE               0
+        1011   11989    0K  20   Sleeping     MIB Traps        0
+        1011   11996    0K  20   Sleeping     Protect Infra    0
+        -------------------------------------------------------------------------------
+                          Job Id: 1012
+                             PID: 10709
+                    Process name: isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
+                      Instance #: 2
+                      Version ID: 00.00.0000
+                         Respawn: ON
+                   Respawn count: 1
+                    Last started: Fri Oct  4 15:47:07 2019
+                   Process state: Exited
+                   Package state: Normal
+              Registered item(s): cfg/gl/isis/instance/.*/ord_A/
+                   Process group: v4-routing
+                            core: COPY
+                       Max. core: 0
+                       Placement: Placeable
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
+                           Ready: 18.046s

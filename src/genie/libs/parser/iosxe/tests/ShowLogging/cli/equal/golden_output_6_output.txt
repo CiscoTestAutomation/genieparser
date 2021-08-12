@@ -1,4 +1,3 @@
-show logging
 Syslog logging: enabled (0 messages dropped, 20 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
 
 No Active Message Discriminator.

@@ -1,0 +1,8 @@
+CL1-cat9400-5#show nve peers vni 200051
+'M' - MAC entry download flag  'A' - Adjacency download flag
+'4' - IPv4 flag  '6' - IPv6 flag
+
+Interface  VNI      Type Peer-IP          RMAC/Num_RTs   eVNI     state flags UP time
+nve1       200051   L2CP 20.0.101.2       1              200051     UP   N/A  2d02h
+nve1       200051   L2CP 20.0.101.3       1              200051     UP   N/A  6d20h
+nve1       200051   L2CP 30.0.107.78      4              200051     UP   N/A  6d20h

@@ -1,0 +1,5 @@
+    MAC                    Interface  vlan       prlvl      state            Time left        Policy           Input_index
+S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47      
+    Attached IP: 10.10.10.11     
+    Attached IP: 10.10.10.10     
+L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60      

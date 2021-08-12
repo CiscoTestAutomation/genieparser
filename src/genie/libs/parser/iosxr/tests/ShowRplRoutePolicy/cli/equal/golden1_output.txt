@@ -1,0 +1,15 @@
+    route-policy test0
+  # Allowing 0.0.0.0 (Default Route) only
+  if destination in (0.0.0.0/0) then
+    pass
+  endif
+end-policy
+!
+    route-policy test1
+  if destination in Test-test_test0 then
+    set spf-priority high
+  elseif destination in (0.0.0.0/0 eq 32) then
+    set spf-priority medium
+  endif
+end-policy
+!

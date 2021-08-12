@@ -1,0 +1,6 @@
+EVI   BD    Ether Tag  Remote IP  Local IP   Dup IP
+----- ----- ---------- ---------- ---------- ----------
+1     11    0          4          5          1
+2     12    0          2          2          0
+
+Total                  6          7          1

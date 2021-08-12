@@ -1,0 +1,14 @@
+Power Stack          Stack    Stack    Total    Rsvd    Alloc    Unused  Num  Num
+Name                 Mode     Topolgy  Pwr(W)   Pwr(W)  Pwr(W)   Pwr(W)  SW   PS
+-------------------- ------   -------  ------   ------  ------   ------  ---  --
+Powerstack-1         SP-PS    Ring     5115     35      1180     3900    4    5
+
+    Power Stack          PS-A     PS-B   Power     Alloc      Avail   Consumd Pwr
+SW  Name                 (W)      (W)    Budgt(W)  Power(W)   Pwr(W)  Sys/PoE(W)
+--  -------------------- -----    -----  --------  --------   ------  -----------
+1   Powerstack-1         0        0      1200      240        960     129 /0
+2   Powerstack-1         1100     715    1230      240        990     131 /0
+3   Powerstack-1         1100     1100   1230      240        990     127 /0
+4   Powerstack-1         1100     0      1420      460        960     143 /0
+--  -------------------- -----    -----  --------  --------   ------  ----------
+Totals:                                            1180       3900    530 /0

@@ -1,5 +1,5 @@
 expected_output = {
-    "GigabitEthernet1/0/1": {
+    "Port-channel1": {
         "address_family": {
             "ipv4": {
                 "version": {
@@ -34,6 +34,11 @@ expected_output = {
                                     "hold_sec": 20,
                                     "next_hello_sent": 2.848,
                                 },
+                                "tracked_objects": {
+                                    1: {
+                                        "object_name": 1
+                                    }
+                                },
                                 "virtual_mac_address": "0000.0cff.909f",
                                 "virtual_mac_address_mac_in_use": True,
                             }
@@ -42,7 +47,7 @@ expected_output = {
                 }
             }
         },
-        "interface": "GigabitEthernet1/0/1",
+        "interface": "Port-channel1",
         "redirects_disable": False,
         "use_bia": False,
     },

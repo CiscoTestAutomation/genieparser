@@ -1,0 +1,21 @@
+R1-asr1k-43#show isis rib
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+3.3.3.3/32  prefix attr X:0 R:0 N:1  source router id: 3.3.3.3  SID index 3 - Bound
+  [115/L1/20] via 20.20.10.2(Ethernet1/2) R3.00-00, from 3.3.3.3, tag 0
+     LSP 3/3/13(13), prefix attr: X:0 R:0 N:1
+     Source router id: 3.3.3.3
+      Prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+     repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
+       next-hop: 10.10.20.2 (Ethernet1/1)
+       TI-LFA link-protecting
+       SRGB: 16000, range: 8000 prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
+       label: 16003
+       P node: R4[4.4.4.4], label: 16004
+       P node: R5[5.5.5.5], label: 16005
+       repair source: R3, LSP 3
