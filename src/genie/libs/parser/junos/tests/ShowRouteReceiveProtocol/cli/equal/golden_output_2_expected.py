@@ -2,14 +2,6 @@ expected_output = {
     "route-information": {
         "route-table": [
             {
-                "active-route-count": "21",
-                "destination-count": "21",
-                "hidden-route-count": "0",
-                "holddown-route-count": "0",
-                "table-name": "inet.0",
-                "total-route-count": "34",
-            },
-            {
                 "active-route-count": "24",
                 "destination-count": "24",
                 "hidden-route-count": "0",
@@ -140,6 +132,47 @@ expected_output = {
                             "protocol-name": "BGP",
                         },
                     },
+                    {
+                        "rt-destination": "2001:db8:22::/48",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "65509 I",
+                            "med": "1000",
+                            "nh": {"to": "2001:db8:7fc5:ca45::2"},
+                            "protocol-name": "BGP",
+                        },
+                    },
+                    {
+                        "rt-destination": "2001:db8:a280::/48",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "65509 I",
+                            "med": "1000",
+                            "nh": {"to": "2001:db8:7fc5:ca45::2"},
+                            "protocol-name": "BGP",
+                        },
+                    },
+                    {
+                        "rt-destination": "2001:db8:6880::/48",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "65509 I",
+                            "local-preference": "100",
+                            "med": "1000",
+                            "nh": {"to": "2001:db8:7fc5:ca45::2"},
+                            "protocol-name": "BGP",
+                        },
+                    },
+                    {
+                        "rt-destination": "2001:db8:3000::/48",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "65509 I",
+                            "local-preference": "100",
+                            "nh": {"to": "2001:db8:7fc5:ca45::2"},
+                            "protocol-name": "BGP",
+                        },
+                    },
                 ],
                 "table-name": "inet6.0",
                 "total-route-count": "36",
@@ -147,3 +180,5 @@ expected_output = {
         ]
     }
 }
+
+

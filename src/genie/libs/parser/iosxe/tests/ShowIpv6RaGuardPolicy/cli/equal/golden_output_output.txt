@@ -1,0 +1,13 @@
+RA guard policy asdf configuration:
+  trusted-port
+  device-role router
+  hop-limit minimum 1
+  hop-limit maximum 3
+  managed-config-flag on
+  other-config-flag on
+  router-preference maximum high
+  match ra prefix-list bar
+  match ipv6 access-list foo
+Policy asdf is applied on the following targets:
+Target               Type  Policy               Feature        Target range
+Twe1/0/42            PORT  asdf                 RA guard       vlan all

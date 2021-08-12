@@ -1,0 +1,9 @@
+Fri Jun 25 16:45:17.940 UTC
+
+Routing entry for 0.0.0.0/0
+Known via "isis RAN", distance 115, metric 101, candidate default path, type level-2
+Installed May 20 15:09:21.072 for 5w1d
+Routing Descriptor Blocks
+10.252.135.154, from 10.252.78.130, via Bundle-Ether1
+Route metric is 101
+No advertising protos.

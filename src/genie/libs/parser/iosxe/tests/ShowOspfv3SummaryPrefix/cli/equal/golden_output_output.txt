@@ -1,0 +1,5 @@
+          OSPFv3 10000 address-family ipv6 (router-id 10.2.2.21)
+
+10:2::/96           Metric <unreachable>
+10:2:2::/96         Metric 123, External metric type 2, Tag 111
+

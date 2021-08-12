@@ -258,7 +258,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(XCVR\s+not\s+inserted\))?'
                         r'(\(No\s+operational\s+members\))?'
                         r'(\(.*ACK.*\))?'
-                        r'(\(inactive\))?$')
+                        r'(\(inactive\))?'
+                        r'(\(Hardware\s+failure\))?$')
 
         # admin state is up
         # admin state is up,

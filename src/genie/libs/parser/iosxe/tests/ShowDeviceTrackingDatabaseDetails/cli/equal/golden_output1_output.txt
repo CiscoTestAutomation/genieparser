@@ -1,0 +1,34 @@
+ Binding table configuration:
+ ----------------------------
+ max/box  : no limit
+ max/vlan : no limit
+ max/port : no limit
+ max/mac  : no limit
+
+ Binding table current counters:
+ ------------------------------
+ dynamic  : 2
+ local    : 1
+ total    : 5
+
+ Binding table counters by state:
+ ----------------------------------
+ VERIFY     : 1
+ REACHABLE  : 2
+ STALE      : 1
+ DOWN       : 1
+   total    : 5
+
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+    Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       8364mn     REACHABLE                   no         yes          0000.0000.0000
+S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       8453mn     STALE      N/A              no         yes          0000.0000.0000
+ND  FE80::6AF3:3E56:FE0B:BEE9                0050.56b0.afed(S)      Twe1/0/42  access     39  (  39)      0005       5mn        VERIFY     15 s try 2       no         yes          0000.0000.0000     test1 (Device-tracking)
+ND  FE80::5786:483C:BD32:CC21                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       171s       REACHABLE  137 s try 0      no         yes          0000.0000.0000     test1 (Device-tracking)
+S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       38959mn    DOWN       N/A              no         yes          0000.0000.0000

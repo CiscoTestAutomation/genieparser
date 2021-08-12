@@ -1,0 +1,144 @@
+show bgp all all nexthops
+Fri Mar 19 08:32:41.109 JST
+
+Address Family: VPNv4 Unicast
+-----------------------------
+
+Total Nexthop Processing
+  Time Spent: 0.000 secs
+
+Maximum Nexthop Processing
+  Received: 00:00:00
+  Bestpaths Deleted: 0
+  Bestpaths Changed: 0
+  Time Spent: 0.000 secs
+
+Last Notification Processing
+  Received: 00:12:06
+  Time Spent: 0.000 secs
+
+Gateway Address Family: IPv4 Unicast
+Table ID: 0xe0000000
+Nexthop Count: 2
+Critical Trigger Delay: 0msec
+Non-critical Trigger Delay: 10000msec
+
+Nexthop Version: 1, RIB version: 1
+EPE Table Version: 1, EPE Label version: 1
+EPE Downloaded Version: 1, EPE Standby Version: 1
+
+Status codes: R/UR Reachable/Unreachable
+              C/NC Connected/Not-connected
+              L/NL Local/Non-local
+              PR   Pending Registration
+              I    Invalid (Policy drop)
+Next Hop        Status          Metric     Tbl-ID   Notf   LastRIBEvent      RefCount
+108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        0/4
+109.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:12:08 (Cri)        0/4
+
+Address Family: VPNv6 Unicast
+-----------------------------
+
+Total Nexthop Processing
+  Time Spent: 0.000 secs
+
+Maximum Nexthop Processing
+  Received: 00:00:00
+  Bestpaths Deleted: 0
+  Bestpaths Changed: 0
+  Time Spent: 0.000 secs
+
+Last Notification Processing
+  Received: 00:12:06
+  Time Spent: 0.000 secs
+
+Gateway Address Family: IPv4 Unicast
+Table ID: 0xe0000000
+Nexthop Count: 2
+Critical Trigger Delay: 0msec
+Non-critical Trigger Delay: 10000msec
+
+Nexthop Version: 1, RIB version: 1
+EPE Table Version: 1, EPE Label version: 1
+EPE Downloaded Version: 1, EPE Standby Version: 1
+
+Status codes: R/UR Reachable/Unreachable
+              C/NC Connected/Not-connected
+              L/NL Local/Non-local
+              PR   Pending Registration
+              I    Invalid (Policy drop)
+Next Hop        Status          Metric     Tbl-ID   Notf   LastRIBEvent      RefCount
+108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        0/4
+109.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:12:08 (Cri)        0/4
+
+Address Family: IPv4 Unicast
+----------------------------
+
+Total Nexthop Processing
+  Time Spent: 0.000 secs
+
+Maximum Nexthop Processing
+  Received: 00:00:00
+  Bestpaths Deleted: 0
+  Bestpaths Changed: 0
+  Time Spent: 0.000 secs
+
+Last Notification Processing
+  Received: 00:12:06
+  Time Spent: 0.000 secs
+
+Gateway Address Family: IPv4 Unicast
+Table ID: 0xe0000000
+Nexthop Count: 2
+Critical Trigger Delay: 3000msec
+Non-critical Trigger Delay: 10000msec
+
+Nexthop Version: 1, RIB version: 1
+EPE Table Version: 1, EPE Label version: 1
+EPE Downloaded Version: 1, EPE Standby Version: 1
+
+Status codes: R/UR Reachable/Unreachable
+              C/NC Connected/Not-connected
+              L/NL Local/Non-local
+              PR   Pending Registration
+              I    Invalid (Policy drop)
+Next Hop        Status          Metric     Tbl-ID   Notf   LastRIBEvent      RefCount
+108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
+109.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:12:08 (Cri)        1/4
+
+Address Family: IPv6 Unicast
+----------------------------
+
+Total Nexthop Processing
+  Time Spent: 0.000 secs
+
+Maximum Nexthop Processing
+  Received: 00:00:00
+  Bestpaths Deleted: 0
+  Bestpaths Changed: 0
+  Time Spent: 0.000 secs
+
+Last Notification Processing
+  Received: 00:12:06
+  Time Spent: 0.000 secs
+
+Gateway Address Family: IPv6 Unicast
+Table ID: 0xe0800000
+Nexthop Count: 2
+Critical Trigger Delay: 3000msec
+Non-critical Trigger Delay: 10000msec
+
+Nexthop Version: 1, RIB version: 1
+EPE Table Version: 1, EPE Label version: 1
+EPE Downloaded Version: 1, EPE Standby Version: 1
+
+Status codes: R/UR Reachable/Unreachable
+              C/NC Connected/Not-connected
+              L/NL Local/Non-local
+              PR   Pending Registration
+              I    Invalid (Policy drop)
+Next Hop        Status          Metric     Tbl-ID   Notf   LastRIBEvent      RefCount
+2000:108:10:10::1
+                [R][NC][NL]          2   e0800000   1/0    00:13:49 (Cri)        1/4
+2000:109:10:10::1
+                [R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3

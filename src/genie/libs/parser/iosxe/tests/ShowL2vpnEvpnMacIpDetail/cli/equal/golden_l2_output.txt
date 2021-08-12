@@ -1,0 +1,24 @@
+IP Address:                192.168.11.12
+EVPN Instance:             1
+Vlan:                      11
+MAC Address:               aabb.0011.0002
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               V:16 2.2.2.1
+Local Address:             1.1.1.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                2001:11::12
+EVPN Instance:             1
+Vlan:                      11
+MAC Address:               aabb.0011.0002
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               V:16 2.2.2.1
+Local Address:             1.1.1.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+          
