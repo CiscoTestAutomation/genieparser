@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       Fix
 --------------------------------------------------------------------------------
 
@@ -262,3 +263,10 @@
     * Added ShowVersion:
         * show version
 >>>>>>> f80777fac (Update and rename JUNE.rst to changelog_ajschroeder_asa_show_version_20210705.rst):changelog/2021/changelog_ajschroeder_asa_show_version_20210705.rst
+=======
+                                      New                                       
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowVersion:
+        * show version
+>>>>>>> d24f5631b (Merge branch 'master' of https://github.com/zhangineer/genieparser into pr/496)
