@@ -74,7 +74,7 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
         # Neighbors for OSPFv3 1, VRF default
         # Neighbors for OSPFv3 1, VRF VRF1
         p1 = re.compile(r'^Neighbors +for +OSPFv3 +(?P<process>\w+)'
-                        '(, +VRF (?P<vrf>[\w]+))?$')
+                        '(, +VRF (?P<vrf>[\w-]+))?$')
 
         # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
         # 10.145.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1

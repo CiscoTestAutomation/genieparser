@@ -1,0 +1,50 @@
+IP Address:                192.168.12.3
+EVPN Instance:             2
+Bridge Domain:             12
+MAC Address:               aabb.cc82.2800
+Ethernet Segment:          03AA.BB00.0000.0200.0001
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 12
+                           L:17 3.3.3.1
+Local Address:             4.4.4.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                2001:12::3
+EVPN Instance:             2
+Bridge Domain:             12
+MAC Address:               aabb.cc82.2800
+Ethernet Segment:          03AA.BB00.0000.0200.0001
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 12
+                           L:17 3.3.3.1
+Local Address:             4.4.4.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                FE80::A8BB:FF:FE12:2 (stale)
+EVPN Instance:             2
+Bridge Domain:             12
+MAC Address:               aabb.0012.0002
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:16 2.2.2.1
+Local Address:             4.4.4.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                FE80::A8BB:CCFF:FE82:2800
+EVPN Instance:             2
+Bridge Domain:             12
+MAC Address:               aabb.cc82.2800
+Ethernet Segment:          03AA.BB00.0000.0200.0001
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 12
+                           L:17 3.3.3.1
+Local Address:             4.4.4.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No

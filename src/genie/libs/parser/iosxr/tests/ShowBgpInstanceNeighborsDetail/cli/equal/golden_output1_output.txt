@@ -1,0 +1,63 @@
+        RP/0/RP0/CPU0:R2_xr#show bgp neighbors 10.4.1.1
+        Fri Nov  1 21:31:51.172 UTC
+
+        BGP neighbor is 10.4.1.1
+        Remote AS 65000, local AS 65000, no-prepend, replace-as, dual-as, internal link
+        Remote router ID 10.4.1.1
+        BGP state = Established, up for 1w1d
+        NSR State: None
+        Last read 00:00:37, Last read before reset 1w1d
+        Hold time is 180, keepalive interval is 60 seconds
+        Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+        Last write 00:00:03, attempted 19, written 19
+        Second last write 00:01:03, attempted 19, written 19
+        Last write before reset 1w1d, attempted 19, written 19
+        Second last write before reset 1w1d, attempted 19, written 19
+        Last write pulse rcvd  Nov  1 21:31:48.334 last full not set pulse count 85322
+        Last write pulse rcvd before reset 1w1d
+        Socket not armed for io, armed for read, armed for write
+        Last write thread event before reset 1w1d, second last 1w1d
+        Last KA expiry before reset 1w1d, second last 1w1d
+        Last KA error before reset 00:00:00, KA not sent 00:00:00
+        Last KA start before reset 1w1d, second last 1w1d
+        Precedence: internet
+        Non-stop routing is enabled
+        Multi-protocol capability received
+        Neighbor capabilities:
+            Route refresh: advertised (old + new) and received (old + new)
+            4-byte AS: advertised and received
+            Address family IPv4 Unicast: advertised and received
+        Received 44766 messages, 0 notifications, 0 in queue
+        Sent 40667 messages, 1 notifications, 0 in queue
+        Minimum time between advertisement runs is 0 secs
+        Inbound message logging enabled, 3 messages buffered
+        Outbound message logging enabled, 3 messages buffered
+
+        For Address Family: IPv4 Unicast
+        BGP neighbor version 7
+        Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+            Extended Nexthop Encoding: advertised
+        Route refresh request: received 0, sent 0
+        1 accepted prefixes, 1 are bestpaths
+        Exact no. of prefixes denied : 0.
+        Cumulative no. of prefixes denied: 0.
+        Prefix advertised 1, suppressed 0, withdrawn 0
+        Maximum prefixes allowed 1048576
+        Threshold for warning message 75%, restart interval 0 min
+        AIGP is enabled
+        An EoR was received during read-only mode
+        Last ack version 7, Last synced ack version 0
+        Outstanding version objects: current 0, max 1, refresh 0
+        Additional-paths operation: None
+        Send Multicast Attributes
+        Advertise routes with local-label via Unicast SAFI
+
+        Connections established 2; dropped 1
+        Local host: 10.16.2.2, Local port: 179, IF Handle: 0x00000000
+        Foreign host: 10.4.1.1, Foreign port: 27104
+        Last reset 1w1d, due to BGP Notification sent: hold time expired
+        Time since last notification sent to neighbor: 1w1d
+        Error Code: hold time expired
+        Notification data sent:
+            None
+        RP/0/RP0/CPU0:R2_xr#

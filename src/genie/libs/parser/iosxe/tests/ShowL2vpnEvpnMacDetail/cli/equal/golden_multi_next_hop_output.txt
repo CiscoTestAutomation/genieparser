@@ -1,0 +1,34 @@
+MAC Address:                aabb.0012.0002
+EVPN Instance:              2
+Bridge Domain:              12
+Ethernet Segment:           0000.0000.0000.0000.0000
+Ethernet Tag ID:            0
+Next Hop(s):                L:16 2.2.2.1
+Local Address:              4.4.4.1
+Sequence Number:            0
+MAC only present:           Yes
+MAC Duplication Detection:  Timer not running
+
+MAC Address:                aabb.cc02.2800
+EVPN Instance:              2
+Bridge Domain:              12
+Ethernet Segment:           03AA.BB00.0000.0200.0001
+Ethernet Tag ID:            0
+Next Hop(s):                L:17 3.3.3.1
+Local Address:              4.4.4.1
+Sequence Number:            0
+MAC only present:           Yes
+MAC Duplication Detection:  Timer not running
+
+MAC Address:                aabb.cc82.2800
+EVPN Instance:              2
+Bridge Domain:              12
+Ethernet Segment:           03AA.BB00.0000.0200.0001
+Ethernet Tag ID:            0
+Next Hop(s):                L:17 Ethernet1/0 service instance 12
+                            L:17 3.3.3.1
+                            L:17 5.5.5.1
+Local Address:              4.4.4.1
+Sequence Number:            0
+MAC only present:           Yes
+MAC Duplication Detection:  Timer not running
