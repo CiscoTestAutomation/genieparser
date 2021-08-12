@@ -552,6 +552,7 @@ class ParserTest(aetest.Testcase):
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info("\nThe following is the device output before it is parsed:\n{}\n\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
                     log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
+                    breakpoint()
                     log.info("The following is your expected output:\n{}\n".format(golden_parsed_output_json_data), extra = {'colour': 'yellow'})
                     log.info("The following is the difference between the two outputs:\n", extra = {'colour': 'yellow'})
 
