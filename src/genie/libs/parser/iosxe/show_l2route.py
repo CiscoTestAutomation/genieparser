@@ -40,7 +40,27 @@ IOS parsers for the following show commands:
     * show l2route evpn imet topology <evi>:<etag> detail
     * show l2route evpn imet topology <evi>:<etag> producer <prod> detail
     * show l2route evpn imet topology <evi>:<etag> producer <prod> origin-rtr <origin-ip> detail
-
+    * show l2route evpn mac ip
+    * show l2route evpn mac ip esi <esi>
+    * show l2route evpn mac ip mac-address <macaddr>
+    * show l2route evpn mac ip mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip next-hop <next-hop>
+    * show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip producer <prod>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip topology <evi:etag>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+    * show l2route evpn mac ip topology <evi>
+    * show l2route evpn mac ip topology <evi> producer <prod>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+    * show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -550,4 +570,176 @@ class ShowL2routeEvpnImetDetail(ShowL2routeEvpnImetDetailSchema):
                 next_hops_dict.update({'next_hop': group['next_hop']})
                 next_hops.append(next_hops_dict)
                 continue
+        return (parser_dict)
+
+# =============================================
+# Schema for 'show l2route evpn mac ip'
+# =============================================
+class ShowL2routeEvpnMacIpSchema(MetaParser):
+    """ Schema for show l2route evpn mac ip
+                   show l2route evpn mac ip esi <esi>
+                   show l2route evpn mac ip mac-address <macaddr>
+                   show l2route evpn mac ip mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip next-hop <next-hop>
+                   show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip producer <prod>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip topology <evi:etag>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip topology <evi:etag> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+                   show l2route evpn mac ip topology <evi>
+                   show l2route evpn mac ip topology <evi> producer <prod>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop> mac-address <macaddr>
+                   show l2route evpn mac ip topology <evi> producer <prod> next-hop <next-hop> mac-address <macaddr> esi <esi>
+
+    """
+
+    schema = {
+        'evi': {
+            Any(): {
+                'producer': {
+                    Any(): {
+                        'host_ip': {
+                            Any(): {
+                                'eth_tag': int,
+                                'mac_addr': str,
+                                'next_hops': ListOf(
+                                    str
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show l2route evpn mac ip'
+# =============================================
+class ShowL2routeEvpnMacIp(ShowL2routeEvpnMacIpSchema):
+
+    cli_command = [
+        'show l2route evpn mac ip',
+        'show l2route evpn mac ip esi {esi}',
+        'show l2route evpn mac ip mac-address {macaddr}',
+        'show l2route evpn mac ip mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip next-hop {next_hop}',
+        'show l2route evpn mac ip next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip producer {prod}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip topology {evi_etag}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip topology {evi_etag} producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}',
+        'show l2route evpn mac ip topology {evi}',
+        'show l2route evpn mac ip topology {evi} producer {prod}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop} mac-address {macaddr}',
+        'show l2route evpn mac ip topology {evi} producer {prod} next-hop {next_hop} mac-address {macaddr} esi {esi}'
+        ]
+
+    def cli (self, output=None, esi=None, macaddr=None, next_hop=None, prod=None, evi=None, etag=None):
+        if not output:
+            cli_command = 'show l2route evpn mac ip'
+
+            if esi:
+                cli_command += ' esi {esi}'.format(esi=esi)
+            if macaddr:
+                cli_command += ' mac-address {macaddr}'.format(macaddr=macaddr)
+            if next_hop:
+                cli_command += ' next-hop {next_hop}'.format(next_hop=next_hop)
+            if prod:
+                cli_command += ' producer {prod}'.format(prod=prod)
+            if evi:
+                if etag:
+                    cli_command += ' topology {evi}:{etag}'.format(evi,etag)
+                else:
+                    cli_command += ' topology {evi}'.format(evi=evi)
+
+            cli_output = self.device.execute(cli_command)
+        else:
+            cli_output = output
+
+        #  EVI       ETag  Prod    Mac Address         Host IP                Next Hop(s)
+        p1 = re.compile(r'^EVI\s+ETag\s+Prod\s+Mac Address\s+Host IP\s+Next Hop\(s\)$')
+
+        #    1          0   BGP 0011.0011.0011  192.168.11.254            V:20011 3.3.3.2
+        #    1          0 L2VPN aabb.0011.0011 FE80::A8BB:FF:FE11:11 \
+        p2 = re.compile(r'^(?P<evi>\d+)\s+(?P<eth_tag>\d+)\s+(?P<producer>\w+)\s+(?P<mac_addr>[0-9a-fA-F.]+)'
+                        r'\s+(?P<host_ip>[0-9a-fA-F.:]+)\s+(?P<next_hop>.+)$')
+
+        # Et0/1:11
+        p3 = re.compile(r'^(?P<next_hop>.+)$')
+
+        parser_dict = {}
+        header_found = False
+        next_hop_in_newline = False
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # test for the correct header
+            m = p1.match(line)
+            if m:
+                header_found = True
+                continue
+
+            #    1          0   BGP 0011.0011.0011  192.168.11.254            V:20011 3.3.3.2
+            #    1          0 L2VPN aabb.0011.0011 FE80::A8BB:FF:FE11:11 \
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                evis = parser_dict.setdefault('evi', {})
+                evi_list = evis.setdefault(int(group['evi']), {})
+
+                producers = evi_list.setdefault('producer', {})
+                producers_list = producers.setdefault( group['producer'], {} )
+
+                host_ip = producers_list.setdefault( 'host_ip' , {} )
+                host_ip_list = host_ip.setdefault( group['host_ip'], {} )
+
+                if group['next_hop'] != '\\':
+                    host_ip_list.update({
+                        'eth_tag': int(group['eth_tag']),
+                        'mac_addr': group['mac_addr']
+                    })
+                    next_hops = host_ip_list.setdefault('next_hops', [])
+                    next_hops.append(group['next_hop'])
+                else:
+                    eth_tag = int(group['eth_tag'])
+                    mac_addr = group['mac_addr']
+                    next_hop_in_newline = True
+
+                continue
+
+            # Et0/1:11
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if next_hop_in_newline:
+                    host_ip_list.update({
+                        'eth_tag': eth_tag,
+                        'mac_addr': mac_addr
+                    })
+                    next_hops = host_ip_list.setdefault('next_hops', [])
+                    next_hops.append(group['next_hop'])
+                next_hop_in_newline = False
+                continue
+
+        if not header_found:
+            return ({})
         return (parser_dict)
