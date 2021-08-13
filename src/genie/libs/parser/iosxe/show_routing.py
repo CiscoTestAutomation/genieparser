@@ -1953,6 +1953,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('isis', {})
+                # isis can have no area-tag defined
                 if instance:
                     vrf_rs_dict['isis'][instance].update(group)
                 else:

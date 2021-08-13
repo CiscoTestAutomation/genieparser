@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Modified ShowIpRouteSummary:
-        * Allow ISIS to have no tag
+        * Allow ISIS to use no/null area-tag
