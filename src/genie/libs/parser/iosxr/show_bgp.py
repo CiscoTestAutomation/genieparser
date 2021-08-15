@@ -5062,6 +5062,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                            r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
+        # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
                            r' +(?P<path>[0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
@@ -5081,10 +5082,11 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))?'
+                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
                          r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
+        #                                                                 65107.65107 ?
         p17 = re.compile(r'(?P<path>[\d\.\s]+)'
                          r' *(?P<origin_codes>(i|e|\?))?$')
 
@@ -5261,6 +5263,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # 2219             0 200 33299 51178 47751 {27016} e
+            # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
             m = p16_2.match(line)
             if m:
                 group = m.groupdict()
@@ -5311,8 +5314,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 
                 # Parse and set the numbers
                 group_num = group['number']
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
-                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
+                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
                 m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
                 m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
                 if m1:
@@ -5336,7 +5339,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     pfx_dict['weight'] = m4.groupdict()['weight']
                 continue
 
-            # 
+            #                                                                 65107.65107 ?
             m = p17.match(line)
             if m:
                 group = m.groupdict()
