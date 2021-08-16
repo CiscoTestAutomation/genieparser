@@ -241,6 +241,5 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
                 log_dict.update({'sync': groups['sync']})
                 continue
             
-
         return event_history_msgs_dict
 
