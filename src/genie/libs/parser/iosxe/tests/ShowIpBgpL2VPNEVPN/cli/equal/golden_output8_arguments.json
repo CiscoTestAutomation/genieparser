@@ -1,6 +1,0 @@
-{
-    "address_family": "l2vpn evpn",
-    "rt": "4",
-    "esi": "03AABB00000002000001",
-    "ip": "3.3.3.3"
-}

@@ -1,6 +1,0 @@
-Target               Type  Policy               Feature         Target range
-Twe1/0/42            PORT  test                 Device-tracking  vlan all
-Twe1/0/42            PORT  test1                Source guard     vlan all
-Twe1/0/42            PORT  asdf                 RA guard         vlan all
-vlan 39              VLAN  test1                Device-tracking  vlan all
-vlan 102             VLAN  DT-PROGRAMMATIC      Device-tracking  vlan all

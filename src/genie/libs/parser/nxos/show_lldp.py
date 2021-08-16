@@ -89,7 +89,6 @@ class ShowLldpTimersSchema(MetaParser):
         Optional('notification_interval'): int
     }
 
-
 class ShowLldpTimers(ShowLldpTimersSchema):
     """parser for show lldp timers"""
     cli_command = 'show lldp timers'
@@ -267,10 +266,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         p6_2 = re.compile(r'^(?P<compiled_by>Compiled +.+)$')
         # Technical Support: http://www.cisco.com/techsupport
         p6_3 = re.compile(r'^(?P<technical_support>(Technical|TAC) (S|s)upport: +.+)$')
-
-        # "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n"
-        p6_xr_0 = re.compile(r'(?P<is_iosxr>(IOS XR))')
-
         # Time remaining: 95 seconds
         p7 = re.compile(r'^Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # System Capabilities: B, R
@@ -310,7 +305,8 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                port_id = group['port_id']
+                port_id = Common.convert_intf_name(group['port_id'])
+                tmp_port_id = port_id
                 continue
             # Local Port id: Eth1/2
             m = p3.match(line)
@@ -318,16 +314,18 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 sub_dict = {}
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group['local_port_id'])
-                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf,
+                                                                                {})
                 sub_dict.update({'chassis_id': tmp_chassis_id})
-                port_dict = intf_dict.setdefault('port_id', {}).setdefault(port_id, {})
+                port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id,
+                                                                           {})
                 continue
-
             # Port Description: null
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault('port_description', group['port_description'])
+                sub_dict.setdefault('port_description',
+                                    group['port_description'])
                 continue
 
             # System Name: R2_xrv9000
@@ -347,21 +345,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 sub_dict.update({'system_description': group['system_description']})
-
-                # sets ports to contain the dictionary of port_ids
-                # sets port equal to the first port in ports, which should be the only one.
-                ports = intf_dict['port_id']
-                port = list(ports.keys())[0]
-                # detects if system description returns an IOS-XR device
-                # changes the format of the interface to ensure compatibility
-                xr_check = p6_xr_0.search(sub_dict['system_description'])
-                if xr_check:
-                    new_port = Common.convert_intf_name(port, os='iosxr')
-                else:
-                    new_port = Common.convert_intf_name(port)
-
-                ports[new_port] = ports.pop(port)
-
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
@@ -404,7 +387,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     cap = [self.CAPABILITY_CODES[n] for n in cap_list]
                     for item in cap:
                         cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
-                                                                                      {})
+                                                                                    {})
                         cap_dict.update({'name': item})
                         cap_dict.update({'system': True})
                 continue
@@ -456,7 +439,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     m.groupdict()['total_entries'])})
 
                 continue
-
+                
             # VRP (R) software, Version 8.80 (CE6850 V100R003C00SPC600)
             m14 = p14.match(line)
             if m14:
@@ -487,7 +470,7 @@ class ShowLldpTrafficSchema(MetaParser):
             "total_frames_discarded": int,  # Total frames discarded: 0
             'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
             'total_entries_aged': int,  # Total entries aged: 0
-            Optional('total_flap_count'): int  # Total flap count: 1
+            Optional('total_flap_count'): int #  Total flap count: 1
         }
     }
 
@@ -520,7 +503,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
             m = p1.match(line)
             if m:
                 traffic = m.groupdict()
-                traffic_dict = parsed_dict.setdefault('counters', {})
+                traffic_dict=parsed_dict.setdefault('counters',{})
                 traffic_key = traffic['pattern'].replace(' ', '_').lower()
                 traffic_value = int(traffic['value'])
                 traffic_dict.update({traffic_key: traffic_value})

@@ -1,3 +1,0 @@
-    Line          	User	        Host(s)	       Idle Location
-    0 con 0                         idle
-*   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM

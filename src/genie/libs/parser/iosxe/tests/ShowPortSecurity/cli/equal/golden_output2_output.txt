@@ -1,9 +1,0 @@
-Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action
-                (Count)       (Count)          (Count)
----------------------------------------------------------------------------
-    Te2/0/4              5            3                  0         Shutdown
-    Tw3/0/4              4            2                  0         Shutdown
-    Gi4/0/4              3            1                  0         Shutdown
----------------------------------------------------------------------------
-Total Addresses in System (excluding one mac per port)     : 0
-Max Addresses limit in System (excluding one mac per port) : 4096

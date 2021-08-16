@@ -1,7 +1,0 @@
-          Mac Address Table
--------------------------------------------
-
-Vlan    Mac Address       Type        Ports
-----    -----------       --------    -----
-1000    f87a.4125.2702    DYNAMIC     Hu1/0/3
-1000    f87a.4125.2703    DYNAMIC     Hu1/0/4

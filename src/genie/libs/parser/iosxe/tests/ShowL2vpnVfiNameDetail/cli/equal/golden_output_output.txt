@@ -1,9 +1,0 @@
-Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
-
-VFI name: vpls, state: up, type: multipoint, signaling: LDP
-  VPN ID: 1000
-  Bridge-Domain 1000 attachment circuits:
-  Pseudo-port interface: pseudowire100007
-  Interface          Peer Address     VC ID        S
-  pseudowire22       192.168.255.3    1000         Y
-  pseudowire11       192.168.255.2    1000         Y

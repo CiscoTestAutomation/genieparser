@@ -14,7 +14,6 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers, \
     ShowLldpTlvSelect, ShowLldpNeighborsDetail, ShowLldpTraffic
 
-
 # =================================
 # Unit test for 'show lldp all'
 # =================================
@@ -96,7 +95,7 @@ class TestShowLldpTimers(unittest.TestCase):
             Hold multiplier in seconds: 4
             Notification interval in seconds: 5
     '''
-                       }
+    }
 
     golden_parsed_output_1 = {
         'hello_timer': 30,
@@ -127,7 +126,6 @@ class TestShowLldpTimers(unittest.TestCase):
         obj = ShowLldpTimers(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
 
 # =================================
 # Unit test for 'show lldp tlv-select'
@@ -201,8 +199,8 @@ class TestShowLldpTraffic(unittest.TestCase):
             Total frames discarded: 0
             Total unrecognized TLVs: 0
     '''
-                     }
-
+    }
+    
     golden_output_1 = {'execute.return_value': '''
         LLDP traffic statistics: 
 
@@ -214,7 +212,7 @@ class TestShowLldpTraffic(unittest.TestCase):
             Total unrecognized TLVs: 0
             Total flap count: 1
     '''
-                       }
+    }
 
     golden_parsed_output_1 = {
         'counters': {
@@ -248,7 +246,6 @@ class TestShowLldpTraffic(unittest.TestCase):
         obj = ShowLldpTraffic(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
 
 if __name__ == '__main__':
     unittest.main()

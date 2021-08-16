@@ -1,6 +1,0 @@
-Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action
-                (Count)       (Count)          (Count)
----------------------------------------------------------------------------
----------------------------------------------------------------------------
-Total Addresses in System (excluding one mac per port)     : 0
-Max Addresses limit in System (excluding one mac per port) : 4096

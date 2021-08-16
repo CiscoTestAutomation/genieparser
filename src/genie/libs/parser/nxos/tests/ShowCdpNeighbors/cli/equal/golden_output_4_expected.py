@@ -49,22 +49,6 @@ expected_output = {
                 "platform": "HPE 2200AF-48 B",
                 "port_id": "TenGigabitEthernet2/0/20",
             },
-            7: {
-                "capability": "R S H",
-                "device_id": "shkothap-lnx",
-                "hold_time": 119,
-                "local_interface": "Ethernet1/1/1",
-                "platform": "Linux",
-                "port_id": "Enp2s0"
-            },
-            8: {
-                "capability": "R S H",
-                "device_id": "shkothap-lnx.cisco.com",
-                "hold_time": 119,
-                "local_interface": "Ethernet1/1/2",
-                "platform": "Linux",
-                "port_id": "Enp2s1"
-            },
         }
     }
 }

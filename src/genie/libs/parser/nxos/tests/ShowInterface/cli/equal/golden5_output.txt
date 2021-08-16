@@ -1,7 +1,0 @@
-abc-defg# show int eth1/10
-
-        Ethernet1/10 is down (Link not connected)
-
-        admin state is up, Dedicated Interface
-
-          Hardware: 100/1000/10000 Ethernet, address: 1234.12ff.df07 (bia 1234.12ff.df07)

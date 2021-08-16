@@ -37,5 +37,5 @@ class ShowIpv6ProtocolsSectionRip(ShowIpv6ProtocolsSectionRip_iosxe):
 
 
 class ShowIpv6Protocols(ShowIpv6Protocols_iosxe):
-	''' Parser for "show ipv6 protocols" '''
-	pass
+    ''' Parser for "show ipv6 protocols" '''
+    pass

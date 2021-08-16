@@ -113,38 +113,7 @@ expected_output = {
                             'source_protocol_status': 'internal',
                             'tag': 64513,
                             'ubest': 1,
-                        },
-                        '10.1.111.0/24': {
-                            'active': True,
-                            'mbest': 0,
-                            'metric': 2000,
-                            'next_hop': {
-                                'next_hop_list': {
-                                    1: {
-                                        'best_ucast_nexthop': True,
-                                        'index': 1,
-                                        'metric': 2000,
-                                        'next_hop': '10.84.66.66',
-                                        'next_hop_vrf': 'default',
-                                        'route_preference': 200,
-                                        'source_protocol': 'bgp',
-                                        'source_protocol_status': 'internal',
-                                        'updated': '00:20:43',
-                                        'segid': 601011,
-                                        'asymmetric': True,
-                                        'tunnelid': '0x64646401',
-                                        'encap': 'vxlan',
-                                    },
-                                },
-                            },
-                            'process_id': '100',
-                            'route': '10.1.111.0/24',
-                            'route_preference': 200,
-                            'source_protocol': 'bgp',
-                            'source_protocol_status': 'internal',
-                            'tag': 200,
-                            'ubest': 1,
-                        },                        
+                        },                                                               
                     }
                 }
             }

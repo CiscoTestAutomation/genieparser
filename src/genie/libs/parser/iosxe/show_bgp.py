@@ -580,9 +580,8 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
         * 'show bgp {address_family} all'
     '''
 
-    cli_command = ['show bgp {address_family} all', 
-                    'show bgp all',
-                    ]
+    cli_command = ['show bgp {address_family} all', 'show bgp all']
+                   
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
@@ -820,24 +819,6 @@ class ShowBgpAllDetailSchema(MetaParser):
                                         Optional('available_path'): str,
                                         Optional('best_path'): str,
                                         Optional('table_version'): str,
-                                        Optional('nlri_data'):
-                                            {Optional('route-type'): str,
-                                             Optional('rd'): str,
-                                             Optional('esi'): str,
-                                             Optional('eti'): str,
-                                             Optional('mac_len'): str,
-                                             Optional('mac'): str,
-                                             Optional('ip_len'): str,
-                                             Optional('ip_prefix'): str,
-                                             Optional('orig_rtr_len'): str,
-                                             Optional('orig_rtr_id'): str,
-                                             Optional('mcast_src_len'): str,
-                                             Optional('mcast_src'): str,
-                                             Optional('mcast_group_len'): str,
-                                             Optional('mcast_group_addr'): str,
-                                             Optional('max_resp_time'): str,
-                                             Optional('subnet'): str
-                                            },
                                         Optional('index'):
                                             {Any():
                                                 {
@@ -868,24 +849,12 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('aggregated_by_as'): str,
                                                 Optional('aggregated_by_address'): str,
                                                 Optional('community'): str,
-                                                Optional('igmpmld'):
-                                                    {Optional('version'): str,
-                                                    Optional('filter_mode'): str
-                                                    },
                                                 Optional('ext_community'): str,
                                                 Optional('recursive_via_connected'): bool,
                                                 Optional('agi_version'): int,
                                                 Optional('ve_block_size'): int,
                                                 Optional('label_base'): int,
                                                 Optional('cluster_list'): str,
-                                                Optional('pmsi'):
-                                                    {Optional('tun_type'): str,
-                                                     Optional('vni'): str,
-                                                     Optional('tun_id'):
-                                                         {Optional('tun_endpoint'): str,
-                                                          Optional('local'): bool,
-                                                         }
-                                                    },
                                                 Optional('evpn'):
                                                     {Optional('ext_community'): str,
                                                     Optional('encap'): str,
@@ -937,7 +906,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         * 'show ip bgp {address_family} rd {rd} detail'
     '''
 
-    def cli(self, address_family='', vrf='', rd='', evi='', rt='', output=None):
+    def cli(self, address_family='', vrf='', rd='', output=None):
         # Init dictionary
         ret_dict = {}
         subdict = ''
@@ -955,7 +924,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch = None
         cmd_vrf = vrf if vrf else None
         default_vrf = None
-        nlri_data = {}
+
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^For +address +family:'
@@ -1001,11 +970,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         p3_2 = re.compile(r'^BGP +routing +table +entry +for'
                           r' +(?:(?P<rd>([0-9\:\[\]]+)))?:(?P<router_id>(\S+)),?'
                           r' +version +(?P<version>(\d+))$')
-
-        # BGP routing table entry for [route_type][rd][...][...][...], version 48
-        p3_3 = re.compile(r'^BGP +routing +table +entry +for'
-                          r' +(?P<router_id>(\[[0-9]\]\[[0-9\.]+[\:][0-9]+\](\[.+\])+[\/][0-9]+))\, +version '
-                          r'+(?P<prefix_table_version>[0-9]+)$')
 
         # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
         # 10.16.2.2 (metric 11) (via default) from 10.16.2.2 (10.16.2.2)
@@ -1071,11 +1035,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Originator: 192.168.165.220, Cluster list: 0.0.0.61
         p8_5 = re.compile(r'^\s*Originator: +(?P<originator>(\S+)),'
                           r' +Cluster +list: +(?P<cluster_list>(\S+))$')
-        
-        p8_6 = re.compile(r'^\s*PMSI Attribute: Flags.*'
-                          r'Tunnel type:(?P<tun_type>.+),'
-                          r' length.+vni:(?P<vni>.+)'
-                          r' tunnel identifier: ((< Tunnel Endpoint: (?P<tun_endpoint>.+) >)|(?P<local>0000 0000))$')
 
         # rx pathid: 0, tx pathid: 0
         p9 = re.compile(r'^rx +pathid\: +(?P<recipient_pathid>[0-9x]+)\,'
@@ -1090,17 +1049,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                          r'\, +[L|l]abel +(?P<label>[0-9]+)$')
 
         # Local vxlan vtep:
-        # Local irb vxlan vtep
-        p11 = re.compile(r'^Local\s+(irb\s+)?vxlan\s+vtep\:$')
+        p11 = re.compile(r'^Local +vxlan +vtep\:$')
 
         # bdi:BDI200
-        # core-bdi:BDI200
-        p12 = re.compile(r'^(core-)?bdi\:(?P<bdi>[A-Z0-9]+)$')
+        p12 = re.compile(r'^bdi\:(?P<bdi>[A-Z0-9]+)$')
 
         # vrf:evpn1, vni:30000
-        # vrf:evpn1, l3-vni:30000
         p13 = re.compile(r'^vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
-                         r'\s+(.+-)?vni\:(?P<vni>[0-9]+)$')
+                         r' +vni\:(?P<vni>[0-9]+)$')
 
         # local router mac:001E.7AFF.FCD2
         p14 = re.compile(r'^local +router +mac\:'
@@ -1131,11 +1087,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # mpls labels in/out nolabel/64402
         p18 = re.compile(r'^mpls +labels +in\/out +(?P<in>\w+)\/(?P<out>\w+)$')
 
-        # IGMP/MLD v1/v2/v3, exclude, max response time:
-        p19 = re.compile(r'^IGMP/MLD\s+(?P<version>v\d)(,\s+(?P<filter_mode>\w+))?$')
-
         for line in output.splitlines():
             line = line.strip()
+
             # For address family: IPv4 Unicast
             # For address family: L2VPN E-VPN
             m = p1.match(line)
@@ -1202,8 +1156,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
                     # Adding the keys we got from 'BGP routing table' line
                     new_addr_family_dict['prefixes'][prefixes]['table_version'] = prefix_table_version
-                    if nlri_data:
-                        new_addr_family_dict['prefixes'][prefixes]['nlri_data'] = nlri_data
 
                     # Adding the keys we got from 'Route Distinguisher' line
                     if route_distinguisher:
@@ -1226,9 +1178,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     address_family_dict[address_family]['prefixes']\
                         [prefixes]['table_version'] = prefix_table_version
 
-                    if nlri_data:
-                        address_family_dict[address_family]['prefixes']\
-                            [prefixes]['nlri_data'] = nlri_data
                     # Adding the keys we got from 'Route Distinguisher' line
                     if route_distinguisher:
                         address_family_dict[address_family]['route_distinguisher'] = route_distinguisher
@@ -1287,226 +1236,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 prefixes = prefixes.replace(']', '')
                 prefix_table_version = m.groupdict()['version']
                 continue
-            
-            # For all EVPN route-types 1-8
-            # BGP routing table entry for [1][2.2.2.2:1000][AAAABBBBCCCCDDDDEEEE][10000]/23, version 26
-            # BGP routing table entry for [2][120:120][0][40][AABBCCDDEF00][0][*]/20, version 35
-            # BGP routing table entry for [2][2.2.2.2:1000][10000][48][022651BDC81C][32][0.0.0.0]/24, version 28
-            # BGP routing table entry for [2][22.2.2.2:1000][10000][48][022651BDC81C][128][1000::1]/36, version 36
-            # BGP routing table entry for [3][40.0.0.3:164][0][32][40.0.0.3]/17, version 30
-            # BGP routing table entry for [4][2.2.2.2:1000][AAAABBBBCCCCDDDDEEEE][32]/23, version 32
-            # BGP routing table entry for [5][100:100][4231][32][1.1.1.1]/17, version 37
-            # BGP routing table entry for [5][20.0.0.1:31000][0][32][250.250.250.22]/17, version 34
-            # BGP routing table entry for [6][7.7.7.7:11][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1]/27, version 27
-            # BGP routing table entry for [6][117901063:11][0][128][A0A:A0A:A0A:A0A:A0A:A0A:A0A:A0A][128][1300:6501:1300:6501:1300:6501:1300:6501][128][E000:1:E000:1:E000:1:E000:1]/63, version 33
-            # BGP routing table entry for [7][7.7.7.7:11][0000000000AABBCCDDEE][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1]/37, version 29
-            # BGP routing table entry for [8][7.7.7.7:11][0000000000AABBCCDDEE][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1][4112]/41, version 31
-            m = p3_3.match(line)
-            if m:
-                nlri_data = {}
-                update_group = 0
-                index = 0
-                prefixes = m.groupdict()['router_id']
-                if prefixes.startswith('[6]'):
-                    # BGP routing table entry for [6][7.7.7.7:11][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1]/27, version 27
-                    # BGP routing table entry for [6][117901063:11][0][128][A0A:A0A:A0A:A0A:A0A:A0A:A0A:A0A][128][1300:6501:1300:6501:1300:6501:1300:6501][128][E000:1:E000:1:E000:1:E000:1]/63, version 33
-                    rt6_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<mcast_src_len>[0-9]+)\]'
-                                                '(\[(?P<mcast_src>.+)\])?'
-                                                '\[(?P<mcast_group_len>[0-9]+)\]'
-                                                '\[(?P<mcast_group_addr>.+)\]'
-                                                '\[(?P<orig_rtr_len>[0-9]+)\]'
-                                                '\[(?P<orig_rtr_id>.+)\]'
-                                                '\/(?P<subnet>[0-9]+)')
-                    rt6_mo = rt6_prefix_re.match(prefixes)
-                    if rt6_mo:
-                        rt6_dict = rt6_mo.groupdict()
-                        nlri_data['route-type'] = '6'
-                        nlri_data['rd'] = rt6_dict['rd']
-                        nlri_data['eti'] = rt6_dict['eti']
-                        nlri_data['mcast_src_len'] = rt6_dict['mcast_src_len']
-                        if int(rt6_dict['mcast_src_len']) > 0:
-                            if rt6_dict['mcast_src']:
-                                nlri_data['mcast_src'] = rt6_dict['mcast_src']
-                        nlri_data['mcast_group_len'] = rt6_dict['mcast_group_len']
-                        nlri_data['mcast_group_addr'] = rt6_dict['mcast_group_addr']
-                        nlri_data['orig_rtr_len'] = rt6_dict['orig_rtr_len']
-                        nlri_data['orig_rtr_id'] = rt6_dict['orig_rtr_id']
-                        nlri_data['subnet'] = rt6_dict['subnet']
-
-                elif prefixes.startswith('[3]'):
-                    # BGP routing table entry for [3][40.0.0.3:164][0][32][40.0.0.3]/17, version 30
-                    rt3_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<ip_len>[0-9]+)\]'
-                                                '(\[(?P<orig_rtr_id>.+)\])?'
-                                                '\/(?P<subnet>[0-9]+)')
-                    rt3_mo = rt3_prefix_re.match(prefixes)
-                    if rt3_mo:
-                        rt3_dict = rt3_mo.groupdict()
-                        nlri_data['route-type'] = '3'
-                        nlri_data['rd'] = rt3_dict['rd']
-                        nlri_data['eti'] = rt3_dict['eti']
-                        nlri_data['ip_len'] = rt3_dict['ip_len']
-                        if rt3_dict['orig_rtr_id']:
-                            nlri_data['orig_rtr_id'] = rt3_dict['orig_rtr_id']
-                        nlri_data['subnet'] = rt3_dict['subnet']
-                        
-                elif prefixes.startswith('[1]'):
-                    # BGP routing table entry for [1][2.2.2.2:1000][AAAABBBBCCCCDDDDEEEE][10000]/23, version 26
-                    rt1_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<esi>.+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\/(?P<subnet>[0-9]+)')
-                    rt1_mo = rt1_prefix_re.match(prefixes)
-                    if rt1_mo:
-                        rt1_dict = rt1_mo.groupdict()
-                        nlri_data['route-type'] = '1'
-                        nlri_data['rd'] = rt1_dict['rd']
-                        nlri_data['esi'] = rt1_dict['esi']
-                        nlri_data['eti'] = rt1_dict['eti']
-                        nlri_data['subnet'] = rt1_dict['subnet']
-
-                elif prefixes.startswith('[2]'):
-                    # BGP routing table entry for [2][2.2.2.2:1000][10000][48][022651BDC81C][32][0.0.0.0]/24, version 28
-                    # BGP routing table entry for [2][22.2.2.2:1000][10000][48][022651BDC81C][128][1000::1]/36, version 36
-                    rt2_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<mac_len>[0-9]+)\]'
-                                                '\[(?P<mac>.+)\]'
-                                                '\[(?P<ip_len>[0-9]+)\]'
-                                                '(\[(?P<ip_prefix>.+)\])?'
-                                                '\/(?P<subnet>[0-9]+)')
-                    
-                    rt2_mo = rt2_prefix_re.match(prefixes)
-                    if rt2_mo:
-                        rt2_dict = rt2_mo.groupdict()
-                        nlri_data['route-type'] = '2'
-                        nlri_data['rd'] = rt2_dict['rd']
-                        nlri_data['eti'] = rt2_dict['eti']
-                        nlri_data['mac_len'] = rt2_dict['mac_len']
-                        nlri_data['mac'] = rt2_dict['mac']
-                        nlri_data['ip_len'] = rt2_dict['ip_len']
-                        if int(rt2_dict['ip_len']) > 0:
-                            if rt2_dict['ip_prefix']:
-                                nlri_data['ip_prefix'] = rt2_dict['ip_prefix']
-                        nlri_data['subnet'] = rt2_dict['subnet']
-
-                elif prefixes.startswith('[4]'):
-                    # BGP routing table entry for [4][2.2.2.2:1000][AAAABBBBCCCCDDDDEEEE][32]/23, version 32
-                    rt4_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<esi>.+)\]'
-                                                '\[(?P<ip_len>[0-9]+)\]'
-                                                '(\[(?P<orig_rtr_id>.+)\])?'
-                                                '\/(?P<subnet>[0-9]+)')
-                    
-                    rt4_mo = rt4_prefix_re.match(prefixes)
-                    if rt4_mo:
-                        rt4_dict = rt4_mo.groupdict()
-                        nlri_data['route-type'] = '4'
-                        nlri_data['rd'] = rt4_dict['rd']
-                        nlri_data['esi'] = rt4_dict['esi']
-                        nlri_data['ip_len'] = rt4_dict['ip_len']
-                        if rt4_dict['orig_rtr_id']:
-                            nlri_data['orig_rtr_id'] = rt4_dict['orig_rtr_id']
-                        nlri_data['subnet'] = rt4_dict['subnet']
-
-                elif prefixes.startswith('[5]'):
-                    # BGP routing table entry for [5][100:100][4231][32][1.1.1.1]/17, version 37
-                    # BGP routing table entry for [5][20.0.0.1:31000][0][32][250.250.250.22]/17, version 34
-                    rt5_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<ip_len>[0-9]+)\]'
-                                                '(\[(?P<ip_prefix>.+)\])?'
-                                                '\/(?P<subnet>[0-9]+)')
-                    
-                    rt5_mo = rt5_prefix_re.match(prefixes)
-                    if rt5_mo:
-                        rt5_dict = rt5_mo.groupdict()
-                        nlri_data['route-type'] = '5'
-                        nlri_data['rd'] = rt5_dict['rd']
-                        nlri_data['eti'] = rt5_dict['eti']
-                        nlri_data['ip_len'] = rt5_dict['ip_len']
-                        if int(rt5_dict['ip_len']) > 0:
-                            if rt5_dict['ip_prefix']:
-                                nlri_data['ip_prefix'] = rt5_dict['ip_prefix']
-                        nlri_data['subnet'] = rt5_dict['subnet']
-
-                elif prefixes.startswith('[7]'):
-                    # BGP routing table entry for [7][7.7.7.7:11][0000000000AABBCCDDEE][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1]/37, version 29
-                    rt7_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<esi>.+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<mcast_src_len>[0-9]+)\]'
-                                                '(\[(?P<mcast_src>.+)\])?'
-                                                '\[(?P<mcast_group_len>[0-9]+)\]'
-                                                '\[(?P<mcast_group_addr>.+)\]'
-                                                '\[(?P<orig_rtr_len>[0-9]+)\]'
-                                                '\[(?P<orig_rtr_id>.+)\]'
-                                                '\/(?P<subnet>[0-9]+)')
-
-                    rt7_mo = rt7_prefix_re.match(prefixes)
-                    if rt7_mo:
-                        rt7_dict = rt7_mo.groupdict()
-                        nlri_data['route-type'] = '7'
-                        nlri_data['rd'] = rt7_dict['rd']
-                        nlri_data['esi'] = rt7_dict['esi']
-                        nlri_data['eti'] = rt7_dict['eti']
-                        nlri_data['mcast_src_len'] = rt7_dict['mcast_src_len']
-                        if int(rt7_dict['mcast_src_len']) > 0:
-                            if rt7_dict['mcast_src']:
-                                nlri_data['mcast_src'] = rt7_dict['mcast_src']
-                        nlri_data['mcast_group_len'] = rt7_dict['mcast_group_len']
-                        nlri_data['mcast_group_addr'] = rt7_dict['mcast_group_addr']
-                        nlri_data['orig_rtr_len'] = rt7_dict['orig_rtr_len']
-                        nlri_data['orig_rtr_id'] = rt7_dict['orig_rtr_id']
-                        nlri_data['subnet'] = rt7_dict['subnet']
-
-                elif prefixes.startswith('[8]'):
-                    # BGP routing table entry for [8][7.7.7.7:11][0000000000AABBCCDDEE][0][32][10.10.10.10][32][19.0.101.1][32][224.0.0.1][4112]/41, version 31
-                    rt8_prefix_re = re.compile(r'\[(?P<rt>[0-9])\]'
-                                                '\[(?P<rd>[0-9\.]+[\:][0-9]+)\]'
-                                                '\[(?P<esi>.+)\]'
-                                                '\[(?P<eti>[0-9]+)\]'
-                                                '\[(?P<mcast_src_len>[0-9]+)\]'
-                                                '(\[(?P<mcast_src>.+)\])?'
-                                                '\[(?P<mcast_group_len>[0-9]+)\]'
-                                                '\[(?P<mcast_group_addr>.+)\]'
-                                                '\[(?P<orig_rtr_len>[0-9]+)\]'
-                                                '\[(?P<orig_rtr_id>.+)\]'
-                                                '\[(?P<max_resp_time>[0-9]+)\]'
-                                                '\/(?P<subnet>[0-9]+)')
-
-                    rt8_mo = rt8_prefix_re.match(prefixes)
-                    if rt8_mo:
-                        rt8_dict = rt8_mo.groupdict()
-                        nlri_data['route-type'] = '8'
-                        nlri_data['rd'] = rt8_dict['rd']
-                        nlri_data['esi'] = rt8_dict['esi']
-                        nlri_data['eti'] = rt8_dict['eti']
-                        nlri_data['mcast_src_len'] = rt8_dict['mcast_src_len']
-                        if int(rt8_dict['mcast_src_len']) > 0:
-                            if rt8_dict['mcast_src']:
-                                nlri_data['mcast_src'] = rt8_dict['mcast_src']
-                        nlri_data['mcast_group_len'] = rt8_dict['mcast_group_len']
-                        nlri_data['mcast_group_addr'] = rt8_dict['mcast_group_addr']
-                        nlri_data['orig_rtr_len'] = rt8_dict['orig_rtr_len']
-                        nlri_data['orig_rtr_id'] = rt8_dict['orig_rtr_id']
-                        nlri_data['max_resp_time'] = rt8_dict['max_resp_time']
-                        nlri_data['subnet'] = rt8_dict['subnet']
-
-
-                prefix_table_version = m.groupdict()['prefix_table_version']
-                continue
-            
             # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
             # 10.16.2.2 (metric 11) (via default) from 10.16.2.2 (10.16.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
@@ -1724,17 +1453,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['cluster_list'] = m.groupdict()['cluster_list']
                 continue
 
-            m = p8_6.match(line)
-            if m:
-                subdict['pmsi'] = {}
-                subdict['pmsi']['tun_type'] = m.groupdict()['tun_type']
-                subdict['pmsi']['vni'] = m.groupdict()['vni']
-                subdict['pmsi']['tun_id'] = {}
-                if m.groupdict()['tun_endpoint'] is not None:
-                    subdict['pmsi']['tun_id']['tun_endpoint'] = m.groupdict()['tun_endpoint']
-                if m.groupdict()['local'] is not None:
-                    subdict['pmsi']['tun_id']['local'] = True
-
             # rx pathid: 0, tx pathid: 0
             m = p9.match(line)
             if m:
@@ -1750,19 +1468,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 mpls_labels_dict = subdict.setdefault('mpls_labels', {})
                 mpls_labels_dict.update({'in': group['in']})
                 mpls_labels_dict.update({'out': group['out']})
-                continue
-
-            # IGMP/MLD v3, exclude
-            # IGMP/MLD v3, include
-            # IGMP/MLD v2
-            # IGMP/MLD v1
-            m = p19.match(line)
-            if m:
-                subdict['igmpmld'] = {}
-                group = m.groupdict()
-                subdict['igmpmld']['version'] = group['version']
-                if group['filter_mode']:
-                    subdict['igmpmld']['filter_mode'] = group['filter_mode']
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
@@ -2016,95 +1721,6 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
         return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
-
-# ====================================================
-# Parser for:
-#   * 'show ip bgp {address_family} detail'
-#   * 'show ip bgp {address_family} evi {evi}'
-#   * 'show ip bgp {address_family} route-type {rt}'
-#   * 'show ip bgp {address_family} evi {evi} route-type {rt}'
-# ====================================================
-class ShowIpBgpL2VPNEVPN(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
-    ''' Parser for:
-          * 'show ip bgp {address_family} detail'
-          * 'show ip bgp {address_family} {evi}'
-          * 'show ip bgp {address_family} route-type {rt}'
-          * 'show ip bgp {address_family} evi {evi} route-type {rt}'
-          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {mpls_label}'
-          * 'show ip bgp {address_family} route-type {rt} {esi} {eti}'
-          * 'show ip bgp {address_family} route-type {rt} {esi}'
-          * 'show ip bgp {address_family} route-type {rt} {eti} {mac} {ip}'
-          * 'show ip bgp {address_family} route-type {rt} {eti} {ip}'
-          * 'show ip bgp {address_family} route-type {rt} {esi} {ip}'
-          * 'show ip bgp {address_family} route-type {rt} {eti} {ip} {ip_len}'
-          * 'show ip bgp {address_family} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}'
-          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}'
-          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}'
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mpls_label}', # RT1
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti}', # RT1
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi}', # RT1
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {mac} {ip}', # RT2
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip}', # RT3
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {ip}', # RT4 
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip} {ip_len}', # RT5 
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
-          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mac} {ip}'
-    '''
-    cli_command = ['show ip bgp {address_family} detail',
-                    'show ip bgp {address_family} evi {evi}',
-                    'show ip bgp {address_family} route-type {rt}',
-                    'show ip bgp {address_family} evi {evi} route-type {rt}',
-                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {mpls_label}', # RT1
-                    'show ip bgp {address_family} route-type {rt} {esi} {eti}', # RT1
-                    'show ip bgp {address_family} route-type {rt} {esi}', # RT1
-                    'show ip bgp {address_family} route-type {rt} {eti} {mac} {ip}', # RT2
-                    'show ip bgp {address_family} route-type {rt} {eti} {ip}', # RT3
-                    'show ip bgp {address_family} route-type {rt} {esi} {ip}', # RT4 
-                    'show ip bgp {address_family} route-type {rt} {eti} {ip} {ip_len}', # RT5 
-                    'show ip bgp {address_family} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
-                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
-                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mpls_label}', # RT1
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti}', # RT1
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi}', # RT1
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {mac} {ip}', # RT2
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip}', # RT3
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {ip}', # RT4 
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip} {ip_len}', # RT5 
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
-                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mac} {ip}']
-
-    def cli(self, address_family='', evi='', rt='', output=None, **kwargs):
-        if output is None:
-            if evi and rt:
-                cmd = self.cli_command[3].format(address_family='l2vpn evpn', evi=evi, rt=rt)
-            elif rt and not evi:
-                cmd = self.cli_command[2].format(address_family='l2vpn evpn', rt=rt)
-            elif not rt and evi:
-                cmd = self.cli_command[1].format(address_family='l2vpn evpn', evi=evi)
-            else:
-                cmd = self.cli_command[0].format(address_family='l2vpn evpn')
-
-            for arg in ['esi', 'eti', 'mac', 'mpls_label', 'ip', 'ip_len', 'src_ip', 'group_ip', 'orig_ip', 'lg_sync']:
-                    if arg in kwargs and kwargs[arg]:
-                        cmd += ' {}'.format(kwargs[arg])
-
-            # import pdb; pdb.set_trace()
-            output = self.device.execute(cmd)
-
-        show_output = output
-        if evi and rt:
-            return super().cli(address_family='l2vpn evpn', evi=evi, rt=rt, output=show_output)
-        elif rt and not evi:
-            return super().cli(address_family='l2vpn evpn', rt=rt, output=show_output)
-        elif not rt and evi:
-            return super().cli(address_family='l2vpn evpn', evi=evi, output=show_output)
-        else:
-            return super().cli(address_family='l2vpn evpn', output=show_output)
 
 #-------------------------------------------------------------------------------
 
@@ -2401,9 +2017,16 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             m = p2.match(line)
             if m:
                 route_identifier = m.groupdict()['route_identifier']
-                local_as = int(m.groupdict()['local_as'])
 
+                local_as = str(m.groupdict()['local_as'])
+                # Coversion to BGP ASN 4260036636(AS-PLAIN) from 65003.28(AS-COLON)
+                if '.' in local_as:
+                    val = local_as.split('.')
+                    local_as = 65536*int(val[0])+int(val[1])
+                else:
+                    local_as = int(local_as)
                 sum_dict['bgp_id'] = local_as
+                
                 continue
 
             # BGP table version is 28, main routing table version 28

@@ -1,2 +1,0 @@
-     Interface                 VRF-Name                        VRF-ID  Site-of-Origin
-    port-channel1101          default                              1  --
