@@ -18,5 +18,3 @@
 [18] 2021 May 18 03:13:17.423021 [hsrp_engine] E_DEBUG    [24530]:Engine Demux: Info='Unexpected MTS message', Opcode=7972
 [19] 2021 May 18 03:13:17.422138 [hsrp_engine] E_DEBUG    [24530]:Engine Demux: Info='Unexpected MTS message', Opcode=409604
 [20] 2021 May 18 03:13:17.389821 [hsrp_engine] E_DEBUG    [24530]:(Acast) Get Bundle For IOD Failed: Reason='No bundle found for VLAN', AddrType=IPv6, VLAN=3
-[21] 2021 May 18 03:13:17.389804 [hsrp_engine] E_DEBUG    [24530]:(Acast) Get Bundle For IOD Failed: Reason='No bundle found for VLAN', AddrType=IPv4, VLAN=3
-[22] 2021 May 18 03:13:17.388826 [hsrp_engine] E_DEBUG    [24530]:Engine Demux: Info='Unexpected MTS message', Opcode=409604
