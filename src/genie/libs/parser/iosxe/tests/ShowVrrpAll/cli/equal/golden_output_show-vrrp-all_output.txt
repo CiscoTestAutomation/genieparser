@@ -22,3 +22,35 @@ GigabitEthernet3.415 - Group 13
   Master Advertisement interval is 1.000 sec
   Master Down interval is 3.609 sec
   FLAGS: 1/1
+
+GigabitEthernet1/0/19 - Group 1 - Address-Family IPv4
+  Description is "single_Vrrp"
+  State is MASTER
+  State duration 23.134 secs
+  Virtual IP address is 10.50.10.104
+  Virtual MAC address is 0000.5E00.0101
+  Advertisement interval is 1000 msec
+  Preemption enabled
+  Priority is 100
+  State change reason:2
+  Tloc preference not configured, value 0
+  Master Router is 10.50.10.106 (local), priority is 100
+  Master Advertisement interval is 1000 msec (expires in 441 msec)
+  Master Down interval is unknown
+  FLAGS: 1/1
+
+GigabitEthernet1/0/20 - Group 1 - Address-Family IPv4
+  Description is "single_Vrrp"
+  State is INIT (No Primary virtual IP address configured)
+  State duration 20 mins 5.224 secs
+  Virtual IP address is no address
+  Virtual MAC address is 0000.5E00.0101
+  Advertisement interval is 40950 msec
+  Preemption enabled
+  Priority is 200
+  State change reason:7
+  Tloc preference not configured, value 0
+  Master Router is unknown, priority is unknown
+  Master Advertisement interval is unknown
+  Master Down interval is unknown
+  FLAGS: 0/0
