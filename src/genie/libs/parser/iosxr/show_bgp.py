@@ -4883,7 +4883,7 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                 {Optional('router_identifier'): str,
                                  Optional('vrf_id'): str,
                                  Optional('instance_number'): str,
-                                 Optional('local_as'): int,
+                                 Optional('local_as'): Or(int, str),
                                  Optional('vrf_state'): str,
                                  Optional('bgp_vrf'): str,
                                  Optional('generic_scan_interval'): str,
@@ -5012,8 +5012,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         p5 = re.compile(r'^\s*VRF +ID: +(?P<vrf_id>(\S+))$')
 
         # BGP router identifier 10.4.1.1, local AS number 100
+        # BGP router identifier 10.10.10.108, local AS number 65108.65108
         p6 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
-                        r' +local +AS +number +(?P<local_as>(\d+))$')
+                        r' +local +AS +number +(?P<local_as>([\d\.]+))$')
 
         # BGP generic scan interval 60 secs
         p7 =  re.compile(r'^\s*BGP +generic +scan +interval'
@@ -5061,8 +5062,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                            r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
+        # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
-                           r' +(?P<path>[0-9\{\}\s]+) '
+                           r' +(?P<path>[0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
 
         # Network            Next Hop   Metric LocPrf Weight Path
@@ -5078,12 +5080,14 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+        # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
+                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
-        p17 = re.compile(r'(?P<path>[\d\s]+)'
+        #                                                                 65107.65107 ?
+        p17 = re.compile(r'(?P<path>[\d\.\s]+)'
                          r' *(?P<origin_codes>(i|e|\?))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -5157,11 +5161,16 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # BGP router identifier 10.4.1.1, local AS number 100
+            # BGP router identifier 10.10.10.108, local AS number 65108.65108
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 af_dict['router_identifier'] = group['router_identifier']
-                af_dict['local_as'] = int(group['local_as'])
+              
+                try:
+                    af_dict['local_as']= int(group['local_as'])
+                except:
+                    af_dict['local_as']= group['local_as']
                 continue 
 
             # BGP generic scan interval 60 secs 
@@ -5254,6 +5263,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # 2219             0 200 33299 51178 47751 {27016} e
+            # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
             m = p16_2.match(line)
             if m:
                 group = m.groupdict()
@@ -5283,6 +5293,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
             # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+            # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -5303,9 +5314,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 
                 # Parse and set the numbers
                 group_num = group['number']
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
-                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
-                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>((\d+\s)|(\{\d+\}\s))+)$').match(group_num)
+                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
                 m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
                 if m1:
                     pfx_dict['metric'] = m1.groupdict()['metric']
@@ -5328,7 +5339,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     pfx_dict['weight'] = m4.groupdict()['weight']
                 continue
 
-            # 
+            #                                                                 65107.65107 ?
             m = p17.match(line)
             if m:
                 group = m.groupdict()

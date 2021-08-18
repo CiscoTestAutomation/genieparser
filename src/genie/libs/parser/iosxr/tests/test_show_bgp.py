@@ -9955,6 +9955,8 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         """
     }
 
+
+
     def test_empty1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpInstanceAllAll(device=self.device)
