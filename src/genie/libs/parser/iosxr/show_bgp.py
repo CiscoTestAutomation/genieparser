@@ -5372,7 +5372,7 @@ class ShowBgpSessionsSchema(MetaParser):
                         'neighbors': {
                             Any(): {
                                 'spk': int,
-                                'as_number': int,
+                                'as_number': Or(int, str),
                                 'in_q': int,
                                 'out_q': int,
                                 'nbr_state': str,
@@ -5407,16 +5407,18 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         # 10.36.3.3         default                 0 65000     0     0  Established  None
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
         # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
+        # 10.10.10.107    default                 0 65107.65107     0     0  Established  None
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
-            '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+            '(?P<as_number>[\d\.]+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
             '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
 
         # 2001:db8:4401:4453::6f9
         p1_1 = re.compile(r'^(?P<neighbor>[\w\d:]+)$')
 
         # default 0 65000 0 0 Established NSR Ready
+        #                 default                 0 65107.65107     0     0  Established  None
         p1_2 = re.compile(r'^(?P<vrf>\S+) +(?P<spk>\d+) +'
-                          r'(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+                          r'(?P<as_number>[\d\.]+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
                           r'(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
 
         # BGP instance 0: 'default'
@@ -5434,7 +5436,14 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 vrf = group['vrf']
                 neighbor = group['neighbor']
                 spk = int(group['spk'])
-                as_number = int(group['as_number'])
+
+                as_number = "NA"
+                try:
+                    as_number = int(group['as_number'])
+                except:
+                    as_number = group['as_number']
+
+
                 in_q = int(group['in_q'])
                 out_q = int(group['out_q'])
                 nbr_state = group['nbr_state']
@@ -5473,7 +5482,13 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                                             setdefault(neighbor, {})
 
                 neighbor_dict['spk'] = int(group['spk'])
-                neighbor_dict['as_number'] = int(group['as_number'])
+                
+                neighbor_dict['as_number'] = "NA"
+                try:
+                    neighbor_dict['as_number'] = int(group['as_number'])
+                except:
+                    neighbor_dict['as_number'] = group['as_number']
+
                 neighbor_dict['in_q'] = int(group['in_q'])
                 neighbor_dict['out_q'] = int(group['out_q'])
                 neighbor_dict['nbr_state'] = group['nbr_state']
