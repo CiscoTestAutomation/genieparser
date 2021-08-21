@@ -1021,7 +1021,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('route_distinguisher'): str,
                          Optional('router_id'): str,
                          Optional('as_system_number_format'): str,
-                         Optional('as_number'): int,
+                         Optional('as_number'): Or(int, str),
                          Optional('default_cluster_id'): str,
                          Optional('active_cluster_id'): str,
                          Optional('fast_external_fallover'): bool,
@@ -1206,7 +1206,9 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         '(?P<operation_mode>\w+) *mode$')
         p3 = re.compile(r'^Autonomous *System *number *format: *'
                         '(?P<as_format>[a-zA-Z]+)$')
-        p4 = re.compile(r'^Autonomous *System: *(?P<as_number>[0-9]+)$')
+
+        #Autonomous System: 65108.65108
+        p4 = re.compile(r'^Autonomous *System: *(?P<as_number>[0-9\.]+)$')
         p5 = re.compile(r'^Router *ID: *(?P<router_id>[\w\.\:]+) *'
                         '(\([\w\s]+\))?$')
         p6_1 = re.compile(r'^Default *Cluster *ID: *'
@@ -1416,7 +1418,12 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
             m = p4.match(line)
             if m:
-                as_number = int(m.groupdict()['as_number'])
+                as_number = "NA"
+                try:
+                    as_number = int(m.groupdict()['as_number'])
+                except:
+                    as_number = m.groupdict()['as_number']
+
 
                 ret_dict['instance'][instance]['vrf'][vrf] \
                     ['as_number'] = as_number
