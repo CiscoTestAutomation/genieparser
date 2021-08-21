@@ -2282,8 +2282,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('minimum_advertisement_interval'): int,
                                  Optional('route_reflector_client'): bool,
                                  Optional('route_reflector_cluster_id'): int,
-                                 Optional('remote_as'): int,
-                                 Optional('local_as_as_no'): int,
+                                 Optional('remote_as'): Or(int, str),
+                                 Optional('local_as_as_no'): Or(int, str),
                                  Optional('local_as_no_prepend'): bool,
                                  Optional('local_as_replace_as'): bool,
                                  Optional('local_as_dual_as'): bool,
@@ -2513,7 +2513,9 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                             '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
         p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
-        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS +(?P<local_as_as_no>[0-9]+)(?:, +(?P<local_as_no_prepend>no-prepend))?(?:, +(?P<local_as_replace_as>replace-as))?(?:, +(?P<local_as_dual_as>dual-as))?(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
+
+        # Remote AS 65107.65107, local AS 65108.65108, external link
+        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9\.]+), +local +AS +(?P<local_as_as_no>[0-9\.]+)(?:, +(?P<local_as_no_prepend>no-prepend))?(?:, +(?P<local_as_replace_as>replace-as))?(?:, +(?P<local_as_dual_as>dual-as))?(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
         p4 = re.compile(r'^Remote *router *ID *(?P<router_id>[a-zA-Z0-9\.\:]+)$')
         p5 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)'
                             '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
@@ -2667,10 +2669,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             # Remote AS 200, local AS 100, no-prepend, replace-as, dual-as, external link
             m = p3.match(line)
             if m:
-                sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
+
+                try:
+                    sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    sub_dict['remote_as'] = m.groupdict()['remote_as']
+
+
                 if m.groupdict()['link_state']:
                     sub_dict['link_state'] = m.groupdict()['link_state']
-                sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
+
+
+                try:
+                    sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
+                except:
+                    sub_dict['local_as_as_no'] = m.groupdict()['local_as_as_no']
 
                 if m.groupdict()['local_as_no_prepend']:
                     sub_dict['local_as_no_prepend'] = True
