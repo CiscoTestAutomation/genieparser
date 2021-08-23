@@ -11,7 +11,7 @@ from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema, ListOf)
 
 
-class ShowSecurityPoliciesHitCount(MetaParser):
+class ShowSecurityPoliciesHitCountSchema(MetaParser):
     """ Schema for:
             * show security policies hit-count
     """
@@ -49,6 +49,7 @@ class ShowSecurityPoliciesHitCount(MetaParser):
             }
         }
     }
+
 
 class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
     """ Parser for:
