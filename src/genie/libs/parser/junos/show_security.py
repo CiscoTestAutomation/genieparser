@@ -67,13 +67,13 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
         ret_dict = {}
 
         # Logical system: root-logical-system
-        p1 = re.compile(r'^(Logical system:)\s(?P<logical_system>\S+)?')
+        p1 = re.compile(r'^(Logical system:)\s(?P<logical_system>\S+)$')
 
         # 9       junos-global     junos-global      GLOBAL-PERMIT-SSH-IN 541543
         # 10      junos-global     junos-global      GLOBAL-PERMIT-KNOWN 337917
         # 11      untrust          UNTRUST-STRICT        STRICT-PERMIT-NTP-IN 1243
         # 12      untrust          UNTRUST-STRICT        STRICT-PERMIT-SSH-IN 445265
-        p2 = re.compile(r'^(?P<index>\d+)\s+(?P<from_zone>\S+)\s+(?P<to_zone>\S+)\s+(?P<name>\S+)\s+(?P<policy_hit_count>\d+)?')
+        p2 = re.compile(r'^(?P<index>\d+)\s+(?P<from_zone>\S+)\s+(?P<to_zone>\S+)\s+(?P<name>\S+)\s+(?P<policy_hit_count>\d+)$')
 
         # Number of policy: 12
         p3 = re.compile(r'(Number of policy:)\s(?P<total_policies>\d+)$')
