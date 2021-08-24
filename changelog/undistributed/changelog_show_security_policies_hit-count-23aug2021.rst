@@ -2,5 +2,5 @@
                             New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Add ShowSecurityPoliciesHitCount parser:
-        * Parse policies per logical-system
+    * Added howSecurityPoliciesHitCount:
+        * show security policies hit-count
