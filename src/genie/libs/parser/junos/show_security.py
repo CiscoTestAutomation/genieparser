@@ -8,34 +8,16 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema, ListOf)
+from genie.metaparser.util.schemaengine import Any, Schema, ListOf
 
 
 class ShowSecurityPoliciesHitCountSchema(MetaParser):
     """ Schema for:
             * show security policies hit-count
     """
-    """schema = {
-        "security_policy_counts": {
-            str: {
-                "security_policy": ListOf(
-                    {
-                        "index": str,
-                        "from_zone": str,
-                        "to_zone": str,
-                        "name": str,
-                        "policy_hit_count": str
-                    },
-                )
-                "total_policies": str
-            }
-        }
-    }"""
-
-    # Main Schema
     schema = {
         "security_policy_counts": {
-            str: {
+            Any(): {
                 "security_policy": ListOf(
                     {
                         "index": str,
@@ -70,9 +52,7 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
         p1 = re.compile(r'^(Logical system:)\s(?P<logical_system>\S+)$')
 
         # 9       junos-global     junos-global      GLOBAL-PERMIT-SSH-IN 541543
-        # 10      junos-global     junos-global      GLOBAL-PERMIT-KNOWN 337917
         # 11      untrust          UNTRUST-STRICT        STRICT-PERMIT-NTP-IN 1243
-        # 12      untrust          UNTRUST-STRICT        STRICT-PERMIT-SSH-IN 445265
         p2 = re.compile(r'^(?P<index>\d+)\s+(?P<from_zone>\S+)\s+(?P<to_zone>\S+)\s+(?P<name>\S+)\s+(?P<policy_hit_count>\d+)$')
 
         # Number of policy: 12
@@ -93,9 +73,7 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
                 continue
 
             # 9       junos-global     junos-global      GLOBAL-PERMIT-SSH-IN 541543
-            # 10      junos-global     junos-global      GLOBAL-PERMIT-KNOWN 337917
             # 11      untrust          UNTRUST-STRICT        STRICT-PERMIT-NTP-IN 1243
-            # 12      untrust          UNTRUST-STRICT        STRICT-PERMIT-SSH-IN 445265
             m = p2.match(line)
             if m:
                 group = m.groupdict()
