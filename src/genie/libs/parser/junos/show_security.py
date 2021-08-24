@@ -17,7 +17,7 @@ class ShowSecurityPoliciesHitCountSchema(MetaParser):
     """
     """schema = {
         "security_policy_counts": {
-            str: {
+            Any(): {
                 "security_policy": ListOf([
                     {
                         "index": str,
@@ -35,7 +35,7 @@ class ShowSecurityPoliciesHitCountSchema(MetaParser):
     # Main Schema
     schema = {
         "security_policy_counts": {
-            str: {
+            Any(): {
                 "security_policy": ListOf([
                     {
                         "index": str,
