@@ -17,17 +17,17 @@ class ShowSecurityPoliciesHitCountSchema(MetaParser):
     """
     """schema = {
         "security_policy_counts": {
-            Any(): {
-                "security_policy": ListOf([
+            str: {
+                "security_policy": ListOf(
                     {
                         "index": str,
-                        "from-zone": str,
-                        "to-zone": str,
+                        "from_zone": str,
+                        "to_zone": str,
                         "name": str,
-                        "policy-hit-count": str
+                        "policy_hit_count": str
                     },
-                ])
-                "total-policies": str
+                )
+                "total_policies": str
             }
         }
     }"""
@@ -35,17 +35,17 @@ class ShowSecurityPoliciesHitCountSchema(MetaParser):
     # Main Schema
     schema = {
         "security_policy_counts": {
-            Any(): {
-                "security_policy": ListOf([
+            str: {
+                "security_policy": ListOf(
                     {
                         "index": str,
-                        "from-zone": str,
-                        "to-zone": str,
+                        "from_zone": str,
+                        "to_zone": str,
                         "name": str,
-                        "policy-hit-count": str
-                    },
-                ]),
-                "total-policies": str
+                        "policy_hit_count": str,
+                    }
+                ),
+                "total_policies": str
             }
         }
     }
@@ -73,7 +73,7 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
         # 10      junos-global     junos-global      GLOBAL-PERMIT-KNOWN 337917
         # 11      untrust          UNTRUST-STRICT        STRICT-PERMIT-NTP-IN 1243
         # 12      untrust          UNTRUST-STRICT        STRICT-PERMIT-SSH-IN 445265
-        p2 = re.compile(r'^(?P<index>\d+)\s+(?P<from_zone>\S+)\s+(?P<to_zone>\S+)\s+(?P<name>\S+)\s(?P<policy_hit_count>\d+)?')
+        p2 = re.compile(r'^(?P<index>\d+)\s+(?P<from_zone>\S+)\s+(?P<to_zone>\S+)\s+(?P<name>\S+)\s+(?P<policy_hit_count>\d+)?')
 
         # Number of policy: 12
         p3 = re.compile(r'(Number of policy:)\s(?P<total_policies>\d+)$')
@@ -100,14 +100,15 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
             if m:
                 group = m.groupdict()
                 security_policy_count_dict = {}
-                security_policy_count_dict.update({k.replace('_', '-'): v for k, v in group.items() if v is not None})
+                #security_policy_count_dict.update({k.replace('_', '-'): v for k, v in group.items() if v is not None})
+                security_policy_count_dict.update({v for k, v in group.items() if v is not None})
                 security_policy_count_list.append(security_policy_count_dict)
 
             # Number of policy: 12
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                total_policies = group['total_policies']
-                ret_dict['security_policy_counts'][logical_system].update({'total-policies': total_policies})
+                total_policies = group['total-policies']
+                ret_dict['security_policy_counts'][logical_system].update({'total_policies': total_policies})
                 continue
         return ret_dict
