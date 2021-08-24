@@ -99,10 +99,7 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                security_policy_count_dict = {}
-                #security_policy_count_dict.update({k.replace('_', '-'): v for k, v in group.items() if v is not None})
-                security_policy_count_dict.update({k: v for k, v in group.items()})
-                security_policy_count_list.append(security_policy_count_dict)
+                security_policy_count_list.append({k: v for k, v in group.items()})
 
             # Number of policy: 12
             m = p3.match(line)
