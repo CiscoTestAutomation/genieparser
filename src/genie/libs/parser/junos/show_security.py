@@ -100,6 +100,7 @@ class ShowSecurityPoliciesHitCount(ShowSecurityPoliciesHitCountSchema):
             if m:
                 group = m.groupdict()
                 security_policy_count_list.append({k: v for k, v in group.items()})
+                continue
 
             # Number of policy: 12
             m = p3.match(line)
