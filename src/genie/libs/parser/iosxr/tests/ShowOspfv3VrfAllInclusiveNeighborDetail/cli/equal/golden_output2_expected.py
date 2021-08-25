@@ -1,0 +1,47 @@
+expected_output = {
+   "vrf":{
+      "VRF VRF-Test":{
+         "address_family":{
+            "ipv6":{
+               "instance":{
+                  "100":{
+                     "area":{
+                        0:{
+                           "neighbor_router_id":{
+                              "1.100.1.2":{
+                                 "interface":{
+                                    "GigabitEthernet0/0/0/1.500":{
+                                       "bfd_enable":"enabled",
+                                       "bfd_mode":"Default",
+                                       "Neighbor":{
+                                          "interface-id":48,
+                                          "link-local_address":"fe80::2ac7:ceff:febd:7c23"
+                                       },
+                                       "priority":1,
+                                       "state":"full",
+                                       "state_changes":6,
+                                       "options":"0x13",
+                                       "dead_timer":"00:00:38",
+                                       "index":"1/1/1,",
+                                       "first":"0(0)/0(0)/0(0)",
+                                       "next":"0(0)/0(0)/0(0)",
+                                       "statistics":{
+                                          "last_retrans_max_scan_length":1,
+                                          "last_retrans_scan_length":1,
+                                          "number_of_retransmissions":2,
+                                          "retransmission_queue_length":0
+                                       }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     },
+                     "total_neighbor_count":1
+                  }
+               }
+            }
+         }
+      }
+   }
+}
