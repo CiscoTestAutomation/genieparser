@@ -422,7 +422,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetailSchema(MetaParser):
                                             Any(): {
                                                 "interface": {
                                                     Any(): {
-                                                        Optional("bfd_enable"): bool,
+                                                        Optional("bfd_enable"): str,
                                                         Optional("bfd_mode"): str,
                                                         'Neighbor': {
                                                             'interface-id': int,
@@ -486,7 +486,9 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
         p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+))$")
 
         # In the area 0 via interface GigabitEthernet0/0/0/0.1
-        p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))$")
+        # In the area 0 via interface GigabitEthernet0/0/0/1.500     BFD enabled, Mode: Default
+        p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))"
+                        "( +BFD (?P<enable>\w+), Mode: (?P<mode>\w+))*")
 
         # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
         p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
@@ -544,6 +546,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
                 neighbor_rid = m.groupdict()['neighbor']
 
             # In the area 0 via interface GigabitEthernet0/0/0/0.1
+            # In the area 0 via interface GigabitEthernet0/0/0/1.500     BFD enabled, Mode: Default
             m = p3.match(line)
             if m:
                 area = int(m.groupdict()['area'])
@@ -551,6 +554,13 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
                 interface_dict = instance_dict.setdefault('area', {}).setdefault(area, {}). \
                     setdefault('neighbor_router_id', {}).setdefault(neighbor_rid, {}). \
                     setdefault('interface', {}).setdefault(interface, {})
+                
+                if m.groupdict()['enable'] and m.groupdict()['mode']:
+                    interface_dict.update(
+                        {
+                            "bfd_enable": str(m.groupdict()['enable']),
+                            "bfd_mode": str(m.groupdict()['mode'])
+                        })
 
             # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
             m = p4.match(line)
