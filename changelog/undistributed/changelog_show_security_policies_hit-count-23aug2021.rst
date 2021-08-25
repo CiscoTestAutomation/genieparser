@@ -2,5 +2,5 @@
                             New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Added howSecurityPoliciesHitCount:
+    * Added ShowSecurityPoliciesHitCount:
         * show security policies hit-count
