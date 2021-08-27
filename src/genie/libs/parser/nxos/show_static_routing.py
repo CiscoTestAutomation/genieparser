@@ -306,9 +306,9 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                         result_dict['vrf'][vrf]['address_family'][af] = {}
                 continue
 
-            # 2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
-            # 2001:1:1:1::1/128 -> Null0, preference: 1
-            p2 = re.compile(r'^\s*(?P<route>[\d\/\:]+)( +\-\> +(?P<nexthop>[\d\:\/]+), )?'
+            # 2001:1:1:a::1/128 -> 2001:10:1:3::1/128, preference: 1
+            # 2001:1:1:a::1/128 -> Null0, preference: 1
+            p2 = re.compile(r'^\s*(?P<route>[a-fA-F\d\:\/]+)( +\-\> +(?P<nexthop>[a-fA-F\d\:\/]+), )?'
                             '( \-\> +(?P<interface>[\w\.\/]+), )?'
                             '(preference: +(?P<preference>[\d]+))?$')
             m = p2.match(line)
@@ -411,7 +411,7 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                 continue
 
             # real-next-hop: 2001:10:2:3::2, interface: Ethernet1/4
-            p4 = re.compile(r'^\s*real-next-hop: +(?P<real_next_hop>[\d\:]+)'
+            p4 = re.compile(r'^\s*real-next-hop: +(?P<real_next_hop>[a-fA-F\d\:]+)'
                             '(, +interface: +(?P<interface2>[\w\/\.]+))?$')
             m = p4.match(line)
             if m:

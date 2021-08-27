@@ -122,12 +122,13 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                         ' +SAFI: +(?P<safi>[\w]+)$')
 
         # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
-        # 2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
+        # 2001:1:1:a::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
         #             GigabitEthernet0_0_0_0   None                None                None                [0/4096/1/0/1]
         # Prefix/Len          Interface                Nexthop             Object         Explicit-path       Metrics          Local-Label
         # 172.16.0.89/32      TenGigE0_0_1_2           None                None          None                [0/4096/1/0/1]    No label    Path is configured at Sep 11 08:29:25.605
         # 10.00.00.0/00       Bundle-Ether2.25         10.01.02.03         None                None                [0/0/1/0/1]
-        p2 = re.compile(r'^(?P<route>[\d\s\/\.\:]+)?(?P<interface>[a-zA-Z][\w\/\.-]+) '
+        p2 = re.compile(r'^(?P<route>[a-fA-F\d\/\.\:]+)? '
+                        r'*(?P<interface>[a-zA-Z][\w\/\.-]+) '
                         r'+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
                         r'+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'
                         r'(\s+(?P<local_label>[\w\s]+?))?'

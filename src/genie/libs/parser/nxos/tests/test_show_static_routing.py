@@ -259,12 +259,12 @@ class test_show_ipv6_static_route(unittest.TestCase):
     R3_nxosv# show ipv6 static-route
     IPv6 Configured Static Routes for VRF "default"(1)
 
-    2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:10:1:3::1/128, preference: 1
       nh_vrf(default) reslv_tid 0
       real-next-hop: 2001:10:1:3::1, interface: Ethernet1/2
         rnh(not installed in u6rib)
         bfd_enabled no
-    2001:1:1:1::1/128 -> 2001:20:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:20:1:3::1/128, preference: 1
       nh_vrf(default) reslv_tid 0
       real-next-hop: 2001:20:1:3::1, interface: Ethernet1/3
         rnh(not installed in u6rib)
@@ -288,8 +288,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'next_hop': {
                                     'next_hop_list': {
                                          1: {
@@ -357,12 +357,12 @@ class test_show_ipv6_static_route(unittest.TestCase):
     R3_nxosv# show ipv6 static-route vrf all
     IPv6 Configured Static Routes for VRF "default"(1)
 
-    2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:10:1:3::1/128, preference: 1
       nh_vrf(default) reslv_tid 0
       real-next-hop: 2001:10:1:3::1, interface: Ethernet1/2
         rnh(not installed in u6rib)
         bfd_enabled no
-    2001:1:1:1::1/128 -> 2001:20:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:20:1:3::1/128, preference: 1
       nh_vrf(default) reslv_tid 0
       real-next-hop: 2001:20:1:3::1, interface: Ethernet1/3
         rnh(not installed in u6rib)
@@ -383,7 +383,7 @@ class test_show_ipv6_static_route(unittest.TestCase):
 
     IPv6 Configured Static Routes for VRF "VRF1"(3)
 
-    2001:1:1:1::1/128 -> Null0, preference: 1
+    2001:1:1:a::1/128 -> Null0, preference: 1
       nh_vrf(VRF1) reslv_tid 80000003
       real-next-hop: 0::, interface: Null0
         rnh(not installed in u6rib)
@@ -393,12 +393,12 @@ class test_show_ipv6_static_route(unittest.TestCase):
       real-next-hop: 0::, interface: Null0
         rnh(not installed in u6rib)
         bfd_enabled no
-    2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:10:1:3::1/128, preference: 1
       nh_vrf(VRF1) reslv_tid 0
       real-next-hop: 2001:10:1:3::1, interface: none
         rnh(not installed in u6rib)
         bfd_enabled no
-    2001:1:1:1::1/128 -> 2001:20:1:3::1/128, preference: 1
+    2001:1:1:a::1/128 -> 2001:20:1:3::1/128, preference: 1
       nh_vrf(VRF1) reslv_tid 0
       real-next-hop: 2001:20:1:3::1, interface: none
         rnh(not installed in u6rib)
@@ -433,8 +433,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -499,8 +499,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'next_hop': {
                                     'outgoing_interface': {
                                         'Null0': {
