@@ -29710,7 +29710,7 @@ class TestShowBgpSessions(unittest.TestCase):
                                 "nbr_state": "Established",
                                 "nsr_state": "None",
                             },
-                            "2001:1:1:1::1": {
+                            "2001:1:1:a::1": {
                                 "spk": 0,
                                 "as_number": 65000,
                                 "in_q": 0,
@@ -29746,7 +29746,7 @@ class TestShowBgpSessions(unittest.TestCase):
                                 "nbr_state": "Established",
                                 "nsr_state": "None",
                             },
-                            "2001:1:1:1::1": {
+                            "2001:1:1:a::1": {
                                 "spk": 0,
                                 "as_number": 65000,
                                 "in_q": 0,
@@ -29777,11 +29777,11 @@ class TestShowBgpSessions(unittest.TestCase):
         Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
         10.4.1.1         default                 0 65000     0     0  Established  None
         10.36.3.3         default                 0 65000     0     0  Established  None
-        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:1:1:a::1   default                 0 65000     0     0  Established  None
         2001:3:3:3::3   default                 0 65000     0     0  Established  None
         10.4.1.1         VRF1                    0 65000     0     0  Established  None
         10.36.3.3         VRF1                    0 65000     0     0  Established  None
-        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:1:1:a::1   VRF1                    0 65000     0     0  Established  None
         2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
         """
     }
@@ -29918,7 +29918,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
                                 "nbr_state": "Established",
                                 "nsr_state": "None",
                             },
-                            "2001:1:1:1::1": {
+                            "2001:1:1:a::1": {
                                 "spk": 0,
                                 "as_number": 65000,
                                 "in_q": 0,
@@ -29954,7 +29954,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
                                 "nbr_state": "Established",
                                 "nsr_state": "None",
                             },
-                            "2001:1:1:1::1": {
+                            "2001:1:1:a::1": {
                                 "spk": 0,
                                 "as_number": 65000,
                                 "in_q": 0,
@@ -29988,11 +29988,11 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
         Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
         10.4.1.1         default                 0 65000     0     0  Established  None
         10.36.3.3         default                 0 65000     0     0  Established  None
-        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:1:1:a::1   default                 0 65000     0     0  Established  None
         2001:3:3:3::3   default                 0 65000     0     0  Established  None
         10.4.1.1         VRF1                    0 65000     0     0  Established  None
         10.36.3.3         VRF1                    0 65000     0     0  Established  None
-        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:1:1:a::1   VRF1                    0 65000     0     0  Established  None
         2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
         """
     }

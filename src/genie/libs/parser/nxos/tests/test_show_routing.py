@@ -3303,7 +3303,7 @@ class test_show_ipv6_route(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        2001:1:1:1::1/128, ubest/mbest: 2/0
+        2001:1:1:a::1/128, ubest/mbest: 2/0
             *via 2001:10:1:3::1, Eth1/2, [1/0], 01:02:00, static
             *via 2001:20:1:3::1, Eth1/3, [1/0], 01:02:00, static
         2001:10:1:2::/64, ubest/mbest: 4/0
@@ -3329,9 +3329,9 @@ class test_show_ipv6_route(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        2001:1:1:1::1/128, ubest/mbest: 2/0, attached
-            *via 2001:1:1:1::1, Lo4, [0/0], 00:00:35, direct,
-            *via 2001:1:1:1::1, Lo4, [0/0], 00:00:35, local
+        2001:1:1:a::1/128, ubest/mbest: 2/0, attached
+            *via 2001:1:1:a::1, Lo4, [0/0], 00:00:35, direct,
+            *via 2001:1:1:a::1, Lo4, [0/0], 00:00:35, local
 
         IPv6 Routing Table for VRF "management"
         '*' denotes best ucast next-hop
@@ -3345,7 +3345,7 @@ class test_show_ipv6_route(unittest.TestCase):
             'address_family': {
                 'ipv6': {
                     'routes': {
-                        '2001:1:1:1::1/128': {
+                        '2001:1:1:a::1/128': {
                             'active': True,
                             'attached': True,
                             'mbest': 0,
@@ -3356,7 +3356,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                         'best_ucast_nexthop': True,
                                         'index': 1,
                                         'metric': 0,
-                                        'next_hop': '2001:1:1:1::1',
+                                        'next_hop': '2001:1:1:a::1',
                                         'outgoing_interface': 'Loopback4',
                                         'route_preference': 0,
                                         'source_protocol': 'direct',
@@ -3366,7 +3366,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                         'best_ucast_nexthop': True,
                                         'index': 2,
                                         'metric': 0,
-                                        'next_hop': '2001:1:1:1::1',
+                                        'next_hop': '2001:1:1:a::1',
                                         'outgoing_interface': 'Loopback4',
                                         'route_preference': 0,
                                         'source_protocol': 'local',
@@ -3374,7 +3374,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            'route': '2001:1:1:1::1/128',
+                            'route': '2001:1:1:a::1/128',
                             'route_preference': 0,
                             'source_protocol': 'local',
                             'ubest': 2,
@@ -3446,7 +3446,7 @@ class test_show_ipv6_route(unittest.TestCase):
                             'source_protocol_status': 'intra',
                             'ubest': 4,
                         },
-                        '2001:1:1:1::1/128': {
+                        '2001:1:1:a::1/128': {
                             'active': True,
                             'mbest': 0,
                             'metric': 0,
@@ -3474,7 +3474,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            'route': '2001:1:1:1::1/128',
+                            'route': '2001:1:1:a::1/128',
                             'route_preference': 1,
                             'source_protocol': 'static',
                             'ubest': 2,
@@ -3601,7 +3601,7 @@ class test_show_ipv6_route(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        2001:1:1:1::1/128, ubest/mbest: 1/0
+        2001:1:1:a::1/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/2848], 03:55:29, eigrp-test, internal
         2001:2:2:2::2/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
@@ -3627,7 +3627,7 @@ class test_show_ipv6_route(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        2001:1:1:1::1/128, ubest/mbest: 1/0
+        2001:1:1:a::1/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/2848], 03:55:29, eigrp-test, internal
         2001:2:2:2::2/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
@@ -3796,7 +3796,7 @@ class test_show_ipv6_route(unittest.TestCase):
                             'source_protocol': 'direct',
                             'ubest': 1,
                         },
-                        '2001:1:1:1::1/128': {
+                        '2001:1:1:a::1/128': {
                             'active': True,
                             'mbest': 0,
                             'metric': 2848,
@@ -3816,7 +3816,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 },
                             },
                             'process_id': 'test',
-                            'route': '2001:1:1:1::1/128',
+                            'route': '2001:1:1:a::1/128',
                             'route_preference': 90,
                             'source_protocol': 'eigrp',
                             'source_protocol_status': 'internal',
@@ -4049,7 +4049,7 @@ class test_show_ipv6_route(unittest.TestCase):
                             'source_protocol': 'local',
                             'ubest': 1,
                         },
-                        '2001:1:1:1::1/128': {
+                        '2001:1:1:a::1/128': {
                             'active': True,
                             'mbest': 0,
                             'metric': 2848,
@@ -4069,7 +4069,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 },
                             },
                             'process_id': 'test',
-                            'route': '2001:1:1:1::1/128',
+                            'route': '2001:1:1:a::1/128',
                             'route_preference': 90,
                             'source_protocol': 'eigrp',
                             'source_protocol_status': 'internal',
@@ -4153,8 +4153,8 @@ class test_show_ipv6_route(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'active': True,
                                 'ubest': 1,
                                 'mbest': 0,
@@ -4214,7 +4214,7 @@ class test_show_ipv6_route(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        2001:1:1:1::1/128, ubest/mbest: 1/0
+        2001:1:1:a::1/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:feb2:c76f, Eth1/2.390, [90/2848], 2w0d, eigrp-test, internal
             via fe80::f816:3eff:feb2:c76f, Eth1/2.420, [120/2], 2w0d, rip-1, rip
             via fe80::f816:3eff:feb2:c76f, Eth1/2.390, [200/0], 2w0d, bgp-65000, internal, tag 65000 (hidden)

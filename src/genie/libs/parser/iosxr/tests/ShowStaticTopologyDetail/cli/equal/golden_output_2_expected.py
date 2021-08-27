@@ -7,8 +7,8 @@ expected_output = {
                     'safi': 'unicast',
                     'table_id': '0xe0800000',
                     'routes': {
-                        '2001:1:1:1::1/128': {
-                            'route': '2001:1:1:1::1/128',
+                        '2001:1:1:a::1/128': {
+                            'route': '2001:1:1:a::1/128',
                             'next_hop': {
                                 'next_hop_list': {
                                     1: {
@@ -89,8 +89,8 @@ expected_output = {
                     'safi': 'unicast',
                     'table_id': '0xe0800010',
                     'routes': {
-                        '2001:1:1:1::1/128': {
-                            'route': '2001:1:1:1::1/128',
+                        '2001:1:1:a::1/128': {
+                            'route': '2001:1:1:a::1/128',
                             'next_hop': {
                                 'outgoing_interface': {
                                     'Null0': {

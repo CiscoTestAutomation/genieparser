@@ -1596,7 +1596,7 @@ class test_show_ipv6_rip_route_vrf_all(unittest.TestCase):
                                             },
                                         'next_hops': 0,
                                         },
-                                    '2001:1:1:1::1/128': {
+                                    '2001:1:1:a::1/128': {
                                         'best_route': False,
                                         'index': {
                                             1: {
@@ -1639,7 +1639,7 @@ class test_show_ipv6_rip_route_vrf_all(unittest.TestCase):
         
         > - indicates best RIP route
         
-         2001:1:1:1::1/128 next-hops 1
+         2001:1:1:a::1/128 next-hops 1
          via fe80::f816:3eff:fe8f:fbd9 Ethernet1/2.120, metric 2, tag 0, timeout 00:02:58
         
         >2001:3:3:3::3/128 next-hops 0

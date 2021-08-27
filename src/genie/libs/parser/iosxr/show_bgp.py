@@ -5419,7 +5419,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         instance = 'default'
 
         # 10.36.3.3         default                 0 65000     0     0  Established  None
-        # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        # 2001:1:1:a::1   default                 0 65000     0     0  Established  None
         # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
@@ -5440,7 +5440,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
             line = line.strip()
 
             # 10.36.3.3         default                 0 65000     0     0  Established  None
-            # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
+            # 2001:1:1:a::1   default                 0 65000     0     0  Established  None
             # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
             m = p1.match(line)
             if m:

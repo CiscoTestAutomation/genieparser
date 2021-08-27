@@ -155,7 +155,7 @@ expected_output = {
                         },
                         "ipv6 unicast": {
                             "prefixes": {
-                                "2001:1:1:1::1/128": {
+                                "2001:1:1:a::1/128": {
                                     "available_path": "1",
                                     "best_path": "1",
                                     "index": {

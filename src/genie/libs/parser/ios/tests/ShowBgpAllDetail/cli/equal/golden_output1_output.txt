@@ -36,7 +36,7 @@ Local
 
 For address family: IPv6 Unicast
 
-BGP routing table entry for 2001:1:1:1::1/128, version 4
+BGP routing table entry for 2001:1:1:a::1/128, version 4
 Paths: (1 available, best #1, table default)
 Advertised to update-groups:
    1         

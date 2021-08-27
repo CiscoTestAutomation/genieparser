@@ -1093,7 +1093,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # VRF: L:123
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')
 
-        # S    2001:1:1:1::1/128
+        # S    2001:1:1:a::1/128
         # L    2001:2:2:2::2/128 is directly connected,
         # i L2 2001:0:10:204:0:33::/126
         # i L1 2001:21:21:21::21/128
@@ -1112,9 +1112,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
 
-        # Routing entry for 2001:1:1:1::1/128, 1 known subnets
-        # Routing entry for 2001:1:1:1::1/128, supernet
-        # Routing entry for 2001:1:1:1::1/128
+        # Routing entry for 2001:1:1:a::1/128, 1 known subnets
+        # Routing entry for 2001:1:1:a::1/128, supernet
+        # Routing entry for 2001:1:1:a::1/128
         p6 = re.compile(r'^Routing +entry +for +(?P<network>(?P<ip>[\w\:\.]+)'
                         r'\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
         
@@ -1179,7 +1179,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # S    2001:1:1:1::1/128
+            # S    2001:1:1:a::1/128
             # L    2001:2:2:2::2/128 is directly connected,
             # i L2 2001:0:10:204:0:33::/126
             # i L1 2001:21:21:21::21/128
@@ -1252,9 +1252,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'updated': updated})
                 continue
             
-            # Routing entry for 2001:1:1:1::1/128, 1 known subnets
-            # Routing entry for 2001:1:1:1::1/128, supernet
-            # Routing entry for 2001:1:1:1::1/128
+            # Routing entry for 2001:1:1:a::1/128, 1 known subnets
+            # Routing entry for 2001:1:1:a::1/128, supernet
+            # Routing entry for 2001:1:1:a::1/128
             m = p6.match(line)
             if m:
                 group = m.groupdict()

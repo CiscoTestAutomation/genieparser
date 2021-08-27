@@ -5,8 +5,8 @@ expected_output = {
             "address_family": {
                 "ipv6": {
                     "routes": {
-                        "2001:1:1:1::1/128": {
-                            "route": "2001:1:1:1::1/128",
+                        "2001:1:1:a::1/128": {
+                            "route": "2001:1:1:a::1/128",
                             "active": True,
                             "source_protocol_codes": "LC",
                             "source_protocol": "local",

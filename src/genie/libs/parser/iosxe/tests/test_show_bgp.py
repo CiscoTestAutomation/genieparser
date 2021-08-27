@@ -509,7 +509,7 @@ class TestShowIpBgpAllSummary(unittest.TestCase):
             [2019-06-05 09:47:19,474] +++ R1_xe: executing command 'show run | sec address-family ipv6 vrf' +++
             show run | sec address-family ipv6 vrf
              address-family ipv6 vrf VRF1
-              network 2001:1:1:1::1/128
+              network 2001:1:1:a::1/128
               neighbor 2001:2:2:2::2 remote-as 65000
               neighbor 2001:2:2:2::2 update-source Loopback300
               neighbor 2001:2:2:2::2 activate

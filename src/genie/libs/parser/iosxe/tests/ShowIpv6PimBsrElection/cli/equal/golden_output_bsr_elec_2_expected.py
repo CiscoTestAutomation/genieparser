@@ -6,12 +6,12 @@ expected_output = {
                     "rp": {
                         "bsr": {
                             "bsr_candidate": {
-                                "address": "2001:1:1:1::1",
+                                "address": "2001:1:1:a::1",
                                 "priority": 0,
                                 "hash_mask_length": 126,
                             },
                             "bsr": {
-                                "address": "2001:1:1:1::1",
+                                "address": "2001:1:1:a::1",
                                 "hash_mask_length": 126,
                                 "priority": 0,
                                 "up_time": "00:00:07",

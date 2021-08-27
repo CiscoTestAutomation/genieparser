@@ -764,7 +764,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # LC  2001:1:1:1::1/128 [0/0]
+            # LC  2001:1:1:a::1/128 [0/0]
             p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
                             ' +\[(?P<route_preference>[\d\/]+)\]$')
             m = p2.match(line)

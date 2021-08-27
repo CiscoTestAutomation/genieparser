@@ -6,7 +6,7 @@ Thu Dec  7 22:10:18.618 UTC
 VRF: default Table Id: 0xe0800000 AFI: IPv6 SAFI: Unicast
 Last path event occured at Dec  7 21:52:00.843
 Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
-2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
+2001:1:1:a::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
 Path is installed into RIB at Dec  7 21:52:00.843
 Path version: 1, Path status: 0xa1
 Path has best tag: 0
@@ -35,7 +35,7 @@ Path version: 0, Path status: 0x0
 VRF: VRF1 Table Id: 0xe0800010 AFI: IPv6 SAFI: Unicast
 Last path event occured at Dec  7 21:51:47.424
 Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
-2001:1:1:1::1/128   Null0                    None                None                None                [0/4096/99/0/1234]
+2001:1:1:a::1/128   Null0                    None                None                None                [0/4096/99/0/1234]
 Path is installed into RIB at Dec  7 21:51:47.424
 Path version: 1, Path status: 0x21
 Path has best tag: 0

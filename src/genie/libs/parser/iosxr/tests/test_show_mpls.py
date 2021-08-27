@@ -1622,7 +1622,7 @@ class TestShowMplsForwarding(unittest.TestCase):
                 "outgoing_label": {
                     "Unlabelled": {
                         "prefix_or_id": {
-                            "2001:1:1:1::1/128[V]": {
+                            "2001:1:1:a::1/128[V]": {
                                 "outgoing_interface": {
                                     "GigabitEthernet0/0/0/0.390": {
                                         "next_hop": "fe80::f816:3eff:fe53:2cc7",
@@ -1762,7 +1762,7 @@ class TestShowMplsForwarding(unittest.TestCase):
         24003  Unlabelled  10.13.115.0/24     Gi0/0/0/0.115 10.12.115.1     0
         24004  Unlabelled  10.13.90.0/24      Gi0/0/0/0.90 10.12.90.1      0
             Unlabelled  10.13.90.0/24      Gi0/0/0/1.90 10.23.90.3      0
-        24005  Unlabelled  2001:1:1:1::1/128[V]   \
+        24005  Unlabelled  2001:1:1:a::1/128[V]   \
                                             Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
                                                                         3928399
         24006  Aggregate   VRF1: Per-VRF Aggr[V]   \
@@ -1816,7 +1816,7 @@ class TestShowMplsForwardingVrf(unittest.TestCase):
                         "outgoing_label": {
                             "Unlabelled": {
                                 "prefix_or_id": {
-                                    "2001:1:1:1::1/128[V]": {
+                                    "2001:1:1:a::1/128[V]": {
                                         "outgoing_interface": {
                                             "GigabitEthernet0/0/0/0.390": {
                                                 "next_hop": "fe80::f816:3eff:fe53:2cc7",
@@ -1917,7 +1917,7 @@ class TestShowMplsForwardingVrf(unittest.TestCase):
         Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes
         Label  Label       or ID              Interface                    Switched
         ------ ----------- ------------------ ------------ --------------- ------------
-        24005  Unlabelled  2001:1:1:1::1/128[V]   \
+        24005  Unlabelled  2001:1:1:a::1/128[V]   \
                                               Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
                                                                           4102415
         24006  Aggregate   VRF1: Per-VRF Aggr[V]   \

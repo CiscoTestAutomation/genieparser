@@ -242,7 +242,7 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                     ['rp']['bsr']['bsr']['scope_range_list'] = scope_range_list
                 continue
 
-            # BSR Address: 2001:1:1:1::1
+            # BSR Address: 2001:1:1:a::1
             p2 = re.compile(r'^\s*BSR +Address: +(?P<bsr_address>[\w\:\.]+)$')
             m = p2.match(line)
             if m:
@@ -290,7 +290,7 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                     ['bsr']['expires'] = bs_timer
                 continue
 
-            # Candidate BSR address: 2001:1:1:1::1, priority: 0, hash mask length: 126
+            # Candidate BSR address: 2001:1:1:a::1, priority: 0, hash mask length: 126
             p6 = re.compile(r'^\s*Candidate +BSR +address: +(?P<can_address>[\w\d\:\.]+),'
                             ' +priority: +(?P<can_priority>\d+),'
                             ' +hash +mask +length: +(?P<can_hash_mask_lenght>\d+)$')

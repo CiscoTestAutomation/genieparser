@@ -9,7 +9,7 @@ Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
        O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
        ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, la - LISP alt
        lr - LISP site-registrations, ld - LISP dyn-eid, a - Application
-LC  2001:1:1:1::1/128 [0/0]
+LC  2001:1:1:a::1/128 [0/0]
      via Loopback0, receive
       Last updated 22:55:51 04 December 2017
 S   2001:2:2:2::2/128 [1/0]

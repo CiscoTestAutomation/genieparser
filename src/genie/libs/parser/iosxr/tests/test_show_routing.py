@@ -37,7 +37,7 @@ class TestShowRouteIpv6(unittest.TestCase):
 
         Gateway of last resort is not set
 
-        S    2001:1:1:1::1/128
+        S    2001:1:1:a::1/128
             [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             [1/0] via 2001:10:1:2::1, 01:52:23, GigabitEthernet0/0/0/3
         L    2001:2:2:2::2/128 is directly connected,
@@ -61,8 +61,8 @@ class TestShowRouteIpv6(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'active': True,
                                 'source_protocol_codes': 'S',
                                 'source_protocol': 'static',
@@ -571,7 +571,7 @@ class TestShowRouteIpv6(unittest.TestCase):
 
         Gateway of last resort is not set
 
-        D    2001:1:1:1::1/128
+        D    2001:1:1:a::1/128
             [90/10880] via fe80::f816:3eff:fe76:b56d, 5d23h, GigabitEthernet0/0/0/0.390
         L    2001:2:2:2::2/128 is directly connected,
             3w4d, Loopback300
@@ -625,8 +625,8 @@ class TestShowRouteIpv6(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
+                            '2001:1:1:a::1/128': {
+                                'route': '2001:1:1:a::1/128',
                                 'active': True,
                                 'source_protocol_codes': 'D',
                                 'source_protocol': 'eigrp',
@@ -1192,10 +1192,10 @@ class TestShowRouteIpv6(unittest.TestCase):
     }
 
     golden_output_7 = {'execute.return_value': '''
-        show route vrf VRF1 ipv6 2001:1:1:1::1
+        show route vrf VRF1 ipv6 2001:1:1:a::1
         Tue Oct 29 19:31:30.848 UTC
 
-        Routing entry for 2001:1:1:1::1/128
+        Routing entry for 2001:1:1:a::1/128
         Known via "eigrp 100", distance 90, metric 10880, type internal
         Installed Oct 23 22:09:38.380 for 5d21h
         Routing Descriptor Blocks
@@ -1210,14 +1210,14 @@ class TestShowRouteIpv6(unittest.TestCase):
                 "address_family": {
                     "ipv6": {
                         "routes": {
-                            "2001:1:1:1::1/128": {
+                            "2001:1:1:a::1/128": {
                                 "active": True,
                                 "distance": 90,
                                 "installed": {
                                     "date": "Oct 23 22:09:38.380",
                                     "for": "5d21h"
                                 },
-                                "ip": "2001:1:1:1::1",
+                                "ip": "2001:1:1:a::1",
                                 "known_via": "eigrp 100",
                                 "mask": "128",
                                 "metric": 10880,
@@ -1232,7 +1232,7 @@ class TestShowRouteIpv6(unittest.TestCase):
                                         }
                                     }
                                 },
-                                "route": "2001:1:1:1::1/128",
+                                "route": "2001:1:1:a::1/128",
                                 "type": "internal"
                             }
                         }
@@ -2139,7 +2139,7 @@ class TestShowRouteIpv6(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_7)
         obj = ShowRouteIpv6(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', route='2001:1:1:1::1')
+        parsed_output = obj.parse(vrf='VRF1', route='2001:1:1:a::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_show_route_ipv6_3(self):
