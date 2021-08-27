@@ -1,0 +1,13 @@
+Interface                      Status         Protocol Description
+Gi0/0/0                        admin down     down
+Gi0/0/1                        down           down
+Gi0/1/0                        down           down
+Gi0/1/1                        up             up
+Gi0/1/2                        up             up
+Gi0/1/3                        down           down
+Ce0/2/0                        up             up       LTE
+Ce0/2/1                        admin down     down
+Vp1                            up             up
+Vl1                            up             up       LAN1
+Vl2                            up             up       LAN2
+pw100001                       up             up

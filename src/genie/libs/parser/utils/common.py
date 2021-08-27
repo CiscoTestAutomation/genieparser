@@ -604,7 +604,10 @@ class Common:
                     'BAGG': 'Bridge-Aggregation',  # comware
                     'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
                     'Di': 'Dialer',
-                    'Vi': 'Virtual-Access'
+                    'Vi': 'Virtual-Access',
+                    'Ce': 'Cellular',
+                    'Vp': 'Virtual-PPP',
+                    'pw': 'pseudowire'
                 },
             'iosxr':
             # interface formats specific to iosxr

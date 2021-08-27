@@ -3,8 +3,8 @@
 --------------------------------------------------------------------------------
 * UTILS
     * Modified Common:
-        * Added Di (Dialer) and Vi (Virtual-Access) to convert list of interfaces
+        * Added Di, Vi, Vp, pw and Ce to convert list of interfaces
 
 * IOSXE
     * Modified ShowInterfacesDescription
-        * Added a test to check Di and Vi full interface name conversion
+        * Added two tests to check Di, Vi, Vp, pw and Ce full interface name conversion
