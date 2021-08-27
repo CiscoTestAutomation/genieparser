@@ -625,7 +625,12 @@ class Common:
                     'M-E': 'M-Ethernet',  # comware
                     'BAGG': 'Bridge-Aggregation',  # comware
                     'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
-                    'Wl': 'Wlan-GigabitEthernet'
+                    'Wl': 'Wlan-GigabitEthernet',
+                    'Di': 'Dialer',
+                    'Vi': 'Virtual-Access',
+                    'Ce': 'Cellular',
+                    'Vp': 'Virtual-PPP',
+                    'pw': 'pseudowire'
                 },
             'iosxr':
             # interface formats specific to iosxr
