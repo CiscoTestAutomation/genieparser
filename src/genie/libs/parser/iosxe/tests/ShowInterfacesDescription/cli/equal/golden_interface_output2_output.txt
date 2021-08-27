@@ -1,0 +1,25 @@
+Interface                      Status         Protocol Description
+Gi0/0/0                        up             up       WAN
+Gi0/0/0.4001                   up             up       WAN PPPOE
+Gi0/0/0.40001                  deleted        down
+Gi0/0/1                        admin down     down
+Gi0/1/0                        up             up
+Gi0/1/1                        admin down     down
+Gi0/1/2                        admin down     down
+Gi0/1/3                        admin down     down
+Gi0/1/4                        admin down     down
+Gi0/1/5                        admin down     down
+Gi0/1/6                        admin down     down
+Gi0/1/7                        admin down     down
+Di1                            down           down     TEST
+Di2                            up             up       TEST
+Di3                            up             up
+Lo0                            up             up
+Po1                            down           down
+Po1.1                          down           down
+Po1.2                          down           down
+Po1.30004                      down           down
+Vi1                            up             up
+Vi2                            up             up       TEST
+Vi3                            down           down
+Vl1                            up             up       LAN
