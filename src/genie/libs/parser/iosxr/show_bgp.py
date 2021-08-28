@@ -2515,7 +2515,12 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
 
         # Remote AS 65107.65107, local AS 65108.65108, external link
-        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9\.]+), +local +AS +(?P<local_as_as_no>[0-9\.]+)(?:, +(?P<local_as_no_prepend>no-prepend))?(?:, +(?P<local_as_replace_as>replace-as))?(?:, +(?P<local_as_dual_as>dual-as))?(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
+        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9\.]+), '
+                         r'+local +AS +(?P<local_as_as_no>[0-9\.]+)'
+                         r'(?:, +(?P<local_as_no_prepend>no-prepend))?'
+                         r'(?:, +(?P<local_as_replace_as>replace-as))?'
+                         r'(?:, +(?P<local_as_dual_as>dual-as))?'
+                         r'(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
         p4 = re.compile(r'^Remote *router *ID *(?P<router_id>[a-zA-Z0-9\.\:]+)$')
         p5 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)'
                             '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
