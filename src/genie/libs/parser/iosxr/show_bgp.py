@@ -5440,7 +5440,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 as_number = "NA"
                 try:
                     as_number = int(group['as_number'])
-                except:
+                except Exception:
                     as_number = group['as_number']
 
 
@@ -5486,7 +5486,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 neighbor_dict['as_number'] = "NA"
                 try:
                     neighbor_dict['as_number'] = int(group['as_number'])
-                except:
+                except Exception:
                     neighbor_dict['as_number'] = group['as_number']
 
                 neighbor_dict['in_q'] = int(group['in_q'])
