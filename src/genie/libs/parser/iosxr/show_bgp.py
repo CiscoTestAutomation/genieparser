@@ -4174,8 +4174,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         p4 = re.compile(
             r'^(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
             r'?P<froms>[\w\.\:]+) *'
-            '(?P<path>[\d\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
-        p5_1 = re.compile(r'(?P<path>[\d\{\}\s]+)(?P<origin_code>e|i)?$')
+            r'(?P<path>[\d\.\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
+        p5_1 = re.compile(r'(?P<path>[\d\.\{\}\s]+)(?P<origin_code>e|i)?$')
         p6 = re.compile(
             r'^Processed *(?P<processed_prefixes>[0-9]+) *prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
@@ -4241,6 +4241,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             # 10.169.1.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
             # 2001:db8:cdc9:121::/64     10.4.1.1         2001:db8:20:1:5::5
             # 10.4.1.1/32         10.4.1.1         Local           ?
+            # 10.8.8.8/32        10.10.10.108    Local           65108.65108?
 
             m = p4.match(line)
             if m:
@@ -4285,6 +4286,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     continue
 
             #                                                    200 33299 51178 47751 {27017}e
+            #                                                    200 33299 51178 65000.47751 {27017}e
 
             m = p5_1.match(line)
             if m:
