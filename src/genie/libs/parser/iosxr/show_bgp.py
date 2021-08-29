@@ -3494,7 +3494,7 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
                                 {Any():
                                     {Optional('router_identifier'): str,
                                      Optional('route_distinguisher'): str,
-                                     Optional('local_as'): int,
+                                     Optional('local_as'): Or(int, str,),
                                      Optional('state'): str,
                                      Optional('vrf_id'): str,
                                      Optional('generic_scan_interval'): int,
@@ -3602,7 +3602,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p15_1 = re.compile(r'^BGP Route Distinguisher: *(?P<route_distinguisher>\S+)')
         p16 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p2 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
-        p3 = re.compile(r'^BGP *router *identifier *(?P<router_identifier>[0-9\.]+), *local *AS *number *(?P<local_as>[0-9]+)$')
+        p3 = re.compile(r'^BGP *router *identifier *(?P<router_identifier>[0-9\.]+), *'
+                        r'local *AS *number *(?P<local_as>[0-9\.]+)$')
         p4 = re.compile(r'^BGP *generic *scan *interval *(?P<generic_scan_interval>[0-9]+) +secs$')
         p5 = re.compile(r'^(?P<non_stop_routing>(Non-stop routing is enabled))$')
         p6 = re.compile(r'^BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
@@ -3615,9 +3616,9 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                             '(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
                             '(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
-                            '(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
-                            '(?: *(?P<origin_codes>(i|e|\?)))?)?$')
-        p13_1 = re.compile(r'(?P<path>[\d\s]+)'
+                            '(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\.\s\{\}]+)?'
+                            '(?: *(?P<origin_codes>(i|e|\?)))?)?$')      
+        p13_1 = re.compile(r'(?P<path>[\d\.\s]+)'
                         ' *(?P<origin_codes>(i|e|\?))?$')
 
         p14 = re.compile(r'^Processed *(?P<processed_prefixes>[0-9]+) *'
@@ -3712,7 +3713,10 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             m = p3.match(line)
             if m:
                 router_identifier = m.groupdict()['router_identifier']
-                local_as = int(m.groupdict()['local_as'])
+                try:
+                    local_as = int(m.groupdict()['local_as'])
+                except Exception:
+                    local_as = m.groupdict()['local_as']
                 continue
 
             # BGP generic scan interval 60 secs
@@ -3985,22 +3989,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
                                  '(?P<locprf>[0-9]+)  +'
                                  '(?P<weight>[0-9]+) '
-                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+                                 '(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
     
                     # metric   locprf  weight path
                     # 2219                0 200 33299 51178 47751 {27016}
                     # locprf   weight path
-                    # 211         0 200 33299 51178 47751 {27016}
+                    # 211         0 200 33299 51178 47751 {27016} 65000.65000
     
                     m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,20})'
                                  '(?P<weight>[0-9]+) '
-                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+                                 '(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
     
                     # weight path
-                    # 0 200 33299 51178 47751 {27016}
+                    # 0 200 33299 51178 47751 {27016} 65000.65000
                     m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                 '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
+                                 '(?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
                                .match(group_num)
 
                     if m1:
@@ -4335,7 +4339,7 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
                         {Optional('address_family'):
                             {Any():
                                 {Optional('router_identifier'): str,
-                                 Optional('local_as'): int,
+                                 Optional('local_as'): Or(int, str,),
                                  Optional('state'): str,
                                  Optional('vrf_id'): str,
                                  Optional('generic_scan_interval'): int,
