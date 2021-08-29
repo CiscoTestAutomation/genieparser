@@ -1,0 +1,4 @@
+Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+10.10.10.107    default                 0 65107.65107     0     0  Established  None
+2001:2001:2001:2001:2001::7
+                default                 0 65107.65107     0     0  Established  None
