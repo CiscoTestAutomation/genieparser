@@ -1,0 +1,88 @@
+Logical system: root-logical-system
+ Index   From zone        To zone           Name           Policy count
+ 1       junos-global     junos-global      GLOBAL-PERMIT-TRACE-IN 78
+ 2       junos-global     junos-global      GLOBAL-PERMIT-RADIUS-IN 0
+ 3       junos-global     junos-global      GLOBAL-PERMIT-NTP-IN 0
+ 4       junos-global     junos-global      GLOBAL-PERMIT-ICMP-IN 3504
+ 5       junos-global     junos-global      GLOBAL-PERMIT-SNMP-IN 1
+ 6       junos-global     junos-global      DEFAULT-DENY   4567302
+ 7       junos-global     junos-global      GLOBAL-PERMIT-DNS-IN 0
+ 8       junos-global     junos-global      GLOBAL-PERMIT-TELEMETRY-IN 0
+ 9       junos-global     junos-global      GLOBAL-PERMIT-SSH-IN 0
+ 10      junos-global     junos-global      GLOBAL-PERMIT-KNOWN-WIDE 337917
+ 11      untrust          TEST-STRICT        STRICT-PERMIT-OPENGEAR-IN 0
+ 12      untrust          TEST-STRICT        STRICT-PERMIT-SSH-IN 445265
+ 13      untrust          TEST-STRICT        STRICT-PERMIT-SNMP-IN 287972350
+ 14      untrust          TEST-STRICT        STRICT-PERMIT-TELEMETRY-IN 0
+ 15      untrust          TEST-STRICT        STRICT-PERMIT-NETCONF-IN 523
+ 16      untrust          TEST-STRICT        STRICT-PERMIT-SSH-CORE-IN 782267
+ 17      untrust          TEST-STRICT        STRICT-PERMIT-SSH-PDUs-IN 333
+ 18      untrust          TEST-STRICT        STRICT-PERMIT-SSH-TEST-FW-IN 91441
+ 19      untrust          TEST-STRICT        STRICT-PERMIT-ICMP-IN 24426998
+ 20      untrust          TEST-STRICT        STRICT-PERMIT-TRACE-IN 1196
+ 21      untrust          TEST-STRICT        STRICT-PERMIT-RADIUS-IN 0
+ 22      untrust          TEST-STRICT        STRICT-PERMIT-NTP-IN 117709
+ 23      untrust          TEST-STRICT        STRICT-PERMIT-TEST-IPSEC-GRE-IN 0
+ 24      untrust          TEST-STRICT        STRICT-PERMIT-SSH-NSO-CORE-IN 223809
+ 25      untrust          TEST-STRICT        STRICT-PERMIT-DNS-IN 0
+ 26      untrust          TEST-DCN           DCN-PERMIT-MONITORING-IN 475804
+ 27      untrust          TEST-DCN           DCN-PERMIT-SNMP-IN 32808
+ 28      untrust          TEST-DCN           DCN-PERMIT-DNS-IN 0
+ 29      untrust          TEST-DCN           DCN-PERMIT-NTP-IN 0
+ 30      untrust          TEST-DCN           DCN-PERMIT-ICMP-IN 1129854
+ 31      untrust          TEST-DCN           DCN-PERMIT-ONE-CONTROL-IN 0
+ 32      untrust          TEST-DCN           DCN-PERMIT-MCP-IN 5305845
+ 33      untrust          TEST-DCN           DCN-PERMIT-RADIUS-IN 0
+ 34      untrust          TEST-DCN           DCN-PERMIT-PNC-IN 0
+ 35      untrust          TEST-DCN           DCN-PERMIT-TRACE-IN 592
+ 36      untrust          TEST-DCN           DCN-PERMIT-SSH-IN 77474
+ 37      untrust          TEST-OPTICAL       OPTICAL-PERMIT-KNOWN-RDP-IN 0
+ 38      untrust          TEST-OPTICAL       OPTICAL-BLOCK-RDP-IN 7636
+ 39      untrust          TEST-OPTICAL       OPTICAL-BLOCK-TELNET-IN 51210
+ 40      untrust          TEST-OPTICAL       OPTICAL-PERMIT-KNOWN-TELNET-IN 1
+ 41      untrust          TEST-OPTICAL       OPTICAL-BLOCK-IDRAC-IN 2167
+ 42      untrust          TEST-OPTICAL       OPTICAL-PERMIT-IDRAC-IN 6528
+ 43      untrust          TEST-OPTICAL       OPTICAL-BLOCK-SSH-IN 10886
+ 44      untrust          TEST-OPTICAL       OPTICAL-PERMIT-SSH-IN 36221
+ 45      untrust          TEST-OPTICAL       OPTICAL-BLOCK-OTHER-NTP-IN 253
+ 46      untrust          TEST-OPTICAL       OPTICAL-PERMIT-KNOWN-NTP-IN 0
+ 47      untrust          TEST-OPTICAL       OPTICAL-BLOCK-OTHER-DNS-IN 10292
+ 48      untrust          TEST-OPTICAL       OPTICAL-PERMIT-DNS-IN 0
+ 49      TEST-STRICT       untrust           STRICT-PERMIT-NTP-OUT 4468672
+ 50      TEST-STRICT       untrust           All_TEST-STRICT_COMMODITY-INTERNET 14599527
+ 51      TEST-STRICT       untrust           STRICT-PERMIT-SNMP-OUT 0
+ 52      TEST-STRICT       untrust           STRICT-BLOCK-SNMP-OUT 0
+ 53      TEST-STRICT       untrust           STRICT-PERMIT-TELEMETRY-OUT 4038240
+ 54      TEST-STRICT       untrust           STRICT-PERMIT-SYSLOG-OUT 125964123
+ 55      TEST-STRICT       untrust           STRICT-BLOCK-SYSLOG-OUT 205620273
+ 56      TEST-STRICT       untrust           STRICT-PERMIT-DNS-OUT 27
+ 57      TEST-STRICT       untrust           STRICT-BLOCK-DNS-OUT 160995
+ 58      TEST-STRICT       untrust           STRICT-BLOCK-NTP-OUT 38040
+ 59      TEST-STRICT       untrust           STRICT-PERMIT-RADIUS-OUT 1699379
+ 60      TEST-STRICT       untrust           STRICT-BLOCK-RADIUS-OUT 0
+ 61      TEST-STRICT       TEST-STRICT        STRICT-INTRA-ZONE-PERMIT 118930
+ 62      TEST-STRICT       TEST-OPTICAL       STRICT-TO-OPTICAL-PERMIT-TELEMETRY 0
+ 63      TEST-STRICT       TEST-OPTICAL       STRICT-TO-OPTICAL-PERMIT-ICMP 0
+ 64      TEST-DCN          untrust           DCN-PERMIT-MCP-OUT 81375
+ 65      TEST-DCN          untrust           DCN-PERMIT-WAVESERVERS-TEST-TRAPS-OUT 0
+ 66      TEST-DCN          untrust           DCN-PERMIT-RADIUS-OUT 158601
+ 67      TEST-DCN          untrust           DCN-DEFAULT-DENY-OUT 43959
+ 68      TEST-DCN          untrust           DCN-PERMIT-SYSLOG-OUT 13650
+ 69      TEST-DCN          untrust           DCN-PERMIT-NTP-OUT 204
+ 70      TEST-DCN          TEST-DCN           DCN-INTRA-ZONE-PERMIT 0
+ 71      TEST-OPTICAL      untrust           OPTICAL-DEFAULT-DENY-OUT 0
+ 72      TEST-OPTICAL      untrust           OPTICAL-PERMIT-DNS-OUT 7552861
+ 73      TEST-OPTICAL      untrust           OPTICAL-BLOCK-OTHER-NTP-OUT 0
+ 74      TEST-OPTICAL      untrust           OPTICAL-PERMIT-NTP-OUT 1222475
+ 75      TEST-OPTICAL      untrust           OPTICAL-BLOCK-OTHER-DNS-OUT 2256
+ 76      TEST-OPTICAL      TEST-OPTICAL       OPTICAL-INTRA-ZONE-PERMIT 0
+
+Number of policy: 76
+
+Logical system: root-logical-system2
+ Index   From zone        To zone           Name           Policy count
+ 1       junos-global     junos-global      GLOBAL-PERMIT-TRACE-IN 78
+ 2       junos-global     junos-global      GLOBAL-PERMIT-RADIUS-IN 0
+ 3       junos-global     junos-global      GLOBAL-PERMIT-NTP-IN 0
+
+Number of policy: 3
