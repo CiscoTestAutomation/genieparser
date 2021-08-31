@@ -1,0 +1,19 @@
+
+Device# show cdp neighbors detail
+
+Device ID: R3_nx.cisco.com(972ZZK4REQK)
+SysName : R3_nx
+Entry address(es):
+  IPv4 address: 172.16.1.53
+Platform: N9K-9000v,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet0/0/0/5
+Port ID (outgoing port): Ethernet1/4
+Holdtime : 138 sec
+
+Version :
+Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+
+advertisement version: 2
+Native VLAN: 1
+Duplex: full
+

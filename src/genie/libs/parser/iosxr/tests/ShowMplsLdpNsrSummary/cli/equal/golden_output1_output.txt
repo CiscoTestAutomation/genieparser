@@ -1,0 +1,6 @@
+RP/0/RP0/CPU0:F17-ASR9922#show mpls ldp nsr summary
+Sat Mar 27 14:09:03.042 JST
+
+Sessions:
+   Total: 1, NSR-eligible: 1, Sync-ed: 1
+      (1 Oper)

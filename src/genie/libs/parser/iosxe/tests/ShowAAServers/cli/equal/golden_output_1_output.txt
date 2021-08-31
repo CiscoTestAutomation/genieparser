@@ -1,0 +1,70 @@
+==========================================================
+            Show AAA Servers
+==========================================================
+RADIUS: id 1, priority 1, host 11.15.24.213, auth-port 1812, acct-port 1813, hostname mgmt-rad
+     State: current UP, duration 7787s, previous duration 0s
+     Dead: total time 0s, count 0
+     Platform State from SMD: current UP, duration 5646s, previous duration 0s
+     SMD Platform Dead: total time 0s, count 2
+     Platform State from WNCD (1) : current UP
+     Platform State from WNCD (2) : current UP
+     Platform State from WNCD (3) : current UP
+     Platform State from WNCD (4) : current UP
+     Platform State from WNCD (5) : current UP
+     Platform State from WNCD (6) : current UP
+     Platform State from WNCD (7) : current UP
+     Platform State from WNCD (8) : current UP, duration 0s, previous duration 0s
+     Platform Dead: total time 0s, count 0UP
+     Quarantined: No
+     Authen: request 49, timeouts 25, failover 0, retransmission 19
+             Response: accept 8, reject 0, challenge 16
+             Response: unexpected 2, server error 0, incorrect 0, time 94ms
+             Transaction: success 24, failure 6
+             Throttled: transaction 0, timeout 0, failure 0
+             Malformed responses: 0
+             Bad authenticators: 0
+             Dot1x transactions:
+             Response: total responses: 24, avg response time: 94ms
+             Transaction: timeouts 4, failover 0
+             Transaction: total 12, success 8, failure 4
+             MAC auth transactions:
+             Response: total responses: 0, avg response time: 0ms
+             Transaction: timeouts 0, failover 0
+             Transaction: total 0, success 0, failure 0
+     Author: request 0, timeouts 0, failover 0, retransmission 0
+             Response: accept 0, reject 0, challenge 0
+             Response: unexpected 0, server error 0, incorrect 0, time 0ms
+             Transaction: success 0, failure 0
+             Throttled: transaction 0, timeout 0, failure 0
+             Malformed responses: 0
+             Bad authenticators: 0
+             MAC author transactions:
+             Response: total responses: 0, avg response time: 0ms
+             Transaction: timeouts 0, failover 0
+             Transaction: total 0, success 0, failure 0
+     Account: request 21, timeouts 8, failover 0, retransmission 6
+             Request: start 8, interim 0, stop 7
+             Response: start 8, interim 0, stop 5
+             Response: unexpected 0, server error 0, incorrect 0, time 3ms
+             Transaction: success 13, failure 2
+             Throttled: transaction 0, timeout 0, failure 0
+             Malformed responses: 0
+             Bad authenticators: 0
+     Elapsed time since counters last cleared: 2h9m
+     Estimated Outstanding Access Transactions: 0
+     Estimated Outstanding Accounting Transactions: 0
+     Estimated Throttled Access Transactions: 0
+     Estimated Throttled Accounting Transactions: 0
+     Maximum Throttled Transactions: access 0, accounting 0
+     Consecutive Response Failures: total 5
+             SMD Platform : max 3, current 0 total 5
+             WNCD Platform: max 0, current 0 total 0
+             IOSD Platform : max 0, current 0 total 0
+     Consecutive Timeouts: total 29
+             SMD Platform : max 15, current 0 total 26
+             WNCD Platform: max 0, current 0 total 0
+             IOSD Platform : max 3, current 3 total 3
+     Requests per minute past 24 hours:
+             high - 1 hours, 37 minutes ago: 4
+             low  - 2 hours, 9 minutes ago: 0
+             average: 0

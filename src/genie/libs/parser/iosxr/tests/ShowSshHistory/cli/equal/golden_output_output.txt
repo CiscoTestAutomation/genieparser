@@ -1,0 +1,5 @@
+id       chan pty     location        userid    host                  ver authentication connection type
+---------------------------------------------------------------------------------------------------------------
+Incoming sessions
+1        1    vty0    0/RP0/CPU0      admin     172.16.1.254          v2  key-intr       Command-Line-Interface
+2        1    vty0    0/RP0/CPU0      admin     172.16.1.254          v2  key-intr       Command-Line-Interface

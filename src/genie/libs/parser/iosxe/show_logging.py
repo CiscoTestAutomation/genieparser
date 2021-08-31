@@ -20,42 +20,42 @@ class ShowLoggingSchema(MetaParser):
         * 'show logging | exclude {exclude}'
     '''
 
-    schema={
+    schema = {
         Optional('logs'): list,
         Optional('syslog_logging'): {
-            Any(): { # enabled
+            Any(): {  # enabled
                 'counters': {
                     'messages_dropped': int,
                     'messages_rate_limited': int,
                     'flushes': int,
                     'overruns': int,
-                    'xml': str, # 'disabled'
-                    'filtering': str, # 'disabled'
+                    'xml': str,  # 'disabled'
+                    'filtering': str,  # 'disabled'
                 }
             }
         },
         Optional('message_discriminator'): {
-            Optional(Any()): { # 'Active'|'Inactive'
+            Optional(Any()): {  # 'Active'|'Inactive'
                 Optional('md_name'): {
-                    Optional(Any()): { # 'C'
+                    Optional(Any()): {  # 'C'
                         Optional('severity_group'): {
-                            'flag': str, # 'includes'|'drops'
-                            'str': str, # '5'
+                            'flag': str,  # 'includes'|'drops'
+                            'str': str,  # '5'
                         },
                         Optional('facility'): {
-                            'flag': str, # 'includes'|'drops'
-                            'regexp_str': str, # 'SYS'
+                            'flag': str,  # 'includes'|'drops'
+                            'regexp_str': str,  # 'SYS'
                         },
                         Optional('mnemonics'): {
-                            'flag': str, # 'include'|'drops'
-                            'regexp_str': str, # 'UPDOWN'
+                            'flag': str,  # 'include'|'drops'
+                            'regexp_str': str,  # 'UPDOWN'
                         },
                         Optional('msg_body'): {
-                            'flag': str, # 'include'|'drops'
-                            'regexp_str': str, # link
+                            'flag': str,  # 'include'|'drops'
+                            'regexp_str': str,  # link
                         },
                         Optional('rate_limit_not_to_exceed'): {
-                            'rate_limit': int, # 100
+                            'rate_limit': int,  # 100
                         }
                     }
                 }
@@ -63,14 +63,14 @@ class ShowLoggingSchema(MetaParser):
         },
         Optional('logging'): {
             'console': {
-                'status': str, # 'enabled'|'disabled'
+                'status': str,  # 'enabled'|'disabled'
                 Optional('level'): str,
                 Optional('messages_logged'): int,
                 Optional('xml'): str,
                 Optional('filtering'): str,
             },
             'monitor': {
-                'status': str, # 'enabled'|'disabled'
+                'status': str,  # 'enabled'|'disabled'
                 Optional('level'): str,
                 Optional('messages_logged'): int,
                 Optional('xml'): str,
@@ -79,74 +79,94 @@ class ShowLoggingSchema(MetaParser):
                 Optional('messages_rate_limited'): int,
                 Optional('messages_dropped_by_md'): int,
                 Optional('logging_to'): {
-                    Any(): { # '10.4.29.222'
-                        Or('vty','tty'): int,
+                    Any(): {  # '10.4.29.222'
+                        Or('vty', 'tty'): int,
                     }
                 }
             },
             'buffer': {
-                'status': str, # 'enabled'|'disabled'
-                'level': str,
-                'messages_logged': int,
-                'xml': str, # 'enabled'|'disabled'
+                'status': str,  # 'enabled'|'disabled'
+                Optional('level'): str,
+                Optional('messages_logged'): int,
+                'xml': str,  # 'enabled'|'disabled'
                 Optional('xml_buffer_count'): int,
-                'filtering': str, # 'enabled'|'disabled'
+                'filtering': str,  # 'enabled'|'disabled'
                 Optional('buffer_count'): int,
                 Optional('discriminator'): str,
                 Optional('messages_rate_limited'): int,
                 Optional('messages_dropped_by_md'): int
             },
             'exception': {
-                Optional('status'): str, # 'enabled'|'disabled'
-                'size_bytes': int, # 4096
+                Optional('status'): str,  # 'enabled'|'disabled'
+                Optional('size_bytes'): int,  # 4096
             },
             'persistent': {
-                Optional('status'): str, # 'enabled'|'disabled'
+                Optional('status'): str,  # 'enabled'|'disabled'
                 Optional('url'): str,
                 Optional('disk_space_bytes'): int,
                 Optional('file_size_bytes'): int,
                 Optional('batch_size_bytes'): int,
+                # threshold capacity 5  alert , immediate , protected , notify
+                Optional('logging_threshold'): int,
+                Optional('threshold_percent'): int,
+                Optional('threshold_alert'): str,
+                Optional('immediate_write'): str,
+                Optional('notify'): str,
+                Optional('protected'): str
             },
+
             Optional('file'): {
-                Optional('status'): str, # 'enabled'|'disabled'
+                Optional('status'): str,  # 'enabled'|'disabled'
                 Optional('file_name'): str,
                 Optional('max_size'): int,
                 Optional('min_size'): int,
                 Optional('level'): str,
                 Optional('messages_logged'): int,
             },
-            Optional('count_and_time_stamp_logging_messages'): str, # 'enabled'|'disabled'
+            Optional('count_and_time_stamp_logging_messages'): str,  # 'enabled'|'disabled'
             'trap': {
-                Optional('status'): str, # 'enabled'|'disabled'
-                'level': str, # 'informational'
-                'message_lines_logged': int, # 70
+                Optional('status'): str,  # 'enabled'|'disabled'
+                Optional('level'): str,  # 'informational'
+                Optional('message_lines_logged'): int,  # 70
+                Optional("logging_source_interface"): {
+                    Any(): {  # Loopback0
+                        Optional("vrf"): str  # Mgmt-intf
+                    }
+                },
                 Optional('logging_to'): {
-                    Any(): { # '10.4.29.222'
-                        'protocol': str, # 'tcp'|'udp'|'unknown'
-                        'port': int, # 1470
-                        'audit': str, # 'disabled'|'enabled'
-                        'link': str, # 'up'|'down'
+                    Any(): {  # '10.4.29.222'
+                        'protocol': str,  # 'tcp'|'udp'|'unknown'
+                        'port': int,  # 1470
+                        'audit': str,  # 'disabled'|'enabled'
+                        'link': str,  # 'up'|'down'
                         'message_lines_logged': int,
                         'message_lines_rate_limited': int,
                         'message_lines_dropped_by_md': int,
-                        'xml': str, # 'enabled'|'disabled'
-                        'sequence_number': str, # 'enabled'|'disabled'
-                        'filtering': str, # 'enabled'|'disabled'
+                        'xml': str,  # 'enabled'|'disabled'
+                        'sequence_number': str,  # 'enabled'|'disabled'
+                        'filtering': str,  # 'enabled'|'disabled'
                         Optional('vrf'): str,
                         Optional('logging_source_interface'): {
-                            Any(): str, # 'Vlan200': <vrf>
+                            Any(): str,  # 'Vlan200': <vrf>
                         },
                     }
                 }
             }
         },
         Optional('filter_modules'): {
-            Any(): { # url
+            Any(): {  # url
                 'cli_args': str,
-                'invalid': bool, # True|False
+                'invalid': bool,  # True|False
             }
         },
-        Optional('log_buffer_bytes'): int, # 32000
+        Optional('tls_profiles'): {
+            Any(): {  # 'tls-profile-name
+                'ciphersuites': list,  # rsa-aes-cbc-sha2 ecdhe-rsa-aes-cbc-sha2
+                'trustpoint': str,  # tls-trustpoint
+                'tls_version': str  # TLSv1.1 | TLSv1.2 | Default
+            }
+        },
+        Optional('log_buffer_bytes'): int,  # 32000
         }
 
 
@@ -188,17 +208,21 @@ class ShowLogging(ShowLoggingSchema):
         # Console logging: disabled
         p2 = re.compile(r'^(?P<tag>\S+) +logging: +(?P<status>\S+)$')
 
+        # Buffer logging: disabled, xml disabled,
+        p3 = re.compile(r'^(?P<tag>\S+) +[Ll]ogging: +(?P<status>\S+), +xml +(?P<xml>\S+),$')
+
         # Monitor logging: level debugging, 13 messages logged, xml disabled,
         # Console logging: level debugging, 9789 messages logged, xml disabled,
-        p3 = re.compile(r'^(?P<tag>\S+) +logging: +level '
+        p4 = re.compile(r'^(?P<tag>\S+) +logging: +level '
                         r'+(?P<level>\S+), +(?P<messages_logged>\d+) '
                         r'+messages +logged, +xml +(?P<xml>\S+),$')
 
         # filtering disabled
-        p4 = re.compile(r'^filtering +(?P<filtering>\S+)$')
+        p5 = re.compile(r'^filtering +(?P<filtering>\S+)$')
 
         # Exception Logging: size (4096 bytes)
-        p6 = re.compile(r'^Exception +Logging: size +\((?P<size_bytes>\d+) +bytes+\)$')
+        # Exception Logging: Disabled
+        p6 = re.compile(r'^Exception +Logging:\s+((?P<disabled>[Dd]isabled)|size\s+\((?P<size_bytes>\d+) +bytes\))$')
 
         # Count and timestamp logging messages: disabled
         p7 = re.compile(r'^Count +and +timestamp +logging +messages: '
@@ -208,8 +232,14 @@ class ShowLogging(ShowLoggingSchema):
         p8 = re.compile(r'^(?P<tag>File +logging): +(?P<status>\S+)$')
 
         # Persistent logging: disabled
-        # Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
-        p9 = re.compile(r'^Persistent\s+logging:\s+(?P<status>\w+)(,\s+url\s+(?P<url>[\w:/]+),\s+disk\s+space\s+(?P<disk_space_bytes>\d+)\s+bytes,\s+file\s+size\s+(?P<file_size_bytes>\d+)\s+bytes,\s+batch\s+size\s+(?P<batch_size_bytes>\d+)\s+bytes)?$')
+        # Persistent logging: enabled, url bootflash:/, disk space 16384 bytes, file size 8192 bytes, batch size 4096 bytes, threshold capacity 5  alert , immediate , protected , notify
+        p9 = re.compile(r'^Persistent\s+logging:\s+(?P<status>\w+)(,\s+url\s+(?P<url>[\w:/]+),\s+disk\s+space\s+'
+                        r'(?P<disk_space_bytes>\d+)\s+bytes,\s+file\s+size\s+(?P<file_size_bytes>\d+)'
+                        r'\s+bytes,\s+batch\s+size\s+(?P<batch_size_bytes>\d+)\s+bytes)'
+                        r'(,?\s+threshold\s+capacity\s+'
+                        r'(?P<threshold_percent>\d+))?(\s+(?P<threshold_alert>alert))?'
+                        r'(\s+,\s+(?P<immediate_write>immediate))?(\s+,\s+(?P<protected>protected))?'
+                        r'(\s+,\s+(?P<notify>notify))?$')
 
         # Trap logging: level informational, 1570 message lines logged
         p10 = re.compile(r'^(?P<tag>Trap) +logging: +level +'
@@ -240,16 +270,32 @@ class ShowLogging(ShowLoggingSchema):
         # xml disabled, sequence number disabled
         p16 = re.compile(r'^xml +(?P<xml>\S+), +sequence +number +(?P<sequence_number>\S+)$')
 
+        # TLS Profiles:
+        p17 = re.compile(r'^TLS\s+Profiles:$')
+
+        # Profile Name:
+        p18 = re.compile(r'^Profile +Name: +(?P<tls_profile_name>\S+)$')
+
+        # Ciphersuites:  rsa-aes-cbc-sha2 ecdhe-rsa-aes-cbc-sha2 ecdhe-ecdsa-aes-gcm-sha2
+        p19 = re.compile(r'^Ciphersuites: +(?P<tls_cipher_suites>.*)$')
+
+        # Trustpoint:
+        p20 = re.compile(r'^Trustpoint: +(?P<tls_trustpoint>\S+)$')
+
+        # TLS version:
+        p21 = re.compile(r'^TLS +version: +(?P<tls_version>\S+)$')
+
         # Logging Source-Interface:       VRF Name:
-        p17 = re.compile(r'^Logging Source-Interface: +VRF +Name:$')
+        p22 = re.compile(r'^Logging Source-Interface: +VRF +Name:$')
 
         # Vlan200
-        p18 = re.compile(r'^(?P<interface>\S+)+(?P<vrf>\S+)?$')
+        p23 = re.compile(r'^(?P<interface>\S+)\s*(?P<vrf>\S+)?$')
 
         # Log Buffer (32000 bytes):
-        p19 = re.compile(r'^Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
+        p24 = re.compile(r'^Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
 
         ret_dict = {}
+        logging_dict = {}
         for line in out.splitlines():
 
             line = line.strip()
@@ -266,6 +312,8 @@ class ShowLogging(ShowLoggingSchema):
                     "log_buffer_bytes", {})
 
                 outer_logging_dict = {}
+                outer_logging_sources_dict = {}
+                outer_tls_profile_dict = {}
                 inner_key = group['enable_disable']
                 parent_dict = {}
                 counter_dict = {
@@ -287,12 +335,22 @@ class ShowLogging(ShowLoggingSchema):
                 group = m.groupdict()
                 current_tag = group['tag'].lower()
                 logging_entry.setdefault(current_tag, {}).setdefault(
+                    'status', group['status'].lower())
+                continue
+
+            # Buffer logging: disabled, xml disabled,
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                current_tag = group['tag'].lower()
+                logging_entry.setdefault(current_tag, {}).setdefault(
                     'status', group['status'])
+                logging_entry[current_tag].setdefault('xml', group['xml'])
                 continue
 
             # Monitor logging: level debugging, 13 messages logged, xml disabled,
             # Console logging: level debugging, 9789 messages logged, xml disabled,
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 current_tag = group['tag'].lower()
@@ -305,15 +363,16 @@ class ShowLogging(ShowLoggingSchema):
                 continue
 
             # filtering disabled
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 if current_tag == 'trap':
                     logging_entry.setdefault(current_tag, {}).setdefault(
                         'logging_to',
-                        {}).setdefault(current_logging_to,
-                                       {}).setdefault('filtering',
-                                                     group['filtering'])
+                        {}).setdefault(current_logging_to, {}).setdefault(
+                            'filtering',
+                            group['filtering']
+                        )
                 else:
                     logging_entry.setdefault(current_tag, {}).setdefault(
                         'filtering', group['filtering'])
@@ -323,7 +382,10 @@ class ShowLogging(ShowLoggingSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                exception_dict = {'size_bytes': int(group['size_bytes'])}
+                if group['disabled']:
+                    exception_dict = {'status': 'disabled'}
+                else:
+                    exception_dict = {'size_bytes': int(group['size_bytes'])}
                 logging_entry['exception'] = exception_dict
                 continue
 
@@ -345,15 +407,36 @@ class ShowLogging(ShowLoggingSchema):
 
             # Persistent logging: disabled
             # Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
+
             m = p9.match(line)
             if m:
                 group = m.groupdict()
+
+                persistent_options = {}
+
+                if group['threshold_percent']:
+                    persistent_options['threshold_percent'] = int(group['threshold_percent'])
+
+                if group['threshold_alert']:
+                    persistent_options['threshold_alert'] = 'enabled'
+
+                if group['immediate_write']:
+                    persistent_options['immediate_write'] = 'enabled'
+
+                if group['notify']:
+                    persistent_options['notify'] = 'enabled'
+
+                if group['protected']:
+                    persistent_options['protected'] = 'enabled'
+
                 for item in group:
                     if group[item]:
                         logging_entry.setdefault('persistent', {}).setdefault(
                             item,
                             int(group[item])
                             if 'bytes' in item else group[item])
+
+                logging_entry['persistent'].update(persistent_options)
                 continue
 
             # Trap logging: level informational, 1570 message lines logged
@@ -428,30 +511,81 @@ class ShowLogging(ShowLoggingSchema):
                 logging_dict['sequence_number'] = group['sequence_number']
                 continue
 
-            # Logging Source-Interface:       VRF Name:
+            # TLS Profiles:
             m = p17.match(line)
+            if m:
+                continue
+
+            # Profile name:
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                tls_profile_dict = {}
+                current_tls_profile = {
+                    group['tls_profile_name']: tls_profile_dict
+                }
+
+                ret_dict['tls_profiles'] = outer_tls_profile_dict
+                outer_tls_profile_dict.update(current_tls_profile)
+                continue
+
+            # Ciphersuites: Default
+            # Ciphersuites:  rsa-aes-cbc-sha2 ecdhe-rsa-aes-cbc-sha2 ecdhe-ecdsa-aes-gcm-sha2
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                tls_profile_dict['ciphersuites'] = group['tls_cipher_suites'].split()
+                continue
+
+            # Trustpoint:
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                tls_profile_dict['trustpoint'] = group['tls_trustpoint']
+                continue
+
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                tls_profile_dict['tls_version'] = group['tls_version']
+                continue
+
+            # Logging Source-Interface:       VRF Name:
+            m = p22.match(line)
             if m:
                 # do nothing, but need to parse for skipping this line
                 continue
 
             # Vlan200
             # Vlan200                         VRF-A
-            m = p18.match(line)
+            m = p23.match(line)
             if m:
                 group = m.groupdict()
                 logging_source_dict = {}
+
+                logging_source_iface = {
+                    group['interface']: {}
+                }
+
                 if group['vrf']:
                     logging_source_dict['logging_configuration'] = group[
                         'interface'] + ':' + group['vrf']
+
+                    logging_source_iface[group['interface']] = {
+                        "vrf": group['vrf']
+                    }
                 else:
                     logging_source_dict['logging_configuration'] = group[
                         'interface']
 
+                outer_logging_sources_dict.update(logging_source_iface)
                 logging_dict['logging_source_interface'] = logging_source_dict
+                trap_dict['logging_source_interface'] = outer_logging_sources_dict
+
                 continue
 
             # Log Buffer (32000 bytes):
-            m = p19.match(line)
+            m = p24.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['log_buffer_bytes'] = int(group['vrf'])

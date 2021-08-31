@@ -1,0 +1,13 @@
+Slot 2
+-------
+Total slot virtual ports 2800
+
+Slot 4
+-------
+Total slot virtual ports 1
+
+Slot 5
+-------
+Total slot virtual ports 13800
+
+Total chassis virtual ports 16601

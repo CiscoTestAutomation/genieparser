@@ -1,0 +1,15 @@
+
+
+Display program related information. This is the program information corresponding to this LR as
+perceived by the placement daemon.
+------------------------------------------------------------------------------------------------------------------------------------------
+	       Process Information
+------------------------------------------------------------------------------------------------------------------------------------------
+Program                                 Group               jid  Active         Active-state             Standby        Standby-state
+------------------------------------------------------------------------------------------------------------------------------------------
+rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+ospf(1)                                 v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+bgp(default)                            v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+statsd_manager_g                        netmgmt             1141 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+pim                                     mcast-routing       1158 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+ipv6_local                              v6-routing          1156 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED

@@ -1,0 +1,59 @@
+App id : meraki
+Owner : iox
+State : RUNNING
+Application
+Type : docker
+Name : cat9k-app
+Version : T-202106031655-G5c6da678-L0b29c1a9M-clouisa-creditor
+Description : 
+Author :
+Path : 
+URL Path : 
+Activated profile name : custom
+
+Resource reservation
+Memory : 512 MB
+Disk : 2 MB
+CPU : 500 units
+CPU-percent : 7 %
+VCPU : 1
+
+Platform resource profiles
+Profile Name CPU(unit) Memory(MB) Disk(MB)
+--------------------------------------------------------------
+
+Attached devices
+Type Name Alias
+---------------------------------------------
+serial/shell iox_console_shell serial0
+serial/aux iox_console_aux serial1
+serial/syslog iox_syslog serial2
+serial/trace iox_trace serial3
+
+Network interfaces
+---------------------------------------
+eth2:
+MAC address : 52:54:dd:0c:8e:82
+IPv6 address : ::
+Network name : mgmt-bridge100
+eth1:
+MAC address : 52:54:dd:0e:5f:bd
+IPv6 address : ::
+Network name : mgmt-bridge-v4093
+eth0:
+MAC address : 52:54:dd:e3:61:72
+IPv6 address : ::
+Network name : mgmt-bridge300
+
+
+Docker
+------
+Run-time information
+Command : 
+Entry-point : /sbin/init
+Run options in use : 
+Package run options : 
+Application health information
+Status : 0
+Last probe error : 
+Last probe output : []

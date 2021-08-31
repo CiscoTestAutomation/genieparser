@@ -98,41 +98,6 @@ Event history:
     08-29 14:51:29.114          FH Resolution           REOPT triggered         Status: REOPTIMIZED
     08-29 14:51:29.150          FH Resolution           REOPT triggered         Status: REOPTIMIZED
     08-29 14:51:29.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:29.250          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:29.592          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:29.733          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:29.873          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:30.013          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:30.162          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:33.875          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:33.879          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:33.919          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:33.978          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:33.982          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:34.724          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    08-29 14:51:35.227          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-03 13:06:47.604          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-03 13:06:47.607          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.537          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.541          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.545          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.557          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.571          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.598          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.614          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.629          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.641          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.667          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.698          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.734          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.764          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.789          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.800          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:15:36.823          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:16:23.743          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:16:23.745          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:19:30.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-    09-09 20:19:30.205          FH Resolution           REOPT triggered         Status: REOPTIMIZED
     09-09 20:50:52.378          CLI AGENT               Set colour              Colour: 200
     09-09 20:52:04.236          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
     09-09 20:59:06.432          CLI AGENT               Policy state DOWN       no shutdown: test1
@@ -143,5 +108,3 @@ Event history:
     09-09 21:25:58.931          CLI AGENT               Policy state DOWN       no shutdown: test1
     09-09 21:25:58.933          FH Resolution           Policy state UP         Status: PATH RESOLVED
     09-09 21:25:58.945          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-sr_ve-hkgasr01#
-    

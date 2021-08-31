@@ -1,0 +1,76 @@
+
+show vrf all detail
+
+Wed Apr 29 12:45:39.793 CET
+
+VRF AWS-DNB-AppSharedServices-PROD; RD 201627:373; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+Bundle-Ether15.244
+Address family IPV4 Unicast
+Import VPN route-target communities:
+RT:201627:373
+Export VPN route-target communities:
+RT:201627:373
+No import route policy
+No export route policy
+Address family IPV6 Unicast
+No import VPN route-target communities
+No export VPN route-target communities
+No import route policy
+No export route policy
+
+VRF Administrasjon; RD not set; VPN ID not set
+VRF mode: Regular
+Description not set
+Address family IPV4 Unicast
+Import VPN route-target communities:
+RT:65100:30
+Export VPN route-target communities:
+RT:65100:30
+No import route policy
+No export route policy
+Address family IPV6 Unicast
+No import VPN route-target communities
+No export VPN route-target communities
+No import route policy
+No export route policy
+
+VRF BT-HCL-DNB; RD 201627:600; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+Bundle-Ether15.2942
+Address family IPV4 Unicast
+Import VPN route-target communities:
+RT:201627:600
+Export VPN route-target communities:
+RT:201627:600
+No import route policy
+No export route policy
+Address family IPV6 Unicast
+No import VPN route-target communities
+No export VPN route-target communities
+No import route policy
+No export route policy
+
+VRF DNB-TATA; RD 201627:241; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+Bundle-Ether15.514
+Bundle-Ether15.1285
+TenGigE0/0/2/1.600
+Address family IPV4 Unicast
+Import VPN route-target communities:
+RT:201627:241
+Export VPN route-target communities:
+RT:201627:241
+No import route policy
+No export route policy
+Address family IPV6 Unicast
+No import VPN route-target communities
+No export VPN route-target communities
+No import route policy
+No export route policy

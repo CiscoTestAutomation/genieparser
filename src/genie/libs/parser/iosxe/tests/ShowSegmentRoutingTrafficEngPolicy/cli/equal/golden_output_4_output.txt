@@ -1,0 +1,16 @@
+R1#show segment-routing traffic-eng policy name r5-s
+Name: r5-s (Color: 102 End-point: 5.5.5.5)
+  Owners : CLI
+  Status:
+    Admin: up, Operational: up for 02:07:25 (since 08-20 06:52:36.113)
+  Candidate-paths:
+    Preference 1 (CLI):
+      Explicit: segment-list to-R5-s (active)
+        Weight: 1, Metric Type: TE
+          16052 [Prefix-SID, 5.5.5.5]
+  Attributes:
+    Binding SID: 17
+      Allocation mode: dynamic
+      State: Programmed
+    Autoroute:
+      Include all (Strict) 

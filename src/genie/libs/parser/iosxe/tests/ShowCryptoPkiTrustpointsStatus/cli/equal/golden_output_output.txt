@@ -1,0 +1,86 @@
+Trustpoint SLA-TrustPoint:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=Cisco Licensing Root CA,o=Cisco
+    Fingerprint MD5: 1468DC18 250BDFCF 769C29DF E1F7E5A8 
+    Fingerprint SHA1: 5CA95FB6 E2980EC1 5AFB681B BB7E62B5 AD3FA8B8 
+  State:
+    Keys generated ............. No
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... None
+
+
+Trustpoint CISCO_IDEVID_SUDI:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=ACT2 SUDI CA,o=Cisco
+    Fingerprint MD5: 542F6E73 28DA2611 8E50685D EB4B7194 
+    Fingerprint SHA1: F6969BBD 48E5F612 5B934D01 E71FE9C2 7C6F547E 
+  Router General Purpose certificate configured:
+    Subject Name:
+     cn=ISR4451-X/K9,ou=ACT-2 Lite SUDI,o=Cisco,serialNumber=PID:ISR4451-X/K9 SN:FOC23231DPE
+    Fingerprint MD5: 3BA7CDE7 F43CDA28 8F96E131 AB4482B9 
+    Fingerprint SHA1: 3AA661E0 BAEE254D 53863902 0321BE12 43989526 
+  State:
+    Keys generated ............. Yes (General Purpose, non-exportable)
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... Yes
+
+
+Trustpoint CISCO_IDEVID_SUDI0:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=Cisco Root CA 2048,o=Cisco Systems
+    Fingerprint MD5: BE395ABE 078AB112 1725CC1D 46343CB2 
+    Fingerprint SHA1: DE990CED 99E0431F 60EDC393 7E7CD5BF 0ED9E5FA 
+  State:
+    Keys generated ............. No
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... None
+
+
+Trustpoint TP-self-signed-1215158049:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=IOS-Self-Signed-Certificate-1215158049
+    Fingerprint MD5: 59348561 E03F69D9 B61814E6 ACD487B5 
+    Fingerprint SHA1: 8BF1439D C53F25C1 B7FB1BF2 AA44BDAA 92FA4862 
+  Router General Purpose certificate configured:
+    Subject Name:
+     cn=IOS-Self-Signed-Certificate-1215158049
+    Fingerprint MD5: 59348561 E03F69D9 B61814E6 ACD487B5 
+    Fingerprint SHA1: 8BF1439D C53F25C1 B7FB1BF2 AA44BDAA 92FA4862 
+  State:
+    Keys generated ............. Yes (General Purpose, non-exportable)
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... Yes
+
+
+Trustpoint PROXY-SIGNING-CA:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=176vManCluster,ou=SDWAN-ENT,o=Cisco,l=BLR,st=KA,c=IN
+    Fingerprint MD5: 2E347435 92F56BC8 493E82B2 7ABFF939 
+    Fingerprint SHA1: 54161DDA 2D5AD554 A4DEC0EB A332996E 0271151D 
+  Router General Purpose certificate configured:
+    Subject Name:
+     cn=ISR4451-X/K9-FOC23231DPE
+    Fingerprint MD5: 1CDBDA3E C1B9E7E1 5AE2C539 056CBAB1 
+    Fingerprint SHA1: 7772B196 6C35A7F6 48DD0D1F B3FF0744 C1F507C4 
+  Last enrollment status: Granted
+  State:
+    Keys generated ............. Yes (General Purpose, non-exportable)
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... Yes
+
+
+Trustpoint PROXY-SIGNING-ROOT-CA:
+  Issuing CA certificate configured:
+    Subject Name:
+     cn=OCSP-CA,dc=pki,dc=pki-dt,dc=com
+    Fingerprint MD5: FFFA0433 8B32A767 E231978F 54FDFC40 
+    Fingerprint SHA1: DB06D0F8 799353EA BBC47BB2 01321D54 F5086289 
+  State:
+    Keys generated ............. No
+    Issuing CA authenticated ....... Yes
+    Certificate request(s) ..... None

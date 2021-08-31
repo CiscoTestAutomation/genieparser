@@ -1,0 +1,5 @@
+FQDN Name : fqdnname
+Protocol  : RADIUS
+IPv4s     : 11.15.24.213
+IPv6s     :
+Groups    : FQDNNAME radius

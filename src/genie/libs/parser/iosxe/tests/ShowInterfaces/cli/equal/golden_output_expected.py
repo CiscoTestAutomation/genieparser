@@ -2,6 +2,7 @@ expected_output = {
     "Port-channel12": {
         "flow_control": {"send": False, "receive": False},
         "err_disabled": False,
+        "suspended": False,
         "type": "EtherChannel",
         "counters": {
             "out_buffer_failure": 0,
@@ -37,7 +38,7 @@ expected_output = {
             "in_crc_errors": 0,
             "out_no_carrier": 0,
             "in_with_dribble": 0,
-            "in_broadcast_pkts": 944788,
+            "in_broadcast_pkts": 944818,
             "out_pkts": 39281,
             "out_late_collision": 0,
             "out_octets": 6235318,
@@ -89,6 +90,7 @@ expected_output = {
     "GigabitEthernet1/0/1": {
         "flow_control": {"send": False, "receive": False},
         "err_disabled": False,
+        "suspended": False,
         "type": "Gigabit Ethernet",
         "counters": {
             "out_buffer_failure": 0,
@@ -124,7 +126,7 @@ expected_output = {
             "in_crc_errors": 0,
             "out_no_carrier": 0,
             "in_with_dribble": 0,
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 4173,
             "out_pkts": 12229,
             "out_late_collision": 0,
             "out_octets": 2321107,
@@ -377,6 +379,7 @@ expected_output = {
     "GigabitEthernet1/0/2": {
         "flow_control": {"send": False, "receive": False},
         "err_disabled": False,
+        "suspended": False,
         "type": "Gigabit Ethernet",
         "counters": {
             "out_buffer_failure": 0,
@@ -412,7 +415,7 @@ expected_output = {
             "in_crc_errors": 0,
             "out_no_carrier": 0,
             "in_with_dribble": 0,
-            "in_broadcast_pkts": 535961,
+            "in_broadcast_pkts": 535996,
             "out_pkts": 23376,
             "out_late_collision": 0,
             "out_octets": 3642296,

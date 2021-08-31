@@ -3,6 +3,7 @@
 IOSXE parsers for show commands:
     * 'show standby all'
     * 'show standby internal'
+    * 'show standby brief'
 """
 # Python
 import re
@@ -405,7 +406,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
         standby_all_dict = {}
 
         # Ethernet4/1 - Group 0 (version 2)
-        p1 = re.compile(r'(?P<intf>[\w\/\.]+) +\- +Group +(?P<group>\d+)'
+        p1 = re.compile(r'(?P<intf>[\w\/\.\-]+) +\- +Group +(?P<group>\d+)'
                         r' *(?:\(version +(?P<version>\d+)\))?$')
 
         # State is Active
@@ -920,3 +921,65 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
                     = int(m.groupdict()['reload_delay'])
 
         return hsrp_delay_dict
+
+# =================
+# Schema for:
+#  * 'show standby brief:'
+# =================
+class ShowStandbyBriefSchema(MetaParser):
+    """Schema for show standby brief:"""
+    
+    schema = {
+        'interface': {
+            Any(): {
+                'grp': int,
+                'priority': int,
+                'state': str,
+                'active': str,
+                'standby': str,
+                'virtual_ip': str,
+            },
+        },
+    }
+
+# =================
+# Parser for:
+#  * 'show standby brief:'
+# =================
+class ShowStandbyBrief(ShowStandbyBriefSchema):
+    '''Parser for show standby brief'''
+    
+    cli_command = 'show standby brief'
+
+    def cli(self, output=None):
+       
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
+        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+(?P<state>\w+)\s+(?P<active>\w+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
+        
+        for line in out.splitlines():
+            line = line.strip()
+            
+            #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                stby_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                stby_dict['grp']  = int(group['grp'])
+                stby_dict['priority']  = int(group['priority'])
+                stby_dict['state']  = group['state']
+                stby_dict['active']  = group['active']
+                stby_dict['standby']  = group['standby']
+                stby_dict['virtual_ip']  = group['virtual_ip']
+                continue
+           
+        return ret_dict

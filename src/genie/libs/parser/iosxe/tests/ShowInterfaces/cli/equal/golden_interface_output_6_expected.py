@@ -5,6 +5,7 @@ expected_output = {
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
+        "suspended": False,
         "err_disabled": True,
         "type": "RP management port",
         "mac_address": "fc99.47ff.97ab",

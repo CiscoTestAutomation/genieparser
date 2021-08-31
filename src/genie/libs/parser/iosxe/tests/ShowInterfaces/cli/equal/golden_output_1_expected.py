@@ -118,6 +118,7 @@ expected_output = {
     "Dialer1": {
         "bandwidth": 56,
         "connected": False,
+        "suspended": False,
         "err_disabled": False,
         "counters": {
             "in_octets": 0,
@@ -168,7 +169,7 @@ expected_output = {
         "auto_negotiate": True,
         "bandwidth": 1000000,
         "counters": {
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 21865326,
             "in_crc_errors": 0,
             "in_errors": 0,
             "in_frame": 0,

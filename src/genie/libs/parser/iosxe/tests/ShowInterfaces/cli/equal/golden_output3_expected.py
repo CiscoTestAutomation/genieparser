@@ -2,6 +2,7 @@ expected_output = {
     "Serial1/0/2:0": {
         "port_channel": {"port_channel_member": False},
         "enabled": False,
+        "suspended": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -51,7 +52,7 @@ expected_output = {
             "in_octets": 2297417,
             "in_no_buffer": 0,
             "in_multicast_pkts": 4171,
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 4173,
             "in_runts": 0,
             "in_giants": 0,
             "in_throttles": 0,

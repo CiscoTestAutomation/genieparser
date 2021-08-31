@@ -1,0 +1,9 @@
+MAC Address                   : ffff.ffff.fffd
+Reference Count               : 1
+Epoch                         : 0
+Producer                      : L2FIB
+Flags                         : None
+Adjacency                     : Olist: 3, Ports: 1
+PD Adjacency                  : Olist: 3, Ports: 1
+Packets                       : 0
+Bytes                         : 0

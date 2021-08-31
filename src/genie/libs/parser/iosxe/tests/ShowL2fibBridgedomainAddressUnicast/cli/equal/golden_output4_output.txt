@@ -1,0 +1,11 @@
+MAC Address : 000a.000a.000a
+Reference Count : 1
+Epoch : 0
+Producer : BD-ENG
+Flags : Age out
+: CP Learn
+: Flood Mac
+Adjacency : VXLAN_CP L:20011:1.1.1.1 R:20012:2.2.2.2
+PD Adjacency : VXLAN_CP L:20011:1.1.1.1 R:20012:2.2.2.2
+Packets                       : 0
+Bytes                         : 0

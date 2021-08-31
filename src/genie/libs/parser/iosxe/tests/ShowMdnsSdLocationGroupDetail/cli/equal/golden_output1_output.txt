@@ -1,0 +1,14 @@
+ Trusted Trunks         : Gi1/0/14 
+ Vlan's                 : 10-11
+ Total Number of Location Groups: 4
+================================================================================
+VLAN                NUMBER OF LGs       LG ID     Ports in LG's                 
+================================================================================
+
+10                           3          200     Gi1/0/15, 
+                                        201     No Active Ports
+                                        0       No Active Ports
+11                           3          200     Gi1/0/37, 
+                                        201     No Active Ports
+                                        0       No Active Ports
+

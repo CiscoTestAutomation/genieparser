@@ -1,0 +1,21 @@
+==========================================================
+            Show Tacacs
+==========================================================
+Tacacs+ Server -  private :
+               Server name: data-tac
+            Server address: 11.15.24.213
+               Server port: 49
+              Socket opens:         23
+             Socket closes:         23
+             Socket aborts:          0
+             Socket errors:          0
+           Socket Timeouts:          0
+   Failed Connect Attempts:          0
+        Total Packets Sent:          0
+        Total Packets Recv:          0
+          Expected Replies:          0
+             Server Status: Alive
+Continous Authc fail count:          0
+Continous Authz fail count:          0
+
+

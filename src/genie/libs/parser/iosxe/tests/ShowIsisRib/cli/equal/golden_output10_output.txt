@@ -1,0 +1,21 @@
+R1-asr1k-43#show isis rib 3.3.3.3
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+3.3.3.0/24  prefix attr X:0 R:0 N:0
+  [115/L1/16777224] via 13.13.1.2(TenGigabitEthernet0/0/5), from 3.3.3.3, tag 0, LSP[36/36/3971] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L2/16777224] via 13.13.1.2(TenGigabitEthernet0/0/5), from 3.3.3.3, tag 0, LSP[37/37/3978] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331652] via 13.13.1.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[37/11/3994] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/83886080] via 13.13.1.2(TenGigabitEthernet0/0/5), from 6.6.6.6, tag 0, LSP[37/21/4000] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None

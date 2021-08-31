@@ -1,0 +1,5 @@
+
+Tue Jun 16 22:42:18.713 PDT
+IP Multicast Forwarding Information Base Summary for VRF vpn1
+  No. of (*,G) routes = 5
+  No. of (S,G) routes = 44

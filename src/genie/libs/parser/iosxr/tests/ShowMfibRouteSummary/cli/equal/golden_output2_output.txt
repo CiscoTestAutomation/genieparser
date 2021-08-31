@@ -1,0 +1,5 @@
+
+Tue Jun 16 22:36:44.453 PDT
+IP Multicast Forwarding Information Base Summary for VRF default
+  No. of (*,G) routes = 4
+  No. of (S,G) routes = 2

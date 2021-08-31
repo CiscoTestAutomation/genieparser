@@ -68,7 +68,7 @@ expected_output = {
             "in_frame": 0,
             "out_mac_pause_frames": 0,
             "in_mac_pause_frames": 0,
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 9672,
             "in_errors": 0,
             "in_pkts": 9672,
             "out_deferred": 0,

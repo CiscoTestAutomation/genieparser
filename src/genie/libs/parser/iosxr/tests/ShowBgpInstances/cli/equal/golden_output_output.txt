@@ -1,0 +1,7 @@
+
+ID  Placed-Grp  Name              AS        VRFs    Address Families
+--------------------------------------------------------------------------------
+0   v4_routing  test              333       0       none
+1   bgp2_1      test1             333       0       none
+2   bgp3_1      test2             333       0       none
+3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,

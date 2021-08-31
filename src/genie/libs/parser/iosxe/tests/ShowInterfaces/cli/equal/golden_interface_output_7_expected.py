@@ -20,6 +20,8 @@ expected_output = {
             "in_throttles": 0,
             "in_watchdog": 0,
             "last_clear": "never",
+            "out_broadcast_pkts": 0,
+            "out_multicast_pkts": 0,
             "out_babble": 0,
             "out_buffer_failure": 0,
             "out_buffers_swapped": 0,

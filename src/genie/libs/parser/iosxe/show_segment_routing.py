@@ -749,6 +749,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
             "name": str,
             "color": int,
             Optional("end_point"): str,
+            Optional("owners"): str,
             "status": {
                 "admin": str,
                 "operational": {
@@ -809,7 +810,10 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                         "state": str,
                     },
                 },
+                Optional("auto_route"): str
             },
+            Optional("tunnel_id"): str,
+            Optional("interface_handle"): str,
             Optional("forwarding_id"): str,
             Optional("stats"): {
                 "packets": int,
@@ -820,7 +824,9 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     "timestamp": str,
                     "client": str,
                     "event_type": str,
-                    "context": str,
+                    "context": {
+                        Any() : str
+                    },
                 },
             },
         },
@@ -849,17 +855,16 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         # Name: test1 (Color: 100 End-point: 10.169.196.241)
         # Name: test_genie_1 (Color: 0 End-point: )
-        p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
-                         '+End-point: *(?P<end_point>\S+)?\)$')
+        p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+)\s+End-point: *(?P<end_point>\S+)?\)$')
 
         # Status:
         #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
-        p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+) '
-                         '+for +(?P<time>\S+) +\(since +(?P<since>[\S\s]+)\)$')
+        p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+)'
+                        ' +for +(?P<time>\S+) +\(since (?P<since>\S+\s+\S+)\)$')
 
         # Candidate-paths:
         #     Preference 400:
-        p3 = re.compile(r'^Preference +(?P<preference>\d+)+\s*\w*:$')
+        p3 = re.compile(r'^Preference\s+(?P<preference>\d+)\s*\S*$')
 
         #     Dynamic (pce) (inactive)
         #     Dynamic (active)
@@ -898,13 +903,14 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         # Stats:
         #   Packets: 44         Bytes: 1748
-        p13 = re.compile(r'^Packets: +(?P<packets>[\d]+) +Bytes: +(?P<bytes>[\d]+)$')
+        p13 = re.compile(r'^Packets:\s+(?P<packets>\d+)\s+Bytes:\s+(?P<bytes>\d+)$')
 
         # Event history:
         #   Timestamp                   Client                  Event type              Context: Value
         #   08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-        p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+) +(?P<client>(?:[\S]+ )+) '
-                          '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
+        p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+)\s+(?P<client>(?:[\S]+ )+)'
+                          '\s+(?P<event_type>(?:[\S]+ )+)\s+(?P<context>\S+(\s*\S+))'
+                          ':\s+(?P<value>\S+(\s*\S+)*)\s*(CP:\s+(?P<cp>\d+))?$')
 
         # Affinity:
         p15 = re.compile(r'^Affinity:$')
@@ -918,12 +924,17 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         # green
         p17 = re.compile(r'^(?P<affinity>\w+)$')
 
+        #Owners : CLI
+        p18 = re.compile(r'^Owners\s*:\s+(?P<owners>\S+)')
+
+        #  Tunnel ID: 65537 (Interface Handle: 0x81)
+        p19 = re.compile(r'^Tunnel ID:\s+(?P<tunnel_id>\d+)\s+\(Interface Handle:\s+(?P<interface_handle>\S+)\)$')
+
         # initial variables
-        aff_flag=False
+        auto_route, aff_flag = False, False
         ret_dict = {}
 
         for line in out.splitlines():
-            line = line.replace('\t', '    ')
             line = line.strip()
             if not line:
                 continue
@@ -1087,8 +1098,21 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 aff_flag = False
                 event_index += 1
                 group = m.groupdict()
+                time = group["timestamp"]
+                client = group["client"].strip()
+                event_type = group["event_type"].strip()
+                context = group["context"]
+                value = group["value"]
+
                 event = policy_dict.setdefault('event_history', {}).setdefault(event_index, {})
-                event.update({k: v.strip() for k, v in group.items()})
+                event.setdefault("timestamp", time)
+                event.setdefault("client", client)
+                event.setdefault("event_type", event_type)
+                context_dict = {context:value}
+
+                if group["cp"]:
+                    context_dict["cp"] = group["cp"]
+                event.setdefault("context", context_dict)
                 continue
 
             # Affinity:
@@ -1116,6 +1140,35 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                     if temp_list is not None:
                         temp_list.append(m.groupdict()['affinity'])
                         aff_dict.update({aff_type: temp_list})
+            
+            #Owners : CLI
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                owners = group['owners']
+                policy_dict.update({'owners': owners})
+                continue
+            
+            #   Tunnel ID: 65537 (Interface Handle: 0x81)
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_id = group['tunnel_id']
+                interface_handle = group['interface_handle']
+                policy_dict.update({'tunnel_id': tunnel_id})
+                policy_dict.update({'interface_handle': interface_handle})
+                continue
+
+            # Autoroute:
+            #   Include all (Strict) 
+            if "Autoroute" in line:
+                auto_route = True
+                continue
+            
+            if auto_route:
+                policy_dict.setdefault("attributes", {}).setdefault("auto_route", line.strip())
+                auto_route = False
+
 
         return ret_dict
 

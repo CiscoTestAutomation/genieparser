@@ -1,0 +1,22 @@
+asr1k-24#sh segment-routing traffic-eng policy name testing123456789_987654321_123456789_987654321
+
+Name: testing123456789_987654321_123456789_987654321 (Color: 80001 End-point: 1.1.1.1)
+  Owners : CLI
+  Status:
+    Admin: up, Operational: up for 00:02:46 (since 08-24 20:20:28.539)
+  Candidate-paths:
+    Preference 2 (CLI):
+      Explicit: segment-list R1_2000 (inactive)
+        Weight: 1, Metric Type: TE
+      Explicit: segment-list R1_20001 (active)
+        Weight: 1, Metric Type: TE
+          100071 [Prefix-SID, 7.7.7.7]
+          100041 [Prefix-SID, 4.4.4.4]
+          100021 [Prefix-SID, 2.2.2.2]
+          100011 [Prefix-SID, 1.1.1.1]
+  Attributes:
+    Binding SID: 957
+      Allocation mode: dynamic
+      State: Programmed
+    Autoroute:
+      Include all

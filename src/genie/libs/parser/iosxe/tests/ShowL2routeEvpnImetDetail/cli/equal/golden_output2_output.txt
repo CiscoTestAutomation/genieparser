@@ -1,0 +1,23 @@
+EVPN Instance:            1
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           1.1.1.3
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            17
+Tunnel ID:                1.1.1.1
+Multicast Proxy:          No
+Next Hop(s):              L:0 1.1.1.1
+
+EVPN Instance:            1
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           2.2.2.3
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            18
+Tunnel ID:                2.2.2.1
+Multicast Proxy:          No
+Next Hop(s):              L:0 2.2.2.1
