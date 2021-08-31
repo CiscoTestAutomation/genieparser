@@ -429,8 +429,9 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             '2001::222:1:1:1234/128': {'flags': 'ipv6 '
                                                                 'm6rib '
                                                                 'pim6',
-                                                        'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1234, '
-                                                                                                                    'internal'}},
+                                                        'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1234',
+                                                                                                        'internal': True}},
+
                                                         'oil_count': '3',
                                                         'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                     'oil_uptime': '00:02:58'},
@@ -442,13 +443,13 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             '2001::222:1:2:1234/128': {'flags': 'ipv6 '
                                                                 'm6rib '
                                                                 'pim6',
-                                                        'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234, '
-                                                                                                                    'internal'}},
+                                                        'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234',
+                                                                                                        'internal': True}},
                                                         'oil_count': '3',
                                                         'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                     'oil_uptime': '00:02:58'},
-                                                                                    'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                        'oil_flags': '(RPF)',
+                                                                                    'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                        'oil_flags': 'm6rib',
                                                                                                         'oil_uptime': '00:04:03'},
                                                                                     'port-channel1001': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:04:01'}},
@@ -456,8 +457,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             '2001::222:2:3:1234/128': {'flags': 'ipv6 '
                                                                 'm6rib '
                                                                 'pim6',
-                                                        'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
-                                                                                                                'internal'}},
+                                                        'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10',
+                                                                                                     'internal': True}},
                                                         'oil_count': '1',
                                                         'outgoing_interface_list': {'Ethernet1/33.11': {'oil_flags': 'm6rib',
                                                                                                         'oil_uptime': '00:04:03'}},
@@ -465,8 +466,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             '2001::222:2:44:1234/128': {'flags': 'ipv6 '
                                                                     'm6rib '
                                                                     'pim6',
-                                                        'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
-                                                                                                                'internal'}},
+                                                        'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10',
+                                                                                                        'internal': True}},
                                                         'oil_count': '1',
                                                         'outgoing_interface_list': {'Ethernet1/33.11': {'oil_flags': 'm6rib',
                                                                                                         'oil_uptime': '00:04:03'}},
@@ -484,8 +485,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                 '2001::222:1:1:1234/128': {'flags': 'ipv6 '
                                                                     'm6rib '
                                                                     'pim6',
-                                                            'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1234, '
-                                                                                                                    'internal'}},
+                                                            'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1234',
+                                                                                                            'internal': True}},
                                                             'oil_count': '3',
                                                             'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:02:58'},
@@ -497,20 +498,20 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                 '2001::222:1:2:1234/128': {'flags': 'ipv6 '
                                                                     'm6rib '
                                                                     'pim6',
-                                                            'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234, '
-                                                                                                                    'internal'}},
+                                                            'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234',
+                                                                                                            'internal': True}},
                                                             'oil_count': '2',
                                                             'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:04:01'},
-                                                                                        'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                            'oil_flags': '(RPF)',
+                                                                                        'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                            'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
                                                             'uptime': '00:04:03'},
                                 '2001::222:2:3:1234/128': {'flags': 'ipv6 '
                                                                     'm6rib '
                                                                     'pim6',
-                                                            'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
-                                                                                                                    'internal'}},
+                                                            'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10',
+                                                                                                        'internal': True}},
                                                             'oil_count': '1',
                                                             'outgoing_interface_list': {'Ethernet1/33.11': {'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
@@ -518,8 +519,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                 '2001::222:2:44:1234/128': {'flags': 'ipv6 '
                                                                     'm6rib '
                                                                     'pim6',
-                                                            'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
-                                                                                                                    'internal'}},
+                                                            'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10',
+                                                                                                        'internal': True}},
                                                             'oil_count': '1',
                                                             'outgoing_interface_list': {'Ethernet1/33.11': {'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
@@ -549,8 +550,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                             'oil_count': '2',
                                                             'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:04:01'},
-                                                                                        'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                            'oil_flags': '(RPF)',
+                                                                                        'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                            'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
                                                             'uptime': '00:04:03'},
                                 '2001::222:2:3:1234/128': {'flags': 'ipv6 '
@@ -596,8 +597,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                             'oil_count': '2',
                                                             'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                             'oil_uptime': '00:04:02'},
-                                                                                        'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                            'oil_flags': '(RPF)',
+                                                                                        'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                            'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
                                                             'uptime': '00:04:03'}}},
 'ff1e:3333::1:0/128': {'source_address': {'*': {'flags': 'ipv6 '                                                                                                                           'mld '
@@ -623,8 +624,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                         'oil_count': '3',
                                                         'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                     'oil_uptime': '00:02:58'},
-                                                                                    'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                        'oil_flags': '(RPF)',
+                                                                                    'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                        'oil_flags': 'm6rib',
                                                                                                         'oil_uptime': '00:04:03'},
                                                                                     'port-channel1001': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:04:01'}},
@@ -656,8 +657,8 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                             'oil_count': '2',
                                                             'outgoing_interface_list': {'Ethernet1/26': {'oil_flags': 'pim6',
                                                                                                         'oil_uptime': '00:04:01'},
-                                                                                        'Ethernet1/33.11': {'oif_rpf': True,
-                                                                                                            'oil_flags': '(RPF)',
+                                                                                        'Ethernet1/33.11': {'oif_rpf': '(RPF)',
+                                                                                                            'oil_flags': 'm6rib',
                                                                                                             'oil_uptime': '00:04:03'}},
                                                             'uptime': '00:04:03'},
                                 '2001::222:2:3:1234/128': {'flags': 'ipv6 '

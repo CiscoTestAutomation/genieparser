@@ -67,6 +67,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('enabled'): bool,
                 Optional('connected'): bool,
                 Optional('err_disabled'): bool,
+                Optional('suspended'): bool,
                 Optional('description'): str,
                 Optional('type'): str,
                 Optional('link_state'): str,
@@ -214,7 +215,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
                'reliability']
 
-    def cli(self,interface="",output=None):
+    def cli(self, interface="", output=None):
         if output is None:
             if interface:
                 cmd = self.cli_command[1].format(interface=interface)
@@ -228,15 +229,16 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Port-channel12 is up, line protocol is up (connected)
         # Vlan1 is administratively down, line protocol is down , Autostate Enabled
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
-        #FastEthernet1 is down, line protocol is down (err-disabled)
+        # FastEthernet1 is down, line protocol is down (err-disabled)
+        # GigabitEthernet1/0/2 is up, line protocol is down (suspended)
 
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is +(?P<enabled>[\w\s]+)(?: '
                         r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                         r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
-        p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is'
-                           r' +(?P<enabled>[\w\s]+),'
-                           r' +line +protocol +is +(?P<line_protocol>\w+)'
-                           r'( *, *(?P<attribute>[\w\s]+))?$')
+        p1_1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is'
+                          r' +(?P<enabled>[\w\s]+),'
+                          r' +line +protocol +is +(?P<line_protocol>\w+)'
+                          r'( *, *(?P<attribute>[\w\s]+))?$')
 
         # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
@@ -404,18 +406,17 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 23376 packets output, 3642296 bytes, 0 underruns
         # 13781 packets output, 2169851 bytes
         p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output, +(?P<out_octets>[0-9]+) '
-                          '+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
+                          r'+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
 
-        # Received 4173 broadcasts (0 IP multicasts)
-        # Received 535996 broadcasts (535961 multicasts)
-        p29 = re.compile(r'^Received +(?P<out_broadcast_pkts>\d+) +broadcasts +'
-                          '\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
+        # Output 0 broadcasts (55 multicasts)
+        p29 = re.compile(r'^Output +(?P<out_broadcast_pkts>\d+) +broadcasts +'
+                          r'\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
 
         # 0 output errors, 0 collisions, 2 interface resets
         # 0 output errors, 0 interface resets
         p30 = re.compile(r'^(?P<out_errors>[0-9]+) +output +errors,'
-                          '( *(?P<out_collision>[0-9]+) +collisions,)? +'
-                          '(?P<out_interface_resets>[0-9]+) +interface +resets$')
+                          r'( *(?P<out_collision>[0-9]+) +collisions,)? +'
+                          r'(?P<out_interface_resets>[0-9]+) +interface +resets$')
 
         # 0 unknown protocol drops
         p31 = re.compile(r'^(?P<out_unknown_protocl_drops>[0-9]+) +'
@@ -423,8 +424,8 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # 0 babbles, 0 late collision, 0 deferred
         p32 = re.compile(r'^(?P<out_babble>[0-9]+) +babbles, +'
-                          '(?P<out_late_collision>[0-9]+) +late +collision, +'
-                          '(?P<out_deferred>[0-9]+) +deferred$')
+                         r'(?P<out_late_collision>[0-9]+) +late +collision, +'
+                         r'(?P<out_deferred>[0-9]+) +deferred$')
 
         # 0 lost carrier, 0 no carrier, 0 pause output
         # 0 lost carrier, 0 no carrier
@@ -487,6 +488,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             # Dialer1 is up (spoofing), line protocol is up (spoofing)
             # FastEthernet1 is down, line protocol is down (err-disabled)
+            # GigabitEthernet1/0/2 is up, line protocol is down (suspended)
 
             m = p1.match(line)
             m1 = p1_1.match(line)
@@ -522,6 +524,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if line_attribute:
                     interface_dict[interface]['connected'] = True if line_attribute == 'connected' else False
                     interface_dict[interface]['err_disabled'] = True if line_attribute == 'err-disabled' else False
+                    interface_dict[interface]['suspended'] = True if line_attribute == 'suspended' else False
 
                 if autostate:
                     interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
@@ -953,9 +956,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p23.match(line)
             if m:
                 interface_dict[interface]['counters']['in_multicast_pkts'] = \
-                    int(m.groupdict()['in_broadcast_pkts'])
-                interface_dict[interface]['counters']['in_broadcast_pkts'] = \
                     int(m.groupdict()['in_multicast_pkts'])
+                interface_dict[interface]['counters']['in_broadcast_pkts'] = \
+                    int(m.groupdict()['in_broadcast_pkts'])
                 continue
 
             # 0 runts, 0 giants, 0 throttles
@@ -1018,8 +1021,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                         int(m.groupdict()['out_underruns'])
                 continue
 
-            # Received 4173 broadcasts (0 IP multicasts)
-            # Received 535996 broadcasts (535961 multicasts)
+            # Output 0 broadcasts (55 multicasts)
             m = p29.match(line)
             if m:
                 interface_dict[interface]['counters']['out_broadcast_pkts'] = \

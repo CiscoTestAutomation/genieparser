@@ -9,7 +9,7 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.viptela.show_cloudexpress_applications import ShowCloudexpressApplication
+from genie.libs.parser.viptela.show_cloudexpress import ShowCloudexpressApplication
 
 
 # ============================================

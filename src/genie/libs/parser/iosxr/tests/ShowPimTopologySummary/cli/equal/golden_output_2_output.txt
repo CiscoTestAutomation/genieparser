@@ -1,0 +1,9 @@
+
+RP/0/RSP0/CPU0:PE5#show pim vrf vpn101 topology summary 
+Tue Jan 26 04:22:07.176 UTC
+
+PIM Topology Summary for VRF vpn101
+  No. of group ranges = 5 (Active group ranges = 4)
+  No. of (*,G) routes = 1
+  No. of (S,G) routes = 150
+  No. of (S,G)RPT routes = 0

@@ -74,7 +74,7 @@ expected_output = {
         "arp_type": "arpa",
         "bandwidth": 100000,
         "counters": {
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 35509555,
             "in_crc_errors": 0,
             "in_errors": 0,
             "in_frame": 0,

@@ -24,6 +24,7 @@ IOSXE parsers for the following show commands:
     * 'show platform software fed active fnf et-analytics-flows'
     * 'show platform software fed switch active mpls forwarding label {label} detail'
     * 'show platform software fed active mpls forwarding label {label} detail'
+    * 'show platform hardware throughput crypto
 '''
 
 # Python
@@ -206,6 +207,7 @@ class ShowVersionSchema(MetaParser):
             Optional('processor_type'): str,
             Optional('chassis_sn'): str,
             Optional('rtr_type'): str,
+            Optional('router_operating_mode'): str,
             'os': str,
             Optional('curr_config_register'): str,
             Optional('license_udi'): {
@@ -359,7 +361,8 @@ class ShowVersion(ShowVersionSchema):
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
                         r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,? *'
-                        r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
+                        r'(?P<label>(\[.+?(?P<build_label>BLD_[0-9a-zA-Z_]+)(-\S+)? \d+\])|.*)$')
+
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p4 = re.compile(r'^Copyright +(.*)$')
@@ -619,6 +622,9 @@ class ShowVersion(ShowVersionSchema):
         # hb_rev_num
         p60 = re.compile(r'^[Hh]ardware\s+[Bb]oard\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<hb_rev_num>.+)$')
 
+        # Router operating mode: Controller-Managed
+        p61 = re.compile(r'^Router operating mode: (?P<router_operating_mode>.+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -866,6 +872,12 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['rtr_type'] = rtr_type = 'ISR'
                 else:
                     version_dict['version']['rtr_type'] = rtr_type = version_dict['version']['chassis']
+                continue
+
+            # Router operating mode: Controller-Managed
+            m = p61.match(line)
+            if m:
+                version_dict['version']['router_operating_mode'] = m.groupdict()['router_operating_mode']
                 continue
 
             # chassis_sn
@@ -2380,18 +2392,17 @@ class ShowPlatform(ShowPlatformSchema):
         # --------- ------------------- --------------------- -----------------
         # 0         ASR1000-SIP40       ok                    00:33:53
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
-        p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
-                        r'(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+        # F0                            ok, active            00:09:23
+        # P1        Unknown             N/A                   never
+        p6 = re.compile(r'^(?P<slot>[a-zA-Z0-9]+)(\/(?P<subslot>\d+))?( +(?P<name>[a-zA-Z0-9\-\_/+]+))? +(?P<state>(?!\d+|unknown)\w+(\, \w+)?(/\w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
-        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
-                          r' +(?P<insert_time>[\w\.\:]+)$')
+        p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
         # 0         00200800            16.2(1r)
-        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
-                        r'(?P<fireware_ver>[\w\.\(\)\/]+)$')
+        p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +(?P<fireware_ver>[\w\.\(\)\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2482,104 +2493,103 @@ class ShowPlatform(ShowPlatformSchema):
                 slot = m.groupdict()['slot']
                 subslot = m.groupdict()['subslot']
                 name = m.groupdict()['name']
-                if not name:
-                    continue
+                if name:
 
-                # subslot
-                if subslot:
-                    try:
-                        # no-slot-type output:
-                        # Slot      Type                State                 Insert time (ago)
+                    # subslot
+                    if subslot:
+                        try:
+                            # no-slot-type output:
+                            # Slot      Type                State                 Insert time (ago)
 
-                        # --------- ------------------- --------------------- -----------------
+                            # --------- ------------------- --------------------- -----------------
 
-                        # 0/2      A900-IMA8Z          ok                    1w4d
+                            # 0/2      A900-IMA8Z          ok                    1w4d
 
+                            if 'slot' not in platform_dict:
+                                platform_dict['slot'] = {}
+                            if slot not in platform_dict['slot']:
+                                platform_dict['slot'][slot] = {}
+                            # if slot not in platform_dict['slot']:
+                            #     continue
+
+                            slot_items = platform_dict['slot'][slot].items()
+
+                            # for no-slot-type output
+                            if not slot_items:
+                                if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                                    if 'R' in slot:
+                                        lc_type = 'rp'
+                                    elif re.match(r'^\d+', slot):
+                                        lc_type = 'lc'
+                                    else:
+                                        lc_type = 'other'
+                                elif re.match(r'^ASR\d+-RP\d+', name):
+                                    lc_type = 'rp'
+                                elif re.match(r'^CSR\d+V', name):
+                                    if 'R' in slot:
+                                        lc_type = 'rp'
+                                    else:
+                                        lc_type = 'other'
+                                else:
+                                    lc_type = 'other'
+
+                                if lc_type not in platform_dict['slot'][slot]:
+                                    platform_dict['slot'][slot][lc_type] = {}
+
+                                if name not in platform_dict['slot'][slot][lc_type]:
+                                    platform_dict['slot'][slot][lc_type][name] = {}
+                                sub_dict = platform_dict['slot'][slot][lc_type][name]
+                                sub_dict['slot'] = slot
+
+                            # Add subslot
+                            for key, value in slot_items:
+                                for key, last in value.items():
+                                    if 'subslot' not in last:
+                                        last['subslot'] = {}
+                                    if subslot not in last['subslot']:
+                                        last['subslot'][subslot] = {}
+                                    if name not in last['subslot'][subslot]:
+                                        last['subslot'][subslot][name] = {}
+                                    sub_dict = last['subslot'][subslot][name]
+                            sub_dict['subslot'] = subslot
+
+                        # KeyError: 'slot'
+                        except Exception:
+                            continue
+                    else:
                         if 'slot' not in platform_dict:
                             platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
                             platform_dict['slot'][slot] = {}
-                        # if slot not in platform_dict['slot']:
-                        #     continue
-
-                        slot_items = platform_dict['slot'][slot].items()
-
-                        # for no-slot-type output
-                        if not slot_items:
-                            if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
-                                if 'R' in slot:
-                                    lc_type = 'rp'
-                                elif re.match(r'^\d+', slot):
-                                    lc_type = 'lc'
-                                else:
-                                    lc_type = 'other'
-                            elif re.match(r'^ASR\d+-RP\d+', name):
+                        if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                            if 'R' in slot:
                                 lc_type = 'rp'
-                            elif re.match(r'^CSR\d+V', name):
-                                if 'R' in slot:
-                                    lc_type = 'rp'
-                                else:
-                                    lc_type = 'other'
+                            elif re.match(r'^\d+', slot):
+                                lc_type = 'lc'
                             else:
                                 lc_type = 'other'
-
-                            if lc_type not in platform_dict['slot'][slot]:
-                                platform_dict['slot'][slot][lc_type] = {}
-
-                            if name not in platform_dict['slot'][slot][lc_type]:
-                                platform_dict['slot'][slot][lc_type][name] = {}
-                            sub_dict = platform_dict['slot'][slot][lc_type][name]
-                            sub_dict['slot'] = slot
-
-                        # Add subslot
-                        for key, value in slot_items:
-                            for key, last in value.items():
-                                if 'subslot' not in last:
-                                    last['subslot'] = {}
-                                if subslot not in last['subslot']:
-                                    last['subslot'][subslot] = {}
-                                if name not in last['subslot'][subslot]:
-                                    last['subslot'][subslot][name] = {}
-                                sub_dict = last['subslot'][subslot][name]
-                        sub_dict['subslot'] = subslot
-
-                    # KeyError: 'slot'
-                    except Exception:
-                        continue
-                else:
-                    if 'slot' not in platform_dict:
-                        platform_dict['slot'] = {}
-                    if slot not in platform_dict['slot']:
-                        platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
-                        if 'R' in slot:
+                        elif re.match(r'^ASR\d+-RP\d+', name):
                             lc_type = 'rp'
-                        elif re.match(r'^\d+', slot):
-                            lc_type = 'lc'
+                        elif re.match(r'^CSR\d+V', name):
+                            if 'R' in slot:
+                                lc_type = 'rp'
+                            else:
+                                lc_type = 'other'
                         else:
                             lc_type = 'other'
-                    elif re.match(r'^ASR\d+-RP\d+', name):
-                        lc_type = 'rp'
-                    elif re.match(r'^CSR\d+V', name):
-                        if 'R' in slot:
-                            lc_type = 'rp'
-                        else:
-                            lc_type = 'other'
-                    else:
-                        lc_type = 'other'
 
-                    if lc_type not in platform_dict['slot'][slot]:
-                        platform_dict['slot'][slot][lc_type] = {}
+                        if lc_type not in platform_dict['slot'][slot]:
+                            platform_dict['slot'][slot][lc_type] = {}
 
-                    if name not in platform_dict['slot'][slot][lc_type]:
-                        platform_dict['slot'][slot][lc_type][name] = {}
-                    sub_dict = platform_dict['slot'][slot][lc_type][name]
-                    sub_dict['slot'] = slot
+                        if name not in platform_dict['slot'][slot][lc_type]:
+                            platform_dict['slot'][slot][lc_type][name] = {}
+                        sub_dict = platform_dict['slot'][slot][lc_type][name]
+                        sub_dict['slot'] = slot
 
-                sub_dict['name'] = name
-                sub_dict['state'] = m.groupdict()['state'].strip()
-                sub_dict['insert_time'] = m.groupdict()['insert_time']
-                continue
+                    sub_dict['name'] = name
+                    sub_dict['state'] = m.groupdict()['state'].strip()
+                    sub_dict['insert_time'] = m.groupdict()['insert_time']
+                    continue
 
             # Slot      CPLD Version        Firmware Version
             # --------- ------------------- ---------------------------------------
@@ -2589,6 +2599,7 @@ class ShowPlatform(ShowPlatformSchema):
                 fw_ver = m.groupdict()['fireware_ver']
                 cpld_ver = m.groupdict()['cpld_version']
                 slot = m.groupdict()['slot']
+                
                 if 'slot' not in platform_dict:
                     continue
                 if slot not in platform_dict['slot']:
@@ -8676,7 +8687,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
 
         #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
         p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:\(+'
-                        r'(?P<nobj>[\S\s]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
+                        r'(?P<nobj>[\w\, ]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
 
         #modify_cnt:1 backwalk_cnt:2
         p2 = re.compile(r'^modify_cnt:+(?P<modify_cnt>\d+)\s+'
@@ -8744,16 +8755,11 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
         #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
         p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)$')
 
-        #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
-        p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
-                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
-                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)+  }$')
-
         #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
-        p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
-                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
-                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)\s+IPv4:+\s+'
-                         r'(?P<IPv4>[\d\.]+)\s+\}$')
+        p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+) +{link_type:(?P<link_type>\w+) +ifnum:(?P<ifnum>\w+), +adj:(?P<adj>\w+), +si: +(?P<si>\w+) +}$')
+
+        #ADJ:objid:137 {link_type:IP ifnum:0x36, adj:0x63000036, si: 0x7f02737a2348  IPv4:     172.16.25.2 }
+        p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+) +{link_type:(?P<link_type>\w+) +ifnum:(?P<ifnum>\w+), +adj:(?P<adj>\w+), +si: +(?P<si>\w+) +IPv4: +(?P<IPv4>[\d\.]+) +}$')
 
         #LENTRY:label:75 not found...
         p20 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\snot +found\S+$')
@@ -9184,6 +9190,97 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 id2 = str(group['objid'])
                 lentry_dict['objid'][id2] = {}
                 lentry_dict['objid'][id2]['SPECIAL'] = str(group['SPECIAL'])
+                continue
+
+        return ret_dict
+
+
+# =======================================================================
+# Schema for 'show platform hardware throughput crypto'
+# =======================================================================
+class ShowPlatformHardwareThroughputCryptoSchema(MetaParser):
+    schema = {
+        'current_configured_crypto_throughput_level': str,
+        'current_enforced_crypto_throughput_level': str,
+        'default_crypto_throughput_level': str,
+        'level': str,
+        'reboot': str,
+        'crypto_throughput': str,
+        Optional('current_boot_level'): str
+    }
+
+# ================================================================
+# Parser for 'show platform hardware throughput crypto'
+# ================================================================
+class ShowPlatformHardwareThroughputCrypto(ShowPlatformHardwareThroughputCryptoSchema):
+    ''' Parser for 'show platform hardware throughput crypto' '''
+
+    cli_command = ['show platform hardware throughput crypto']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Current configured crypto throughput level: T3
+        p1 = re.compile(r'^Current configured crypto throughput level: (?P<level>.+)$')
+
+        # Current enforced crypto throughput level: 10G
+        p2 = re.compile(r'^Current enforced crypto throughput level: (?P<level>.+)$')
+
+        # Default Crypto throughput level: 2.5G
+        p3 = re.compile(r'^Default Crypto throughput level: (?P<level>.+)$')
+
+        # Level is saved, reboot is not required
+        p4 = re.compile(r'^Level is (?P<saved>[^,]+), reboot is (?P<reboot>.+)$')
+
+        # Crypto Throughput is not throttled
+        p5 = re.compile(r'^Crypto Throughput is (?P<throttled>.+)$')
+
+        # Current boot level is network-premier
+        p6 = re.compile(r'^Current boot level is (?P<level>.+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Current configured crypto throughput level: T3
+            m = p1.match(line)
+            if m:
+                ret_dict['current_configured_crypto_throughput_level'] = m.groupdict()['level']
+                continue
+            
+            # Current enforced crypto throughput level: 10G
+            m = p2.match(line)
+            if m:
+                ret_dict['current_enforced_crypto_throughput_level'] = m.groupdict()['level']
+                continue
+            
+            # Default Crypto throughput level: 2.5G
+            m = p3.match(line)
+            if m:
+                ret_dict['default_crypto_throughput_level'] = m.groupdict()['level']
+                continue
+
+            # Level is saved, reboot is not required
+            m = p4.match(line)
+            if m:
+                ret_dict['level'] = m.groupdict()['saved']
+                ret_dict['reboot'] = m.groupdict()['reboot']
+                continue
+
+            # Crypto Throughput is not throttled
+            m = p5.match(line)
+            if m:
+                ret_dict['crypto_throughput'] = m.groupdict()['throttled']
+                continue
+
+            # Current boot level is network-premier
+            m = p6.match(line)
+            if m:
+                ret_dict['current_boot_level'] = m.groupdict()['level']
                 continue
 
         return ret_dict

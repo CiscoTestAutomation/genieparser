@@ -1,0 +1,20 @@
+  Total messages sent              : 0
+  Total messages received          : 0
+  Keepalive messages sent          : 0
+  Keepalive messages received      : 0
+  Interface WITHDRAW messages sent : 0
+  Vlan WITHDRAW messages sent      : 0
+  Clear cache messages sent        : 0
+  Total RESYNC state count         : 0
+  Last successful RESYNC           : Not-Applicable
+
+  Service Advertisements:
+   Advertisements sent             : 0
+   Withdraws sent                  : 0
+   Advertisements Filtered         : 0
+   Total service resynced          : 0
+
+  Service Queries:
+   Queries sent                    : 0
+   Query responses received        : 0
+

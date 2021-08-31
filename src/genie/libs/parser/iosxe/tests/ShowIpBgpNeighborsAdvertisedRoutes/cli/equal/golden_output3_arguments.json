@@ -1,0 +1,4 @@
+{
+    "neighbor": "192.168.2.65",
+    "address_family": "ipv4 unicast"
+}

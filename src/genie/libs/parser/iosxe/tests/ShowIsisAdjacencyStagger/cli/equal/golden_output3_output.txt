@@ -1,0 +1,14 @@
+Tag 1:
+Adjacency stagger enabled: init 2, max 64
+
+Full or expired P2P nbrs: 653
+Syncing P2P nbrs: 64
+
+System Id       Type Interface     State   Timer   CSNP Init  ReqList
+                                           Expire  Rcvd Flood size
+VM1_5           L2   Tu26          Syncing Expired no   no    0
+VM1_6           L2   Tu32          Syncing Expired no   no    0
+VM1_6           L2   Tu34          Syncing Expired no   no    0
+VM1_11          L2   Tu65          Syncing  28 sec no   no    0
+VM1_14          L2   Tu80          Syncing Expired no   no    0
+

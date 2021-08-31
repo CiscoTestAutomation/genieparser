@@ -1,0 +1,81 @@
+==========================================================
+            Show AAA USER ALL
+==========================================================
+--------------------------------------------------
+Unique id 13 is currently in use.
+  No data for type 0
+  No data for type EXEC
+  No data for type CONN
+  NET: Username=(n/a)
+    Session Id=00000FA3 Unique Id=0000000D
+    Start Sent=0 Stop Only=N
+    stop_has_been_sent=N
+    Method List=0
+    Attribute list:
+      7F0DC20E8250 0 00000001 session-id(408) 4 4003(FA3)
+--------
+  No data for type CMD
+  No data for type SYSTEM
+  No data for type VRRS
+  No data for type RM CALL
+  No data for type RM VPDN
+  No data for type AUTH PROXY
+  No data for type DOT1X
+  No data for type CALL
+  No data for type VPDN-TUNNEL
+  No data for type VPDN-TUNNEL-LINK
+  No data for type IPSEC-TUNNEL
+  No data for type MCAST
+  No data for type RESOURCE
+  No data for type SSG
+  No data for type IDENTITY
+  No data for type ConnectedApps
+Accounting:
+  log=0x18001
+  Events recorded :
+    CALL START
+    INTERIM START
+    INTERIM STOP
+  update method(s) :
+    NONE
+  update interval = 0
+  Outstanding Stop Records : 0
+  Dynamic attribute list:
+    7F0DC20E8250 0 00000001 connect-progress(75) 4 Term Serv Auth
+    7F0DC20E8290 0 00000001 pre-session-time(334) 4 3670(E56)
+    7F0DC20E82D0 0 00000001 elapsed_time(414) 4 0(0)
+    7F0DC20E8310 0 00000001 pre-bytes-in(330) 4 0(0)
+    7F0DC20E8350 0 00000001 pre-bytes-out(331) 4 0(0)
+    7F0DC20E80F8 0 00000001 pre-paks-in(332) 4 0(0)
+    7F0DC20E8138 0 00000001 pre-paks-out(333) 4 0(0)
+Debg: No data available
+Radi: No data available
+Interface:
+  TTY Num = 0
+  Stop Received = 0
+  Byte/Packet Counts till Call Start:
+    Start Bytes In = 0             Start Bytes Out = 0         
+    Start Paks  In = 0             Start Paks  Out = 0         
+  Byte/Packet Counts till Service Up:
+    Pre Bytes In = 0             Pre Bytes Out = 0         
+    Pre Paks  In = 0             Pre Paks  Out = 0         
+  Cumulative Byte/Packet Counts :
+    Bytes In = 0             Bytes Out = 0         
+    Paks  In = 0             Paks  Out = 0         
+  StartTime = 11:47:09 UTC Aug 1 2021
+  Component = Exec
+Authen: service=LOGIN type=ASCII method=LOCAL
+Kerb: No data available
+Meth: No data available
+Preauth: No Preauth data.
+General:
+  Unique Id = 0000000D
+  Session Id = 00000FA3
+  Attribute List:
+    7F0DC20E80F8 0 00000081 interface(221) 4 tty0
+    7F0DC20E8138 0 00000001 port-type(225) 4 Async
+    7F0DC20E8178 0 00000081 clid(36) 5 async
+PerU: No data available
+Service Profile: No Service Profile data.
+Unkn: No data available
+Unkn: No data available

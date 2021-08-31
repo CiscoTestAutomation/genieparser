@@ -4690,3 +4690,97 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
 
 
         return wireless_info_obj
+
+
+# ========================================
+# Schema for:
+#  * 'show wireless management trustpoint'
+# ========================================
+class ShowWirelessManagementTrustPointSchema(MetaParser):
+    """ Schema for :
+        show wireless management trustpoint"""
+
+    schema = {
+        "trustpoint_name": str,
+        "certificate_info": str,
+        "private_key_info": str,
+        "fips_suitability": str,
+        Optional("certificate_type"): str,
+        Optional("certificate_hash"): str
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show wireless management trustpoint'
+# ========================================
+
+class ShowWirelessManagementTrustPoint(ShowWirelessManagementTrustPointSchema):
+    """Parser for :
+        show wireless management trustpoint"""
+
+    cli_command = 'show wireless management trustpoint'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        ret_dict = {}
+
+        # Trustpoint Name : ewlc-tp1  
+        p1 = re.compile('^Trustpoint +Name +:( +(?P<trustpoint_name>.*))?$')
+        
+        # Certificate Info : Available
+        p2 = re.compile(r'^Certificate +Info +: +(?P<certificate_info>.*)$')
+        
+        # Certificate Type : SSC
+        p3 = re.compile(r'^Certificate +Type +: +(?P<certificate_type>.*)$')
+        
+        # FIPS suitability : Not Applicable
+        p4 = re.compile(r'^FIPS +suitability +: +(?P<fips_suitability>.*)$')
+        
+        # Private key Info : Available
+        p5 = re.compile(r'^Private +key +Info +: +(?P<private_key_info>.*)$')
+        
+        # Certificate Hash : 4a5d777c5b2071c17faef376febc08398702184e       
+        p6 = re.compile(r'^Certificate +Hash +: +(?P<certificate_hash>.*)$')
+        
+         
+        for line in out.splitlines():
+        
+            # Trustpoint Name : ewlc-tp1
+            m = p1.match(line)            
+            if m:
+                trustpoint_name = m.groupdict()['trustpoint_name']
+                if trustpoint_name:
+                    ret_dict["trustpoint_name"] = trustpoint_name.strip()
+                else:
+                    ret_dict["trustpoint_name"] = ""
+                
+            # Certificate Info : Available                
+            m = p2.match(line)
+            if m:
+                ret_dict["certificate_info"] = m.groupdict()['certificate_info'].strip()
+        
+            # Certificate Type : SSC        
+            m = p3.match(line)
+            if m:
+                ret_dict["certificate_type"] = m.groupdict()['certificate_type'].strip()
+                
+            # FIPS suitability : Not Applicable        
+            m = p4.match(line)
+            if m:
+                ret_dict["fips_suitability"] = m.groupdict()['fips_suitability'].strip()
+        
+            # Private key Info : Available         
+            m = p5.match(line)
+            if m:
+                ret_dict["private_key_info"] = m.groupdict()['private_key_info'].strip()
+        
+            # Certificate Hash : 4a5d777c5b2071c17faef376febc08398702184e
+            m = p6.match(line)
+            if m:
+                ret_dict["certificate_hash"] = m.groupdict()['certificate_hash'].strip()
+              
+        return ret_dict   

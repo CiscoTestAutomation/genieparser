@@ -1,0 +1,5 @@
+                     P indicates configured to preempt.
+                     |
+Interface   Grp  Pri P State   Active          Standby         Virtual IP
+Vl1309      1    110   Init    unknown         unknown         40.1.31.100
+

@@ -1,0 +1,47 @@
+RP/0/RP0/CPU0:R2_xrv9000#show arp traffic detail 
+Wed Mar 21 02:14:05.935 UTC
+
+-------------------------------------------------------------------------------
+0/0/CPU0
+-------------------------------------------------------------------------------
+
+ARP statistics:
+  Recv: 108 requests, 8 replies
+  Sent: 8 requests, 108 replies (0 proxy, 0 local proxy, 2 gratuitous)
+  Subscriber Interface: 
+		 0 requests recv, 0 replies sent, 0 gratuitous replies sent
+  Resolve requests rcvd: 0
+  Resolve requests dropped: 0
+  Errors: 0 out of memory, 0 no buffers, 0 out of subnet
+
+ARP cache:
+  Total ARP entries in cache: 4
+  Dynamic: 2, Interface: 2, Standby: 0
+  Alias: 0,   Static: 0,    DHCP: 0
+
+  IP Packet drop count for node 0/0/CPU0: 0
+
+  Total ARP-IDB:2
+
+
+-------------------------------------------------------------------------------
+0/RP0/CPU0
+-------------------------------------------------------------------------------
+
+ARP statistics:
+  Recv: 0 requests, 0 replies
+  Sent: 0 requests, 0 replies (0 proxy, 0 local proxy, 0 gratuitous)
+  Subscriber Interface: 
+		 0 requests recv, 0 replies sent, 0 gratuitous replies sent
+  Resolve requests rcvd: 0
+  Resolve requests dropped: 0
+  Errors: 0 out of memory, 0 no buffers, 0 out of subnet
+
+ARP cache:
+  Total ARP entries in cache: 0
+  Dynamic: 0, Interface: 0, Standby: 0
+  Alias: 0,   Static: 0,    DHCP: 0
+
+  IP Packet drop count for node 0/RP0/CPU0: 0
+
+  Total ARP-IDB:0

@@ -10,6 +10,7 @@ IOSXE parsers for the following show command:
     * 'show power inline priority {interface}'
     * 'show power inline upoe-plus'
     * 'show power inline upoe-plus {interface}'
+    * 'show stack-power detail'
 """
 
 import re
@@ -25,6 +26,7 @@ class ShowStackPowerSchema(MetaParser):
     """Schema for 
         * show stack-power
         * show stack-power budgeting
+        * show stack-power detail
     """
 
     schema = {
@@ -35,9 +37,27 @@ class ShowStackPowerSchema(MetaParser):
                 'total_power': int,
                 'reserved_power': int,
                 'allocated_power': int,
-                'unused_power': int,
+                Optional('unused_power'): int,
+                Optional('available_power'): int,
                 'switch_num': int,
                 'power_supply_num': int,
+                Optional('power_stack_detail'):{  
+                    'stack_mode': str,
+                    'stack_topology': str,
+                    'switch': {
+                        Any(): {
+                            'power_budget': int,
+                            'power_allocated': int,
+                            'low_port_priority_value': int,
+                            'high_port_priority_value': int,
+                            'switch_priority_value': int,
+                            'port_1_status': str,
+                            'port_2_status': str,
+                            'neighbor_on_port_1': str,
+                            'neighbor_on_port_2': str,
+                        },
+                    },
+                },    
                 Optional('switches'): {
                     Any(): {
                         'power_supply_a': int,
@@ -374,4 +394,174 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
                 intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
                 continue
 
+        return ret_dict
+
+   
+class ShowStackPowerDetail(ShowStackPowerSchema):
+    """Parser for 
+        * show stack-power detail
+    """
+    cli_command = ['show stack-power detail']
+    
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+                    
+        ret_dict = {}
+         
+        # Powerstack-1                     SP-PS   Stndaln  1100    0       243     857       1    1  
+        p1 = re.compile(r'^(?P<name>[\w\-]+) *'
+                        r'(?P<mode>[\w\-]+) +'
+                        r'(?P<topology>[\w\-]+) +'
+                        r'(?P<total_power>\d+) +'
+                        r'(?P<reserved_power>\d+) +'
+                        r'(?P<allocated_power>\d+) +'
+                        r'(?P<available_power>\d+) +'
+                        r'(?P<switch_num>\d+) +'
+                        r'(?P<power_supply_num>\d+)$')
+
+        #Power stack name: Powerstack-1
+        p2 = re.compile(r"^Power+\s+stack+\s+name:+\s+(?P<name>[\w\-]+)$")
+
+        # Stack mode: Power sharing 
+        p3 = re.compile(r"^Stack+\s+mode:+\s+(?P<stack_mode>.*)$")
+
+        # Stack topology: Standalone
+        p4 = re.compile(r"^Stack+\s+topology:+\s+(?P<stack_topology>[\w\-]+)$")
+        
+        # Switch 1 
+        p5 = re.compile(r"^Switch+\s+\d")
+        
+        # Power budget: 1100
+        p6= re.compile(r"^Power+\s+budget:+\s+(?P<power_budget>\d+)$")
+        
+        # Power allocated: 243
+        p7 = re.compile(r"^Power+\s+allocated:+\s+(?P<power_allocated>\d+)$")
+                
+        # Low port priority value: 22
+        p8 = re.compile(r"^Low+\s+port+\s+priority+\s+value:+\s+(?P<low_port_priority_value>\d+)$")
+                
+        # High port priority value: 13
+        p9 = re.compile(r"^High+\s+port+\s+priority+\s+value:+\s+(?P<high_port_priority_value>\d+)$")
+        
+        # Switch priority value: 4
+        p10 = re.compile(r"^Switch+\s+priority+\s+value:+\s+(?P<switch_priority_value>\d+)$")    
+        
+        # Port 1 status: Not connected
+        p11 = re.compile(r"^Port+\s+1+\s+status:+\s+(?P<port_1_status>.*)$")
+        
+        #Port 2 status: Not connected
+        p12 = re.compile(r"^Port+\s+2+\s+status:+\s+(?P<port_2_status>.*)$")
+        
+        # Neighbor on port 1: 0000.0000.0000
+        p13 = re.compile(r"^Neighbor+\s+on+\s+port+\s+1:+\s+(?P<neighbor_on_port_1>.*)$")
+        
+        # Neighbor on port 2: 0000.0000.0000
+        p14 = re.compile(r"^Neighbor+\s+on+\s+port+\s+2:+\s+(?P<neighbor_on_port_2>.*)$")
+
+
+        for line in out.splitlines():
+            line = line.strip()    
+            
+            # Powerstack-1                     SP-PS   Stndaln  1100    0       243     857       1    1  
+            if p1.match(line):
+                m = p1.match(line)
+                group = m.groupdict()
+                name = group.pop('name')
+                stack_dict_1 = ret_dict.setdefault('power_stack', {})\
+                                    .setdefault(name, {})
+                stack_dict_1['mode'] = group.pop('mode')
+                stack_dict_1['topology'] = group.pop('topology')
+                stack_dict_1.update({k:int(v) for k, v in group.items()})
+                continue
+            
+            #Power stack name: Powerstack-1
+            if p2.match(line):
+                match = p2.match(line)
+                power_stack_name = match.group(1)
+                stack_dict_2 = ret_dict['power_stack'][power_stack_name]
+                stack_dict_2.setdefault('power_stack_detail', {})
+                stack_dict_3 = ret_dict['power_stack'][power_stack_name]['power_stack_detail']
+                continue
+            
+            # Stack mode: Power sharing
+            if p3.match(line):
+                match = p3.match(line)
+                stack_dict_3['stack_mode'] = match.group('stack_mode')
+                continue
+
+            # Stack topology: Standalone            
+            if p4.match(line):
+                match = p4.match(line)
+                stack_dict_3['stack_topology'] = match.group('stack_topology')
+                continue
+            
+             # Switch 1 
+            if p5.match(line):
+                match = p5.match(line)
+                switch = match.group()
+                switch = int(switch[-1])
+                stack_dict_4 = ret_dict['power_stack'][power_stack_name]['power_stack_detail']
+                stack_dict_4.setdefault('switch', {})\
+                                    .setdefault(switch, {})
+                stack_dict_5 = ret_dict['power_stack'][power_stack_name]['power_stack_detail']['switch'][switch]
+                continue
+
+            # Power budget: 1100
+            if p6.match(line):
+                match = p6.match(line)
+                stack_dict_5['power_budget'] = int(match.group('power_budget'))
+                continue
+
+            # Power allocated: 243
+            if p7.match(line):
+                match = p7.match(line)
+                stack_dict_5['power_allocated'] = int(match.group('power_allocated'))
+                continue
+                
+            # Low port priority value: 22
+            if p8.match(line):
+                match = p8.match(line)
+                stack_dict_5['low_port_priority_value'] = int(match.group('low_port_priority_value'))
+                continue
+                
+            # High port priority value: 13
+            if p9.match(line):
+                match = p9.match(line)
+                stack_dict_5['high_port_priority_value'] = int(match.group('high_port_priority_value'))
+                continue
+            
+            # Switch priority value: 4
+            if p10.match(line):
+                match = p10.match(line)
+                stack_dict_5['switch_priority_value'] = int(match.group('switch_priority_value'))
+                continue
+
+            # Port 1 status: Not connected   
+            if p11.match(line):
+                match = p11.match(line)
+                stack_dict_5['port_1_status'] = match.group('port_1_status')
+                continue
+                
+            #Port 2 status: Not connected
+            if p12.match(line):
+                match = p12.match(line)
+                stack_dict_5['port_2_status'] = match.group('port_2_status')
+                continue
+                
+            # Neighbor on port 1: 0000.0000.0000
+            if p13.match(line):
+                match = p13.match(line)
+                stack_dict_5['neighbor_on_port_1'] = match.group('neighbor_on_port_1')
+                continue
+                
+            # Neighbor on port 2: 0000.0000.0000
+            if p14.match(line):
+                match = p14.match(line)
+                stack_dict_5['neighbor_on_port_2'] = match.group('neighbor_on_port_2')
+                continue
+        
         return ret_dict

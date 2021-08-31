@@ -1,0 +1,20 @@
+Syslog logging: enabled (0 messages dropped, 20 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+
+No Active Message Discriminator.
+
+No Inactive Message Discriminator.
+
+    Console logging: disabled
+    Monitor logging: disabled
+    Buffer logging:  disabled, xml disabled,
+                    filtering disabled
+    Exception Logging: Disabled
+    Count and timestamp logging messages: disabled
+    Persistent logging: enabled, url bootflash:/, disk space 16384 bytes, file size 8192 bytes, batch size 4096 bytes, threshold capacity 5  alert , immediate , protected , notify
+
+No active filter modules.
+
+    Trap logging: disabled
+    TLS Profiles:
+
+Log Buffer (214748364 bytes):

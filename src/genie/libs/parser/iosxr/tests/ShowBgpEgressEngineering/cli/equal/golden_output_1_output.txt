@@ -1,0 +1,27 @@
+Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+    Nexthop: 192.168.1.2
+    Version: 2, rn_version: 2
+      Flags: 0x00000002
+  Local ASN: 1
+ Remote ASN: 2
+  Local RID: 10.4.1.3
+ Remote RID: 10.4.1.4
+  First Hop: 192.168.1.2
+       NHID: 3
+      Label: 24002, Refcount: 3
+    rpc_set: 10b9d408
+
+Egress Engineering Peer Set: 192.168.1.3/32 (10be61d4)
+    Nexthop: 192.168.1.3
+    Version: 3, rn_version: 3
+      Flags: 0x00000002
+  Local ASN: 1
+ Remote ASN: 3
+  Local RID: 10.4.1.3
+ Remote RID: 10.4.1.5
+  First Hop: 192.168.1.3
+       NHID: 4
+      Label: 24003, Refcount: 3
+    rpc_set: 10be6250
+
+

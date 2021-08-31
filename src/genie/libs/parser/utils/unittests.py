@@ -77,10 +77,7 @@ def get_operating_systems(_os):
 # determine that a sub folder is in fact a token, if there is a "tests" directory. Upon removing
 # the .py via [-2], there is now a list of files to import from.
 def get_tokens(folder):
-    tokens = []
-    for path in glob.glob(str(folder / '*' / 'tests')):
-        tokens.append(path.split("/")[-2])
-    return tokens
+    return [path.split("/")[-2] for path in glob.glob(str(folder / '*' / 'tests'))]
 
 
 def get_files(folder, token=None):
@@ -129,18 +126,18 @@ def failed_build_tree(section, parent_node, level=0):
                                 name = str_shortener(section['name'], max_len),
                                 result = RESULT_COLOUR[str(section['result'])].apply(str(section['result']).upper()),
                                 max_len = max_len))
-    
+
         result = section['result'].value
         sections = section['sections']
 
     # Determine if we're only looking to display failures or not
     parsed_args = _parse_args()
-    if parsed_args['_display_only_failed']:
-        if result not in ['passed']:
-            parent_node.add_child(section_node)
-    else:
+    if (
+        parsed_args['_display_only_failed']
+        and result not in ['passed']
+        or not parsed_args['_display_only_failed']
+    ):
         parent_node.add_child(section_node)
-
     # Recursive indentation
     for child_section in sections:
         if level < 2:
@@ -194,7 +191,7 @@ class FailedReporter(StandaloneReporter):
                 if glo_values.missingParsers:
                     log.info("\n".join(glo_values.missingParsers), extra={'colour': 'yellow'})
                     log.info('-'*80)
-            
+
             log.info(' {name:<58}{num:>20} '.format(
                                             name = 'Total Passing Unittests',
                                             num = glo_values.parserPassed))
@@ -206,14 +203,16 @@ class FailedReporter(StandaloneReporter):
                                             num = glo_values.parserErrored))
             log.info(' {name:<58}{num:>20} '.format(
                                             name = 'Total Unittests',
-                                            num = glo_values.parserTotal))                                            
+                                            num = glo_values.parserTotal))
             log.info('-'*80)
 
-            if hasattr(glo_values, '_class_exists'):
-                if not glo_values._class_exists:
-                    parsed_args = _parse_args()
-                    log.info(f'`{parsed_args["_class"]}` does not exist', extra={'colour': 'yellow'})
-                    log.info('-'*80)
+            if (
+                hasattr(glo_values, '_class_exists')
+                and not glo_values._class_exists
+            ):
+                parsed_args = _parse_args()
+                log.info(f'`{parsed_args["_class"]}` does not exist', extra={'colour': 'yellow'})
+                log.info('-'*80)
 
         else:
             log.info(banner('No Results To Show'))
@@ -304,7 +303,7 @@ class SuperFileBasedTesting(aetest.Testcase):
         glo_values.parserFailed = 0
         glo_values.parserErrored = 0
         glo_values.parserTotal = 0
-        glo_values.missingParsers = list()
+        glo_values.missingParsers = []
 
 
     @aetest.setup
@@ -313,10 +312,10 @@ class SuperFileBasedTesting(aetest.Testcase):
         # If _class is passed then check to see if it even exists
         if _class:
             glo_values._class_exists = False
-        
+
         operating_systems = get_operating_systems(_os)
 
-        self.parsers = dict()
+        self.parsers = {}
 
         for operating_system in operating_systems:
 
@@ -330,8 +329,7 @@ class SuperFileBasedTesting(aetest.Testcase):
             # Please refer to get_tokens comments for the how, the what is a genie token, such as
             # "asr1k" or "c3850" to provide namespaced parsing.
             tokens = get_tokens(base_folder)
-            parse_files = []
-            parse_files.extend(get_files(base_folder))
+            parse_files = list(get_files(base_folder))
             for token in tokens:
                 parse_files.extend(get_files(base_folder / token, token))
             # Get all of the root level files
@@ -366,7 +364,7 @@ class SuperFileBasedTesting(aetest.Testcase):
                     # Same as previous, however, for class
                     if _class and _class != name:
                         continue
-                    if _class and _class == name:
+                    if _class:
                         glo_values._class_exists = True
                     # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
                     # since the ios module often refers to the iosxe parser, leveraging this naming convention.
@@ -487,7 +485,7 @@ class ParserTest(aetest.Testcase):
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
         all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"), key=aph_key)
-        
+
         unacceptable_filenames = [fil for fil in all_txt_glob if fil not in output_glob]
 
         if len(output_glob) == 0:
@@ -495,7 +493,7 @@ class ParserTest(aetest.Testcase):
 
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
-        
+
         for user_defined in output_glob:
             glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
@@ -525,13 +523,11 @@ class ParserTest(aetest.Testcase):
                 try:
                     parsed_output = obj.parse(**arguments)
                 except Exception as e:
-                    parsed_output = dict()
-                    if display_only_failed:
-                        self.add_logger()
-                        log.error(traceback.format_exc(), extra={"colour": 'red'})
-                        self.remove_logger()
+                    parsed_output = {}
+                    self.add_logger()
+                    log.error(traceback.format_exc(), extra={'colour': 'red'})
+                    self.remove_logger()
                     glo_values.parserErrored += 1
-                
                 # Use Diff method to get the difference between 
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
@@ -548,7 +544,7 @@ class ParserTest(aetest.Testcase):
                     # Format expected and parsed output in a nice format
                     parsed_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
                     golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
-                    
+
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info("\nThe following is the device output before it is parsed:\n{}\n\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
                     log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
@@ -565,27 +561,33 @@ class ParserTest(aetest.Testcase):
                     # If tests pass, display the device output in debug mode
                     # But first check if the screen handler is removed, if it is
                     # put it back into the root otherwise just display to stdout
-                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                    if (
+                        self.temporary_screen_handler in log.root.handlers
+                        or self.temporary_screen_handler is None
+                    ):
+                        logging.debug(banner(msg))
+                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+
+                    else:
                         self.add_logger()
                         logging.debug(banner(msg))
                         logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
                         self.remove_logger()
-                    else:
-                        logging.debug(banner(msg))
-                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
-
         if unacceptable_filenames:
             for unacc_fil in unacceptable_filenames:
                 unacc_fil_name = pathlib.Path(unacc_fil).name
                 msg = f"{unacc_fil_name} does not follow the filename schema and will not be ran..."
                 with steps.start(msg, continue_ = True) as step:
-                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                    if (
+                        self.temporary_screen_handler in log.root.handlers
+                        or self.temporary_screen_handler is None
+                    ):
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                    else:
                         self.add_logger()
                         log.info(msg, extra={'colour': 'yellow'})
                         log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
                         self.remove_logger()
-                    else:
-                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
                     step.failed()
 
     @screen_log_handling

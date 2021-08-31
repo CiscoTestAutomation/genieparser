@@ -26,6 +26,12 @@ expected_output = {
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.100.1.1"
                 },
+                10103: {
+                    'vni': 10103,
+                    'associated_vrf': False,
+                    'multisite_mcast_group': "226.1.1.1",
+                    'mcast_group': "231.100.1.1"
+                },
                 100000: {
                     'vni': 100000,
                     'associated_vrf': True,
@@ -48,6 +54,12 @@ expected_output = {
                     'vni': 100006,
                     'associated_vrf': True,
                     'multisite_ingress_replication_optimized': True,
+                    'mcast_group': "231.200.1.1"
+                },
+                100007: {
+                    'vni': 100007,
+                    'associated_vrf': True,
+                    'multisite_mcast_group': "226.2.1.1",
                     'mcast_group': "231.200.1.1"
                 },
                 10202: {

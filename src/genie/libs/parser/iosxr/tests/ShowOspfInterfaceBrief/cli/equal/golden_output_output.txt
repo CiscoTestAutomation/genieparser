@@ -1,0 +1,13 @@
+RP/0/RP0/CPU0:F17-ASR9922#show ospf interface brief
+Mon Mar 15 09:40:14.728 JST
+
+* Indicates MADJ interface, (P) Indicates fast detect hold down state
+
+Interfaces for OSPF mpls1
+
+Interface          PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo0                mpls1 0               17.17.17.17/32     1     LOOP  0/0
+Lo10               mpls1 0               10.10.10.10/32     1     LOOP  0/0
+Hu0/0/0/0          mpls1 0               21.0.0.1/24        1     P2P   1/1
+Te0/2/0/0          mpls1 0               100.20.0.1/30      10    P2P   1/1
+Te0/2/0/3          mpls1 0               100.10.0.1/30      10    P2P   1/1

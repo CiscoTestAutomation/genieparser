@@ -1,0 +1,37 @@
+
+RP/0/0/CPU0:R3_ospf_xr#show protocols afi-all all
+Mon Jan  8 17:45:17.553 UTC
+
+Routing Protocol "BGP 100"
+Non-stop routing is enabled
+Graceful restart is not enabled
+Current BGP NSR state - Active Ready
+BGP NSR state not ready: Wait for standby ready msg
+
+Address Family VPNv4 Unicast:
+  Distance: external 20 internal 200 local 200
+  Routing Information Sources:
+    Neighbor          State/Last update received  NSR-State  GR-Enabled
+    10.64.4.4           00:01:28                    None         No
+
+Address Family VPNv6 Unicast:
+  Distance: external 20 internal 200 local 200
+  Routing Information Sources:
+    Neighbor          State/Last update received  NSR-State  GR-Enabled
+    10.64.4.4           00:01:28                    None         No
+
+Routing Protocol OSPF 1
+  Router Id: 10.36.3.3
+  Distance: 110
+  Distance: IntraArea 112 InterArea 113 External/NSSA 114
+  Non-Stop Forwarding: Disabled
+  Redistribution:
+    connected
+    static with metric 10
+    bgp 100 with metric 111
+    isis 10 with metric 3333
+  Area 0
+    MPLS/TE enabled
+    Loopback0
+    GigabitEthernet0/0/0/0
+    GigabitEthernet0/0/0/2
