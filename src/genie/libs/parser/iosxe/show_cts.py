@@ -1802,7 +1802,7 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
 
     schema = {
         "indexes": {
-            int: {
+            Optional(int): {
                 Optional("policy_name"): str,
                 "action_policy": str,
                 "action_policy_group": str,
@@ -1908,6 +1908,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 continue
             #         Deny IP-00
             elif policy_action_capture.match(line):
+                cts_rb_permissions_dict.setdefault('indexes', {})
                 policy_action_match = policy_action_capture.match(line)
                 groups = policy_action_match.groupdict()
                 action_policy = groups['action_policy']
@@ -1919,6 +1920,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 continue
             # RBACL Monitor All for Dynamic Policies : FALSE
             elif monitor_dynamic_capture.match(line):
+                cts_rb_permissions_dict.setdefault('indexes', {})
                 monitor_dynamic_match = monitor_dynamic_capture.match(line)
                 groups = monitor_dynamic_match.groupdict()
                 monitor_dynamic = groups['monitor_dynamic']
@@ -1930,6 +1932,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 continue
             # RBACL Monitor All for Configured Policies : FALSE
             elif monitor_configured_capture.match(line):
+                cts_rb_permissions_dict.setdefault('indexes', {})
                 monitor_configured_match = monitor_configured_capture.match(line)
                 groups = monitor_configured_match.groupdict()
                 monitor_configured = groups['monitor_configured']
