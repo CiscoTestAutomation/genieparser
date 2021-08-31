@@ -1,0 +1,12 @@
+expected_output={
+   "interface":{
+      "Vl1309":{
+         "grp":1,
+         "priority":110,
+         "state":"Init",
+         "active":"unknown",
+         "standby":"unknown",
+         "virtual_ip":"40.1.31.100"
+      }
+   }
+}

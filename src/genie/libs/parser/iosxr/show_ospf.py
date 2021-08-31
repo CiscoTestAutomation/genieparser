@@ -16,6 +16,7 @@ IOSXR parsers for the following show commands:
     * show ospf mpls1 database
     * show ospf {process_id} database router
     * show ospf all-inclusive database router
+    * show ospf interface brief
 """
 
 # Python
@@ -5727,6 +5728,88 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
 # ======================================================
 # parser schema for:
+#          * show ospf interface brief
+# ======================================================
+class ShowOspfInterfaceBriefSchema(MetaParser):
+    """Schema details for:
+          * show ospf interface  brief
+    """
+    schema = {
+        'instance': {
+            Any(): {
+                'areas': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                "name": str,
+                                "ip_address": str,
+                                "process_id": str,
+                                "state": str,
+                                "area": str,
+                                "cost": int,
+                                "nbrs_f": int,
+                                "nbrs_count": int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# parser for:
+#          * show ospf interface brief
+# ======================================================
+class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
+    """parser details for:
+         * show ospf interface brief
+    """
+
+    cli_command = ['show ospf interface brief']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Lo0                mpls1 0               17.17.17.17/32     1     LOOP  0/0
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<pid>\S+) +(?P<area>\S+) +'
+            r'(?P<ip_addr>\S+) +(?P<cost>[0-9]+) +(?P<state>\S+) +(?P<nbrs_count>[0-9]+)\/(?P<nbrs_f>[0-9]+).*$')
+
+        for line in out.splitlines():
+            
+            # Lo0                mpls1 0               17.17.17.17/32     1     LOOP  0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                area = group['area']
+                interface = group['interface']
+                interface_dict = ret_dict.setdefault('instance', {}).\
+                    setdefault('default', {}).\
+                    setdefault('areas', {}).\
+                    setdefault(area, {}).\
+                    setdefault('interfaces', {}).\
+                    setdefault(interface, {})
+                interface_dict.update({
+                    'name': interface,
+                    'process_id': group['pid'],
+                    'area': group['area'],
+                    'ip_address': group['ip_addr'],
+                    'state': group['state'],
+                    'cost': int(group['cost']),
+                    'nbrs_f': int(group['nbrs_f']),
+                    'nbrs_count': int(group['nbrs_count'])
+                })
+
+        return ret_dict
+
+
+# ======================================================
+# parser schema for:
 #          * show ospf interface
 #          * show ospf interface <interface_name>
 #          * show ospf <process_name> interface
@@ -6305,6 +6388,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p28.match(line)
             if m:
                 interface_dict['treated_as_stub_host'] = True
+                continue
 
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:

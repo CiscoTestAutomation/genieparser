@@ -651,3 +651,62 @@ class ShowVlanId(ShowVlanIdSchema):
                 vlan_dict['trans1'] = group['trans1']
                 vlan_dict['trans2'] = group['trans2']
         return vlan_dict 
+
+
+class ShowVlanVirtualportSchema(MetaParser):
+    """Schema for show vlan virtual-port"""
+    schema = {
+        Optional('slots'): {
+             Any(): {
+                 'virtual-ports': int
+             }
+        },
+        Optional('total'): int
+    }
+
+
+class ShowVlanVirtualport(ShowVlanVirtualportSchema):
+    """ Parser for show vlan virtual-port"""
+    cli_command = "show vlan virtual-port"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Slot 1
+        p1 = re.compile(r'^Slot +(?P<slot>\d+)$')
+
+        # Total slot virtual ports 4796
+        p2 = re.compile(r'^Total +slot +virtual +ports +(?P<ports>\d+)$')
+
+        # Total chassis virtual ports 14254
+        p3 = re.compile(r'^Total +chassis +virtual +ports +(?P<ports>\d+)$')
+
+        ret_dict = {}
+        slot = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Slot 1
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('slots', {})
+                slot = int(m.groupdict()['slot'])
+                ret_dict['slots'].setdefault(slot, {})
+                continue
+
+            # Total slot virtual ports 4796
+            m = p2.match(line)
+            if m:
+                ports = int(m.groupdict()['ports'])
+                if slot:
+                    ret_dict['slots'][slot]['virtual-ports'] = ports
+                slot = None
+
+            # Total chassis virtual ports 14254
+            m = p3.match(line)
+            if m:
+                ports = int(m.groupdict()['ports'])
+                ret_dict['total'] = ports
+
+        return ret_dict

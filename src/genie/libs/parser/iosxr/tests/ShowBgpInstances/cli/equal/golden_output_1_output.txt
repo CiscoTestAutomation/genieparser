@@ -1,0 +1,9 @@
+
+show bgp instances
+
+Number of BGP instances: 1
+
+ID  Placed-Grp  Name              AS        VRFs    Address Families
+--------------------------------------------------------------------------------
+0   v4_routing  default           34984     12      IPv4 Unicast, VPNv4 Unicast,
+						    IPv6 Unicast

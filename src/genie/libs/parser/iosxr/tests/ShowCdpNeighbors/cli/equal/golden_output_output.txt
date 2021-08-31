@@ -1,0 +1,12 @@
+Device# show cdp neighbors
+
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+		S - Switch, H - Host, I - IGMP, r - Repeater
+
+Device ID       Local Intrfce    Holdtme Capability Platform  Port ID
+R1_xe.cisco.com Gi0/0/0/0        135     R I        CSR1000V  Gi2
+R3_nx.cisco.com Gi0/0/0/5        163     R S I      N9K-9000v Et1/4
+R3_nx.cisco.com Gi0/0/0/4        163     R S I      N9K-9000v Et1/3
+R1_xe.cisco.com Gi0/0/0/3        161     R I        CSR1000V  Gi5
+R1_xe.cisco.com Gi0/0/0/2        177     R I        CSR1000V  Gi4
+R3_nx.cisco.com Gi0/0/0/1        151     R S        N9K-9000v Et1/1

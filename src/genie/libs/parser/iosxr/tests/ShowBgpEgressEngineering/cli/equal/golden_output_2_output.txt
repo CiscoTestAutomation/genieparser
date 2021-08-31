@@ -1,0 +1,75 @@
+
+RP/0/0/CPU0:R1#show bgp egress-engineering
+Wed Apr 25 15:45:31.170
+
+Egress Engineering Peer Set: 10.19.0.2/32 (0xa968758)
+    Nexthop: 10.19.0.2
+    Version: 2, rn_version: 2
+      Flags: 0x00000006
+  Local ASN: 100
+ Remote ASN: 200
+  Local RID: 192.168.2.1
+ Remote RID: 192.168.1.2
+Local Address: 10.19.0.1
+  First Hop: 10.19.0.2
+       NHID: 2
+	IFH: 0x1000060
+      Label: 24002, Refcount: 3
+    rpc_set: 0xe91d2fd8, ID: 1
+Egress Engineering Peer Set: 10.30.30.30/32 (0xa9686b4)
+    Nexthop: 10.30.30.30
+    Version: 3, rn_version: 3
+      Flags: 0x00000006
+  Local ASN: 100
+ Remote ASN: 300
+  Local RID: 192.168.2.1
+ Remote RID: 192.168.1.3
+Local Address: 10.166.13.13
+  First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
+       NHID: 9, 10, 11
+	IFH: 0x110, 0x130, 0x150
+      Label: 24008, Refcount: 3
+    rpc_set: 0xe91d4160, ID: 10
+Egress Engineering Peer Set: 10.121.88.1/32 (0xa9684c8)
+    Nexthop: 10.121.88.1
+    Version: 6, rn_version: 6
+      Flags: 0x0000000a
+  Local ASN: 100
+ Remote ASN: 300
+  Local RID: 192.168.2.1
+ Remote RID: 192.168.1.3
+Local Address: 10.121.88.2
+  First Hop: 10.121.88.1
+       NHID: 9
+	IFH: 0x110
+      Label: 24004, Refcount: 3
+    rpc_set: 0xe91d4060, ID: 7
+Egress Engineering Peer Set: 10.1.0.1/32 (0xa96856c)
+    Nexthop: 10.1.0.1
+    Version: 5, rn_version: 6
+      Flags: 0x0000000a
+  Local ASN: 100
+ Remote ASN: 300
+  Local RID: 192.168.2.1
+ Remote RID: 192.168.1.3
+Local Address: 10.1.0.2
+  First Hop: 10.1.0.1
+       NHID: 10
+	IFH: 0x130
+      Label: 24006, Refcount: 3
+    rpc_set: 0xe91d40e0, ID: 9
+Egress Engineering Peer Set: 10.204.0.1/32 (0xa968610)
+    Nexthop: 10.204.0.1
+    Version: 4, rn_version: 6
+      Flags: 0x0000000a
+  Local ASN: 100
+ Remote ASN: 300
+  Local RID: 192.168.2.1
+ Remote RID: 192.168.1.3
+Local Address: 10.204.0.2
+  First Hop: 10.204.0.1
+       NHID: 11
+	IFH: 0x150
+      Label: 24010, Refcount: 3
+    rpc_set: 0xe91d4548, ID: 11
+

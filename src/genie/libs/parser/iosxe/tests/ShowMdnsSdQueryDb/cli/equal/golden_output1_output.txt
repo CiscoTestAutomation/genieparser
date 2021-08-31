@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+Client MAC       Vlan ID    Location ID                  User Role
+------------------------------------------------------------------
+
+PTR Name: _afpovertcp._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _airplay._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _daap._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _dpap._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _ftp._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _http._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _ichat._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _ipp._tcp.local
+0050.56b1.30ef     1101              1                       none
+0242.6601.0505     1101              1                       none
+0050.56b1.30ef     1102           4096                       none
+
+PTR Name: _ipps._tcp.local
+0050.56b1.30ef     1101              1                       none
+0242.6601.0505     1101              1                       none
+0050.56b1.30ef     1102           4096                       none
+
+PTR Name: _nfs._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _presence._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _printer._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _raop._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _smb._tcp.local
+0242.6601.0505     1101              1                       none
+
+PTR Name: _ssh._tcp.local
+0242.6601.0505     1101              1                       none
+
+

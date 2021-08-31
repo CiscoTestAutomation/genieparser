@@ -152,9 +152,10 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
         # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162   
         # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82   
+        # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
-                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
+                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
 
         for line in out.splitlines():
             if line:
@@ -1749,6 +1750,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('multisite_ingress_replication_optimized'): bool,
                         Optional('ingress_replication_protocol_bgp'): bool,
                         Optional('mcast_group'): str,
+                        Optional('multisite_mcast_group'): str,
                         Optional('suppress_arp'): bool,
                         Optional('vni_type'): str,
                     },
@@ -1780,7 +1782,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
     cli_command = 'show running-config nv overlay'
 
     def cli(self, output=None):
-        # excute command to get output
+        # execute command to get output
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -1826,6 +1828,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p16 = re.compile(r'^multisite +ingress-replication +optimized$')
         #   ingress-replication protocol bgp
         p17 = re.compile(r'^ingress-replication +protocol +bgp$')
+        #   multisite mcast-group 226.1.1.1
+        p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
+
         
         for line in out.splitlines():
             line = line.strip()
@@ -1971,6 +1976,15 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'ingress_replication_protocol_bgp': True})
+                continue
+
+            m = p18.match(line)
+            if m:
+                multisite_mcast = m.groupdict().pop('multisite_mcast_group')
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'multisite_mcast_group': multisite_mcast})
                 continue
 
         return result_dict
@@ -2482,4 +2496,3 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
         else:
             show_output = output
         return super().cli(output=show_output)
-

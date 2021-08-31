@@ -1,0 +1,5 @@
+RP/0/RSP0/CPU0:router# show traffic-collector external-interface 
+ Interface             Status          
+ --------------------  ----------------
+ Te0/1/0/3             Enabled 
+ Te0/1/0/4             Enabled

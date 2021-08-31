@@ -1,0 +1,54 @@
+
+Mon Sep 18 09:36:51.507 PDT
+
+VRF VRF1; RD 200:1; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  GigabitEthernet0/0/0/1
+  GigabitEthernet0/0/0/0.415
+  GigabitEthernet0/0/0/0.420
+  GigabitEthernet0/0/0/1.390
+  GigabitEthernet0/0/0/1.410
+  GigabitEthernet0/0/0/1.415
+  GigabitEthernet0/0/0/1.420
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:200:1
+    RT:200:2
+    RT:300:1
+    RT:400:1
+  Export VPN route-target communities:
+    RT:200:1
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  Import VPN route-target communities:
+    RT:200:1
+    RT:200:2
+    RT:300:1
+    RT:400:1
+  Export VPN route-target communities:
+    RT:200:1
+  No import route policy
+  No export route policy
+
+VRF VRF2; RD 200:2; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  GigabitEthernet0/0/0/2
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:200:2
+  Export VPN route-target communities:
+    RT:200:2
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  Import VPN route-target communities:
+    RT:200:2
+  Export VPN route-target communities:
+    RT:200:2
+  No import route policy
+  No export route policy

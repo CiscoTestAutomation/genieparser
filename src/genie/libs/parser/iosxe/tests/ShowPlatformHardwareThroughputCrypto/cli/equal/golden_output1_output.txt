@@ -1,0 +1,6 @@
+Current configured crypto throughput level: T3
+Level is saved, reboot is not required
+Current enforced crypto throughput level: 10G
+Crypto Throughput is not throttled
+Default Crypto throughput level: 2.5G
+Current boot level is network-premier

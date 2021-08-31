@@ -1,0 +1,22 @@
+RP/0/RP0/CPU0:F17-ASR9922#show mpls ldp igp sync
+Mon Mar 15 09:40:16.528 JST
+
+HundredGigE0/0/0/0:
+  VRF: 'default' (0x60000000)
+  Sync delay: Disabled
+  Sync status: Ready
+    Peers:
+      63.63.63.63:0   (GR)
+      63.63.63.65:0   (GR)
+
+TenGigE0/2/0/0:
+  VRF: 'default' (0x60000000)
+  Sync delay: Disabled
+  Sync status: Not ready (No hello adjacency)
+
+TenGigE0/2/0/3:
+  VRF: 'default' (0x60000000)
+  Sync delay: Disabled
+  Sync status: Ready
+    Peers:
+      107.107.107.107:0   (GR)

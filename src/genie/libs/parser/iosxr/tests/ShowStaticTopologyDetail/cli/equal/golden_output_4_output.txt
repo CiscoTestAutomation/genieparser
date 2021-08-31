@@ -1,0 +1,8 @@
+
+VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+  Last path event occured at Apr 30 15:48:19.545
+Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics       
+10.15.20.2/32       Bundle-Ether2.25         10.151.22.21         None                None                [0/0/1/0/1]
+  Path is configured at Apr 30 15:43:47.894
+  Path version: 0, Path status: 0x80
+  Path contains both next-hop and outbound interface.

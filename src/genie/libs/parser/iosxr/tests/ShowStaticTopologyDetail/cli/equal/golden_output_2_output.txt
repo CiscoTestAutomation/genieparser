@@ -1,0 +1,47 @@
+
+RP/0/0/CPU0:R2_xrv#show static vrf all ipv6 topology detail
+Thu Dec  7 22:10:18.618 UTC
+
+
+VRF: default Table Id: 0xe0800000 AFI: IPv6 SAFI: Unicast
+Last path event occured at Dec  7 21:52:00.843
+Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
+2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
+Path is installed into RIB at Dec  7 21:52:00.843
+Path version: 1, Path status: 0xa1
+Path has best tag: 0
+Path contains both next-hop and outbound interface.
+		GigabitEthernet0_0_0_0   2001:20:1:2::1      None                None                [0/0/1/0/1]
+Path is installed into RIB at Dec  7 21:52:00.733
+Path version: 1, Path status: 0xa1
+Path has best tag: 0
+Path contains both next-hop and outbound interface.
+
+2001:3:3:3::3/128   GigabitEthernet0_0_0_2   2001:20:2:3::3      None                None                [0/0/1/0/1]
+Path is installed into RIB at Dec  7 21:52:00.763
+Path version: 1, Path status: 0xa1
+Path has best tag: 0
+Path contains both next-hop and outbound interface.
+		GigabitEthernet0_0_0_1   2001:10:2:3::3      None                None                [0/0/1/0/1]
+Path is installed into RIB at Dec  7 21:52:00.753
+Path version: 1, Path status: 0xa1
+Path has best tag: 0
+Path contains both next-hop and outbound interface.
+		None                     2001:20:2:3::3      None                None                [0/0/3/0/1]
+Path is configured at Dec  7 21:47:43.624
+Path version: 0, Path status: 0x0
+
+
+VRF: VRF1 Table Id: 0xe0800010 AFI: IPv6 SAFI: Unicast
+Last path event occured at Dec  7 21:51:47.424
+Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
+2001:1:1:1::1/128   Null0                    None                None                None                [0/4096/99/0/1234]
+Path is installed into RIB at Dec  7 21:51:47.424
+Path version: 1, Path status: 0x21
+Path has best tag: 0
+
+2001:2:2:2::2/128   Null0                    None                None                None                [0/4096/101/0/3456]
+Path is installed into RIB at Dec  7 21:51:47.424
+Path version: 1, Path status: 0x21
+Path has best tag: 0
+

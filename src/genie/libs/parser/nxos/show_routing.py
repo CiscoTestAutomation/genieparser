@@ -485,6 +485,8 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('source_protocol_status'): str,
                                 Optional('attached'): bool,
                                 Optional('active'): bool,
+                                Optional('direct'): bool,
+                                Optional('pervasive'): bool,
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {  # interface  if there is no next_hop
@@ -711,10 +713,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
         # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
         # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
+        # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+        # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
+
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +'
                         r'(?P<ubest_mbest>[\d\/]+)( +time)?)?((?P<ubest>\d+) '
                         r'+ucast +next-hops, +(?P<mbest>\d+) +mcast +next-hops)?'
-                        r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?$')
+                        r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?'
+                        r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
@@ -768,11 +774,16 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
             # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
             # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
+            # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
+            # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 route = groups['route']
                 active = True
+                direct = False
+                pervasive = False
+
                 index = 1
 
                 if groups['ubest_mbest']:
@@ -788,6 +799,12 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if groups['attached']:
                     attached = True if 'attached' in groups['attached'] else False
+
+                if groups['direct']:
+                    direct = True if 'direct' in groups['direct'] else False
+
+                if groups['pervasive']:
+                    pervasive = True if 'pervasive' in groups['pervasive'] else False
 
                 # if vrf:
                 if 'vrf' not in result_dict:
@@ -806,6 +823,12 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if groups['attached']:
                     route_dict.update({'attached': attached})
+
+                if direct:
+                    route_dict.update({'direct': direct})
+
+                if pervasive:
+                    route_dict.update({'pervasive': pervasive})
 
                 continue
 
