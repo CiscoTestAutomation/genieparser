@@ -29,11 +29,15 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip uninstall genie.libs.parser -y
 
-    - name: Folder based testing
+    - name: Make develop
       run: |
         make develop
         make json
         git status
+        git diff
+
+    - name: Folder based testing
+      run: |
         cd tests
         pyats run job folder_parsing_job.py --no-mail --no-archive
 
