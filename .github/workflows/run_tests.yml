@@ -32,6 +32,8 @@ jobs:
     - name: Folder based testing
       run: |
         make develop
+        make json
+        git status
         cd tests
         pyats run job folder_parsing_job.py --no-mail --no-archive
 
