@@ -1576,8 +1576,8 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
     """Parser for show ipv6 vrf all interface"""
 
     cli_command = ['show ipv6 vrf {vrf} interface {interface}',
-                   'show ipv6 vrf {vrf} interface', 'show ipv6 vrf all interface',
-                   'show ipv6 interface']
+                   'show ipv6 vrf {vrf} interface',
+                   'show ipv6 vrf all interface']
 
     exclude = ['complete_protocol_adj', 'complete_glean_adj', 'ipv6_groups', 'ipv6_link_local']
 
