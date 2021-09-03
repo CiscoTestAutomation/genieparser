@@ -1,0 +1,4 @@
+IPv4 Role-based permissions from group Invalid to group Invalid:
+        Permit IP-00
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE
