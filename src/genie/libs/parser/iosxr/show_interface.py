@@ -3017,11 +3017,17 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
 class ShowIpv6Interface(ShowIpv6VrfAllInterface):
     """Parser for show ipv6 interface"""
 
-    cli_command = 'show ipv6 interface {interface}'
+    cli_command = [
+                    'show ipv6 interface',
+                    'show ipv6 interface {interface}'
+                  ]
 
     def cli(self, interface=None, output=None):
         if output is None:
-            cmd = self.cli_command.format(interface=interface)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
