@@ -1,0 +1,34 @@
+mDNS Statistics
+
+ Vl330:
+  mDNS packets sent                 : 1
+     IPv4 sent                      : 1
+       IPv4 advertisements sent     : 0
+       IPv4 queries sent            : 1
+     IPv6 sent                      : 0
+       IPv6 advertisements sent     : 0
+       IPv6 queries sent            : 0
+  mDNS packets rate limited         : 0
+  mDNS packets received             : 0
+   advertisements received          : 0
+   queries received                 : 0
+     IPv4 received                  : 0
+       IPv4 advertisements received : 0
+       IPv4 queries received        : 0
+     IPv6 received                  : 0
+       IPv6 advertisements received : 0
+       IPv6 queries received        : 0
+  mDNS packets dropped              : 0
+  =========================================
+  Query Type                        : Count
+  =========================================
+  PTR                               : 0
+  SRV                               : 0
+  A                                 : 0
+  AAAA                              : 0
+  TXT                               : 0
+  ANY                               : 0
+  ======================================================================
+  PTR Name                                       Advertisement     Query
+  ======================================================================
+

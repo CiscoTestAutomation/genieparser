@@ -1,0 +1,13 @@
+RP/0/RP0/CPU0:R2_xrv9000#show arp vrf default detail
+Wed Mar 21 02:13:24.990 UTC
+
+-------------------------------------------------------------------------------
+0/0/CPU0
+-------------------------------------------------------------------------------
+Address         Age         Hardware Addr   State      Flag      Type  Interface
+10.1.2.1        02:56:20   fa16.3eff.06af  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
+10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
+10.2.3.2        -          fa16.3eff.c3f7  Interface  Unknown ARPA GigabitEthernet0/0/0/1
+10.2.3.3        00:13:49   5e00.80ff.0209  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
+10.3.4.3        -          6c6c.d3ff.468b  Interface  Unknown ARPA Bundle-Ether1
+10.3.4.4        01:55:46   0896.adff.66f8  Dynamic    Dynamic ARPA Bundle-Ether1

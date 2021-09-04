@@ -1,0 +1,9 @@
+RP/0/0/CPU0:ios#show access-lists ethernet-services 
+Wed Mar 28 04:04:37.482 UTC
+ethernet-services access-list eth_acl
+10 permit any any
+ethernet-services access-list mac_acl
+10 permit host 0000.0000.0000 host 0000.0000.0000
+20 deny host 0000.0000.0000 host 0000.0000.0000 8041
+30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
+40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3

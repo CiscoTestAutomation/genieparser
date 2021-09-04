@@ -1,0 +1,65 @@
+mdns-sd gateway 
+ mode service-peer
+ active-query timer 10
+ rate-limit 10
+ source-interface Vlan4021
+ service-mdns-query all
+ sdg-agent 40.1.21.1
+ cache-memory-max 10
+ service-type-enumeration period 20
+ air-print-helper enable
+ any-query forward
+ cache-sync timer 20
+ active-response timer 10
+!
+mdns-sd location-filter filter_1
+ match location-group 2000 vlan 1101 role none
+ match location-group 2001 vlan 1101 role none
+ match location-group 2000 vlan 1102 role none
+!
+mdns-sd service-definition custom1
+ service-type _airplay._tcp.local
+ service-type _raop._tcp.local
+ service-type _ipp._tcp.local
+ service-type _afpovertcp._tcp.local
+ service-type _nfs._tcp.local
+ service-type _ssh._tcp.local
+ service-type _dpap._tcp.local
+ service-type _daap._tcp.local
+ service-type _ichat._tcp.local
+ service-type _presence._tcp.local
+ service-type _http._tcp.local
+ service-type _ipps._tcp.local
+ service-type _printer._tcp.local
+ service-type _smb._tcp.local
+ service-type _ftp._tcp.local
+!
+mdns-sd service-list policie1 IN
+ match custom1
+!
+mdns-sd service-list policie2 OUT
+ match custom1
+!
+mdns-sd service-list policie3 IN
+ match custom1 message-type query
+!
+mdns-sd service-list policie4 OUT
+ match custom1 location-filter filter_1
+!
+mdns-sd service-policy policy1
+ service-list policie1 IN
+ service-list policie2 OUT
+!
+mdns-sd service-policy policy2
+ service-list policie3 IN
+ service-list policie4 OUT
+!
+mdns-sd location-group 2000 vlan 1101
+  interface Gi1/0/37       
+!
+mdns-sd location-group 2000 vlan 1102
+  interface Gi1/0/15       
+!
+mdns-sd location-group 2001 vlan 1101
+!
+

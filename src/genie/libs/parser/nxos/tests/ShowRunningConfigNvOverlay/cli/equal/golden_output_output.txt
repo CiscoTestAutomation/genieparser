@@ -17,12 +17,18 @@ interface nve1
   member vni 10102
     multisite ingress-replication
     mcast-group 231.100.1.1
+  member vni 10103
+    multisite mcast-group 226.1.1.1
+    mcast-group 231.100.1.1
   member vni 100000-100002 associate-vrf
   member vni 100004 associate-vrf
     multisite ingress-replication optimized
     mcast-group 231.200.1.1
   member vni 100006 associate-vrf
     multisite ingress-replication optimized
+    mcast-group 231.200.1.1
+  member vni 100007 associate-vrf
+    multisite mcast-group 226.2.1.1
     mcast-group 231.200.1.1
   member vni 10202
     multisite ingress-replication

@@ -1,0 +1,31 @@
+R1-asr1k-43#show isis rib
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
+  [115/L2/50] via 6.6.6.6(Tunnel65536), from 6.6.6.6, tag 0, LSP[115/115/220]
+     prefix attr: X:0 R:0 N:1
+     source router id: 6.6.6.6
+       SRGB: 100000, range: 30001 prefix-SID index: 61, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+              (SR_POLICY)(installed)
+             - - - - - -
+  [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[2/115/220]
+       SRGB: 100000, range: 30001 prefix-SID index: 61, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100061
+              (ALT)(installed)
+  [115/L2/50] via 199.1.2.2(Tunnel4002), from 6.6.6.6, tag 0, LSP[2/115/220]
+       SRGB: 100000, range: 30001 prefix-SID index: 61, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100061
+              (ALT)(installed)
+  [115/L2/50] via 12.12.12.2(GigabitEthernet0/3/1), from 6.6.6.6, tag 0, LSP[3/115/220]
+       SRGB: 100000, range: 30001 prefix-SID index: 61, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100061,
+              (ALT)(installed)
+     repair path: 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
+       local LFA
+       label: 100061
+       repair source: asr1k-24

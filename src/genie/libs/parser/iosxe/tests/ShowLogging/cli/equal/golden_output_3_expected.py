@@ -43,6 +43,9 @@ expected_output = {
       "trap":{
          "level": "informational",
          "message_lines_logged": 1570,
+         "logging_source_interface": {
+            "Vlan200": {}
+         },
          "logging_to":{
             "192.168.1.3":{
                "protocol": "tcp",

@@ -1,0 +1,13 @@
+
+RP/0/0/CPU0:R2# show pim vrf default ipv4 mstatic
+Mon May 29 14:37:05.732 UTC
+IP Multicast Static Routes Information
+
+* 10.10.10.10/32 via GigabitEthernet0/0/0/0 with nexthop 192.168.1.0 and distance 10
+* 10.10.10.11/32 via GigabitEthernet0/0/0/1 with nexthop 192.168.1.1 and distance 11
+* 10.10.10.12/32 via GigabitEthernet0/0/0/2 with nexthop 192.168.1.2 and distance 12
+* 10.10.10.13/32 via GigabitEthernet0/0/0/3 with nexthop 192.168.1.3 and distance 13
+* 10.10.10.14/32 via GigabitEthernet0/0/0/4 with nexthop 192.168.1.4 and distance 14
+* 10.10.10.15/32 via GigabitEthernet0/0/0/5 with nexthop 192.168.1.5 and distance 15
+* 10.10.10.16/32 via GigabitEthernet0/0/0/6 with nexthop 192.168.1.6 and distance 16
+* 10.10.10.17/32 via GigabitEthernet0/0/0/7 with nexthop 192.168.1.7 and distance 17

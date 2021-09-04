@@ -1,0 +1,9 @@
+MAC Address                   : aabb.0000.0005
+Reference Count               : 1
+Epoch                         : 0
+Producer                      : EVPN
+Flags                         : Local Mac
+Adjacency                     : BD_PORT   Et0/1:11
+PD Adjacency                  : BD_PORT   Et0/1:11
+Packets                       : 0
+Bytes                         : 0

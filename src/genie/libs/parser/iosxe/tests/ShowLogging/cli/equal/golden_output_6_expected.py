@@ -1,8 +1,4 @@
 expected_output = {
-    "logs": [
-        "show logging",
-        "TLS Profiles:"
-    ],
     "syslog_logging": {
         "enabled": {
             "counters": {
@@ -42,6 +38,9 @@ expected_output = {
         "trap": {
             "level": "informational",
             "message_lines_logged": 1190,
+            "logging_source_interface": {
+                "Loopback246": {}
+            },
             "logging_to": {
                 "55.55.55.70": {
                     "protocol": "udp",

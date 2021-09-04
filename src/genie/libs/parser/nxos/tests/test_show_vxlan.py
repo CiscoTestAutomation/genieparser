@@ -148,6 +148,12 @@ class TestShowNvePeers(unittest.TestCase):
                     "peer_state": "up",
                     "router_mac": "5254.00ff.52c7",
                     "uptime": "05:35:40"
+                },
+                "172.31.201.40": {
+                    "learn_type": "CP",
+                    "peer_state": "down",
+                    "router_mac": "n/a",
+                    "uptime": "0.000000"
                 }
             },
         },
@@ -161,6 +167,7 @@ class TestShowNvePeers(unittest.TestCase):
     nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
     nve1      2001:db8:646:a2bb:0:abcd:1234:3     Up    CP       05:34:40 5254.00ff.3050   
     nve1      2001:db8:646:a2bb:0:abcd:1234:5     Up    CP       05:35:40 5254.00ff.52c7
+    nve1      172.31.201.40   Down  CP        0.000000 n/a
         '''}
 
     def test_show_nve_golden(self):

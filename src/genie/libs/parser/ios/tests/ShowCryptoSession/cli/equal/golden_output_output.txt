@@ -1,0 +1,9 @@
+Crypto session current status
+
+Interface: Tunnel13
+Session status: UP-ACTIVE     
+Peer: 11.0.1.1 port 500 
+  Session ID: 0  
+  IKEv1 SA: local 11.0.1.2/500 remote 11.0.1.1/500 Active 
+  IPSEC FLOW: permit 47 host 11.0.1.2 host 11.0.1.1 
+        Active SAs: 2, origin: crypto map

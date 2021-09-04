@@ -70,7 +70,7 @@ def _load_parser_json():
             summary = ext.output.pop('extend_info', None)
 
             merge_dict(parser_data, ext.output, update=True)
-            log.info("External parser counts: {}\nSummary:\n{}"
+            log.debug("External parser counts: {}\nSummary:\n{}"
                      .format(len(summary), json.dumps(summary, indent=2)))
 
     return parser_data

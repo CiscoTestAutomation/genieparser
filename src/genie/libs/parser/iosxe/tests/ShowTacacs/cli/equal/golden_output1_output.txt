@@ -1,0 +1,18 @@
+==========================================================
+            Show Tacacs
+==========================================================
+Tacacs+ Server -  public  :
+               Server name: mgmt-tac
+            Server address: UNKNOWN
+               Server port: 49
+              Socket opens:          0
+             Socket closes:          0
+             Socket aborts:          0
+             Socket errors:          0
+           Socket Timeouts:          0
+   Failed Connect Attempts:          0
+        Total Packets Sent:          0
+        Total Packets Recv:          0
+             Server Status: Alive
+Continous Authc fail count:          0
+Continous Authz fail count:          0

@@ -52,7 +52,7 @@ expected_output = {
             "in_octets": 1772200805652,
             "in_no_buffer": 0,
             "in_multicast_pkts": 60322,
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 3,
             "in_runts": 0,
             "in_giants": 0,
             "in_throttles": 0,

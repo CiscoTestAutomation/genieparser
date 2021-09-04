@@ -1,0 +1,9 @@
+RP/0/RP0/CPU0:F141-ASR9912#show mpls ldp graceful-restart
+Wed Mar 24 21:21:13.215 JST
+
+  Forwarding State Hold timer : Not Running
+  GR Neighbors                : 1
+
+   Neighbor ID      Up  Connect Count  Liveness Timer      Recovery Timer
+   ---------------  --  -------------  ------------------  ------------------
+   17.17.17.17      Y        4                -                   -

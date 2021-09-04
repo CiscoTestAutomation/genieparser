@@ -1,0 +1,51 @@
+R1-asr1k-43#show isis flex-algo 
+Tag 1:
+IS-IS Flex-Algo Database
+ Flex-Algo count: 3
+ 
+Flex-Algo 128: 
+    IS-IS Level-2
+      Definition Priority: 131
+      Definition Source: asr1k-25.00
+      Definition Equal to Local: No
+      Definition Metric Type: IGP
+      Definition Exclude-any Affinity:
+       0x00000000 0x00000000 0x00000000 0x00000000 
+       0x00000000 0x00000000 0x00000200 
+      Disabled: No
+      Microloop Avoidance Timer Running: No
+   Local Priority: 128
+   FRR Disabled: No
+   Microloop Avoidance Disabled: No
+
+Flex-Algo 129: 
+    IS-IS Level-2
+      Definition Priority: 132
+      Definition Source: asr1k-25.00
+      Definition Equal to Local: No
+      Definition Metric Type: Delay
+      Definition Include-all Affinity:
+       0x00000001 0x00800000 0x00000000 0x00000000 
+       0x00000000 0x00000000 0x00000000 0x40000000 
+      Definition Flex-Algo Prefix Metric: Yes
+      Disabled: No
+      Microloop Avoidance Timer Running: No
+   Local Priority: 128
+   FRR Disabled: No
+   Microloop Avoidance Disabled: No
+
+Flex-Algo 130: 
+    IS-IS Level-2
+      Definition Priority: 133
+      Definition Source: asr1k-25.00
+      Definition Equal to Local: No
+      Definition Metric Type: IGP
+      Definition Include-any Affinity:
+       0x00000002 
+      Definition Flex-Algo Prefix Metric: No
+      Disabled: No
+      Microloop Avoidance Timer Running: No
+   Local Priority: 128
+   FRR Disabled: No
+   Microloop Avoidance Disabled: No
+

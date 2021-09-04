@@ -1,0 +1,26 @@
+IPv4 Sessions
+NeighAddr LD/RD RH/RS State Int
+10.50.10.100 23/14 Up Up Gi1/0/19
+Session state is UP and using echo function with 2000 ms interval.
+Session Host: Software
+OurAddr: 10.50.10.106
+Handle: 3
+Local Diag: 0, Demand mode: 0, Poll bit: 0
+MinTxInt: 1000000, MinRxInt: 1000000, Multiplier: 3
+Received MinRxInt: 1000000, Received Multiplier: 6
+Holddown (hits): 0(0), Hello (hits): 1000(41511)
+Rx Count: 41515, Rx Interval (ms) min/max/avg: 1/1004/877 last: 296 ms ago
+Tx Count: 41513, Tx Interval (ms) min/max/avg: 1/1004/880 last: 578 ms ago
+Echo Rx Count: 20777, Echo Rx Interval (ms) min/max/avg: 1505/2003/1751 last: 721 ms ago
+Echo Tx Count: 20777, Echo Tx Interval (ms) min/max/avg: 1506/2003/1751 last: 722 ms ago
+Elapsed time watermarks: 0 0 (last: 0)
+Registered protocols: OSPF CEF
+Uptime: 10:07:15
+Last packet: Version: 1 - Diagnostic: 0
+State bit: Up - Demand bit: 0
+Poll bit: 0 - Final bit: 0
+C bit: 0
+Multiplier: 6 - Length: 24
+My Discr.: 14 - Your Discr.: 23
+Min tx interval: 1000000 - Min rx interval: 1000000
+Min Echo interval: 2000000

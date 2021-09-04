@@ -5,7 +5,7 @@ expected_output = {
         "auto_negotiate": False,
         "bandwidth": 10000000,
         "counters": {
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 7,
             "in_crc_errors": 0,
             "in_errors": 0,
             "in_frame": 0,
@@ -83,7 +83,7 @@ expected_output = {
         "auto_negotiate": False,
         "bandwidth": 10000000,
         "counters": {
-            "in_broadcast_pkts": 0,
+            "in_broadcast_pkts": 98185589,
             "in_crc_errors": 0,
             "in_errors": 0,
             "in_frame": 0,
