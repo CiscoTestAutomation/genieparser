@@ -7,7 +7,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-
 # =======================
 # Schema for 'show track'
 # =======================
@@ -72,13 +71,14 @@ class ShowTrack(ShowTrackSchema):
         #Init vars
         parsed_dict = {}
        
+        #Track N 
         p0 = re.compile(r'Track (?P<track_id>\d+)') 
+
         # Interface Ethernet1/4 IP Routing
         # IP Route 10.1.1.1/32 Reachability
         # IPv6 Route 10:1::1:1/32 Reachability
         # IP SLA 121 Reachability
         p1 = re.compile(r'^(?P<type>IP Route|Interface|IP SLA|IPv6 Route|List)\s+((?P<address>[\d.]+(\/\d+))|(?P<name>([\d\w.:]+()\/\d+|loopback[\d]+|\d+)))*\s+((?P<parameter>[\w \-]+))')
-
 
         # IP Routing is DOWN
         # Line Protocol is delayed DOWN (20 secs remaining)
@@ -88,11 +88,9 @@ class ShowTrack(ShowTrackSchema):
         p3 = re.compile(r'^(?P<change_count>\d+) +changes, +last +change'
             r' +(?P<last_change>[\d\w:]+)')
    
-
         # Threshold weight up 20 down 10
         # Threshold percentage up 20% down 10%
         p4  = re.compile(r'^(?P<parameter>[\w ]+) +up +(?P<threshold_up>[\d]+%*) +down +(?P<threshold_down>[\d]+%*)')
-
 
         # Track List  12
         # VRRPV3 Vlan2 2
@@ -104,11 +102,9 @@ class ShowTrack(ShowTrackSchema):
         # Delay up 10000 milliseconds, down 10000 milliseconds 
         p6 = re.compile(r'^(Delay )(up (?P<delay_up_secs>[\d]+\s+)secs,*)*(up (?P<delay_up_millisecs>[\d]+\s+)milliseconds,)*(\s*down (?P<delay_down_secs>[\d]+) secs)*( down (?P<delay_down_millisecs>[\d]+) milliseconds)*')
 
-
         # object 10 weight 10 UP
         # object 1 (100%) DOWN
         p7 = re.compile(r'^(object)\s+(?P<object_id>[\d]+)\s(weight (?P<weight>[\d]+))*((?P<percent>\([\d%]+\)))*\s*(?P<obj_state>[\w \-]+)')
-
 
         # VPN Routing/Forwarding table "management"
         # VPN Routing/Forwarding table "vrf2"
@@ -116,7 +112,6 @@ class ShowTrack(ShowTrackSchema):
 
         for line in output.splitlines():
             line = line.strip()
-
             
             #Track n   
             m = p0.match(line)
@@ -298,9 +293,7 @@ class ShowTrackBrief(ShowTrackBriefSchema):
           if m:
              group = m.groupdict()
              track_number = group['trc']
-
              result_dict = track_table_dict.setdefault('track', {}).setdefault(track_number, {})
-
              result_dict['tracktype'] = group['typ']
              result_dict['instance'] = group['inst']
              result_dict['parameter'] = group['par']
