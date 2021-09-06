@@ -21,7 +21,7 @@ class test_show_track(unittest.TestCase):
 
     golden_parsed_output = {
         "track": {
-           1: {
+           "1": {
                "type": "IPv6 Route",
                "instance": "10:1::1:2/32",
                "subtrack": "Reachability",
