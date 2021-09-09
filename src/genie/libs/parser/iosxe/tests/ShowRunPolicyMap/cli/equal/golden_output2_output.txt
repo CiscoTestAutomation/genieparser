@@ -1,0 +1,12 @@
+
+policy-map TEST
+ class premium
+  set cos 5
+  priority percent 10
+ class silver
+  set dscp af21
+ class gold
+  set precedence 4
+ class class-default
+  set precedence 5
+!

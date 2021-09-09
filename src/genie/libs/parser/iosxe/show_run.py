@@ -23,34 +23,38 @@ from genie.libs.parser.utils.common import Common
 # ==================================================
 class ShowRunPolicyMapSchema(MetaParser):
 
-    schema = {
-        'policy_map': {
-            Any(): {
-                'class': {
-                    Any(): {
-                        Optional('qos_set'): {
-                            Optional('ip precedence'): str,
-                            Optional('qos-group'): str,
-                        },
-                        Optional('police'): {
-                            Optional('cir_bps'): str,
-                            Optional('pir_bps'): str,
-                            Optional('cir_bc_bytes'): str,
-                            Optional('cir_be_bytes'): str,
-                            Optional('conformed'): str,
-                            Optional('exceeded'): str,
-                        },
-                        Optional('bandwidth_percent'): str,
-                        Optional('priority_level'): str,
-                        Optional('target_shape_rate'): str,
-                        Optional('service_policy'): str,
-                        Optional('service_policy_input'): str,
-                        Optional('service_policy_output'): str,
-                    },
-                }
-            },
-        }
-    }
+	schema = {
+		'policy_map': {
+			Any(): {
+				'class': {
+					Any(): {
+						Optional('qos_set'): {
+							Optional('ip precedence'): str,
+							Optional('precedence'): str,
+							Optional('dscp'): str,
+							Optional('cos'): str,
+							Optional('qos-group'): str,
+							},
+						Optional('police'): {
+							Optional('cir_bps'): str,
+							Optional('pir_bps'): str,
+							Optional('cir_bc_bytes'): str,
+							Optional('cir_be_bytes'): str,
+							Optional('conformed'): str,
+							Optional('exceeded'): str,
+							},
+						Optional('bandwidth_percent'): str,
+						Optional('priority_percent'): str,
+						Optional('priority_level'): str,
+						Optional('target_shape_rate'): str,
+						Optional('service_policy'): str,
+						Optional('service_policy_input'): str,
+						Optional('service_policy_output'): str,
+					},
+				}
+			},
+		}
+	}
 
 
 # ===================================
@@ -95,7 +99,10 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         p2 = re.compile(r'^shape +average +(?P<target_shape_rate>(\d+))$')
 
         # set ip precedence 4
-        p3 = re.compile(r'^set +ip +precedence +(?P<ip_precedence>(\w+))$')
+        p3_1 = re.compile(r'^set +ip +precedence +(?P<ip_precedence>(\w+))$')
+
+		# set precedence 5
+        p3_2 = re.compile(r'^set +precedence +(?P<precedence>(\w+))$')
 
         # set qos-group 4
         p4 = re.compile(r'^set +qos-group +(?P<qos_group>(\w+))$')
@@ -104,10 +111,20 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         p5 = re.compile(r'^bandwidth percent +(?P<bandwidth_percent>(\d+))$')
 
         # priority level 2
-        p6 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
+        p6_1 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
+
+        # priority percent 20
+        p6_2 = re.compile(r'^priority +percent +(?P<priority_percent>(\d+))$')
 
         # service-policy input L3VPN-0_in
         p7 = re.compile(r'^service-policy( +(?P<direction>(\w+)))? +(?P<service_policy>([\w\-\_]+))$')
+
+        # set dscp ef
+        # set dscp 46
+        p8 = re.compile(r'^set +dscp +(?P<dscp>(\w+))$')
+
+		# set cos 0
+        p9 = re.compile(r'^set +cos +(?P<cos>(\d+))$')
 
         for line in out.splitlines():
 
@@ -158,7 +175,7 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
                 continue
 
             # set ip precedence 4
-            m = p3.match(line)
+            m = p3_1.match(line)
             if m:
                 group = m.groupdict()
                 if 'qos_set' not in \
@@ -168,6 +185,18 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
                 config_dict['policy_map'][policy_map]['class'][class_name]\
                     ['qos_set'].update(
                         {k.replace('_', ' '): v for k, v in group.items() if v})
+                continue
+
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                if 'qos_set' not in \
+                    config_dict['policy_map'][policy_map]['class'][class_name]:
+                    config_dict['policy_map'][policy_map]['class'][class_name]\
+                        .setdefault('qos_set', {})
+                config_dict['policy_map'][policy_map]['class'][class_name]\
+                    ['qos_set'].update(
+                        {k: v for k, v in group.items() if v})
                 continue
 
             # set qos-group 4
@@ -192,7 +221,15 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
                 continue
 
             # priority level 2
-            m = p6.match(line)
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                config_dict['policy_map'][policy_map]['class'][class_name]\
+                    .update({k: v for k, v in group.items() if v})
+                continue
+
+            # priority percent 20
+            m = p6_2.match(line)
             if m:
                 group = m.groupdict()
                 config_dict['policy_map'][policy_map]['class'][class_name]\
@@ -215,6 +252,33 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
                 else:
                     config_dict['policy_map'][policy_map]['class'][class_name]\
                         ['service_policy'] = m.groupdict()['service_policy']
+                continue
+
+            # set dscp ef
+            # set dscp 46
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if 'qos_set' not in config_dict['policy_map'][policy_map]\
+                    ['class'][class_name]:
+                    config_dict['policy_map'][policy_map]['class'][class_name]\
+                        .setdefault('qos_set', {})
+                config_dict['policy_map'][policy_map]['class'][class_name]\
+                    ['qos_set'].update(
+                        {k: v for k, v in group.items() if v})
+                continue
+
+            # set cos 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if 'qos_set' not in config_dict['policy_map'][policy_map]\
+                    ['class'][class_name]:
+                    config_dict['policy_map'][policy_map]['class'][class_name]\
+                        .setdefault('qos_set', {})
+                config_dict['policy_map'][policy_map]['class'][class_name]\
+                    ['qos_set'].update(
+                        {k: v for k, v in group.items() if v})
                 continue
 
         return config_dict
