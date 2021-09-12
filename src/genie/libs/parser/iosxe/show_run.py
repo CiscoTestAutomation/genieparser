@@ -323,6 +323,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_block_multicast'): bool,
                 Optional('ip_dhcp_snooping_trust'): bool,
                 Optional('ip_arp_inspection_trust'): bool,
+                Optional('mac_address_sticky'):str,
             }
         }
     }
@@ -532,6 +533,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # mpls ip
         p58=re.compile(r"^mpls ip$")
+
+        # switchport port-security mac-address sticky 1020.4bb1.6f2f
+        p59=re.compile(r"^switchport port-security mac-address sticky (?P<value>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1000,12 +1004,19 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                     sub_dict.update({'path_name':group['path_type']}) 
                 continue    
 
-            #mpls ip
+            # mpls ip
             m = p58.match(line)
             if m:
                 intf_dict.update({'mpls_ip':'enabled'})
                 continue
-                                
+
+            # switchport port-security mac-address sticky 1020.4bb1.6f2f
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mac_address_sticky':group['value']})
+                continue
+                                                   
         return config_dict
 
 
