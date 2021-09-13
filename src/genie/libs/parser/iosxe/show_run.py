@@ -324,6 +324,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_dhcp_snooping_trust'): bool,
                 Optional('ip_arp_inspection_trust'): bool,
                 Optional('mac_address_sticky'):str,
+                Optional('source_template'):str,
             }
         }
     }
@@ -332,21 +333,28 @@ class ShowRunInterfaceSchema(MetaParser):
 # ==================================================
 # Parser for:
 #   * show running-config interface {interface}
+#   * show running-config | section ^interface
 # ==================================================
 class ShowRunInterface(ShowRunInterfaceSchema):
     
     ''' Parser for
-        * show running-config interface {interface}
+         show running-config interface {interface},
+         show running-config | section ^interface
     '''
 
-    cli_command = 'show running-config interface {interface}'
+    cli_command = ['show running-config interface {interface}',
+                   'show running-config | section ^interface']
 
-    def cli(self, interface, output=None):
+    def cli(self, interface=None, output=None):
 
         if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+
             # Execute command on device
-            output = self.device.execute(self.cli_command\
-                                .format(interface=interface))
+            output = self.device.execute(cmd)
 
         # Init vars
         config_dict = {}
@@ -517,7 +525,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p52 = re.compile(r'^ip unnumbered (?P<src_address>\S+)$')
 
         # tunnel mode mpls traffic-eng
-        p53=re.compile(r"^tunnel mode (?P<tunnel_mode>[a-zA-Z\- ]+)$")               
+        p53=re.compile(r"^tunnel mode (?P<tunnel_mode>[a-zA-Z\- ]+)$")
 
         # tunnel destination 2.2.2.2
         p54=re.compile(r"^tunnel destination (?P<tunnel_dst>\S+)$")
@@ -536,6 +544,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # switchport port-security mac-address sticky 1020.4bb1.6f2f
         p59=re.compile(r"^switchport port-security mac-address sticky (?P<value>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$")
+
+        # source template USER_NoAuth
+        p60=re.compile(r"^source template (?P<template>\w+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1016,7 +1027,16 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'mac_address_sticky':group['value']})
                 continue
-                                                   
+            
+            # source template USER_NoAuth
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'source_template':group['template']})
+                continue
+
+
+
         return config_dict
 
 
