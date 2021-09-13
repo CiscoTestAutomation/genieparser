@@ -12,6 +12,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # =======================
 class ShowTrackSchema(MetaParser):
     """ Schema for 'show track' """
+    """ Schema for 'show track {id}' """
     schema = {
         'track': {
             Any(): {
@@ -57,7 +58,10 @@ class ShowTrackSchema(MetaParser):
 class ShowTrack(ShowTrackSchema):
     """ Parser for 'show track' 'show track {id}'"""
 
-    cli_command = ['show track','show track {track_id}']
+    cli_command = [
+        'show track',
+        'show track {track_id}'
+    ]
 
     def cli(self, track_id = ' ', output=None):
         if output is None:
@@ -86,7 +90,7 @@ class ShowTrack(ShowTrackSchema):
 
         # 1 changes, last change 00:01:04
         p3 = re.compile(r'^(?P<change_count>\d+) +changes, +last +change'
-            r' +(?P<last_change>[\d\w:]+)')
+                        r' +(?P<last_change>[\d\w:]+)')
    
         # Threshold weight up 20 down 10
         # Threshold percentage up 20% down 10%
@@ -96,7 +100,7 @@ class ShowTrack(ShowTrackSchema):
         # VRRPV3 Vlan2 2
         # HSRP Vlan2 2   
         p5 = re.compile(r'^(?P<name>[a-zA-Z3]{3,6}) +'
-            r'(?P<interface>[A-Za-z0-9\/.]{3,}) +((?P<group_id>\d+)|(\n))')
+                        r'(?P<interface>[A-Za-z0-9\/.]{3,}) +((?P<group_id>\d+)|(\n))')
 
         # Delay up 20 secs, down 10 secs
         # Delay up 10000 milliseconds, down 10000 milliseconds 
@@ -120,7 +124,7 @@ class ShowTrack(ShowTrackSchema):
                type_dict1 = parsed_dict.setdefault('track', {})
                track_id1 = group['track_id']
                type_dict = type_dict1.setdefault(track_id1,{})
-
+               continue
 
             # Interface Ethernet1/4 IP Routing
             # IP Route 10.1.1.1/32 Reachability
