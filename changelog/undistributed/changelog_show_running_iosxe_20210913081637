@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Modified ShowRunInterfaceSchema:
+        * Add key mac_address_sticky and source_template to schema.
+        * Update command can now exept 'show running-config | section ^interface'
