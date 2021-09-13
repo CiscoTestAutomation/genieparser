@@ -2,7 +2,7 @@
                             New
 --------------------------------------------------------------------------------
 * NXOS
-    * Added Parser:
-        * For 'show track'
-        * For 'show track {id}'
-        * For 'show track brief'
+    * Added ShowTrack:
+        * show track
+        * show track {id}
+        * show track brief
