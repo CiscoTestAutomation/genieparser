@@ -586,9 +586,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         # [90/15360] via 10.23.90.3, 1w0d, GigabitEthernet0/0/0/1.90
         # [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
-        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
-                        r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
-                        r'(?P<interface>[\w\/\.\-]+)$')
+        # [110/2] via 10.1.3.1, 3w3d
+        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
+                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
