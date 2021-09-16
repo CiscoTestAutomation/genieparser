@@ -1,0 +1,27 @@
+Track 1
+  Interface Ethernet1/4 IP Routing
+  IP Routing is DOWN
+  1 changes, last change 3w5d
+  Tracked by:
+    HSRP Vlan2 2
+    HSRP Ethernet1/1 1
+    VRRPV3 Vlan2 2
+    Track List  10
+    Track List  11
+    Track List  12
+  Delay up 20 secs
+
+Track 12
+  List  Threshold weight
+  Threshold weight is DOWN
+  1 changes, last change 3w3d
+  Threshold weight up 20 down 10
+  Track List Members:
+  object 10 weight 10 UP
+  object 1 weight 100 DOWN
+
+Track 13
+  Interface loopback1 Line Protocol
+  Line Protocol is DOWN
+  2 changes, last change 3w3d
+  Delay up 23 secs, down 24 secs
