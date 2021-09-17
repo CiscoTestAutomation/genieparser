@@ -11,32 +11,32 @@ expected_output = {
                     1: {
                       "name": "HSRP", 
                       "interface": "Vlan2",
-                      "group_id": "2"
+                      "id": "2"
                     },
                     2: {
                       "name": "HSRP", 
                       "interface": "Ethernet1/1", 
-                      "group_id": "1"
+                      "id": "1"
                     },
                     3: {
                       "name": "VRRPV3",
                       "interface": "Vlan2",
-                      "group_id": "2"
+                      "id": "2"
                     },
                     4: {
-                      "name": "Track", 
-                      "interface": "List", 
-                      "group_id": "10"
+                      "name": "TrackList", 
+                      "id": "10"
                     }, 
                     5: {
-                      "name": "Track",
-                      "interface": "List",
-                      "group_id": "11"
+                      "name": "TrackList",
+                      "id": "11"
                     }, 
                     6: {
-                      "name": "Track",
-                      "interface": "List",
-                      "group_id": "12"
+                      "name": "TrackList",
+                      "id": "12"
+                    },
+                    7: {
+                      "name": "Route Map Configuration"
                     }
                },
                "delay_up_secs": 20.0
