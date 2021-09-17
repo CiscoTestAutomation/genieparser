@@ -31,7 +31,7 @@ class ShowTrackSchema(MetaParser):
                     Optional(Any()): {   #increasing index 0, 1, 2, 3, ...
                         Optional('name'): str,
                         Optional('interface'): str,
-                        Optional('group_id'): str,
+                        Optional('id'): str,
                      }
                 },
                 Optional('track_list_members'):{
@@ -99,8 +99,8 @@ class ShowTrack(ShowTrackSchema):
         # Track List  12
         # VRRPV3 Vlan2 2
         # HSRP Vlan2 2   
-        p5 = re.compile(r'^(?P<name>[a-zA-Z3]{3,6}) +'
-                        r'(?P<interface>[A-Za-z0-9\/.]{3,}) +((?P<group_id>\d+)|(\n))')
+        p5 = re.compile(r'^((?P<name>[a-zA-Z3]{3,6}) +'
+            r'(?P<interface>[A-Za-z0-9\/.]{3,}) +(?P<group_id>\d+))|(?P<route>Route Map Configuration)')
 
         # Delay up 20 secs, down 10 secs
         # Delay up 10000 milliseconds, down 10000 milliseconds 
@@ -187,11 +187,18 @@ class ShowTrack(ShowTrackSchema):
                 tracked_by_dict = type_dict.setdefault('tracked_by', {})
                 tracker_index = len(tracked_by_dict) + 1
                 tracker_dict = tracked_by_dict.setdefault(tracker_index, {})
-                tracker_dict['name'] = group['name']
-                if group['interface']:
-                    tracker_dict['interface'] = group['interface']
-                if group['group_id']:
-                    tracker_dict['group_id'] = group['group_id']
+                if group['route']:
+                   tracker_dict['name'] = group['route']
+                elif group['name'] == 'Track':
+                   tracker_dict['name'] = group['name']+group['interface']
+                   if group['group_id']:
+                      tracker_dict['id'] = group['group_id']
+                else:
+                   tracker_dict['name'] = group['name']
+                   if group['interface']:
+                      tracker_dict['interface'] = group['interface']
+                   if group['group_id']:
+                      tracker_dict['id'] = group['group_id']
                 continue
 
 
