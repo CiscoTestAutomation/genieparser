@@ -1800,6 +1800,7 @@ class ShowIpRouteSummarySchema(MetaParser):
             Any(): {
                 'vrf_id': str,
                 'maximum_paths': int,
+                Optional('removing_queue_size'): int,
                 'total_route_source': {
                     'networks': int,
                     'subnets': int,
@@ -1918,6 +1919,9 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         p13 = re.compile(
             r'^External: +(?P<external>\d+) +Internal: +(?P<internal>\d+) +Local: +(?P<local>\d+)$')
 
+        # Removing Queue Size 0
+        p14 = re.compile(r'^Removing +Queue +Size +(?P<q_size>\d+)')
+
         ret_dict = {}
         replicates_flag = None
         for line in out.splitlines():
@@ -2014,6 +2018,12 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict.setdefault('bgp', {})
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
+
+            # Removing Queue Size 0
+            m = p14.match(line)
+            if m:
+                vrf_dict.update({'removing_queue_size': int(m.groupdict()['q_size'])})
+
         return ret_dict
 
 

@@ -11,3 +11,4 @@ bgp 65448 133 72 43092 31564
 External: 0 Internal: 197 Local: 8
 internal 96 210048
 Total 338 4517 423868 899432
+Removing Queue Size 0
