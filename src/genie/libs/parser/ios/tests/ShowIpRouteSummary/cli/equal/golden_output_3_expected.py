@@ -50,6 +50,7 @@ expected_output = {
                     }
                 },
                 "maximum_paths": 32,
+                "removing_queue_size": 0,
                 "total_route_source": {
                     "networks": 338,
                     "subnets": 4517,
