@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
                             New
 --------------------------------------------------------------------------------
-* <SLXOS>
+* SLXOS
     * Added ShowRunBridgeDomain:
         * show run bridge-domain
         * show run bridge-domain {bd_id} {bd_type}
