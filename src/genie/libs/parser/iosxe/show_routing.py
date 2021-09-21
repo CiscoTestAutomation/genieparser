@@ -1796,24 +1796,40 @@ class ShowIpRouteSummarySchema(MetaParser):
                   show ip route vrf <vrf> summary
     """
     schema = {
-        'vrf':{
-        Any():{
-            'vrf_id': str,
-            'maximum_paths': int,
-            'total_route_source': {
-                'networks': int,
-                'subnets': int,
-                'replicates': int,
-                'overhead': int,
-                'memory_bytes': int,
-            },
-            'route_source': {
-                Any(): {
-
+        'vrf': {
+            Any(): {
+                'vrf_id': str,
+                'maximum_paths': int,
+                Optional('removing_queue_size'): int,
+                'total_route_source': {
+                    'networks': int,
+                    'subnets': int,
+                    Optional('replicates'): int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                'route_source': {
+                    Any(): {
+                        Optional('networks'): int,
+                        Optional('subnets'): int,
+                        Optional('replicates'): int,
+                        Optional('overhead'): int,
+                        Optional('memory_bytes'): int,
+                        Optional('intra_area'): int,
+                        Optional('inter_area'): int,
+                        Optional('external_1'): int,
+                        Optional('external_2'): int,
+                        Optional('nssa_external_1'): int,
+                        Optional('nssa_external_2'): int,
+                        Optional('level_1'): int,
+                        Optional('level_2'): int,
+                        Optional('external'): int,
+                        Optional('internal'): int,
+                        Optional('local'): int,
                         Any(): {
                             'networks': int,
                             'subnets': int,
-                            'replicates': int,
+                            Optional('replicates'): int,
                             'overhead': int,
                             'memory_bytes': int,
                             Optional('intra_area'): int,
@@ -1827,39 +1843,21 @@ class ShowIpRouteSummarySchema(MetaParser):
                             Optional('external'): int,
                             Optional('internal'): int,
                             Optional('local'): int,
-
+                        },
                     },
-                    Optional('networks'): int,
-                    Optional('subnets'): int,
-                    Optional('replicates'): int,
-                    Optional('overhead'): int,
-                    Optional('memory_bytes'): int,
-                    Optional('intra_area'): int,
-                    Optional('inter_area'): int,
-                    Optional('external_1'): int,
-                    Optional('external_2'): int,
-                    Optional('nssa_external_1'): int,
-                    Optional('nssa_external_2'): int,
-                    Optional('level_1'): int,
-                    Optional('level_2'): int,
-                    Optional('external'): int,
-                    Optional('internal'): int,
-                    Optional('local'): int,
-                },
-
+                }
             }
-
         }
     }
-    }
+
 
 # ====================================================
 #  parser for show ip route summary
 # ====================================================
-"""Parser for show ip route summary
-                  show ip route vrf <vrf> summary
-    """
 class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+    """Parser for show ip route summary
+                  show ip route vrf <vrf> summary
+        """
 
     cli_command = ['show ip route summary', 'show ip route vrf {vrf} summary']
 
@@ -1879,11 +1877,32 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\S+) *\((?P<vrf_id>\w+)\)$')
         # IP routing table maximum-paths is 32
         p2 = re.compile(r'^IP +routing +table +maximum-paths +is +(?P<max_path>[\d]+)$')
-        # application     0           0           0           0           0
+
+        # Route Source Networks Subnets Replicates Overhead Memory (bytes)
+        # Route Source Networks Subnets Overhead Memory (bytes)
+        p3_0 = re.compile(
+            r'^(?P<replicates>(Route +Source +Networks +Subnets +Replicates +Overhead +Memory +\(bytes\)))|'
+            r'(?P<no_replicates>(Route +Source +Networks +Subnets +Overhead +Memory +\(bytes\)))$'
+        )
+
+        # Route Source Networks Subnets Replicates Overhead Memory (bytes)
+        # connected 0 68 0 4080 11968
+        # static 0 0 0 0 0
+        # eigrp 120 0 54 0 4320 9504
+        # ospf 100 0 0 0 0 0
         p3 = re.compile(
             r'^(?P<protocol>\w+) +(?P<instance>\w+)*? *(?P<networks>\d+) +('
             r'?P<subnets>\d+)? +(?P<replicates>\d+)? +(?P<overhead>\d+)? +('
             r'?P<memory_bytes>\d+)$')
+
+        # Route Source Networks Subnets Overhead Memory (bytes)
+        # connected 2 43 9260 6480
+        # static 6 58 19508 9216
+        # eigrp 1 0 0 0 0
+        # ospf 100 101 4344 352008 642124
+        p3_1 = re.compile(r'^(?P<protocol>\w+) +(?P<instance>\w+)*? *(?P<networks>\d+) '
+                          r'+(?P<subnets>\d+)? +(?P<overhead>\d+)? +(?P<memory_bytes>\d+)$')
+
         # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
         p7 = re.compile(
             r'^Intra-area: +(?P<intra_area>\d+) +Inter-area: +(?P<inter_area>\d+) '
@@ -1900,7 +1919,11 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         p13 = re.compile(
             r'^External: +(?P<external>\d+) +Internal: +(?P<internal>\d+) +Local: +(?P<local>\d+)$')
 
+        # Removing Queue Size 0
+        p14 = re.compile(r'^Removing +Queue +Size +(?P<q_size>\d+)')
+
         ret_dict = {}
+        replicates_flag = None
         for line in out.splitlines():
             line = line.strip()
             # IP routing table name is default (0x0)
@@ -1916,23 +1939,51 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 vrf_dict['maximum_paths'] = int(m.groupdict()['max_path'])
                 continue
+
+            m = p3_0.match(line)
+            if m:
+                if m.groupdict()['replicates']:
+                    replicates_flag = True
+                elif m.groupdict()['no_replicates']:
+                    replicates_flag = False
+
             # application     0           0           0           0           0
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                protocol = group.pop('protocol')
-                instance = group.pop('instance')
-                if protocol == 'Total':
-                    protocol_dict = vrf_dict.setdefault('total_route_source', {})
-                else:
-                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
-                if instance is not None:
-                    inst_dict = protocol_dict.setdefault(instance, {})
-                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
-                else:
-                    group = {k: int(v) for k, v in group.items() if v is not None}
-                    protocol_dict.update(group)
-                continue
+                if replicates_flag:
+                    group = m.groupdict()
+                    protocol = group.pop('protocol')
+                    instance = group.pop('instance')
+                    if protocol == 'Total':
+                        protocol_dict = vrf_dict.setdefault('total_route_source', {})
+                    else:
+                        protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                    if instance:
+                        inst_dict = protocol_dict.setdefault(instance, {})
+                        inst_dict.update({k: int(v) for k, v in group.items() if v})
+                    else:
+                        group = {k: int(v) for k, v in group.items() if v}
+                        protocol_dict.update(group)
+                    continue
+
+            m = p3_1.match(line)
+            if m:
+                if not replicates_flag:
+                    group = m.groupdict()
+                    protocol = group.pop('protocol')
+                    instance = group.pop('instance')
+                    if protocol == 'Total':
+                        protocol_dict = vrf_dict.setdefault('total_route_source', {})
+                    else:
+                        protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                    if instance:
+                        inst_dict = protocol_dict.setdefault(instance, {})
+                        inst_dict.update({k:int(v) for k, v in group.items() if v})
+                    else:
+                        group = {k: int(v) for k, v in group.items() if v}
+                        protocol_dict.update(group)
+                    continue
+
             # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
             m = p7.match(line)
             if m:
@@ -1967,6 +2018,12 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict.setdefault('bgp', {})
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
+
+            # Removing Queue Size 0
+            m = p14.match(line)
+            if m:
+                vrf_dict.update({'removing_queue_size': int(m.groupdict()['q_size'])})
+
         return ret_dict
 
 
