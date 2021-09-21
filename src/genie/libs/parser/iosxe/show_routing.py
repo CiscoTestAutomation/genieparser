@@ -1958,11 +1958,11 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                         protocol_dict = vrf_dict.setdefault('total_route_source', {})
                     else:
                         protocol_dict = vrf_rs_dict.setdefault(protocol, {})
-                    if instance is not None:
+                    if instance:
                         inst_dict = protocol_dict.setdefault(instance, {})
-                        inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                        inst_dict.update({k: int(v) for k, v in group.items() if v})
                     else:
-                        group = {k: int(v) for k, v in group.items() if v is not None}
+                        group = {k: int(v) for k, v in group.items() if v}
                         protocol_dict.update(group)
                     continue
 
