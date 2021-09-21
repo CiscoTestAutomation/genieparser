@@ -144,7 +144,10 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
             if m:
                 group = m.groupdict()
                 bridge_domains = res_dict.setdefault('bridge-domains', {})
-                bridge_domain = bridge_domains.setdefault(int(group['bd_id']), {'bridge-domain-id': int(group['bd_id']), 'bridge-domain-type': group['bd_type']})
+                bridge_domain = bridge_domains.setdefault(
+                    int(group["bd_id"]),
+                    {"bridge-domain-id": int(group["bd_id"]), "bridge-domain-type": group["bd_type"]},
+                )
                 continue
 
             # vc-id 20
@@ -603,9 +606,18 @@ class ShowRunMacAccessList(ShowRunMacAccessListSchema):
 
         if acl_type:
             if acl_name:
-                rpc_request = rpc_request_mac_acl.format(acl_type_template=acl_type_template.format(acl_type=acl_type, acl_name_template=acl_name_template.format(acl_name=acl_name)))
+                rpc_request = rpc_request_mac_acl.format(
+                    acl_type_template=acl_type_template.format(
+                        acl_type=acl_type,
+                        acl_name_template=acl_name_template.format(acl_name=acl_name),
+                    )
+                )
             else:
-                rpc_request = rpc_request_mac_acl.format(acl_type_template=acl_type_template.format(acl_type=acl_type, acl_name_template=''))
+                rpc_request = rpc_request_mac_acl.format(
+                    acl_type_template=acl_type_template.format(
+                        acl_type=acl_type, acl_name_template=""
+                    )
+                )
         else:
             rpc_request = rpc_request_mac_acl.format(acl_type_template='')
 
