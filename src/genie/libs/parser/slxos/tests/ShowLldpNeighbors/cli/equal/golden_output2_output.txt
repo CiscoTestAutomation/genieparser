@@ -1,0 +1,3 @@
+Local Port    Dead Interval  Remaining Life  Remote Port ID                    Remote Port Descr                 Chassis ID       Tx           Rx           System Name
+
+Total no. of Records: 0

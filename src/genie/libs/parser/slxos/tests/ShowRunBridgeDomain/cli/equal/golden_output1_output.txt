@@ -1,0 +1,34 @@
+bridge-domain 20 p2mp
+ vc-id 20
+ peer 1.1.1.1 lsp abc def ed
+ peer 3.3.3.3 lsp 1 abc cos
+ peer 4.4.4.4 load-balance cos 4 flow-label control-word lsp abc ds
+ statistics
+ pw-profile default
+ logical-interface ethernet 0/30.1
+ logical-interface ethernet 0/30.2
+ logical-interface port-channel 100.1
+ logical-interface port-channel 100.2
+ bpdu-drop-enable
+ local-switching
+ mac-address withdrawal
+ suppress-nd
+ suppress-arp
+ ip arp inspection
+ ip arp inspection filter abc
+ ip igmp snooping enable
+!
+bridge-domain 30 p2p
+ vc-id 20030
+ peer 100.1.234.6 load-balance cos 1 flow-label control-word
+ pw-profile class-fat
+ logical-interface port-channel 1.300
+!
+bridge-domain 40 p2mp
+ description test
+ statistics
+ pw-profile default
+ bpdu-drop-enable
+ local-switching
+ mac-address withdrawal
+!

@@ -1,0 +1,36 @@
+
+SLX-OS Operating System Software
+SLX-OS Operating System Version: 18r.1.00
+Copyright (c) 1995-2021 Extreme Networks Systems, Inc.
+Firmware name:      18r.1.00h
+Build Time:         08:13:43 Apr  7, 2021
+Install Time:       07:14:32 Jun  1, 2021
+Kernel:             2.6.34.6
+
+Control Processor:  GenuineIntel
+Memory Size:        SLXVM: 11468 MB   System Total: 32174 MB
+
+System Uptime:   94days 8hrs 25mins 29secs 
+
+Slot    Name    Primary/Secondary Versions                         Status
+---------------------------------------------------------------------------
+M1      SLX-OS  18r.1.00h                                          ACTIVE*
+                18r.1.00h                                           
+M2      SLX-OS  18r.1.00h                                          STANDBY
+                18r.1.00h                                           
+L1/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L2/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L3/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L4/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L5/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L6/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L7/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           
+L8/0    SLX-OS  18r.1.00h                                          ACTIVE
+                18r.1.00h                                           

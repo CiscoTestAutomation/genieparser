@@ -1,0 +1,8 @@
+VlanId/BDId   Mac-address       Type        State      Ports/LIF/PW/T
+199 (V)       deab.0e3e.78df    Dynamic     Active     Eth 0/44
+100 (B)       aabb.c951.0801    Dynamic     Active     192.168.90.31
+100 (B)       abcd.0f09.0a12    Dynamic     Active     192.168.90.20
+100 (B)       1234.45cc.b249    Dynamic     Active     Po 6.100
+200 (B)       1234.45cc.b249    Dynamic     Active     Po 6.200
+839 (B)       1234.45cc.b249    Dynamic     Active     Po 6.839
+Total MAC addresses    :  6

@@ -1,0 +1,28 @@
+mac access-list standard test-1
+ seq 10 permit host aaaa.aaaa.aaaa count
+ seq 20 deny aaaa.aaaa.aaa0 ffff.ffff.fff0 log
+ seq 30 hard-drop any copy-sflow
+!
+mac access-list extended test-2
+ seq 10 permit host e481.84a5.e47e any vlan-tag-format single-tagged vlan 10 arp
+ seq 11 permit bbbb.bbbb.bbb0 ffff.ffff.fff0 any vlan-tag-format single-tagged vlan 10 ipv4
+ seq 12 deny any host cccc.cccc.ccc0 vlan-tag-format single-tagged vlan 30 ipv6
+ seq 13 hard-drop any cccc.cccc.cc00 ffff.ffff.ff00 vlan-tag-format single-tagged vlan 30 ipv6
+ seq 100 deny any any
+!
+mac access-list extended test3
+ seq 103 permit host abcd.abcd.abcd any vlan-tag-format double-tagged outer-vlan 200 inner-vlan 1234 arp
+ seq 104 permit host abcd.abcd.abcd any vlan-tag-format double-tagged outer-vlan 1234 inner-vlan 200 ipv4
+ seq 105 permit host abcd.abcd.abcd any vlan-tag-format double-tagged outer-vlan 10 inner-vlan 10 ipv6
+ seq 110 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 321 arp
+ seq 111 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 321 ipv4
+ seq 112 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 321 ipv6
+ seq 200 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 10 pcp 1 pcp-force 3 drop-precedence-force 2 count log mirror
+ seq 210 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 10 0xfff
+ seq 211 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 10 0xfff arp
+ seq 610 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 10
+ seq 700 permit host abcd.abcd.abcd any vlan-tag-format single-tagged vlan 10 drop-precedence-force 1
+ seq 800 permit host abcd.abcd.abcd any vlan 1111
+ seq 801 permit host abcd.abcd.abcd any vlan 1111 unknown-unicast-only
+ seq 802 permit host abcd.abcd.abcd any vlan 1111 known-unicast-only
+!

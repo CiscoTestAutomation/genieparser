@@ -1,0 +1,19 @@
+
+2021-09-03 15:47:41,881: %UNICON-INFO: +++ lab-ixsp-nicjd-pe-slx9540-135 with alias 'cli': executing command 'show version' +++
+show version
+
+SLX-OS Operating System Version: 20.2.2
+Copyright (c) 1995-2021 Extreme Networks, Inc.
+Firmware name:      20.2.2a
+Build Time:         10:29:46 Nov 11, 2020
+Install Time:       05:00:38 Nov 28, 2020
+Kernel:             4.14.67
+Control Processor:  Intel(R) Xeon(R) CPU D-1527 @ 2.20GHz,  4 cores
+Microcode Version:  0x7000017
+Memory Size:        System Total: 31644 MB
+System Uptime:      30days 18hrs 5mins 39secs 
+
+Name     Primary/Secondary Versions 
+------------------------------------------
+SLX-OS   20.2.2a
+         20.2.2a
