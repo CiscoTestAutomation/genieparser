@@ -76,10 +76,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
         # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
-                         ' +GPORT\=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
+                         ' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
                          '(?: +Trunk\=(?P<trunk>\d+))?'
                          '(?: +(?P<b_static>(Static)))?'
-                         ' +encap_id\=(?P<encap_id>\d+|0x[[A-Fa-f0-9\']+)$')
+                         ' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
 
         for line in out.splitlines():
             line = line.strip()
