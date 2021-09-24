@@ -11,8 +11,10 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # Schema for 'show track'
 # =======================
 class ShowTrackSchema(MetaParser):
-    """ Schema for 'show track' """
-    """ Schema for 'show track {id}' """
+    """ Schema for:
+       * 'show track' 
+       * 'show track {id}' 
+    """
     schema = {
         'track': {
             Any(): {
