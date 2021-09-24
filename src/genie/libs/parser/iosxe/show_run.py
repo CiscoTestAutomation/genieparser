@@ -277,8 +277,6 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('snmp_trap_link_status'): bool,
                 Optional('snmp_trap_mac_notification_change_added'): bool,
                 Optional('snmp_trap_mac_notification_change_removed'): bool,
-                Optional('spanning_tree_bpduguard'): str,
-                Optional('spanning_tree_portfast'): bool,
                 Optional('switchport_access_vlan'): str,
                 Optional('switchport_mode'): str,
                 Optional('switchport_nonegotiate'): str,
@@ -303,6 +301,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('spanning_tree_bpduguard'): str,
                 Optional('spanning_tree_portfast'): bool,
                 Optional('spanning_tree_bpdufilter'): str,
+                Optional('spanning_tree_portfast_trunk'): bool,
                 Optional('switchport_access_vlan'): str,
                 Optional('switchport_trunk_vlans'): str,
                 Optional('switchport_mode'): str,
@@ -532,6 +531,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # mpls ip
         p58=re.compile(r"^mpls ip$")
+
+        # spanning-tree portfast trunk
+        p59=re.compile(r"^spanning-tree +portfast +trunk$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1005,7 +1007,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 intf_dict.update({'mpls_ip':'enabled'})
                 continue
-                                
+
+            #spanning-tree portfast trunk
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'spanning_tree_portfast_trunk': True})
+                continue
+
         return config_dict
 
 

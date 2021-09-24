@@ -1,0 +1,9 @@
+interface GigabitEthernet1/0/5
+ switchport mode trunk
+ ip flow monitor IPv4_NETFLOW input
+ ip arp inspection limit rate 100
+ load-interval 30
+ spanning-tree portfast trunk
+ service-policy output UPLINK-EGRESS-QUEUING
+ ip dhcp snooping limit rate 20
+end
