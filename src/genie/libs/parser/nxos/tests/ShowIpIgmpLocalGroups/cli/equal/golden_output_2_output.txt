@@ -1,0 +1,11 @@
+
+IGMP Locally Joined Group Membership for VRF "VRF1"
+Group Address    Source Address   Type     Interface   Last Reported 
+239.1.1.1        *                Local    Eth2/4      00:00:50  
+239.2.2.2        *                Local    Eth2/4      00:00:54  
+239.3.3.3        10.4.1.1          Local    Eth2/4      00:01:01  
+239.4.4.4        10.4.1.2          Local    Eth2/4      00:00:55  
+239.5.5.5        *                Static   Eth2/4      01:06:47  
+239.6.6.6        *                Static   Eth2/4      01:06:47  
+239.7.7.7        10.16.2.1          Static   Eth2/4      01:06:47  
+239.8.8.8        10.16.2.2          Static   Eth2/4      01:06:47

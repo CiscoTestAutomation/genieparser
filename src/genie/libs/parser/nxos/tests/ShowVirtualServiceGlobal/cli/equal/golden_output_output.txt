@@ -1,0 +1,20 @@
+
+
+Virtual Service Global State and Virtualization Limits:
+
+Infrastructure version : 1.10
+Total virtual services installed : 1
+Total virtual services activated : 1
+
+Machine types supported   : LXC
+Machine types disabled    : KVM
+
+Maximum VCPUs per virtual service : 1
+
+Resource virtualization limits:
+Name                        Quota    Committed    Available
+-----------------------------------------------------------------------
+system CPU (%)                 20            1           19
+memory (MB)                  3840          500         3340
+bootflash (MB)               8192         1000         7192
+

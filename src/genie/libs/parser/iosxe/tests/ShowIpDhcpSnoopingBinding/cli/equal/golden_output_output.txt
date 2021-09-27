@@ -1,0 +1,5 @@
+show ip dhcp snooping binding
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+00:11:01:00:00:01   100.100.0.3      1128        dhcp-snooping   100   FiftyGigE6/0/25
+Total number of bindings: 1

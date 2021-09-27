@@ -1,0 +1,36 @@
+
+show ip ospf vrf all
+Routing Process 1 with ID 10.1.0.105 VRF default
+Routing Process Instance Number 1
+Stateful High Availability enabled
+Graceful-restart is configured
+Grace period: 60 state: Inactive
+Last graceful restart exit status: None
+Supports only single TOS(TOS0) routes
+Supports opaque LSA
+Administrative distance 110
+Reference Bandwidth is 40000 Mbps
+SPF throttling delay time of 20.000 msecs,
+SPF throttling hold time of 50.000 msecs,
+SPF throttling maximum wait time of 500.000 msecs
+LSA throttling start time of 20.000 msecs,
+LSA throttling hold interval of 50.000 msecs,
+LSA throttling maximum wait time of 500.000 msecs
+Minimum LSA arrival 50.000 msec
+LSA group pacing timer 10 secs
+Maximum paths to destination 8
+Number of external LSAs 0, checksum sum 0
+Number of opaque AS LSAs 0, checksum sum 0
+Number of areas is 1, 1 normal, 0 stub, 0 nssa
+Number of active areas is 1, 1 normal, 0 stub, 0 nssa
+Install discard route for summarized external routes.
+Install discard route for summarized internal routes.
+Area BACKBONE(0.0.0.0)
+    Area has existed for 2d05h
+    Interfaces in this area: 4 Active interfaces: 3
+    Passive interfaces: 0  Loopback interfaces: 1
+    Message-digest authentication
+    SPF calculation has run 64 times
+     Last SPF ran for 0.002091s
+    Area ranges are
+    Number of LSAs: 35, checksum sum 0x13a425

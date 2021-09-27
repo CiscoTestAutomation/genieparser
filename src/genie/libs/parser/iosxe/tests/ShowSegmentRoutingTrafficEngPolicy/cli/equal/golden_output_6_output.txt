@@ -1,0 +1,9 @@
+R1#show segment-routing traffic-eng policy name r5-15-s       
+
+Name: r5-15-s (Color: 0 End-point: )
+  Owners : CLI
+  Status:
+    Admin: up, Operational: down for 00:50:31 (since 09-22 10:10:35.361)
+  Candidate-paths:
+  Attributes:
+    Autoroute:

@@ -1,0 +1,17 @@
+show template binding target TenGigabitEthernet 5/0/1
+
+Interface Templates
+===================
+Interface: Te5/0/1
+
+Method              Source            Template-Name
+------              ------            -------------
+static              User              source_template                                 
+
+Service Templates
+
+=================
+Template-Name                                    Source            Bound-To-MAc
+-------------                                    ------            ----------------
+DefaultCriticalAuthVlan_SRV_TEMPLATE             User               40-F0-78-CA-D1-1A   
+DefaultCriticalVoice_SRV_TEMPLATE                User               40-F0-78-CA-D1-1A   

@@ -1,0 +1,31 @@
+Name: R3_t100                             (Tunnel100) Destination: 2.2.2.2
+  Status:
+    Admin: admin-down Oper: down   Path: not valid   Signalling: Down
+    path option 1, type dynamic
+    path option 2, type dynamic
+    path option 3, type explicit R3_R5_R2
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 500 [0] bw-based
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Shortest Unconstrained Path Info:
+    Path Weight: 1 (TE)
+    Explicit Route: 192.1.1.1 192.1.1.2 2.2.2.2 
+  Reason for the tunnel being down: Tunnel interface is shutdown
+
+  History:
+    Tunnel:
+      Time since created: 10 hours, 4 minutes
+      Time since path change: 49 seconds
+      Number of LSP IDs (Tun_Instances) used: 29
+    Prior LSP: [ID: 19]
+      ID: path option unknown
+      Removal Trigger: tunnel shutdown

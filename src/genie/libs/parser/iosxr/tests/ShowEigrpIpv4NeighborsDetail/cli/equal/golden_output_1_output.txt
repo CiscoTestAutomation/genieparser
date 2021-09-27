@@ -1,0 +1,14 @@
+
+#show eigrp ipv4 neighbors detail
+Mon Apr 15 18:03:58.323 UTC
+
+IPv4-EIGRP VR(test) Neighbors for AS(100) VRF default
+
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+				    (sec)         (ms)       Cnt Num
+1   10.23.90.3              Gi0/0/0/1.90      11 01:43:15   13   200  0  23
+BFD disabled
+Version 8.0/1.2, Retrans: 1, Retries: 0, Prefixes: 3
+0   10.12.90.1              Gi0/0/0/0.90      14 02:56:28    1   200  0  17
+BFD disabled
+Version 23.0/2.0, Retrans: 1, Retries: 0, Prefixes: 3

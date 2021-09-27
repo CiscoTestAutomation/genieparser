@@ -1,0 +1,28 @@
+
+VRF-Name: VRF1, VRF-ID: 3, State: Up
+    VPNID: unknown
+    RD: 300:1
+    Max Routes: 20000  Mid-Threshold: 17000
+    Table-ID: 0x80000003, AF: IPv6, Fwd-ID: 0x80000003, State: Up
+    Table-ID: 0x00000003, AF: IPv4, Fwd-ID: 0x00000003, State: Up
+
+VRF-Name: VRF2, VRF-ID: 4, State: Up
+    VPNID: unknown
+    RD: 400:1
+    Max Routes: 0  Mid-Threshold: 0
+    Table-ID: 0x80000004, AF: IPv6, Fwd-ID: 0x80000004, State: Up
+    Table-ID: 0x00000004, AF: IPv4, Fwd-ID: 0x00000004, State: Up
+
+VRF-Name: default, VRF-ID: 1, State: Up
+    VPNID: unknown
+    RD: 0:0
+    Max Routes: 0  Mid-Threshold: 0
+    Table-ID: 0x80000001, AF: IPv6, Fwd-ID: 0x80000001, State: Up
+    Table-ID: 0x00000001, AF: IPv4, Fwd-ID: 0x00000001, State: Up
+
+VRF-Name: management, VRF-ID: 2, State: Up
+    VPNID: unknown
+    RD: 0:0
+    Max Routes: 0  Mid-Threshold: 0
+    Table-ID: 0x80000002, AF: IPv6, Fwd-ID: 0x80000002, State: Up
+    Table-ID: 0x00000002, AF: IPv4, Fwd-ID: 0x00000002, State: Up

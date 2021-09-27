@@ -1,0 +1,8 @@
+IP Multicast Routing Table for VRF "default"
+(10.234.1.2/32, 225.1.0.1/32), uptime: 00:22:11, ip pim mrib
+Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2,internal
+Outgoing interface list: (count: 3)
+port-channel12, uptime: 00:10:13, pim
+Vlan30, uptime: 00:21:53, mrib
+Vlan200, uptime: 03:01:01, mrib, (bridge-only)
+Ethernet1/11, uptime: 00:22:00, mrib

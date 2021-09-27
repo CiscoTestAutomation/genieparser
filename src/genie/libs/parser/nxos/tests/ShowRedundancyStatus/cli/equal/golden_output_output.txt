@@ -1,0 +1,26 @@
+
+
+Redundancy mode
+---------------
+  administrative:   HA
+     operational:   HA
+
+This supervisor (sup-1)
+-----------------------
+Redundancy state:   Active
+Supervisor state:   Active
+  Internal state:   Active with HA standby
+
+Other supervisor (sup-2)
+------------------------
+Redundancy state:   Standby
+
+Supervisor state:   HA standby
+  Internal state:   HA standby
+
+System start time:          Fri Apr 21 01:53:24 2017
+
+System uptime:              0 days, 7 hours, 57 minutes, 30 seconds
+Kernel uptime:              0 days, 8 hours, 0 minutes, 56 seconds
+Active supervisor uptime:   0 days, 7 hours, 57 minutes, 30 seconds
+

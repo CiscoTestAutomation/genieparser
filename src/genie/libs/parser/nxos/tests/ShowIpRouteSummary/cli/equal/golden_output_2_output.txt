@@ -1,0 +1,12 @@
+
+IP Route Table for VRF "xxx"
+Total number of routes: 308
+Total number of paths:  332
+
+Best paths per protocol:      Backup paths per protocol:
+am             : 214          ospf-1000      : 10
+local          : 14
+direct         : 14
+broadcast      : 29
+hsrp           : 10
+ospf-1000      : 41

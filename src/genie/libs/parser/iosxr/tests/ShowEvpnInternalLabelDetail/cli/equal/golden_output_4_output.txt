@@ -1,0 +1,11 @@
+
+    VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label   
+---------- ------ --------------------------- ----------   --------
+1000       MPLS   0001.00ff.0102.0000.0011    0            100001  
+   Multi-paths resolved: TRUE (Remote all-active) (ECMP Disable)
+   Multi-paths Internal label: None
+    MAC         172.16.2.89                              100001         
+    EAD/ES      172.16.2.89                              0              
+    EAD/EVI     172.16.2.89                              100001         
+   Summary pathlist:
+ 0xffffffff (P) 172.16.2.89                              100001         

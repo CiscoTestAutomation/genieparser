@@ -1,0 +1,143 @@
+
+show bgp vrf all all summary
+
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 174, IPv4 Unicast config peers 3, capable peers 3
+5 network entries and 7 paths using 1424 bytes of memory
+BGP attribute entries [4/640], BGP AS path entries [4/144]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 2 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31      174    0    0 00:20:33 3
+10.106.102.3    4   888     841      28      174    0    0 00:20:33 2
+10.106.102.4    4   333      27      31      174    0    0 00:20:33 2
+
+BGP summary information for VRF default, address family IPv4 Multicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 175, IPv4 Multicast config peers 3, capable peers 3
+6 network entries and 6 paths using 1392 bytes of memory
+BGP attribute entries [3/480], BGP AS path entries [2/56]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 2 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31      175    0    0 00:20:33 2
+10.106.102.3    4   888     841      28      175    0    0 00:20:33 2
+10.106.102.4    4   333      27      31      175    0    0 00:20:33 2
+
+BGP summary information for VRF default, address family IPv6 Unicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 173, IPv6 Unicast config peers 5, capable peers 2
+5 network entries and 5 paths using 1220 bytes of memory
+BGP attribute entries [3/480], BGP AS path entries [3/106]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 2 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31        0    0    0 00:20:33 0 (No Cap)
+10.106.102.3    4   888     841      28        0    0    0 00:20:33 0 (No Cap)
+10.106.102.4    4   333      27      31        0    0    0 00:20:33 0 (No Cap)
+2001:db8:8d82::1002      4   333      26      26      173    0    0 00:20:33 3
+2001:db8:8d82::2002      4   888     187      25      173    0    0 00:20:33 2
+
+BGP summary information for VRF default, address family IPv6 Multicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 6, IPv6 Multicast config peers 5, capable peers 2
+2 network entries and 2 paths using 488 bytes of memory
+BGP attribute entries [1/160], BGP AS path entries [0/0]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 0 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31        0    0    0 00:20:33 0 (No Cap)
+10.106.102.3    4   888     841      28        0    0    0 00:20:33 0 (No Cap)
+10.106.102.4    4   333      27      31        0    0    0 00:20:33 0 (No Cap)
+2001:db8:8d82::1002      4   333      26      26        6    0    0 00:20:33 2
+2001:db8:8d82::2002      4   888     187      25        6    0    0 00:20:33 0
+
+BGP summary information for VRF default, address family VPNv4 Unicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 183, VPNv4 Unicast config peers 3, capable peers 3
+6 network entries and 8 paths using 1656 bytes of memory
+BGP attribute entries [4/640], BGP AS path entries [4/140]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 2 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31      183    0    0 00:20:33 2
+10.106.102.3    4   888     841      28      183    0    0 00:20:33 2
+10.106.102.4    4   333      27      31      183    0    0 00:20:33 4
+
+BGP summary information for VRF default, address family VPNv6 Unicast
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 13, VPNv6 Unicast config peers 3, capable peers 3
+4 network entries and 4 paths using 976 bytes of memory
+BGP attribute entries [2/320], BGP AS path entries [1/42]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 0 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31       13    0    0 00:20:33 2
+10.106.102.3    4   888     841      28       13    0    0 00:20:33 2
+10.106.102.4    4   333      27      31       13    0    0 00:20:33 0
+
+BGP summary information for VRF default, address family Link-State
+BGP router identifier 10.145.0.6, local AS number 333
+BGP table version is 173, Link-State config peers 5, capable peers 3
+4 network entries and 4 paths using 928 bytes of memory
+BGP attribute entries [2/320], BGP AS path entries [2/84]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+Dampening configured, 0 history paths, 2 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.101.1    4   333      29      31      173    0    0 00:20:33 2
+10.106.102.3    4   888     841      28      173    0    0 00:20:33 2
+10.106.102.4    4   333      27      31      173    0    0 00:20:33 0
+2001:db8:8d82::1002      4   333      26      26        0    0    0 00:20:33 0 (No Cap)
+2001:db8:8d82::2002      4   888     187      25        0    0    0 00:20:33 0 (No Cap)
+
+BGP summary information for VRF vpn1, address family IPv4 Unicast
+BGP router identifier 0.0.0.0, local AS number 333
+BGP table version is 9, IPv4 Unicast config peers 1, capable peers 0
+3 network entries and 3 paths using 300 bytes of memory
+BGP attribute entries [2/320], BGP AS path entries [2/80]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.103.1    4   333       0       0        0    0    0 00:20:35 Idle
+
+BGP summary information for VRF vpn1, address family IPv4 Multicast
+BGP router identifier 0.0.0.0, local AS number 333
+BGP table version is 2, IPv4 Multicast config peers 1, capable peers 0
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.103.1    4   333       0       0        0    0    0 00:20:35 Idle
+
+BGP summary information for VRF vpn1, address family IPv6 Unicast
+BGP router identifier 0.0.0.0, local AS number 333
+BGP table version is 2, IPv6 Unicast config peers 1, capable peers 0
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.103.1    4   333       0       0        0    0    0 00:20:35 Idle
+
+BGP summary information for VRF vpn1, address family IPv6 Multicast
+BGP router identifier 0.0.0.0, local AS number 333
+BGP table version is 2, IPv6 Multicast config peers 1, capable peers 0
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.106.103.1    4   333       0       0        0    0    0 00:20:35 Idle
+
+BGP summary information for VRF vpn2, address family IPv4 Unicast
+
+BGP summary information for VRF vpn2, address family IPv6 Unicast

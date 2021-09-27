@@ -1,0 +1,17 @@
+MEX-X-4000#show boot
+BOOT path-list      : flash:/ie4000-universalk9-mz.152-4.EA5 
+Config file         : sdflash:/config.text
+Private Config file : flash:/private-config.text
+Enable Break        : yes
+Manual Boot         : no
+Allow Dev Key         : yes
+HELPER path-list    : 
+Auto upgrade        : yes
+Auto upgrade path   : 
+Boot optimization   : enabled
+NVRAM/Config file
+      buffer size:   524288
+Timeout for Config
+          Download:    0 seconds
+Config Download 
+       via DHCP:       disabled (next boot: disabled)

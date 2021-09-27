@@ -1,0 +1,110 @@
+
+Mon Jan  4 10:56:40.197 EST
+Legend:
+B   - No Forwarders EVPN-enabled,
+C   - Backbone Source MAC missing (PBB-EVPN),
+RT  - ES-Import Route Target missing,
+E   - ESI missing,
+H   - Interface handle missing,
+I   - Name (Interface or Virtual Access) missing,
+M   - Interface in Down state,
+O   - BGP End of Download missing,
+P   - Interface already Access Protected,
+Pf  - Interface forced single-homed,
+R   - BGP RID not received,
+S   - Interface in redundancy standby state,
+X   - ESI-extracted MAC Conflict
+SHG - No local split-horizon-group label allocated
+
+Ethernet Segment Id      Interface                          Nexthops           
+------------------------ ---------------------------------- --------------------
+0021.22ff.2020.1010.1010 BE10                               192.168.99.21
+							    192.168.99.22
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : Bundle-Ether10
+    Interface MAC  : 00bc.60ff.7122
+    IfHandle       : 0x08004054
+    State          : Up
+    Redundancy     : Not Defined
+ESI type          : 0
+    Value          : 21.2210.10ff.2020.1010
+ES Import RT      : 2122.10ff.2020 (from ESI)
+Source MAC        : 0000.0000.0000 (N/A)
+Topology          :
+    Operational    : MH, All-active
+    Configured     : All-active (AApF) (default)
+Service Carving   : Auto-selection
+    Multicast      : Disabled
+Convergence       : NH-Tracking
+    Tracked Nexthop: 192.168.99.22
+Peering Details   : 2 Nexthops
+    192.168.99.21 [MOD:P:7fff:T]
+    192.168.99.22 [MOD:P:00:T]
+Service Carving Synchronization:
+    Mode           : NONE
+    Peer Updates   :
+Service Carving Results:
+    Forwarders     : 11
+    Elected        : 7
+    Not Elected    : 4
+EVPN-VPWS Service Carving Results:
+    Primary        : 0
+    Backup         : 0
+    Non-DF         : 0
+MAC Flushing mode : STP-TCN
+Peering timer     : 10 sec [not running]
+Recovery timer    : 30 sec [not running]
+Carving timer     : 0 sec [not running]
+HRW Reset timer   : 5 sec [not running]
+Local SHG label   : 28105
+Remote SHG labels : 1
+	    28105 : nexthop 192.168.99.22
+Access signal mode: Bundle OOS (Default)
+
+0021.22ff.2222.1111.1111 BE11                               192.168.99.21
+							    192.168.99.22
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : Bundle-Ether11
+    Interface MAC  : 00bc.60ff.7121
+    IfHandle       : 0x080040b4
+    State          : Standby
+    Redundancy     : Not Defined
+ESI type          : 0
+    Value          : 21.2211.11ff.2222.1111
+ES Import RT      : 2122.11ff.2222 (from ESI)
+Source MAC        : 0000.0000.0000 (N/A)
+Topology          :
+    Operational    : MH
+    Configured     : Port-Active
+Service Carving   : Auto-selection
+    Multicast      : Disabled
+Convergence       :
+Peering Details   : 2 Nexthops
+    192.168.99.21 [MOD:P:00:T]
+    192.168.99.22 [MOD:P:00:T]
+Service Carving Synchronization:
+    Mode           : NTP_SCT
+    Peer Updates   :
+	192.168.99.21 [SCT: 2020-12-21 17:21:05:210251]
+	192.168.99.22 [SCT: 2020-12-21 17:20:50:188446]
+Service Carving Results:
+    Forwarders     : 1
+    Elected        : 0
+    Not Elected    : 1
+EVPN-VPWS Service Carving Results:
+    Primary        : 0
+    Backup         : 0
+    Non-DF         : 0
+MAC Flushing mode : STP-TCN
+Peering timer     : 10 sec [not running]
+Recovery timer    : 30 sec [not running]
+Carving timer     : 0 sec [not running]
+HRW Reset timer   : 5 sec [not running]
+Local SHG label   : 28139
+Remote SHG labels : 1
+	    28139 : nexthop 192.168.99.22
+Access signal mode: Bundle Down

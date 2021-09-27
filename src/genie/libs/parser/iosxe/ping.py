@@ -5,6 +5,8 @@ IOSXE parsers for the following show commands:
     * ping {addr} source {source} repeat {count}
     * ping vrf {vrf} {addr}
     * ping mpls ip {addr} {mask} repeat {count} timeout {timeout}
+    * ping mpls traffic-eng tunnel {tunnel_id}
+    * ping mpls pseudowire <ip> <vc_id>
 """
 # Python
 import re
@@ -192,6 +194,7 @@ class Ping(PingSchema):
 class PingMplsSchema(MetaParser):
     """ Schema for
             * ping mpls ip {addr} {mask} repeat {count} timeout {timeout}
+            * ping mpls traffic-eng tunnel {tunnel_id}
     """
 
     schema = {
@@ -222,7 +225,10 @@ class PingMpls(PingMplsSchema):
     """
 
     cli_command = [
-        'ping mpls ip {addr} {mask} repeat {count}'
+        'ping mpls ip {addr} {mask} repeat {count}',
+        'ping mpls traffic-eng tunnel {tunnel_id}',
+        'ping mpls pseudowire {addr} {vc_id}'
+        
     ]
 
     def cli(self,
@@ -231,19 +237,26 @@ class PingMpls(PingMplsSchema):
             mask=None,
             timeout=None,
             command=None,
+            tunnel_id=None,
+            vc_id=None,
             output=None):
 
         if not output:
-            cmd = []
-            if mask:
-                cmd.append('ping mpls ip {addr} {mask}'.format(addr=addr,mask=mask))
-            if count:
-                cmd.append('repeat {count}'.format(count=count))
-            if timeout:
-                cmd.append('timeout {timeout}'.format(timeout=timeout))
-            cmd = ' '.join(cmd)
-            if command:
-                cmd = command
+            if not tunnel_id and not vc_id:
+                cmd = []
+                if mask:
+                    cmd.append('ping mpls ip {addr} {mask}'.format(addr=addr,mask=mask))
+                if count:
+                    cmd.append('repeat {count}'.format(count=count))
+                if timeout:
+                    cmd.append('timeout {timeout}'.format(timeout=timeout))
+                cmd = ' '.join(cmd)
+                if command:
+                    cmd = command
+            elif vc_id and addr:
+                cmd = "ping mpls pseudowire {addr} {vc_id}".format(addr=addr, vc_id=vc_id)          
+            else:
+                cmd = "ping mpls traffic-eng tunnel {tunnel_id}".format(tunnel_id=tunnel_id)
             out = self.device.execute(cmd)
         else:
             out = output

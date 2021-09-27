@@ -1,0 +1,25 @@
+
+Ethernet4/1 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State DOWN, Network type BROADCAST
+Ethernet4/10 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State DOWN, Network type BROADCAST
+loopback1 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State LOOPBACK, Network type LOOPBACK
+loopback2 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State LOOPBACK, Network type LOOPBACK
+loopback3 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State LOOPBACK, Network type LOOPBACK
+loopback4 - Process ID UNDERLAY VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State LOOPBACK, Network type LOOPBACK

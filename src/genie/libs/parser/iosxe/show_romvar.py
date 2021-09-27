@@ -15,7 +15,7 @@ class ShowRomvarSchema(MetaParser):
         "rommon_variables" : {
             "ps1": str,
             Optional("switch_number"): int,
-            "mcp_startup_traceflags": str,
+            Optional("mcp_startup_traceflags"): str,
             Optional("license_active_level"): str,
             Optional("license_boot_level"): str,
             Optional("stack"): str,
@@ -149,7 +149,7 @@ class ShowRomvar(ShowRomvarSchema):
         p_ps1 = re.compile(r"^PS1\s+=\s+(?P<ps1>.*)$")
 
         # THRPUT =
-        p_thrput = re.compile(r"^THRPUT\s+=\s+(?P<thrput>.*)$")
+        p_thrput = re.compile(r"^(THRPUT|CRYPTO_BI_THPUT)\s+=\s+(?P<thrput>.*)$")
 
         # SR_MGMT_VRF = 0
         p_mgmt_vrf = re.compile(r"^SR_MGMT_VRF\s+=\s+(?P<mgmt_vrf>.*)$")

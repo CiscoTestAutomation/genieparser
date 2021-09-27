@@ -1,0 +1,23 @@
+LISP Dynamic EID Information for router 0, IID 4100, EID-table VRF "red"
+
+Dynamic-EID name: 192_168_1_0
+  Database-mapping EID-prefix: 192.168.1.0/24, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: 192.168.1.1, 1d22h ago
+    192.168.1.1, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam
+    192.168.1.71, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking
+
+Dynamic-EID name: 2001_192_168_1
+  Database-mapping EID-prefix: 2001:192:168:1::/64, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: 2001:192:168:1::1, 1d22h ago
+    2001:192:168:1::1, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam

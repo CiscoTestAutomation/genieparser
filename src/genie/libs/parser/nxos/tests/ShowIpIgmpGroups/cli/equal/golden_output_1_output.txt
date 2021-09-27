@@ -1,0 +1,20 @@
+
+IGMP Connected Group Membership for VRF "default" - 4 total entries
+Type: S - Static, D - Dynamic, L - Local, T - SSM Translated
+Group Address      Type Interface           Uptime    Expires   Last Reporter
+239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
+239.6.6.6          S    Ethernet2/1         00:20:53  never     10.1.2.1
+239.7.7.7
+  10.16.2.1          S    Ethernet2/1         00:20:42  never     10.1.2.1
+239.8.8.8
+  10.16.2.2          S    Ethernet2/1         00:20:34  never     10.1.2.1
+
+IGMP Connected Group Membership for VRF "VRF1" - 4 total entries
+Type: S - Static, D - Dynamic, L - Local, T - SSM Translated
+Group Address      Type Interface           Uptime    Expires   Last Reporter
+239.5.5.5          S    Ethernet2/4         00:15:27  never     10.186.2.1
+239.6.6.6          S    Ethernet2/4         00:15:27  never     10.186.2.1
+239.7.7.7
+  10.16.2.1          S    Ethernet2/4         00:15:27  never     10.186.2.1
+239.8.8.8
+  10.16.2.2          S    Ethernet2/4         00:15:27  never     10.186.2.1

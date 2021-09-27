@@ -1,0 +1,28 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp session destination 109.109.109.109 detail dst-port 50000
+Tue Mar 30 16:19:15.692 JST
+SESSION: IPv4-LSP Addr: 109.109.109.109, TunID: 50000, ExtID: 17.17.17.17
+ PSBs: 1, RSBs: 1, Requests: 0
+ LSPId: 15
+ Tunnel Name: 50000_F17-ASR9922_F109-ASR9001
+  RSVP Path Info:
+   InLabel: No intf, No label
+   Incoming Address: Unknown
+   Explicit Route:
+     Strict, 20.50.0.1/32
+     Strict, 21.50.0.2/32
+     Strict, 109.109.109.109/32
+   Record Route: None
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: HundredGigE0/0/0/0, 24023
+   FRR OutLabel: tunnel-te53300, 3
+   Record Route:
+     IPv4 141.141.141.141, flags 0x21
+     Label 24023, flags 0x1
+     IPv4 20.50.0.1, flags 0x1
+     Label 24023, flags 0x1
+     IPv4 109.109.109.109, flags 0x20
+     Label 3, flags 0x1
+     IPv4 21.50.0.2, flags 0x0
+     Label 3, flags 0x1
+   Fspec: avg rate=0, burst=1K, peak rate=0

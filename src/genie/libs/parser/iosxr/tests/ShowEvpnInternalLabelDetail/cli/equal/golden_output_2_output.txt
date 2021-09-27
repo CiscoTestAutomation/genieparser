@@ -1,0 +1,9 @@
+
+RP/0/0/CPU0:PE1#show evpn internal-label detail
+Thu May  5 10:16:51.447 EDT
+
+EVI   Ethernet Segment Id                     EtherTag Label   
+----- --------------------------------------- -------- --------
+145   ff00.00ff.c025.ce01.0000                0        24005
+      Summary 192.168.0.3                              524288
+

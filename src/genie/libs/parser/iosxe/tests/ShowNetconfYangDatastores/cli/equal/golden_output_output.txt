@@ -1,0 +1,5 @@
+cedge#show netconf-yang datastores 
+Datastore Name             : running
+Datastore Name             : candidate
+
+cedge#

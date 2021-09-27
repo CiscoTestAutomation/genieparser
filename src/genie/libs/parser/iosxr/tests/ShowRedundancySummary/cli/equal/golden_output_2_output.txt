@@ -1,0 +1,4 @@
+
+Active Node    Standby Node
+-----------    ------------
+ 0/RP0/CPU0             N/A

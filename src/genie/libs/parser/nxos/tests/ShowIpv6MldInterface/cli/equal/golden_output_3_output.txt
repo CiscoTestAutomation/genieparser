@@ -1,0 +1,199 @@
+
+MLD Interfaces for VRF "default", count: 6
+Ethernet1/1.10, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:10:3:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:33
+  Membership count: 0
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name default (id 1)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/6
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:1
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: No
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+Ethernet1/2.10, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:20:5:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:11
+  Membership count: 2
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name default (id 1)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/36
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:0
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+MLD Interfaces for VRF "VRF1", count: 4
+Ethernet1/1.11, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:10:3:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:24
+  Membership count: 0
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name VRF1 (id 3)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/6
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:1
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: No
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+Ethernet1/2.11, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:20:5:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:20
+  Membership count: 2
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name VRF1 (id 3)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/36
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:0
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0

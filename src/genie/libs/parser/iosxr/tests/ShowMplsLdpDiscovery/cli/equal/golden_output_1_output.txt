@@ -1,0 +1,47 @@
+
+RP/0/RP0/CPU0:R3# show mpls ldp discovery
+
+Local LDP Identifier: 10.52.26.119:0
+Discovery Sources:
+Interfaces:
+Bundle-Ether1 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.26.124:0, Transport address: 10.52.26.124
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Nov  6 14:39:26.164 (5w2d ago)
+
+Bundle-Ether100 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Oct 30 12:06:32.962 (6w2d ago)
+
+Bundle-Ether3 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.31.247:0, Transport address: 10.52.31.247
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Dec  1 11:54:28.707 (1w5d ago)
+
+GigabitEthernet0/0/1/1 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.26.123:0, Transport address: 10.52.26.123
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Oct 30 12:06:32.786 (6w2d ago)
+
+GigabitEthernet0/0/1/18 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.31.253:0, Transport address: 10.52.31.253
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Oct 30 12:06:30.788 (6w2d ago)
+
+GigabitEthernet0/0/1/2 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.26.120:0, Transport address: 10.52.26.120
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Oct 30 12:06:27.565 (6w2d ago)
+
+GigabitEthernet0/0/1/6 : xmit/recv
+VRF: 'default' (0x60000000)
+LDP Id: 10.52.31.250:0, Transport address: 10.52.31.250
+    Hold time: 15 sec (local:15 sec, peer:15 sec)
+    Established: Oct 30 12:06:29.720 (6w2d ago)

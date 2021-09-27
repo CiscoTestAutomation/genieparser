@@ -1,0 +1,103 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp session detail
+Tue Mar 30 16:19:12.369 JST
+SESSION: IPv4-LSP Addr: 17.17.17.17, TunID: 15060, ExtID: 141.141.141.141
+ PSBs: 1, RSBs: 1, Requests: 1
+ LSPId: 5
+ Tunnel Name: NHOP_15060_F141-ASR9912_Hu0000_F17-ASR922_Hu0000
+  RSVP Path Info:
+   InLabel: TenGigE0/2/0/0, 3
+   Incoming Address: 99.33.0.1
+   Explicit Route:
+     Strict, 99.33.0.1/32
+     Strict, 17.17.17.17/32
+   Record Route:
+     IPv4 99.33.0.2, flags 0x0
+     IPv4 20.51.0.1, flags 0x0
+     IPv4 27.90.132.57, flags 0x0
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: No intf, No label
+   FRR OutLabel: No intf, No label
+   Record Route: None
+   Fspec: avg rate=0, burst=1K, peak rate=0
+
+SESSION: IPv4-LSP Addr: 17.17.17.17, TunID: 16370, ExtID: 107.107.107.107
+ PSBs: 1, RSBs: 1, Requests: 1
+ LSPId: 14
+ Tunnel Name: NNHOP_16370_F107-ASR9001_F141-ASR9912_F17-ASR9922
+  RSVP Path Info:
+   InLabel: TenGigE0/2/0/0, 3
+   Incoming Address: 99.33.0.1
+   Explicit Route:
+     Strict, 99.33.0.1/32
+     Strict, 17.17.17.17/32
+   Record Route:
+     IPv4 99.33.0.2, flags 0x0
+     IPv4 20.51.0.1, flags 0x0
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: No intf, No label
+   FRR OutLabel: No intf, No label
+   Record Route: None
+   Fspec: avg rate=0, burst=1K, peak rate=0
+
+SESSION: IPv4-LSP Addr: 17.17.17.17, TunID: 16710, ExtID: 107.107.107.107
+ PSBs: 1, RSBs: 1, Requests: 1
+ LSPId: 23
+ Tunnel Name: NNHOP_16710_F107-ASR9001_F106-ASR9001_F17-ASR9922
+  RSVP Path Info:
+   InLabel: HundredGigE0/0/0/0, 3
+   Incoming Address: 20.50.0.2
+   Explicit Route:
+     Strict, 20.50.0.2/32
+     Strict, 17.17.17.17/32
+   Record Route:
+     IPv4 20.50.0.1, flags 0x0
+     IPv4 27.90.132.58, flags 0x0
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: No intf, No label
+   FRR OutLabel: No intf, No label
+   Record Route: None
+   Fspec: avg rate=0, burst=1K, peak rate=0
+
+SESSION: IPv4-LSP Addr: 17.17.17.17, TunID: 55000, ExtID: 109.109.109.109
+ PSBs: 1, RSBs: 1, Requests: 1
+ LSPId: 22
+ Tunnel Name: 55000_F109-ASR9001_F17-ASR9922
+  RSVP Path Info:
+   InLabel: HundredGigE0/0/0/0, 3
+   Incoming Address: 20.50.0.2
+   Explicit Route:
+     Strict, 20.50.0.2/32
+     Strict, 17.17.17.17/32
+   Record Route:
+     IPv4 20.50.0.1, flags 0x0
+     IPv4 21.50.0.2, flags 0x0
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: No intf, No label
+   FRR OutLabel: No intf, No label
+   Record Route: None
+   Fspec: avg rate=0, burst=1K, peak rate=0
+
+SESSION: IPv4-LSP Addr: 17.17.17.17, TunID: 56000, ExtID: 108.108.108.108
+ PSBs: 1, RSBs: 1, Requests: 1
+ LSPId: 13
+ Tunnel Name: 56000_F108-ASR9001_F17-ASR9922
+  RSVP Path Info:
+   InLabel: HundredGigE0/0/0/0, 3
+   Incoming Address: 20.50.0.2
+   Explicit Route:
+     Strict, 20.50.0.2/32
+     Strict, 17.17.17.17/32
+   Record Route:
+     IPv4 20.50.0.1, flags 0x0
+     IPv4 21.50.0.2, flags 0x0
+     IPv4 37.25.0.2, flags 0x0
+   Tspec: avg rate=0, burst=1K, peak rate=0
+  RSVP Resv Info:
+   OutLabel: No intf, No label
+   FRR OutLabel: No intf, No label
+   Record Route: None
+   Fspec: avg rate=0, burst=1K, peak rate=0

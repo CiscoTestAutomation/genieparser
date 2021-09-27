@@ -1,0 +1,19 @@
+  * For interface indicates MLDP recursive forwarding is enabled
+  * For RPF-ID indicates wildcard value
+  > Indicates it is a Primary MLDP MDT Branch
+
+LSM ID : 21 (RNR LSM ID: 22)   Type: MP2MP   Uptime : 1d05h
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 0]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000000
+  RNR active LSP     : (this entry)
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 21
+      Out Label (U)  : 24            Interface    : Port-channel20*
+      Local Label (D): 27            Next Hop     : 104.1.1.2
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 1d05h         Path Set ID  : 22
+      Interface      : Lspvif1       RPF-ID       : *

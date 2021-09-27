@@ -1,0 +1,41 @@
+
+Route Flap Dampening Parameters for VRF VRF1 Address family IPv4 Unicast:
+
+Dampening policy configured: dampening1
+
+Half-life time                 : 45
+Suppress penalty               : 20000
+Reuse penalty                  : 10000
+Max suppress time              : 255
+Max suppress penalty           : 507968
+
+Route Flap Dampening Parameters for VRF VRF1 Address family IPv6 Unicast:
+
+Dampening policy configured: dampening2
+
+Half-life time                 : 45
+Suppress penalty               : 19999
+Reuse penalty                  : 9999
+Max suppress time              : 255
+Max suppress penalty           : 507917
+
+Route Flap Dampening Parameters for VRF default Address family IPv4 Unicast:
+
+Configured values in use:
+
+Half-life time                 : 45
+Suppress penalty               : 2222
+Reuse penalty                  : 1111
+Max suppress time              : 255
+Max suppress penalty           : 56435
+
+Route Flap Dampening Parameters for VRF default Address family VPNv4 Unicast:
+Route Distinguisher: 1:100    (VRF vpn1)
+
+Configured values in use:
+
+Half-life time                 : 1 mins
+Suppress penalty               : 30
+Reuse penalty                  : 10
+Max suppress time              : 2 mins
+Max suppress penalty           : 40

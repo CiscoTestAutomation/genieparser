@@ -1,0 +1,26 @@
+
+Legend:
+(*) - local vpc is down, forwarding via vPC peer-link
+
+vPC domain id : 10
+Peer status : peer adjacency formed ok
+vPC keep-alive status : peer is alive
+Configuration consistency status: failed
+Configuration consistency reason: vPC type-1 configuration incompatible - STP interface port type inconsistent
+vPC role : secondary
+Number of vPC configured : 1
+
+vPC peer-link status
+---------------------------------------------------------------------
+id Port Status Active vlans
+-- ---- ------ --------------------------------------------------
+1 Po10 up 1-100
+
+vPC status
+----------------------------------------------------------------------
+id Port Status Consistency Reason Active vlans
+-- ---- ------ ----------- -------------------------- ------------
+20 Po20 up failed vPC type-1 configuration -
+incompatible - STP
+interface port type
+inconsistent

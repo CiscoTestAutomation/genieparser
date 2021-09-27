@@ -1,0 +1,12 @@
+
+RP/0/0/CPU0:XR5#show msdp vrf VRF1 sa-cache
+
+MSDP Flags:
+E - set MRIB E flag , L - domain local source is active,
+EA - externally active source, PI - PIM is interested in the group,
+DE - SAs have been denied.    Timers age/expiration,
+Cache Entry:
+(10.1.1.10, 239.1.1.1), RP 192.168.1.1, MBGP/AS 200, 00:01:02/00:01:32
+Learned from peer 192.168.1.1, RPF peer 192.168.1.1
+SAs recvd 2, Encapsulated data received: 0
+grp flags: PI,    src flags: E, EA, PI

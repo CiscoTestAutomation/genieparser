@@ -1,0 +1,17 @@
+
+R1# show ipv6 rip
+RIP Isolate Mode: No
+MMODE: Initialized
+Process Name "rip-1" VRF "default"
+RIP port 521, multicast-group ff02::9
+Admin-distance: 120 
+Updates every 30 sec, expire in 180 sec
+Collect garbage in 120 sec
+Default-metric: 1
+Max-paths: 16
+Process is up and running
+Interfaces supported by ipv6 RIP :
+Ethernet1/1.100
+Ethernet1/2.100
+Redistributing :
+static          policy metric3_v6

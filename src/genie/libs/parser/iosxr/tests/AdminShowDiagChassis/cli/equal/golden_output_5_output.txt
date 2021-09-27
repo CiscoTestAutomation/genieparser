@@ -1,0 +1,17 @@
+
+RP/0/RP0/CPU0:ios#admin show diag chassis
+Tue Sep 22 23:23:54.013 UTC
+
+Diag Information For : 0
+
+Rack 0-Chassis IDPROM Info
+    Controller Family        : 0009
+    Controller Type          : 09d2
+    PID                      : NCS1004
+    Version Identifier       : V01
+    UDI Description          : Network Convergence System 1004 4 line card slots
+    CLEI Code                : WOMS400GRA
+    Top Assy. Part Number    : 800-47655-01
+    Top Assy. Revision       : A0
+    PCB Serial Number        : CAT2311B0AK
+RP/0/RP0/CPU0:ios#

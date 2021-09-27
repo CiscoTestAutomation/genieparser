@@ -1,0 +1,12 @@
+
+RP/0/RP0/CPU0:router# show ntp status 
+  
+Tue Oct  7 11:22:54.023 EST 
+  
+Clock is synchronized, stratum 3, reference is 192.168.128.5
+nominal freq is 1000.0000 Hz, actual freq is 1000.2725 Hz, precision is 2**24
+reference time is CC95463C.9B964367 (11:21:48.607 EST Tue Oct  7 2008)
+clock offset is -1.738 msec, root delay is 186.050 msec
+root dispersion is 53.86 msec, peer dispersion is 0.09 msec
+loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.0002724105 s/s
+system poll interval is 64, last update was 66 sec ago

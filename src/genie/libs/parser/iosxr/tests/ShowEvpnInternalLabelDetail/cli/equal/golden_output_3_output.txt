@@ -1,0 +1,26 @@
+
+RP/0/RP0/CPU0:RGT-HVS-1#show evpn internal-label detail location 0/RP0/CPU0 
+Sat Jun  9 10:20:21.939 UTC
+
+VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label   
+---------- ------ --------------------------- --------   --------
+16001      VXLAN  0001.04ff.0b0c.0607.0811    0          24002   
+   Multi-paths resolved: TRUE (Remote all-active) 
+   Multi-paths Internal label: 24002
+   Pathlists:
+     EAD/ES     10.76.1.2                                0              
+     EAD/EVI    10.76.1.2                                16001          
+   Summary pathlist:
+     0x03000001 10.76.1.2                                16001          
+
+16002      VXLAN  0001.04ff.0b0c.0607.0811    0          24003   
+   Multi-paths resolved: TRUE (Remote all-active) 
+   Multi-paths Internal label: 24003
+   Pathlists:
+     EAD/ES     10.76.1.2                                0              
+     EAD/EVI    10.76.1.2                                16002          
+   Summary pathlist:
+     0x03000001 10.76.1.2                                16002          
+
+16003      VXLAN  0001.04ff.0b0c.0607.0811    0          24004   
+   Multi-paths resolved: TRUE (Remote all-active) 

@@ -1,0 +1,8 @@
+
+RP/0/RP0/CPU0:router# show ntp status
+
+Clock is synchronized, stratum 4, reference is 172.19.69.1
+nominal freq is 1000.0000 Hz, actual freq is 999.9988 Hz, precision is 2**26
+reference time is C54C131B.9EECF6CA (07:26:19.620 UTC Mon Nov 24 2008)
+clock offset is 66.3685 msec, root delay is 7.80 msec
+root dispersion is 950.04 msec, peer dispersion is 3.38 msec

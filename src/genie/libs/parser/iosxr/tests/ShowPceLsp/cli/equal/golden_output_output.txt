@@ -1,0 +1,14 @@
+
+RP/0/RSP0/CPU0:router# show pce lsp
+
+PCE's tunnel database:
+----------------------
+PCC 192.168.0.1:
+
+Tunnel Name: rtrA_t1
+LSPs:
+LSP[0]:
+source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+State: Admin up, Operation up
+Setup type: Segment Routing
+Binding SID: 24013

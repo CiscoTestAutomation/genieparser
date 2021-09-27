@@ -1,0 +1,7 @@
+
+Mon Mar 19 18:23:08.490 UTC
+Global LLDP information:
+    Status: ACTIVE
+    LLDP advertisements are sent every 30 seconds
+    LLDP hold time advertised is 120 seconds
+    LLDP interface reinitialisation delay is 2 seconds

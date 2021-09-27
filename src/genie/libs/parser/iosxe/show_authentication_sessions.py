@@ -148,11 +148,22 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         return ret_dict
 
 
+
 # ==================================================================================
-# Parser for 'show authentication sessions interface {interface} details'
+# Schema for:
+#                * 'show authentication sessions interface {interface} details'
+#                * 'show authentication sessions interface {interface} details switch {switch} r0'
+#                * 'show authentication sessions mac {mac_address} details'
+#                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
 # ==================================================================================
-class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for 'show authentication sessions interface {interface} details'
+
+class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
+    """
+    Schema for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
     """
     schema = {
         'interfaces': {
@@ -222,19 +233,25 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
         }
     }
 
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions interface {interface} details'
+#           * 'show authentication sessions interface {interface} details switch {switch} r0'
+#           * 'show authentication sessions mac {mac_address} details'
+#           * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+# ==================================================================================
 
-class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-    """Parser for 'show authentication sessions interface {interface} details'
+class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDetailsSuperSchema):
     """
-    cli_command = 'show authentication sessions interface {interface} details'
+    SuperParser for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+    """
 
-    def cli(self, interface, output=None):
+    def cli(self, interface='', mac_address='', switch='', output=None):
 
-        if not output:
-            # get output from device
-            out = self.device.execute(self.cli_command.format(interface=interface))
-        else:
-            out = output
 
         # Interface:  GigabitEthernet3/0/2
         # IIF-ID:  0x1055240000001F6 
@@ -318,6 +335,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         policies_flag = False
         index = 1
 
+        out = output
         for line in out.splitlines():
             line = line.strip()
 
@@ -516,3 +534,67 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 continue
 
         return ret_dict
+
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions interface {interface} details'
+#           * 'show authentication sessions interface {interface} details switch {switch} r0'
+# ==================================================================================
+
+class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsDetailsSuperParser):
+    """
+    Parser for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+    """
+
+    cli_command = ['show authentication sessions interface {interface} details',\
+                   'show authentication sessions interface {interface} details switch {switch} r0']
+                   
+    def cli(self, interface='', switch='', output=None):
+
+        if output is None:
+            # Build command
+            if switch:
+                cmd = self.cli_command[1].format(interface=interface,switch=switch)
+            else: 
+                cmd = self.cli_command[0].format(interface=interface)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, interface=interface, switch=switch)
+
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions mac {mac_address} details'
+#           * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+# ==================================================================================
+
+class ShowAuthenticationSessionsMACDetails(ShowAuthenticationSessionsDetailsSuperParser):
+    """
+       Parser for:
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+    """
+    cli_command = ['show authentication sessions mac {mac_address} details',\
+                   'show authentication sessions mac {mac_address} details switch {switch} r0'] 
+                    
+
+    def cli(self, mac_address='', switch='', output=None):
+
+        if output is None:
+            # Build command
+            if switch:
+                cmd = self.cli_command[1].format(mac_address=mac_address,switch=switch)
+            else: 
+                cmd = self.cli_command[0].format(mac_address=mac_address)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, mac_address=mac_address, switch=switch)

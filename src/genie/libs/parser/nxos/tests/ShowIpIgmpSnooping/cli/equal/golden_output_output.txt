@@ -1,0 +1,73 @@
+
+N95_1# show ip igmp snooping
+Global IGMP Snooping Information:
+  IGMP Snooping enabled
+  IGMPv1/v2 Report Suppression enabled
+  IGMPv3 Report Suppression disabled
+  Link Local Groups Suppression enabled
+  VPC Multicast optimization disabled
+
+IGMP Snooping information for vlan 1
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier none
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+IGMP Snooping information for vlan 100
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier present, address: 10.51.1.1, version: 2, i/f Vlan100
+  Querier interval: 125 secs
+  Querier last member query interval: 1 secs
+  Querier robustness: 2
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 2
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+IGMP Snooping information for vlan 101
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier none
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+

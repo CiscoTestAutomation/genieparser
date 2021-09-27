@@ -1,0 +1,12 @@
+
+Ethernet4/1 - Group 0 (HSRP-V2) (IPv4)
+  Local state is Initial(Interface Down), priority 110 (Cfged 110), may preempt
+    Forwarding threshold(for vPC), lower: 1 upper: 110 
+  Hellotime 1 sec, holdtime 3 sec
+  Virtual IP address is 192.168.1.254 (Cfged)
+  Active router is unknown
+  Standby router is unknown 
+  Authentication MD5, key-string "cisco123"
+  Virtual mac address is 0000.0cff.909f (Default MAC)
+  0 state changes, last state change never
+  IP redundancy name is hsrp-Eth4/1-0 (default)

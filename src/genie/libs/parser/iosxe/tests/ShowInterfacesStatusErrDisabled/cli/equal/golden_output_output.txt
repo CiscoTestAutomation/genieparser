@@ -1,0 +1,25 @@
+Port           Name         Status       Reason               Err-disabled Vlan
+Fi1/7/0/1      some descrip err-disabled loopdetect
+Fi1/7/0/2                   err-disabled loopdetect
+Fi1/7/0/3                   err-disabled loopdetect
+Fi1/7/0/4                   err-disabled loopdetect
+Fi1/7/0/5                   err-disabled loopdetect
+Fi1/7/0/6                   err-disabled loopdetect
+Fi1/7/0/7                   err-disabled loopdetect
+Fi1/7/0/8                   err-disabled loopdetect
+Fi1/7/0/9                   err-disabled loopdetect
+Fi1/7/0/10                  err-disabled loopdetect
+Fi1/7/0/11                  err-disabled loopdetect
+Fi1/7/0/12     Heeeeyyy     err-disabled loopdetect
+Fi1/7/0/13                  err-disabled loopdetect
+Fi1/7/0/14                  err-disabled loopdetect
+Fi1/7/0/15                  err-disabled loopdetect
+Fi1/7/0/16                  err-disabled loopdetect
+Fi1/7/0/17                  err-disabled loopdetect
+Fi1/7/0/18     Hello World  err-disabled loopdetect
+Fi1/7/0/19                  err-disabled loopdetect
+Fi1/7/0/20                  err-disabled loopdetect
+Fi1/7/0/21                  err-disabled loopdetect
+Fi1/7/0/22                  err-disabled loopdetect
+Fi1/7/0/23                  err-disabled loopdetect
+Fi1/7/0/24                  err-disabled loopdetect

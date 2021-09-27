@@ -1,0 +1,39 @@
+
+Router# show msdp context
+
+MSDP context information for default
+    VRF ID    : 0x60000000
+    Table ID    : 0xe0000000
+    Table Count (Active/Total) : 2/2
+Inheritable Configuration
+    TTL    : 2
+    Maximum SAs    : 0
+    Keepalive Period    : 30
+    Peer Timeout Period : 75
+    Connect Source    :   
+    SA Filter In    :   
+    SA Filter Out    :   
+    RP Filter In    :   
+    RP Filter Out    :   
+Configuration
+    Originator Address    : 172.16.76.1
+    Originator Interface Name    : Loopback150
+    Default Peer Address    : 0.0.0.0
+    SA Holdtime    : 150
+    Allow Encaps Count    : 0
+    Context Maximum SAs    : 20000
+SA Cache Counts    (Current/High Water Mark)
+    Groups    :    2/2   
+    Sources    :    12/12   
+    RPs    :    3/0   
+    External SAs :    3/3   
+MRIB Update Counts
+    Total updates    : 473
+    With no changes    : 0
+    (*,G) routes    : 26
+    (S,G) routes    : 447
+MRIB Update Drops
+    Invalid group    : 0
+    Invalid group length : 0
+    Invalid source    : 0
+    Auto-RP Address    : 2

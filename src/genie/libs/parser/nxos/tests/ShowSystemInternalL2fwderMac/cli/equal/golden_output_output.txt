@@ -1,0 +1,32 @@
+
+N95_1# show system internal l2fwder Mac
+Legend: 
+	* - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+	age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+	(T) - True, (F) - False, C - ControlPlane MAC
+   VLAN     MAC Address      Type      age     Secure NTFY Ports
+---------+-----------------+--------+---------+------+----+------------------
+G  1008    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G  1009    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G  1006    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G  1007    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G  1005    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G  1000    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   114    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   112    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   113    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   110    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   111    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   108    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   109    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   106    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   107    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+*   100    fa16.3eff.2a0c    static   -          F     F  (0x47000001) nve-peer1 93.1.1.  
+G   105    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   102    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   103    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   100    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G   101    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+G     1    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+*   100    fa16.3eff.6b31   dynamic   00:01:43   F     F     Eth1/4  
+    1           1         -00:00:de:ff:6c:9d         -             1

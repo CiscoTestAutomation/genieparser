@@ -1,0 +1,22 @@
+
+R3_nx# show ipv6 rip route
+R3_nx# show ipv6 rip route vrf default
+Process Name "rip-1" VRF "default"
+RIP routing table 
+
+> - indicates best RIP route
+
+ 2001:1:1:1::1/128 next-hops 1
+ via fe80::f816:3eff:fe8f:fbd9 Ethernet1/2.120, metric 2, tag 0, timeout 00:02:58
+
+>2001:3:3:3::3/128 next-hops 0
+ via 2001:3:3:3::3 loopback0, metric 1, tag 0, direct route
+
+ 2001:10:12:120::/64 next-hops 1
+ via fe80::f816:3eff:fe8f:fbd9 Ethernet1/2.120, metric 2, tag 0, timeout 00:02:58
+
+>2001:10:13:120::/64 next-hops 0
+ via 2001:10:13:120::3 Ethernet1/2.120, metric 1, tag 0, direct route
+
+>2001:10:23:120::/64 next-hops 0
+ via 2001:10:23:120::3 Ethernet1/1.120, metric 1, tag 0, direct route

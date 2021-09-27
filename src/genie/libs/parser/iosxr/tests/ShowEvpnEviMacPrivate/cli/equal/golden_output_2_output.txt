@@ -1,0 +1,38 @@
+
+sh evpn evi mac private
+Tue Jun 14 15:14:25.359 UTC
+
+MAC address    Nexthop                                 Label    vpn-id 
+-------------- --------------------------------------- -------- --------
+001b.01ff.0001 N/A                                     24014    7      
+IP Address   : 10.196.7.8
+Ether.Segment: 0000.0000.0000.0000.0000
+ESI port key : 0x0000
+Source       : Local
+Multi-paths resolved: FALSE
+Multi-paths local label: 0        
+Flush Count  : 0
+BP IFH: 0
+Flush Seq ID : 0
+Static: No
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x204100, type=2113792, reserved=0
+EVPN MAC event history  [Num events: 12]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags     
+    ====                =====                         =====      =====     
+    Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
+    Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+    Jun 14 14:07:33.376 Redundant path buffer         00000000, 00000000 -  -
+    Jun 14 14:07:33.376 Modify                        00000000, 00000000 -  -
+    Jun 14 14:07:33.376 MAC advertise rejected        00000003, 00000000 -  -
+    Jun 14 14:55:40.544 Redundant path buffer         00000000, 00000000 -  -
+    Jun 14 14:55:40.544 Modify                        00000000, 00000000 -  -
+    Jun 14 14:55:40.544 MAC advertise rejected        00000003, 00000000 -  -
+    Jun 14 15:00:53.888 Redundant path buffer         00000000, 00000000 -  -
+    Jun 14 15:00:53.888 Modify                        00000000, 00000000 -  -
+    Jun 14 15:00:53.888 MAC advertise rejected        00000003, 00000000 -  -
+    Jun 14 15:13:16.800 Advertise to BGP              00004110, 00000000 -  -
+----------------------------------------------------------------------------
+

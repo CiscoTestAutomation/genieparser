@@ -1,0 +1,106 @@
+
+Authenticator_9400#show platform software fed active acl counters hardware
+=========== Cumulative Stats Across All Asics ===========
+Unknown Stat Counter             (0x49000001):       82318 frames
+Ingress IPv4 Forward             (0x8d000003):       27494 frames
+Ingress IPv4 Forward from CPU    (0xc2000004):           0 frames
+Ingress IPv4 PACL Drop           (0x77000005):           0 frames
+Ingress IPv4 VACL Drop           (0x23000006):           0 frames
+Ingress IPv4 RACL Drop           (0xed000007):           0 frames
+Ingress IPv4 GACL Drop           (0x92000008):           0 frames
+Ingress IPv4 RACL Drop and Log   (0x93000009):           0 frames
+Ingress IPv4 VACL Drop and Log   (0x6100000a):           0 frames
+Ingress IPv4 PACL CPU            (0x3e00000b):           0 frames
+Ingress IPv4 VACL CPU            (0x3f00000c):           0 frames
+Ingress IPv4 RACL CPU            (0xc000000d):           0 frames
+Ingress IPv4 GACL CPU            (0x4f00000e):           0 frames
+Ingress IPv4 TCP MSS CPU         (0x2e00000f):           0 frames
+Ingress IPv6 Forward             (0x81000010):       38994 frames
+Ingress IPv6 Forward from CPU    (0x31000011):           0 frames
+Ingress IPv6 PACL Drop           (0x12000012):           0 frames
+Ingress IPv6 VACL Drop           (0xe5000013):           0 frames
+Ingress IPv6 RACL Drop           (0x78000014):           0 frames
+Ingress IPv6 GACL Drop           (0x0a000015):           0 frames
+Ingress IPv6 RACL Drop and Log   (0x61000016):           0 frames
+Ingress IPv6 VACL Drop and Log   (0xf5000017):           0 frames
+Ingress IPv6 PACL CPU            (0x7b000018):           0 frames
+Ingress IPv6 PACL SISF CPU       (0x40000019):           0 frames
+Ingress IPv6 VACL CPU            (0x7900001a):           0 frames
+Ingress IPv6 VACL SISF CPU       (0x7400001b):       92891 frames
+Ingress IPv6 RACL CPU            (0x5100001c):           0 frames
+Ingress IPv6 GACL CPU            (0x3c00001d):           0 frames
+Ingress IPv6 TCP MSS CPU         (0x8f00001e):           0 frames
+Ingress MAC Forward              (0x9100001f):      117178 frames
+Ingress MAC Forward from CPU     (0x9e000020):           0 frames
+Ingress MAC PACL Drop            (0x73000021):           0 frames
+Ingress MAC VACL Drop            (0x37000022):           0 frames
+Ingress MAC RACL Drop            (0xc2000023):           0 frames
+Ingress MAC GACL Drop            (0x04000024):           0 frames
+Ingress MAC RACL Drop and Log    (0xbb000025):           0 frames
+Ingress MAC VACL Drop and Log    (0x2a000026):           0 frames
+Ingress MAC PACL CPU             (0xf7000027):           0 frames
+Ingress MAC VACL CPU             (0x4d000028):           0 frames
+Ingress MAC RACL CPU             (0x8b000029):           0 frames
+Ingress MAC GACL CPU             (0x9600002a):           0 frames
+Ingress DAI SMAC Validation Drop (0xa500002b):           0 frames
+Ingress DAI DMAC Validation Drop (0x6400002c):           0 frames
+Ingress DAI IP Validation Drop   (0xe500002d):           0 frames
+Ingress ARP ACL Permit           (0x3500002e):           0 frames
+Ingress ARP ACL Drop             (0xe500002f):           0 frames
+Ingress AUTH ACL Drop            (0xcb000002):           0 frames
+Egress IPv4 Forward              (0x77000030):      137400 frames
+Egress IPv4 Forward to CPU       (0x60000031):         249 frames
+Egress IPv4 PACL Drop            (0xe3000032):           0 frames
+Egress IPv4 VACL Drop            (0x08000033):           0 frames
+Egress IPv4 RACL Drop            (0xcb000034):           0 frames
+Egress IPv4 GACL Drop            (0xa6000035):           0 frames
+Egress IPv4 RACL Drop and Log    (0x16000036):           0 frames
+Egress IPv4 VACL Drop and Log    (0xc1000037):           0 frames
+Egress IPv4 PACL CPU             (0xff000038):           0 frames
+Egress IPv4 VACL CPU             (0xa9000039):           0 frames
+Egress IPv4 RACL CPU             (0x3400003a):           0 frames
+Egress IPv4 GACL CPU             (0xb200003b):           0 frames
+Egress IPv4 TCP MSS CPU          (0x4600003c):           0 frames
+Egress IPv6 Forward              (0xdd00003d):      661034 frames
+Egress IPv6 Forward to CPU       (0x5c00003e):           0 frames
+Egress IPv6 PACL Drop            (0xfe00003f):           0 frames
+Egress IPv6 VACL Drop            (0xcb000040):           0 frames
+Egress IPv6 RACL Drop            (0xf4000041):           0 frames
+Egress IPv6 GACL Drop            (0x3b000042):           0 frames
+Egress IPv6 RACL Drop and Log    (0xce000043):           0 frames
+Egress IPv6 VACL Drop and Log    (0xc8000044):           0 frames
+Egress IPv6 PACL CPU             (0x64000045):           0 frames
+Egress IPv6 VACL CPU             (0x26000046):           0 frames
+Egress IPv6 RACL CPU             (0x14000047):           0 frames
+Egress IPv6 GACL CPU             (0xee000048):           0 frames
+Egress IPv6 TCP MSS CPU          (0xbc000049):           0 frames
+Egress MAC Forward               (0x3500004a):      944044 frames
+Egress MAC Forward to CPU        (0xb400004b):           0 frames
+Egress MAC PACL Drop             (0x0200004c):           0 frames
+Egress MAC VACL Drop             (0x8300004d):           0 frames
+Egress MAC RACL Drop             (0xb200004e):           0 frames
+Egress MAC GACL Drop             (0x9200004f):           0 frames
+Egress MAC RACL Drop and Log     (0x44000050):           0 frames
+Egress MAC VACL Drop and Log     (0xf6000051):           0 frames
+Egress MAC PACL CPU              (0xb3000052):           0 frames
+Egress MAC VACL CPU              (0x29000053):           0 frames
+Egress MAC RACL CPU              (0xb5000054):           0 frames
+Egress MAC GACL CPU              (0x2b000055):           0 frames
+Egress IPv4 CPU Queues Drop      (0xe9000056):           0 frames
+Egress IPv4 P2P Drop             (0xce000057):           0 frames
+Egress IPv6 P2P Drop             (0xd3000058):           0 frames
+Egress MAC P2P Drop              (0x99000059):           0 frames
+Egress IPv4 P2P Redirect         (0xe100005a):           0 frames
+Egress IPv6 P2P Redirect         (0x3200005b):           0 frames
+Egress MAC P2P Redirect          (0x8f00005c):           0 frames
+Egress IPv4 SGACL Drop           (0x3c00005d):           0 frames
+Egress IPv6 SGACL Drop           (0x9100005e):           0 frames
+Egress IPv4 SGACL Test Cell Drop (0x5900005f):           0 frames
+Egress IPv6 SGACL Test Cell Drop (0x49000060):           0 frames
+Egress IPv4 DNS Response CPU     (0x2d000061):           0 frames
+Egress IPv6 DNS Response CPU     (0x89000062):           0 frames
+Egress IPv4 Pre SGACL Forward    (0x10000063):           0 frames
+=========================================================
+
+Authenticator_9400#
+

@@ -1,0 +1,355 @@
+
++++ genie-Router: executing command 'show evpn evi mac private' +++
+show evpn evi mac private
+
+Mon Oct 14 17:57:12.677 EDT
+
+EVI        MAC address    IP address                               Nexthop                                 Label   
+---------- -------------- ---------------------------------------- --------------------------------------- --------
+19         0000.00ff.0019 ::                                       BVI19                                   114012  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : Yes
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : 0
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0x800001a1
+MAC State                               : Static
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x40024100, type=8, reserved=0
+EVPN MAC event history  [Num events: 16]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    May  1 09:10:13.248 Got L2RIB update              40024000, 00000000 -  - 
+    May  1 09:10:13.248 Modify Redundant              00000000, 00000000 -  - 
+    May  1 09:10:13.248 MAC advertise rejected        00000011, 00000000 -  - 
+    May  1 09:10:13.248 FSM Event (event, state)      00000001, 00020002 -  - 
+    May  8 14:32:40.192 Got L2RIB update              40024100, 00000000 -  - 
+    May  8 14:32:40.192 Modify Redundant              00000000, 00000000 -  - 
+    May  8 14:32:40.192 MAC advertise rejected        00000011, 00000000 -  - 
+    May  8 14:32:40.192 FSM Event (event, state)      00000001, 00020002 -  - 
+    May 22 09:53:49.568 Got L2RIB update              40024100, 00000000 -  - 
+    May 22 09:53:49.568 Modify Redundant              00000000, 00000000 -  - 
+    May 22 09:53:49.568 MAC advertise rejected        00000011, 00000000 -  - 
+    May 22 09:53:49.568 FSM Event (event, state)      00000001, 00020002 -  - 
+    May 25 18:08:39.936 Got L2RIB update              40024100, 00000000 -  - 
+    May 25 18:08:39.936 Modify Redundant              00000000, 00000000 -  - 
+    May 25 18:08:39.936 MAC advertise rejected        00000011, 00000000 -  - 
+    May 25 18:08:39.936 FSM Event (event, state)      00000001, 00020002 -  - 
+----------------------------------------------------------------------------
+19         0009.0fff.0916 ::                                       Bundle-Ether1.19                        114012  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : No
+Local Ethernet Segment                  : 0000.01ff.acce.7700.cccc
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 7
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : bef5
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0xc0000002
+MAC State                               : Local
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x8004100, type=8, reserved=0
+EVPN MAC event history  [Num events: 16]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Jul  2 16:06:33.728 Advertise to BGP              09206110, 00000000 -  - 
+    Jul  2 16:06:33.728 FSM Event (event, state)      00000006, 00010006 -  - 
+    Jul  2 16:06:33.728 Encode NLRI                   09206110, 00000000 M  - 
+    Jul  2 16:06:33.728 L2RIB Download                00000000, 00000000 -  - 
+    Jul  2 16:06:33.728 Got BGP update                01010001, 00000001 -  - 
+    Jul  2 16:06:33.728 Modify                        00000019, 00000000 -  - 
+    Jul  2 16:06:33.728 Advertise to BGP              083c6110, 00000000 -  - 
+    Jul  2 16:06:33.728 FSM Event (event, state)      00000003, 00060001 -  - 
+    Jul  2 16:06:33.728 Encode NLRI                   08bc6110, 00000000 M  - 
+    Jul  2 16:06:33.728 L2RIB Download                00000000, 01000100 -  - 
+    Jul 23 11:30:27.968 Delete                        00000001, 00000000 -  - 
+    Jul 23 11:30:27.968 Advertise to BGP              09206110, 00000000 -  - 
+    Jul 23 11:30:27.968 FSM Event (event, state)      00000006, 00010006 -  - 
+    Jul 23 11:30:27.968 Encode NLRI                   09206110, 00000000 M  - 
+    Jul 23 11:30:27.968 L2RIB Download                00000000, 00000000 -  - 
+    Aug 21 09:09:20.512 Ignore BGP update             00000000, 00000000 M  - 
+----------------------------------------------------------------------------
+19         0009.0fff.0916 10.169.19.4                               Bundle-Ether1.19                        114012  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : No
+Local Ethernet Segment                  : 0000.01ff.acce.7700.cccc
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : bef5
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0xc0000002
+MAC State                               : Local
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x8004100, type=8, reserved=0
+EVPN MAC event history  [Num events: 16]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Oct  5 19:36:44.800 Got L2RIB update              083c4110, 00000000 -  - 
+    Oct  5 19:36:44.800 Modify Redundant              00000000, 00000000 -  - 
+    Oct  5 19:36:44.800 Advertise to BGP              083c4110, 00000000 -  - 
+    Oct  5 19:36:44.800 FSM Event (event, state)      00000000, 00060006 -  - 
+    Oct  5 19:36:44.800 Encode NLRI                   083c4110, 00000061 M  - 
+    Oct  5 23:25:46.880 Delete                        00000001, 00000000 -  - 
+    Oct  5 23:25:46.880 Advertise to BGP              09204110, 00000000 -  - 
+    Oct  5 23:25:46.880 FSM Event (event, state)      00000007, 00010006 -  - 
+    Oct  5 23:25:46.880 Got BGP update                00000001, 00000000 -  - 
+    Oct  5 23:25:46.880 Encode NLRI                   09204110, 00000061 M  - 
+    Oct  5 23:25:46.880 L2RIB Download                00000000, 00000000 -  - 
+    Oct  5 23:25:47.904 Got L2RIB update              08004100, 00000000 -  - 
+    Oct  5 23:25:47.904 Modify Redundant              00000000, 00000000 -  - 
+    Oct  5 23:25:47.904 Advertise to BGP              08204110, 00000000 -  - 
+    Oct  5 23:25:47.904 FSM Event (event, state)      00000000, 00010001 -  - 
+    Oct  5 23:25:47.904 Encode NLRI                   08204110, 00000061 M  - 
+----------------------------------------------------------------------------
+1994       78ba.f9ff.106d ::                                       BVI900                                  114416  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : Yes
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : 0
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0x800001a5
+MAC State                               : Static
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x40024100, type=8, reserved=0
+EVPN MAC event history  [Num events: 16]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    May  1 09:10:13.248 MAC advertise rejected        0000000b, 00000000 -  - 
+    May  1 09:10:13.248 FSM Event (event, state)      00000001, 00020002 -  - 
+    May  8 14:32:40.192 Got L2RIB update              40024100, 00000000 -  - 
+    May  8 14:32:40.192 Modify Redundant              00000000, 00000000 -  - 
+    May  8 14:32:40.192 MAC advertise rejected        0000000b, 00000000 -  - 
+    May  8 14:32:40.192 FSM Event (event, state)      00000001, 00020002 -  - 
+    May 22 09:53:49.568 Got L2RIB update              40024100, 00000000 -  - 
+    May 22 09:53:49.568 Modify Redundant              00000000, 00000000 -  - 
+    May 22 09:53:49.568 MAC advertise rejected        0000000b, 00000000 -  - 
+    May 22 09:53:49.568 FSM Event (event, state)      00000001, 00020002 -  - 
+    May 25 18:08:39.936 Got L2RIB update              40024100, 00000000 -  - 
+    May 25 18:08:39.936 Modify Redundant              00000000, 00000000 -  - 
+    May 25 18:08:39.936 MAC advertise rejected        0000000b, 00000000 -  - 
+    May 25 18:08:39.936 FSM Event (event, state)      00000001, 00020002 -  - 
+    May 25 18:09:23.456 MAC advertise rejected        00000011, 00000000 -  - 
+    Jun 12 12:01:15.776 MAC advertise rejected        0000000b, 00000000 -  - 
+----------------------------------------------------------------------------
+2112       0000.25ff.e485 ::                                       10.154.219.101                           100965  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : MPLS
+ESI Port Key                            : 0
+Source                                  : Remote
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : 10.154.219.101
+BP XCID                                 : 0x0
+MAC State                               : Remote (w/ SOO)
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0xc0100, type=8, reserved=0
+EVPN MAC event history  [Num events: 9]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Oct  5 19:36:45.824 Create                        00000000, 00000000 -  - 
+    Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+    Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
+    Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
+    Oct  5 19:36:45.824 Got BGP update                00010000, 00000001 -  - 
+    Oct  5 19:36:45.824 Modify                        00000040, 00000000 -  - 
+    Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+    Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040004 -  - 
+    Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
+----------------------------------------------------------------------------
+2112       0000.25ff.c4da ::                                       10.154.219.150                           114483  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : MPLS
+ESI Port Key                            : 0
+Source                                  : Remote
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : 10.154.219.150
+BP XCID                                 : 0x0
+MAC State                               : Remote (w/ SOO)
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+EVPN MAC event history  [Num events: 4]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Oct  5 19:36:45.824 Create                        00000000, 00000000 -  - 
+    Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+    Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
+    Oct  5 19:36:45.824 L2RIB Download                0001bf33, 01000000 -  - 
+----------------------------------------------------------------------------
+2112       4c96.14ff.df15 ::                                       10.154.219.101                           100965  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : True
+Static                                  : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0100.23ff.a315.5080.1600
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : MPLS
+ESI Port Key                            : 0
+Source                                  : Remote
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 100490
+SOO Nexthop                             : 10.154.219.101
+BP XCID                                 : 0x0
+MAC State                               : Remote (w/ SOO)
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+EVPN MAC event history  [Num events: 4]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Sep 24 07:09:11.040 Create                        00000000, 00000000 -  - 
+    Sep 24 07:09:11.040 MAC advertise rejected        00000007, 00000000 -  - 
+    Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
+    Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
+----------------------------------------------------------------------------
+2112       4c96.14ff.df15 10.246.100.1                             10.154.219.101                           100965  
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : True
+Static                                  : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0100.23ff.a315.5080.1600
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : MPLS
+ESI Port Key                            : 0
+Source                                  : Remote
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 100490
+SOO Nexthop                             : 10.154.219.101
+BP XCID                                 : 0x0
+MAC State                               : Remote (w/ SOO)
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+EVPN MAC event history  [Num events: 4]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Sep 24 07:09:11.040 Create                        00000000, 00000000 -  - 
+    Sep 24 07:09:11.040 MAC advertise rejected        00000007, 00000000 -  - 
+    Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
+    Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
+----------------------------------------------------------------------------
+65535      78ba.f9ff.106c ::                                       Local                                   0       
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Static                                  : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : 0
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+Multi-paths Local Label                 : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0x0
+MAC State                               : Local
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x4100, type=8, reserved=0
+EVPN MAC event history  [Num events: 8]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    May  1 09:00:02.944 Create                        00000000, 00000000 -  - 
+    May  1 09:00:02.944 MAC advertise rejected        00000000, 00000000 -  - 
+    May  1 09:00:02.944 FSM Event (event, state)      00000000, 00010000 -  - 
+    May  1 09:00:02.944 Modify Redundant              00000000, 00000000 -  - 
+    May  1 09:02:05.312 Replay EVI to BGP             00000000, 00000000 -  - 
+    May  1 09:02:05.312 MAC advertise rejected        00000000, 00000000 -  - 
+    May  1 09:05:20.896 Replay EVI to BGP             00000000, 00000000 -  - 
+    May  1 09:05:20.896 MAC advertise rejected        00000000, 00000000 -  - 
+----------------------------------------------------------------------------
+RP/0/RSP0/CPU0:genie-Router#
+

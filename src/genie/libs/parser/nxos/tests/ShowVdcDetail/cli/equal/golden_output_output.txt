@@ -1,0 +1,55 @@
+
+
+Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3
+
+vdc id: 1
+vdc name: PE1
+vdc state: active
+vdc mac address: 84:78:ac:ff:e0:1c
+vdc ha policy: RELOAD
+vdc dual-sup ha policy: SWITCHOVER
+vdc boot Order: 1
+CPU Share: 5
+CPU Share Percentage: 33%
+vdc create time: Fri Apr 28 03:36:26 2017
+vdc reload count: 0
+vdc uptime: 0 day(s), 10 hour(s), 35 minute(s), 47 second(s)
+vdc restart count: 1
+vdc restart time: Fri Apr 28 03:36:26 2017
+vdc type: Ethernet
+vdc supported linecards: f3
+
+vdc id: 2
+vdc name: PE2
+vdc state: active
+vdc mac address: 84:78:ac:ff:e0:1d
+vdc ha policy: RESTART
+vdc dual-sup ha policy: SWITCHOVER
+vdc boot Order: 1
+CPU Share: 5
+CPU Share Percentage: 33%
+vdc create time: Fri Apr 28 03:48:01 2017
+vdc reload count: 0
+vdc uptime: 0 day(s), 10 hour(s), 25 minute(s), 2 second(s)
+vdc restart count: 1
+vdc restart time: Fri Apr 28 03:48:01 2017
+vdc type: Ethernet
+vdc supported linecards: f3
+
+vdc id: 3
+vdc name: CORE
+vdc state: active
+vdc mac address: 84:78:ac:ff:e0:1e
+vdc ha policy: RESTART
+vdc dual-sup ha policy: SWITCHOVER
+vdc boot Order: 1
+CPU Share: 5
+CPU Share Percentage: 33%
+vdc create time: Fri Apr 28 03:49:33 2017
+vdc reload count: 0
+vdc uptime: 0 day(s), 10 hour(s), 23 minute(s), 39 second(s)
+vdc restart count: 1
+vdc restart time: Fri Apr 28 03:49:33 2017
+vdc type: Ethernet
+vdc supported linecards: f3
+

@@ -1,0 +1,8 @@
+
+RP/0/RSP0/CPU0:router# show pce ipv4 peer
+
+PCE's peer database:
+--------------------
+Peer address: 192.168.0.1
+State: Up
+Capabilities: Stateful, Segment-Routing, Update
