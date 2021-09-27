@@ -1,0 +1,16 @@
+
++++ genie-Device: executing command 'show evpn internal-label detail' +++
+show evpn internal-label detail
+
+Mon Oct 22 10:43:37.980 EDT
+
+VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label   
+---------- ------ --------------------------- ----------   --------
+1000       MPLS   0001.00ff.0102.0000.0011    0                    
+Multi-paths resolved: FALSE (Remote all-active) (ECMP Disable)
+    Reason: No EAD/ES
+Multi-paths Internal label: None
+    EAD/EVI     10.94.2.88                              100010         
+
+RP/0/RP0/CPU0:genie-Device#
+

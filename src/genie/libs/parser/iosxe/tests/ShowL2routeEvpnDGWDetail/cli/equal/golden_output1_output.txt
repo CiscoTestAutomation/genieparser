@@ -1,0 +1,76 @@
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            BGP   
+MAC Address:              0012.0012.0012
+Host IP:                  192.168.12.254                           
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      0000.0000.0000.0000.0000
+MAC Route Flags:          BInt(Brm)Dgr
+Next Hop(s):              L:16 2.2.2.1
+
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            BGP   
+MAC Address:              0012.0012.0012
+Host IP:                  2001:12::254                             
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      0000.0000.0000.0000.0000
+MAC Route Flags:          BInt(Brm)Dgr
+Next Hop(s):              L:16 2.2.2.1
+
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            L2VPN 
+MAC Address:              0012.0012.0012
+Host IP:                  192.168.12.254                           
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      0000.0000.0000.0000.0000
+MAC Route Flags:          Int(Brm)Dgl
+Next Hop(s):              BD12:0
+          
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            L2VPN 
+MAC Address:              0012.0012.0012
+Host IP:                  2001:12::254                             
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      0000.0000.0000.0000.0000
+MAC Route Flags:          Int(Brm)Dgl
+Next Hop(s):              BD12:0
+          
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            BGP   
+MAC Address:              aabb.0012.0002
+Host IP:                  FE80::A8BB:FF:FE12:2                     
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      0000.0000.0000.0000.0000
+MAC Route Flags:          B()
+Next Hop(s):              L:16 2.2.2.1
+          
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            L2VPN 
+MAC Address:              aabb.cc82.2800
+Host IP:                  FE80::A8BB:CCFF:FE82:2800                
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      03AA.BB00.0000.0200.0001
+MAC Route Flags:          B(Brm)
+Next Hop(s):              Et1/0:12
+          
+EVPN Instance:            2     
+Ethernet Tag:             0          
+Producer Name:            BGP   
+MAC Address:              aabb.cc82.2800
+Host IP:                  FE80::A8BB:CCFF:FE82:2800                
+Sequence Number:          0 
+Label 2:                  0          
+ESI:                      03AA.BB00.0000.0200.0001
+MAC Route Flags:          Int(Brm)
+Next Hop(s):              L:17 4.4.4.1, L:18 3.3.3.1, L:19 2.2.2.1

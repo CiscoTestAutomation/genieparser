@@ -1,0 +1,74 @@
+
+Next Hop table for VRF default, address family IPv4 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 192.168.154.1, Flags: 0x41, Refcount: 1, IGP cost: 3
+IGP Route type: 0, IGP preference: 110
+Attached nexthop: 192.168.66.2, Interface: port-channel2.107
+Attached nexthop: 192.168.196.2, Interface: port-channel2.100
+Nexthop is not-attached not-local reachable labeled
+Nexthop last resolved: 18:37:36, using 192.168.154.1/32
+Metric next advertise: Never
+RNH epoch: 1
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family IPv6 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Nexthop: 2001:db8:400::3:1, Flags: 0x1, Refcount: 1, IGP cost: 2
+IGP Route type: 0, IGP preference: 110
+Attached nexthop: fe80::6e9c:edff:fe4d:ff41, Interface: port-channel2.100
+Nexthop is not-attached not-local reachable not-labeled
+Nexthop last resolved: 18:37:36, using 2001:db8:400::3:1/128
+Metric next advertise: Never
+RNH epoch: 1
+
+Next Hop table for VRF default, address family VPNv4 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family VPNv6 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family IPv4 MDT:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 0.0.0.0, Flags: 0x2, Refcount: 1, IGP cost: 0
+IGP Route type: 0, IGP preference: 0
+Nexthop is not-attached local unreachable not-labeled
+Nexthop last resolved: never, using 0.0.0.0/0
+Metric next advertise: Never
+RNH epoch: 0
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:

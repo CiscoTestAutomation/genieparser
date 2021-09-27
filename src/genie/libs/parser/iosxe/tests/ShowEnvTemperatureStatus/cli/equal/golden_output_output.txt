@@ -1,0 +1,4 @@
+Temperature Value: 33 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 65 Degree Celsius
+Red Threshold    : 75 Degree Celsius

@@ -1,0 +1,113 @@
+
+DS1-R101# sh spanning-tree detail 
+
+ VLAN0109 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 109, address 0023.04ff.ad0e
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 8 last change occurred 126:41:16 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0109 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245744
+
+ Port 4194 (port-channel99, vPC) of VLAN0109 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 20589, address 0026.98ff.e460
+   Designated port id is 128.4194, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725887, received 0
+
+ Port 4196 (port-channel101, vPC) of VLAN0109 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4196
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 20589, address 0026.98ff.e460
+   Designated port id is 128.4196, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is shared
+   BPDU: sent 231106, received 0
+
+
+ VLAN0110 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 110, address 0023.04ff.ad0e
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 9 last change occurred 123:32:30 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0110 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20590, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245745
+
+ Port 4194 (port-channel99, vPC) of VLAN0110 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20590, address 0023.04ff.ad0e
+   Designated bridge has priority 20590, address 0026.98ff.e460
+   Designated port id is 128.4194, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725886, received 0
+
+
+ VLAN0122 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 122, address 0023.04ff.ad0e
+  Configured hello time 2, max age 20, forward delay 15
+  Topology change flag not set, detected flag not set
+  Number of topology changes 9 last change occurred 123:10:02 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0122 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20602, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245745
+
+ Port 4194 (port-channel99, vPC) of VLAN0122 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20602, address 0023.04ff.ad0e
+   Designated bridge has priority 20602, address 0026.98ff.e460
+   Designated port id is 128.4194, designated path cost 0, Topology change is set
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725887, received 0
+

@@ -1,0 +1,33 @@
+expected_output={
+   "traceroute":{
+      "Tunnel100":{
+         "address":"Tunnel100",
+         "hops":{
+            "0":{
+               "paths":{
+                  1:{
+                     "address":"192.1.1.1",
+                     "label_info":{
+                        "exp":0,
+                        "label_name":"implicit-null"
+                     },
+                     "mru":1500
+                  }
+               }
+            },
+            "1":{
+               "code":"!",
+               "paths":{
+                  1:{
+                     "address":"192.1.1.2",
+                     "probe_msec":[
+                        "2"
+                     ]
+                  }
+               }
+            }
+         },
+         "timeout_seconds":2
+      }
+   }
+}

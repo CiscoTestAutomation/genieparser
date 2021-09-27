@@ -33,7 +33,7 @@ class ShowMonitorSchema(MetaParser):
         'session':
             {Any():
                  {'type':str,
-                  'status':str,
+                  Optional('status'):str,
                   Optional('source_ports'):
                       {Any(): str,
                       },

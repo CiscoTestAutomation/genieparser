@@ -1,0 +1,32 @@
+In [4]: dev.parse('monitor interface MgmtEth0/RP0/CPU0/0')
+monitor interface MgmtEth0/RP0/CPU0/0
+Fri Aug 27 15:24:12.060 UTC
+R2_xr                Monitor Time: 00:00:00          SysUptime: 154:49:36
+
+
+MgmtEth0/
+RP0/CPU0/0 is up, line protocol is up
+Encapsulation ARPA
+
+Traffic Stats:(2 second rates)                                     Delta
+  Input  Packets:                  75064793                            0
+  Input  pps:                           134
+  Input  Bytes:                 12453726964                            0
+  Input  Kbps (rate):                    NA                         (NA)
+  Output Packets:                    220564                            0
+  Output pps:                             0
+  Output Bytes:                    21805480                            0
+  Output Kbps (rate):                    NA                         (NA)
+
+Errors Stats:
+  Input  Total:                           0                            0
+  Input  CRC:                             0                            0
+  Input  Frame:                           0                            0
+  Input  Overrun:                         0                            0
+  Output Total:                           0                            0
+  Output Underrun:                        0                            0
+
+Quit='q', Freeze='f', Thaw='t', Clear='c', Interface='i',
+Next='n', Prev='p'
+
+Brief='b', Detail='d', Protocol(IPv4/IPv6)='r'

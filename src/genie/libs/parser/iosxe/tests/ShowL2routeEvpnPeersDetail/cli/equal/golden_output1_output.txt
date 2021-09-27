@@ -1,0 +1,36 @@
+EVPN Instance:            2          
+Ethernet Tag:             0         
+Topology:                 BD-12            
+Topology ID:              200000000       
+Peer IP:                  2.2.2.1         
+Encapsulation:            MPLS       
+Up Time:                  3d02h     
+Number of routes         
+  EAD-EVI:                0       
+  MAC:                    2       
+  MAC-IP:                 4       
+  IMET:                   1      
+
+EVPN Instance:            2          
+Ethernet Tag:             0         
+Topology:                 BD-12            
+Topology ID:              200000000       
+Peer IP:                  3.3.3.1         
+Encapsulation:            MPLS       
+Up Time:                  3d02h     
+Number of routes         
+  EAD-EVI:                1       
+  MAC:                    1       
+  MAC-IP:                 1       
+  IMET:                   1      
+          
+EVPN Instance:            0          
+Ethernet Tag:             0         
+Topology:                 GLOBAL           
+Topology ID:              FFFFFFFE00000000
+Peer IP:                  3.3.3.1         
+Encapsulation:            MPLS       
+Up Time:                  3d02h     
+Number of routes         
+  EAD-ES:                 1       
+  ES:                     1      

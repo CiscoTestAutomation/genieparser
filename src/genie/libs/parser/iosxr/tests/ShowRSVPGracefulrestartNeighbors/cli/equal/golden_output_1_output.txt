@@ -1,0 +1,6 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp graceful-restart neighbors
+Thu Apr  1 05:30:38.497 JST
+Neighbor          App  State Recovery       Reason                Since  LostCnt
+--------------- ----- ------ -------- ------------ -------------------- --------
+106.106.106.106  MPLS    N/A     DONE          N/A                  N/A        0
+141.141.141.141  MPLS    N/A     DONE          N/A                  N/A        0

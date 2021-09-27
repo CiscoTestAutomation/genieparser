@@ -1,0 +1,16 @@
+show template binding target GigabitEthernet1/0/12
+
+Interface Templates
+===================
+Interface: Gi1/0/12
+
+Method              Source            Template-Name
+------              ------            -------------
+
+Service Templates
+
+=================
+Template-Name                                    Source            Bound-To-MAc
+-------------                                    ------            ----------------
+DefaultCriticalAuthVlan_SRV_TEMPLATE             User               68-3B-78-7A-2C-90   
+DefaultCriticalVoice_SRV_TEMPLATE                User               68-3B-78-7A-2C-90   

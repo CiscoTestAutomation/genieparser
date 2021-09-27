@@ -1,0 +1,152 @@
+
+N7k# show bgp vrf default all neighbors
+BGP neighbor is 10.16.2.2,  remote AS 100, ibgp link,  Peer index 1
+  Description: nei_desc
+  BGP version 4, remote router ID 10.16.2.2
+  BGP state = Established, up for 02:20:02
+  Using loopback0 as update source for this peer
+  BFD live-detection is configured
+  Neighbor local-as command not active
+  Last read 00:00:15, hold time = 99, keepalive interval is 33 seconds
+  Last written 00:00:13, keepalive timer expiry due 00:00:19
+  Received 261 messages, 0 notifications, 0 bytes in queue
+  Sent 263 messages, 0 notifications, 0 bytes in queue
+  Connections established 1, dropped 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received
+  Route refresh capability (old): advertised received
+  4-Byte AS capability: disabled
+  Address family VPNv4 Unicast: advertised received
+  Address family VPNv6 Unicast: advertised received
+  Address family IPv4 MVPN: advertised received
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    VPNv4 Unicast  VPNv6 Unicast
+  Address families received from peer:
+    VPNv4 Unicast  VPNv6 Unicast
+  Forwarding state preserved by peer for:
+  Restart time advertised to peer: 240 seconds
+  Stale time for routes advertised by peer: 600 seconds
+  Restart time advertised by peer: 120 seconds
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         1                  1
+  Notifications:                 0                  0
+  Updates:                       6                  4
+  Keepalives:                  256                256
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                       263                261
+  Total bytes:                5311               5139
+  Bytes in queue:                0                  0
+
+  For address family: VPNv4 Unicast
+  BGP table version 11, neighbor version 11
+  1 accepted paths consume 48 bytes of memory
+  2 sent paths
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 300000
+  Inbound route-map configured is genie_redistribution, handle obtained
+  Outbound route-map configured is genie_redistribution, handle obtained
+
+  For address family: VPNv6 Unicast
+  BGP table version 10, neighbor version 10
+  1 accepted paths consume 48 bytes of memory
+  2 sent paths
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+
+  Local host: 10.4.1.1, Local port: 57144
+  Foreign host: 10.16.2.2, Foreign port: 179
+  fd = 44
+
+BGP neighbor is 10.16.2.5,  remote AS 200, local AS 333, ebgp link,  Peer index 2
+  Inherits session configuration from session-template PEER-SESSION
+  Description: PEER-SESSION
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Shut (Admin), down for 02:20:09
+  Using loopback0 as update source for this peer
+  Connected check is disabled
+  BFD live-detection is configured and enabled, state is Up
+  Private AS numbers removed from updates sent to this neighbor
+  External BGP peer might be upto 255 hops away
+  TCP MD5 authentication is enabled
+  Only passive connection setup allowed
+  Last read never, hold time = 45, keepalive interval is 15 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0 bytes in queue
+  Connections established 0, dropped 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  0 sent paths
+  Inbound soft reconfiguration allowed
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop set to local peering address, 0.0.0.0
+  Maximum prefixes allowed 300
+  Allow my ASN 9 times
+  ASN override is enabled
+  Inbound route-map configured is test-map, handle obtained
+  Outbound route-map configured is test-map, handle obtained
+  Default information originate, default not sent
+  Inherited policy-templates:
+    Preference    Name
+	    10    PEER-POLICY
+	    20    PEER-POLICY2
+
+  No established BGP session with peer
+
+BGP neighbor is 10.16.2.25,  remote AS 0, unknown link,  Peer index 3
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle, down for 02:20:08, retry in 0.000000
+  No address family configured
+  Last read never, hold time = 45, keepalive interval is 15 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0 bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  No established BGP session with peer

@@ -1,0 +1,3 @@
+
+Interface   Next-hop             Application     Ref-Count   Table / VRF name   Flags
+ Lspvif1     0.0.0.0              MDT               N/A       3    (vrf vrf3001) 0x1

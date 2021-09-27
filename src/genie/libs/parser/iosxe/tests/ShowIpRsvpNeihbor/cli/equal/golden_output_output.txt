@@ -1,0 +1,7 @@
+Neighbor        Encapsulation  Time since msg rcvd/sent
+192.1.1.2       Raw IP         00:03:45   00:03:24  
+193.1.1.2       Raw IP         00:03:24   00:03:21  
+194.1.1.2       Raw IP         00:03:21   00:03:18  
+
+* Neighbors inactive for more than one hour are not shown.
+  Use the "inactive" keyword to display them.

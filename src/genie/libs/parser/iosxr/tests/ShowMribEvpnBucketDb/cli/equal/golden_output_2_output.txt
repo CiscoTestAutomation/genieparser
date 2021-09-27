@@ -1,0 +1,17 @@
+
+				    EVPN Bucket Database
+				    --------------------
+
+IFName                      IFHandle      BucketID      State      Uptime       Delete In Progress
+Bundle-Ether1                  0x200b120        0         Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        1         Forward    01:53:10            N
+Bundle-Ether1                  0x200b120        2         Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        3         Forward    01:53:10            N
+Bundle-Ether1                  0x200b120        4         Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        5         Forward    01:53:10            N
+Bundle-Ether1                  0x200b120        6         Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        7         Forward    01:53:10            N
+Bundle-Ether1                  0x200b120        8         Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        9         Forward    01:53:10            N
+Bundle-Ether1                  0x200b120        10        Blocked    01:53:10            N
+Bundle-Ether1                  0x200b120        11        Forward    01:53:10            N

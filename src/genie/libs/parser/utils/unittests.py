@@ -30,17 +30,14 @@ from pyats.easypy.email import TEST_RESULT_ROW
 from pyats.log.utils import banner, str_shortener
 from pyats.aetest.reporter import StandaloneReporter
 
-
-
 # Genie
 from genie.utils.diff import Diff
 from genie.libs import parser as _parser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-
+from genie.libs.parser.utils.common import format_output
 
 log = logging.getLogger(__name__)
 glo_values = AttrDict
-
 
 #===========================================================================
 #                            Helper Functions
@@ -138,6 +135,7 @@ def failed_build_tree(section, parent_node, level=0):
         or not parsed_args['_display_only_failed']
     ):
         parent_node.add_child(section_node)
+
     # Recursive indentation
     for child_section in sections:
         if level < 2:
@@ -355,7 +353,6 @@ class SuperFileBasedTesting(aetest.Testcase):
                         folder_root_equal = pathlib.Path(f"{operating_system}/{name}/cli/equal")
                         folder_root_empty = pathlib.Path(f"{operating_system}/{name}/cli/empty")
 
-
                     # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
                     # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
                     # one test.
@@ -528,6 +525,7 @@ class ParserTest(aetest.Testcase):
                     log.error(traceback.format_exc(), extra={'colour': 'red'})
                     self.remove_logger()
                     glo_values.parserErrored += 1
+                
                 # Use Diff method to get the difference between 
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
@@ -542,13 +540,13 @@ class ParserTest(aetest.Testcase):
                         self.add_logger()
                         log.info(banner(msg))
                     # Format expected and parsed output in a nice format
-                    parsed_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
-                    golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
+                    parsed_json_data = format_output(parsed_output)
+                    golden_parsed_output_json_data = format_output(golden_parsed_output)
 
                     # Display device output, parsed output, and golden_output of failed tests
-                    log.info("\nThe following is the device output before it is parsed:\n{}\n\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
-                    log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
-                    log.info("The following is your expected output:\n{}\n".format(golden_parsed_output_json_data), extra = {'colour': 'yellow'})
+                    log.info(f"\nThe following is the device output before it is parsed:\n{golden_output['execute.return_value']}\n\n", extra = {'colour': 'yellow'})
+                    log.info(f"The following is your device's parsed output:\n{parsed_json_data}\n", extra = {'colour': 'yellow'})
+                    log.info(f"The following is your expected output:\n{golden_parsed_output_json_data}\n", extra = {'colour': 'yellow'})
                     log.info("The following is the difference between the two outputs:\n", extra = {'colour': 'yellow'})
 
                     # Display the diff between parsed output and golden_output
@@ -741,7 +739,7 @@ def main(**kwargs):
 
     parsed_args = _parse_args(**kwargs)
 
-    if parsed_args['_number'] and (not parsed_args['_class'] or not parsed_args['_number']):
+    if parsed_args['_number'] and not parsed_args['_class']:
         sys.exit("Unittest number provided but missing supporting arguments:"
                 "\n* '-c' or '--class_name' for the parser class"
                 "\n* '-o' or '--operating_system' for operating system")

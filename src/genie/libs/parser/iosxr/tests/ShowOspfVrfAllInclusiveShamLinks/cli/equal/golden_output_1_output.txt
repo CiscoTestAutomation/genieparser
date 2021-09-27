@@ -1,0 +1,13 @@
+
+RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links
+
+Sham Links for OSPF 1, VRF VRF1
+
+Sham Link OSPF_SL0 to address 10.151.22.22 is up
+Area 1, source address 10.21.33.33
+IfIndex = 2
+  Run as demand circuit
+  DoNotAge LSA not allowed (Number of DCbitless LSA is 1)., Cost of using 111
+  Transmit Delay is 7 sec, State POINT_TO_POINT,
+  Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
+    Hello due in 00:00:00:772

@@ -1,0 +1,21 @@
+
+RP/0/RSP0/CPU0:router# show pce ipv4 peer detail
+PCE's peer database:
+--------------------
+Peer address: 192.168.0.1
+State: Up
+Capabilities: Stateful, Segment-Routing, Update
+PCEP has been up for: 00:01:50
+PCEP session ID: local 0, remote 0
+Sending KA every 30 seconds
+Minimum acceptable KA interval: 20 seconds
+Peer timeout after 120 seconds
+Statistics:
+Keepalive messages: rx     4 tx     4
+Request messages:   rx     3 tx     0
+Reply messages:     rx     0 tx     3
+Error messages:     rx     0 tx     0
+Open messages:      rx     1 tx     1
+Report messages:    rx     4 tx     0
+Update messages:    rx     0 tx     2
+Initiate messages:  rx     0 tx     0

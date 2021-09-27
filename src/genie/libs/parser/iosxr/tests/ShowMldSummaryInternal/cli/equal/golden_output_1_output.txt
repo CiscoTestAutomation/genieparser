@@ -1,0 +1,17 @@
+
+RP/0/0/CPU0:ios#show mld summary internal
+
+Robustness Value 10
+No. of Group x Interfaces 13
+Maximum number of Group x Interfaces 75000
+
+Supported Interfaces   : 1
+Unsupported Interfaces : 0
+Enabled Interfaces     : 1
+Disabled Interfaces    : 0
+
+MTE tuple count        : 0
+
+Interface                       Number  Max #   On Parent     Last     Last     IGMP R
+				Groups  Groups                query    Report   Uptime
+GigabitEthernet0/0/0/0          13      6400    Y  0x0        00:29:26 00:04:16    1d06h

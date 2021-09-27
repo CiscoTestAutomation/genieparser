@@ -1,0 +1,24 @@
+
+RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database external
+Thu Nov  2 21:26:53.724 UTC
+
+
+	    OSPF Router with ID (10.36.3.3) (Process ID 1)
+
+		Type-5 AS External Link States
+
+  Routing Bit Set on this LSA
+  LS age: 608
+  Options: (No TOS-capability, DC)
+  LS Type: AS External Link
+  Link State ID: 10.94.44.44 (External Network Number)
+  Advertising Router: 10.64.4.4
+  LS Seq Number: 80000002
+  Checksum: 0x7d61
+  Length: 36
+  Network Mask: /32
+	Metric Type: 2 (Larger than any link state path)
+	TOS: 0
+	Metric: 20
+	Forward Address: 0.0.0.0
+	External Route Tag: 0

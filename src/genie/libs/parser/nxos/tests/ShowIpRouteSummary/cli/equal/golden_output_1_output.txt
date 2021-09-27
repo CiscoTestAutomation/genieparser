@@ -1,0 +1,57 @@
+
+IP Route Table for VRF "default"
+Total number of routes: 17
+Total number of paths:  20
+
+Best paths per protocol:      Backup paths per protocol:
+  am             : 1            None
+  local          : 4
+  direct         : 4
+  broadcast      : 5
+  ospf-1         : 6
+  ospf-2         : 6
+  bgp-100        : 1000
+
+Number of routes per mask-length:
+  /8 : 1       /24: 4       /32: 12
+
+
+IP Route Table for VRF "management"
+Total number of routes: 11
+Total number of paths:  11
+
+Best paths per protocol:      Backup paths per protocol:
+  am             : 3            None
+  local          : 1
+  direct         : 1
+  static         : 1
+  broadcast      : 5
+
+Number of routes per mask-length:
+  /0 : 1       /8 : 1       /24: 1       /32: 8
+
+
+IP Route Table for VRF "evpn-tenant-0002"
+Total number of routes: 11
+Total number of paths:  11
+
+Best paths per protocol:      Backup paths per protocol:
+  local          : 2            None
+  direct         : 2
+  broadcast      : 7
+
+Number of routes per mask-length:
+  /8 : 1       /16: 2       /32: 8
+
+
+IP Route Table for VRF "evpn-t-0003"
+Total number of routes: 11
+Total number of paths:  11
+
+Best paths per protocol:      Backup paths per protocol:
+  local          : 2            None
+  direct         : 2
+  broadcast      : 7
+
+Number of routes per mask-length:
+  /8 : 1       /16: 2       /32: 8

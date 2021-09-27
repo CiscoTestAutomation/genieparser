@@ -14,6 +14,7 @@
      *  show pagp internal
      *  show pagp <channel_group> internal
      *  show etherchannel summary
+     *  show etherchannel <port_channel> summary
      *  show etherchannel load-balancing
      *  show lacp neighbor detail
 """
@@ -729,9 +730,14 @@ class ShowEtherchannelSummarySchema(MetaParser):
 # ====================================================
 class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
     """Parser for :
-      show etherchannel summary"""
+      show etherchannel summary
+      show etherchannel <port-channel> summary      
+      """
 
-    cli_command = 'show etherchannel summary'
+    cli_command = [
+                  'show etherchannel summary',
+                  'show etherchannel {port_channel} summary',
+                ]
     exclude = ['current_time', 'last_read', 'last_write',
         'retrans', 'keepalives', 'total', 'value', 'retransmit', 
         'total_data', 'with_data', 'krtt', 'receive_idletime', 
@@ -746,9 +752,12 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         'keepalive', 'out_of_order']
 
 
-    def cli(self,output=None):
+    def cli(self,port_channel="",output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if not port_channel:
+                out = self.device.execute(self.cli_command[0])
+            else:
+                out = self.device.execute(self.cli_command[1].format(port_channel=port_channel))            
         else:
             out = output
 
@@ -909,7 +918,6 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                     intf_dict['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
                 continue
         return result_dict
-
 
 # ====================================================
 #  schema for show etherchannel load-balancing

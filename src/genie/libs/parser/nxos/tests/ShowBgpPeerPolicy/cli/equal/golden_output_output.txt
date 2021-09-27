@@ -1,0 +1,23 @@
+
+N7k# show running-config | inc peer-policy
+  template peer-policy PEER-POLICY
+      inherit peer-policy PEER-POLICY 10
+      inherit peer-policy PEER-POLICY2 20
+
+N7k# show bgp peer-policy PEER-POLICY
+Commands configured in this template:
+  Send Community
+  Send Ext-community
+  Route Reflector Client
+  Route-map Inbound - policy-name: test-map
+  Route-map Outbound - policy-name: test-map
+  Maximum Prefixes - prefix limit: 300
+  Default Originate - route-map: test
+  Soft-Reconfig
+  Site-of-origin
+  Allowas-in
+  AS-override
+Inherited commands:
+Inherited by the following peers:
+  VRF default: 10.16.2.5
+N7k#

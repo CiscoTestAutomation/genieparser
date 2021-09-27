@@ -1,0 +1,5 @@
+Smart Licensing Usage Report:
+====================================
+Report Id,          State,    Flag, Feature Name
+1629870048          CLOSED    N     network-premier_2.5G
+1629870049          ACK       N     dna-premier_2.5G

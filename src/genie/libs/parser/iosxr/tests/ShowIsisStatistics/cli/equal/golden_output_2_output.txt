@@ -1,0 +1,57 @@
+
+RP/0/RSP0/CPU0:XXXX#sh isis stat
+Fri Sep 25 18:17:07.477 FRANCE
+
+IS-IS COEUR statistics:
+    Fast PSNP cache (hits/tries): 57508538/115477425
+    Fast CSNP cache (hits/tries): 0/49
+    Fast CSNP cache updates: 66
+    LSP checksum errors received: 0
+    LSP Dropped: 0
+    SNP Dropped: 0
+    UPD Max Queue size: 20
+    Average transmit times and rate:
+      Hello:          0 s,     999840 ns,          0/s
+      CSNP:           0 s,          0 ns,          0/s
+      PSNP:           0 s,     999836 ns,          0/s
+      LSP:            0 s,     999840 ns,          0/s
+    Average process times and rate:
+      Hello:          0 s,     999833 ns,          0/s
+      CSNP:           0 s,    1249805 ns,          0/s
+      PSNP:           0 s,     999835 ns,          0/s
+      LSP:            0 s,     999840 ns,          0/s
+    Level-1:
+      LSPs sourced (new/refresh): 9140/117187
+      IPv4 Unicast
+	Total SPF calculations     : 1222317
+	Full SPF calculations      : 331056
+	ISPF calculations          : 0
+	Next Hop Calculations      : 4
+	Partial Route Calculations : 891257
+	Periodic SPF calculations  : 39298
+      IPv6 Unicast
+	Total SPF calculations     : 234715
+	Full SPF calculations      : 177541
+	ISPF calculations          : 0
+	Next Hop Calculations      : 4
+	Partial Route Calculations : 57170
+	Periodic SPF calculations  : 43596
+  Interface Bundle-Ether10:
+    PTP Hellos (sent/rcvd)    : 26609054/5327323
+    LSP Retransmissions       : 11
+    Level-1 LSPs (sent/rcvd)  : 2218410/57776373
+  Level-1 CSNPs (sent/rcvd) : 24/24
+    Level-1 PSNPs (sent/rcvd) : 33297781/1576294
+    Level-1 LSP Flooding Duplicates     : 162
+    Level-1 LSPs Arrival Time Throttled : 0
+  Interface Bundle-Ether11:
+    PTP Hellos (sent/rcvd)    : 26608031/5327345
+    LSP Retransmissions       : 15
+    Level-1 LSPs (sent/rcvd)  : 2724240/57701052
+    Level-1 CSNPs (sent/rcvd) : 25/36
+    Level-1 PSNPs (sent/rcvd) : 33274400/1761310
+    Level-1 LSP Flooding Duplicates     : 15
+    Level-1 LSPs Arrival Time Throttled : 0
+  Interface Loopback0:
+  Interface Loopback6:
+RP/0/RSP0/CPU0:XXXX#

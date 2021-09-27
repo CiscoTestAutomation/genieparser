@@ -139,7 +139,8 @@ class ShowVrfDetailSchema(MetaParser):
                     Optional('flags'):  str,
                     Optional('vrf_label'): {
                         Optional('distribution_protocol'): str,
-                        Optional('allocation_mode'): str
+                        Optional('allocation_mode'): str,
+                        Optional('label'):int
                     },
                     Optional('route_targets'): {
                         Any(): {
@@ -269,7 +270,8 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)$')
 
         # VRF label allocation mode: per-prefix
-        p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
+        p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)'
+                         r'(?:\s*\(Label\s*(?P<label>\d+)\))?$')
         
         # Description: desc
         p12 = re.compile(r'^Description: +(?P<desc>[\S\s]+)$')
@@ -496,7 +498,9 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 if 'not' not in groups['mode']:
                     vrf_label_dict = af_dict.setdefault('vrf_label', {})
-                    vrf_label_dict.update({'allocation_mode': groups['mode']})
+                    vrf_label_dict.update({'allocation_mode': groups['mode'].strip()})
+                    if groups['label']:
+                        vrf_label_dict.update({'label': int(groups['label'])})
                 continue
 
             # Description: desc

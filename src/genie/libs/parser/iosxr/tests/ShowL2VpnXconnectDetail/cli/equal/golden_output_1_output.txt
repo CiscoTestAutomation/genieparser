@@ -1,0 +1,68 @@
+
+show l2vpn xconnect detail
+Sat Sep 28 10:09:46.728 UTC
+Group tjub_xc, XC siva_p2p, state is down; Interworking none
+Monitor-Session: pw-span-test, state is configured
+AC: GigabitEthernet1/5/1/2, state is up
+Type Ethernet
+MTU 2611; XC ID 0x6111112; interworking none; MSTi 0
+Statistics:
+packet totals: send 100
+byte totals: send 20798
+PW: neighbor 10.19.2.2, PW ID 2, state is down ( local ready )
+PW class not set, XC ID 0x6111112
+Encapsulation MPLS, protocol LDP
+PW type Ethernet, control word enabled, interworking none
+PW backup disable delay 0 sec
+Sequencing not set
+    MPLS         Local                          Remote                        
+------------ ------------------------------ -----------------------------
+Label        41116                          unknown                       
+Group ID     0x6111411                      1x1                           
+Interface    GigabitEthernet1/5/1/2         unknown   
+    Interface        pw-span-test                GigabitEthernet1/4/1/2
+MTU          2611                           unknown                       
+Control word enabled                        unknown                       
+PW type      Ethernet                       unknown                       
+VCCV CV type 1x3                            1x1                           
+					    (none)                        
+	    (LSP ping verification)                                      
+VCCV CC type 1x4                            1x1                           
+					    (none)                        
+		(control word)                                               
+	    (router alert label)                                         
+------------ ------------------------------ -----------------------------
+Create time: 21/11/2008 11:35:17 (11:64:42 ago)
+Last time status changed: 21/01/2008 21:37:15 (01:10:34 ago)
+Statistics:
+packet totals: receive 0
+byte totals: receive 0
+
+Backup PW:
+PW: neighbor 10.66.3.3, PW ID 3, state is up ( established )
+Backup for neighbor 10.19.2.2 PW ID 2 ( active )
+PW class not set, XC ID 1x1
+Encapsulation MPLS, protocol LDP
+PW type Ethernet, control word enabled, interworking none
+PW backup disable delay 0 sec
+Sequencing not set
+    MPLS         Local                          Remote                        
+------------ ------------------------------ -----------------------------
+Label        41117                          27114                         
+Group ID     unassigned                     1x6111511                     
+Interface    unknown                        GigabitEthernet1/5/1/3        
+MTU          2611                           2611                          
+Control word enabled                        enabled                       
+PW type      Ethernet                       Ethernet                      
+VCCV CV type 1x3                            1x3                           
+	    (LSP ping verification)        (LSP ping verification)       
+VCCV CC type 1x4                            1x4                           
+		(control word)                 (control word)                
+	    (router alert label)           (router alert label)          
+------------ ------------------------------ -----------------------------
+Backup PW for neighbor 10.19.2.2 PW ID 2
+Create time: 21/11/2008 11:45:44 (00:32:54 ago)
+Last time status changed: 20/11/2008 21:45:48 (00:44:49 ago)
+Statistics:
+packet totals: receive 0
+byte totals: receive 0

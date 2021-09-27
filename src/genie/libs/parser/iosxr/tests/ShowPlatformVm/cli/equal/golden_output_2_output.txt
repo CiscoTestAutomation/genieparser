@@ -1,0 +1,7 @@
+
+RP/0/RSP0/CPU0:ios#show platform vm
+Sat Sep  7 18:34:53.949 UTC
+Node name       Node type       Partner name    SW status       IP address
+--------------- --------------- --------------- --------------- ---------------
+0/RSP0/CPU0     RP (ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
+0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4

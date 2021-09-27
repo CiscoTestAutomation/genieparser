@@ -128,6 +128,21 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn mac ip remote detail
     * show l2vpn evpn mac ip remote summary
     * show l2vpn evpn mac ip summary
+    * show storm-control {interface}
+    * show l2vpn evpn mac vlan {vlan_id}
+    * show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
+    * show l2vpn evpn mac vlan {vlan_id} duplicate
+    * show l2vpn evpn mac vlan {vlan_id} local
+    * show l2vpn evpn mac vlan {vlan_id} remote
+    * show l2vpn evpn mac ip vlan {vlan_id}
+    * show l2vpn evpn mac ip vlan {vlan_id} address {ipv4_addr}
+    * show l2vpn evpn mac ip vlan {vlan_id} address {ipv6_addr}
+    * show l2vpn evpn mac ip vlan {vlan_id} duplicate
+    * show l2vpn evpn mac ip vlan {vlan_id} local
+    * show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr}
+    * show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv4_addr}
+    * show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv6_addr}
+    * show l2vpn evpn mac ip vlan {vlan_id} remote
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -1690,18 +1705,32 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
                    show l2vpn evpn mac evi {evi_id} remote
                    show l2vpn evpn mac local
                    show l2vpn evpn mac remote
+                   show l2vpn evpn mac vlan {vlan_id}
+                   show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
+                   show l2vpn evpn mac vlan {vlan_id} duplicate
+                   show l2vpn evpn mac vlan {vlan_id} local
+                   show l2vpn evpn mac vlan {vlan_id} remote
     """
 
     schema = {
-        'mac_addr': {
-            str: {
-                'evi': int,
-                'bd_id': int,
-                'esi': str,
-                'eth_tag': int,
-                'next_hops': list,
-            },
-        },
+        'evi': {
+            Any(): {
+                'bd_id': {
+                    Any(): {
+                        'eth_tag': {
+                            Any() : {
+                                'mac_addr':{
+                                    Any(): {
+                                        'esi': str,
+                                        'next_hops': list
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -1724,6 +1753,11 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac evi {evi_id} remote
                    show l2vpn evpn mac local
                    show l2vpn evpn mac remote
+                   show l2vpn evpn mac vlan {vlan_id}
+                   show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
+                   show l2vpn evpn mac vlan {vlan_id} duplicate
+                   show l2vpn evpn mac vlan {vlan_id} local
+                   show l2vpn evpn mac vlan {vlan_id} remote
     """
 
     cli_command = ['show l2vpn evpn mac',
@@ -1735,9 +1769,14 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    'show l2vpn evpn mac evi {evi_id}',
                    'show l2vpn evpn mac evi {evi_id} address {mac_addr}',
                    'show l2vpn evpn mac evi {evi_id} {mac_type}',
+                   'show l2vpn evpn mac vlan {vlan_id}',
+                   'show l2vpn evpn mac vlan {vlan_id} address {mac_addr}',
+                   'show l2vpn evpn mac vlan {vlan_id} duplicate',
+                   'show l2vpn evpn mac vlan {vlan_id} local',
+                   'show l2vpn evpn mac vlan {vlan_id} remote'
     ]
 
-    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None):
+    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None, vlan_id=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
@@ -1749,6 +1788,8 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                 cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
                 cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+            elif vlan_id:
+                cli_cmd += ' vlan {vlan_id}'.format(vlan_id=vlan_id)
 
             if mac_type:
                 cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
@@ -1807,13 +1848,20 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                mac_addr_dict = parser_dict.setdefault('mac_addr', {})
+                evi_dict = parser_dict.setdefault('evi', {})
+                evis = evi_dict.setdefault(int(group['evi']), {})
+
+                bd_id_dict = evis.setdefault('bd_id', {})
+                bd_ids = bd_id_dict.setdefault(int(group['bd_id']), {})
+
+                eth_tag_dict = bd_ids.setdefault( 'eth_tag', {})
+                eth_tags = eth_tag_dict.setdefault( int(group['eth_tag']), {})
+
+                mac_addr_dict = eth_tags.setdefault('mac_addr', {})
                 mac_vals = mac_addr_dict.setdefault(group['mac'], {})
+
                 mac_vals.update({
-                    'evi': int(group['evi']),
-                    'bd_id': int(group['bd_id']),
-                    'esi': group['esi'],
-                    'eth_tag': int(group['eth_tag']),
+                    'esi': group['esi']
                 })
                 next_hops = mac_vals.setdefault('next_hops', [])
                 next_hops.append(group['next_hop'])
@@ -1855,26 +1903,35 @@ class ShowL2vpnEvpnMacDetailSchema(MetaParser):
     """
 
     schema = {
-        'mac_addr': {
-            str: {
-                'sticky': bool,
-                'stale': bool,
-                'evi': int,
-                'bd_id': int,
-                'esi': str,
-                'eth_tag': int,
-                'next_hops': list,
-                Optional('local_addr'): str,
-                'seq_number': int,
-                'mac_only_present': bool,
-                'mac_dup_detection': {
-                    'status': str,
-                    Optional('moves_count'): int,
-                    Optional('moves_limit'): int,
-                    Optional('expiry_time'): str,
-                },
-            },
-        },
+        'evi': {
+            Any(): {
+                'bd_id': {
+                    Any(): {
+                        'eth_tag': {
+                            Any(): {
+                                'mac_addr': {
+                                    Any(): {
+                                        'sticky': bool,
+                                        'stale': bool,
+                                        'esi': str,
+                                        'next_hops': list,
+                                        Optional('local_addr'): str,
+                                        'seq_number': int,
+                                        'mac_only_present': bool,
+                                        'mac_dup_detection': {
+                                            'status': str,
+                                            Optional('moves_count'): int,
+                                            Optional('moves_limit'): int,
+                                            Optional('expiry_time'): str,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -1993,24 +2050,21 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                mac_addr_dict = parser_dict.setdefault('mac_addr', {})
-                mac_vals = mac_addr_dict.setdefault(group['mac'], {})
+                mac_addr_value = group['mac']
                 sticky = False
                 stale = False
                 if group['mac_status']:
                     sticky = 'sticky' in group['mac_status']
                     stale = 'stale' in group['mac_status']
-                mac_vals.update({
-                    'sticky': sticky,
-                    'stale': stale,
-                })
                 continue
 
             # EVPN Instance:              2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'evi': int(group['evi'])})
+                evi_dict = parser_dict.setdefault( 'evi', {})
+                evis = evi_dict.setdefault( int(group['evi']), {} )
+
                 continue
 
             # Bridge Domain:              11
@@ -2018,21 +2072,34 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'bd_id': int(group['bd_id'])})
+                bd_id_dict = evis.setdefault( 'bd_id', {} )
+                bd_ids = bd_id_dict.setdefault( int(group['bd_id']), {} )
+
                 continue
 
             # Ethernet Segment:           03AA.BB00.0000.0200.0001
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'esi': group['esi']})
+                esi_value = group['esi']
                 continue
 
             # Ethernet Tag ID:            0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'eth_tag': int(group['eth_tag'])})
+                # mac_vals.update({'eth_tag': int(group['eth_tag'])})
+                eth_tag_dict = bd_ids.setdefault( 'eth_tag', {})
+                eth_tags = eth_tag_dict.setdefault( int(group['eth_tag']), {} )
+
+                mac_addr_dict = eth_tags.setdefault('mac_addr', {})
+                mac_vals = mac_addr_dict.setdefault(mac_addr_value, {})
+
+                mac_vals.update({
+                    'sticky': sticky,
+                    'stale': stale,
+                    'esi': esi_value
+                })
                 continue
 
             # Next Hop(s):                L:17 Ethernet1/0 service instance 12
@@ -2381,17 +2448,35 @@ class ShowL2vpnEvpnMacIpSchema(MetaParser):
                    show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr}
                    show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr}
                    show l2vpn evpn mac ip remote
+                   show l2vpn evpn mac ip vlan {vlan_id}
+                   show l2vpn evpn mac ip vlan {vlan_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} duplicate
+                   show l2vpn evpn mac ip vlan {vlan_id} local
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} remote
     """
 
     schema = {
-        'ip_addr': {
-            str: {
-                'evi': int,
-                'bd_id': int,
-                'mac_addr': str,
-                'next_hops': list,
-            },
-        },
+        'evi': {
+            Any(): {
+                'bd_id': {
+                    Any(): {
+                        'ip_addr': {
+                            Any(): {
+                                'mac_addr': {
+                                    Any(): {
+                                        'next_hops': list
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -2426,6 +2511,15 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
                    show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr}
                    show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr}
                    show l2vpn evpn mac ip remote
+                   show l2vpn evpn mac ip vlan {vlan_id}
+                   show l2vpn evpn mac ip vlan {vlan_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} duplicate
+                   show l2vpn evpn mac ip vlan {vlan_id} local
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip vlan {vlan_id} remote
     """
 
     cli_command = ['show l2vpn evpn mac ip',
@@ -2443,9 +2537,14 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
                     'show l2vpn evpn mac ip evi {evi_id} {mac_ip_type}',
                     'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr}',
                     'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ip_addr}',
+                    'show l2vpn evpn mac ip vlan {vlan_id}',
+                    'show l2vpn evpn mac ip vlan {vlan_id} address {ip_addr}',
+                    'show l2vpn evpn mac ip vlan {vlan_id} {mac_ip_type}',
+                    'show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr}',
+                    'show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ip_addr}',
      ]
 
-    def cli(self, output=None, mac_addr=None, mac_ip_type=None, bd_id=None, evi_id=None, ip_addr=None):
+    def cli(self, output=None, mac_addr=None, mac_ip_type=None, bd_id=None, evi_id=None, ip_addr=None, vlan_id=None):
         if not output:
             # Only these CLI options for mac_ip_type are supported.
             if mac_ip_type and mac_ip_type != 'local' and mac_ip_type != 'remote' and mac_ip_type != 'duplicate':
@@ -2457,6 +2556,8 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
                 cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
                 cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+            elif vlan_id:
+                cli_cmd += ' vlan {vlan_id}'.format(vlan_id=vlan_id)
 
             if mac_ip_type:
                 cli_cmd += ' {mac_ip_type}'.format(mac_ip_type=mac_ip_type)
@@ -2528,14 +2629,19 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ip_addr_dict = parser_dict.setdefault('ip_addr', {})
+                evi_dict = parser_dict.setdefault('evi', {})
+                evis = evi_dict.setdefault(int(group['evi']), {})
+
+                bd_id_dict = evis.setdefault('bd_id', {})
+                bd_ids = bd_id_dict.setdefault(int(group['bd_id']), {})
+
+                ip_addr_dict = bd_ids.setdefault('ip_addr', {})
                 ip_vals = ip_addr_dict.setdefault(group['ip'], {})
-                ip_vals.update({
-                    'evi': int(group['evi']),
-                    'bd_id': int(group['bd_id']),
-                    'mac_addr': group['mac'],
-                })
-                next_hops = ip_vals.setdefault('next_hops', [])
+
+                mac_addr_dict = ip_vals.setdefault( 'mac_addr', {})
+                mac_addrs = mac_addr_dict.setdefault( group['mac'], {})
+
+                next_hops = mac_addrs.setdefault('next_hops', [])
                 next_hops.append(group['next_hop'])
                 continue
 
@@ -2587,29 +2693,41 @@ class ShowL2vpnEvpnMacIpDetailSchema(MetaParser):
     """
 
     schema = {
-        'ip_addr': {
-            str: {
-                'stale': bool,
-                'evi': int,
-                'bd_id': int,
-                'mac_addr': str,
-                'esi': str,
-                'eth_tag': int,
-                'next_hops': list,
-                Optional('local_addr'): str,
-                'seq_number': int,
-                'ip_dup_detection': {
-                    'status': str,
-                    Optional('moves_count'): int,
-                    Optional('moves_limit'): int,
-                    Optional('expiry_time'): str,
-                },
-                Optional('last_local_mac_sent'): str,
-                Optional('last_local_mac_learned'): str,
-                Optional('last_remote_mac_received'): str,
-                'label2_included': bool,
-            },
-        },
+        'evi': {
+            Any(): {
+                'bd_id': {
+                    Any(): {
+                        'eth_tag': {
+                            Any(): {
+                                'ip_addr': {
+                                    Any(): {
+                                        'mac_addr': {
+                                            Any(): {
+                                                'stale': bool,
+                                                'esi': str,
+                                                'next_hops': list,
+                                                Optional('local_addr'): str,
+                                                'seq_number': int,
+                                                'ip_dup_detection': {
+                                                    'status': str,
+                                                    Optional('moves_count'): int,
+                                                    Optional('moves_limit'): int,
+                                                    Optional('expiry_time'): str,
+                                                },
+                                                Optional('last_local_mac_sent'): str,
+                                                Optional('last_local_mac_learned'): str,
+                                                Optional('last_remote_mac_received'): str,
+                                                'label2_included': str,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -2760,21 +2878,18 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ip_addr_dict = parser_dict.setdefault('ip_addr', {})
-                ip_vals = ip_addr_dict.setdefault(group['ip'], {})
+                ip_addr_value = group['ip']
                 stale = False
                 if group['ip_status']:
                     stale = 'stale' in group['ip_status']
-                ip_vals.update({
-                    'stale': stale,
-                })
                 continue
 
             # EVPN Instance:             1
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'evi': int(group['evi'])})
+                evi_dict = parser_dict.setdefault( 'evi', {})
+                evis = evi_dict.setdefault( int(group['evi']), {})
                 continue
 
             # Bridge Domain:             11
@@ -2782,35 +2897,47 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'bd_id': int(group['bd_id'])})
+                bd_id_dict = evis.setdefault('bd_id', {})
+                bd_ids = bd_id_dict.setdefault( int(group['bd_id']), {})
                 continue
 
             # MAC Address:               aabb.0012.0002
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'mac_addr': group['mac']})
+                mac_addr_value = group['mac']
                 continue
 
             # Ethernet Segment:          03AA.BB00.0000.0200.0001
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'esi': group['esi']})
+                esi_value = group['esi']
                 continue
 
             # Ethernet Tag ID:           0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'eth_tag': int(group['eth_tag'])})
+                eth_tag_dict = bd_ids.setdefault('eth_tag', {})
+                eth_tags = eth_tag_dict.setdefault( int(group['eth_tag']), {})
+
+                ip_addr_dict = eth_tags.setdefault('ip_addr', {})
+                ip_vals = ip_addr_dict.setdefault(ip_addr_value, {})
+
+                mac_addr_dict = ip_vals.setdefault( 'mac_addr', {})
+                mac_addrs = mac_addr_dict.setdefault( mac_addr_value, {})
+                mac_addrs.update({
+                    'stale': stale,
+                    'esi': esi_value
+                })
                 continue
 
             # Next Hop(s):               L:17 Ethernet1/0 service instance 12
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                next_hops = ip_vals.setdefault('next_hops', [])
+                next_hops = mac_addrs.setdefault('next_hops', [])
                 next_hops.append(group['next_hop'])
                 continue
 
@@ -2818,14 +2945,14 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'local_addr': group['local_addr']})
+                mac_addrs.update({'local_addr': group['local_addr']})
                 continue
 
             # Sequence Number:           0
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'seq_number': int(group['seq_number'])})
+                mac_addrs.update({'seq_number': int(group['seq_number'])})
                 continue
 
             # IP Duplication Detection:  Timer not running
@@ -2835,7 +2962,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             if m:
                 group = m.groupdict()
                 ip_dup_status = group['ip_dup_status']
-                ip_dup_vals = ip_vals.setdefault('ip_dup_detection', {})
+                ip_dup_vals = mac_addrs.setdefault('ip_dup_detection', {})
                 ip_dup_vals.update({'status': ip_dup_status})
 
                 m = p12.match(ip_dup_status)
@@ -2858,29 +2985,28 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'last_local_mac_sent': group['last_local_mac_sent']})
+                mac_addrs.update({'last_local_mac_sent': group['last_local_mac_sent']})
                 continue
 
             # Last Local MAC learned:    aabb.0011.0022
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'last_local_mac_learned': group['last_local_mac_learned']})
+                mac_addrs.update({'last_local_mac_learned': group['last_local_mac_learned']})
                 continue
 
             # Last Remote MAC received:  aabb.0011.0022
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'last_remote_mac_received': group['last_remote_mac_received']})
+                mac_addrs.update({'last_remote_mac_received': group['last_remote_mac_received']})
                 continue
 
             # MAC only present:           Yes
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                label2_included = True if group['label2_included'] == 'Yes' else False
-                ip_vals.update({'label2_included': label2_included})
+                mac_addrs.update({'label2_included': group['label2_included']})
                 continue
 
             # Check this pattern last as it can match other fields.
@@ -3150,3 +3276,63 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
             return {}
 
         return parser_dict
+
+
+
+class ShowStormControlSchema(MetaParser):
+    ''' Schema for
+        show storm-control {interface}
+    '''
+
+    schema = {
+        'storm_control': {
+            Any(): {
+                'interface': str,
+                'state': str,
+                'upper': float,
+                'lower': float,
+                'current': float,
+                'action': str
+            },
+        }
+    }
+
+
+class ShowStormControl(ShowStormControlSchema):
+    ''' Parser for
+    show storm-control {interface}
+    '''
+
+    cli_command = 'show storm-control {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        ret_dict = {}
+
+        #Te1/0/3         Forwarding           5.00%        1.00%          2.00%    Shutdown     B
+        #Te1/0/3         Forwarding           5.00%        1.00%          3.00%    Shutdown     M
+        p1 = re.compile(
+            r'^(?P<interface>(\S+))\s+(?P<state>([A-Za-z]+))\s+(?P<upper>\d+.\d+)%\s+(?P<lower>\d+.\d+)%\s+(?P<current>\d+.\d+)%\s+(?P<action>\S+)\s+(?P<type>\S)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                if 'storm_control' not in ret_dict:
+                    control_dict = ret_dict.setdefault('storm_control', {})
+                traffic_type = str(group['type'])
+                control_dict[traffic_type] = {}
+                control_dict[traffic_type]['interface'] = str(group['interface'])
+                control_dict[traffic_type]['state'] = str(group['state'])
+                control_dict[traffic_type]['upper'] = float(group['upper'])
+                control_dict[traffic_type]['lower'] = float(group['lower'])
+                control_dict[traffic_type]['current'] = float(group['current'])
+                control_dict[traffic_type]['action'] = str(group['action'])
+                continue
+
+        return ret_dict

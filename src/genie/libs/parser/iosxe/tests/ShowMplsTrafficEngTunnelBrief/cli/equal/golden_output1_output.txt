@@ -1,0 +1,27 @@
+Signalling Summary:
+    LSP Tunnels Process:            running
+    Passive LSP Listener:           running
+    RSVP Process:                   running
+    Forwarding:                     enabled
+    auto-tunnel:
+	p2p    Disabled (0), id-range:62336-64335
+
+    Periodic reoptimization:        every 3600 seconds, next in 273 seconds
+    Periodic FRR Promotion:         Not Running
+    Periodic auto-bw collection:    every 300 seconds, next in 273 seconds
+    SR tunnel max label push:       2 primary path labels (2 repair path labels)
+
+P2P TUNNELS/LSPs:
+TUNNEL NAME                      DESTINATION      UP IF     DOWN IF   STATE/PROT
+R3_t100                          2.2.2.2          -         Po20      up/up      
+R3_t101                          2.2.2.2          -         Po30      up/up      
+R3_t102                          2.2.2.2          -         Po40      up/up      
+Displayed 3 (of 3) heads, 0 (of 0) midpoints, 0 (of 0) tails
+
+P2MP TUNNELS:
+Displayed 0 (of 0) P2MP heads
+
+P2MP SUB-LSPS:
+Displayed 0 P2MP sub-LSPs:
+          0 (of 0) heads, 0 (of 0) midpoints, 0 (of 0) tails
+

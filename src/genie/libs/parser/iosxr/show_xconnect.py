@@ -22,66 +22,6 @@ from genie.metaparser.util.schemaengine import Schema, \
 from genie.libs.parser.base import *
 from genie.libs.parser.utils.common import Common
 
-class ShowL2VpnXconnectSummary(MetaParser):
-    """Parser for show l2vpn xconnect summary"""
-    # parser class - implements detail parsing mechanisms for cli output.
-
-
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    """
-    schema = {'TODO:': {
-                        'module': {
-                                 Any(): {
-                                         'bios_compile_time': str,
-                                         'bios_version': str,
-                                         'image_compile_time': str,
-                                         'image_version': str,
-                                         'status': str},}},
-              'hardware': {
-                        'bootflash': str,
-                        'chassis': str,
-                        'cpu': str,
-                        'device_name': str,
-                        'memory': str,
-                        'model': str,
-                        'processor_board_id': str,
-                        'slots': str,
-                        Any(): str,},
-              'kernel_uptime': {
-                        'days': str,
-                        'hours': str,
-                        'minutes': str,
-                        'seconds': str},
-              'reason': str,
-              'software': {
-                        'bios': str,
-                        'bios_compile_time': str,
-                        'kickstart': str,
-                        'kickstart_compile_time': str,
-                        'kickstart_image_file': str,
-                        'system': str,
-                        'system_compile_time': str,
-                        'system_image_file': str},
-              'system_version': str,
-              Any(): str,}
-    """
-    cli_command = 'show l2vpn xconnect summary'
-
-    def cli(self):
-        '''parsing mechanism: cli
-        '''
-
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
-
-        return kl
-
 
 # ======================================
 # Schema for 'show l2vpn xconnect brief'

@@ -1,0 +1,18 @@
+
+RP/0/RSP0/CPU0:SMU-uut#show spanning-tree pvstag foo 
+Bundle-Ether1000
+  VLAN 2100
+    Pre-empt delay is disabled
+    Sub-interface:    Bundle-Ether1000.2100 (Up)
+    Max Age:          20
+    Root Priority:    0
+    Root Bridge:      0000.0000.0000
+    Cost:             0
+    Bridge Priority:  32768
+    Bridge ID:        6c9c.edff.8d95
+    Port Priority:    128
+    Port ID           1
+    Hello Time:       2
+    Active:           Yes
+    BPDUs sent:       10
+    Topology Changes: 0

@@ -1,0 +1,36 @@
+
+IPv6 Routing Table for VRF "otv-vrf139"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:112:1:2b3::/64, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, direct,
+2001:112:1:2b3::1/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b3::1, Vlan1191, [0/0], 20:57:53, hsrp
+2001:112:1:2b3::2/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, local
+2001:112:1:2b4::/64, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, direct,
+2001:112:1:2b4::1/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b4::1, Vlan1192, [0/0], 20:57:53, hsrp
+2001:112:1:2b4::2/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, local
+2001:112:1:2b5::/64, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, direct,
+2001:112:1:2b5::1/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b5::1, Vlan1193, [0/0], 20:57:52, hsrp
+2001:112:1:2b5::2/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, local
+2001:112:1:2b6::/64, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, direct,
+2001:112:1:2b6::1/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b6::1, Vlan1194, [0/0], 20:57:52, hsrp
+2001:112:1:2b6::2/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, local
+2001:112:1:2b7::/64, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, direct,
+2001:112:1:2b7::1/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b7::1, Vlan1195, [0/0], 20:57:52, hsrp
+2001:112:1:2b7::2/128, ubest/mbest: 1/0, attached
+    *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, local

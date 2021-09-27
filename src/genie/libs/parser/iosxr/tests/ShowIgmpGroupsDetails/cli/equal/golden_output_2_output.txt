@@ -1,0 +1,122 @@
+
+R2_xr#show igmp vrf VRF1 groups detail
+Interface:	Loopback300
+Group:		224.0.0.2
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.16.2.2
+Suppress:	0
+Source list is empty
+Interface:	Loopback300
+Group:		224.0.0.9
+Uptime:		09:48:07
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.16.2.2
+Suppress:	0
+Source list is empty
+Interface:	Loopback300
+Group:		224.0.0.13
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.16.2.2
+Suppress:	0
+Source list is empty
+Interface:	Loopback300
+Group:		224.0.0.22
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.16.2.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.390
+Group:		224.0.0.10
+Uptime:		01:54:16
+Router mode:	INCLUDE
+Host mode:	EXCLUDE
+Last reporter:	0.0.0.0
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.0.2
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.0.5
+Uptime:		10:37:41
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.0.6
+Uptime:		10:37:41
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.0.13
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.0.22
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.1.39
+Uptime:		02:30:06
+Router mode:	EXCLUDE (Expires: 00:01:21)
+Host mode:	INCLUDE
+Last reporter:	10.12.110.1
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.410
+Group:		224.0.1.40
+Uptime:		02:43:30
+Router mode:	EXCLUDE (Expires: never)
+Host mode:	EXCLUDE
+Last reporter:	10.12.110.2
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/0.420
+Group:		224.0.0.9
+Uptime:		09:48:07
+Router mode:	INCLUDE
+Host mode:	EXCLUDE
+Last reporter:	0.0.0.0
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/1.390
+Group:		224.0.0.10
+Uptime:		01:54:16
+Router mode:	INCLUDE
+Host mode:	EXCLUDE
+Last reporter:	0.0.0.0
+Suppress:	0
+Source list is empty
+Interface:	GigabitEthernet0/0/0/1.420
+Group:		224.0.0.9
+Uptime:		09:48:07
+Router mode:	INCLUDE
+Host mode:	EXCLUDE
+Last reporter:	0.0.0.0
+Suppress:	0
+Source list is empty

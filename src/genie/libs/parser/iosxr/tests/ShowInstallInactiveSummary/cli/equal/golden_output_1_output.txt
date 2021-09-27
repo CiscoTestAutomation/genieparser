@@ -1,0 +1,6 @@
+
+Default Profile:
+    SDRs:
+    Owner
+    Inactive Packages:
+	disk0:asr9k-diags-3.7.2

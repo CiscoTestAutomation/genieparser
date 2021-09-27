@@ -1,0 +1,16 @@
+
+RP/0/RP0/CPU0:SIT-540#show l2vpn xconnect brief 
+Sat Aug  4 14:48:34.079 IST
+Locally Switching
+  Like-to-Like                        UP       DOWN        UNR
+    Ether                              1          0          0
+    Total                              1          0          0
+
+  Total                                1          0          0
+
+AToM
+  Like-to-Like                        UP       DOWN        UNR
+    EFP                               32          0          0
+    Total                             32          0          0
+
+  Total                               32          0          0

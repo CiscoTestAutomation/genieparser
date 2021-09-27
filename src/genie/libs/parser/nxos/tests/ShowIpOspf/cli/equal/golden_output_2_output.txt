@@ -1,0 +1,35 @@
+
+Routing Process 1 with ID 10.100.2.2 VRF default
+Routing Process Instance Number 1
+Stateful High Availability enabled
+Graceful-restart is configured
+Grace period: 60 state: Inactive
+Last graceful restart exit status: None
+Supports only single TOS(TOS0) routes
+Supports opaque LSA
+Administrative distance 110
+Reference Bandwidth is 40000 Mbps
+SPF throttling delay time of 200.000 msecs,
+SPF throttling hold time of 1000.000 msecs,
+SPF throttling maximum wait time of 5000.000 msecs
+LSA throttling start time of 0.000 msecs,
+LSA throttling hold interval of 5000.000 msecs,
+LSA throttling maximum wait time of 5000.000 msecs
+Minimum LSA arrival 1000.000 msec
+LSA group pacing timer 10 secs
+Maximum paths to destination 8
+Number of external LSAs 0, checksum sum 0
+Number of opaque AS LSAs 0, checksum sum 0
+Number of areas is 1, 1 normal, 0 stub, 0 nssa
+Number of active areas is 1, 1 normal, 0 stub, 0 nssa
+Install discard route for summarized external routes.
+Install discard route for summarized internal routes.
+Area BACKBONE(0.0.0.0) (Inactive)
+    Area has existed for 1w5d
+    Interfaces in this area: 6 Active interfaces: 4
+    Passive interfaces: 0  Loopback interfaces: 4
+    No authentication available
+    SPF calculation has run 2 times
+     Last SPF ran for 0.000447s
+    Area ranges are
+    Number of LSAs: 1, checksum sum 0x9ccb

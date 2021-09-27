@@ -1,0 +1,45 @@
+
+RP/0/RSP0/CPU0:router# show spanning-tree pvrst MSTP
+Role: ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
+State: FWD=Forwarding, LRN=Learning, BLK=Blocked
+
+
+VLAN 10:
+
+
+Root ID Priority 4096
+Address 8cb6.4fff.6588
+This bridge is the root
+Max Age 20 sec, Forward Delay 15 sec
+
+
+Bridge ID Priority 4096 (priority 4096 sys-id-ext 0)
+Address 8cb6.4fff.6588
+Max Age 20 sec, Forward Delay 15 sec
+Transmit Hold count 6
+
+
+Interface Port ID Role State Designated Port ID
+Pri.Nbr Cost Bridge ID Pri.Nbr
+------------ ------- --------- ---- ----- -------------------- -------
+Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fff.6588 128.1
+Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fff.6588 128.2
+
+VLAN 20:
+
+Root ID Priority 8192
+Address c062.6bff.4d2b
+Max Age 20 sec, Forward Delay 15 sec
+
+
+Bridge ID Priority 16384 (priority 16384 sys-id-ext 0)
+Address 8cb6.4fff.6588
+Max Age 20 sec, Forward Delay 15 sec
+Transmit Hold count 6
+
+
+Interface Port ID Role State Designated Port ID
+Pri.Nbr Cost Bridge ID Pri.Nbr
+------------ ------- --------- ---- ----- -------------------- -------
+Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bff.4d2b 128.1
+Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bff.4d2b 128.2

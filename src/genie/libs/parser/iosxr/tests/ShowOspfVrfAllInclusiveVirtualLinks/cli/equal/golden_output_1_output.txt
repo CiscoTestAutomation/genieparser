@@ -1,0 +1,26 @@
+
+RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links
+Fri Nov  3 01:25:44.845 UTC
+
+Virtual Links for OSPF 1
+
+Virtual Link OSPF_VL0 to router 10.16.2.2 is up
+
+  DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+  Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
+  Transmit Delay is 5 sec, State POINT_TO_POINT,
+  Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+  Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+    Hello due in 00:00:03:179
+  Clear text authentication enabled
+
+Virtual Link OSPF_VL1 to router 10.100.5.5 is up
+
+  DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+  Transit area 1, via interface GigabitEthernet0/0/0/4, Cost of using 65535
+  Transmit Delay is 5 sec, State POINT_TO_POINT,
+  Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+  Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+    Hello due in 00:00:03:179
+  Message digest authentication enabled
+  Youngest key id is 1

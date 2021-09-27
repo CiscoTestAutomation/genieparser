@@ -1,0 +1,9 @@
+
+port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+    LDP Autoconfig is enabled
+    LDP Sync is enabled, is required and is achieved
+    State P2P, Network type P2P
+port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+    LDP Autoconfig is enabled
+    LDP Sync is enabled, is required and is achieved
+    State P2P, Network type P2P

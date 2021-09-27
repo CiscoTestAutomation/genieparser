@@ -1,0 +1,3 @@
+Interface          Minimum Reload
+GigabitEthernet1   99      888
+GigabitEthernet3   1       5

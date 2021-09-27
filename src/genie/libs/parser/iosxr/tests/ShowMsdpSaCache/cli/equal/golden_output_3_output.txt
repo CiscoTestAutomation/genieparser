@@ -1,0 +1,23 @@
+
++++ Device: executing command 'show msdp sa-cache 10.4.1.1' +++
+show msdp sa-cache 10.4.1.1
+Wed Nov 20 20:25:03.135 UTC
+
+MSDP Flags:
+E - set MRIB E flag , L - domain local source is active,
+EA - externally active source, PI - PIM is interested in the group,
+DE - SAs have been denied.  Timers age/expiration,
+Cache Entry:
+(10.4.1.1, 239.1.1.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+SAs recvd 10605, Encapsulated data received: 0
+grp flags: none,  src flags: EA
+(10.4.1.1, 239.2.2.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+SAs recvd 10605, Encapsulated data received: 0
+grp flags: none,  src flags: EA
+(10.4.1.1, 239.3.3.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+SAs recvd 10605, Encapsulated data received: 0
+grp flags: none,  src flags: EA
+RP/0/RP0/CPU0:Device#

@@ -1,0 +1,33 @@
+
+Virtual service watchdog_lxc detail
+  State                 : Activated
+  Package information
+    Name                : ft_mv_no_onep.ova
+    Path                : bootflash:/ft_mv_no_onep.ova
+    Application
+      Name              : TestingApp
+      Installed version : 45.67.A.01
+      Description       : Testing Application Suite
+    Signing
+      Key type          : Cisco development key
+      Method            : SHA-1
+    Licensing
+      Name              : None
+      Version           : None
+  Resource reservation
+    Disk                : 87 MB
+    Memory              : 256 MB
+    CPU                 : 1% system CPU
+
+  Attached devices
+    Type              Name        Alias
+    ---------------------------------------------
+    Disk              _rootfs
+    Disk              /mnt/data_disk
+    Disk              /var/sysmgr/tmp
+    Disk              /mnt/config_disk
+    Serial/shell
+    Serial/aux
+    Serial/Syslog                 serial2
+    Serial/Trace                  serial3
+    Watchdog

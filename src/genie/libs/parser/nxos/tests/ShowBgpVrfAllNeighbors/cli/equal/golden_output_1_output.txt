@@ -1,0 +1,35 @@
+
+N7k# show bgp vrf VRF1 all neighbors
+BGP neighbor is 10.16.2.10,  remote AS 0, unknown link,  Peer index 1
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle, down for 02:19:37, retry in 0.000000
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0 bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 21, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  0 sent paths
+  Third-party Nexthop will not be computed.
+  Default information originate, route-map SOMENAME, default not sent
+  SOO Extcommunity: SOO:100:100
+
+  No established BGP session with peer

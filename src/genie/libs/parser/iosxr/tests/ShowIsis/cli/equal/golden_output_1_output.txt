@@ -1,0 +1,44 @@
+
+IS-IS Router: test
+  System Id: 3333.33ff.6666
+  Instance Id: 0
+  IS Levels: level-1-2
+  Manual area address(es):
+    49.0002
+  Routing for area address(es):
+    49.0002
+    49.0001
+  Non-stop forwarding: Disabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Down
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Level-1
+	Metric style (generate/accept): Wide/Wide
+	Metric: 10
+	ISPF status: Disabled
+      Level-2
+	Metric style (generate/accept): Wide/Wide
+	Metric: 10
+	ISPF status: Disabled
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+    IPv6 Unicast
+      Level-1
+	Metric: 10
+	ISPF status: Disabled
+      Level-2
+	Metric: 10
+	ISPF status: Disabled
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+  SRLB not allocated
+  SRGB not allocated
+  Interfaces supported by IS-IS:
+    Loopback0 is running actively (active in configuration)
+    GigabitEthernet0/0/0/0 is running actively (active in configuration)
+    GigabitEthernet0/0/0/1 is running actively (active in configuration)
+    GigabitEthernet0/0/0/2 is running actively (active in configuration)
+    GigabitEthernet0/0/0/3 is running actively (active in configuration)

@@ -1,0 +1,19 @@
+
+R1# show ip rip interface vrf all
+Process Name "rip-1" VRF "default"
+RIP-configured interface information
+
+Ethernet1/1.100, protocol-up/link-up/admin-up, RIP state : up
+  address/mask 10.1.2.1/24, metric 1, split-horizon, passive (no outbound updates)
+Ethernet1/2.100, protocol-up/link-up/admin-up, RIP state : up
+  address/mask 10.1.3.1/24, metric 1, split-horizon
+  Authentication Mode: none  Keychain: 1
+
+Process Name "rip-1" VRF "VRF1"
+RIP-configured interface information
+
+Ethernet1/1.200, protocol-up/link-up/admin-up, RIP state : up
+  address/mask 10.1.2.1/24, metric 1, split-horizon
+Ethernet1/2.200, protocol-up/link-up/admin-up, RIP state : up
+  address/mask 10.1.3.1/24, metric 1, split-horizon
+  Authentication Mode: md5  Keychain: none

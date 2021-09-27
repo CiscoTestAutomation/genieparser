@@ -1,0 +1,21 @@
+
+IS-IS Level-1 Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+0000.0CFF.0C35.00-00  0x0000000C   0x5696        325           0/0/0
+  Area Address: 47.0004.00FF.4D4E
+  Area Address: 39.0001
+  Metric: 10   IS 0000.0CFF.62E6.03
+  Metric: 0    ES 0000.0CFF.0C35
+0000.0CFF.40AF.00-00* 0x00000009   0x8452        608           1/0/0
+  Area Address: 47.0004.00FF.4D4E
+  Topology: IPv4 (0x0) IPv6 (0x2)
+  NLPID: 0xCC 0x8E
+  IP Address: 172.16.21.49
+  Metric: 10   IS 0800.2BFF.3A01.01
+  Metric: 10   IS 0000.0CFF.62E6.03
+  Metric: 0    ES 0000.0CFF.40AF
+  IPv6 Address: 2001:0DB8::/32
+  Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
+  Metric: 5    IS-Extended cisco.03
+  Metric: 10   IS-Extended cisco1.03
+  Metric: 10    IS (MT-IPv6) cisco.03

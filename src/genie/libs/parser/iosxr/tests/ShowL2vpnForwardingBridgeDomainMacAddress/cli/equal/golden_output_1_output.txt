@@ -1,0 +1,26 @@
+
+RP/0/RP0/CPU0:ios#show l2vpn forwarding bridge-domain mac-address location 0/$
+Wed Jul 3 14:10:20.666 UTC
+To Resynchronize MAC table from the Network Processors, use the command...
+l2vpn resynchronize forwarding mac-address-table location <r/s/i>
+
+Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to 
+-------------- ------- --------------------------- ---------- ---------------------- -------------- 
+0001.00ff.0002 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0003 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0004 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0005 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0006 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0007 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0008 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0009 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000a dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000b dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000c dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000d dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000e dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.000f dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0010 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0011 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0012 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+0001.00ff.0013 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A

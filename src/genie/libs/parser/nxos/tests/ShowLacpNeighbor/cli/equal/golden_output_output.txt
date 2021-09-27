@@ -1,0 +1,50 @@
+
+Flags:  S - Device is sending Slow LACPDUs F - Device is sending Fast LACPDUs
+        A - Device is in Active mode       P - Device is in Passive mode
+port-channel1 neighbors
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/1      32768,5e-2-0-1-0-7     0x101           1140        SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x8000                      0x3d
+
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/2      32768,5e-2-0-1-0-7     0x102           1140        SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x8000                      0x3d
+
+
+Po2 neighbors
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/3      32768,5e-2-0-1-0-7     0x103           625         SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0x3d
+
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/4      32768,5e-2-0-1-0-7     0x104           638         SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0x3d
+
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/5      32768,5e-2-0-1-0-7     0x105           834         SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0xd

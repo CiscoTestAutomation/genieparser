@@ -1,0 +1,27 @@
+
+N7k# show running-config | inc peer
+  template peer PEER
+    inherit peer-session PEER-SESSION
+  template peer-policy PEER-POLICY
+  template peer-session PEER-SESSION
+  template peer-session test_tahigash
+    inherit peer-session PEER-SESSION
+      inherit peer-policy PEER-POLICY 10
+      inherit peer-policy PEER-POLICY2 20
+
+N7k# show bgp peer-template PEER
+BGP peer-template is PEER
+Remote AS 500
+Inherits session configuration from session-template PEER-SESSION
+Description: DESC
+Using loopback1 as update source for this peer
+Connected check is disabled
+BFD live-detection is configured
+External BGP peer might be upto 255 hops away
+TCP MD5 authentication is enabled
+Only passive connection setup allowed
+Neighbor local-as command not active
+Private AS numbers removed from updates sent to this neighbor
+Hold time = 26, keepalive interval is 13 seconds
+
+Members of peer-template PEER:

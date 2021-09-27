@@ -1,0 +1,13 @@
+
+show controllers npu voq-usage interface GigabitEthernet0/0/0/0 instance all location all
+Mon Mar 23 13:11:55.030 UTC
+
+-------------------------------------------------------------------
+Node ID: 0/0/CPU0
+Intf         Intf     NPU NPU  PP   Sys   VOQ   Flow   VOQ    Port
+name         handle    #  core Port Port  base  base   port   speed
+	    (hex)                                     type
+----------------------------------------------------------------------
+Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+Te0/0/0/2    a0        0   0   20    20   1120  11368 local    10G
+Not supported on this location 0/RP0/CPU0 or Data not found

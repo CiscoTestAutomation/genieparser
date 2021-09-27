@@ -1,0 +1,15 @@
+
+Directory of /misc/scratch
+   15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
+   20 -rw-r--r-- 1   773 May 10  2017 cvac.log
+16353 drwxr-xr-x 2  4096 May 10 14:02 nvgen_traces
+ 8179 drwxr-xr-x 9  4096 May 10 13:41 ztp
+ 8177 drwx------ 2  4096 May 10  2017 clihistory
+   11 drwx------ 2 16384 May 10  2017 lost+found
+   14 -rw-r--r-- 1 10429 May 10  2017 pnet_cfg.log
+   18 -rw-r--r-- 1  2458 May 10 13:15 status_file
+   12 drwxr-xr-x 2  4096 May 10  2017 core
+   13 -rw-r--r-- 1  1438 May 10  2017 envoke_log
+ 8178 drwxr-xr-x 2  4096 May 10  2017 kim
+
+1012660 kbytes total (939092 kbytes free)

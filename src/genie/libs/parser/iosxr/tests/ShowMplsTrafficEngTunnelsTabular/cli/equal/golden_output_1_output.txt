@@ -1,0 +1,22 @@
+RP/0/RP0/CPU0:F17-ASR9922#show mpls traffic-eng tunnels tabular
+Thu Apr  1 05:33:16.701 JST
+
+           Tunnel   LSP     Destination          Source    Tun    FRR  LSP  Path
+             Name    ID         Address         Address  State  State Role  Prot
+----------------- ----- --------------- --------------- ------ ------ ---- -----
+   tunnel-te50000     4 109.109.109.109     17.17.17.17     up  Ready Head Inact
+   tunnel-te50010     3 108.108.108.108     17.17.17.17     up  Ready Head Inact
+   tunnel-te53000     2 141.141.141.141     17.17.17.17     up  Inact Head Inact
+   tunnel-te53010     2 106.106.106.106     17.17.17.17     up  Inact Head Inact
+   tunnel-te53100     2 107.107.107.107     17.17.17.17     up  Inact Head Inact
+   tunnel-te53300     2 109.109.109.109     17.17.17.17     up  Inact Head Inact
+   tunnel-te53400     2 107.107.107.107     17.17.17.17     up  Inact Head Inact
+NHOP_15060_F141-A     3     17.17.17.17 141.141.141.141     up  Inact Tail
+NNHOP_15370_F141-     3 106.106.106.106 141.141.141.141     up  Inact  Mid
+NHOP_16060_F107-A    61 106.106.106.106 107.107.107.107     up  Inact  Mid
+NNHOP_16370_F107-    48     17.17.17.17 107.107.107.107     up  Inact Tail
+NNHOP_16710_F107-    74     17.17.17.17 107.107.107.107     up  Inact Tail
+51000_F106-ASR900   167 109.109.109.109 106.106.106.106     up  Ready  Mid
+55000_F109-ASR900     3     17.17.17.17 109.109.109.109     up  Inact Tail
+56000_F108-ASR900    26     17.17.17.17 108.108.108.108     up  Inact Tail
+NNHOP_58300_F109-     4     17.17.17.17 109.109.109.109     up  Inact Tail
