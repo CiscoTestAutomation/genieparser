@@ -31,10 +31,10 @@ MTU          1500                           1500
 Control word disabled                       disabled                      
 PW type      Ethernet                       Ethernet                      
 VCCV CV type 0x2                            0x2                           
-	    (LSP ping verification)        (LSP ping verification)       
+             (LSP ping verification)        (LSP ping verification)       
 VCCV CC type 0x6                            0x2                           
-	    (router alert label)           (router alert label)          
-	    (TTL expiry)                                                 
+             (router alert label)           (router alert label)          
+             (TTL expiry)                                                 
 ------------ ------------------------------ -----------------------------
 Incoming Status (PW Status TLV):
 Status code: 0x0 (Up) in Notification message
@@ -77,10 +77,10 @@ MTU          9198                           9198
 Control word disabled                       disabled                      
 PW type      Ethernet                       Ethernet                      
 VCCV CV type 0x2                            0x2                           
-	    (LSP ping verification)        (LSP ping verification)       
+             (LSP ping verification)        (LSP ping verification)       
 VCCV CC type 0x6                            0x6                           
-	    (router alert label)           (router alert label)          
-	    (TTL expiry)                   (TTL expiry)                  
+             (router alert label)           (router alert label)          
+             (TTL expiry)                   (TTL expiry)                  
 ------------ ------------------------------ -----------------------------
 Incoming Status (PW Status TLV):
 Status code: 0x0 (Up) in Notification message
@@ -115,10 +115,10 @@ MTU          9198                           9198
 Control word disabled                       disabled                      
 PW type      Ethernet                       Ethernet                      
 VCCV CV type 0x2                            0x2                           
-	    (LSP ping verification)        (LSP ping verification)       
+             (LSP ping verification)        (LSP ping verification)       
 VCCV CC type 0x6                            0x6                           
-	    (router alert label)           (router alert label)          
-	    (TTL expiry)                   (TTL expiry)                  
+             (router alert label)           (router alert label)          
+             (TTL expiry)                   (TTL expiry)                  
 ------------ ------------------------------ -----------------------------
 Incoming Status (PW Status TLV):
 Status code: 0x20 (Standby) in Notification message
@@ -158,10 +158,10 @@ MTU          9198                           9198
 Control word disabled                       disabled                      
 PW type      Ethernet                       Ethernet                      
 VCCV CV type 0x2                            0x2                           
-	    (LSP ping verification)        (LSP ping verification)       
+             (LSP ping verification)        (LSP ping verification)       
 VCCV CC type 0x6                            0x6                           
-	    (router alert label)           (router alert label)          
-	    (TTL expiry)                   (TTL expiry)                  
+             (router alert label)           (router alert label)          
+             (TTL expiry)                   (TTL expiry)                  
 ------------ ------------------------------ -----------------------------
 Incoming Status (PW Status TLV):
 Status code: 0x0 (Up) in Notification message

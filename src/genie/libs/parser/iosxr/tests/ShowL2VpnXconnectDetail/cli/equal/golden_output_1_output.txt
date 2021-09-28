@@ -25,12 +25,12 @@ MTU          2611                           unknown
 Control word enabled                        unknown                       
 PW type      Ethernet                       unknown                       
 VCCV CV type 1x3                            1x1                           
-					    (none)                        
-	    (LSP ping verification)                                      
+                                            (none)                        
+             (LSP ping verification)                                      
 VCCV CC type 1x4                            1x1                           
-					    (none)                        
-		(control word)                                               
-	    (router alert label)                                         
+                                            (none)                        
+             (control word)                                               
+             (router alert label)                                         
 ------------ ------------------------------ -----------------------------
 Create time: 21/11/2008 11:35:17 (11:64:42 ago)
 Last time status changed: 21/01/2008 21:37:15 (01:10:34 ago)
@@ -55,10 +55,10 @@ MTU          2611                           2611
 Control word enabled                        enabled                       
 PW type      Ethernet                       Ethernet                      
 VCCV CV type 1x3                            1x3                           
-	    (LSP ping verification)        (LSP ping verification)       
+             (LSP ping verification)        (LSP ping verification)       
 VCCV CC type 1x4                            1x4                           
-		(control word)                 (control word)                
-	    (router alert label)           (router alert label)          
+             (control word)                 (control word)                
+             (router alert label)           (router alert label)          
 ------------ ------------------------------ -----------------------------
 Backup PW for neighbor 10.19.2.2 PW ID 2
 Create time: 21/11/2008 11:45:44 (00:32:54 ago)
