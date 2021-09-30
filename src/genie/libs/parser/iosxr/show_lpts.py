@@ -24,12 +24,13 @@ class ShowLptsPfibHardwarePoliceSchema(MetaParser):
                     {
                         "flow_type": str,
                         "policer": str,
+                        "type": str,
                         "curr_rate": str,
                         "burst": str,
                         "accepted": str,
                         "dropped": str,
                         "npu": str,
-                    }
+                    },
                 )
             }
         }
@@ -65,10 +66,8 @@ class ShowLptsPfibHardwarePolice(ShowLptsPfibHardwarePoliceSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            print(line)
             m = p1.match(line)
             if m:
-                print(line)
                 # Parse regexp
                 group = m.groupdict()
                 node = group['node'] or "None"
