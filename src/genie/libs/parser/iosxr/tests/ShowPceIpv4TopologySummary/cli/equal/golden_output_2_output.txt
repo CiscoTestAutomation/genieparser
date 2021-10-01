@@ -1,0 +1,11 @@
+
+RP/0/RSP0/CPU0:router# show pce ipv4 topology summary
+
+PCE's topology database summary:
+--------------------------------
+
+Topology nodes:                4
+Prefixes:                      4
+Prefix SIDs:                 4
+Links:                        12
+Adjacency SIDs:             24

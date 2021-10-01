@@ -1,0 +1,174 @@
+
+show lldp neighbors detail
+
+
+
+Thu Apr 30 16:14:06.186 UTC
+
+Capability codes:
+
+    (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+
+    (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+
+
+------------------------------------------------
+
+Local Interface: TenGigE0/0/0/1
+
+Chassis id: 0026.88ff.c416
+
+Port id: 655
+
+Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1
+
+System Name: MX480-01.comcast.net
+
+
+
+System Description:
+
+Juniper Networks, Inc. mx480 internet router, kernel JUNOS 18.4R2.7, Build date: 2019-06-27 10:00:44 UTC Copyright (c) 1996-2019 Juniper Networks, Inc.
+
+
+
+Time remaining: 98 seconds
+
+Hold Time: 120 seconds
+
+System Capabilities: B,R
+
+Enabled Capabilities: B,R
+
+Management Addresses:
+
+IPv4 address: 10.253.47.140
+
+
+
+
+
+
+
+------------------------------------------------
+
+Local Interface: TenGigE0/2/0/1
+
+Parent Interface: Bundle-Ether10
+
+Chassis id: 444c.a8ff.39f5
+
+Port id: Ethernet1/4
+
+Port Description: PHY|BW|AGG-MEMBER|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/2/0/1|lagg:Port-Channel10|ragg:Bundle-Ether10
+
+System Name: 7280CR2A-01.comcast.net
+
+
+
+System Description:
+
+Arista Networks EOS version 4.21.6F running on an Arista Networks DCS-7280CR-48
+
+
+
+Time remaining: 97 seconds
+
+Hold Time: 120 seconds
+
+System Capabilities: B,R
+
+Enabled Capabilities: B,R
+
+Management Addresses:
+
+IPv4 address: 10.252.26.104
+
+
+
+
+
+
+
+------------------------------------------------
+
+Local Interface: TenGigE0/2/0/11
+
+Chassis id: 6c41.0eff.3712
+
+Port id: Te0/0/0/0
+
+Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:te0/2/0/11
+
+System Name: ASR9904.netlabs.nj.ula.comcast.net
+
+
+
+System Description:
+
+Cisco IOS XR Software, Version 6.1.4[Default]
+
+Copyright (c) 2017 by Cisco Systems, Inc., ASR9K Series
+
+
+
+Time remaining: 116 seconds
+
+Hold Time: 120 seconds
+
+System Capabilities: R
+
+Enabled Capabilities: R
+
+Management Addresses:
+
+IPv4 address: 10.253.47.122
+
+IPv6 address: 2001:db8:fbd1:8e5c::4
+
+
+
+
+
+
+
+------------------------------------------------
+
+Local Interface: TenGigE0/2/0/23
+
+Chassis id: 7c31.0eff.203f
+
+Port id: TenGigE0/0/0/4
+
+Port Description: ASR-01 T0/2/0/23
+
+System Name: NCS5501
+
+
+
+System Description:
+
+6.5.2, NCS-5500
+
+
+
+Time remaining: 114 seconds
+
+Hold Time: 120 seconds
+
+System Capabilities: R
+
+Enabled Capabilities: R
+
+Management Addresses:
+
+IPv4 address: 10.253.47.30
+
+
+
+
+
+
+
+Total entries displayed: 4

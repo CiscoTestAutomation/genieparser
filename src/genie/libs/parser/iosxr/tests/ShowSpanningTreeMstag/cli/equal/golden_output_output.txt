@@ -1,0 +1,31 @@
+
+RP/0/RSP0/CPU0:iamx#show spanning-tree mstag risc
+Fri Apr 22 17:26:52.757 CEST
+Bundle-Ether10.0
+  Pre-empt delay is disabled
+  Name:            risc
+  Revision:        1
+  Max Age:         20
+  Provider Bridge: no
+  Bridge ID:       0000.00ff.0002
+  Port ID:         1
+  External Cost:   0
+  Hello Time:      2
+  Active:          yes
+  BPDUs sent:      39921
+    MSTI 0 (CIST):
+    VLAN IDs:         1-2,4-4094
+    Bridge Priority:  8192
+    Port Priority:    128
+    Cost:             0
+    Root Bridge:      0000.00ff.0001
+    Root Priority:    4096
+    Topology Changes: 31
+  MSTI 1
+    VLAN IDs:         3
+    Bridge Priority:  4096
+    Port Priority:    128
+    Cost:             0
+    Root Bridge:      0000.00ff.0002
+    Root Priority:    4096
+    Topology Changes: 51

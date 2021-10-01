@@ -1,0 +1,47 @@
+expected_output = {
+   'boot_loader_version': 'Not applicable',
+   'build': '34',
+   'chassis_serial_number': 'None',
+   'commit_pending': 'false',
+   'configuration_template': 'None',   
+   'cpu_allocation': {'total': 16},
+   'cpu_reported_reboot': 'Not Applicable',
+   'cpu_states': {'idle': 97.21, 'system': 0.14, 'user': 2.65},
+   'current_time': 'Thu Aug 26 15:40:21 UTC 2021',
+   'disk_usage': {
+      'avail_mega': 12514,
+      'filesystem': '/dev/root',
+      'mounted_on': '/',
+      'size_mega': 15230,
+      'use_pc': 13,
+      'used_mega': 1881
+   },
+   'vmanage_storage_usage': {
+      'filesystem': '/dev/sdb',
+      'size_mega': 100281,
+      'used_mega': 5525,
+      'avail_mega': 89636,
+      'use_pc': 5,
+      'mounted_on': '/opt/data'
+   },
+   'last_reboot': 'Initiated by user.',
+   'load_average': {'minute_1': 0.8, 'minute_5': 0.61, 'minute_15': 0.57},
+   'memory_usage': {
+      'buffers_kilo': 1129488,
+      'cache_kilo': 4079788,
+      'free_kilo': 8635456,
+      'total_kilo': 32760644,
+      'used_kilo': 18915912
+   },
+   'model_name': 'vmanage',
+   'personality': 'vmanage',
+   'processes': 2887,
+   'services': 'None',
+   'system_fips_state': 'Enabled',
+   'system_logging_disk': 'enabled',
+   'system_logging_host': 'disabled',
+   'system_state': 'GREEN. All daemons up',
+   'system_uptime': '17 days 14 hrs 04 min 07 sec',
+   'version': '20.5.1',
+   'vmanaged': 'false',
+}

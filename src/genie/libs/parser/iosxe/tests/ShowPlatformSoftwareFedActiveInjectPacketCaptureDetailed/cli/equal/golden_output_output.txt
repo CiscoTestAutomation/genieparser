@@ -1,0 +1,34 @@
+show platform software fed active inject packet-capture detailed
+Inject packet capturing: disabled. Buffer wrapping: disabled
+Total captured so far: 1 packets. Capture capacity : 4096 packets
+Capture filter : "udp.port == 9995"
+
+------ Inject Packet Number: 1, Timestamp: 2021/09/20 16:28:40.308 ------
+ interface : pal:  [if-id: 0x00000000]
+ metadata  : cause: 2 [QFP destination lookup], sub-cause: 1, q-no: 0, linktype: MCP_LINK_TYPE_IP [1]
+ ether hdr : dest mac: 3c57.3104.6a00, src mac: 3c57.3104.6a00
+ ether hdr : ethertype: 0x0800 (IPv4)
+ ipv4  hdr : dest ip: 111.0.0.2, src ip: 111.0.0.1
+ ipv4  hdr : packet len: 188, ttl: 255, protocol: 17 (UDP)
+ udp   hdr : dest port: 9995, src port: 49572
+
+ Packet Data Hex-Dump (length: 128 bytes) :
+   3C5731046A003C57  31046A0008004500  00BCB6F10000FF11  263C6F0000016F00
+   0002C1A4270B00A8  52B0000900031A45  9EAB614869600006  95A5000000060001
+   001E010000040010  0001000400EA0004  00EC0021005A0008  00EB00040100006E
+   6F00000100000001  4D676D742D767266  0000000000000000  0000000000000000
+
+ Doppler Frame Descriptor :
+   fdFormat                  = 0x3            systemTtl                 = 0x8
+   fdType                    = 0x1            spanSessionMap            = 0
+   qosLabel                  = 0x81           fpeFirstHeaderType        = 0
+   l3ifIndex                 = 0x21           srcPortLeIndex            = 0x54
+   debugTagId                = 0              vrfId                     = 0
+   ingressSkipId             = 0              ingressFfd                = 0
+   unmappedSrcVlan           = 0              frameLength               = 0xce
+   fdCrc                     = 0x22           showForward               = 0
+
+ Doppler Frame Descriptor Hex-Dump :
+   00000000813800CE  2280000000000000  0000000000000000  0000000000021000
+   0000000000000000  0000005400000000  0000000000000000  0000000000000000
+

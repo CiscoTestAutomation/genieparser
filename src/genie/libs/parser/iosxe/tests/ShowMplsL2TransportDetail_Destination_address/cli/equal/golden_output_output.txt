@@ -1,0 +1,5 @@
+  Destination address: 2.2.2.2, VC ID: 10, VC status: up
+    Output interface: Tu100, imposed label stack {133}
+    Preferred path: Tunnel100,  active
+    Default path: ready
+    Next hop: point2point

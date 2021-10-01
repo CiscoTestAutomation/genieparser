@@ -1,0 +1,6 @@
+route-map pbr-gre, permit, sequence 1
+  Match clauses:
+    ip address (access-lists): pbr-acl
+  Set clauses:
+    ip next-hop 10.0.0.20
+  Policy routing matches: 0 packets, 0 bytes

@@ -1,0 +1,16 @@
+
++++ Device: executing command 'show msdp vrf VRF1 statistics peer 10.4.1.1' +++
+show msdp vrf VRF1 statistics peer 10.4.1.1
+Wed Nov 20 16:37:11.526 UTC
+MSDP Peer Statistics :- VRF1
+Peer 10.4.1.1 : AS is 65000, State is Established, 3 active SAs
+TLV Rcvd : 10366 total
+	   1 keepalives, 0 notifications
+	   10365 SAs, 0 SA Requests
+	   0 SA responses, 0 unknowns
+TLV Sent : 19345 total
+	   19345 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses
+SA msgs  : 31095 received, 0 sent
+RP/0/RP0/CPU0:Device#

@@ -1,0 +1,13 @@
+
+N95_2_R2# show ip msdp summary 
+MSDP Peer Status Summary for VRF "default"
+Local ASN: 0, originator-id: 10.16.2.2
+
+Number of configured peers:  1
+Number of established peers: 1
+Number of shutdown peers:    0
+
+Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
+Address         ASN         State           Downtime  Received  Received
+10.144.6.6         0           Established     06:15:59  00:00:48  1
+

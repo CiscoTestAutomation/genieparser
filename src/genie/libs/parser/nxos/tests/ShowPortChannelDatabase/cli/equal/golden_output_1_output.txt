@@ -1,0 +1,23 @@
+
+port-channel1
+    Last membership update is successful
+    2 ports in total, 2 ports up
+    First operational port is Ethernet1/1
+    Age of the port-channel is 0d:02h:31m:22s
+    Time since last bundle is 0d:02h:28m:30s
+    Last bundled member is Ethernet1/2
+    Ports:   Ethernet1/1     [active ] [up] *
+             Ethernet1/2     [active ] [up]
+
+port-channel2
+    Last membership update is successful
+    3 ports in total, 2 ports up
+    First operational port is Ethernet1/4
+    Age of the port-channel is 0d:02h:27m:37s
+    Time since last bundle is 0d:00h:12m:50s
+    Last bundled member is Ethernet1/5
+    Time since last unbundle is 0d:00h:14m:05s
+    Last unbundled member is Ethernet1/5
+    Ports:   Ethernet1/3     [passive] [up]
+             Ethernet1/4     [passive] [up] *
+             Ethernet1/5     [passive] [hot-standy]

@@ -1,0 +1,12 @@
+ MLDP peer ID    : 2.2.2.2:0, uptime 06:51:44 Up,
+  Target Adj     : No
+  Session hndl   : 3
+  Upstream count : 1
+  Branch count   : 0
+  LDP GR         : Enabled
+                 : Reconnect time: 120 Seconds
+                 : Instance: 2
+  Path count     : 1
+  Path(s)        : 104.1.1.2         LDP Port-channel20
+  Nhop count     : 1
+  Nhop list      : 104.1.1.2

@@ -588,7 +588,7 @@ class ShowFlowMonitorSdwanFlowMonitorStatisticsSchema(MetaParser):
         "cache_type": str,
         "cache_size": int,
         "current_entries": int,
-        "high_watermark": int,
+        Optional("high_watermark"): int,
         "flows_added": int,
         "flows_aged":{
                     "total_flows_aged" : int,
@@ -641,6 +641,7 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
         check_flag=0
 
         for line in out.splitlines():
+            line = line.strip()
             m1= p1.match(line)
             if m1:
                 #{'cache_type':'Normal (Platform cache)'}

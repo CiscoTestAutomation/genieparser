@@ -94,8 +94,8 @@ expected_output = {
       "flags": "RD",
       "oper_status": "down",
       "members": {
-        "Fi1/0/5": {
-          "interface": "Fi1/0/5",
+        "FiveGigabitEthernet1/0/5": {
+          "interface": "FiveGigabitEthernet1/0/5",
           "flags": "D",
           "bundled": False,
           "port_channel": {
@@ -116,7 +116,7 @@ expected_output = {
       "port_channel": {
         "port_channel_member": True,
         "port_channel_member_intfs": [
-          "Fi1/0/5",
+          "FiveGigabitEthernet1/0/5",
           "GigabitEthernet4/0/5"
         ]
       }

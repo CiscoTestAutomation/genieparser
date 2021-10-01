@@ -1,0 +1,13 @@
+
+RP/0/RP0/CPU0:R2_xr#show mld groups ff35::232:2:2:22 detail
+
+Interface:      GigabitEthernet0/0/0/0.115
+Group:          ff35::232:2:2:22
+Uptime:         00:01:21
+Router mode:    INCLUDE
+Host mode:      INCLUDE
+Last reporter:  ::
+Suppress:       0
+Group source list:
+  Source Address                          Uptime    Expires   Fwd  Flags
+  fc00::10:255:134:44                   00:01:21  expired   No   Local a

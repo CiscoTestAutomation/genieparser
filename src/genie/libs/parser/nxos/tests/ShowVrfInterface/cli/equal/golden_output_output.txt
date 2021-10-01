@@ -1,0 +1,8 @@
+
+pinxdt-n9kv-3# show vrf interface
+Interface                 VRF-Name                        VRF-ID  Site-of-Origin
+loopback0                 default                              1  --
+Null0                     default                              1  --
+Ethernet1/1               default                              1  --
+Ethernet1/2               default                              1  --
+mgmt0                     management                           2  --

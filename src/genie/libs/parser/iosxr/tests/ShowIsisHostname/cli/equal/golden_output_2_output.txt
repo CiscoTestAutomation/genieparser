@@ -1,0 +1,12 @@
+
+show isis hostname
+IS-IS test hostnames
+Level  System ID      Dynamic Hostname
+ 2     2222.22ff.4444 R2
+ 1     4444.44ff.8888 R4
+ 1     6666.66ff.cccc R6
+ 2     8888.88ff.1111 R8
+ 1,2   7777.77ff.eeee R7
+ 1,2 * 3333.33ff.6666 R3
+ 1,2   5555.55ff.aaaa R5
+ 2     9999.99ff.3333 R9

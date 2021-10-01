@@ -1,0 +1,11 @@
+
++++ R2_xr: executing command 'show isis neighbors' +++
+show isis neighbors
+Wed Apr 17 16:21:30.075 UTC
+
+IS-IS test neighbors:
+System Id      Interface        SNPA           State Holdtime Type IETF-NSF
+R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
+R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    25       L1L2 Capable
+
+Total neighbor count: 2

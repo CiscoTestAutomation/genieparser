@@ -1,0 +1,14 @@
+202-xTR1#show lisp eid-table vlan 101 dynamic-eid detail
+LISP Dynamic EID Information for router 0, IID 101
+
+Dynamic-EID name: Auto-L2-group-101
+  Database-mapping EID-prefix: any-mac, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: aabb.cc80.ca00, 1d22h ago
+    aabb.cc00.c901, N/A, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking
+    aabb.cc80.ca00, N/A, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam

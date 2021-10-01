@@ -1,0 +1,49 @@
+
+RP/0/RSP0/CPU0:Router1#show evpn evi detail
+EVI        Bridge Domain                Type   
+---------- ---------------------------- -------
+145        tb1-core1                    PBB 
+Unicast Label  : 16000
+Multicast Label: 16001
+RD Config: none
+RD Auto  : (auto) 10.1.100.100:145
+RT Auto  : 100:145
+Route Targets in Use           Type   
+------------------------------ -------
+100:145                        Import 
+100:145                        Export 
+
+165        tb1-core2                    PBB 
+Unicast Label  : 16002
+Multicast Label: 16003
+RD Config: none
+RD Auto  : (auto) 10.1.100.100:165
+RT Auto  : 100:165
+Route Targets in Use           Type   
+------------------------------ -------
+100:165                        Import 
+100:165                        Export 
+
+185        tb1-core3                    PBB 
+Unicast Label  : 16004
+Multicast Label: 16005
+RD Config: none
+RD Auto  : (auto) 10.1.100.100:185
+RT Auto  : 100:185
+Route Targets in Use           Type   
+------------------------------ -------
+100:185                        Import 
+100:185                        Export 
+
+65535      ES:GLOBAL                    BD  
+Unicast Label  : 0
+Multicast Label: 0
+RD Config: none
+RD Auto  : (auto) 10.1.100.100:0
+RT Auto  : none
+Route Targets in Use           Type   
+------------------------------ -------
+0100.9eff.0210                 Import 
+0100.beff.cf01                 Import 
+0100.beff.0303                 Import
+

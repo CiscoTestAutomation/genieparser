@@ -1,0 +1,8 @@
+
+Mstatic-route for VRF "default"(1)
+IPv4 Multicast Static Routes:
+
+Mstatic-route for VRF "management"(2)
+IPv4 Multicast Static Routes:
+
+Process finished with exit code 0

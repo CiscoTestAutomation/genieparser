@@ -1,0 +1,19 @@
+
+P1# show spanning-tree mst detail  
+
+##### MST0    vlans mapped:   1-399,501-4094
+Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
+Root          this switch for the CIST
+Regional Root this switch
+Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
+Configured    hello time 10, forward delay 30, max age 40, max hops    255
+
+
+Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsisten
+t)
+Port info             port id       128.4125  priority    128  cost   500      
+Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
+Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
+Timers: message expires in 0 sec, forward delay 0, forward transitions 0
+Bpdus sent 113, received 0

@@ -1,0 +1,9 @@
+
+
+PID    MemAlloc  MemLimit    MemUsed     StackBase/Ptr      Process
+-----  --------  ----------  ----------  -----------------  ----------------
+1    188416  0           4308992     ffffffff/ffffffff  init
+417    200704  0           3588096     ffe65dd0/ffe64518  bootflash_sync.
+447    393216  0           6639616     ffffffff/ffffffff  inotifywait
+
+All processes: MemAlloc = 4646350848

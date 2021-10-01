@@ -1,0 +1,43 @@
+
+    vmanage-01# show system status 
+
+    Viptela (tm) vmanage Operating System Software
+    Copyright (c) 2013-2021 by Viptela, Inc.
+    Controller Compatibility: 
+    Version: 20.5.1
+    Build: 34
+
+
+    System logging to host  is disabled
+    System logging to disk is enabled
+
+    System state:            GREEN. All daemons up
+    System FIPS state:       Enabled
+
+    Last reboot:             Initiated by user. 
+    CPU-reported reboot:     Not Applicable
+    Boot loader version:     Not applicable
+    System uptime:           17 days 14 hrs 04 min 07 sec
+    Current time:            Thu Aug 26 15:40:21 UTC 2021
+
+    Load average:            1 minute: 0.80, 5 minutes: 0.61, 15 minutes: 0.57
+    Processes:               2887 total
+    CPU allocation:          16 total
+    CPU states:              2.65% user,   0.14% system,   97.21% idle
+    Memory usage:            32760644K total,    18915912K used,   8635456K free
+                            1129488K buffers,  4079788K cache
+
+    Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
+                            /dev/root       15230M  1881M  12514M   13%   /
+    vManage storage usage:   Filesystem      Size  Used  Avail  Use%  Mounted on
+                            /dev/sdb        100281M  5525M  89636M   5%   /opt/data
+
+    Personality:             vmanage
+    Model name:              vmanage
+    Services:                None
+    vManaged:                false
+    Commit pending:          false
+    Configuration template:  None
+    Chassis serial number:   None
+
+    vmanage-01# 

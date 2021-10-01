@@ -254,6 +254,58 @@ class ShowIpRoute(ShowIpRouteSchema):
         ret_dict = {}
         index = 0
 
+        # Routing Table: VRF1
+        # Routing Table: VRF-infra
+        p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
+
+        # 10.1.0.0/32 is subnetted, 1 subnets
+        # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
+        p2 = re.compile(r'^(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
+                        r'+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
+        
+        # C        10.4.1.1 is directly connected, Loopback0
+        # S        10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+        # S*       10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+        # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
+        # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
+        # D        192.168.205.1
+        # S*       0.0.0.0/0 [1/0] via 10.50.15.1
+        # L        FF00::/8 [0/0]
+        # S   %    10.34.0.1 [1/0] via 192.168.16.1
+        # C   p    10.34.0.2 is directly connected, Loopback0
+        # S   &    10.69.0.0 [1/0] via 10.34.0.1
+        # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
+        # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        if self.IP_VER == 'ipv4':
+            p3 = re.compile(
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
+                r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+        else:
+            p3 = re.compile(
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
+                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+        
+        #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
+        p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
+                        r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
+        
+        #       is directly connected, GigabitEthernet0/2
+        p5 = re.compile(r'^is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\] '
+                        r'+via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?'
+                        r'( +(?P<interface>[\S]+))?$')
+
+        #      via 2001:DB8:1:1::2
+        #      via 10.4.1.1%default, indirectly connected
+        #      via 2001:DB8:4:6::6
+        #      via 2001:DB8:20:4:6::6%VRF2
+        #      via Null0, receive
+        #      via 33.33.33.33%default, Vlan100%default
+        p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]{4,}),?)?'
+                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+),?)?,?( +receive)?'
+                        r'( +directly connected)?( +indirectly connected)?$')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -263,7 +315,6 @@ class ShowIpRoute(ShowIpRouteSchema):
             next_hop = interface = updated = metrics = route_preference = nh_vrf = ""
             # Routing Table: VRF1
             # Routing Table: VRF-infra
-            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -271,8 +322,6 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # 10.1.0.0/32 is subnetted, 1 subnets
             # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
-            p2 = re.compile(r'^(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
-                            r'+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
             m = p2.match(line)
             if m:
                 # if you see the issue by "show ip route", it means that active is True.
@@ -302,17 +351,6 @@ class ShowIpRoute(ShowIpRouteSchema):
             # S   &    10.69.0.0 [1/0] via 10.34.0.1
             # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
             # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
-            if self.IP_VER == 'ipv4':
-                p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[0-9\.\:\/]+)?( '
-                    r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-            else:
-                p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[\w\.\:\/]+)?( '
-                    r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-
             m = p3.match(line)
             if m:
                 active = True
@@ -328,10 +366,10 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if m.groupdict()['network']:
                     network = m.groupdict()['network']
-                    if '/' in network:
-                        route = network
-                    else:
+                    if '/' not in network and self.IP_VER == 'ipv4':
                         route = '{}/{}'.format(network,netmask)
+                    else:
+                        route = network
 
                 if not m.groupdict()['network']:
                     route = route
@@ -393,8 +431,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
-            p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
-                            r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
             m = p4.match(line)
             if m:
                 routepreference = m.groupdict()['route_preference']
@@ -444,9 +480,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #       is directly connected, GigabitEthernet0/2
-            p5 = re.compile(r'^is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\] '
-                            r'+via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?'
-                            r'( +(?P<interface>[\S]+))?$')
             m = p5.match(line)
             if m:
 
@@ -498,9 +531,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             #      via 2001:DB8:4:6::6
             #      via 2001:DB8:20:4:6::6%VRF2
             #      via Null0, receive
-            p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]+),?)?'
-                            r'( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?'
-                            r'( +directly connected)?( +indirectly connected)?$')
+            #      via 33.33.33.33%default, Vlan100%default
             m = p6.match(line)
             if m:
                 vrf_val = ''
@@ -537,7 +568,13 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if updated:
                         idx_dict['updated'] = updated
                     if interface:
-                        idx_dict['outgoing_interface'] = interface
+                        if '%' in interface and '%' in tmp_next_hop:
+                            if tmp_next_hop.split('%')[1] == interface.split('%')[1]:
+                                idx_dict['outgoing_interface'] = interface.split('%')[0]
+                            else:
+                                idx_dict['outgoing_interface'] = interface
+                        else:
+                            idx_dict['outgoing_interface'] = interface
                     if vrf_val:
                         idx_dict['vrf'] = vrf_val
 
@@ -750,6 +787,28 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
         source_protocol_dict['redirect'] = ['NDr']
 
         result_dict = {}
+        # IPv6 Routing Table - default - 23 entries
+        # IPv6 Routing Table - VRF1 - 104 entries
+        p1 = re.compile(r'^\s*IPv6 +Routing +Table +\- +(?P<vrf>[\w]+) +\- +(?P<entries>[\d]+) +entries$')
+
+        # LC  2001:1:1:1::1/128 [0/0]
+        p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
+                        ' +\[(?P<route_preference>[\d\/]+)\]$')
+
+        #   via Loopback0, receive
+        #   via 2001:10:1:2::2, GigabitEthernet0/0
+        #   via GigabitEthernet0/2, directly connected
+        #   via 192.168.51.1%default, indirectly connected
+        p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
+                        '( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
+
+        #   via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
+        p4 = re.compile(r'^\s*via +(?P<next_hop>[\w\:\.\%]+),'
+                        ' +(?P<interface>[\S]+)$')
+
+        #      Last updated 14:15:23 06 December 2017
+        p5 = re.compile(r'^\s*Last +updated +(?P<last_updated>[\S\s]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -758,15 +817,12 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
             # IPv6 Routing Table - default - 23 entries
             # IPv6 Routing Table - VRF1 - 104 entries
-            p1 = re.compile(r'^\s*IPv6 +Routing +Table +\- +(?P<vrf>[\w]+) +\- +(?P<entries>[\d]+) +entries$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
                 continue
 
             # LC  2001:1:1:1::1/128 [0/0]
-            p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
-                            ' +\[(?P<route_preference>[\d\/]+)\]$')
             m = p2.match(line)
             if m:
                 active = True
@@ -834,8 +890,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
             #   via 2001:10:1:2::2, GigabitEthernet0/0
             #   via GigabitEthernet0/2, directly connected
             #   via 192.168.51.1%default, indirectly connected
-            p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
-                            '( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
             m = p3.match(line)
             if m:
                 if m.groupdict()['next_hop']:
@@ -896,8 +950,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
                 continue
 
             #   via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
-            p4 = re.compile(r'^\s*via +(?P<next_hop>[\w\:\.\%]+),'
-                            ' +(?P<interface>[\S]+)$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['next_hop']:
@@ -958,7 +1010,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
                 continue
             #      Last updated 14:15:23 06 December 2017
-            p5 = re.compile(r'^\s*Last +updated +(?P<last_updated>[\S\s]+)$')
             m = p5.match(line)
             if m:
 

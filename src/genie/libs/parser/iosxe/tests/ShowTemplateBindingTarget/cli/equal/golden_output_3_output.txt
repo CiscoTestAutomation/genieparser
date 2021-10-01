@@ -1,0 +1,16 @@
+show template binding target GigabitEthernet1/0/11
+
+Interface Templates
+===================
+Interface: Gi1/0/11
+
+Method              Source            Template-Name
+------              ------            -------------
+dynamic             User              cts_dot1x                                       
+static              User              static_template_dot1x                           
+
+Service Templates
+
+=================
+Template-Name                                    Source            Bound-To-MAc
+-------------                                    ------            ----------------

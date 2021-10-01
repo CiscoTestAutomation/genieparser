@@ -34,7 +34,7 @@ pipeline {
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     # checkout same branch on genielibs, if it exists
                     cd ../genielibs
-                    git chechout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
             }
@@ -59,11 +59,15 @@ pipeline {
                     make develop
                     cd $WORKSPACE/genielibs
                     make develop
+                    make json
+                    git status
                     cd $WORKSPACE
                     make develop
                     env
                     pip list
                     pip freeze
+                    make json
+                    git status
                 """
             }
         }
@@ -74,6 +78,44 @@ pipeline {
                 . /scratch/genieparser-env/bin/activate
                 compileAll
                 """
+            }
+        }
+        
+        stage("Test changelogs") {
+            steps {
+                sh"""
+                . /scratch/genieparser-env/bin/activate
+                make changelogs
+                """
+            }
+        }
+        
+        stage("Run folder_parsing_job") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+                python folder_parsing_job.py
+                """
+            }
+        }
+
+        stage("Run folder_parsing_job (coverage)") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py -f --no-mail --no-archive
+                coverage html
+                """
+                publishHTML (target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'tests/htmlcov',
+                    reportFiles: "index.html",
+                    reportName: 'Coverage report'
+                ])
             }
         }
 
@@ -104,35 +146,6 @@ pipeline {
                 cd genielibs/tests
                 runAll --path ops --no-refresh --coverage
                 """
-            }
-        }
-
-        stage("Run folder_parsing_job") {
-            steps {
-                sh """
-                . /scratch/genieparser-env/bin/activate
-                cd tests
-                python folder_parsing_job.py
-                """
-            }
-        }
-
-        stage("Run folder_parsing_job (coverage)") {
-            steps {
-                sh """
-                . /scratch/genieparser-env/bin/activate
-                cd tests
-                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py -f --no-mail --no-archive
-                coverage html
-                """
-                publishHTML (target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'tests/htmlcov',
-                    reportFiles: "index.html",
-                    reportName: 'Coverage report'
-                ])
             }
         }
 

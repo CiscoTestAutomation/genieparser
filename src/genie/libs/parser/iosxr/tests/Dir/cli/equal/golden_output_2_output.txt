@@ -1,0 +1,6 @@
+
+Directory of disk0a:/usr
+
+9867        -rwx  8909        Thu Jan 15 15:29:26 2015  start
+
+2562719744 bytes total (1918621184 bytes free)

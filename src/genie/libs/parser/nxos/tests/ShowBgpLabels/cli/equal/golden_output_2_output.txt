@@ -1,0 +1,33 @@
+
+2018-04-10T05:02:05: %UNICON-20-INFO: +++ execute  +++
+show bgp ipv4 unicast labels vrf all
+BGP routing table information for VRF VRF1, address family IPv4 Unicast
+BGP table version is 18, Local Router ID is 10.81.1.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            In label/Out label
+*>e10.85.0.0/24        10.76.1.101          492288/nolabel (VRF1)
+*>e10.85.1.0/24        10.76.1.101          492288/nolabel (VRF1)
+*>e10.85.2.0/24        10.76.1.101          492288/nolabel (VRF1)
+*>e10.85.3.0/24        10.76.1.101          492288/nolabel (VRF1)
+*>e10.85.4.0/24        10.76.1.101          492288/nolabel (VRF1)
+*>e10.94.0.0/24        10.51.1.101          16/16 (VRF1)
+*>e10.94.1.0/24        10.51.1.101          17/17 (VRF1)
+*>e10.94.2.0/24        10.51.1.101          18/18 (VRF1)
+*>e10.94.3.0/24        10.51.1.101          19/19 (VRF1)
+*>e10.94.4.0/24        10.51.1.101          20/20 (VRF1)
+
+BGP routing table information for VRF default, address family IPv4 Unicast
+BGP table version is 17, Local Router ID is 10.1.1.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            In label/Out label
+  a10.4.0.0/16        0.0.0.0             nolabel/nolabel
+*>e10.171.0.0/24        10.51.1.101          nolabel/nolabel
+*>e10.171.1.0/24        10.51.1.101          nolabel/nolabel
+*>e10.171.2.0/24        10.51.1.101          nolabel/nolabel
+*>r10.85.0.0/24        0.0.0.0             nolabel/nolabel

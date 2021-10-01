@@ -1,0 +1,25 @@
+
+IPv6 Configured Static Routes for VRF "default"(1)
+
+2001:db8:51a5::/16 -> Null0, preference: 1
+nh_vrf(default) reslv_tid 80000001
+real-next-hop: 0::, interface: Null0
+  rnh(not installed in u6rib)
+  bfd_enabled no
+2001:db8:9da8::/16 -> Null0, preference: 1
+nh_vrf(default) reslv_tid 80000001
+real-next-hop: 0::, interface: Null0
+  rnh(not installed in u6rib)
+  bfd_enabled no
+2001:db8:53f2::/16 -> port-channel8, preference: 2
+nh_vrf(default) reslv_tid 80000001
+real-next-hop: 0::, interface: port-channel8
+  rnh(not installed in u6rib)
+  bfd_enabled no
+2001:db8:a1f5::/16 -> Ethernet1/2.10, preference: 3
+nh_vrf(default) reslv_tid 80000001
+real-next-hop: 0::, interface: Ethernet1/2.10
+  rnh(not installed in u6rib)
+  bfd_enabled no   
+
+  IPv6 Configured Static Routes for VRF "default"(1)    

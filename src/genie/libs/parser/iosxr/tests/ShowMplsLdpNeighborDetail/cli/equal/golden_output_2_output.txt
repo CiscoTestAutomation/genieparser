@@ -1,0 +1,36 @@
+
+RP/0/RP0/CPU0:R2#show mpls ldp vrf all neighbor detail
+
+Peer LDP Identifier: 192.168.70.6:0
+  TCP connection: 192.168.70.6:15332 - 192.168.1.1:646
+  Graceful Restart: Yes (Reconnect Timeout: 120 sec, Recovery: 180 sec)
+  Session Holdtime: 180 sec
+  State: Oper; Msgs sent/rcvd: 851/232; Downstream-Unsolicited
+  Up time: 00:02:44
+  LDP Discovery Sources:
+    IPv4: (2)
+      Bundle-Ether1.3
+      Targeted Hello (192.168.1.1 -> 192.168.70.6, active/passive)
+    IPv6: (0)
+  Addresses bound to this peer:
+    IPv4: (15)
+      10.10.10.1     10.126.249.223  10.126.249.224  10.76.23.2
+      10.219.1.2       10.19.1.2       10.76.1.2       10.135.1.2
+      10.151.1.2       192.168.106.1    192.168.205.1    192.168.51.1
+      192.168.196.1     192.168.171.1    192.168.70.6
+    IPv6: (0)
+  Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+  NSR: Operational
+  Clients: Session Protection
+  Session Protection:
+    Enabled, state: Ready
+    Duration: 86400 sec
+  Capabilities:
+    Sent:
+      0x508  (MP: Point-to-Multipoint (P2MP))
+      0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+      0x50b  (Typed Wildcard FEC)
+    Received:
+      0x508  (MP: Point-to-Multipoint (P2MP))
+      0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+      0x50b  (Typed Wildcard FEC)

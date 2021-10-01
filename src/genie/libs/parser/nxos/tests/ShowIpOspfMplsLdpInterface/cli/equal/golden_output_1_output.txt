@@ -1,0 +1,37 @@
+
+loopback0 - Process ID 1 VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State LOOPBACK, Network type LOOPBACK
+Ethernet2/2 - Process ID 1 VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State BDR, Network type BROADCAST
+Ethernet2/3 - Process ID 1 VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State BDR, Network type BROADCAST
+Ethernet2/4 - Process ID 1 VRF default, area 0.0.0.0
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State BDR, Network type BROADCAST
+Ethernet2/1 - Process ID 1 VRF VRF1, area 0.0.0.1
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State BDR, Network type BROADCAST
+SL1-0.0.0.0-10.151.22.22-10.229.11.11 - Process ID 1 VRF VRF1, area 0.0.0.1
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State P2P, Network type P2P
+SL2-0.0.0.0-10.151.22.22-10.21.33.33 - Process ID 1 VRF VRF1, area 0.0.0.1
+    LDP Autoconfig not enabled
+    LDP Sync not enabled, not required
+    State P2P, Network type P2P
+port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+    LDP Autoconfig is enabled
+    LDP Sync not enabled, not required
+    State P2P, Network type P2P
+port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+    LDP Autoconfig is enabled
+    LDP Sync not enabled, not required
+    State P2P, Network type P2P

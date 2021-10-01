@@ -1,0 +1,98 @@
+
+R3_nx# show isis vrf all
+
+ISIS process : test
+Instance number :  1
+UUID: 1090519320
+Process ID 1581
+VRF: default
+System ID : 3333.33ff.6666  IS-Type : L1-L2
+SAP : 412  Queue Handle : 15
+Maximum LSP MTU: 1492
+Stateful HA enabled
+Graceful Restart enabled. State: Inactive
+Last graceful restart status : none
+Start-Mode Complete
+BFD IPv4 is globally disabled for ISIS process: test
+BFD IPv6 is globally disabled for ISIS process: test
+Topology-mode is Multitopology
+Metric-style : advertise(wide), accept(narrow, wide)
+Area address(es) :
+    49.0001
+Process is up and running
+VRF ID: 1
+Stale routes during non-graceful controlled restart
+Enable resolution of L3->L2 address for ISIS adjacency
+SR IPv4 is not configured and disabled for ISIS process: test
+SR IPv6 is not configured and disabled for ISIS process: test
+Interfaces supported by IS-IS :
+    loopback0
+    Ethernet1/1.115
+    Ethernet1/2.115
+Topology : 0
+Address family IPv4 unicast :
+    Number of interface : 3
+    Distance : 115
+Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+Topology : 2
+Address family IPv6 unicast :
+    Number of interface : 3
+    Distance : 115
+Level1
+No auth type and keychain
+Auth check set
+Level2
+No auth type and keychain
+Auth check set
+L1 Next SPF: 00:00:07
+L2 Next SPF: 00:00:04
+
+ISIS process : test
+Instance number :  1
+UUID: 1090519320
+Process ID 1581
+VRF: VRF1
+System ID : 3333.33ff.6666  IS-Type : L1-L2
+SAP : 412  Queue Handle : 15
+Maximum LSP MTU: 1492
+Stateful HA enabled
+Graceful Restart enabled. State: Inactive
+Last graceful restart status : none
+Start-Mode Complete
+BFD IPv4 is globally disabled for ISIS process: test
+BFD IPv6 is globally disabled for ISIS process: test
+Topology-mode is Multitopology
+Metric-style : advertise(wide), accept(narrow, wide)
+Area address(es) :
+    49.0001
+Process is up and running
+VRF ID: 3
+Stale routes during non-graceful controlled restart
+Enable resolution of L3->L2 address for ISIS adjacency
+SR IPv4 is not configured and disabled for ISIS process: test
+SR IPv6 is not configured and disabled for ISIS process: test
+Interfaces supported by IS-IS :
+    loopback300
+    Ethernet1/1.415
+    Ethernet1/2.415
+Topology : 0
+Address family IPv4 unicast :
+    Number of interface : 3
+    Distance : 115
+Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+Topology : 2
+Address family IPv6 unicast :
+    Number of interface : 3
+    Distance : 115
+Level1
+No auth type and keychain
+Auth check set
+Level2
+No auth type and keychain
+Auth check set
+L1 Next SPF: Inactive
+L2 Next SPF: Inactive

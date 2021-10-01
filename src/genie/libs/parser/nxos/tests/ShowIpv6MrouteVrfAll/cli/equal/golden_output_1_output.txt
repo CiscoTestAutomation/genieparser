@@ -1,0 +1,177 @@
+
+IPv6 Multicast Routing Table for VRF "default"
+
+(*, ff30::/12), uptime: 3d11h, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+
+
+IPv6 Multicast Routing Table for VRF "VRF1"
+
+(*, ff30::/12), uptime: 3d11h, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+  
+(*, ff1e:1111::1:0/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: loopback10, RPF nbr: 2001:db8:4401:9999::1
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:1111::1:0/128), uptime: 00:04:03, ipv6 pim6 m6rib 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234, internal
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:1111::1:0/128), uptime: 00:04:03, ipv6 pim6 m6rib 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234, internal
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(2001::222:2:3:1234/128, ff1e:1111::1:0/128), uptime: 00:04:03, pim6 m6rib ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10, internal
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:2:44:1234/128, ff1e:1111::1:0/128), uptime: 00:04:03, pim6 m6rib ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10, internal
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(*, ff1e:1111:ffff::/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:1111:ffff::/128), uptime: 00:04:03, ipv6 pim6 m6rib 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234, internal
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:00, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:1111:ffff::/128), uptime: 00:04:03, ipv6 pim6 m6rib 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234, internal
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(2001::222:2:3:1234/128, ff1e:1111:ffff::/128), uptime: 00:04:03, pim6 m6rib ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10, internal
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:2:44:1234/128, ff1e:1111:ffff::/128), uptime: 00:04:03, pim6 m6rib ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10, internal
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(*, ff1e:2222:ffff::/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:2222:ffff::/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:2222:ffff::/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(2001::222:2:3:1234/128, ff1e:2222:ffff::/128), uptime: 00:04:02, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:02, m6rib
+
+(2001::222:2:44:1234/128, ff1e:2222:ffff::/128), uptime: 00:04:02, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:02, m6rib
+
+(*, ff1e:2222:ffff::1:0/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:2222:ffff::1:0/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:02, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:2222:ffff::1:0/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:02, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(*, ff1e:3333::1:0/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:3333::1:0/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:3333::1:0/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(*, ff1e:3333:ffff::/128), uptime: 00:04:03, mld pim6 ipv6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:03, mld
+
+(2001::222:1:1:1234/128, ff1e:3333:ffff::/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234
+  Outgoing interface list: (count: 3)
+    Ethernet1/26, uptime: 00:02:58, pim6
+    port-channel1001, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib
+
+(2001::222:1:2:1234/128, ff1e:3333:ffff::/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.11, RPF nbr: 2001::222:1:2:1234
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:04:01, pim6
+    Ethernet1/33.11, uptime: 00:04:03, m6rib, (RPF)
+
+(2001::222:2:3:1234/128, ff1e:3333:ffff::/128), uptime: 00:04:01, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:01, m6rib
+
+(2001::222:2:44:1234/128, ff1e:3333:ffff::/128), uptime: 00:04:00, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/26, RPF nbr: fe80::10
+  Outgoing interface list: (count: 1)
+    Ethernet1/33.11, uptime: 00:04:00, m6rib
+
+(*, ff30::/12), uptime: 19:55:47, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+
+IPv6 Multicast Routing Table for VRF "default"
+
+(*, ff30::/12), uptime: 00:11:23, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+
+
+IPv6 Multicast Routing Table for VRF "VRF"

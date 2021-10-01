@@ -1,0 +1,10 @@
+
+management-address-v4
+management-address-v6
+port-description
+port-vlan
+power-management
+system-capabilities
+system-description
+system-name
+dcbxp
