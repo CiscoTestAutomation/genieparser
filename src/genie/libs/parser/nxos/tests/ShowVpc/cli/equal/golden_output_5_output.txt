@@ -1,0 +1,27 @@
+
+Legend:
+(*) - local vPC is down, forwarding via vPC peer-link
+ 
+vPC domain id : 100
+Peer status : peer link is down
+vPC keep-alive status : peer is alive, but domain IDs do not match
+Configuration consistency status: success
+Per-vlan consistency status : success
+Type-2 consistency status : success
+vPC role : primary
+Number of vPCs configured : 1
+Peer Gateway : Disabled
+Dual-active excluded VLANs : -
+Graceful Consistency Check : Enabled
+ 
+vPC peer-link status
+---------------------------------------------------------------------
+id Port Status Active vlans
+-- ---- ------ --------------------------------------------------
+1 Po100 down -
+ 
+vPC status
+----------------------------------------------------------------------------
+id Port Status Consistency Reason Active vlans
+------ ----------- ------ ----------- -------------------------- -----------
+1 Po1 down success success -

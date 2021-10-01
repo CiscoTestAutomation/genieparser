@@ -1,0 +1,7 @@
+
+RP/0/RP0/CPU0:R3#show mpls interfaces 
+Thu Aug 29 15:32:55.170 UTC
+Interface                  LDP      Tunnel   Static   Enabled 
+-------------------------- -------- -------- -------- --------
+GigabitEthernet0/0/0/0     No       No       No       Yes
+GigabitEthernet0/0/0/1     No       No       No       Yes

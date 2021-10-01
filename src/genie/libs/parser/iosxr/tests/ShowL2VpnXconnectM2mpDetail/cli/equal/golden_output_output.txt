@@ -1,0 +1,58 @@
+
+show l2vpn xconnect mp2mp detail
+
+Group gr1, MP2MP mp1, state: up
+
+VPN ID: 100
+
+VPN MTU: 1500
+
+L2 Encapsulation: VLAN
+
+Auto Discovery: BGP, state is Advertised (Service Connected)
+
+    Route Distinguisher: (auto) 10.36.3.3:32770
+
+Import Route Targets:
+
+    10.16.2.2:100
+
+Export Route Targets:
+
+    10.16.2.2:100
+
+Signaling protocol:BGP
+
+    CE Range:10
+
+Group gr1, XC mp1.1:2, state is up; Interworking none
+
+Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
+
+AC: GigabitEthernet0/1/0/1.1, state is up
+
+Type VLAN; Num Ranges: 1
+
+VLAN ranges: [1, 1]
+
+MTU 1500; XC ID 0x2000013; interworking none
+
+PW: neighbor 10.4.1.1, PW ID 65538, state is up ( established )
+
+PW class not set, XC ID 0x2000013
+
+Encapsulation MPLS, Auto-discovered (BGP), protocol BGP
+
+    MPLS         Local                         Remote                       
+
+    ------------ ------------------------------ -----------------------------
+
+    Label        16031                          16045                        
+
+    MTU          1500                           1500                        
+
+Control word     enabled                        enabled                      
+
+    PW type      Ethernet VLAN                  Ethernet VLAN                
+
+    CE-ID        1                              2                            

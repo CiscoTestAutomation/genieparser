@@ -1,0 +1,384 @@
+
+IS-IS test Interfaces
+Loopback0                   Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  Bandwidth:                0
+
+  Circuit Type:             level-1-2
+  Media Type:               Loop
+  Circuit Number:           0
+
+  Level-1
+    Adjacency Count:        0
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  Level-2
+    Adjacency Count:        0
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1500
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 0.0.0.0
+    Global Prefix(es):      10.36.3.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): ::
+    Global Prefix(es):      2001:db8:3:3:3::3/128
+
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 10 back-to-back LSPs in the next 0 ms
+
+GigabitEthernet0/0/0/0      Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  Bandwidth:                1000000
+
+  Circuit Type:             level-1-2
+  Media Type:               LAN
+  Circuit Number:           7
+
+  Level-1
+    Adjacency Count:        0
+    LAN ID:                 R3.07
+    Priority (Local/DIS):   64/none (no DIS elected)
+    Next LAN IIH in:        5 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  Level-2
+    Adjacency Count:        1
+    LAN ID:                 R3.07
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        3 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   fa16.3eff.52be
+    Layer-2 MCast Groups Membership:
+      All Level-1 ISs:      Yes
+      All Level-2 ISs:      Yes
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 10.2.3.3
+    Global Prefix(es):      10.2.3.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): fe80::f816:3eff:feff:52be
+    Global Prefix(es):      2001:db8:10:2::/64
+
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 9 back-to-back LSPs in the next 0 ms
+
+GigabitEthernet0/0/0/1      Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  Bandwidth:                1000000
+
+  Circuit Type:             level-1-2
+  Media Type:               LAN
+  Circuit Number:           5
+
+  Level-1
+    Adjacency Count:        1
+    LAN ID:                 R3.05
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        2 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  Level-2
+    Adjacency Count:        0
+    LAN ID:                 R3.05
+    Priority (Local/DIS):   64/none (no DIS elected)
+    Next LAN IIH in:        6 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   fa16.3eff.86bf
+    Layer-2 MCast Groups Membership:
+      All Level-1 ISs:      Yes
+      All Level-2 ISs:      Yes
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 10.3.6.3
+    Global Prefix(es):      10.3.6.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): fe80::f816:3eff:feff:86bf
+    Global Prefix(es):      2001:db8:10:3::/64
+
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 9 back-to-back LSPs in the next 0 ms
+
+GigabitEthernet0/0/0/2      Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  Bandwidth:                1000000
+
+  Circuit Type:             level-1-2
+  Media Type:               LAN
+  Circuit Number:           3
+
+  Level-1
+    Adjacency Count:        1
+    LAN ID:                 R3.03
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        1 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  Level-2
+    Adjacency Count:        0
+    LAN ID:                 R3.03
+    Priority (Local/DIS):   64/none (no DIS elected)
+    Next LAN IIH in:        6 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   fa16.3eff.d6b3
+    Layer-2 MCast Groups Membership:
+      All Level-1 ISs:      Yes
+      All Level-2 ISs:      Yes
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 10.3.4.3
+    Global Prefix(es):      10.3.4.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): fe80::f816:3eff:feff:d6b3
+    Global Prefix(es):      None (No global addresses are configured)
+
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 9 back-to-back LSPs in the next 0 ms
+
+GigabitEthernet0/0/0/3      Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  Bandwidth:                1000000
+
+  Circuit Type:             level-1-2
+  Media Type:               LAN
+  Circuit Number:           1
+
+  Level-1
+    Adjacency Count:        1
+    LAN ID:                 R5.01
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        3 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  Level-2
+    Adjacency Count:        1
+    LAN ID:                 R5.01
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        2 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   fa16.3eff.f442
+    Layer-2 MCast Groups Membership:
+      All Level-1 ISs:      Yes
+      All Level-2 ISs:      Yes
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 10.3.5.3
+    Global Prefix(es):      10.3.5.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): fe80::f816:3eff:feff:f442
+    Global Prefix(es):      None (No global addresses are configured)
+
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 9 back-to-back LSPs in the next 0 ms
+  
+tunnel-te105                Enabled
+  Adjacency Formation:      Disabled (CLNS I/O unavailable/down on the intf)
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  RSI SRLG:                 Registered
+  Bandwidth:                0
+  
+  Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+  Media Type:               P2P
+  Circuit Number:           0
+  CLNS I/O
+    Protocol State:         Down (IMD did not notify that node exists)
+    MTU:                    Invalid (MTU invalid or too small)
+  
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Disabled (CLNS I/O service unavailable on intf)
+    Prefix Advertisement:   Running
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/1/10/10 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Enabled/Enabled
+      LDPv4 Sync Status:    Achieved
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+      FRR Type:             None               None           
+  
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 10.3.5.3
+    Global Prefix(es):      None (Interface is unnumbered)

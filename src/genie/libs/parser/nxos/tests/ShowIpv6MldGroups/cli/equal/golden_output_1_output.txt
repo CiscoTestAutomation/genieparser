@@ -1,0 +1,18 @@
+
+MLD Connected Group Membership for VRF "default" - 2 total entries
+(2001:db8:0:abcd::2, ff30::2)
+  Type: Static, Interface: Ethernet2/1
+  Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
+
+(*, fffe::2)
+  Type: Static, Interface: Ethernet2/1
+  Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
+
+MLD Connected Group Membership for VRF "VRF1" - 2 total entries
+(2001:db8:0:abcd::2, ff30::2)
+  Type: Static, Interface: Ethernet2/2
+  Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1
+
+(*, fffe::2)
+  Type: Static, Interface: Ethernet2/2
+  Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1

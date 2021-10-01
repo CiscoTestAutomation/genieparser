@@ -1,0 +1,209 @@
+
+ <data>
+  <bgp xmlns="http://openconfig.net/yang/bgp">
+   <global>
+    <config>
+     <as>100</as>
+     <router-id>10.4.1.1</router-id>
+    </config>
+    <state>
+     <as>100</as>
+     <router-id>10.4.1.1</router-id>
+     <total-paths>0</total-paths>
+     <total-prefixes>0</total-prefixes>
+    </state>
+    <afi-safis>
+     <afi-safi>
+      <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+      <config>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+       <enabled>true</enabled>
+      </config>
+      <state>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+       <enabled>true</enabled>
+       <total-paths>0</total-paths>
+       <total-prefixes>0</total-prefixes>
+      </state>
+     </afi-safi>
+     <afi-safi>
+      <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+      <config>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+       <enabled>true</enabled>
+      </config>
+      <state>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+       <enabled>true</enabled>
+       <total-paths>0</total-paths>
+       <total-prefixes>0</total-prefixes>
+      </state>
+     </afi-safi>
+    </afi-safis>
+   </global>
+   <neighbors>
+    <neighbor>
+     <neighbor-address>10.16.2.2</neighbor-address>
+     <config>
+      <neighbor-address>10.16.2.2</neighbor-address>
+      <peer-as>100</peer-as>
+     </config>
+     <state>
+      <neighbor-address>10.16.2.2</neighbor-address>
+      <peer-as>100</peer-as>
+      <queues>
+       <input>0</input>
+       <output>0</output>
+      </queues>
+      <session-state>IDLE</session-state>
+      <messages>
+       <sent>
+	<NOTIFICATION>0</NOTIFICATION>
+	<UPDATE>0</UPDATE>
+       </sent>
+       <received>
+	<NOTIFICATION>0</NOTIFICATION>
+	<UPDATE>0</UPDATE>
+       </received>
+      </messages>
+     </state>
+     <transport>
+      <config>
+       <local-address>Loopback0</local-address>
+      </config>
+      <state>
+       <local-address>Loopback0</local-address>
+       <local-port>0</local-port>
+       <remote-address>10.16.2.2</remote-address>
+       <remote-port>0</remote-port>
+      </state>
+     </transport>
+     <afi-safis>
+      <afi-safi>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+       <config>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+	<enabled>true</enabled>
+       </config>
+       <state>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+	<enabled>true</enabled>
+	<active>false</active>
+	<prefixes>
+	 <received>0</received>
+	 <sent>0</sent>
+	</prefixes>
+       </state>
+      </afi-safi>
+      <afi-safi>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+       <config>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+	<enabled>true</enabled>
+       </config>
+       <state>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+	<enabled>true</enabled>
+	<active>false</active>
+	<prefixes>
+	 <received>0</received>
+	 <sent>0</sent>
+	</prefixes>
+       </state>
+      </afi-safi>
+     </afi-safis>
+     <timers>
+      <state>
+       <negotiated-hold-time>180</negotiated-hold-time>
+      </state>
+     </timers>
+     <graceful-restart>
+      <state>
+       <peer-restart-time>120</peer-restart-time>
+      </state>
+     </graceful-restart>
+    </neighbor>
+    <neighbor>
+     <neighbor-address>10.36.3.3</neighbor-address>
+     <config>
+      <neighbor-address>10.36.3.3</neighbor-address>
+      <peer-as>100</peer-as>
+     </config>
+     <state>
+      <neighbor-address>10.36.3.3</neighbor-address>
+      <peer-as>100</peer-as>
+      <queues>
+       <input>0</input>
+       <output>0</output>
+      </queues>
+      <session-state>IDLE</session-state>
+      <messages>
+       <sent>
+	<NOTIFICATION>0</NOTIFICATION>
+	<UPDATE>0</UPDATE>
+       </sent>
+       <received>
+	<NOTIFICATION>0</NOTIFICATION>
+	<UPDATE>0</UPDATE>
+       </received>
+      </messages>
+     </state>
+     <transport>
+      <config>
+       <local-address>Loopback0</local-address>
+      </config>
+      <state>
+       <local-address>Loopback0</local-address>
+       <local-port>0</local-port>
+       <remote-address>10.36.3.3</remote-address>
+       <remote-port>0</remote-port>
+      </state>
+     </transport>
+     <afi-safis>
+      <afi-safi>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+       <config>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+	<enabled>true</enabled>
+       </config>
+       <state>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv4-unicast</afi-safi-name>
+	<enabled>true</enabled>
+	<active>false</active>
+	<prefixes>
+	 <received>0</received>
+	 <sent>0</sent>
+	</prefixes>
+       </state>
+      </afi-safi>
+      <afi-safi>
+       <afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+       <config>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+	<enabled>true</enabled>
+       </config>
+       <state>
+	<afi-safi-name xmlns:idx="http://openconfig.net/yang/bgp-types">idx:l3vpn-ipv6-unicast</afi-safi-name>
+	<enabled>true</enabled>
+	<active>false</active>
+	<prefixes>
+	 <received>0</received>
+	 <sent>0</sent>
+	</prefixes>
+       </state>
+      </afi-safi>
+     </afi-safis>
+     <timers>
+      <state>
+       <negotiated-hold-time>180</negotiated-hold-time>
+      </state>
+     </timers>
+     <graceful-restart>
+      <state>
+       <peer-restart-time>120</peer-restart-time>
+      </state>
+     </graceful-restart>
+    </neighbor>
+   </neighbors>
+  </bgp>
+ </data>

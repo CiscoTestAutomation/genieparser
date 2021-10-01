@@ -1,0 +1,53 @@
+2021-08-30 01:37:46,379: %UNICON-INFO: +++ a2_acc_9300 with alias 'a': executing command 'show monitor session all' +++
+show monitor session all
+
+Session 10
+Type : Local Session
+Source Ports :
+
+RX Only              : Gi3/0/27
+Destination Ports : Gi4/0/2
+
+Encapsulation        : Native
+      Ingress        : Disabled
+IP Access-group : span-filter-acl1
+
+Session 20
+Type : Local Session
+Source Ports :
+
+RX Only              : Gi3/0/27
+Destination Ports : Gi3/0/28
+
+Encapsulation        : Native
+      Ingress        : Disabled
+MAC Access-group : span-filter-macl1
+
+Session 30
+Type : Local Session
+Source Ports :
+
+RX Only              : Gi3/0/27
+Destination Ports : Gi1/0/1
+
+Encapsulation        : Native
+      Ingress        : Disabled
+Session 40
+Type : Remote Source Session
+Source Ports :
+
+RX Only              : Gi3/0/27
+Dest RSPAN VLAN : 300
+
+Session 52
+Type : ERSPAN Source Session
+Status : Admin Enabled
+Description : pkt-send-to-c2(9500H)
+Source Ports :
+
+RX Only              : Gi3/0/27
+Filter VLANs : 123
+Destination IP Address : 1.1.1.20
+MTU : 1500
+Destination ERSPAN ID : 12
+Origin IP Address : 1.1.1.2

@@ -1,0 +1,6 @@
+ PTP PORT DATASET: TenGigabitEthernet1/0/33
+  Port identity: clock identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Port identity: port number: 33
+  PTP version: 2
+  PTP port number: 33
+  PTP slot number: 1

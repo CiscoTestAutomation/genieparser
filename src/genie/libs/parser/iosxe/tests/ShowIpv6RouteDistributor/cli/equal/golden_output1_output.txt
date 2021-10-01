@@ -1,0 +1,25 @@
+show ipv6 route vrf Red
+IPv6 Routing Table - Red - 7 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid
+lA - LISP away, le - LISP extranet-policy, lp - LISP publications
+ls - LISP destinations-summary
+    C 2001:192:168:2::/64 [0/0]
+    via Vlan11, directly connected
+    B 2001:192:168:2::1/128 [20/0], tag 1
+    via 33.33.33.33%default, Vlan100%default
+    L 2001:192:168:2::100/128 [0/0]
+    via Vlan11, receive
+    C 2001:192:168:255::/64 [0/0]
+    via Vlan4000, directly connected
+    B 2001:192:168:255::1/128 [20/0], tag 1
+    via 33.33.33.33%default, Vlan100%default
+    L 2001:192:168:255::100/128 [0/0]
+    via Vlan4000, receive
+    L FF00::/8 [0/0]
+    via Null0, receive

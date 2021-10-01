@@ -1,0 +1,7 @@
+
+VRF-Name: VRF1, VRF-ID: 3, State: Up
+    VPNID: unknown
+    RD: 300:1
+    Max Routes: 20000  Mid-Threshold: 17000
+    Table-ID: 0x80000003, AF: IPv6, Fwd-ID: 0x80000003, State: Up
+    Table-ID: 0x00000003, AF: IPv4, Fwd-ID: 0x00000003, State: Up

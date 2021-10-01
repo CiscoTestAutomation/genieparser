@@ -1,0 +1,12 @@
+
+RP/0/0/CPU0:router# show segment-routing mapping-server prefix-sid-map ipv4 detail
+Prefix
+10.186.1.0/24
+    SID Index:      400
+    Range:          300
+    Last Prefix:    10.229.44.0/24
+    Last SID Index: 699
+    Flags:
+10.1.1.1/32
+    SID Index:      10
+    Range:          200

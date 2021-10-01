@@ -1,0 +1,9 @@
+interface Tunnel100
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 2.2.2.2
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 500
+ tunnel mpls traffic-eng path-option 1 dynamic
+end

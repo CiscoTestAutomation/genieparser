@@ -1,0 +1,421 @@
+
+BGP neighbor is 10.64.4.4, remote AS 0, unknown link, Peer index 5
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle, down for 01:27:54, retry in 0.000000
+  No address family configured
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  No established BGP session with peer
+
+BGP neighbor is 10.186.101.1, remote AS 333, ibgp link, Peer index 6
+  BGP version 4, remote router ID 10.186.101.1
+  BGP state = Established, up for 00:07:46
+  Peer is directly attached, interface Ethernet1/1
+  Last read 00:00:45, hold time = 180, keepalive interval is 60 seconds
+  Last written 00:00:45, keepalive timer expiry due 00:00:14
+  Received 67 messages, 0 notifications, 0 bytes in queue
+  Sent 50 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 5, dropped 4
+  Last reset by peer 00:12:43, due to session closed
+  Last reset by us never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received
+  Route refresh capability (old): advertised received
+  4-Byte AS capability: advertised received
+  Address family IPv4 Unicast: advertised received
+  Address family IPv4 Multicast: advertised received
+  Address family IPv6 Unicast: advertised
+  Address family IPv6 Multicast: advertised
+  Address family VPNv4 Unicast: advertised
+  Address family VPNv6 Unicast: advertised
+  Address family Link-State: advertised
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    IPv4 Unicast  IPv4 Multicast  IPv6 Unicast  IPv6 Multicast  VPNv4 Unicast  VPNv6 Unicast  Link-State
+  Address families received from peer:
+    IPv4 Unicast  IPv4 Multicast
+  Forwarding state preserved by peer for:
+  Restart time advertised to peer: 120 seconds
+  Stale time for routes advertised by peer: 300 seconds
+  Restart time advertised by peer: 120 seconds
+  Extended Next Hop Encoding Capability: advertised received
+  Receive IPv6 next hop encoding Capability for AF:
+    IPv4 Unicast
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         5                  5
+  Notifications:                 0                  0
+  Updates:                      23                 28
+  Keepalives:                   17                 17
+  Route Refresh:                 0                  0
+  Capability:                   17                 17
+  Total:                        50                 67
+  Total bytes:                1940               2261
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 6765004, neighbor version 6765004
+  5 accepted paths consume 660 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+  5 paths flushed from peer
+  Last End-of-RIB received 00:00:01 after session start
+
+  For address family: IPv4 Multicast
+  BGP table version 55, neighbor version 55
+  5 accepted paths consume 660 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+  5 paths flushed from peer
+  Last End-of-RIB received 00:00:01 after session start
+
+  For address family: IPv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: IPv6 Multicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: VPNv4 Unicast
+  BGP table version 12863408, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: VPNv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: Link-State
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  Local host: 10.186.0.2, Local port: 55337
+  Foreign host: 10.186.101.1, Foreign port: 179
+  fd = 81
+
+BGP neighbor is 10.186.102.1, remote AS 333, ibgp link, Peer index 7
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle, down for 01:27:53, retry in 00:00:55
+  Peer is directly attached, interface Ethernet1/1
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 69
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 6765004, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: IPv4 Multicast
+  BGP table version 55, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: IPv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: IPv6 Multicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: VPNv4 Unicast
+  BGP table version 12863408, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+
+  For address family: VPNv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  For address family: Link-State
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+
+  No established BGP session with peer
+
+BGP neighbor is 10.186.201.1, remote AS 888, ebgp link, Peer index 8
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle, down for 01:27:52, retry in 00:01:12
+  Peer is directly attached, interface Ethernet1/1
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 70
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 6765004, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: IPv4 Multicast
+  BGP table version 55, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: IPv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: IPv6 Multicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: VPNv4 Unicast
+  BGP table version 12863408, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: VPNv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: Link-State
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  No established BGP session with peer
+
+BGP neighbor is 2001:db8:8b05::1002, remote AS 333, ibgp link, Peer index 3
+  BGP version 4, remote router ID 10.186.101.1
+  BGP state = Established, up for 00:07:40
+  Peer is directly attached, interface Ethernet1/1
+  Last read 00:00:39, hold time = 180, keepalive interval is 60 seconds
+  Last written 00:00:39, keepalive timer expiry due 00:00:20
+  Received 43 messages, 0 notifications, 0 bytes in queue
+  Sent 33 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 5, dropped 4
+  Last reset by peer 00:12:43, due to session closed
+  Last reset by us never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received
+  Route refresh capability (old): advertised received
+  4-Byte AS capability: advertised received
+  Address family IPv4 Unicast: advertised received
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    IPv4 Unicast
+  Address families received from peer:
+    IPv4 Unicast
+  Forwarding state preserved by peer for:
+  Restart time advertised to peer: 120 seconds
+  Stale time for routes advertised by peer: 300 seconds
+  Restart time advertised by peer: 120 seconds
+  Extended Next Hop Encoding Capability: advertised received
+  Receive IPv6 next hop encoding Capability for AF:
+    IPv4 Unicast
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         5                  5
+  Notifications:                 0                  0
+  Updates:                      20                 15
+  Keepalives:                   17                 17
+  Route Refresh:                 0                  0
+  Capability:                    6                  6
+  Total:                        33                 43
+  Total bytes:                1739               1420
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 6765004, neighbor version 6765004
+  5 accepted paths consume 660 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Route reflector client
+  5 paths flushed from peer
+  Last End-of-RIB received 00:00:01 after session start
+
+  Local host: 2001:db8:8b05::112, Local port: 179
+  Foreign host: 2001:db8:8b05::1002, Foreign port: 29470
+  fd = 88
+
+BGP neighbor is 2001:db8:8b05::2002, remote AS 888, ebgp link, Peer index 4
+  BGP version 4, remote router ID 0.0.0.0
+  BGP state = Idle (Connect failure), down for 01:27:55, retry in 00:00:29
+  Peer is directly attached, interface Ethernet1/1
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 0, dropped 0
+  Connection attempts 68
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Message statistics:
+			      Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 6765004, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: IPv6 Unicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: IPv6 Multicast
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  For address family: Link-State
+  BGP table version 2, neighbor version 0
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+
+  No established BGP session with peer

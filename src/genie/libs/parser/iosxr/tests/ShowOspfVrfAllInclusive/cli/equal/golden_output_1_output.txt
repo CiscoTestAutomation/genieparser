@@ -1,0 +1,106 @@
+
+RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive
+Thu Nov  2 21:14:35.895 UTC
+
+ Routing Process "ospf 1" with ID 10.36.3.3
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Originating router-LSAs with maximum metric
+ Condition: on switch-over for 10 seconds, State: inactive
+    Advertise stub links with maximum metric in router-LSAs
+    Advertise summary-LSAs with metric 16711680
+    Advertise external-LSAs with metric 16711680
+ Condition: on start-up for 5 seconds, State: inactive
+    Advertise stub links with maximum metric in router-LSAs
+    Advertise summary-LSAs with metric 16711680
+    Advertise external-LSAs with metric 16711680
+ Condition: always State: active
+    Advertise stub links with maximum metric in router-LSAs
+    Advertise summary-LSAs with metric 16711680
+    Advertise external-LSAs with metric 16711680
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+ LSA refresh interval 1800 seconds
+ Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+ Adjacency stagger enabled; initial (per area): 2, maximum: 64
+    Number of neighbors forming: 0, 2 full
+ Maximum number of configured interfaces 1024
+ Number of external LSA 1. Checksum Sum 0x00607f
+ Number of opaque AS LSA 0. Checksum Sum 00000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ External flood list length 0
+ SNMP trap is enabled
+ LDP Sync Enabled, Sync Status: Not Achieved
+ LSD connected, registered, bound, revision 1
+ Segment Routing Global Block default (16000-23999), not allocated
+ Strict-SPF capability is enabled
+    Area BACKBONE(0)
+	Number of interfaces in this area is 3
+	Area has RRR enabled, topology version 15
+	SPF algorithm executed 26 times
+	Number of LSA 19.  Checksum Sum 0x0a2fb5
+	Number of opaque link LSA 0.  Checksum Sum 00000000
+	Number of DCbitless LSA 5
+	Number of indication LSA 0
+	Number of DoNotAge LSA 0
+	Flood list length 0
+	Number of LFA enabled interfaces 0, LFA revision 0
+	Number of Per Prefix LFA enabled interfaces 0
+	Number of neighbors forming in staggered mode 0, 2 full
+
+
+ VRF VRF1 in Routing Process "ospf 1" with ID 10.36.3.3
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ It is an area border and autonomous system boundary router
+ Redistributing External Routes from,
+    bgp 100
+    Maximum number of redistributed prefixes 10240
+    Threshold for warning message 75%
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+ LSA refresh interval 1800 seconds
+ Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+ Adjacency stagger enabled; initial (per area): 2, maximum: 64
+    Number of neighbors forming: 0, 1 full
+ Maximum number of configured interfaces 1024
+ Maximum number of non self-generated LSA allowed 123
+ Number of external LSA 0. Checksum Sum 00000000
+ Number of opaque AS LSA 0. Checksum Sum 00000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ External flood list length 0
+ SNMP trap is disabled
+ LSD connected, registered, bound, revision 1
+ Segment Routing Global Block default (16000-23999), not allocated
+ Strict-SPF capability is enabled
+    Area 1
+	Number of interfaces in this area is 2
+	SPF algorithm executed 79 times
+	Number of LSA 11.  Checksum Sum 0x04f437
+	Number of opaque link LSA 0.  Checksum Sum 00000000
+	Number of DCbitless LSA 1
+	Number of indication LSA 0
+	Number of DoNotAge LSA 0
+	Flood list length 0
+	Number of LFA enabled interfaces 0, LFA revision 0
+	Number of Per Prefix LFA enabled interfaces 0
+	Number of neighbors forming in staggered mode 0, 1 full

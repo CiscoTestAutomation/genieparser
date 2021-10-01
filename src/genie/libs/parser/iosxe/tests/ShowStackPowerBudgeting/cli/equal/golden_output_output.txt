@@ -1,0 +1,11 @@
+ Power Stack                      Stack   Stack    Total   Rsvd    Alloc   Sw_Avail Num  Num
+    Name                             Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)   Pwr(W)  SW   PS
+    --------------------             ------  -------  ------  ------  ------  ------  ----- -----
+    Powerstack-1                     SP-PS   Stndaln  350     0       235     115       1    1
+
+    Power Stack                      PS-A   PS-B   Power     Alloc     Poe_Avail   Consumd Pwr
+SW  Name                             (W)    (W)    Budgt(W)  Power(W)    Pwr(W)    Sys/PoE(W)
+--  --------------------             -----  -----  --------  --------   --------  ------------
+1   Powerstack-1                     350    0      235       235.0      0.0       139/0.0
+--  --------------------             -----  -----  --------  --------   --------  ------------
+Totals:                                                      235.0      0.0       139/0.0

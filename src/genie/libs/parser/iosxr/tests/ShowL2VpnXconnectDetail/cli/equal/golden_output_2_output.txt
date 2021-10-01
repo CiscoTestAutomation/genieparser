@@ -1,0 +1,70 @@
+
+show l2vpn xconnect detail
+
+Fri Oct  4 15:37:35.184 EDT
+
+Group qf2-to-tqjof2, XC genie_bo3_vqt53_422, state is up; Interworking none
+AC: TenGigE1/1/1/4/2.311, state is up
+Type VLAN; Num Ranges: 1
+Rewrite Tags: []
+VLAN ranges: [311, 311]
+MTU 2611; XC ID 1x3; interworking none
+Statistics:
+packets: received 4, sent 0
+bytes: received 291, sent 0
+drops: illegal VLAN 0, illegal length 0
+EVPN: neighbor 78.81.320.94, PW ID: evi 21311, ac-id 41311, state is up ( established )
+XC ID 1xd1111112
+Encapsulation MPLS
+Source address 78.81.320.99
+Encap type Ethernet, control word enabled
+Sequencing not set
+LSP : Up
+
+EVPN         Local                          Remote                        
+------------ ------------------------------ -----------------------------
+Label        211124                         211121                        
+MTU          2611                           unknown                       
+Control word enabled                        enabled                       
+AC ID        31311                          41311                         
+EVPN type    Ethernet                       Ethernet                      
+
+------------ ------------------------------ -----------------------------
+Create time: 25/10/2019 14:17:28 (2x1e ago)
+Last time status changed: 25/10/2019 15:13:33 (2x1e ago)
+Statistics:
+packets: received 0, sent 4
+bytes: received 0, sent 291
+
+Group qfw-to-tqjof2, XC xstu_bo3_vqt2_211, state is up; Interworking none
+AC: TenGigE1/1/1/4/2.211, state is up
+Type VLAN; Num Ranges: 1
+Rewrite Tags: []
+VLAN ranges: [211, 211]
+MTU 2611; XC ID 1x2; interworking none
+Statistics:
+packets: received 4, sent 0
+bytes: received 291, sent 0
+drops: illegal VLAN 0, illegal length 0
+EVPN: neighbor 78.81.321.93, PW ID: evi 21211, ac-id 41211, state is up ( established )
+XC ID 1xd111113
+Encapsulation MPLS
+Source address 78.81.321.99
+Encap type Ethernet, control word enabled
+Sequencing not set
+LSP : Up
+
+EVPN         Local                          Remote                        
+------------ ------------------------------ -----------------------------
+Label        211123                         211111                        
+MTU          2611                           unknown                       
+Control word enabled                        enabled                       
+AC ID        31211                          31211                         
+EVPN type    Ethernet                       Ethernet                      
+
+------------ ------------------------------ -----------------------------
+Create time: 25/10/2019 15:10:17 (2x1e ago)
+Last time status changed: 25/10/2019 15:15:33 (2x1e ago)
+Statistics:
+packets: received 0, sent 4
+bytes: received 0, sent 291

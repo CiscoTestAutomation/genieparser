@@ -1,0 +1,8 @@
+
+ip prefix-list test: 6 entries
+ seq 5 deny 10.205.0.0/8 
+ seq 10 permit 10.205.0.0/8 le 16 
+ seq 15 permit 10.21.0.0/8 le 16 
+ seq 20 permit 10.94.0.0/8 ge 24 
+ seq 25 permit 10.169.0.0/8 ge 16 le 24 
+ seq 30 permit 192.0.2.0/24 eq 25

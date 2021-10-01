@@ -1,0 +1,12 @@
+sh mpls mldp count
+MLDP Database Summary:
+  Number of MP2MP Entries : 1
+  Number of P2MP Entries  : 0
+  Total Number of Entries : 1
+
+MLDP Root Count:
+  Total Number of MLDP roots: 1
+
+MLDP Neighbor Count:
+  Total Number of MLDP neighbors: 1
+

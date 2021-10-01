@@ -1,0 +1,4 @@
+
+Vlan access-map ed 10
+match ip: foo 
+action: forward 

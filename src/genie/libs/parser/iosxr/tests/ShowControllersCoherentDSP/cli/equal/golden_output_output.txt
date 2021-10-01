@@ -1,0 +1,28 @@
+
+#show controllers coherentDSP 0/0/1/2
+Sat Aug  3 03:10:15.685 EST
+
+Port                                            : CoherentDSP 0/0/1/2
+Controller State                                : Up
+Inherited Secondary State                       : Normal
+Configured Secondary State                      : Normal
+Derived State                                   : In Service
+Loopback mode                                   : None
+BER Thresholds                                  : SF = 1.0E-5  SD = 1.0E-7
+Performance Monitoring                          : Enable
+
+Alarm Information:
+LOS = 1 LOF = 0 LOM = 0
+OOF = 0 OOM = 0 AIS = 0
+IAE = 0 BIAE = 0        SF_BER = 0
+SD_BER = 0      BDI = 2 TIM = 0
+FECMISMATCH = 0 FEC-UNC = 0     
+Detected Alarms                                 : None
+
+Bit Error Rate Information
+PREFEC  BER                                     : 0.0E+00 
+POSTFEC BER                                     : 0.0E+00 
+
+OTU TTI Received 
+
+FEC mode                                        : STANDARD

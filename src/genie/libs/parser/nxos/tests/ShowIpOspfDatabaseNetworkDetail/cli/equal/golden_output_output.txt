@@ -1,0 +1,130 @@
+
+R2_ospf_nx# show ip ospf database network detail vrf all
+OSPF Router with ID (10.100.2.2) (Process ID 1 VRF default)
+
+	Network Link States (Area 0.0.0.0)
+
+LS age: 772
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.1.2.1 (Designated Router address)
+Advertising Router: 10.4.1.1
+LS Seq Number: 0x80000010
+Checksum: 0x3bd1
+Length: 32
+Network Mask: /24
+     Attached Router: 10.4.1.1
+     Attached Router: 10.100.2.2
+
+LS age: 1482
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.1.4.4 (Designated Router address)
+Advertising Router: 10.64.4.4
+LS Seq Number: 0x8000002f
+Checksum: 0xa232
+Length: 32
+Network Mask: /24
+     Attached Router: 10.64.4.4
+     Attached Router: 10.4.1.1
+
+LS age: 788
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.2.3.3 (Designated Router address)
+Advertising Router: 10.36.3.3
+LS Seq Number: 0x80000010
+Checksum: 0x28d0
+Length: 32
+Network Mask: /24
+     Attached Router: 10.100.2.2
+     Attached Router: 10.36.3.3
+
+LS age: 724
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.2.4.4 (Designated Router address)
+Advertising Router: 10.64.4.4
+LS Seq Number: 0x80000010
+Checksum: 0x07e7
+Length: 32
+Network Mask: /24
+     Attached Router: 10.64.4.4
+     Attached Router: 10.100.2.2
+
+LS age: 987
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.3.4.4 (Designated Router address)
+Advertising Router: 10.64.4.4
+LS Seq Number: 0x8000002f
+Checksum: 0xeedb
+Length: 32
+Network Mask: /24
+     Attached Router: 10.64.4.4
+     Attached Router: 10.36.3.3
+
+
+    OSPF Router with ID (10.151.22.22) (Process ID 1 VRF VRF1)
+
+	    Network Link States (Area 0.0.0.1)
+
+LS age: 1454
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.186.5.1 (Designated Router address)
+Advertising Router: 10.229.11.11
+LS Seq Number: 0x80000033
+Checksum: 0xddd9
+Length: 32
+Network Mask: /24
+     Attached Router: 10.229.11.11
+     Attached Router: 10.115.55.55
+
+LS age: 1080
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.229.6.6 (Designated Router address)
+Advertising Router: 10.84.66.66
+LS Seq Number: 0x80000010
+Checksum: 0x3f5f
+Length: 32
+Network Mask: /24
+     Attached Router: 10.84.66.66
+     Attached Router: 10.151.22.22
+
+LS age: 812
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.19.7.7 (Designated Router address)
+Advertising Router: 10.1.77.77
+LS Seq Number: 0x8000002b
+Checksum: 0x5a1a
+Length: 32
+Network Mask: /24
+     Attached Router: 10.1.77.77
+     Attached Router: 10.36.3.3
+
+LS age: 573
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.115.6.6 (Designated Router address)
+Advertising Router: 10.84.66.66
+LS Seq Number: 0x8000002a
+Checksum: 0x5f9d
+Length: 32
+Network Mask: /24
+     Attached Router: 10.84.66.66
+     Attached Router: 10.115.55.55
+
+LS age: 1819
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Network Links
+Link State ID: 10.166.7.6 (Designated Router address)
+Advertising Router: 10.84.66.66
+LS Seq Number: 0x8000002b
+Checksum: 0x960b
+Length: 32
+Network Mask: /24
+     Attached Router: 10.84.66.66
+     Attached Router: 10.1.77.77

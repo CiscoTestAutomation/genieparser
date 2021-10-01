@@ -1,0 +1,13 @@
+
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+10.106.0.0/8, ubest/mbest: 1/0
+    *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
+10.16.1.0/24, ubest/mbest: 1/0
+    *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+10.106.0.5/8, ubest/mbest: 1/0
+    *via Null0, [1/0], 18:47:42, static
+

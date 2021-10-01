@@ -7,7 +7,7 @@ Tunnel Flags:             0
 Tunnel Type:              Ingress Replication
 Tunnel Labels:            20011
 Tunnel ID:                2.2.2.2
-Multicast Proxy:          IGMP
+Multicast Proxy:          IGMP, MLD
 Next Hop(s):              V:20011 2.2.2.2
 
 EVPN Instance:            1

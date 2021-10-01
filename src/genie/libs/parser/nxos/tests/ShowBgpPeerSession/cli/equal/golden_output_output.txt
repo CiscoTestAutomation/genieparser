@@ -1,0 +1,23 @@
+
+N7k# show running-config | inc peer-session
+    inherit peer-session PEER-SESSION
+template peer-session PEER-SESSION
+    inherit peer-session PEER-SESSION
+
+N7k# show bgp peer-session PEER-SESSION
+Commands configured in this template:
+  Shutdown
+  Update Source - interface: loopback0
+  Description - description: PEER-SESSION
+  Password
+  EBGP Multihop - hop limit: 255
+  Disable Connectivity Check
+  Suppress Capabilities
+  Passive Only
+  Timers - hold time: 111, keepalive: 222
+  Remote AS
+  Local AS
+  Enable Bfd
+Inherited commands:
+Inherited by the following peers:
+  VRF default: 10.16.2.5

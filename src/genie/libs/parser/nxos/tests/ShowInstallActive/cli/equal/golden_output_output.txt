@@ -1,0 +1,25 @@
+
+
+Boot Images:
+    Kickstart Image: slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+    System Image: slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
+
+Active Packages:
+
+    n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin
+
+Active Packages on Module #3:
+
+    n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin
+
+Active Packages on Module #4:
+
+
+Active Packages on Module #6:
+
+
+Active Packages on Module #7:
+
+
+Active Packages on Module #8:
+

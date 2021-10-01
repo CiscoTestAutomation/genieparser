@@ -1,0 +1,9 @@
+ PTP CLOCK INFO
+  PTP Device Type: Unknown
+  PTP Device Profile: Default Profile
+  Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Clock Domain: 0
+  Network Transport Protocol: 802.3
+  Message general ip dscp  : 47
+  Message event  ip dscp   : 59
+  Number of PTP ports: 75

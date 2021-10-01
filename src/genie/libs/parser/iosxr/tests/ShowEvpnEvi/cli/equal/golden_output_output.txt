@@ -1,0 +1,8 @@
+
+RP/0/RSP1/CPU0:Router1#show evpn evi
+EVI        Bridge                       Domain Type
+---------- ---------------------------- -------------------
+1000        VPWS:1000                   VPWS (vlan-unaware)
+2000        XC-POD1-EVPN                EVPN
+2001        XC-POD2-EVPN                EVPN
+

@@ -1,0 +1,9 @@
+
+RP/0/0/CPU0:router# show isis segment-routing prefix-sid-map active-policy
+
+IS-IS 1 active policy
+Prefix               SID Index    Range        Flags
+10.4.1.100/32         100          20
+10.4.1.150/32         150          10
+
+Number of mapping entries: 2

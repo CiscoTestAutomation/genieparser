@@ -1,0 +1,7 @@
+
+Port                 InOctets    InUcastPkts    InMcastPkts    InBcastPkts 
+Po20               1363220686       14789766          20785              6 
+
+Port                OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts 
+Po20               1595563943       16594471          23569              3 
+R3#

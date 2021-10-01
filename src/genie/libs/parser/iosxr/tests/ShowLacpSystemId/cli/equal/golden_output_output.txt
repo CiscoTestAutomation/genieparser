@@ -1,0 +1,7 @@
+
+RP/0/RP0/CPU0:iosxrv9000-1#show lacp system-id 
+Tue Apr  3 20:33:23.108 UTC
+
+Priority  MAC Address
+--------  -----------------
+  0x0064  00-1b-0c-ff-6a-36

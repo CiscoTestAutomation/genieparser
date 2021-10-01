@@ -1,0 +1,61 @@
+
+        show ospf vrf all-inclusive
+
+Wed Jun 17 11:14:00.030 UTC
+
+ Routing Process "ospf 10" with ID 10.0.12.56
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Originating router-LSAs with maximum metric
+    Condition: on start-up while BGP is converging, State: inactive
+       Advertise stub links with maximum metric in router-LSAs
+    Last max-metric unset reason: unconfigured
+    Last max-metric set condition: always
+    Last max-metric unset time: Apr  6 10:18:36.777, Time elapsed: 2y10w
+ Initial SPF schedule delay 100 msecs
+ Minimum hold time between two consecutive SPFs 500 msecs
+ Maximum wait time between two consecutive SPFs 10000 msecs
+ Initial LSA throttle delay 0 msecs
+ Minimum hold time for LSA throttle 25 msecs
+ Maximum wait time for LSA throttle 10000 msecs
+ Minimum LSA interval 25 msecs. Minimum LSA arrival 0 msecs
+ LSA refresh interval 1800 seconds
+ Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+ Adjacency stagger enabled; initial (per area): 2, maximum: 64
+    Number of neighbors forming: 0, 2 full
+ Maximum number of configured interfaces 1024
+ Number of external LSA 145. Checksum Sum 0x40c673
+ Number of opaque AS LSA 0. Checksum Sum 00000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ External flood list length 0
+ IPFRR per-prefix tiebreakers:
+    Name                    Index
+    No Tunnel (Implicit)    255
+    Node Protection         40
+    Line-card Disjoint      30
+    Lowest Metric           20
+    Primary Path            10
+    Downstream              0
+    Secondary Path          0
+    SRLG Disjoint           0
+    Post Convergence Path   0
+ SNMP trap is enabled
+ LSD connected, registered, bound, revision 1
+ Segment Routing Global Block default (16000-23999), not allocated
+    Area BACKBONE(0)
+	Number of interfaces in this area is 6
+	Area has RRR enabled, topology version 390659
+	SPF algorithm executed 366720 times
+	Number of LSA 786.  Checksum Sum 0x1849b5b
+	Number of opaque link LSA 0.  Checksum Sum 00000000
+	Number of DCbitless LSA 166
+	Number of indication LSA 0
+	Number of DoNotAge LSA 0
+	Flood list length 0
+	Number of LFA enabled interfaces 2, LFA revision 366718
+	Number of Per Prefix LFA enabled interfaces 0
+	Number of neighbors forming in staggered mode 0, 2 full

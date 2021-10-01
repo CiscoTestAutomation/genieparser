@@ -1,0 +1,19 @@
+
+2021-08-25 10:01:44,987: %UNICON-INFO: +++ R2_xr with alias 'cli': executing command 'monitor interface Gi0/0/0/4 Gi0/0/0/5 Gi0/0/0/3' +++
+monitor interface Gi0/0/0/4 Gi0/0/0/5 Gi0/0/0/3
+Wed Aug 25 14:01:41.716 UTC
+R2_xr                Monitor Time: 00:00:06          SysUptime: 21:24:05
+
+Protocol:General
+Interface             In(bps)      Out(bps)     InBytes/Delta  OutBytes/Delta
+R2_xr                Monitor Time: 00:00:20          SysUptime: 21:24:19
+
+Protocol:General
+Interface             In(bps)      Out(bps)     InBytes/Delta  OutBytes/Delta
+Gi0/0/0/4                 0/  0%        0/  0%     2.5M/0          1.2M/133
+Gi0/0/0/5                 0/  0%        0/  0%     2.5M/120      869437/0
+Gi0/0/0/3                 0/  0%        0/  0%     1.8M/124      869074/0
+
+Quit='q',     Clear='c',    Freeze='f', Thaw='t',
+Next set='n', Prev set='p', Bytes='y',  Packets='k'
+(General='g', IPv4 Uni='4u', IPv4 Multi='4m', IPv6 Uni='6u', IPv6 Multi='6m')

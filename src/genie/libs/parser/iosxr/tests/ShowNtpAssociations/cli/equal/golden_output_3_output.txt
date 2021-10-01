@@ -1,0 +1,10 @@
+
+RP/0/RP0/CPU0:router# show ntp associations 
+  
+Tue Oct  7 11:22:46.839 EST 
+   
+      address         ref clock     st  when  poll reach  delay  offset    disp
+*~192.168.128.5    10.81.254.131     2     1    64  377    7.98  -0.560   0.108
++~2001:db8:429a:3189::2 vrf testAA
+		   172.16.36.80      3    20    64  377    6.00  -2.832   0.046
+* sys_peer, # selected, + candidate, - outlayer, x falseticker, ~ configured

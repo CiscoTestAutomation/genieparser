@@ -1,0 +1,20 @@
+
+R2_ospf_nx# show ip ospf database external detail vrf all
+OSPF Router with ID (10.100.2.2) (Process ID UNDERLAY VRF default)
+
+	Type-5 AS External Link States
+
+LS age: 1565
+Options: 0x20 (No TOS-capability, DC)
+LS Type: Type-5 AS-External
+Link State ID: 10.94.44.44 (Network address)
+Advertising Router: 10.64.4.4
+LS Seq Number: 0x80000002
+Checksum: 0x7d61
+Length: 36
+Network Mask: /32
+     Metric Type: 2 (Larger than any link state path)
+     TOS: 0
+     Metric: 20
+     Forward Address: 0.0.0.0
+     External Route Tag: 0

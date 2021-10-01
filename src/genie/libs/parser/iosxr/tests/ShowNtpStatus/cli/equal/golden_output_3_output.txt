@@ -1,0 +1,11 @@
+
+RP/0/RP0/CPU0:iosxrv9000-1#show ntp status
+Mon Nov  5 23:23:09.761 UTC
+
+Clock is unsynchronized, stratum 16, no reference clock
+nominal freq is 1000000000.0000 Hz, actual freq is 1000000000.0000 Hz, precision is 2**23
+reference time is 00000000.00000000 (00:00:00.000 UTC Thu Jan  1 1970)
+clock offset is 0.000 msec, root delay is 0.000 msec
+root dispersion is 101.71 msec, peer dispersion is 0.00 msec
+loopfilter state is 'NSET' (Never set), drift is 0.0000000000 s/s
+system poll interval is 64, never updated

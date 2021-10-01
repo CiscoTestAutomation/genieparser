@@ -1,0 +1,24 @@
+
+RP/0/0/CPU0:Devicevr#show msdp vrf VRF1 statistics peer 
+Fri Jun 16 15:52:06.775 UTC
+MSDP Peer Statistics :- VRF1
+Peer 10.4.1.1 : AS is 0, State is Listen, 0 active SAs
+TLV Rcvd : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses, 0 unknowns
+TLV Sent : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses
+SA msgs  : 0 received, 0 sent
+Peer 10.229.11.11 : AS is 0, State is Listen, 0 active SAs
+TLV Rcvd : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses, 0 unknowns
+TLV Sent : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses
+SA msgs  : 0 received, 0 sent

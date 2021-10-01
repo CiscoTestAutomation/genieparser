@@ -1,0 +1,34 @@
+
+n9kv-3# show ipv6 routers vrf all
+Router fe80::f816:3eff:feff:e5a2 on Ethernet1/1 , last update time 3.2 min
+Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
+HomeAgentFlag 0, Preference Medium
+Reachable time 0 msec, Retransmission time 0 msec
+Prefix 2001:db8:c56d:4::/64  onlink_flag 1 autonomous_flag 1
+valid lifetime 2592000, preferred lifetime 604800
+
+
+Router fe80::f816:3eff:feff:e455 on Ethernet1/2 , last update time 1.5 min
+Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
+HomeAgentFlag 0, Preference Medium
+Reachable time 0 msec, Retransmission time 0 msec
+Prefix 2001:db8:c8d1:4::/64  onlink_flag 1 autonomous_flag 1
+valid lifetime 2592000, preferred lifetime 604800
+Prefix 2001:db8:888c:4::/64   onlink_flag 1 autonomous_flag 1
+valid lifetime 2592000, preferred lifetime 604800
+
+
+Router fe80::f816:3eff:feff:9f9b on Ethernet1/3 , last update time 2.8 min
+Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
+HomeAgentFlag 0, Preference Medium
+Reachable time 0 msec, Retransmission time 0 msec
+Prefix 2001:db8:c56d:1::/64  onlink_flag 1 autonomous_flag 1
+valid lifetime 2592000, preferred lifetime 604800
+
+
+Router fe80::f816:3eff:feff:4908 on Ethernet1/4 , last update time 2.3 min
+Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
+HomeAgentFlag 0, Preference Medium
+Reachable time 0 msec, Retransmission time 0 msec
+Prefix 2001:db8:c8d1:1::/64  onlink_flag 1 autonomous_flag 1
+valid lifetime 2592000, preferred lifetime 604800

@@ -1,0 +1,25 @@
+202-xTR1#show lisp all instance-id * dynamic-eid
+
+=================================================
+Output for router lisp 0 instance-id 100
+=================================================
+LISP Dynamic EID Information for router 0, IID 100
+
+Dynamic-EID name: Auto-L2-group-100
+  Database-mapping EID-prefix: any-mac, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 0
+
+
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+LISP Dynamic EID Information for router 0, IID 101
+
+Dynamic-EID name: Auto-L2-group-101
+  Database-mapping EID-prefix: any-mac, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured

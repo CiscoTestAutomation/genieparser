@@ -1,0 +1,67 @@
+
+ICMPv6 MLD Interfaces for VRF "VRF1"
+Ethernet2/2, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:db8:8404:751c::1/64 [VALID]
+  Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
+  IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
+  ICMPv6 MLD parameters:
+      Active Querier: fe80::5054:ff:fed7:c01f
+      Querier version: 2, next query sent in: 00:05:18
+      MLD Membership count: 2
+      MLD version: 2, host version: 2
+      MLD query interval: 366 secs, configured value: 366 secs
+      MLD max response time: 16 secs, configured value: 16 secs
+      MLD startup query interval: 91 secs, configured value: 31 secs
+      MLD startup query count: 7
+      MLD last member mrt: 1 secs
+      MLD last member query count: 7
+      MLD group timeout: 2578 secs, configured value: 260 secs
+      MLD querier timeout: 2570 secs, configured value: 255 secs
+      MLD unsolicited report interval: 1 secs
+      MLD robustness variable: 7, configured value: 7
+      MLD reporting for link-local groups: disabled
+      MLD immediate leave: enabled
+      MLD interface enable refcount: 4
+      MLD Report Policy: test
+      MLD State Limit: 6400,  Available States: 6400
+  ICMPv6 MLD Statistics (sent/received):
+  V1 Queries:          0/0         
+  V2 Queries:         82/82        
+  V1 Reports:          0/0         
+  V2 Reports:        102/416       
+  V1 Leaves :          0/0         
+ICMPv6 MLD Interfaces for VRF "default"
+Ethernet2/1, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:db8:8404:907f::1/64 [VALID]
+  Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
+  IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
+  ICMPv6 MLD parameters:
+      Active Querier: fe80::5054:ff:fed7:c01f
+      Querier version: 2, next query sent in: 00:03:01
+      MLD Membership count: 2
+      MLD version: 2, host version: 2
+      MLD query interval: 366 secs, configured value: 366 secs
+      MLD max response time: 16 secs, configured value: 16 secs
+      MLD startup query interval: 91 secs, configured value: 31 secs
+      MLD startup query count: 7
+      MLD last member mrt: 1 secs
+      MLD last member query count: 7
+      MLD group timeout: 2578 secs, configured value: 260 secs
+      MLD querier timeout: 2570 secs, configured value: 255 secs
+      MLD unsolicited report interval: 1 secs
+      MLD robustness variable: 7, configured value: 7
+      MLD reporting for link-local groups: disabled
+      MLD immediate leave: enabled
+      MLD interface enable refcount: 5
+      MLD Report Policy: test
+      MLD State Limit: 6400,  Available States: 6400
+  ICMPv6 MLD Statistics (sent/received):
+  V1 Queries:          0/0         
+  V2 Queries:        792/792       
+  V1 Reports:          0/0         
+  V2 Reports:        191/1775      
+  V1 Leaves :          0/0         
+ICMPv6 MLD Interfaces for VRF "management"
+

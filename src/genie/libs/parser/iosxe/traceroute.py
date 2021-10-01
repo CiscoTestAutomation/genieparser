@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
+    * traceroute mpls traffic-eng tunnel {tunnelid}
 
 '''
 
@@ -22,6 +23,7 @@ class TracerouteSchema(MetaParser):
 
     ''' Schema for:
         * 'traceroute'
+        * 'traceroute mpls traffic-eng tunnel {tunnelid}'
     '''
 
     schema = {
@@ -73,7 +75,6 @@ class Traceroute(TracerouteSchema):
         * 'traceroute'
     '''
     cli_command = 'traceroute'
-
     def cli(self, output=None):
 
         if output is None:
@@ -101,6 +102,11 @@ class Traceroute(TracerouteSchema):
         # Tracing the route to www.cisco.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
                           r' \(+(?P<traceroute>\S+)\)$')
+                          
+        # Tracing MPLS TE Label Switched Path on Tunnel100 Active LSP, timeout is 2 seconds
+        p1_4 = re.compile(r'^Tracing +MPLS +TE +Label +Switched +Path +on'
+                          r' +(?P<traceroute>\S+) +Active +LSP, +timeout +is'
+                          r' +(?P<timeout>(\d+)) +seconds$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
@@ -198,6 +204,18 @@ class Traceroute(TracerouteSchema):
                                    setdefault(traceroute, {})
                 tr_dict['name_of_address'] = name_of_address
                 tr_dict['address'] = traceroute
+                continue
+                
+            # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
+            m = p1_4.match(line)
+            if m:
+                group = m.groupdict()
+                traceroute = group['traceroute']
+                tr_dict = ret_dict.setdefault('traceroute', {}).\
+                                   setdefault(traceroute, {})
+                tr_dict['timeout_seconds'] = int(group['timeout'])
+                tr_dict['address'] = traceroute
+
                 continue
 
             # 1 10.1.1.2 (red/1001, red/1001)
@@ -377,3 +395,17 @@ class Traceroute(TracerouteSchema):
             tr_dict.update({'vrf': vrf})
         
         return ret_dict
+
+class TracerouteMPLSTETunnel(Traceroute):
+
+    ''' Parser for:
+        * 'traceroute mpls traffic-eng tunnel <tunnelid>'
+    '''
+    cli_command = 'traceroute mpls traffic-eng tunnel {tunnelid}'
+
+    def cli(self, tunnelid="", output=None):
+        if not output:
+            output=self.device.execute(self.cli_command.format(tunnelid=tunnelid))
+        else:
+            output=output
+        return super().cli(output=output)

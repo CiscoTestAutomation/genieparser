@@ -1,0 +1,56 @@
+
+RP/0/RSP0/CPU0:router# show bundle
+Bundle-Ether 2
+  Status:                                     Up
+  Local links <active/standby/configured>:   1 / 0 / 1
+  Local bandwidth <effective/available>:     100000 (100000) kbps
+  MAC address (source):                      1234.43ff.3232 (Gi0/0/0/1)
+  Minimum active links / bandwidth:          1 / 500 kbps
+  Maximum active links:                      32
+  Wait-while timer:                          2000 ms
+  Load-balancing:                            Default
+  LACP:                                      Operational
+    Flap suppression timer:                  2500 ms
+    Cisco extensions:                        Disabled
+  mLACP:                                     Operational
+    Interchassis group:                      3
+    Foreign links <active/configured>:       1 / 1
+    Switchover type:                         Revertive
+    Recovery delay:                          300 s
+    Maximize threshold:                      2 links
+  IPv4 BFD:                                  Not operational
+    State:                                   Off
+    Fast detect:                             Enabled
+    Start timer:                             Off
+    Neighbor-unconfigured timer:             Off
+    Preferred min interval:                  150 ms
+    Preferred multiple:                      3
+    Destination address:                     Not Configured
+
+  Port                  Device          State       Port ID        B/W, kbps
+  --------------------  --------------- ----------- -------------- -----------
+  Gi0/0/0/1             Local           Active      0x8000, 0x0001      100000
+  MyFirstInterface      10.10.10.123    Negotiating 0x8000, 0x0032      100000
+
+
+Bundle-Ether 3
+  Status:                                    Up 
+  Local links <active/standby/configured>:   1 / 0 / 1
+  Local bandwidth <effective/available>:     100000 / 100000 kbps
+  MAC address (source):                      1234.43ff.4343 (chassis pool)
+  Minimum active links / bandwidth:          1 / 500 kbps
+  Maximum active links:                      32 (from partner)
+  Wait-while timer:                          100 ms
+  Load-balancing:
+    Link order signaling:                    Operational
+    Hash type:                               Src-IP
+  LACP:                                      Operational
+    Flap suppression timer:                  120 s
+    Cisco extensions:                        Enabled
+  mLACP:                                     Not configured
+  IPv4 BFD:                                  Not operational
+
+  Port                  Device          State       Port ID        B/W, kbps
+  --------------------  --------------- ----------- -------------- -----------
+  Gi0/0/0/2             Local           Active      0x8000, 0x0002      100000
+

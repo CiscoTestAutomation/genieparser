@@ -1,0 +1,5 @@
+{
+    "neighbor": "10.193.16.177",
+    "address_family": "vpnv4 unicast",
+    "vrf": "tel-189"
+}

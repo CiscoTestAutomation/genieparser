@@ -1,0 +1,19 @@
+
+RP/0/RP0/CPU0:R1#show rip                                                                                                      
+Wed Jan 30 18:47:49.312 UTC                                                     
+										
+RIP config:                                                                     
+Active:                    Yes                                                  
+Added to socket:           Yes                                                  
+Out-of-memory state:        Normal                                              
+Version:                    2                                                   
+Default metric:             3                                                   
+Maximum paths:              4                                                   
+Auto summarize:            No                                                   
+Broadcast for V2:          No                                                   
+Packet source validation:  Yes                                                  
+NSF:                        Disabled                                            
+Timers: Update:             10 seconds (7 seconds until next update)            
+	Invalid:            31 seconds                                          
+	Holddown:           32 seconds                                          
+	Flush:              33 seconds  

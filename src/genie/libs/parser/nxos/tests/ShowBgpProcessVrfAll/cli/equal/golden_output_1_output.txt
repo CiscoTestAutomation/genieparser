@@ -1,0 +1,136 @@
+
+BGP Process Information
+BGP Process ID                 : 29474
+BGP Protocol Started, reason:  : configuration
+BGP Protocol Tag               : 100
+BGP Performance Mode:          : No
+BGP Protocol State             : Running
+BGP Isolate Mode               : No
+BGP MMODE                      : Initialized
+BGP Memory State               : OK
+BGP asformat                   : asplain
+Segment Routing Global Block   : 10000-25000
+
+BGP attributes information
+Number of attribute entries    : 4
+HWM of attribute entries       : 5
+Bytes used by entries          : 368
+Entries pending delete         : 0
+HWM of entries pending delete  : 0
+BGP paths per attribute HWM    : 1
+BGP AS path entries            : 0
+Bytes used by AS path entries  : 0
+
+Confcheck capabilities in use:
+  1. CAP_FEATURE_BGP_5_2_1 (refcount = 7)
+
+Information regarding configured VRFs:
+
+BGP Information for VRF VRF1
+VRF Id                         : 3
+VRF state                      : UP
+Router-ID                      : 10.229.11.11
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 1
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 100:100
+
+    Information for address family IPv4 Unicast in VRF VRF1
+    Table Id                   : 10
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          0               5          5          1          2
+
+    Redistribution
+	direct, route-map genie_redistribution
+	static, route-map genie_redistribution
+	eigrp, route-map test-map
+
+    Export RT list: 100:100
+    Import RT list: 100:100
+    Label mode: per-prefix
+    Aggregate label: 492287
+
+    Information for address family IPv6 Unicast in VRF VRF1
+    Table Id                   : 0x80000010
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               4          4          1          1
+
+    Redistribution
+	direct, route-map genie_redistribution
+	static, route-map genie_redistribution
+
+    Export RT list: 100:100
+    Import RT list: 100:100
+    Label mode: per-prefix
+    Aggregate label: 492288
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF default
+VRF Id                         : 1
+VRF state                      : UP
+Router-ID                      : 10.4.1.1
+Configured Router-ID           : 10.4.1.1
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 3
+No. of pending config peers    : 0
+No. of established peers       : 1
+VRF RD                         : Not configured
+
+    Information for address family IPv4 Unicast in VRF default
+    Table Id                   : 1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          0               0          0          0          0
+
+    Redistribution
+	None
+
+
+    Information for address family IPv6 Unicast in VRF default
+    Table Id                   : 80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+
+    Information for address family VPNv4 Unicast in VRF default
+    Table Id                   : 1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          1               5          5          0          0
+
+    Redistribution
+	None
+
+    Retain RT: enabled all
+
+    Information for address family VPNv6 Unicast in VRF default
+    Table Id                   : 80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          1               4          4          0          0
+
+    Redistribution
+	None
+
+
+    Information for address family IPv6 Label Unicast in VRF default
+    Table Id                   : 80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None

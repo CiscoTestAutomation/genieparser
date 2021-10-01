@@ -1,0 +1,20 @@
+
+Virtual service lxc_9 detail
+  State                 : Not Installed
+  Package information
+    Name                : None
+    Path                : Not Available
+    Application
+      Name              : None
+      Installed version : None
+      Description       : None
+    Signing
+      Key type          : Unsigned
+      Method            : None
+    Licensing
+      Name              : None
+      Version           : None
+  Resource reservation
+    Disk                : 0 MB
+    Memory              : 0 MB
+    CPU                 : 0% system CPU

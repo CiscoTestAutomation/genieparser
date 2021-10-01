@@ -1,0 +1,49 @@
+R1#show segment-routing traffic-eng policy name r5-15-s detail
+
+Name: r5-15-s (Color: 115 End-point: 15.0.0.15)
+  Owners : CLI
+  Status:
+    Admin: up, Operational: up for 00:05:09 (since 09-21 14:13:15.629)
+  Candidate-paths:
+    Preference 1 (CLI):
+      Explicit: segment-list to-R5-15-s (active)
+        Weight: 1, Metric Type: TE
+          16505 [Prefix-SID, 15.0.0.15]
+  Attributes:
+    Binding SID: 17
+      Allocation mode: dynamic
+      State: Programmed
+    Autoroute:
+      Include all (Strict)
+      Mode: constant, Value: 21
+  Tunnel ID: 65756 (Interface Handle: 0x83)
+  Per owner configs:
+    CLI
+      Binding SID: dynamic
+  Stats:
+    5 minute output rate 0 bits/sec, 0 packets/sec
+    Packets: 0 	Bytes: 0
+
+  Event history:
+    Timestamp           	Client          	Event type          	Context: Value
+    ---------           	------          	----------          	-------: -----
+    09-21 14:13:15.629  	CLI             	Policy created      	Name: CLI
+    09-21 14:13:15.812  	CLI             	Set colour          	Colour: 115
+    09-21 14:13:15.812  	CLI             	Set end point       	End-point: 15.0.0.15
+    09-21 14:13:16.754  	CLI             	Set explicit path   	Path option: to-R5-15-s
+    09-21 14:13:16.759  	CLI             	BSID allocated      	FWD: label 17
+    09-21 14:13:19.815  	FH Resolution   	Policy state UP     	Status: PATH RESOLVED CP: 1
+    09-21 14:13:19.883  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:13:28.082  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:14:31.562  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:14:31.626  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:15:36.795  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:15:44.974  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:15:52.763  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:15:53.570  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:17:00.310  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:17:02.790  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:18:09.492  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:18:11.841  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:18:19.154  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1
+    09-21 14:18:21.617  	FH Resolution   	REOPT triggered     	Status: REOPTIMIZED CP: 1

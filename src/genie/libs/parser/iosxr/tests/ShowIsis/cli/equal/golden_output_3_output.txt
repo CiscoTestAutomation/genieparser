@@ -1,0 +1,38 @@
+
+show isis
+Mon Nov 25 22:23:10.670 UTC
+
+IS-IS Router: test
+System Id: 4444.44ff.8888
+Instance Id: 0
+IS Levels: level-1
+Manual area address(es):
+    49.0002
+Routing for area address(es):
+    49.0002
+Non-stop forwarding: Disabled
+Most recent startup mode: Cold Restart
+TE connection status: Down
+Topologies supported by IS-IS:
+    IPv4 Unicast
+    Level-1
+	Metric style (generate/accept): Wide/Wide
+	Metric: 10
+	ISPF status: Disabled
+    No protocols redistributed
+    Distance: 115
+    Advertise Passive Interface Prefixes Only: No
+    IPv6 Unicast
+    Level-1
+	Metric: 10
+	ISPF status: Disabled
+    No protocols redistributed
+    Distance: 115
+    Advertise Passive Interface Prefixes Only: No
+SRLB not allocated
+SRGB not allocated
+Interfaces supported by IS-IS:
+    Loopback0 is running actively (active in configuration)
+    GigabitEthernet0/0/0/0 is running actively (active in configuration)
+    GigabitEthernet0/0/0/1 is running actively (active in configuration)
+

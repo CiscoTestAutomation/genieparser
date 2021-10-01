@@ -1,0 +1,107 @@
+
+pinxdt-n9kv-2# show bgp vrf default all neighbors 10.186.0.2 routes
+Can't find neighbor 10.186.0.2
+
+Peer 10.186.0.2 routes for address family IPv4 Unicast:
+BGP table version is 25, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+*>i10.16.0.0/8          10.186.0.2                 0        100          0 ?
+* i10.106.0.0/8        10.186.0.2                 0        100          0 ?
+* i192.168.51.0/8        10.186.0.2                 0        100          0 ?
+
+
+Peer 10.186.0.2 routes for address family IPv4 Multicast:
+BGP table version is 19, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+*>i10.16.0.0/8          10.186.0.2                 0        100          0 ?
+*>i10.106.0.0/8        10.186.0.2                 0        100          0 ?
+*>i192.168.51.0/8        10.186.0.2                 0        100          0 ?
+
+
+Peer 10.186.0.2 routes for address family IPv6 Unicast:
+BGP table version is 7, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+
+
+Peer 10.186.0.2 routes for address family IPv6 Multicast:
+BGP table version is 2, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+
+Peer 10.186.0.2 routes for address family VPNv4 Unicast:
+BGP table version is 23, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 1:100    (VRF vpn1)
+*>i10.16.0.0/8          10.186.0.2                 0        100          0 ?
+
+Route Distinguisher: 2:100    (VRF vpn2)
+*>i10.16.0.0/8          10.186.0.2                 0        100          0 ?
+
+Peer 10.186.0.2 routes for address family VPNv6 Unicast:
+BGP table version is 7, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 1:100    (VRF vpn1)
+
+Route Distinguisher: 2:100    (VRF vpn2)
+
+
+Peer 10.186.0.2 routes for address family IPv4 MVPN:
+BGP table version is 2, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+
+Peer 10.186.0.2 routes for address family IPv6 MVPN:
+BGP table version is 2, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+
+Peer 10.186.0.2 routes for address family IPv4 Label Unicast:
+BGP table version is 28, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+*>i10.16.0.0/8          10.186.0.2                 0        100          0 ?
+* i10.106.0.0/8        10.186.0.2                 0        100          0 ?
+* i192.168.51.0/8        10.186.0.2                 0        100          0 ?
+
+
+Peer 10.186.0.2 routes for address family Link-State:
+BGP table version is 2, Local Router ID is 10.186.101.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Can't find neighbor 10.186.0.2
+Can't find neighbor 10.186.0.2

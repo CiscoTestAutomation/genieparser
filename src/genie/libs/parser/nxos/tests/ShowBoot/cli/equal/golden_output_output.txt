@@ -1,0 +1,26 @@
+
+Current Boot Variables:
+
+sup-1
+kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
+Boot POAP Disabled
+sup-2
+kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
+Boot POAP Disabled
+No module boot variable set
+
+Boot Variables on next reload:
+
+sup-1
+kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
+Boot POAP Disabled
+sup-2
+kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
+Boot POAP Disabled
+No module boot variable set
+
+

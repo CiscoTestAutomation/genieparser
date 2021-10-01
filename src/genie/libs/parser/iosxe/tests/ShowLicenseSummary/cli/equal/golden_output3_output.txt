@@ -1,0 +1,5 @@
+License Usage:
+  License                 Entitlement Tag               Count Status
+  -----------------------------------------------------------------------------
+  network-premier_2.5G    (ESR_P_2.5G_P)                    1 IN USE
+  dna-premier_2.5G        (DNA_P_2.5G_P)                    1 IN USE

@@ -1,0 +1,3 @@
+
+R2# show running-config | sec '^advertise evpn multicast'
+advertise evpn multicast
