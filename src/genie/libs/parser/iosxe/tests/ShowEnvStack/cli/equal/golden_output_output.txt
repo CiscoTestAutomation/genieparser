@@ -1,0 +1,11 @@
+SWITCH: 1
+Switch 1 FAN 1 is OK
+Switch 1 FAN 2 is OK
+Switch 1 FAN 3 is OK
+FAN PS-1 is NOT PRESENT
+FAN PS-2 is OK
+Switch 1: SYSTEM TEMPERATURE is OK
+Temperature Value: 28 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 41 Degree Celsius
+Red Threshold    : 56 Degree Celsius

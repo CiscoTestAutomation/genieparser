@@ -1,0 +1,19 @@
+
+RP/0/RP0/CPU0:router# show l2vpn forwarding protection main-interface location 0/2/1
+Main Interface ID                Instance   State
+-------------------------------- ---------- ------------
+VFI:ves-vfi-1                    0          FORWARDING
+VFI:ves-vfi-1                    1          BLOCKED
+VFI:ves-vfi-2                    0          FORWARDING
+VFI:ves-vfi-2                    1          FORWARDING
+VFI:ves-vfi-3                    0          FORWARDING
+VFI:ves-vfi-3                    1          BLOCKED
+VFI:ves-vfi-4                    0          FORWARDING
+VFI:ves-vfi-4                    1          FORWARDING
+PW:10.25.40.40,10001             0          FORWARDING
+PW:10.25.40.40,10001             1          BLOCKED
+PW:10.25.40.40,10007             0          FORWARDING
+PW:10.25.40.40,10007             1          FORWARDING
+PW:10.25.40.40,10011             0          FORWARDING
+PW:10.25.40.40,10011             1          FORWARDING
+PW:10.25.40.40,10017             0          FORWARDING

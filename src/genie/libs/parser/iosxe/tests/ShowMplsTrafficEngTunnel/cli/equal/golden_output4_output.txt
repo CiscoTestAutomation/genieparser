@@ -1,0 +1,100 @@
+
+P2P TUNNELS/LSPs:
+
+Name: PE1_t100                            (Tunnel100) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 1, (LOCKDOWN) type explicit PE1_R4_R5_R2 (Basis for Setup, path weight 1)
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: disabled LockDown: enabled  Loadshare: 500 [4000000] bw-based
+    AutoRoute destination: enabled 
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: explicit path option 1 is active
+    BandwidthOverride: disabled  LockDown: enabled   Verbatim: disabled
+  Node Hop Count: 1
+
+  InLabel  :  -
+  OutLabel : Port-channel30, 27
+  Next Hop : 193.1.1.2
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 100, Tun_Instance 5030
+    RSVP Path Info:
+      My Address: 193.1.1.1   
+      Explicit Route: 193.1.1.2 4.4.4.4 196.1.1.2* 197.1.1.2* 
+      Record   Route: 
+      Tspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+    RSVP Resv Info:
+      Record   Route:  196.1.1.1 197.1.1.1 197.1.1.2
+      Fspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+
+  History:
+    Tunnel:
+      Time since created: 2 days, 4 hours, 19 minutes
+      Time since path change: 22 minutes, 40 seconds
+      Number of LSP IDs (Tun_Instances) used: 5030
+    Current LSP: [ID: 5030]
+      Uptime: 22 minutes, 40 seconds
+    Prior LSP: [ID: 5022]
+      ID: path option unknown
+      Removal Trigger: configuration changed (severe)
+
+Name: PE1_t101                            (Tunnel101) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 1, type explicit PE1_R4_R5_R2 (Basis for Setup, path weight 1)
+      Path-option attribute: ATT
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: disabled LockDown: disabled Loadshare: 500 [4000000] bw-based
+    AutoRoute destination: enabled 
+    auto-bw: disabled
+    Attribute-set: ATT
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: explicit path option 1 is active
+    BandwidthOverride: disabled  LockDown: disabled  Verbatim: disabled
+  Node Hop Count: 1
+
+  InLabel  :  -
+  OutLabel : Port-channel30, 28
+  Next Hop : 193.1.1.2
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 101, Tun_Instance 1
+    RSVP Path Info:
+      My Address: 193.1.1.1   
+      Explicit Route: 193.1.1.2 4.4.4.4 196.1.1.2* 197.1.1.2* 
+      Record   Route: 
+      Tspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+    RSVP Resv Info:
+      Record   Route:  196.1.1.1 197.1.1.1 197.1.1.2
+      Fspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+
+  History:
+    Tunnel:
+      Time since created: 17 minutes, 23 seconds
+      Time since path change: 17 minutes, 12 seconds
+      Number of LSP IDs (Tun_Instances) used: 1
+    Current LSP: [ID: 1]
+      Uptime: 17 minutes, 12 seconds
+
+P2MP TUNNELS:
+
+P2MP SUB-LSPS:
+

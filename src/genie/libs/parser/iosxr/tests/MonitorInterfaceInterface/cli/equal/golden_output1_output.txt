@@ -1,0 +1,13 @@
+RP/0/RP0/CPU0:F17-ASR9922#monitor interface HundredGigE0/0/0/0 TenGigE0/2/0/0
+Fri May 21 14:15:31.655 JST
+F17-ASR9922          Monitor Time: 00:00:00          SysUptime: 09:47:06
+
+Protocol:General
+Interface             In(bps)      Out(bps)     InBytes/Delta  OutBytes/Delta
+Hu0/0/0/0             22000/  0%    23000/  0%   114.6M/0        280.5M/0
+Te0/2/0/0              9000/  0%     9000/  0%    89.3M/0         93.0M/0
+
+Quit='q',     Clear='c',    Freeze='f', Thaw='t',
+Next set='n', Prev set='p', Bytes='y',  Packets='k'
+(General='g', IPv4 Uni='4u', IPv4 Multi='4m', IPv6 Uni='6u', IPv6 Multi='6m')
+F17-ASR9922          Monitor Time: 00:00:02          SysUptime: 09:47:08

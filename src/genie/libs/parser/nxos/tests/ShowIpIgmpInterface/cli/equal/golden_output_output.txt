@@ -1,0 +1,127 @@
+
+IGMP Interfaces for VRF "default", count: 2
+Ethernet2/1, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.1.2.1, IP subnet: 10.1.2.0/24
+  Active querier: 10.1.2.1, version: 3, next query sent in: 00:00:47
+  Membership count: 4
+  Old Membership count 0
+  IGMP version: 3, host version: 3
+  IGMP query interval: 133 secs, configured value: 133 secs
+  IGMP max response time: 15 secs, configured value: 15 secs
+  IGMP startup query interval: 33 secs, configured value: 31 secs
+  IGMP startup query count: 5
+  IGMP last member mrt: 1 secs
+  IGMP last member query count: 5
+  IGMP group timeout: 680 secs, configured value: 260 secs
+  IGMP querier timeout: 672 secs, configured value: 255 secs
+  IGMP unsolicited report interval: 10 secs
+  IGMP robustness variable: 5, configured value: 5
+  IGMP reporting for link-local groups: disabled
+  IGMP interface enable refcount: 9
+  IGMP interface immediate leave: enabled
+  IGMP VRF name default (id 1)
+  IGMP Report Policy: access-group-filter
+  IGMP State Limit: 10,  Available States: 10
+  IGMP interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v2-queries: 5/5, v2-reports: 0/0, v2-leaves: 0/0
+      v3-queries: 11/11, v3-reports: 56/56
+    Errors:
+      Packets dropped due to router-alert check: 19
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+Ethernet2/2, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.1.3.1, IP subnet: 10.1.3.0/24
+  Active querier: 10.1.3.1, version: 2, next query sent in: 00:00:55
+  Membership count: 0
+  Old Membership count 0
+  IGMP version: 2, host version: 2
+  IGMP query interval: 125 secs, configured value: 125 secs
+  IGMP max response time: 10 secs, configured value: 10 secs
+  IGMP startup query interval: 31 secs, configured value: 31 secs
+  IGMP startup query count: 2
+  IGMP last member mrt: 1 secs
+  IGMP last member query count: 2
+  IGMP group timeout: 260 secs, configured value: 260 secs
+  IGMP querier timeout: 255 secs, configured value: 255 secs
+  IGMP unsolicited report interval: 10 secs
+  IGMP robustness variable: 2, configured value: 2
+  IGMP reporting for link-local groups: disabled
+  IGMP interface enable refcount: 1
+  IGMP interface immediate leave: disabled
+  IGMP VRF name default (id 1)
+  IGMP Report Policy: None
+  IGMP State Limit: None
+  IGMP interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v2-queries: 16/16, v2-reports: 0/0, v2-leaves: 0/0
+    Errors:
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+
+IGMP Interfaces for VRF "VRF1", count: 2
+Ethernet2/3, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.186.3.1, IP subnet: 10.186.3.0/24
+  Active querier: 10.186.3.1, version: 2, next query sent in: 00:00:47
+  Membership count: 0
+  Old Membership count 0
+  IGMP version: 2, host version: 2
+  IGMP query interval: 125 secs, configured value: 125 secs
+  IGMP max response time: 10 secs, configured value: 10 secs
+  IGMP startup query interval: 31 secs, configured value: 31 secs
+  IGMP startup query count: 2
+  IGMP last member mrt: 1 secs
+  IGMP last member query count: 2
+  IGMP group timeout: 260 secs, configured value: 260 secs
+  IGMP querier timeout: 255 secs, configured value: 255 secs
+  IGMP unsolicited report interval: 10 secs
+  IGMP robustness variable: 2, configured value: 2
+  IGMP reporting for link-local groups: disabled
+  IGMP interface enable refcount: 1
+  IGMP interface immediate leave: disabled
+  IGMP VRF name VRF1 (id 3)
+  IGMP Report Policy: None
+  IGMP State Limit: None
+  IGMP interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v2-queries: 16/16, v2-reports: 0/0, v2-leaves: 0/0
+    Errors:
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+Ethernet2/4, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.186.2.1, IP subnet: 10.186.2.0/24
+  Active querier: 10.186.2.1, version: 3, next query sent in: 00:00:06
+  Membership count: 4
+  Old Membership count 0
+  IGMP version: 3, host version: 3
+  IGMP query interval: 133 secs, configured value: 133 secs
+  IGMP max response time: 15 secs, configured value: 15 secs
+  IGMP startup query interval: 33 secs, configured value: 31 secs
+  IGMP startup query count: 5
+  IGMP last member mrt: 1 secs
+  IGMP last member query count: 5
+  IGMP group timeout: 680 secs, configured value: 260 secs
+  IGMP querier timeout: 672 secs, configured value: 255 secs
+  IGMP unsolicited report interval: 10 secs
+  IGMP robustness variable: 5, configured value: 5
+  IGMP reporting for link-local groups: disabled
+  IGMP interface enable refcount: 9
+  IGMP interface immediate leave: enabled
+  IGMP VRF name VRF1 (id 3)
+  IGMP Report Policy: access-group-filter
+  IGMP State Limit: 10,  Available States: 10
+  IGMP interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v2-queries: 8/8, v2-reports: 0/0, v2-leaves: 0/0
+      v3-queries: 8/8, v3-reports: 44/44
+    Errors:
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+
+IGMP Interfaces for VRF "tenant1", count: 0
+IGMP Interfaces for VRF "manegement", count: 0
+

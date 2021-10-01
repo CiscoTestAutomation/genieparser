@@ -1,0 +1,10 @@
+
+show mrib vrf vrf_104 ipv4 route summary
+
+    Thu Oct  8 15:08:46.116 UTC
+    MRIB Route Summary for VRF vrf_104
+	No. of group ranges = 5
+	No. of (*,G) routes = 1
+	No. of (S,G) routes = 100
+	No. of Route x Interfaces (RxI) = 100
+	Total No. of Interfaces in all routes = 202

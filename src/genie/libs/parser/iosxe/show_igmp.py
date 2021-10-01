@@ -9,6 +9,9 @@ IOSXE parsers for the following show commands:
     * show ip igmp vrf <WORD> groups detail
     * show ip igmp ssm-mapping <WORD>
     * show ip igmp vrf <WORD> ssm-mapping <WORD>
+    * show ip igmp snooping mrouter
+    * show ip igmp snooping querier
+    * show ip igmp snooping groups
 """
 
 # Python
@@ -733,3 +736,180 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
                 continue
 
         return ret_dict
+
+# ========================================================
+# Parser for 'show ip igmp snooping mrouter'
+# ========================================================
+
+class ShowIpIgmpSnoopingMrouterSchema(MetaParser):
+    """
+    Schema for 'show ip igmp snooping mrouter'
+    """
+
+    schema = {
+        'vlan':
+            {Any():{
+                'port': str
+            },
+        }
+    }
+
+
+class ShowIpIgmpSnoopingMrouter(ShowIpIgmpSnoopingMrouterSchema):
+    """
+    Parser for 'show ip igmp snooping mrouter'
+    """
+    cli_command = 'show ip igmp snooping mrouter'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+
+        # initial variables
+        vlan_dict = {}
+
+        # 1    Po62(dynamic), Router
+        p1 = re.compile(r'(?P<vlan_id>\d+)+\s+(?P<port>.+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict = vlan_dict.setdefault('vlan',{})
+                vlan_id = group['vlan_id']
+                port = group['port']
+                ret_dict[vlan_id] = {}
+                ret_dict[vlan_id]['port'] = port
+        return vlan_dict
+
+
+
+# ========================================================
+# Parser for 'show ip igmp snooping querier'
+# ========================================================
+
+class ShowIpIgmpSnoopingQuerierSchema(MetaParser):
+    """
+    Schema for 'show ip igmp snooping querier'
+    """
+
+    schema = {
+        'vlans': {
+            Any(): {
+                  'ip_address': str,
+                  'igmp_version': str,
+                  'port': str
+            },
+        }
+    }
+
+
+
+class ShowIpIgmpSnoopingQuerier(ShowIpIgmpSnoopingQuerierSchema):
+    """
+    Parser for 'show ip igmp snooping querier'
+    """
+    cli_command = 'show ip igmp snooping querier'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+
+        # initial variables
+        vlan_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #327       27.1.1.2                 v2          Router
+            p1 = re.compile(r'^(?P<vlan>\d+) +(?P<ip_address>[\d.]+) +(?P<igmp_version>\w+) +(?P<port>\w+)$')
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                ret_dict = vlan_dict.setdefault('vlans', {})
+
+                ip_address = group['ip_address']
+                vlan = group['vlan']
+                port = group['port']
+                igmp_version = group['igmp_version']
+
+                ret_dict[vlan] = {}
+                ret_dict[vlan]['ip_address'] = ip_address
+                ret_dict[vlan]['igmp_version'] = igmp_version
+                ret_dict[vlan]['port'] = port
+
+        return vlan_dict
+
+
+# ========================================================
+# Parser for 'show ip igmp snooping groups'
+# ========================================================
+
+class ShowIpIgmpSnoopingGroupsSchema(MetaParser):
+    """
+    Schema for 'show ip igmp snooping groups'
+    """
+
+    schema = {
+        'igmp_groups': {
+            Any(): {
+                'vlan_id': str,
+                'type': str,
+                'version': str,
+                'port': str
+            },
+        }
+    }
+
+
+class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
+    """
+    Parser for 'show ip igmp snooping groups'
+    """
+    cli_command = 'show ip igmp snooping groups'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        igmp_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+
+            #801       225.6.1.1                igmp        v2          pw100155
+            p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>\w+)$')
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                ret_dict = igmp_dict.setdefault('igmp_groups', {})
+
+                group_ip = group['group_ip']
+                vlan_id = group['vlan_id']
+                type = group['type']
+                port = group['port']
+                version = group['version']
+
+                ret_dict[group_ip] = {}
+                ret_dict[group_ip]['vlan_id'] = vlan_id
+                ret_dict[group_ip]['type'] = type
+                ret_dict[group_ip]['version'] = version
+                ret_dict[group_ip]['port'] = port
+
+        return igmp_dict

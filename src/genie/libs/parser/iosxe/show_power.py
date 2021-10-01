@@ -16,7 +16,7 @@ IOSXE parsers for the following show command:
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional,Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -60,22 +60,22 @@ class ShowStackPowerSchema(MetaParser):
                 },    
                 Optional('switches'): {
                     Any(): {
-                        'power_supply_a': int,
-                        'power_supply_b' : int,
-                        'power_budget': int,
-                        'allocated_power': int,
-                        'available_power': int,
-                        'consumed_power_sys': int,
-                        'consumed_power_poe': int,
+                        'power_supply_a': Or(int, float),
+                        'power_supply_b' : Or(int, float),
+                        'power_budget': Or(int, float),
+                        'allocated_power': Or(int, float),
+                        'available_power': Or(int, float),
+                        'consumed_power_sys': Or(int, float),
+                        'consumed_power_poe': Or(int, float),
                     },
                 },
             },
         },
         Optional('totals'): {
-            'total_allocated_power': int,
-            'total_available_power': int,
-            'total_consumed_power_sys': int,
-            'total_consumed_power_poe': int,
+            'total_allocated_power': Or(int, float),
+            'total_available_power': Or(int, float),
+            'total_consumed_power_sys': Or(int, float),
+            'total_consumed_power_poe': Or(int, float),
         },
     }
 
@@ -109,22 +109,24 @@ class ShowStackPower(ShowStackPowerSchema):
                         r'(?P<power_supply_num>\d+)$')
 
         # 1   Powerstack-1         0        0      1200      240        960     129 /0
+        # 1   Powerstack-1         350      0      235       235.0      0.0     136/0.0
         p2 = re.compile(r'^(?P<switch_num>\d+) +'
                         r'(?P<name>[\w-]+) *'
                         r'(?P<power_supply_a>\d+) +'
                         r'(?P<power_supply_b>\d+) +'
                         r'(?P<power_budget>\d+) +'
-                        r'(?P<allocated_power>\d+) +'
-                        r'(?P<available_power>\d+) +'
-                        r'(?P<consumed_power_sys>\d+)[ \/]+'
-                        r'(?P<consumed_power_poe>\d+)$')
+                        r'(?P<allocated_power>[\d.]+) +'
+                        r'(?P<available_power>[\d.]+) +'
+                        r'(?P<consumed_power_sys>[\d.]+)[ \/]+'
+                        r'(?P<consumed_power_poe>[\d.]+)$')
 
         # Totals:                               1150    1050      310/0
+        # Totals:                               235.0   0.0       136/0.0
         p3 = re.compile(r'^Totals: +'
-                        r'(?P<total_allocated_power>\d+) +'
-                        r'(?P<total_available_power>\d+) +'
-                        r'(?P<total_consumed_power_sys>\d+)[ \/]+'
-                        r'(?P<total_consumed_power_poe>\d+)$')
+                        r'(?P<total_allocated_power>[\d.]+) +'
+                        r'(?P<total_available_power>[\d.]+) +'
+                        r'(?P<total_consumed_power_sys>[\d.]+)[ \/]+'
+                        r'(?P<total_consumed_power_poe>[\d.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -142,6 +144,7 @@ class ShowStackPower(ShowStackPowerSchema):
                 continue
 
             # 1   Powerstack-1         0        0      1200      240        960     129 /0
+            # 1   Powerstack-1         350      0      235       235.0      0.0     136/0.0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -151,18 +154,35 @@ class ShowStackPower(ShowStackPowerSchema):
                                       .setdefault(stack_name, {})\
                                       .setdefault('switches', {})\
                                       .setdefault(int(switch_num), {})
-                switch_dict.update({k:int(v) for k, v in group.items()})
+                switch_dict.update({k:int(v) if v.isdigit() else float(v) 
+                    for k, v in group.items()})
                 continue
 
             # Totals:                               1150    1050      310/0
+            # Totals:                               235.0   0.0       136/0.0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 total_dict = ret_dict.setdefault('totals', {})
-                total_dict.update({k:int(v) for k, v in group.items()})
+                total_dict.update({k:int(v) if v.isdigit() else float(v) 
+                    for k, v in group.items()})
                 continue
 
         return ret_dict
+
+
+class ShowStackPowerBudgeting(ShowStackPower):
+    """Parser for 
+        * show stack-power budgeting
+    """
+
+    cli_command = ['show stack-power budgeting']
+
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        return super().cli(output=output)
 
 
 class ShowPowerInlineSchema(MetaParser):

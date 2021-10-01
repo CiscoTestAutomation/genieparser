@@ -1,0 +1,16 @@
+
+#show eigrp ipv6 neighbors detail
+Mon Apr 15 18:05:00.348 UTC
+
+IPv6-EIGRP VR(test) Neighbors for AS(100) VRF default
+
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+					    (sec)         (ms)       Cnt Num
+1   Link Local Address:     Gi0/0/0/1.90      13 01:37:57   11   200  0  28
+    fe80::5c00:ff:fe02:7
+   BFD disabled
+   Version 8.0/1.2, Retrans: 1, Retries: 0, Prefixes: 5
+0   Link Local Address:     Gi0/0/0/0.90      12 02:31:58    1   200  0  23
+    fe80::f816:3eff:feb4:b131
+   BFD disabled
+   Version 23.0/2.0, Retrans: 1, Retries: 0, Prefixes: 6

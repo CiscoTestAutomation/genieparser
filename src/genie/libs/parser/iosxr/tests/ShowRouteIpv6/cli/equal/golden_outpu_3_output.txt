@@ -1,0 +1,47 @@
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+    E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+    i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+    ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+    U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+    A - access/subscriber, a - Application route
+    M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is fe80::10ff:fe04:209e to network ::
+
+a*   ::/0
+[2/0] via fe80::10ff:fe04:209e, 00:08:31, MgmtEth0/RP0/CPU0/0
+O    2001:db8:1234::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:1579::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:1981::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:2222::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:3456::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:4021::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:5354::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:5555::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:6666::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:7654::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:7777::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+O    2001:db8:9843::8/128
+[110/1] via fe80::5054:ff:fef2:a625, 00:03:00, GigabitEthernet0/0/0/1
+C    2001:db8:abcd::/64 is directly connected,
+00:07:43, GigabitEthernet0/0/0/1
+L    2001:db8:abcd::1/128 is directly connected,
+00:07:43, GigabitEthernet0/0/0/1
+C    2001:db8:50e0:7b33::/64 is directly connected,
+00:08:31, MgmtEth0/RP0/CPU0/0
+L    2001:db8:50e0:7b33:5054:ff:fe43:e2ee/128 is directly connected,
+00:08:31, MgmtEth0/RP0/CPU0/0   

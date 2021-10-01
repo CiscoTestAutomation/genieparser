@@ -1,0 +1,57 @@
+
+show ip ospf database router detail vrf all
+    OSPF Router with ID (10.186.0.1) (Process ID UNDERLAY VRF default)
+
+	    Router Link States (Area 0.0.0.0)
+
+LS age: 29
+Options: 0x2 (No TOS-capability, No DC)
+LS Type: Router Links
+Link State ID: 10.186.0.1
+Advertising Router: 10.186.0.1
+LS Seq Number: 0x80000905
+Checksum: 0x5cf6
+Length: 108
+Number of links: 7
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.186.0.1
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.51.0.1
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.55.1.1
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Router (point-to-point)
+ (Link ID) Neighboring Router ID: 10.186.0.2
+ (Link Data) Router Interface address: 10.186.1.1
+   Number of TOS metrics: 0
+     TOS   0 Metric: 40
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.186.1.0
+  (Link Data) Network Mask: 255.255.255.0
+   Number of TOS metrics: 0
+     TOS   0 Metric: 40
+
+ Link connected to: a Router (point-to-point)
+ (Link ID) Neighboring Router ID: 10.186.0.4
+ (Link Data) Router Interface address: 0.0.0.4
+   Number of TOS metrics: 0
+     TOS   0 Metric: 4
+
+ Link connected to: a Router (point-to-point)
+ (Link ID) Neighboring Router ID: 10.186.0.3
+ (Link Data) Router Interface address: 0.0.0.5
+   Number of TOS metrics: 0
+     TOS   0 Metric: 4

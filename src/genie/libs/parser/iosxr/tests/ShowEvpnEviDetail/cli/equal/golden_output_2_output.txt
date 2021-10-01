@@ -1,0 +1,18 @@
+
+show evpn evi detail 
+Mon Aug 24 14:14:19.873 EDT
+
+EVI        Bridge Domain                Type   
+---------- ---------------------------- -------
+1          core1                        PBB    
+Unicast Label  : 24001
+Multicast Label: 24002
+Flow Label: N
+Table-policy Name: forward_class_1
+Forward-class: 1
+RD Config: none
+RD Auto  : none
+RT Auto  : none
+Route Targets in Use           Type   
+------------------------------ -------
+

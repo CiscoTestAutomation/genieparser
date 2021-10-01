@@ -1,0 +1,1 @@
+33          0     8     TenGigabitEthernet1/0/33          0x00000029          Y

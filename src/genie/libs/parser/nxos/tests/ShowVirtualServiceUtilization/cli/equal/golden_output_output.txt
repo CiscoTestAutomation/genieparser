@@ -1,0 +1,20 @@
+
+Virtual-Service Utilization:
+
+CPU Utilization:
+  Requested Application Utilization:  1 %
+  Actual Application Utilization:  0 % (30 second average)
+  CPU State: R : Running
+
+Memory Utilization:
+  Memory Allocation: 262144 KB
+  Memory Used:       13400 KB
+
+Storage Utilization:
+  Name: _rootfs, Alias:
+    Capacity(1K blocks):  243823      Used(1K blocks): 161690
+    Available(1K blocks): 77537       Usage: 68 %
+
+  Name: /cisco/core, Alias:
+    Capacity(1K blocks):  2097152     Used(1K blocks): 62216
+    Available(1K blocks): 2034936     Usage: 3  %

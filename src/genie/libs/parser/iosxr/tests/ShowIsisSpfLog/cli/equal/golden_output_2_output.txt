@@ -1,0 +1,21 @@
+
+# show isis spf-log
+
+       IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+		   Time  Total Trig
+  Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+  ----------- ---- ----  ----- ----- ----- ------- --- --------
+  --- Thurs Aug 19 2004 ---
+  12:00:50.787  FSPF  1    1     3   ensoft-grs7.00-00 LSPHEADER TLVCODE
+  12:00:52.846  FSPF  1    1     1   ensoft-grs7.00-00 LSPHEADER
+  12:00:56.049  FSPF  1    1     1   ensoft-grs7.00-00 TLVCODE
+  12:01:02.620  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LINKTLV
+
+       IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+		   Time  Total Trig
+  Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+  ----------- ---- ----  ----- ----- ----- ------- --- --------
+  --- Mon Aug 19 2004 ---
+  12:00:50.790  FSPF  0    1     4   ensoft-grs7.00-00 LSPHEADER TLVCODE
+  12:00:54.043  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LSPHEADER
+  12:00:55.922  FSPF  1    2     1   ensoft-grs7.00-00 NEWLSPO

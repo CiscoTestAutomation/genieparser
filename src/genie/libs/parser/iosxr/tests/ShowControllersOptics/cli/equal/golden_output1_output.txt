@@ -1,0 +1,54 @@
+Thu Sep  2 15:53:01.238 CDT
+
+ Controller State: Up 
+
+ Transport Admin State: In Service 
+
+ Laser State: N/A 
+
+ LED State: Not Applicable 
+
+ FEC State: FEC DISABLED 
+ 
+ Optics Status 
+
+         Optics Type:  1G 1000BASE-T
+         Wavelength = 0.00 nm 
+
+         Alarm Status:
+         -------------
+         Detected Alarms: None
+
+
+         LOS/LOL/Fault Status:
+
+         TX Power = N/A 
+         RX Power = N/A 
+
+         Performance Monitoring: Disable        
+
+         THRESHOLD VALUES
+         ----------------
+
+         Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+         ------------------------  ----------  ---------  ------------  -----------
+         Rx Power Threshold(dBm)          0.0        0.0           0.0          0.0
+         Tx Power Threshold(dBm)          0.0        0.0           0.0          0.0
+         LBC Threshold(mA)               0.00       0.00          0.00         0.00
+         Temp. Threshold(celsius)        0.00       0.00          0.00         0.00
+         Voltage Threshold(volt)         0.00       0.00          0.00         0.00
+
+         Polarization parameters not supported by optics
+
+         Temperature = 0.00 Celsius 
+         Voltage = 0.00 V 
+
+ Transceiver Vendor Details
+
+         Form Factor            : SFP
+         Optics type            : N/A
+         Name                   : N/A
+         OUI Number             : 00.00.00
+         Part Number            : N/A
+         Rev Number             : N/A
+         Serial Number          : N/A

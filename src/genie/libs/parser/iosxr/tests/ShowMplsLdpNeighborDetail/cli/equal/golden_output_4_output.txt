@@ -1,0 +1,29 @@
+
+RP/0/RP0/CPU0:R9#show mpls ldp neighbor vrf Vpn1 GigabitEthernet0/0/0/1 detail 
+Thu Jan  2 20:56:36.689 UTC
+
+Peer LDP Identifier: 10.16.0.7:0
+TCP connection: 10.16.0.7:646 - 10.16.0.9:19323
+Graceful Restart: No
+Session Holdtime: 180 sec
+State: Oper; Msgs sent/rcvd: 24671/24693; Downstream-Unsolicited
+Up time: 2w1d
+LDP Discovery Sources:
+  IPv4: (1)
+    GigabitEthernet0/0/0/1
+  IPv6: (0)
+Addresses bound to this peer:
+  IPv4: (4)
+    10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
+  IPv6: (0)
+Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+NSR: Disabled
+Capabilities:
+  Sent: 
+    0x508  (MP: Point-to-Multipoint (P2MP))
+    0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+    0x50b  (Typed Wildcard FEC)
+  Received: 
+    0x508  (MP: Point-to-Multipoint (P2MP))
+    0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+    0x50b  (Typed Wildcard FEC)

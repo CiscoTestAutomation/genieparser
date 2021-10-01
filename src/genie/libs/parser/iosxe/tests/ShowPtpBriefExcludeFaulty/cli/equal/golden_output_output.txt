@@ -1,0 +1,6 @@
+Interface                       Domain    PTP State
+TenGigabitEthernet1/0/6         0         MASTER
+TenGigabitEthernet1/0/33        0         MASTER
+TenGigabitEthernet1/0/34        0         MASTER
+TenGigabitEthernet1/0/42        0         MASTER
+TenGigabitEthernet1/0/43        0         MASTER

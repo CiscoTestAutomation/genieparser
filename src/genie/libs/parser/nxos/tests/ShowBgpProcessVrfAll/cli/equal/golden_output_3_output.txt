@@ -1,0 +1,562 @@
+
+show bgp process vrf all
+
+BGP Process Information
+BGP Process ID                 : 6308
+BGP Protocol Started, reason:  : configuration
+BGP Performance Mode:          : No
+BGP Protocol Tag               : 100
+BGP Protocol State             : Running
+BGP Isolate Mode               : No
+BGP MMODE                      : Initialized
+BGP Memory State               : OK
+BGP asformat                   : asplain
+
+BGP attributes information
+Number of attribute entries    : 11
+HWM of attribute entries       : 11
+Bytes used by entries          : 1276
+Entries pending delete         : 0
+HWM of entries pending delete  : 0
+BGP paths per attribute HWM    : 6
+BGP AS path entries            : 1
+Bytes used by AS path entries  : 26
+
+Information regarding configured VRFs:
+
+BGP Information for VRF default
+VRF Id                         : 1
+VRF state                      : UP
+VNID                           : 0 (invalid)
+Router-ID                      : 10.49.1.0
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 100
+Cluster-ID                     : 10.4.1.1
+No. of configured peers        : 1
+No. of pending config peers    : 0
+No. of established peers       : 1
+VRF RD                         : Not configured
+
+    Information for address family IPv4 Unicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          1               12         12         0          1
+
+    Redistribution
+	direct, route-map RMAP_Lo0
+	static, route-map ALL
+	ospf, route-map RMAP_OSPF
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3333 ms
+	non-critical 11111 ms
+    Nexthop route-map: ALL
+
+    Information for address family IPv6 Unicast in VRF default
+    Table Id                   : 0x80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family VPNv4 Unicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               3          4          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family VPNv6 Unicast in VRF default
+    Table Id                   : 0x80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family L2VPN EVPN in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          1               5          6          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Retain RT: enabled all
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9100
+VRF Id                         : 3
+VRF state                      : UP
+VNID                           : 9100 (valid)
+  Topo Id                    : 1000
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.11.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:3
+VRF EVPN RD                    : 10.49.1.0:3
+
+    Information for address family IPv4 Unicast in VRF vrf-9100
+    Table Id                   : 0x3
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               3          4          0          0
+
+    Redistribution
+	direct, route-map permitall
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9100
+    Import RT list:
+	100:9100
+    EVPN Export RT list:
+	100:9100
+    EVPN Import RT list:
+	100:9100
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9100
+    Table Id                   : 0x80000003
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9100
+    Import RT list:
+	100:9100
+    EVPN Export RT list:
+	100:9100
+    EVPN Import RT list:
+	100:9100
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9105
+VRF Id                         : 4
+VRF state                      : UP
+VNID                           : 9105 (valid)
+  Topo Id                    : 1005
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.16.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:4
+VRF EVPN RD                    : 10.49.1.0:4
+
+    Information for address family IPv4 Unicast in VRF vrf-9105
+    Table Id                   : 0x4
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9105
+    Import RT list:
+	100:9105
+    EVPN Export RT list:
+	100:9105
+    EVPN Import RT list:
+	100:9105
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9105
+    Table Id                   : 0x80000004
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9105
+    Import RT list:
+	100:9105
+    EVPN Export RT list:
+	100:9105
+    EVPN Import RT list:
+	100:9105
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9106
+VRF Id                         : 5
+VRF state                      : UP
+VNID                           : 9106 (valid)
+  Topo Id                    : 1006
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.17.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:5
+VRF EVPN RD                    : 10.49.1.0:5
+
+    Information for address family IPv4 Unicast in VRF vrf-9106
+    Table Id                   : 0x5
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9106
+    Import RT list:
+	100:9106
+    EVPN Export RT list:
+	100:9106
+    EVPN Import RT list:
+	100:9106
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9106
+    Table Id                   : 0x80000005
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9106
+    Import RT list:
+	100:9106
+    EVPN Export RT list:
+	100:9106
+    EVPN Import RT list:
+	100:9106
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9107
+VRF Id                         : 6
+VRF state                      : UP
+VNID                           : 9107 (valid)
+  Topo Id                    : 1007
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.18.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:6
+VRF EVPN RD                    : 10.49.1.0:6
+
+    Information for address family IPv4 Unicast in VRF vrf-9107
+    Table Id                   : 0x6
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9107
+    Import RT list:
+	100:9107
+    EVPN Export RT list:
+	100:9107
+    EVPN Import RT list:
+	100:9107
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9107
+    Table Id                   : 0x80000006
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9107
+    Import RT list:
+	100:9107
+    EVPN Export RT list:
+	100:9107
+    EVPN Import RT list:
+	100:9107
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9108
+VRF Id                         : 7
+VRF state                      : UP
+VNID                           : 9108 (valid)
+  Topo Id                    : 1008
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.19.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:7
+VRF EVPN RD                    : 10.49.1.0:7
+
+    Information for address family IPv4 Unicast in VRF vrf-9108
+    Table Id                   : 0x7
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9108
+    Import RT list:
+	100:9108
+    EVPN Export RT list:
+	100:9108
+    EVPN Import RT list:
+	100:9108
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9108
+    Table Id                   : 0x80000007
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9108
+    Import RT list:
+	100:9108
+    EVPN Export RT list:
+	100:9108
+    EVPN Import RT list:
+	100:9108
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vrf-9109
+VRF Id                         : 8
+VRF state                      : UP
+VNID                           : 9109 (valid)
+  Topo Id                    : 1009
+Encap type                     : VXLAN
+VTEP IP                        : 10.49.1.1
+VTEP Virtual IP                : 10.49.2.1
+VTEP VIP-R                     : 10.49.2.1
+Router-MAC                     : 000c.29ff.a329
+VIP Derived MAC                : 000c.29ff.a329
+Router-ID                      : 10.220.20.1
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 10.49.1.0:8
+VRF EVPN RD                    : 10.49.1.0:8
+
+    Information for address family IPv4 Unicast in VRF vrf-9109
+    Table Id                   : 0x8
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	hmm, route-map permitall
+
+    Wait for IGP convergence is not configured
+    Advertise to EVPN
+
+    Export RT list:
+	100:9109
+    Import RT list:
+	100:9109
+    EVPN Export RT list:
+	100:9109
+    EVPN Import RT list:
+	100:9109
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vrf-9109
+    Table Id                   : 0x80000008
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Export RT list:
+	100:9109
+    Import RT list:
+	100:9109
+    EVPN Export RT list:
+	100:9109
+    EVPN Import RT list:
+	100:9109
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms

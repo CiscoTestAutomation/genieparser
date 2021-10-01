@@ -1,0 +1,24 @@
+
+R2_xr#show igmp vrf VRF1 summary
+Robustness Value 2
+No. of Group x Interfaces 15
+Maximum number of Groups for this VRF 50000
+
+Supported Interfaces   : 9
+Unsupported Interfaces : 0
+Enabled Interfaces     : 3
+Disabled Interfaces    : 6
+
+MTE tuple count        : 0
+
+Interface                       Number  Max #
+				Groups  Groups
+Loopback300                     4       25000
+GigabitEthernet0/0/0/0.390      1       25000
+GigabitEthernet0/0/0/0.410      7       25000
+GigabitEthernet0/0/0/0.415      4       25000
+GigabitEthernet0/0/0/0.420      1       25000
+GigabitEthernet0/0/0/1.390      1       25000
+GigabitEthernet0/0/0/1.410      5       25000
+GigabitEthernet0/0/0/1.415      0       25000
+GigabitEthernet0/0/0/1.420      1       25000

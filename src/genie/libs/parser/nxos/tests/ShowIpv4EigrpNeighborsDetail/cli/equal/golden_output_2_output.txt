@@ -1,0 +1,16 @@
+
+# show ipv6 eigrp neighbors detail vrf all
+IPv6-EIGRP neighbors for process 100 VRF default
+H   Address                                 Interface       Hold  Uptime  SRTT   RTO  Q  Seq
+							    (sec)         (ms)       Cnt Num
+0   fe80::f816:3eff:fecf:5a5b               Eth1/1.90       12   01:41:31  10   60    0   30
+   Version 3.3/2.0, Retrans: 1, Retries: 0, BFD state: N/A
+1   fe80::f816:3eff:fe62:65af               Eth1/2.90       12   01:41:30  4    50    0   22
+   Version 23.0/2.0, Retrans: 0, Retries: 0, BFD state: N/A
+IPv6-EIGRP neighbors for process 100 VRF VRF1
+H   Address                                 Interface       Hold  Uptime  SRTT   RTO  Q  Seq
+							    (sec)         (ms)       Cnt Num
+0   fe80::f816:3eff:fecf:5a5b               Eth1/1.390      11   01:45:50  10   60    0   10
+   Version 3.3/2.0, Retrans: 2, Retries: 0, BFD state: N/A
+1   fe80::f816:3eff:fe62:65af               Eth1/2.390      14   01:45:01  4    50    0   8
+   Version 23.0/2.0, Retrans: 1, Retries: 0, BFD state: N/A

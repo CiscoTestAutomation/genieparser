@@ -1,0 +1,20 @@
+
+IP Multicast Routing Table for VRF "default"
+
+(*, 228.0.0.0/8), bidir, uptime: 10w5d, pim ip 
+  Incoming interface: Null, RPF nbr: 0.0.0.0
+  Outgoing interface list: (count: 0)
+
+(*, 232.0.0.0/8), uptime: 10w5d, pim ip 
+  Incoming interface: Null, RPF nbr: 0.0.0.0
+  Outgoing interface list: (count: 0)
+
+
+IP Multicast Routing Table for VRF "VRF1"
+
+
+IP Multicast Routing Table for VRF "blue"
+
+(*, 232.0.0.0/8), uptime: 10w5d, pim ip 
+  Incoming interface: Null, RPF nbr: 0.0.0.0
+  Outgoing interface list: (count: 0)

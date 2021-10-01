@@ -1,0 +1,3 @@
+Port         Name               Status       Vlan       Duplex  Speed Type
+Te1/0/1      t1/0/1             notconnect   1            auto   auto 100/1000/2.5G/5G/10GBaseTX
+

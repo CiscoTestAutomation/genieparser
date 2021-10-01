@@ -1,0 +1,76 @@
+
+Local Interface: TenGigE0/1/0/0
+Parent Interface: Bundle-Ether1
+Chassis id: ccd8.c1ff.49dc
+Port id: Bundle-Ether2
+Port Description: 10G to ge1-genie port Ge1/1/1/1:GG1 
+System Name: geni5-genie
+
+System Description: 
+Cisco IOS XR Software, Version 6.5.3[Default]
+Copyright (c) 2019 by Cisco Systems, Inc., ASR9K Series
+
+Time remaining: 99 seconds
+Hold Time: 120 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+IPv4 address: 10.10.10.12
+
+Peer MAC Address: cc:d8:c1:ff:49:df
+
+Local Interface: TenGigE0/5/0/5
+Chassis id: c471.feff.70c3
+Port id: Te0/1/0/3
+Port Description: 10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
+System Name: system3
+
+System Description: 
+Cisco IOS XR Software, Version 6.4.2[Default]
+Copyright (c) 2019 by Cisco Systems, Inc., CRS
+
+Time remaining: 108 seconds
+Hold Time: 120 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+IPv4 address: 10.10.10.13
+
+Peer MAC Address: c4:71:fe:ff:73:3d
+
+Local Interface: TenGigE0/5/0/6
+Chassis id: 8426.2bff.e85a
+Port id: 1611153480
+Port Description: 2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"
+System Name: GENIE02GEN2
+
+System Description: 
+TiMOS-C-16.0.R7 cpm/hops64 Nokia 7950 XRS Copyright (c) 2000-2019 Nokia.
+All rights reserved. All use subject to applicable license agreements.
+Built on Wed Apr 10 16:45:38 PDT 2019 by builder in /builds/c/160B/R7/panos/main
+
+
+Time remaining: 105 seconds
+Hold Time: 121 seconds
+System Capabilities: B,R
+Enabled Capabilities: B,R
+Management Addresses:
+IPv4 address: 10.10.10.14
+
+Peer MAC Address: a0:f3:e4:ff:19:d4
+
+Local Interface: TenGigE0/5/0/8
+Chassis id: 8426.2bff.e85a
+Port id: 8426.2bff.e85a
+Port Description - not advertised
+System Name - not advertised
+System Description - not advertised
+
+Time remaining: 74 seconds
+Hold Time: 14 seconds
+System Capabilities: N/A
+Enabled Capabilities: N/A
+Management Addresses - not advertised
+Peer MAC Address: c4:71:fe:ff:73:3d
+
+Total entries displayed: 4

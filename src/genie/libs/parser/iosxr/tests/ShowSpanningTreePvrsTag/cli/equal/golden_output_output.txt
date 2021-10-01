@@ -1,0 +1,36 @@
+
+RP/0/0/CPU0:ios#show spanning-tree pvrstag foo
+Wed Mar 29 12:38:05.528 UTC
+GigabitEthernet0/0/0/0
+  VLAN 5
+    Pre-empt delay is enabled. Sending startup BPDU until 13:38:03
+    Sub-interface:    GigabitEthernet0/0/0/0.5 (Up)
+    Max Age: 20
+    Root Priority:    0
+    Root Bridge: 0000.0000.0000
+    Cost:             1
+    Bridge Priority:  32768
+    Bridge ID:        0255.1dff.3c70
+    Port Priority:    128
+    Port ID           1
+    Hello Time:       2
+    Active:           Yes
+    BPDUs sent:       6
+    Topology Changes: 0
+
+GigabitEthernet0/0/0/1
+  VLAN 5
+    Pre-empt delay is enabled. Sending standard BPDU
+    Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
+    Max Age:          20
+    Root Priority:    0
+    Root Bridge:      0000.0000.0000
+    Cost:             0
+    Bridge Priority:  32768
+    Bridge ID:        021a.9eff.5645
+    Port Priority:    128
+    Port ID           1
+    Hello Time:       2
+    Active:           Yes
+    BPDUs sent:       7
+    Topology Changes: 0

@@ -1,0 +1,19 @@
+
+    SDR Information:
+__________________________________________________
+	SDR_id               : 0
+	SDR_name             : Owner
+	dSDRsc node          : 0/0/CPU0
+	dSDRsc partner node  : NONE
+	primary node1        : 0/0/CPU0
+	primary node2        : NONE
+	mac addr             : 025e.eaff.fb57
+
+
+
+SDR Inventory
+--------------
+
+Type       NodeName    NodeState         RedState   PartnerName
+---------------------------------------------------------------
+RP         0/0/CPU0    IOS XR RUN        Primary    NONE

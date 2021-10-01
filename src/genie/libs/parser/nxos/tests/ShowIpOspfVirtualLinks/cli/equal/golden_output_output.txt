@@ -1,0 +1,17 @@
+
+Virtual link VL1 to router 10.64.4.4 is up
+    Transit area 0.0.0.1, via interface Eth1/5, remote addr 10.19.4.4
+    Unnumbered interface using IP address of Ethernet1/5 (10.19.4.3)
+    Process ID 1 VRF default, area 0.0.0.0
+    State P2P, Network type P2P, cost 40
+    Index 7, Transmit delay 1 sec
+    1 Neighbors, flooding to 1, adjacent with 1
+    Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+      Hello timer due in 00:00:05
+    No authentication
+    Number of opaque link LSAs: 0, checksum sum 0
+    Adjacency Information
+    State is FULL, 5 state changes, last change 00:07:51
+    Hello options 0x32, dbd options 0x72
+    Last non-hello packet received 00:07:49
+      Dead timer due in 00:00:33

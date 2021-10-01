@@ -1,0 +1,339 @@
+   * For interface indicates MLDP recursive forwarding is enabled
+  * For RPF-ID indicates wildcard value
+  > Indicates it is a Primary MLDP MDT Branch
+
+LSM ID : 102   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 1]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000001
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 102
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 43            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 10C   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 1]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000001
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 10C
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 46            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 103   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 2]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000002
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 103
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 45            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 10D   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 2]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000002
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 10D
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 47            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 104   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 3]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000003
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 104
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 44            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 10E   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 3]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000003
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 10E
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 24            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 105   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 4]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000004
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 105
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 40            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 10F   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 4]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000004
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 10F
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 23            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 106   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 5]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000005
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 106
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 39            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 110   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 5]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000005
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 110
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 21            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 107   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 6]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000006
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 107
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:21      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:21      Path Set ID  : None
+      Out label (D)  : 21            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 111   Type: P2MP   Uptime : 00:00:18
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 6]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000006
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 111
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 17            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:18      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 108   Type: P2MP   Uptime : 00:00:21
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 7]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000007
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 108
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:26      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:26      Path Set ID  : None
+      Out label (D)  : 23            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 112   Type: P2MP   Uptime : 00:00:23
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 7]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000007
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 112
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 16            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:23      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 109   Type: P2MP   Uptime : 00:00:26
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 8]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000008
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 109
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:26      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:26      Path Set ID  : None
+      Out label (D)  : 22            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 113   Type: P2MP   Uptime : 00:00:23
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 8]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000008
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 113
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 25            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:23      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 10A   Type: P2MP   Uptime : 00:00:26
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 9]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000009
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 10A
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:26      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:26      Path Set ID  : None
+      Out label (D)  : 20            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 114   Type: P2MP   Uptime : 00:00:23
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 9]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000009
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 114
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 29            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:23      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 10B   Type: P2MP   Uptime : 00:00:26
+  FEC Root           : 1.1.1.1 (we are the root)
+  Opaque decoded     : [mdt 3001:1 10]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 003001000000010000000A
+  Upstream client(s) :
+    None
+      Expires        : N/A           Path Set ID  : 10B
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:00:26      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+    2.2.2.2:0
+      Uptime         : 00:00:30      Path Set ID  : None
+      Out label (D)  : 32            Interface    : Port-channel20*
+      Local label (U): None          Next Hop     : 104.1.1.2
+
+LSM ID : 115   Type: P2MP   Uptime : 00:00:27
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 10]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 003001000000010000000A
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 115
+      Out Label (U)  : None          Interface    : Port-channel20*
+      Local Label (D): 26            Next Hop     : 104.1.1.2
+  Replication client(s):
+    MDT  (VRF vrf3001)
+      Uptime         : 00:00:27      Path Set ID  : None
+      Interface      : Lspvif9       RPF-ID       : *
+
+LSM ID : 100 (RNR LSM ID: 101)   Type: MP2MP   Uptime : 00:06:44
+  FEC Root           : 5.5.5.5
+  Opaque decoded     : [mdt 3001:1 0]
+  Opaque length      : 11 bytes
+  Opaque value       : 02 000B 0030010000000100000000
+  RNR active LSP     : (this entry)
+  Upstream client(s) :
+    2.2.2.2:0    [Active]
+      Expires        : Never         Path Set ID  : 100
+      Out Label (U)  : 26            Interface    : Port-channel20*
+      Local Label (D): 45            Next Hop     : 104.1.1.2
+  Replication client(s):
+>   MDT  (VRF vrf3001)
+      Uptime         : 00:06:44      Path Set ID  : 101
+      Interface      : Lspvif9       RPF-ID       : *

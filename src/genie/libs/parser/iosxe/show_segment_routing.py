@@ -804,13 +804,15 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                 },
             },
             Optional("attributes"): {
-                "binding_sid": {
+                Optional("binding_sid"): {
                     Any(): {
                         "allocation_mode": str,
                         "state": str,
                     },
                 },
-                Optional("auto_route"): str
+                Optional("auto_route"): str,
+                Optional("auto_route_mode"): str,
+                Optional("auto_route_value"): int
             },
             Optional("tunnel_id"): str,
             Optional("interface_handle"): str,
@@ -929,6 +931,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         #  Tunnel ID: 65537 (Interface Handle: 0x81)
         p19 = re.compile(r'^Tunnel ID:\s+(?P<tunnel_id>\d+)\s+\(Interface Handle:\s+(?P<interface_handle>\S+)\)$')
+
+        #Mode: constant, Value: 9
+        p20 = re.compile(r'^Mode:\s+(?P<auto_mode>\S+),\s+Value:\s+(?P<auto_value>\S+)$')
 
         # initial variables
         auto_route, aff_flag = False, False
@@ -1164,11 +1169,24 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             if "Autoroute" in line:
                 auto_route = True
                 continue
-            
-            if auto_route:
-                policy_dict.setdefault("attributes", {}).setdefault("auto_route", line.strip())
-                auto_route = False
 
+            lowercase_line = line.lower()
+            if auto_route:
+                if "include" in lowercase_line or "exclude" in lowercase_line:
+                    policy_dict.setdefault("attributes", {}).setdefault("auto_route", line.strip())
+                else:
+                    policy_dict.setdefault("attributes", {}).setdefault("auto_route", "")
+                auto_route = False
+            
+            m = p20.match(line)
+            if m:
+                
+                group = m.groupdict()
+                mode = group['auto_mode']
+                value = int(group['auto_value'])
+                policy_dict.setdefault("attributes", {}).setdefault("auto_route_mode", mode)
+                policy_dict.setdefault("attributes", {}).setdefault("auto_route_value", value)
+                continue
 
         return ret_dict
 

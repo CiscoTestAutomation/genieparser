@@ -1,0 +1,401 @@
+
+BGP Process Information
+BGP Process ID                 : 26549
+BGP Protocol Started, reason:  : configuration
+BGP Performance Mode:          : No
+BGP Protocol Tag               : 333
+BGP Protocol State             : Running (Isolate)
+BGP Isolate Mode               : Yes
+BGP MMODE                      : Initialized
+BGP Memory State               : OK
+BGP asformat                   : asplain
+Segment Routing Global Block   : 10000-25000
+
+BGP attributes information
+Number of attribute entries    : 7
+HWM of attribute entries       : 8
+Bytes used by entries          : 784
+Entries pending delete         : 0
+HWM of entries pending delete  : 0
+BGP paths per attribute HWM    : 3
+BGP AS path entries            : 0
+Bytes used by AS path entries  : 0
+
+Confcheck capabilities in use:
+  1. CAP_FEATURE_BGP_5_2_1 (refcount = 2)
+
+Information regarding configured VRFs:
+
+BGP Information for VRF VRF1
+VRF Id                         : 3
+VRF state                      : UP
+Router-ID                      : 0.0.0.0
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 2
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : Not configured
+
+BGP Information for VRF ac
+VRF Id                         : 4
+VRF state                      : UP
+Router-ID                      : 0.0.0.0
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 1
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : Not configured
+
+    Information for address family IPv4 Unicast in VRF ac
+    Table Id                   : 0x4
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    1          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF ac
+    Table Id                   : 0x80000004
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF default
+VRF Id                         : 1
+VRF state                      : UP
+Router-ID                      : 10.36.3.3
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.3
+No. of configured peers        : 6
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : Not configured
+
+    Information for address family IPv4 Unicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    5          0               4          7          1          1
+
+    Redistribution
+	static, route-map ADD_RT_400_400
+
+    Wait for IGP convergence is not configured
+    Label mode: per-prefix
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv4 Multicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    3          0               3          3          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF default
+    Table Id                   : 0x80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    4          0               3          5          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Multicast in VRF default
+    Table Id                   : 0x80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    4          0               3          3          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family VPNv4 Unicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    3          0               5          7          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 4 ms
+	non-critical 5 ms
+
+    Information for address family VPNv6 Unicast in VRF default
+    Table Id                   : 0x80000001
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    3          0               5          7          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv4 Label Unicast in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               4          7          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family Link-State in VRF default
+    Table Id                   : 0x1
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    4          0               0          0          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Is a Route-reflector
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF management
+VRF Id                         : 2
+VRF state                      : UP
+Router-ID                      : 0.0.0.0
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 1
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : Not configured
+
+BGP Information for VRF vpn1
+VRF Id                         : 5
+VRF state                      : UP
+Router-ID                      : 10.21.33.33
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 2
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 1:100
+VRF EVPN RD                    : 1:100
+
+    Information for address family IPv4 Unicast in VRF vpn1
+    Table Id                   : 0x5
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    2          0               3          5          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+    Import route-map PERMIT_ALL_RM
+    Export route-map PERMIT_ALL_RM
+    Export RT list:
+	100:1
+	400:400
+    Import RT list:
+	100:1
+    Label mode: per-vrf
+    Aggregate label: 492287
+    Import default limit       : 1000
+    Import default prefix count : 3
+    Import default map         : PERMIT_ALL_RM
+    Export default limit       : 1000
+    Export default prefix count : 2
+    Export default map         : PERMIT_ALL_RM
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv4 Multicast in VRF vpn1
+    Table Id                   : 0x5
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               2          2          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vpn1
+    Table Id                   : 0x80000005
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    2          0               3          5          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+    Import route-map PERMIT_ALL_RM
+    Export route-map PERMIT_ALL_RM
+    Export RT list:
+	1:100
+	600:600
+    Import RT list:
+	1:100
+    Label mode: per-vrf
+    Aggregate label: 492288
+    Import default limit       : 1000
+    Import default prefix count : 3
+    Import default map         : PERMIT_ALL_RM
+    Export default limit       : 1000
+    Export default prefix count : 2
+    Export default map         : PERMIT_ALL_RM
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Multicast in VRF vpn1
+    Table Id                   : 0x80000005
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               2          2          0          0
+
+    Redistribution
+	static, route-map PERMIT_ALL_RM
+
+    Wait for IGP convergence is not configured
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+BGP Information for VRF vpn2
+VRF Id                         : 6
+VRF state                      : UP
+Router-ID                      : 0.0.0.0
+Configured Router-ID           : 0.0.0.0
+Confed-ID                      : 0
+Cluster-ID                     : 0.0.0.0
+No. of configured peers        : 0
+No. of pending config peers    : 0
+No. of established peers       : 0
+VRF RD                         : 2:100
+VRF EVPN RD                    : 2:100
+
+    Information for address family IPv4 Unicast in VRF vpn2
+    Table Id                   : 0x6
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               2          2          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Import RT list:
+	400:400
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms
+
+    Information for address family IPv6 Unicast in VRF vpn2
+    Table Id                   : 0x80000006
+    Table state                : UP
+    Peers      Active-peers    Routes     Paths      Networks   Aggregates
+    0          0               2          2          0          0
+
+    Redistribution
+	None
+
+    Wait for IGP convergence is not configured
+    Import RT list:
+	600:600
+    Label mode: per-vrf
+
+
+    Nexthop trigger-delay
+	critical 3000 ms
+	non-critical 10000 ms

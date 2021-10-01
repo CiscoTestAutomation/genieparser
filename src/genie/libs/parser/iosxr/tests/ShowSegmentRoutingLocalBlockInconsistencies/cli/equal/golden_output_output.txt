@@ -1,0 +1,4 @@
+
+RP/0/RSP0/CPU0:router(config)# show segment-routing local-block inconsistencies
+Tue Aug 15 13:53:30.555 EDT
+SRLB inconsistencies range: Start/End: 30000/30009

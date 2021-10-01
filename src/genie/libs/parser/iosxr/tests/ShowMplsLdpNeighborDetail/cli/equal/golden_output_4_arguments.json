@@ -1,0 +1,4 @@
+{
+	"vrf": "Vpn1",
+	"interface": "GigabitEthernet0/0/0/1"
+}

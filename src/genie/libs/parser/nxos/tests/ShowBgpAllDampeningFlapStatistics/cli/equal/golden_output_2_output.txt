@@ -1,0 +1,29 @@
+
+show bgp all dampening flap-statistics
+
+Flap Statistics for VRF default, address family IPv4 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 0 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+*>e 10.4.0.0/24       192.168.64.1                 1    00:20:56           570/1500/1000
+*>e 10.4.1.0/24       192.168.64.1                 1    00:20:56           570/1500/1000
+*>e 10.4.2.0/24       192.168.64.1                 1    00:20:56           570/1500/1000
+
+Flap Statistics for VRF default, address family IPv4 Multicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 0 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family IPv6 Multicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 0 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R

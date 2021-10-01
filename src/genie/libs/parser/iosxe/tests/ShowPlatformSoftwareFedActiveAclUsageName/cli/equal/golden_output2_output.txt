@@ -1,0 +1,3 @@
+RACL                    IPV4            Egress          test-acl                2  
+RACL                    IPV4            Ingress         test-acl                2  
+

@@ -1,0 +1,28 @@
+
+RP/0/RP0/CPU0:iosxrv9000-1#show lacp Bundle-Ether8
+Tue Apr  3 20:32:49.966 UTC
+State: a - Port is marked as Aggregatable.
+       s - Port is Synchronized with peer.
+       c - Port is marked as Collecting.
+       d - Port is marked as Distributing.
+       A - Device is in Active mode.
+       F - Device requests PDUs from the peer at fast rate.
+       D - Port is using default values for partner information.
+       E - Information about partner has expired.
+
+Bundle-Ether8
+
+  Port          (rate)  State    Port ID       Key    System ID
+  --------------------  -------- ------------- ------ ------------------------
+Local
+  Te0/0/0/0         1s  ascdAF-- 0x8000,0x0002 0x0008 0x8000,40-55-39-ff-6c-0f
+   Partner          1s  ascdAF-- 0x0001,0x0006 0x0008 0x0001,cc-ef-48-ff-23-0a
+  Te0/1/0/0         1s  ascdAF-- 0x8000,0x0001 0x0008 0x8000,40-55-39-ff-6c-0f
+   Partner          1s  ascdAF-- 0x8000,0x0004 0x0008 0x0001,cc-ef-48-ff-23-0a
+
+  Port                  Receive    Period Selection  Mux       A Churn P Churn
+  --------------------  ---------- ------ ---------- --------- ------- -------
+Local
+  Te0/0/0/0             Current    Fast   Selected   Distrib   None    None   
+  Te0/1/0/0             Current    Fast   Selected   Distrib   None    None   
+

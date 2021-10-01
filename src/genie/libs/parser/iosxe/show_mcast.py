@@ -12,6 +12,7 @@ IOSXE parsers for the following show commands:
     * show ip mroute vrf <vrf_name> static
     * show ip multicast
     * show ip multicast vrf <vrf_name>
+    * show ip multicast mpls vif
 
 """
 
@@ -537,3 +538,56 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                 continue
 
         return ret_dict
+
+class ShowIpMulticastMplsvifSchema(MetaParser):
+    """Schema for:
+        show ip multicast mpls vif
+    """
+    schema = {
+        'interfaces': {
+            Any(): {
+                'next_hop': str,
+                'application': str,
+                'ref_count': str,
+                'table': int,
+                'vrf': str,
+                'flags': str,
+            },
+        },
+    }
+
+class ShowIpMulticastMplsvif(ShowIpMulticastMplsvifSchema):
+    """Parser for:
+        show ip multicast mpls vif
+    """
+    cli_command = 'show ip multicast mpls vif'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        if not out.strip():
+            return ret_dict
+
+        ## Lspvif9     0.0.0.0              MDT               N/A       11   (vrf vrf3001) 0x1
+        p1=re.compile(r"(?P<interface>[a-zA-Z0-9]+)\s+(?P<next_hop>\d+\.\d+\.\d+\.\d+)\s+"
+                    "(?P<application>\S+)\s+(?P<ref_count>\S+)\s+(?P<table>\S+)\s+[a-zA-Z\(]*\s*"
+                    "(?P<vrf>[a-z0-9]+)\)*\s+(?P<flags>\S+)")
+        
+        for line in out.splitlines():
+            line=line.strip()
+            
+            ## Lspvif9     0.0.0.0              MDT               N/A       11   (vrf vrf3001) 0x1
+            m=p1.match(line)
+            if m:
+                r=m.groupdict()
+                intf_dict=ret_dict.setdefault('interfaces',{}).setdefault(r["interface"],{})
+                r.pop('interface')
+                for key,value in r.items():
+                    intf_dict.update({key:int(value) if value.isdigit() else value})
+                
+        return ret_dict
+        

@@ -1,0 +1,20 @@
+
+HSRP Summary:
+
+Extended-hold (NSF) enabled, 10 seconds 
+Global HSRP-BFD enabled
+
+Total Groups: 3
+     Version::    V1-IPV4: 0       V2-IPV4: 3      V2-IPV6: 0   
+       State::     Active: 0       Standby: 0       Listen: 0   
+       State::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0   
+
+Total HSRP Enabled interfaces: 1
+
+Total Packets: 
+	     Tx - Pass: 0       Fail: 0
+	     Rx - Good: 0      
+
+Packet for unknown groups: 0
+
+Total MTS: Rx: 85

@@ -1,0 +1,56 @@
+
+router# show isis database detail
+IS-IS isp (Level-1) Link State Database
+    LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+    router-5.00-00     0x00000003   0x8074460        457             0/0/0
+      Area Address: 49
+      NLPID:       0xcc
+      Hostname:    router-5
+      IP Address:  172.16.186.5
+      Metric: 0          IP 172.16.115.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IS router-11.00
+      Metric: 10         IS router-11.01
+    router-11.00-00  * 0x0000000b   0x8074460        1161            0/0/0
+      Area Address: 49
+      NLPID:       0xcc
+      Hostname:    router-11
+      IP Address:  172.16.196.11
+      Metric: 0          IP 172.16.76.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IS router-11.01
+      Metric: 10         IS router-5.00
+    router-11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+      Metric: 0          IS router-11.00
+      Metric: 0          IS router-5.00
+     Total LSP count: 3 (L1: 3, L2 0, local L1: 2, local L2 0)
+    IS-IS isp (Level-2) Link State Database
+    LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+    router-5.00-00     0x00000005   0x807997c        457             0/0/0
+      Area Address: 49
+      NLPID:       0xcc
+      Hostname:    router-5
+      IP Address:  172.16.166.5
+      Metric: 0          IP 172.16.115.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IP 172.16.94.0/24
+      Metric: 10         IS router-11.00
+      Metric: 10         IS router-11.01
+      Metric: 10         IP 172.16.21.0/24
+    router-11.00-00  * 0x0000000d   0x807997c        1184            0/0/0
+      Area Address: 49
+      NLPID:       0xcc
+      Hostname:    router-11
+      IP Address:  172.28.111.111
+      Metric: 0          IP 172.16.21.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IP 172.16.166.0/24
+      Metric: 10         IS router-11.01
+      Metric: 10         IS router-5.00
+      Metric: 10         IP 172.16.115.0/24
+    router-gsr11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+      Metric: 0          IS router-11.00
+      Metric: 0          IS router-5.00
+     Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)

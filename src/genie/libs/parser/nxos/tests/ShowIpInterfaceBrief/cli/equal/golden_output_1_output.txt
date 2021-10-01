@@ -1,0 +1,32 @@
+
+ IP Interface Status for VRF "default"(1)
+ Interface            IP Address      Interface Status
+ Vlan23               192.168.186.1     protocol-up/link-up/admin-up
+ Lo0                  192.168.4.1       protocol-up/link-up/admin-up
+ Lo1                  192.168.154.1       protocol-up/link-up/admin-up
+ Lo2                  192.168.51.1       protocol-up/link-up/admin-up
+ Lo3                  192.168.205.1       protocol-up/link-up/admin-up
+ Lo10                 192.168.64.1      protocol-up/link-up/admin-up
+ Lo11                 192.168.151.1      protocol-up/link-up/admin-up
+ Po2.100              192.168.196.1      protocol-up/link-up/admin-up
+ Po1.101              192.168.151.2      protocol-up/link-up/admin-up
+ Po2.101              192.168.135.1      protocol-up/link-up/admin-up
+ Po1.102              192.168.70.2      protocol-up/link-up/admin-up
+ Po2.102              192.168.76.1      protocol-up/link-up/admin-up
+ Po1.103              192.168.246.2      protocol-up/link-up/admin-up
+ Po2.103              192.168.19.1      protocol-up/link-up/admin-up
+ Po2.107              192.168.66.1      protocol-up/link-up/admin-up
+ Eth5/48.100          10.81.0.1       protocol-down/link-down/admin-up
+ Eth5/48.101          10.81.1.1       protocol-down/link-down/admin-up
+ Eth5/48.102          10.81.2.1       protocol-down/link-down/admin-up
+ Eth5/48.103          10.81.3.1       protocol-down/link-down/admin-up
+ Eth5/48.104          10.81.4.1       protocol-down/link-down/admin-up
+ Eth5/48.105          10.81.5.1       protocol-down/link-down/admin-up
+ Eth5/48.106          10.81.6.1       protocol-down/link-down/admin-up
+ Eth5/48.110          10.81.10.1      protocol-down/link-down/admin-up
+ Eth6/22              192.168.145.1     protocol-up/link-up/admin-up
+ tunnel-te11          unnumbered      protocol-up/link-up/admin-up
+                      (loopback0)
+ tunnel-te12          unnumbered      protocol-up/link-up/admin-up
+                      (loopback0)
+

@@ -1,0 +1,127 @@
+
++++ genie-Router: executing command 'show isis interface' +++
+show isis interface
+
+Mon Oct 21 10:46:56.224 EDT
+
+IS-IS Genie Interfaces
+Bundle-Ether2               Enabled
+Adjacency Formation:      Enabled
+Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+IPv4 BFD:                 Disabled
+IPv6 BFD:                 Disabled
+BFD Min Interval:         150
+BFD Multiplier:           3
+RSI SRLG:                 Registered
+Bandwidth:                100000000
+
+Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+Media Type:               P2P
+Circuit Number:           0
+Extended Circuit Number:  113
+Next P2P IIH in:          4 s
+LSP Rexmit Queue Size:    1
+
+Level-2
+    Adjacency Count:        1
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+CLNS I/O
+    Protocol State:         Up
+    MTU:                    9199
+    SNPA:                   008a.96ff.1790
+    Layer-2 MCast Groups Membership:
+    All ISs:              Yes
+
+IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Enabled         L2 Enabled
+    FRR Type:             per-prefix         per-prefix
+    Direct LFA:           Enabled            Enabled
+    Remote LFA:           Not Enabled        Not Enabled
+    Tie Breaker          Default            Default
+    Line-card disjoint   30                 30
+    Lowest backup metric 20                 20
+    Node protecting      40                 40
+    Primary path         10                 10
+    TI LFA:               Enabled            Enabled
+    Tie Breaker          Default            Default
+    Link Protecting      Enabled            Enabled
+    Line-card disjoint   0                  0
+    Node protecting      100                100
+    SRLG disjoint        0                  0
+
+IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 172.18.0.1
+    Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+
+LSP transmit timer expires in 0 ms
+LSP transmission is idle
+Can send up to 9 back-to-back LSPs in the next 0 ms
+
+Underlying Interface List
+    IfName: Hu0/0/0/1 IfIndex: 0x55
+
+
+TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+TenGigE0/0/0/4/0            Enabled
+Adjacency Formation:      Enabled
+Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+IPv4 BFD:                 Enabled
+IPv6 BFD:                 Disabled
+BFD Min Interval:         250
+BFD Multiplier:           3
+RSI SRLG:                 Registered
+Bandwidth:                10000000
+
+Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+Media Type:               P2P
+Circuit Number:           0
+Extended Circuit Number:  27
+Next P2P IIH in:          5 s
+LSP Rexmit Queue Size:    0
+
+Level-2
+    Adjacency Count:        1
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+CLNS I/O
+    Protocol State:         Up
+    MTU:                    9199
+    SNPA:                   008a.96ff.131b
+    Layer-2 MCast Groups Membership:
+    All ISs:              Yes
+
+IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+    Metric (L1/L2):         10/10
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+    FRR Type:             None               None
+
+IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 172.16.2.133
+    Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+
+LSP transmit timer expires in 0 ms
+LSP transmission is idle
+Can send up to 9 back-to-back LSPs in the next 0 ms
+
+RP/0/RP0/CPU0:genie-Router#
+

@@ -1,0 +1,65 @@
+
+RP/0/RSP0/CPU0:router# show pce lsp detail
+
+PCE's tunnel database:
+----------------------
+PCC 192.168.0.1:
+
+Tunnel Name: rtrA_t1
+LSPs:
+LSP[0]:
+source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+State: Admin up, Operation up
+Setup type: Segment Routing
+Binding SID: 24013
+PCEP information:
+    plsp-id 2, flags: D:1 S:0 R:0 A:1 O:1
+Reported path:
+    Metric type: TE, Accumulated Metric 42
+    SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+    SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
+Computed path:
+    Metric type: TE, Accumulated Metric 42
+    SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+    SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
+Recorded path:
+    None
+
+RP/0/RSP0/CPU0:router# show pce lsp detail
+
+PCE's tunnel database:
+----------------------
+PCC 192.168.0.1:
+
+Tunnel Name: rtrA_t1
+LSPs:
+LSP[0]:
+source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+State: Admin up, Operation up
+Setup type: Segment Routing
+Binding SID: 24013
+PCEP information:
+    plsp-id 2, flags: D:1 S:0 R:0 A:1 O:1
+Reported path:
+    Metric type: TE, Accumulated Metric 42
+    SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+    SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
+Computed path:
+    Metric type: TE, Accumulated Metric 42
+    SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+    SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
+Recorded path:
+    None
+Event history (latest first):
+Time                      Event
+June 13 2016 13:28:29     Report
+			Symbolic-name: rtrA_t1, LSP-ID: 2,
+			Source: 192.168.0.1 Destination: 192.168.0.4,
+			D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
+June 13 2016 13:28:28     Report
+			Symbolic-name: rtrA_t1, LSP-ID: 2,
+			Source: 192.168.0.1 Destination: 192.168.0.4,
+			D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
+June 13 2016 13:28:28     Create
+			Symbolic-name: rtrA_t1, PLSP-ID: 2,
+			Peer: 192.168.0.1

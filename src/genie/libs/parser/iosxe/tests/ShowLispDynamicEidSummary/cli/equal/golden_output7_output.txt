@@ -1,0 +1,60 @@
+202-xTR1#
+202-xTR1#show lisp all instance-id * dynamic-eid summary
+
+=================================================
+Output for router lisp 0 instance-id 100
+=================================================
+LISP Dynamic EID Summary for router 0, IID 100
+
+^ = Dyn-EID learned by EID Notify
+* = Dyn-EID learned by Site-Based Map-Notify
+n = Dyn-EID learned by NSF Replay
+> = Dyn-EID learned by Roaming detection
+
+Dyn-EID Name         Dynamic-EID      Interface     Uptime    Last      Pending
+                                                              Packet    Ping Count
+
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+LISP Dynamic EID Summary for router 0, IID 101
+
+^ = Dyn-EID learned by EID Notify
+* = Dyn-EID learned by Site-Based Map-Notify
+n = Dyn-EID learned by NSF Replay
+> = Dyn-EID learned by Roaming detection
+
+Dyn-EID Name         Dynamic-EID      Interface     Uptime    Last      Pending
+                                                              Packet    Ping Count
+Auto-L2-group-101    aabb.cc00.c901   N/A           1d22h     never     0
+Auto-L2-group-101    aabb.cc80.ca00   N/A           1d22h     never     0
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Dynamic EID Summary for router 0, IID 4100, EID-table VRF "red"
+
+^ = Dyn-EID learned by EID Notify
+* = Dyn-EID learned by Site-Based Map-Notify
+n = Dyn-EID learned by NSF Replay
+> = Dyn-EID learned by Roaming detection
+
+Dyn-EID Name         Dynamic-EID             Interface     Uptime    Last      Pending
+                                                                     Packet    Ping Count
+192_168_1_0          192.168.1.1             Vl101         1d22h     never     0
+192_168_1_0          192.168.1.71            Vl101         1d22h     never     0
+2001_192_168_1       2001:192:168:1::1       Vl101         1d22h     never     0
+2001_192_168_1       2001:192:168:1::71      Vl101         1d22h     never     0
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+LISP Dynamic EID Summary for router 0, IID 4101, EID-table VRF "blue"
+
+^ = Dyn-EID learned by EID Notify
+* = Dyn-EID learned by Site-Based Map-Notify
+n = Dyn-EID learned by NSF Replay
+> = Dyn-EID learned by Roaming detection
+
+Dyn-EID Name         Dynamic-EID      Interface     Uptime    Last      Pending
+                                                              Packet    Ping Count

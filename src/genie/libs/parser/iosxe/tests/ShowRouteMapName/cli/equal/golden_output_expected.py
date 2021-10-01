@@ -1,0 +1,22 @@
+expected_output = {
+   "pbr-gre":{
+      "statements":{
+         "1":{
+            "actions":{
+               "route_disposition":"permit",
+               "set_next_hop":[
+                  "10.0.0.20"
+               ],
+               "set_next_hop_self":false
+            },
+            "conditions":{
+               "match_access_list":"pbr-acl"
+            },
+            "policy_routing_matches":{
+               "bytes":0,
+               "packets":0
+            }
+         }
+      }
+   }
+}

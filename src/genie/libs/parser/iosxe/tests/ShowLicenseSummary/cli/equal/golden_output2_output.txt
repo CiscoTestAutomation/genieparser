@@ -1,7 +1,6 @@
 License Usage:
-License                  Entitlement Tag                Count Status
------------------------------------------------------------------------------
-C9300 48P DNA Advantage  (C9300-48 DNA Advantage)          2 AUTHORIZED
-C9300 48P Network Adv... (C9300-48 Network Advan...)       2 AUTHORIZED
-C9300 24P Network Adv... (C9300-24 Network Advan...)       1 AUTHORIZED
-C9300 24P DNA Advantage  (C9300-24 DNA Advantage)          1 AUTHORIZED
+  License                 Entitlement Tag               Count Status
+  -----------------------------------------------------------------------------
+  network-premier_5G      (ESR_P_5G_P)                      1 IN USE
+  dna-premier_5G          (DNA_P_5G_P)                      1 IN USE
+  hseck9                  (DNA_HSEC)                        1 IN USE

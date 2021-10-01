@@ -1,0 +1,236 @@
+
+show system internal sysmgr service name ospf
+
+Service "__inst_001__ospf" ("ospf", 83):
+ 
+	UUID = 0x41000119, PID = 23994, SAP = 320
+ 
+	State: SRV_STATE_HANDSHAKED (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	Restart count: 1
+ 
+	Time of last restart: Wed Mar 18 10:14:35 2020.
+ 
+	The service never crashed since the last reboot.
+ 
+	Tag = ENT
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_002__ospf" ("ospf", 88):
+ 
+	UUID = 0x42000119, PID = 23993, SAP = 321
+ 
+	State: SRV_STATE_HANDSHAKED (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	Restart count: 1
+ 
+	Time of last restart: Wed Mar 18 10:14:35 2020.
+ 
+	The service never crashed since the last reboot.
+ 
+	Tag = IPN
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_003__ospf" ("ospf", 93):
+ 
+	UUID = 0x43000119, PID = 23992, SAP = 322
+ 
+	State: SRV_STATE_HANDSHAKED (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	Restart count: 1
+ 
+	Time of last restart: Wed Mar 18 10:14:35 2020.
+ 
+	The service never crashed since the last reboot.
+ 
+	Tag = l3vpn
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_004__ospf" ("ospf", 98):
+ 
+	UUID = 0x44000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_005__ospf" ("ospf", 103):
+ 
+	UUID = 0x45000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_006__ospf" ("ospf", 107):
+ 
+	UUID = 0x46000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_007__ospf" ("ospf", 111):
+ 
+	UUID = 0x47000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_008__ospf" ("ospf", 115):
+ 
+	UUID = 0x48000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_009__ospf" ("ospf", 119):
+ 
+	UUID = 0x49000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_010__ospf" ("ospf", 123):
+ 
+	UUID = 0x4A000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_011__ospf" ("ospf", 127):
+ 
+	UUID = 0x4B000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_012__ospf" ("ospf", 131):
+ 
+	UUID = 0x4C000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_013__ospf" ("ospf", 135):
+ 
+	UUID = 0x4D000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_014__ospf" ("ospf", 139):
+ 
+	UUID = 0x4E000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_015__ospf" ("ospf", 143):
+ 
+	UUID = 0x4F000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1
+ 
+ 
+ 
+Service "__inst_016__ospf" ("ospf", 147):
+ 
+	UUID = 0x50000119, -- Currently not running --
+ 
+	State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Wed Mar 18 10:14:35 2020).
+ 
+	The service has never been started since the last reboot.
+ 
+	Tag = N/A
+ 
+	Plugin ID: 1

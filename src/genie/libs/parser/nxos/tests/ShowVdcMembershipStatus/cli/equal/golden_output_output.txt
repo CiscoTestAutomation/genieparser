@@ -1,0 +1,29 @@
+
+
+Flags : b - breakout port
+---------------------------------
+
+vdc_id: 0 vdc_name: Unallocated interfaces:
+Port        Status
+----        ----------
+Eth3/1      OK
+Eth3/2      OK
+
+vdc_id: 1 vdc_name: PE1 interfaces:
+Port        Status
+----        ----------
+Eth4/5      OK
+Eth4/6      OK
+
+vdc_id: 2 vdc_name: PE2 interfaces:
+Port        Status
+----        ----------
+Eth4/3      OK
+Eth4/4      OK
+
+vdc_id: 3 vdc_name: CORE interfaces:
+Port        Status
+----        ----------
+Eth4/1      OK
+Eth4/2(b)   OK
+

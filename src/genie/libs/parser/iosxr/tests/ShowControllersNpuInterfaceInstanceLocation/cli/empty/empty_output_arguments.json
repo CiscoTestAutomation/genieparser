@@ -1,0 +1,6 @@
+{
+	"npu": "voq-usage",
+	"interface": "GigabitEthernet0/0/0/0",
+	"instance": "all",
+	"location": "all"
+}

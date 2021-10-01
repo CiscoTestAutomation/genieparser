@@ -1,0 +1,13 @@
+
+GigabitEthernet0/0/0/0:
+		Tx: enabled
+		Rx: enabled
+		Tx state: IDLE
+		Rx state: WAIT FOR FRAME
+
+
+GigabitEthernet0/0/0/1:
+		Tx: enabled
+		Rx: enabled
+		Tx state: IDLE
+		Rx state: WAIT FOR FRAME

@@ -1,0 +1,16 @@
+
+admin show diag chassis
+
+Mon Oct 21 10:54:18.093 EDT
+
+Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
+  MAIN:  board type 0001ee
+	 800-35128-03 rev B1
+	 dev N/A
+	 S/N FXS1752Q3AU
+  PCA:   73-13062-02 rev A0
+  PID:   CRS-16-LCC-B
+  VID:   V03
+  CLEI:  IPMS110DRC
+  ECI:   465887
+  RACK NUM: 0

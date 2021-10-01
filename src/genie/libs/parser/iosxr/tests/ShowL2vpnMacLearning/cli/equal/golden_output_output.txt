@@ -1,0 +1,9 @@
+
+Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
+
+6        0/0/CPU0   BV1        1000.00ff.0102      10.1.1.11
+7        0/0/CPU0   BV2        0000.f6ff.8fca      10.1.2.91
+7        0/0/CPU0   BV2        0000.f6ff.8fca      10.1.2.93
+1        0/0/CPU0   BE1.7      7777.77ff.7779
+6        0/0/CPU0   BV1        0000.f6ff.8fd6      fe80::200:f6ff:feff:8fd6
+

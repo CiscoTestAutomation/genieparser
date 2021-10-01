@@ -1,0 +1,20 @@
+P2P TUNNELS/LSPs:
+
+LSP Tunnel PE1_t100 is signalled, connection is up
+  InLabel  : Port-channel20, implicit-null
+  Prev Hop : 192.1.1.1
+  OutLabel :  - 
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 100, Tun_Instance 1481
+    RSVP Path Info:
+      My Address: 2.2.2.2   
+      Explicit Route:  NONE
+      Record   Route:   NONE
+      Tspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+    RSVP Resv Info:
+      Record   Route:   NONE
+      Fspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+
+P2MP TUNNELS:
+
+P2MP SUB-LSPS:

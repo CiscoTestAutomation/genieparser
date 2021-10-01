@@ -1,22 +1,72 @@
-show mpls forwarding-table
-Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-Label      Label      or Tunnel Id     Switched      interface
-16         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
-17         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
-18         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
-19         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
-20         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
-21         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
-22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
-16110      Pop Label  10.70.20.20/32   0             Et0/0      10.4.1.2
-16120      16120      10.30.30.30/32   0             Et0/0      10.4.1.2
-16130      16130      10.25.40.40/32   0             Et0/0      10.4.1.2
-      [T]  16130      10.25.40.40/32   0             Tu1        point2point
-16140 [T]  Pop Label  10.55.50.50/32   0             Tu1        point2point
-16200      Pop Label  10.220.100.100/32                                                  0             Et0/1      10.135.15.2
-17100      Pop Label  0-10.70.20.20/32-0                                                  0             Et0/0      10.4.1.2
-17200      17200      0-10.30.30.30/32-0                                                  0             Et0/0      10.4.1.2
-17300      17300      0-10.25.40.40/32-0                                                  0             Et0/1      10.135.15.2
-17400      17400      0-10.55.50.50/32-0                                                  0             Et0/1      10.135.15.2
-18000      Pop Label  0-10.220.100.100/32-0                                                  0             Et0/1      10.135.15.2
-    
+R1#show mpls forwarding-table
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface              
+16    [T]  Pop Label  65757/1[TE-Bind]               Tu65757    point2point 
+      [T]  Pop Label  65757/1[TE-Bind]               Tu65757    point2point 
+17    [T]  Pop Label  65758/1[TE-Bind]               Tu65758    point2point 
+      [T]  Pop Label  65758/1[TE-Bind]               Tu65758    point2point 
+19         No Label   30.30.30.0/24    0             Gi0/0/3    10.10.10.2  
+21         No Label   45.45.45.0/24    0             Gi0/0/3    10.10.10.2  
+           No Label   45.45.45.0/24    0             Te0/0/5    20.20.20.2  
+22    [T]  Pop Label  10/1[TE-Bind]                  Tu10       point2point 
+      [T]  Pop Label  10/1[TE-Bind]                  Tu10       point2point 
+25    [T]  Pop Label  5.5.5.5/32                     Tu65758    point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu65758    point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu20       point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu20       point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu10       point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu10       point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu65757    point2point 
+      [T]  Pop Label  5.5.5.5/32                     Tu65757    point2point 
+26    [T]  No Label   60.60.60.0/24                  Tu65758    point2point 
+      [T]  No Label   60.60.60.0/24                  Tu20       point2point 
+      [T]  No Label   60.60.60.0/24                  Tu10       point2point 
+      [T]  No Label   60.60.60.0/24                  Tu65757    point2point 
+28    [T]  16061      6.6.6.6/32                     Tu20       point2point 
+      [T]  16061      6.6.6.6/32                     Tu20       point2point 
+      [T]  16061      6.6.6.6/32                     Tu10       point2point 
+      [T]  16061      6.6.6.6/32                     Tu10       point2point 
+29         No Label   90.90.90.0/24    0             Te0/0/5    20.20.20.2  
+30         Pop Label  10.10.10.2-A     0             Gi0/0/3    10.10.10.2  
+31         No Label   80.80.80.0/24    0             Gi0/0/3    10.10.10.2  
+32    [T]  No Label   70.70.70.0/24                  Tu20       point2point 
+      [T]  No Label   70.70.70.0/24                  Tu10       point2point 
+34    [T]  Pop Label  20/1[TE-Bind]                  Tu20       point2point 
+      [T]  Pop Label  20/1[TE-Bind]                  Tu20       point2point 
+35         Pop Label  20.20.20.2-A     0             Te0/0/5    20.20.20.2  
+42         No Label   50.50.50.0/24    0             Te0/0/5    20.20.20.2  
+45    [M]  Pop Label  3.3.3.3/32       0             Te0/0/5    20.20.20.2  
+46         No Label   40.40.40.0/24    0             Gi0/0/3    10.10.10.2  
+           No Label   40.40.40.0/24    0             Te0/0/5    20.20.20.2  
+47    [M]  Pop Label  2.2.2.2/32       0             Gi0/0/3    10.10.10.2  
+48    [M]  16041      4.4.4.4/32       0             Gi0/0/3    10.10.10.2  
+      [M]  16041      4.4.4.4/32       0             Te0/0/5    20.20.20.2  
+16021 [M]  Pop Label  2.2.2.2/32       0             Gi0/0/3    10.10.10.2  
+16022      Pop Label  0-2.2.2.2/32-2   0             Gi0/0/3    10.10.10.2  
+16031 [M]  Pop Label  3.3.3.3/32       0             Te0/0/5    20.20.20.2  
+16032      Pop Label  0-3.3.3.3/32-2   0             Te0/0/5    20.20.20.2  
+16041 [M]  16041      4.4.4.4/32       0             Gi0/0/3    10.10.10.2  
+      [M]  16041      4.4.4.4/32       0             Te0/0/5    20.20.20.2  
+16042      16042      0-4.4.4.4/32-2   0             Gi0/0/3    10.10.10.2  
+           16042      0-4.4.4.4/32-2   0             Te0/0/5    20.20.20.2  
+16051 [T]  Pop Label  0-5.5.5.5/32-1                 Tu65758    point2point 
+      [T]  Pop Label  0-5.5.5.5/32-1                 Tu65758    point2point 
+      [T]  Pop Label  0-5.5.5.5/32-1                 Tu20       point2point 
+      [T]  Pop Label  0-5.5.5.5/32-1                 Tu20       point2point 
+16052      16052      0-5.5.5.5/32-2   0             Gi0/0/3    10.10.10.2  
+           16052      0-5.5.5.5/32-2   0             Te0/0/5    20.20.20.2  
+16061 [T]  16061      0-6.6.6.6/32-1                 Tu65758    point2point 
+      [T]  16061      0-6.6.6.6/32-1                 Tu65758    point2point 
+      [T]  16061      0-6.6.6.6/32-1                 Tu20       point2point 
+      [T]  16061      0-6.6.6.6/32-1                 Tu20       point2point 
+           16061      0-6.6.6.6/32-1                 Gi0/0/3    10.10.10.2  
+           16061      0-6.6.6.6/32-1   0             Te0/0/5    20.20.20.2  
+16062      16062      0-6.6.6.6/32-2   0             Gi0/0/3    10.10.10.2  
+           16062      0-6.6.6.6/32-2   0             Te0/0/5    20.20.20.2  
+
+[T]     Forwarding through a LSP tunnel.
+        View additional labelling info with the 'detail' option
+
+A  - Adjacency SID
+
+[M] - Merged

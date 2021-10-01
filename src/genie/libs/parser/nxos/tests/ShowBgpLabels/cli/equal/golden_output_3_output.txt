@@ -1,0 +1,36 @@
+
+2018-04-10T05:02:05: %UNICON-20-INFO: +++ execute  +++
+show bgp ipv6 unicast labels vrf all
+BGP routing table information for VRF VRF1, address family IPv6 Unicast
+BGP table version is 18, Local Router ID is 10.81.1.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            In label/Out label
+*>e2001:db8:4519::/112           2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+*>e2001:db8:4519::1:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+*>e2001:db8:4519::2:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+*>e2001:db8:4519::3:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+*>e2001:db8:4519::4:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+*>e2001:db8:4840::/112           ::ffff:10.51.1.101
+					  21/16 (VRF1)
+*>e2001:db8:4840::1:0/112        ::ffff:10.51.1.101
+					  22/17 (VRF1)
+*>e2001:db8:4840::2:0/112        ::ffff:10.51.1.101
+					  23/18 (VRF1)
+*>e2001:db8:4840::3:0/112        ::ffff:10.51.1.101
+					  24/19 (VRF1)
+*>e2001:db8:4840::4:0/112        ::ffff:10.51.1.101
+					  25/20 (VRF1)
+
+BGP routing table information for VRF default, address family IPv6 Unicast
+BGP table version is 11, Local Router ID is 10.1.1.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            In label/Out label
+*>e2001:db8:4410::/112           2001:db8:1900:1::1:101         nolabel/nolabel
+*>e2001:db8:4410::1:0/112        2001:db8:1900:1::1:101         nolabel/nolabel
+*>e2001:db8:4410::2:0/112        2001:db8:1900:1::1:101         nolabel/nolabel
