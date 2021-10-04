@@ -422,7 +422,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetailSchema(MetaParser):
                                             Any(): {
                                                 "interface": {
                                                     Any(): {
-                                                        Optional("bfd_enable"): str,
+                                                        Optional("bfd_enable"): Or(str, int),
                                                         Optional("bfd_mode"): str,
                                                         'Neighbor': {
                                                             'interface-id': int,
@@ -555,12 +555,17 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
                     setdefault('neighbor_router_id', {}).setdefault(neighbor_rid, {}). \
                     setdefault('interface', {}).setdefault(interface, {})
                 
-                if m.groupdict()['enable'] and m.groupdict()['mode']:
+                if m.groupdict()['enable']:
                     interface_dict.update(
                         {
                             "bfd_enable": str(m.groupdict()['enable']),
-                            "bfd_mode": str(m.groupdict()['mode'])
-                        })
+                        })   
+
+                if m.groupdict()['mode']:
+                    interface_dict.update(
+                        {
+                            "bfd_mode": str(m.groupdict()['mode']),
+                        })  
 
             # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
             m = p4.match(line)
