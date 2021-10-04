@@ -422,7 +422,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetailSchema(MetaParser):
                                             Any(): {
                                                 "interface": {
                                                     Any(): {
-                                                        Optional("bfd_enable"): (str, int),
+                                                        Optional("bfd_enable"): str or bool,
                                                         Optional("bfd_mode"): str,
                                                         'Neighbor': {
                                                             'interface-id': int,
