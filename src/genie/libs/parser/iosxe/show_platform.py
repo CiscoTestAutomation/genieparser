@@ -2224,7 +2224,21 @@ class ShowInventory(ShowInventorySchema):
                 # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
                 # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
                 elif subslot:
-                    if ('STACK' in pid) or asr900_rp:
+                    if ('STACK' in pid):
+                        try:
+                            rp_dict
+                        except NameError:
+                            stack_dict = slot_dict.setdefault('other', {}).\
+                                setdefault(pid, {})
+                            subslot_dict = stack_dict.setdefault('subslot', {}).\
+                                setdefault(subslot, {}).\
+                                setdefault(pid, {})
+                        else:
+                            subslot_dict = rp_dict.setdefault('subslot', {}).\
+                                setdefault(subslot, {}).\
+                                setdefault(pid, {})
+
+                    elif asr900_rp:
                         subslot_dict = rp_dict.setdefault('subslot', {}).\
                             setdefault(subslot, {}).\
                             setdefault(pid, {})
