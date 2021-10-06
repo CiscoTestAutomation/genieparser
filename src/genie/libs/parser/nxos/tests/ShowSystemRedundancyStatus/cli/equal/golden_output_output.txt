@@ -1,0 +1,19 @@
+
+
+Redundancy mode
+---------------
+  administrative:   HA
+     operational:   HA
+
+This supervisor (sup-1)
+-----------------------
+Redundancy state:   Active
+Supervisor state:   Active
+  Internal state:   Active with HA standby
+
+Other supervisor (sup-2)
+------------------------
+Redundancy state:   Standby
+Supervisor state:   HA standby
+  Internal state:   HA standby
+

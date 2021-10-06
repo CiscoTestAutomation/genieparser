@@ -1,0 +1,27 @@
+Syslog logging: enabled (0 messages dropped, 1 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+
+No Active Message Discriminator.
+
+
+
+No Inactive Message Discriminator.
+
+
+    Console logging: disabled
+    Monitor logging: level debugging, 0 messages logged, xml disabled,
+                     filtering disabled
+    Buffer logging:  level debugging, 59 messages logged, xml disabled,
+                    filtering disabled
+    Exception Logging: size (8192 bytes)
+    Count and timestamp logging messages: disabled
+    Persistent logging: disabled
+    Trap logging: level informational, 62 message lines logged
+        Logging Source-Interface:       VRF Name:
+        Loopback246
+        GigabitEthernet1                Mgmt-intf
+        Loopback1                       000000
+        Loopback2                       default
+        Loopback3                       global
+
+Log Buffer (8192 bytes):
+*Aug 19 15:23:24.798: %SYS-5-CONFIG_I: Configured from console by cisco on vty1 (10.10.20.50)

@@ -1,0 +1,8 @@
+
+RP/0/RSP0/CPU0:router# show spanning-tree mst blocked-ports
+MSTI 0 (CIST):
+
+Interface                Port ID                     Designated               Port ID
+Name                     Prio.Nbr Cost   Role State  Cost Bridge ID           Prio.Nbr
+----------------------   -------- ------ ---------   ------------------------ --------
+GigabitEthernet0/0/4/4      128.196  200000 ALT  BLK    0    4097 0004.9bff.8078 128.195

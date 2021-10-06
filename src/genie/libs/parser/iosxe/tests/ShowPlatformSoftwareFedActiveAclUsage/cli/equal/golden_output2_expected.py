@@ -1,0 +1,33 @@
+expected_output = {
+   "acl_usage":{
+      "ace_software":{
+         "used":263,
+         "vmr_max":196608
+      },
+      "acl_name":{
+         "pbr-acl":{
+            "direction":{
+               "Ingress":{
+                  "acl_type":"IPV4",
+                  "entries_used":2,
+                  "feature_type":"RACL"
+               }
+            }
+         },
+         "test-acl":{
+            "direction":{
+               "Egress":{
+                  "acl_type":"IPV4",
+                  "entries_used":2,
+                  "feature_type":"RACL"
+               },
+               "Ingress":{
+                  "acl_type":"IPV4",
+                  "entries_used":2,
+                  "feature_type":"RACL"
+               }
+            }
+         }
+      }
+   }
+}

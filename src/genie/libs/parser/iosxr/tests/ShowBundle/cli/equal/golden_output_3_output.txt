@@ -1,0 +1,28 @@
+
+RP/0/RSP0/CPU0:router# show bundle
+
+Bundle-Ether1
+Status: Up
+Local links <active/standby/configured>: 1 / 0 / 1
+Local bandwidth <effective/available>: 1000000 (1000000) kbps
+MAC address (source): 0000.deff.afaf (Configured)
+Minimum active links / bandwidth: 1 / 1 kbps
+Maximum active links: 64
+Wait while timer: 100 ms
+LACP: Operational
+Flap suppression timer: 300 ms
+mLACP: Operational
+ICCP Group: 1
+Role: Active
+Foreign links <active/configured>: 0 / 1
+Switchover type: Non-revertive
+Recovery delay: 300 s
+Maximize threshold: Not configured
+IPv4 BFD: Not configured
+ 
+Port Device State Port ID B/W, kbps
+-------------------- --------------- ----------- -------------- ----------
+Gi0/0/0/0 Local Active 0x8001, 0x9001 1000000
+Link is Active
+Gi0/0/0/0 10.81.3.2 Standby 0x8002, 0xa001 1000000
+Link is marked as Standby by mLACP peer

@@ -1,0 +1,12 @@
+
+show routing 10.4.1.1
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+10.4.1.1/32, ubest/mbest: 1/0
+    *via 10.13.90.1, Eth1/2.90, [90/2848], 1w5d, eigrp-test, internal
+    via 10.4.1.1, [200/0], 1w5d, bgp-65000, internal, tag 65000 (hidden)
+    via 10.13.110.1, Eth1/2.110, [110/41], 1w5d, ospf-1, intra

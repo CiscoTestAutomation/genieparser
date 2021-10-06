@@ -1,0 +1,4 @@
+Tag 1:
+Adjacency stagger disabled
+
+Tag null:

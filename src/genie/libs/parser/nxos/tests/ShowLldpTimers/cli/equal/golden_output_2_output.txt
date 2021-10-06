@@ -1,0 +1,11 @@
+
+show lldp timers
+
+LLDP Timers:
+
+    Holdtime in seconds: 120
+    Reinit-time in seconds: 2
+    Transmit interval in seconds: 30
+    Transmit delay in seconds: 2
+    Hold multiplier in seconds: 4
+    Notification interval in seconds: 5

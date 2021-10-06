@@ -1,0 +1,10 @@
+
+show run key chain
+Wed Mar 27 22:31:22.533 UTC
+key chain ISIS-HELLO-CORE
+    key 1
+	accept-lifetime 00:01:00 january 01 2013 infinite
+	key-string password 020F175218
+	cryptographic-algorithm HMAC-MD5
+	!
+    accept-tolerance infinite !

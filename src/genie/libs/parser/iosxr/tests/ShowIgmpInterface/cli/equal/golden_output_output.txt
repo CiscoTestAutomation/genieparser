@@ -1,0 +1,59 @@
+
+R2_xr# show igmp interface
+Loopback0 is up, line protocol is up
+    Internet address is 10.16.2.2/32
+    IGMP is enabled on interface
+    Current IGMP version is 3
+    IGMP query interval is 60 seconds
+    IGMP querier timeout is 125 seconds
+    IGMP max query response time is 10 seconds
+    Last member query response interval is 1 seconds
+    IGMP activity: 6 joins, 0 leaves
+    IGMP querying router is 10.16.2.2 (this system)
+    Time elapsed since last query sent 00:00:53
+    Time elapsed since IGMP router enabled 02:46:41
+    Time elapsed since last report received 00:00:51
+GigabitEthernet0/0/0/0.90 is up, line protocol is up
+    Internet address is 10.12.90.2/24
+    IGMP is disabled on interface
+GigabitEthernet0/0/0/1.90 is up, line protocol is up
+    Internet address is 10.23.90.2/24
+    IGMP is disabled on interface
+GigabitEthernet0/0/0/0.110 is up, line protocol is up
+    Internet address is 10.12.110.2/24
+    IGMP is enabled on interface
+    Current IGMP version is 3
+    IGMP query interval is 60 seconds
+    IGMP querier timeout is 125 seconds
+    IGMP max query response time is 10 seconds
+    Last member query response interval is 1 seconds
+    IGMP activity: 7 joins, 1 leaves
+    IGMP querying router is 10.12.110.1
+    Time elapsed since last query sent 02:42:58
+    Time elapsed since IGMP router enabled 02:46:41
+    Time elapsed since last report received 00:00:31
+GigabitEthernet0/0/0/0.115 is up, line protocol is up
+    Internet address is 10.12.115.2/24
+    IGMP is disabled on interface
+GigabitEthernet0/0/0/0.120 is up, line protocol is up
+    Internet address is 10.12.120.2/24
+    IGMP is disabled on interface
+GigabitEthernet0/0/0/1.110 is up, line protocol is up
+    Internet address is 10.23.110.2/24
+    IGMP is enabled on interface
+    Current IGMP version is 3
+    IGMP query interval is 60 seconds
+    IGMP querier timeout is 125 seconds
+    IGMP max query response time is 10 seconds
+    Last member query response interval is 1 seconds
+    IGMP activity: 5 joins, 0 leaves
+    IGMP querying router is 10.23.110.2 (this system)
+    Time elapsed since last query sent 00:00:55
+    Time elapsed since IGMP router enabled 02:46:41
+    Time elapsed since last report received 00:00:55
+GigabitEthernet0/0/0/1.115 is up, line protocol is up
+    Internet address is 10.23.115.2/24
+    IGMP is disabled on interface
+GigabitEthernet0/0/0/1.120 is up, line protocol is up
+    Internet address is 10.23.120.2/24
+    IGMP is disabled on interface

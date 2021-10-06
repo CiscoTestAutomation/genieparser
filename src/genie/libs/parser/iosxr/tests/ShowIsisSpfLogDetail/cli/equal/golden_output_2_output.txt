@@ -1,0 +1,50 @@
+
+show isis spf-log detail
+
+Mon Oct 21 10:41:33.540 EDT
+
+IS-IS Genie Level 2 IPv4 Unicast Route Calculation Log
+		    Time Total Trig.
+Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+------------ ----- ----- ----- ----- -------------------- -----------------------
+--- Sun Oct 20 2019 ---
+15:53:18.505 PPFRR     5    71     1                      PERPREFIXFRR
+Delay:                 0ms (since first trigger)
+New LSP Arrivals:      0
+SR uloop:              No
+Next Wait Interval:    0ms
+Interrupted:           No
+RIB Batches:           0
+Timings (ms):          +--Total--+
+			Real   CPU
+    SPT Calculation:         5     5
+    Route Update:            0     0
+			----- -----
+    Full Calculation:        5     5
+16:08:18.055  FSPF     0    71     1                      PERIODIC
+Delay:                 50ms (since first trigger)
+			899545ms (since end of last calculation)
+New LSP Arrivals:      0
+SR uloop:              No
+Next Wait Interval:    150ms
+RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+Timings (ms):          +--Total--+
+			Real   CPU
+    SPT Calculation:         0     0
+    Route Update:            0     0
+			----- -----
+    Full Calculation:        0     0
+16:08:18.555 PPFRR     5    71     1                      PERPREFIXFRR
+Delay:                 0ms (since first trigger)
+			500ms (since end of last calculation)
+New LSP Arrivals:      0
+SR uloop:              No
+Next Wait Interval:    0ms
+Interrupted:           No
+RIB Batches:           0
+Timings (ms):          +--Total--+
+			Real   CPU
+    SPT Calculation:         5     5
+    Route Update:            0     0
+			----- -----
+    Full Calculation:        5     5

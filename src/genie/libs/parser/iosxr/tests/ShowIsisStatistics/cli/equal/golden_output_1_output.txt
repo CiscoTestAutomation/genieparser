@@ -1,0 +1,123 @@
+
+IS-IS test statistics:
+    Fast PSNP cache (hits/tries): 21/118
+    Fast CSNP cache (hits/tries): 1398/1501
+    Fast CSNP cache updates: 204
+    LSP checksum errors received: 0
+    LSP Dropped: 0
+    SNP Dropped: 0
+    UPD Max Queue size: 3
+    UPD Queue size: 0
+    Average transmit times and rate:
+      Hello:          0 s,      66473 ns,         15/s
+      CSNP:           0 s,      45979 ns,          2/s
+      PSNP:           0 s,       4113 ns,          0/s
+      LSP:            0 s,      14392 ns,          0/s
+    Average process times and rate:
+      Hello:          0 s,      51163 ns,          9/s
+      CSNP:           0 s,      26914 ns,          1/s
+      PSNP:           0 s,      39758 ns,          0/s
+      LSP:            0 s,      52706 ns,          0/s
+    Level-1:
+      LSPs sourced (new/refresh): 11/15
+      IPv4 Unicast
+	Total SPF calculations     : 18
+	Full SPF calculations      : 16
+	ISPF calculations          : 0
+	Next Hop Calculations      : 0
+	Partial Route Calculations : 2
+	Periodic SPF calculations  : 3
+      IPv6 Unicast
+	Total SPF calculations     : 19
+	Full SPF calculations      : 17
+	ISPF calculations          : 0
+	Next Hop Calculations      : 0
+	Partial Route Calculations : 2
+	Periodic SPF calculations  : 3
+    Level-2:
+      LSPs sourced (new/refresh): 13/11
+      IPv4 Unicast
+	Total SPF calculations     : 23
+	Full SPF calculations      : 15
+	ISPF calculations          : 0
+	Next Hop Calculations      : 0
+	Partial Route Calculations : 8
+	Periodic SPF calculations  : 4
+      IPv6 Unicast
+	Total SPF calculations     : 22
+	Full SPF calculations      : 14
+	ISPF calculations          : 0
+	Next Hop Calculations      : 0
+	Partial Route Calculations : 8
+	Periodic SPF calculations  : 4
+  Interface Loopback0:
+    Level-1 LSPs (sent/rcvd)  : 0/0
+    Level-1 CSNPs (sent/rcvd) : 0/0
+    Level-1 PSNPs (sent/rcvd) : 0/0
+    Level-1 LSP Flooding Duplicates     : 51
+    Level-1 LSPs Arrival Time Throttled : 0
+    Level-2 LSPs (sent/rcvd)  : 0/0
+    Level-2 CSNPs (sent/rcvd) : 0/0
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 46
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface GigabitEthernet0/0/0/0:
+    Level-1 Hellos (sent/rcvd): 594/593
+    Level-1 DR Elections      : 1
+    Level-1 LSPs (sent/rcvd)  : 0/0
+    Level-1 CSNPs (sent/rcvd) : 0/0
+    Level-1 PSNPs (sent/rcvd) : 0/0
+    Level-1 LSP Flooding Duplicates     : 51
+    Level-1 LSPs Arrival Time Throttled : 0
+    Level-2 Hellos (sent/rcvd): 1779/594
+    Level-2 DR Elections      : 1
+    Level-2 LSPs (sent/rcvd)  : 63/7
+    Level-2 CSNPs (sent/rcvd) : 595/0
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 0
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface GigabitEthernet0/0/0/1:
+    Level-1 Hellos (sent/rcvd): 1294/604
+    Level-1 DR Elections      : 5
+    Level-1 LSPs (sent/rcvd)  : 47/15
+    Level-1 CSNPs (sent/rcvd) : 339/0
+    Level-1 PSNPs (sent/rcvd) : 0/1
+    Level-1 LSP Flooding Duplicates     : 8
+    Level-1 LSPs Arrival Time Throttled : 0
+    Level-2 Hellos (sent/rcvd): 724/281
+    Level-2 DR Elections      : 5
+    Level-2 LSPs (sent/rcvd)  : 0/0
+    Level-2 CSNPs (sent/rcvd) : 0/0
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 42
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface GigabitEthernet0/0/0/2:
+    Level-1 Hellos (sent/rcvd): 1739/572
+    Level-1 DR Elections      : 3
+    Level-1 LSPs (sent/rcvd)  : 51/31
+    Level-1 CSNPs (sent/rcvd) : 567/0
+    Level-1 PSNPs (sent/rcvd) : 0/0
+    Level-1 LSP Flooding Duplicates     : 0
+    Level-1 LSPs Arrival Time Throttled : 0
+    Level-2 Hellos (sent/rcvd): 597/0
+    Level-2 DR Elections      : 1
+    Level-2 LSPs (sent/rcvd)  : 0/0
+    Level-2 CSNPs (sent/rcvd) : 0/0
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 46
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface GigabitEthernet0/0/0/3:
+    Level-1 Hellos (sent/rcvd): 598/1115
+    Level-1 DR Elections      : 3
+    Level-1 LSPs (sent/rcvd)  : 38/26
+    Level-1 CSNPs (sent/rcvd) : 0/370
+    Level-1 PSNPs (sent/rcvd) : 0/0
+    Level-1 LSP Flooding Duplicates     : 5
+    Level-1 LSPs Arrival Time Throttled : 0
+    Level-2 Hellos (sent/rcvd): 596/1113
+    Level-2 DR Elections      : 3
+    Level-2 LSPs (sent/rcvd)  : 18/39
+    Level-2 CSNPs (sent/rcvd) : 0/370
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 3
+    Level-2 LSPs Arrival Time Throttled : 0

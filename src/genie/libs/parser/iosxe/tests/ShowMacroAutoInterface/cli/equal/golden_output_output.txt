@@ -1,0 +1,11 @@
+ Global Auto Smart Port Status
+ Auto Smart Ports Enabled
+ Fallback : CDP  Disabled
+Interface     Auto Smart Port   Fallback    Macro Description(s)      
+--------------------------------------------------------------
+Vl1           TRUE              None        No Macro Applied
+Gi0/0         TRUE              None        No Macro Applied          
+Gi1/0/1       TRUE              None        No Macro Applied
+Gi1/0/37      FALSE             None        CISCO_LAST_RESORT_EVENT
+Ap1/0/1       TRUE              None        CISCO_LAST_RESORT_EVENT
+Tu2           TRUE              None        No Macro Applied  

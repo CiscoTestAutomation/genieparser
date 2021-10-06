@@ -1,0 +1,9 @@
+Track 3
+  Interface Ethernet1/3 Line Protocol
+  Line Protocol is DOWN
+  1 changes, last change 3w5d
+
+Track 4
+  IP Route 10.1.1.1/32 Reachability
+  Reachability is DOWN
+  1 changes, last change 3w4d

@@ -1,0 +1,10 @@
+
+show static topology detail
+
+Wed Oct  9 14:34:58.699 EDT 
+
+VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+Last path event occured at Sep 11 08:29:25.605
+Prefix/Len        Interface          Nexthop  Object    Explicit-path       Metrics         Local-Label   
+172.16.0.89/32    TenGigE0_0_1_2     None     None      None                [0/4096/1/0/1]	No label    Path is configured at Sep 11 08:29:25.605
+Path version: 0, Path status: 0x0

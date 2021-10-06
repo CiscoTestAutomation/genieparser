@@ -1,0 +1,6 @@
+License Usage:
+  License                 Entitlement Tag               Count Status
+  -----------------------------------------------------------------------------
+  network-premier_5G      (ESR_P_5G_P)                      1 IN USE
+  dna-premier_5G          (DNA_P_5G_P)                      1 IN USE
+  hseck9                  (DNA_HSEC)                        1 IN USE

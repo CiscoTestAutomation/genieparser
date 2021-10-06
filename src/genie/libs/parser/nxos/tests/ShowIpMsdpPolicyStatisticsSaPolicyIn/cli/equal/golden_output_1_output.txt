@@ -1,0 +1,11 @@
+
+N95_2_R2# show ip msdp policy statistics sa-policy 10.144.6.6 in 
+C: No. of comparisions, M: No. of matches
+
+route-map filtera permit 10
+match ip address mcast-all-groups                          C: 0      M: 0     
+route-map filtera permit 20
+match ip address mcast-all-groups2                         C: 0      M: 0     
+
+Total accept count for policy: 0     
+Total reject count for policy: 0  

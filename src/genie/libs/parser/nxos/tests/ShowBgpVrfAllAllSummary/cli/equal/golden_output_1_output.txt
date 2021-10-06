@@ -1,0 +1,50 @@
+
+BGP summary information for VRF VRF1, address family IPv4 Unicast
+BGP router identifier 10.64.4.4, local AS number 100
+BGP table version is 40, IPv4 Unicast config peers 1, capable peers 0
+5 network entries and 5 paths using 620 bytes of memory
+BGP attribute entries [3/384], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [1/4]
+Dampening configured, 0 history paths, 0 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.16.2.10        4     0       0       0        0    0    0     5w6d Idle
+
+BGP summary information for VRF VRF1, address family IPv6 Unicast
+
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.4.1.1, local AS number 100
+BGP table version is 2, IPv4 Unicast config peers 1, capable peers 0
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [1/4]
+Dampening configured, 0 history paths, 0 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.16.2.5         4   200       0       0        0    0    0     5w6d Shut (Admin)
+2001:db8:8191:506d:5::5
+		3   200       0       0        0    0    0     5w5d Shut (Admin)
+
+BGP summary information for VRF default, address family IPv6 Unicast
+
+BGP summary information for VRF default, address family VPNv4 Unicast
+BGP router identifier 10.4.1.1, local AS number 100
+BGP table version is 53, VPNv4 Unicast config peers 1, capable peers 1
+5 network entries and 5 paths using 620 bytes of memory
+BGP attribute entries [1/128], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [1/4]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.16.2.2         4   100  108554  108566       53    0    0     5w6d 1
+
+BGP summary information for VRF default, address family VPNv6 Unicast
+BGP router identifier 10.4.1.1, local AS number 100
+BGP table version is 45, VPNv6 Unicast config peers 1, capable peers 1
+4 network entries and 4 paths using 544 bytes of memory
+BGP attribute entries [1/128], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [1/4]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.16.2.2         4   100  108554  108566       45    0    0     5w6d 1
+
+BGP summary information for VRF default, address family IPv6 Label Unicast

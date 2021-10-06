@@ -1,0 +1,11 @@
+
+show routing 10.36.3.3
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+10.36.3.3/32, ubest/mbest: 2/0, attached
+    *via 10.36.3.3, Lo0, [0/0], 1w4d, local
+    *via 10.36.3.3, Lo0, [0/0], 1w4d, direct

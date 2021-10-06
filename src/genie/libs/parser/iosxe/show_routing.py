@@ -254,6 +254,58 @@ class ShowIpRoute(ShowIpRouteSchema):
         ret_dict = {}
         index = 0
 
+        # Routing Table: VRF1
+        # Routing Table: VRF-infra
+        p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
+
+        # 10.1.0.0/32 is subnetted, 1 subnets
+        # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
+        p2 = re.compile(r'^(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
+                        r'+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
+        
+        # C        10.4.1.1 is directly connected, Loopback0
+        # S        10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+        # S*       10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+        # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
+        # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
+        # D        192.168.205.1
+        # S*       0.0.0.0/0 [1/0] via 10.50.15.1
+        # L        FF00::/8 [0/0]
+        # S   %    10.34.0.1 [1/0] via 192.168.16.1
+        # C   p    10.34.0.2 is directly connected, Loopback0
+        # S   &    10.69.0.0 [1/0] via 10.34.0.1
+        # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
+        # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        if self.IP_VER == 'ipv4':
+            p3 = re.compile(
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
+                r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+        else:
+            p3 = re.compile(
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
+                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+        
+        #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
+        p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
+                        r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
+        
+        #       is directly connected, GigabitEthernet0/2
+        p5 = re.compile(r'^is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\] '
+                        r'+via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?'
+                        r'( +(?P<interface>[\S]+))?$')
+
+        #      via 2001:DB8:1:1::2
+        #      via 10.4.1.1%default, indirectly connected
+        #      via 2001:DB8:4:6::6
+        #      via 2001:DB8:20:4:6::6%VRF2
+        #      via Null0, receive
+        #      via 33.33.33.33%default, Vlan100%default
+        p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]{4,}),?)?'
+                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+),?)?,?( +receive)?'
+                        r'( +directly connected)?( +indirectly connected)?$')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -263,7 +315,6 @@ class ShowIpRoute(ShowIpRouteSchema):
             next_hop = interface = updated = metrics = route_preference = nh_vrf = ""
             # Routing Table: VRF1
             # Routing Table: VRF-infra
-            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -271,8 +322,6 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # 10.1.0.0/32 is subnetted, 1 subnets
             # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
-            p2 = re.compile(r'^(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
-                            r'+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
             m = p2.match(line)
             if m:
                 # if you see the issue by "show ip route", it means that active is True.
@@ -302,17 +351,6 @@ class ShowIpRoute(ShowIpRouteSchema):
             # S   &    10.69.0.0 [1/0] via 10.34.0.1
             # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
             # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
-            if self.IP_VER == 'ipv4':
-                p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[0-9\.\:\/]+)?( '
-                    r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-            else:
-                p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[\w\.\:\/]+)?( '
-                    r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-
             m = p3.match(line)
             if m:
                 active = True
@@ -328,10 +366,10 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if m.groupdict()['network']:
                     network = m.groupdict()['network']
-                    if '/' in network:
-                        route = network
-                    else:
+                    if '/' not in network and self.IP_VER == 'ipv4':
                         route = '{}/{}'.format(network,netmask)
+                    else:
+                        route = network
 
                 if not m.groupdict()['network']:
                     route = route
@@ -393,8 +431,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
-            p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
-                            r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
             m = p4.match(line)
             if m:
                 routepreference = m.groupdict()['route_preference']
@@ -444,9 +480,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #       is directly connected, GigabitEthernet0/2
-            p5 = re.compile(r'^is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\] '
-                            r'+via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?'
-                            r'( +(?P<interface>[\S]+))?$')
             m = p5.match(line)
             if m:
 
@@ -498,9 +531,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             #      via 2001:DB8:4:6::6
             #      via 2001:DB8:20:4:6::6%VRF2
             #      via Null0, receive
-            p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]+),?)?'
-                            r'( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?'
-                            r'( +directly connected)?( +indirectly connected)?$')
+            #      via 33.33.33.33%default, Vlan100%default
             m = p6.match(line)
             if m:
                 vrf_val = ''
@@ -537,7 +568,13 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if updated:
                         idx_dict['updated'] = updated
                     if interface:
-                        idx_dict['outgoing_interface'] = interface
+                        if '%' in interface and '%' in tmp_next_hop:
+                            if tmp_next_hop.split('%')[1] == interface.split('%')[1]:
+                                idx_dict['outgoing_interface'] = interface.split('%')[0]
+                            else:
+                                idx_dict['outgoing_interface'] = interface
+                        else:
+                            idx_dict['outgoing_interface'] = interface
                     if vrf_val:
                         idx_dict['vrf'] = vrf_val
 
@@ -750,6 +787,28 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
         source_protocol_dict['redirect'] = ['NDr']
 
         result_dict = {}
+        # IPv6 Routing Table - default - 23 entries
+        # IPv6 Routing Table - VRF1 - 104 entries
+        p1 = re.compile(r'^\s*IPv6 +Routing +Table +\- +(?P<vrf>[\w]+) +\- +(?P<entries>[\d]+) +entries$')
+
+        # LC  2001:1:1:1::1/128 [0/0]
+        p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
+                        ' +\[(?P<route_preference>[\d\/]+)\]$')
+
+        #   via Loopback0, receive
+        #   via 2001:10:1:2::2, GigabitEthernet0/0
+        #   via GigabitEthernet0/2, directly connected
+        #   via 192.168.51.1%default, indirectly connected
+        p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
+                        '( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
+
+        #   via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
+        p4 = re.compile(r'^\s*via +(?P<next_hop>[\w\:\.\%]+),'
+                        ' +(?P<interface>[\S]+)$')
+
+        #      Last updated 14:15:23 06 December 2017
+        p5 = re.compile(r'^\s*Last +updated +(?P<last_updated>[\S\s]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -758,15 +817,12 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
             # IPv6 Routing Table - default - 23 entries
             # IPv6 Routing Table - VRF1 - 104 entries
-            p1 = re.compile(r'^\s*IPv6 +Routing +Table +\- +(?P<vrf>[\w]+) +\- +(?P<entries>[\d]+) +entries$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
                 continue
 
             # LC  2001:1:1:1::1/128 [0/0]
-            p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
-                            ' +\[(?P<route_preference>[\d\/]+)\]$')
             m = p2.match(line)
             if m:
                 active = True
@@ -834,8 +890,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
             #   via 2001:10:1:2::2, GigabitEthernet0/0
             #   via GigabitEthernet0/2, directly connected
             #   via 192.168.51.1%default, indirectly connected
-            p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
-                            '( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
             m = p3.match(line)
             if m:
                 if m.groupdict()['next_hop']:
@@ -896,8 +950,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
                 continue
 
             #   via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
-            p4 = re.compile(r'^\s*via +(?P<next_hop>[\w\:\.\%]+),'
-                            ' +(?P<interface>[\S]+)$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['next_hop']:
@@ -958,7 +1010,6 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
                 continue
             #      Last updated 14:15:23 06 December 2017
-            p5 = re.compile(r'^\s*Last +updated +(?P<last_updated>[\S\s]+)$')
             m = p5.match(line)
             if m:
 
@@ -1796,24 +1847,40 @@ class ShowIpRouteSummarySchema(MetaParser):
                   show ip route vrf <vrf> summary
     """
     schema = {
-        'vrf':{
-        Any():{
-            'vrf_id': str,
-            'maximum_paths': int,
-            'total_route_source': {
-                'networks': int,
-                'subnets': int,
-                'replicates': int,
-                'overhead': int,
-                'memory_bytes': int,
-            },
-            'route_source': {
-                Any(): {
-
+        'vrf': {
+            Any(): {
+                'vrf_id': str,
+                'maximum_paths': int,
+                Optional('removing_queue_size'): int,
+                'total_route_source': {
+                    'networks': int,
+                    'subnets': int,
+                    Optional('replicates'): int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                'route_source': {
+                    Any(): {
+                        Optional('networks'): int,
+                        Optional('subnets'): int,
+                        Optional('replicates'): int,
+                        Optional('overhead'): int,
+                        Optional('memory_bytes'): int,
+                        Optional('intra_area'): int,
+                        Optional('inter_area'): int,
+                        Optional('external_1'): int,
+                        Optional('external_2'): int,
+                        Optional('nssa_external_1'): int,
+                        Optional('nssa_external_2'): int,
+                        Optional('level_1'): int,
+                        Optional('level_2'): int,
+                        Optional('external'): int,
+                        Optional('internal'): int,
+                        Optional('local'): int,
                         Any(): {
                             'networks': int,
                             'subnets': int,
-                            'replicates': int,
+                            Optional('replicates'): int,
                             'overhead': int,
                             'memory_bytes': int,
                             Optional('intra_area'): int,
@@ -1827,39 +1894,21 @@ class ShowIpRouteSummarySchema(MetaParser):
                             Optional('external'): int,
                             Optional('internal'): int,
                             Optional('local'): int,
-
+                        },
                     },
-                    Optional('networks'): int,
-                    Optional('subnets'): int,
-                    Optional('replicates'): int,
-                    Optional('overhead'): int,
-                    Optional('memory_bytes'): int,
-                    Optional('intra_area'): int,
-                    Optional('inter_area'): int,
-                    Optional('external_1'): int,
-                    Optional('external_2'): int,
-                    Optional('nssa_external_1'): int,
-                    Optional('nssa_external_2'): int,
-                    Optional('level_1'): int,
-                    Optional('level_2'): int,
-                    Optional('external'): int,
-                    Optional('internal'): int,
-                    Optional('local'): int,
-                },
-
+                }
             }
-
         }
     }
-    }
+
 
 # ====================================================
 #  parser for show ip route summary
 # ====================================================
-"""Parser for show ip route summary
-                  show ip route vrf <vrf> summary
-    """
 class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+    """Parser for show ip route summary
+                  show ip route vrf <vrf> summary
+        """
 
     cli_command = ['show ip route summary', 'show ip route vrf {vrf} summary']
 
@@ -1879,11 +1928,32 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\S+) *\((?P<vrf_id>\w+)\)$')
         # IP routing table maximum-paths is 32
         p2 = re.compile(r'^IP +routing +table +maximum-paths +is +(?P<max_path>[\d]+)$')
-        # application     0           0           0           0           0
+
+        # Route Source Networks Subnets Replicates Overhead Memory (bytes)
+        # Route Source Networks Subnets Overhead Memory (bytes)
+        p3_0 = re.compile(
+            r'^(?P<replicates>(Route +Source +Networks +Subnets +Replicates +Overhead +Memory +\(bytes\)))|'
+            r'(?P<no_replicates>(Route +Source +Networks +Subnets +Overhead +Memory +\(bytes\)))$'
+        )
+
+        # Route Source Networks Subnets Replicates Overhead Memory (bytes)
+        # connected 0 68 0 4080 11968
+        # static 0 0 0 0 0
+        # eigrp 120 0 54 0 4320 9504
+        # ospf 100 0 0 0 0 0
         p3 = re.compile(
             r'^(?P<protocol>\w+) +(?P<instance>\w+)*? *(?P<networks>\d+) +('
             r'?P<subnets>\d+)? +(?P<replicates>\d+)? +(?P<overhead>\d+)? +('
             r'?P<memory_bytes>\d+)$')
+
+        # Route Source Networks Subnets Overhead Memory (bytes)
+        # connected 2 43 9260 6480
+        # static 6 58 19508 9216
+        # eigrp 1 0 0 0 0
+        # ospf 100 101 4344 352008 642124
+        p3_1 = re.compile(r'^(?P<protocol>\w+) +(?P<instance>\w+)*? *(?P<networks>\d+) '
+                          r'+(?P<subnets>\d+)? +(?P<overhead>\d+)? +(?P<memory_bytes>\d+)$')
+
         # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
         p7 = re.compile(
             r'^Intra-area: +(?P<intra_area>\d+) +Inter-area: +(?P<inter_area>\d+) '
@@ -1900,7 +1970,11 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         p13 = re.compile(
             r'^External: +(?P<external>\d+) +Internal: +(?P<internal>\d+) +Local: +(?P<local>\d+)$')
 
+        # Removing Queue Size 0
+        p14 = re.compile(r'^Removing +Queue +Size +(?P<q_size>\d+)')
+
         ret_dict = {}
+        replicates_flag = None
         for line in out.splitlines():
             line = line.strip()
             # IP routing table name is default (0x0)
@@ -1916,23 +1990,51 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 vrf_dict['maximum_paths'] = int(m.groupdict()['max_path'])
                 continue
+
+            m = p3_0.match(line)
+            if m:
+                if m.groupdict()['replicates']:
+                    replicates_flag = True
+                elif m.groupdict()['no_replicates']:
+                    replicates_flag = False
+
             # application     0           0           0           0           0
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                protocol = group.pop('protocol')
-                instance = group.pop('instance')
-                if protocol == 'Total':
-                    protocol_dict = vrf_dict.setdefault('total_route_source', {})
-                else:
-                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
-                if instance is not None:
-                    inst_dict = protocol_dict.setdefault(instance, {})
-                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
-                else:
-                    group = {k: int(v) for k, v in group.items() if v is not None}
-                    protocol_dict.update(group)
-                continue
+                if replicates_flag:
+                    group = m.groupdict()
+                    protocol = group.pop('protocol')
+                    instance = group.pop('instance')
+                    if protocol == 'Total':
+                        protocol_dict = vrf_dict.setdefault('total_route_source', {})
+                    else:
+                        protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                    if instance:
+                        inst_dict = protocol_dict.setdefault(instance, {})
+                        inst_dict.update({k: int(v) for k, v in group.items() if v})
+                    else:
+                        group = {k: int(v) for k, v in group.items() if v}
+                        protocol_dict.update(group)
+                    continue
+
+            m = p3_1.match(line)
+            if m:
+                if not replicates_flag:
+                    group = m.groupdict()
+                    protocol = group.pop('protocol')
+                    instance = group.pop('instance')
+                    if protocol == 'Total':
+                        protocol_dict = vrf_dict.setdefault('total_route_source', {})
+                    else:
+                        protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                    if instance:
+                        inst_dict = protocol_dict.setdefault(instance, {})
+                        inst_dict.update({k:int(v) for k, v in group.items() if v})
+                    else:
+                        group = {k: int(v) for k, v in group.items() if v}
+                        protocol_dict.update(group)
+                    continue
+
             # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
             m = p7.match(line)
             if m:
@@ -1967,6 +2069,12 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict.setdefault('bgp', {})
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
+
+            # Removing Queue Size 0
+            m = p14.match(line)
+            if m:
+                vrf_dict.update({'removing_queue_size': int(m.groupdict()['q_size'])})
+
         return ret_dict
 
 

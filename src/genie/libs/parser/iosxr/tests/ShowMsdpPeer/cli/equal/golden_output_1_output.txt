@@ -1,0 +1,27 @@
+
+Router# show msdp peer
+
+MSDP Peer 192.168.229.3 (?), AS 65109
+Description:
+    Connection status:
+    State: Inactive, Resets: 999, Connection Source: 192.168.100.1
+    Uptime(Downtime): 00:00:09, SA messages received: 0
+    TLV messages sent/received: 3/0
+    Output messages discarded: 0
+    Connection and counters cleared 00:01:25 ago
+    SA Filtering:
+    Input (S,G) filter: none
+    Input RP filter: none
+    Output (S,G) filter: none
+    Output RP filter: none
+    SA-Requests:
+    Input filter: none
+    Sending SA-Requests to peer: disabled
+    Password: None
+    Peer ttl threshold: 2
+    Input queue size: 0, Output queue size: 0
+    KeepAlive timer period: 30
+    Peer Timeout timer period: 75
+    NSR:
+    State: StopRead, Oper-Downs: 0
+    NSR-Uptime(NSR-Downtime): 1d02h

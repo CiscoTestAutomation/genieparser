@@ -1,0 +1,15 @@
+
+R2_xr# show igmp vrf VRF1 interface Loopback0
+Loopback0 is up, line protocol is up
+    Internet address is 10.16.2.2/32
+    IGMP is enabled on interface
+    Current IGMP version is 3
+    IGMP query interval is 60 seconds
+    IGMP querier timeout is 125 seconds
+    IGMP max query response time is 10 seconds
+    Last member query response interval is 1 seconds
+    IGMP activity: 6 joins, 0 leaves
+    IGMP querying router is 10.16.2.2 (this system)
+    Time elapsed since last query sent 00:00:53
+    Time elapsed since IGMP router enabled 02:46:41
+    Time elapsed since last report received 00:00:51

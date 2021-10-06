@@ -1,0 +1,15 @@
+
+#show isis lsp-log
+Tue Oct  8 17:38:16.254 EDT
+
+   IS-IS TEST Level 2 LSP log
+When          Count  Interface          Triggers
+--- Thu Sep 26 2019 ---
+09:39:16.648      1                     IPEXT
+10:29:02.303      1                     IPEXT
+--- Mon Sep 30 2019 ---
+00:00:17.274      1                     IPEXT
+00:02:25.263      1                     IPEXT
+--- Fri Oct  4 2019 ---
+16:10:11.734      2  BE2                DELADJ
+16:17:45.821      2  BE2                ADJSIDADD

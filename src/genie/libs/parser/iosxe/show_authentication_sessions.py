@@ -148,11 +148,22 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         return ret_dict
 
 
+
 # ==================================================================================
-# Parser for 'show authentication sessions interface {interface} details'
+# Schema for:
+#                * 'show authentication sessions interface {interface} details'
+#                * 'show authentication sessions interface {interface} details switch {switch} r0'
+#                * 'show authentication sessions mac {mac_address} details'
+#                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
 # ==================================================================================
-class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for 'show authentication sessions interface {interface} details'
+
+class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
+    """
+    Schema for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
     """
     schema = {
         'interfaces': {
@@ -165,10 +176,13 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('user_name'): str,
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
-                        Optional('restart_timeout'): str,
+                        Optional('restart_timeout'): {
+                            Optional('timeout'): int,
+                            Optional('remaining'): int,
+                        },
                         Optional('unauth_timeout'): {
-                            Optional('timeout'): str,
-                            Optional('remaining'): str,
+                            Optional('timeout'): int,
+                            Optional('remaining'): int,
                         },
                         Optional('session_uptime'): str,
                         'status': str,
@@ -219,19 +233,25 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
         }
     }
 
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions interface {interface} details'
+#           * 'show authentication sessions interface {interface} details switch {switch} r0'
+#           * 'show authentication sessions mac {mac_address} details'
+#           * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+# ==================================================================================
 
-class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-    """Parser for 'show authentication sessions interface {interface} details'
+class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDetailsSuperSchema):
     """
-    cli_command = 'show authentication sessions interface {interface} details'
+    SuperParser for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+    """
 
-    def cli(self, interface, output=None):
+    def cli(self, interface='', mac_address='', switch='', output=None):
 
-        if not output:
-            # get output from device
-            out = self.device.execute(self.cli_command.format(interface=interface))
-        else:
-            out = output
 
         # Interface:  GigabitEthernet3/0/2
         # IIF-ID:  0x1055240000001F6 
@@ -302,10 +322,10 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         p12 = re.compile(r'^Server +Policies\:$')
 
         # Restart timeout:  60s, Remaining: 44s
-        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<restart_timeout>.*)')
+        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<timeout>\w+)s(\s*,\s*Remaining\s*:\s*(?P<remaining>\w+)s)?')
 
         # Unauth timeout:  10s, Remaining: 5s
-        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)(\s*,\s*Remaining\s*:\s*(?P<remaining>\w*))?')
+        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)s(\s*,\s*Remaining\s*:\s*(?P<remaining>\w+)s)?')
 
         # initial return dictionary
         ret_dict = {}
@@ -315,6 +335,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         policies_flag = False
         index = 1
 
+        out = output
         for line in out.splitlines():
             line = line.strip()
 
@@ -382,14 +403,17 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # Restart timeout:  10s, Remaining: 5s
             m13 = p13.match(line)
             if m13:
-                mac_dict.update(m13.groupdict())
+                restart_dict = mac_dict.setdefault('restart_timeout', {})
+                restart_dict.update({'timeout': int(m13.group('timeout'))})
+                restart_dict.update({'remaining': int(m13.group('remaining'))})
                 continue
 
             # Unauth timeout:  60s, Remaining: 44s
             m14 = p14.match(line)
             if m14:
                 unauth_dict = mac_dict.setdefault('unauth_timeout', {})
-                unauth_dict.update(m14.groupdict())
+                unauth_dict.update({'timeout': int(m14.group('timeout'))})
+                unauth_dict.update({'remaining': int(m14.group('remaining'))})
                 continue
 
             # match these lines:
@@ -510,3 +534,67 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 continue
 
         return ret_dict
+
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions interface {interface} details'
+#           * 'show authentication sessions interface {interface} details switch {switch} r0'
+# ==================================================================================
+
+class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsDetailsSuperParser):
+    """
+    Parser for:
+                * 'show authentication sessions interface {interface} details'
+                * 'show authentication sessions interface {interface} details switch {switch} r0'
+    """
+
+    cli_command = ['show authentication sessions interface {interface} details',\
+                   'show authentication sessions interface {interface} details switch {switch} r0']
+                   
+    def cli(self, interface='', switch='', output=None):
+
+        if output is None:
+            # Build command
+            if switch:
+                cmd = self.cli_command[1].format(interface=interface,switch=switch)
+            else: 
+                cmd = self.cli_command[0].format(interface=interface)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, interface=interface, switch=switch)
+
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions mac {mac_address} details'
+#           * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+# ==================================================================================
+
+class ShowAuthenticationSessionsMACDetails(ShowAuthenticationSessionsDetailsSuperParser):
+    """
+       Parser for:
+                * 'show authentication sessions mac {mac_address} details'
+                * 'show authentication sessions mac {mac_address} details switch {switch} r0'
+    """
+    cli_command = ['show authentication sessions mac {mac_address} details',\
+                   'show authentication sessions mac {mac_address} details switch {switch} r0'] 
+                    
+
+    def cli(self, mac_address='', switch='', output=None):
+
+        if output is None:
+            # Build command
+            if switch:
+                cmd = self.cli_command[1].format(mac_address=mac_address,switch=switch)
+            else: 
+                cmd = self.cli_command[0].format(mac_address=mac_address)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, mac_address=mac_address, switch=switch)

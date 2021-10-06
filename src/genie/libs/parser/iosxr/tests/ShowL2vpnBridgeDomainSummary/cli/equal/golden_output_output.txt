@@ -1,0 +1,6 @@
+
+Device1# show l2vpn bridge-domain summary
+
+Number of groups: 1, bridge-domains: 1, Up: 1, Shutdown: 0
+Number of ACs: 1 Up: 1, Down: 0
+Number of PWs: 1 Up: 1, Down: 0

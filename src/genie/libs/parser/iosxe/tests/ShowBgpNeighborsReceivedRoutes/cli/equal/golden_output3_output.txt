@@ -1,0 +1,15 @@
+show bgp vpnv4 unicast vrf tel-189 neighbors 10.193.16.177 received-routes
+BGP table version is 44278653, local router ID is 203.62.187.142
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+              t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 9268:10189 (default for vrf tel-189)
+ *    172.25.193.0/24  10.193.16.177            0             0 65100 ?
+ *    172.26.193.0/24  10.193.16.177            0             0 65100 ?
+
+Total number of prefixes 2

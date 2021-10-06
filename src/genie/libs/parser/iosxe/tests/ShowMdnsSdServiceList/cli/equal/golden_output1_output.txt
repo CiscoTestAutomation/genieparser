@@ -1,0 +1,23 @@
+Name                             Type                       Service       Msg-Type                        Source                         Location-filter
+========================================================================================================================================================
+default-mdns-in-service-list       IN                apple-airprint            any                             -                                       -
+                                   IN            apple-remote-login            any                             -                                       -
+                                   IN            apple-screen-share            any                             -                                       -
+                                   IN                      apple-tv            any                             -                                       -
+                                   IN       apple-windows-fileshare            any                             -                                       -
+                                   IN             google-chromecast            any                             -                                       -
+                                   IN            google-expeditions            any                             -                                       -
+                                   IN                   homesharing            any                             -                                       -
+                                   IN         multifunction-printer            any                             -                                       -
+                                   IN                  printer-ipps            any                             -                                       -
+default-mdns-out-service-list     OUT                apple-airprint            any                           ALL            default-mdns-location-filter
+                                  OUT            apple-remote-login            any                           ALL            default-mdns-location-filter
+                                  OUT            apple-screen-share            any                           ALL            default-mdns-location-filter
+                                  OUT                      apple-tv            any                           ALL            default-mdns-location-filter
+                                  OUT       apple-windows-fileshare            any                           ALL            default-mdns-location-filter
+                                  OUT             google-chromecast            any                           ALL            default-mdns-location-filter
+                                  OUT            google-expeditions            any                           ALL            default-mdns-location-filter
+                                  OUT                   homesharing            any                           ALL            default-mdns-location-filter
+                                  OUT         multifunction-printer            any                           ALL            default-mdns-location-filter
+                                  OUT                  printer-ipps            any                           ALL            default-mdns-location-filter
+C9300_48U_SP#

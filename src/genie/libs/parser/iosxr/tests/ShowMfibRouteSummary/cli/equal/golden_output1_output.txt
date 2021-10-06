@@ -1,0 +1,5 @@
+
+Tue Jun 16 22:36:59.181 PDT
+IP Multicast Forwarding Information Base Summary for ALL VRFs (num VRFs: 4)
+  No. of (*,G) routes = 20
+  No. of (S,G) routes = 176

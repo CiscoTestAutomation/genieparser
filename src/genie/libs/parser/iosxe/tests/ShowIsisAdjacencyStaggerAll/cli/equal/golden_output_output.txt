@@ -1,0 +1,12 @@
+Tag 1:
+Adjacency stagger enabled: init 2, max 64
+
+Full or expired P2P nbrs: 2
+Syncing P2P nbrs: 0
+
+System Id       Type Interface     State   Timer   CSNP Init  ReqList
+                                           Expire  Rcvd Flood size
+R2              L1L2 Et0/0         Full    NewCfg  yes  yes   0
+R3              L1L2 Et1/0         Full    NewCfg  yes  yes   0
+
+Tag null:

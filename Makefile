@@ -14,10 +14,10 @@
 #   pyats-support@cisco.com
 #
 # Version:
-#   v3.0
+#   v21.8
 #
 # Date:
-#   November 2018
+#   August 2021
 #
 # About This File:
 #   This script will build the genie.libs.parser package for
@@ -38,10 +38,14 @@ STAGING_PKGS  = /auto/pyats/staging/packages
 STAGING_EXT_PKGS  = /auto/pyats/staging/packages_external
 PYTHON        = python3
 TESTCMD       = runAll --path=$(shell pwd)/tests
+TESTFLD       = pyats run job folder_parsing_job.py --no-mail
+TESTDEVAT     = pyats run job folder_parsing_job.py -e ${BINOS_ROOT}/atests/cisco/pyats/libs/genie/external_parser --no-mail
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 PYLINT_CMD	  = pylintAll
 CYTHON_CMD	  = compileAll
+INDEX_URL     = https://pyats-pypi.cisco.com/simple
+TRUSTED_HOST  = pyats-pypi.cisco.com
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
@@ -83,8 +87,8 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
-	@pip install cisco-distutils --upgrade || true
-	$(CYTHON_CMD) 
+	@pip install --index-url=$(INDEX_URL) --trusted-host $(TRUSTED_HOST) cisco-distutils --upgrade || true
+	$(CYTHON_CMD)
 	@echo "Done Compiling"
 	@echo ""
 	@echo "Done."
@@ -126,7 +130,16 @@ docs:
 	@echo ""
 
 test:
-	@$(TESTCMD)
+	@pip install --index-url=$(INDEX_URL) --trusted-host $(TRUSTED_HOST) cisco-distutils --upgrade || true
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Unittests runs"
+	@if [ -d "${BINOS_ROOT}/atests/cisco/pyats/libs/genie/external_parser" ]; then \
+		$(TESTCMD) && cd tests && $(TESTFLD) && cd ${BINOS_ROOT}/atests/cisco/pyats/libs/genie/external_parser/tests && $(TESTDEVAT); \
+	else \
+		$(TESTCMD) && cd tests && $(TESTFLD); \
+	fi
+
 
 package:
 	@echo ""

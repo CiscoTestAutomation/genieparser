@@ -1,0 +1,8 @@
+Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
+-------- -------------- --------------- ----------- ----------------------------------------
+0        0001.00ff.0307 10.1.0.250    LOCAL       N/A
+0        0001.00ff.0307 2001:db8::250   LOCAL       N/A
+0        0aaa.0bff.bbbb 10.1.0.3      LOCAL       N/A
+0        0aaa.0bff.bbbc 10.1.0.4      LOCAL       N/A
+0        fc00.00ff.0107 192.168.166.3   L2VPN  Bundle-Ether1.0
+0        fc00.00ff.0109 192.168.49.3    L2VPN  68101/I/ME

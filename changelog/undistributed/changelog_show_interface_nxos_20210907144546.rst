@@ -1,0 +1,3 @@
+NXOS
+   * Modified ShowInterface:
+       * Fix pattern p1 and p1_1 to handle empty 'type'

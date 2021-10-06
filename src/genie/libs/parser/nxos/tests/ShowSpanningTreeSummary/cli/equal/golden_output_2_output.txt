@@ -1,0 +1,21 @@
+
+P1# show spanning-tree summary 
+
+Switch is in mst mode (IEEE Standard)
+Root bridge for: MST0000
+Port Type Default                        is disable
+Edge Port [PortFast] BPDU Guard Default  is enabled
+Edge Port [PortFast] BPDU Filter Default is enabled
+Bridge Assurance                         is enabled
+Loopguard Default                        is disabled
+Pathcost method used                     is long
+PVST Simulation                          is disabled
+vPC peer-switch                          is enabled (non-operational)
+STP-Lite                                 is enabled
+
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+MST0                         3         0        0          9         12
+MST100                       3         0        0          1          4
+---------------------- -------- --------- -------- ---------- ----------
+1 mst                        1         0        0          0          1

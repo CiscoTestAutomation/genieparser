@@ -1,0 +1,36 @@
+
+show evpn evi mac private
+Tue Sep 17 20:08:26.843 UTC
+
+VPN-ID     Encap  MAC address    IP address                               Nexthop                                 Label 
+---------- ------ -------------- ---------------------------------------- --------------------------------------- --------
+65535      N/A    0000.0000.0000 ::                                       Local                                   0     
+Ethernet Tag                            : 0
+Multi-paths Resolved                    : False
+Multi-paths Internal label              : 0
+Local Static                            : No
+Remote Static                           : No
+Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+Local Sequence Number                   : 0
+Remote Sequence Number                  : 0
+Local Encapsulation                     : N/A
+Remote Encapsulation                    : N/A
+ESI Port Key                            : 0
+Source                                  : Local
+Flush Requested                         : 0
+Flush Received                          : 0
+SOO Nexthop                             : ::
+BP XCID                                 : 0xffffffff
+MAC State                               : Init
+MAC Producers                           : 0x0 (Best: 0x0)
+Local Router MAC                        : 0000.0000.0000
+L3 Label                                : 0
+
+Object: EVPN MAC
+Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
+EVPN MAC event history  [Num events: 0]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags
+    ====                =====                         =====      =====
+---------------------------------------------------------------------------- 

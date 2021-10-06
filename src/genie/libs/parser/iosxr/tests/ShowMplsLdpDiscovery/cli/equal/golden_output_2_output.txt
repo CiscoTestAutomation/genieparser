@@ -1,0 +1,12 @@
+
+RP/0/RSP0/CPU0:TSTR2#show mpls ldp discovery 10.52.26.121
+Mon Dec 21 17:38:00.299 UTC
+
+Local LDP Identifier: 10.52.31.247:0
+Discovery Sources:
+Interfaces:
+    TenGigE0/0/0/5.2097 : xmit/recv
+    VRF: 'default' (0x60000000)
+    LDP Id: 10.52.26.121:0, Transport address: 10.52.26.121
+	Hold time: 15 sec (local:15 sec, peer:15 sec)
+	Established: Dec 18 16:49:16.538 (3d00h ago)

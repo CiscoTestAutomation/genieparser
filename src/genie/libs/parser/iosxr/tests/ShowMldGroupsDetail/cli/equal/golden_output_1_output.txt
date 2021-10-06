@@ -1,0 +1,98 @@
+
+RP/0/0/CPU0:ios#show mld groups detail
+
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::2
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: never)
+Host mode:      EXCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::d
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: never)
+Host mode:      EXCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::16
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: never)
+Host mode:      EXCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::1:ff28:cd4b
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: 01:00:01)
+Host mode:      INCLUDE
+Last reporter:  fe80::eca7:a4ff:fe28:cd4b
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::1:ff60:50aa
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: 01:00:01)
+Host mode:      INCLUDE
+Last reporter:  fe80::eca7:a4ff:fe28:cd4b
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::1:ffae:4aba
+Uptime:         1d06h
+Router mode:    EXCLUDE (Expires: 01:00:01)
+Host mode:      INCLUDE
+Last reporter:  fe80::eca7:a4ff:fe28:cd4b
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::1:ffd7:c01f
+Uptime:         00:33:19
+Router mode:    EXCLUDE (Expires: 00:29:15)
+Host mode:      INCLUDE
+Last reporter:  fe80::5054:ff:fed7:c01f
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff02::1:ffda:f428
+Uptime:         06:27:46
+Router mode:    EXCLUDE (Expires: 01:00:01)
+Host mode:      INCLUDE
+Last reporter:  fe80::eca7:a4ff:fe28:cd4b
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff15:1::1
+Uptime:         08:06:00
+Router mode:    INCLUDE
+Host mode:      INCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Group source list:
+  Source Address                          Uptime    Expires   Fwd  Flags
+  2001:db8:2:2::2                       08:06:00  01:00:00  Yes  Remote Local 2d
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff25:2::1
+Uptime:         08:06:00
+Router mode:    EXCLUDE (Expires: never)
+Host mode:      EXCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff35:1::1
+Uptime:         00:33:28
+Router mode:    INCLUDE
+Host mode:      INCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Group source list:
+  Source Address                          Uptime    Expires   Fwd  Flags
+  2001:db8:3:3::3                       00:33:28  01:00:00  Yes  Remote Local e
+Interface:      GigabitEthernet0/0/0/0
+Group:          ff45:1::1
+Uptime:         00:33:28
+Router mode:    EXCLUDE (Expires: never)
+Host mode:      EXCLUDE
+Last reporter:  fe80::5054:ff:fefa:9ad7
+Source list is empty
+Interface:      GigabitEthernet0/0/0/0
+Group:          fffe::1
+Uptime:         07:59:31
+Router mode:    EXCLUDE (Expires: 00:59:49)
+Host mode:      INCLUDE
+Last reporter:  fe80::5054:ff:fed7:c01f
+Source list is empty

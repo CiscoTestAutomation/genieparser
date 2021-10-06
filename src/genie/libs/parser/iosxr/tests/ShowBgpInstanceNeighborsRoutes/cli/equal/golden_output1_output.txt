@@ -1,0 +1,26 @@
+
+BGP instance 0: 'default'
+=========================
+
+Address Family: IPv4 Unicast
+----------------------------
+
+BGP router identifier 10.10.10.108, local AS number 65108.65108
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000000   RD version: 8
+BGP main routing table version 8
+BGP NSR Initial initsync version 3 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+BGP scan interval 60 secs
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+*> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+*  10.10.10.0/24      10.10.10.107             0             0 65107.65107 ?
+*  192.168.52.0/24    10.10.10.107             0             0 65107.65107 ?
+
+Processed 3 prefixes, 3 paths

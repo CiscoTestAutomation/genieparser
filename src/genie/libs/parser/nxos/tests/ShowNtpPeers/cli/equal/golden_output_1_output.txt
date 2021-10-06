@@ -1,0 +1,8 @@
+
+--------------------------------------------------
+  Peer IP Address               Serv/Peer          
+--------------------------------------------------
+  10.4.1.1                       Server (configured) 
+  10.64.4.4                       Server (configured) 
+  10.16.2.2                       Server (configured) 
+  10.100.5.5                       Server (configured)

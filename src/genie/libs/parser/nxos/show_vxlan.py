@@ -152,9 +152,10 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
         # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162   
         # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82   
+        # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
-                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
+                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
 
         for line in out.splitlines():
             if line:
@@ -1303,9 +1304,14 @@ class ShowL2routeMacAllDetailSchema(MetaParser):
                             'next_hop1': str,
                             'rte_res': str,
                             'fwd_state': str,
+                            Optional('label'): int,
                             Optional('peer_id'): int,
+                            Optional('res_pl'): str,
                             Optional('sent_to'): str,
                             Optional('soo'): int,
+                            Optional('esi'): str,
+                            Optional('encap'): int,
+                            Optional('pl_flag'): bool,
                         }
                     }
                 }
@@ -1317,16 +1323,24 @@ class ShowL2routeMacAllDetailSchema(MetaParser):
 # ====================================================
 class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
     """parser for:
-        show l2route mac all detail"""
+            show l2route mac all detail"""
 
-    cli_command = 'show l2route mac all detail'
+    cli_command = ['show l2route evpn mac all detail',
+                   'show l2route evpn mac evi {evi} detail',
+                   'show l2route evpn mac evi {evi} mac {mac} detail']
     exclude = [
         'mac']
 
-    def cli(self, output=None):
+    def cli(self, output=None, evi=None, mac=None):
         # excute command to get output
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if evi and mac:
+                cmd = self.cli_command[2].format(evi=evi, mac=mac)
+            elif evi:
+                cmd = self.cli_command[1].format(evi=evi)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd, timeout=180)
         else:
             out = output
 
@@ -1338,28 +1352,50 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
         #            Forwarding State: Resolved (PeerID: 2)
         #            Sent To: BGP
         #            SOO: 774975538
-        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
-                        ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
+        #
+        # 11          0000.1111.0108 BGP    Spl           0          3.2.2.1 (Label: 10011)
+        #                                                            3.2.2.2 (Label: 10011)
+        #             Route Resolution Type: ESI
+        #             Forwarding State: Resolved (PL)
+        #             Resultant PL: 3.2.2.1, 3.2.2.2
+        #             Sent To: L2FM
+        #             ESI : 0300.0000.0000.0000.0347
+        #             Encap: 1
 
-        p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
-        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PeerID: +(?P<peer_id>[\d]+)\))?$')
-        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w\,]+)$')
-        p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
+        #  11          0000.1111.0108 BGP    Spl           0          3.2.2.1 (Label: 10011)
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
+                        ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)\s*'
+                        '(?:\(Label: (?P<label>\d+)\).*)?$')
+        #  3.2.2.2 (Label: 10011)
+        p2 = re.compile(r'^\s*(?P<next_hop2>[\d\/\.]+)')
+        #  Route Resolution Type: ESI
+        p3 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
+        #  Forwarding State: Resolved (PeerID: 2)
+        p4 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PeerID: +(?P<peer_id>[\d]+)\))?$')
+        #  Forwarding State: Resolved
+        p10 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)$')
+        #  Forwarding State: Resolved (PL)
+        p11 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PL\))$')
+        #  Resultant PL: 3.2.2.1, 3.2.2.2
+        p5 = re.compile(r'^\s*Resultant +PL: +(?P<res_pl>.*$)')
+        #  ESI : 0300.0000.0000.0000.0347
+        p6 = re.compile(r'^\s*ESI\s*: +(?P<esi>[\w\.]+)\s*$')
+        #  Sent To: L2FM
+        #  SOO: 774975538
+        #  Encap: 1
+        p7 = re.compile(r'^\s*(?P<key>[\w ]+) *: +(?P<value>\S+)\s*$')
 
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
-            else:
-                continue
-
 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 topo_id = int(group.pop('topo_id'))
                 mac_addr = group.pop('mac_addr')
-                topo_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id,{}).\
-                                        setdefault('mac',{}).setdefault(mac_addr,{})
+                topo_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id, {}). \
+                                        setdefault('mac', {}).setdefault(mac_addr, {})
 
                 flags = group.pop('flags')
                 if flags.endswith(','):
@@ -1367,27 +1403,40 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
 
                 topo_dict.update({'flags':  flags.lower()})
                 topo_dict.update({'prod_type':  group.pop('prod_type').lower()})
-                topo_dict.update({'seq_num': int(group.pop('seq_num'))})
-                topo_dict.update({'mac_addr': mac_addr})
+                topo_dict.update({'seq_num':  int(group.pop('seq_num'))})
+                topo_dict.update({'mac_addr':  mac_addr})
                 try:
                     next_hop1 = Common.convert_intf_name(group.pop('next_hop1'))
                 except:
                     next_hop1 = group.pop('next_hop1')
                 topo_dict.update({'next_hop1': next_hop1})
+                if group['label']:
+                    topo_dict['label'] = int(group['label'])
 
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop2 = group['next_hop2']
+                prev_nexthop = topo_dict['next_hop1']
+                next_hops = prev_nexthop + ',' + next_hop2
+                topo_dict['next_hop1'] = next_hops
                 continue
 
             m1 = ""
-            if p2.match(line):
-                m1 = p2.match(line)
-            if p4.match(line):
-                m1 = p4.match(line)
+            if p3.match(line):
+                m1 = p3.match(line)
+            if p5.match(line):
+                m1 = p5.match(line)
+            if p6.match(line):
+                m1 = p6.match(line)
             if m1:
                 group = m1.groupdict()
-                topo_dict.update({k:v.lower() for k,v in group.items() })
+                topo_dict.update({k:v.lower() for k,v in group.items()})
                 continue
 
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 topo_dict.update({'fwd_state': group.get('fwd_state')})
@@ -1395,11 +1444,27 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
                     topo_dict.update({'peer_id': int(group.get('peer_id'))})
                 continue
 
-            m = p5.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
-                topo_dict.update({k:int(v) for k, v in group.items()})
+                topo_dict.update({'fwd_state': group.get('fwd_state')})
                 continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                topo_dict.update({
+                    'fwd_state': group.get('fwd_state'),
+                    'pl_flag': True
+                })
+                continue
+
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['key'].replace(' ', '_').replace('-', '_').lower()
+                value = int(groups['value']) if groups['value'].isdigit() else groups['value'].lower()
+                topo_dict.update({key:value})
 
         return result_dict
 
@@ -1749,6 +1814,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('multisite_ingress_replication_optimized'): bool,
                         Optional('ingress_replication_protocol_bgp'): bool,
                         Optional('mcast_group'): str,
+                        Optional('multisite_mcast_group'): str,
                         Optional('suppress_arp'): bool,
                         Optional('vni_type'): str,
                     },
@@ -1780,7 +1846,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
     cli_command = 'show running-config nv overlay'
 
     def cli(self, output=None):
-        # excute command to get output
+        # execute command to get output
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -1826,6 +1892,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p16 = re.compile(r'^multisite +ingress-replication +optimized$')
         #   ingress-replication protocol bgp
         p17 = re.compile(r'^ingress-replication +protocol +bgp$')
+        #   multisite mcast-group 226.1.1.1
+        p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
+
         
         for line in out.splitlines():
             line = line.strip()
@@ -1971,6 +2040,15 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'ingress_replication_protocol_bgp': True})
+                continue
+
+            m = p18.match(line)
+            if m:
+                multisite_mcast = m.groupdict().pop('multisite_mcast_group')
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'multisite_mcast_group': multisite_mcast})
                 continue
 
         return result_dict
@@ -2482,4 +2560,3 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
         else:
             show_output = output
         return super().cli(output=show_output)
-

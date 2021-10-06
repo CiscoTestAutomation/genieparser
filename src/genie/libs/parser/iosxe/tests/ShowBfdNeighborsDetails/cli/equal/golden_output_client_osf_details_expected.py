@@ -4,6 +4,8 @@ expected_output = {
             "neighbor_address": {
                 "10.169.197.94": {
                     "ld_rd": "4097/4097",
+                    "ld": 4097,
+                    "rd": 4097,
                     "rh_rs": "Up",
                     "state": "Up",
                     "interface": "GigabitEthernet0/0/0",

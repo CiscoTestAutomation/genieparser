@@ -1,0 +1,71 @@
+EVPN Instance:            1
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           2.2.2.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20011
+Tunnel ID:                2.2.2.2
+Multicast Proxy:          IGMP, MLD
+Next Hop(s):              V:20011 2.2.2.2
+
+EVPN Instance:            1
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           3.3.3.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20011
+Tunnel ID:                3.3.3.2
+Multicast Proxy:          IGMP
+Next Hop(s):              V:20011 3.3.3.2
+
+EVPN Instance:            1
+Ethernet Tag:             0
+Producer Name:            L2VPN
+Router IP Addr:           1.1.1.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20011
+Tunnel ID:                1.1.1.2
+Multicast Proxy:          IGMP
+Next Hop(s):              N/A
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           2.2.2.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20012
+Tunnel ID:                2.2.2.2
+Multicast Proxy:          IGMP
+Next Hop(s):              V:20012 2.2.2.2
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            BGP
+Router IP Addr:           3.3.3.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20012
+Tunnel ID:                3.3.3.2
+Multicast Proxy:          IGMP
+Next Hop(s):              V:20012 3.3.3.2
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            L2VPN
+Router IP Addr:           1.1.1.2
+Route Ethernet Tag:       0
+Tunnel Flags:             0
+Tunnel Type:              Ingress Replication
+Tunnel Labels:            20012
+Tunnel ID:                1.1.1.2
+Multicast Proxy:          IGMP
+Next Hop(s):              N/A

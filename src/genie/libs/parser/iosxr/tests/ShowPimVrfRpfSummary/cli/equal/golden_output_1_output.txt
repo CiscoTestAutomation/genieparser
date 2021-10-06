@@ -1,0 +1,18 @@
+
+RP/0/0/CPU0:R2#show pim vrf default ipv4 rpf summary
+Mon May 29 14:42:47.569 UTC
+    ISIS Mcast Topology Not configured
+    MoFRR Flow-based    Not configured
+    MoFRR RIB           Not configured
+    RUMP MuRIB          Not enabled
+
+PIM RPFs registered with Unicast RIB table
+
+Default RPF Table: IPv4-Unicast-default
+RIB Convergence Timeout Value: 00:30:00
+RIB Convergence Time Left:     00:00:00
+Multipath RPF Selection is Enabled
+
+Table: IPv4-Unicast-default
+    PIM RPF Registrations = 1
+    RIB Table converged

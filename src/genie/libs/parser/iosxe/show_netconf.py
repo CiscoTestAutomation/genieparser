@@ -2,8 +2,10 @@
 IOSXE parsers for the following commands
 
     * 'show netconf session'
+    * 'show netconf-yang datastores'
     * 'show netconf-yang sessions'
     * 'show netconf-yang sessions detail'
+    * 'show netconf-yang status
 '''
 
 # Python
@@ -11,10 +13,11 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional, Any, Use, Schema
+from genie.metaparser.util.schemaengine import Optional, Any, Use, Schema, ListOf
 
 # pyATS
 from pyats.utils.exceptions import SchemaTypeError
+
 
 class ShowNetconfSessionSchema(MetaParser):
     '''Schema for:
@@ -53,6 +56,49 @@ class ShowNetconfSession(ShowNetconfSessionSchema):
                 group = m.groupdict()
                 ret_dict['open'] = int(group.get('open'))
                 ret_dict['maximum'] = int(group.get('maximum'))
+                continue
+
+        return ret_dict
+
+
+class ShowNetconfYangDatastoresSchema(MetaParser):
+    '''Schema for:
+        * 'show netconf-yang datastores'
+    '''
+
+    schema = {
+        'datastores': {
+            'names': ListOf(str),
+        }
+    }
+
+class ShowNetconfYangDatastores(ShowNetconfYangDatastoresSchema):
+    '''Parser for:
+        * 'show netconf-yang datastores'
+    '''
+
+    cli_command = 'show netconf-yang datastores'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Datastore Name             : running
+        # Datastore Name             : candidate
+        p1 = re.compile(r'^Datastore Name\s+:\s+(?P<datastore>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Datastore Name             : running
+            # Datastore Name             : candidate
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                datastore_list = ret_dict.setdefault("datastores", {}).setdefault("names", [])
+                datastore_list.append(group['datastore'])
                 continue
 
         return ret_dict
@@ -269,5 +315,60 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
                     group['key'].replace('-', '_'): group['data']
                 })
                 continue
+
+        return ret_dict
+
+
+class ShowNetconfYangStatusSchema(MetaParser):
+    '''Schema for:
+        * 'show netconf-yang status'
+    '''
+
+    schema = {
+        'status': str,
+        'ssh_port': str,
+        'candidate_datastore_status': str
+    }
+
+class ShowNetconfYangStatus(ShowNetconfYangStatusSchema):
+    '''Parser for:
+        * 'show netconf-yang status'
+    '''
+
+    cli_command = 'show netconf-yang status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # netconf-yang: enabled
+        p1 = re.compile(r'^netconf-yang:\s+(?P<status>\S+)$')
+        # netconf-yang ssh port: 830
+        p2 = re.compile(r'^netconf-yang ssh port:\s+(?P<ssh_port>\d+)$')
+        # netconf-yang candidate-datastore: enabled
+        p3 = re.compile(r'^netconf-yang candidate-datastore:\s+(?P<candidate_datastore_status>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # netconf-yang: enabled
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict['status'] = group.pop('status')
+            
+            # netconf-yang ssh port: 830
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict['ssh_port'] = group.pop('ssh_port')
+
+            # netconf-yang candidate-datastore: enabled
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict['candidate_datastore_status'] = group.pop('candidate_datastore_status')
 
         return ret_dict

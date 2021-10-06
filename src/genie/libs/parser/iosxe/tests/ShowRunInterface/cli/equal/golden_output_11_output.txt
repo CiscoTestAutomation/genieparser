@@ -1,0 +1,6 @@
+interface GigabitEthernet1/0/5
+ description arne-44
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 1020.4bb1.6f2f
+ source template USER_NoAuth
+end

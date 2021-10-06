@@ -1,0 +1,8 @@
+
+RP/0/RP0/CPU0:router# show l2route topology
+
+Topology ID   Topology Name    Type
+-----------   -------------    ----
+0              EVPN-Multicast-BTV    L2VRF
+4294967294     GLOBAL           N/A
+4294967295     ALL              N/A

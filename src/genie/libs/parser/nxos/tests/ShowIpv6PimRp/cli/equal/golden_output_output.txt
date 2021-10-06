@@ -1,0 +1,42 @@
+
+R1# show ipv6 pim rp vrf all
+PIM6 RP Status Information for VRF "default"
+BSR: 2001:db8:1:1::1*, next Bootstrap message in: 00:00:15,
+      priority: 99, hash-length: 128
+Auto-RP disabled
+BSR RP Candidate policy: None
+BSR RP policy: None
+Auto-RP Announce policy: None
+Auto-RP Discovery policy: None
+
+Anycast-RP 2001:db8:111:111::111 members:
+  2001:db8:1:2::2  2001:db8:3:4::5
+
+RP: 2001:db8:1:1::1*, (0), uptime: 03:29:13, expires: 00:02:20,
+ priority: 192, RP-source: 2001:db8:1:1::1 (B), group ranges:
+      ff05::1/8
+RP: 2001:db8:12:12::12, (7), uptime: 00:58:17, expires: 0.000000,
+ priority: 0, RP-source: (local), group ranges:
+      ff08::/16 (bidir)
+RP: 2001:db8:111:111::111, (0), uptime: 00:00:52, expires: 0.000000,
+ priority: 0, RP-source: (local), group ranges:
+      ff09::/16
+RP: 2001:db8:504::1, (0), uptime: 00:00:02, expires: 0.000000,
+ priority: 0, RP-source: (local), group-map: PIM6-STATIC-RP, group ranges:
+      ff1e::3002/128 ff1e::3001/128
+
+PIM6 RP Status Information for VRF "VRF1"
+BSR: 2001:db8:1:1::1, uptime: 00:09:14, expires: 00:01:37,
+      priority: 99, hash-length: 128
+Auto-RP disabled
+BSR RP Candidate policy: None
+BSR RP policy: None
+Auto-RP Announce policy: None
+Auto-RP Discovery policy: None
+
+Anycast-RP 2001:db8:111:111::111 members:
+  2001:db8:1:2::2  2001:db8:3:4::5
+
+RP: 2001:db8:1:1::1*, (0), uptime: 03:29:13, expires: 00:02:20,
+ priority: 192, RP-source: 2001:db8:1:1::1 (B), group ranges:
+      ff05::1/8

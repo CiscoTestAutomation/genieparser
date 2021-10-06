@@ -1,0 +1,18 @@
+ PTP CLOCK INFO
+  PTP Device Type: Boundary clock
+  PTP Device Profile: Default Profile
+  Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Clock Domain: 0
+  Network Transport Protocol: 802.3
+  Message general ip dscp  : 47
+  Message event  ip dscp   : 59
+  Number of PTP ports: 75
+  Priority1: 128
+  Priority2: 128
+  Clock Quality:
+        Class: 248
+        Accuracy: Unknown
+        Offset (log variance): 17258
+  Offset From Master(ns): 0
+  Mean Path Delay(ns): 0
+  Steps Removed: 0

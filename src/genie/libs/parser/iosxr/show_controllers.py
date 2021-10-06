@@ -76,10 +76,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
         # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
-                         ' +GPORT\=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
+                         ' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
                          '(?: +Trunk\=(?P<trunk>\d+))?'
                          '(?: +(?P<b_static>(Static)))?'
-                         ' +encap_id\=(?P<encap_id>\d+|0x[[A-Fa-f0-9\']+)$')
+                         ' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -395,6 +395,7 @@ class ShowControllersOpticsSchema(MetaParser):
             'transport_admin_state': str,
             'laser_state': str,
             Optional('led_state'): str,
+            Optional('fec_state'): str,
             'optics_status': {
                 'optics_type': str,
                 'wavelength': str,
@@ -499,10 +500,15 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         p2 = re.compile(r'^Transport +Admin +State: +(?P<transport_admin_state>[\w\s]+)$')
 
         # Laser State: On
-        p3 = re.compile(r'^Laser +State: +(?P<laser_state>\w+)$')
+        # Laser State: N/A 
+        p3 = re.compile(r'^Laser +State: +(?P<laser_state>.+)$')
 
         # LED State: Green
-        p4 = re.compile(r'^LED +State: +(?P<led_state>\w+)$')
+        # LED State: Not Applicable
+        p4 = re.compile(r'^LED +State: +(?P<led_state>.+)$')
+
+        # FEC State: FEC DISABLED 
+        p4_1 = re.compile(r'^FEC +State: +(?P<fec_state>.+)$')
 
         # Optics Type:  CFP2 DWDM
         p5 = re.compile(r'^Optics +Type: +(?P<optics_type>[\S\s]+)$')
@@ -633,7 +639,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         p39 = re.compile(r'^Rev +Number +: +(?P<rev_number>\S+)$')
 
         # Serial Number          : AGD162040SP
-        p40 = re.compile(r'^Serial +Number +: +(?P<serial_number>\w+)$')
+        # Serial Number          : N/A
+        p40 = re.compile(r'^Serial +Number +: +(?P<serial_number>.+)$')
 
         # PID                    : SFP-10G-SR
         p41 = re.compile(r'^PID +: +(?P<pid>\S+)$')
@@ -668,6 +675,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
             # Laser State: On
+            # Laser State: N/A 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -675,7 +683,15 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
             # LED State: Green
+            # LED State: Not Applicable 
             m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # FEC State: FEC DISABLED  
+            m = p4_1.match(line)
             if m:
                 group = m.groupdict()
                 optics_dict.update({k: v for k, v in group.items()})
@@ -973,6 +989,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
             # Serial Number          : AGD162040SP
+            # Serial Number          : N/A
             m = p40.match(line)
             if m:
                 group = m.groupdict()

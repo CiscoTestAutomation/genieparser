@@ -1,0 +1,33 @@
+
+SL1-0.0.0.0-10.151.22.22-10.229.11.11 line protocol is up
+    Unnumbered interface using IP address of loopback1 (10.151.22.22)
+    Process ID 1 VRF VRF1, area 0.0.0.1
+    State P2P, Network type P2P, cost 1
+    Index 6, Transmit delay 1 sec
+    1 Neighbors, flooding to 1, adjacent with 1
+    Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+      Hello timer due in 00:00:02
+    No authentication
+    Number of opaque link LSAs: 0, checksum sum 0
+    Adjacency Information :
+    Destination IP address: 10.229.11.11
+ Neighbor 10.229.11.11, interface address 10.229.11.11
+    Process ID 1 VRF VRF1, in area 0.0.0.1 via interface SL1-0.0.0.0-10.151.22.22
+-10.229.11.11
+    State is FULL, 8 state changes, last change 08:10:01
+    Hello options 0x32, dbd options 0x72
+    Last non-hello packet received never
+      Dead timer due in 00:00:38
+
+ SL2-0.0.0.0-10.151.22.22-10.21.33.33 line protocol is up
+    Unnumbered interface using IP address of loopback1 (10.151.22.22)
+    Process ID 1 VRF VRF1, area 0.0.0.1
+    State P2P, Network type P2P, cost 111
+    Index 7, Transmit delay 7 sec
+    0 Neighbors, flooding to 0, adjacent with 0
+    Timer intervals: Hello 3, Dead 13, Wait 13, Retransmit 5
+      Hello timer due in 00:00:01
+    Simple authentication, using keychain test (ready)
+    Number of opaque link LSAs: 0, checksum sum 0
+    Adjacency Information :
+    Destination IP address: 10.21.33.33

@@ -1,0 +1,11 @@
+NAME: "c93xx Stack", DESCR: "c93xx Stack"
+PID: C9300-48U         , VID: V02  , SN: FCW88888888
+
+NAME: "Switch 1", DESCR: "C9300-48U"
+PID: C9300-48U         , VID: V02  , SN: FCW999999999
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC3333333
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC4444444

@@ -1,0 +1,11 @@
+
+Router# show isis lsp-log
+    Level 1 LSP log
+  When       Count      Interface   Triggers
+07:05:18        3                   CONFIG NEWADJ DIS
+07:05:13        2       Ethernet0   NEWADJ DIS
+    Level 2 LSP log
+  When       Count      Interface   Triggers
+07:05:24        2                   CONFIG NEWADJ
+07:05:23        1       Ethernet0   NEWADJ
+07:01:39        3       Loopback0   CONFIG DELADJ

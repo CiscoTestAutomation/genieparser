@@ -1,0 +1,10 @@
+
+RP/0/RP0/CPU0:iosxrv9000-1#show isis segment-routing label table
+Mon Sep 30 13:22:32.921 EDT
+
+IS-IS SR IS Label Table
+Label         Prefix/Interface
+----------    ----------------
+16001         Loopback0
+16002         10.2.2.2/32
+16003         10.3.3.3/32

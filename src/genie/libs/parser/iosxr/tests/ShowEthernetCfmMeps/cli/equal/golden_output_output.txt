@@ -1,0 +1,26 @@
+RP/0/0/CPU0:router# show ethernet cfm peer meps 
+
+Flags:
+> - Ok                          I - Wrong interval
+R - Remote Defect received      V - Wrong level
+L - Loop (our MAC received)     T - Timed out
+C - Config (our ID received)    M - Missing (cross-check)
+X - Cross-connect (wrong MAID)  U - Unexpected (cross-check)
+* - Multiple errors received
+
+Domain dom3 (level 5), Service ser3
+Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
+================================================================================
+St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
+-- ----- -------------- ------- ----------- --------- ------ ----- -----
+V     10 0001.02ff.0706 Up      00:01:35            2      0     0     2
+
+Domain dom4 (level 2), Service ser4
+Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
+================================================================================
+St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
+-- ----- -------------- ------- ----------- --------- ------ ----- -----
+>    20 0001.02ff.0705 Up      00:00:03            4      1     0     0
+>    21 0001.02ff.0706 Up      00:00:04            3      0     0     0
+
+Domain dom5 (level 2), Service dom5

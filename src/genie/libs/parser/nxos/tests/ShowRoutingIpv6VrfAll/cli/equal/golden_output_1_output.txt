@@ -1,0 +1,28 @@
+
+IPv6 Routing Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:db8::/64, ubest/mbest: 1/0, attached
+    *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
+2001:db8::5054:ff:fed5:63f9/128, ubest/mbest: 1/0, attached
+    *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, local
+2001:db8:1:1::/64, ubest/mbest: 1/0, attached
+    *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, direct,
+2001:db8:1:1::1/128, ubest/mbest: 1/0, attached
+    *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, local
+2001:db8:2:2::/64, ubest/mbest: 1/0, attached
+    *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
+2001:db8:2:2::2/128, ubest/mbest: 1/0, attached
+    *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, local, tag 222
+2001:db8:cdc9:121::/64, ubest/mbest: 1/0
+    *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls)
+
+IPv6 Routing Table for VRF "VRF1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:db8:cdc9:144::/64, ubest/mbest: 1/0
+    *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)

@@ -1,0 +1,32 @@
+Name: PE1_t100                            (Tunnel100) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: down   Path: not valid   Signalling: Down
+    path option 1, (LOCKDOWN) type explicit R4_R5_R2
+    path option 2, type explicit R3_R4_R2
+      Path-option attribute: ATTR
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: disabled LockDown: disabled Loadshare: 500 [0] bw-based
+    AutoRoute destination: enabled 
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Shortest Unconstrained Path Info:
+    Path Weight: UNKNOWN
+    Explicit Route:  UNKNOWN
+
+  History:
+    Tunnel:
+      Time since created: 2 days, 3 hours, 48 minutes
+      Time since path change: 12 minutes, 41 seconds
+      Number of LSP IDs (Tun_Instances) used: 5029
+    Prior LSP: [ID: 5022]
+      ID: path option 1 [5022]
+      Removal Trigger: configuration changed (severe)
+      Last Error: CTRL:: path-option updated

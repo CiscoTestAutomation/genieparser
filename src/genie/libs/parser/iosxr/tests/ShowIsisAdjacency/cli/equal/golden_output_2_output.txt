@@ -1,0 +1,27 @@
+
++++ R2_xr: executing command 'show isis adjacency' +++
+show isis adjacency
+Wed Apr 17 16:25:06.870 UTC
+
+IS-IS test Level-1 adjacencies:
+System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
+								       BFD  BFD
+R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    23   22:30:27 Yes None None
+R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    20   22:30:27 Yes None None
+
+Total adjacency count: 2
+
+IS-IS test Level-2 adjacencies:
+System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
+								       BFD  BFD
+R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
+R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    23   22:30:27 Yes None None
+
+Total adjacency count: 2
+
+IS-IS test1 Level-1 adjacencies:
+System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
+							       BFD  BFD
+
+IS-IS test1 Level-2 adjacencies:
+System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6

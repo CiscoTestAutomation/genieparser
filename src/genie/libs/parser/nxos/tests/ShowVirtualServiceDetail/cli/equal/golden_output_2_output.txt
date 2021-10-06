@@ -1,0 +1,30 @@
+
+Virtual service lxc_8 detail
+  State                 : Installed
+  Package information
+    Name                : c7ulxc_kstack.ova
+    Path                : bootflash:/c7ulxc_kstack.ova
+    Application
+      Name              : Centos7Kstack
+      Installed version : 1.0; (devtest)
+      Description       : centos distro (kstack)
+    Signing
+      Key type          : Cisco development key
+      Method            : SHA-1
+    Licensing
+      Name              : None
+      Version           : None
+  Resource reservation
+    Disk                : 126 MB
+    Memory              : 0 MB
+    CPU                 : 0% system CPU
+
+  Attached devices
+    Type              Name        Alias
+    ---------------------------------------------
+    Disk              _rootfs
+    Disk              /var/sysmgr/tmp
+    Serial/shell
+    Serial/aux
+    Serial/Syslog                 serial2
+    Serial/Trace                  serial3

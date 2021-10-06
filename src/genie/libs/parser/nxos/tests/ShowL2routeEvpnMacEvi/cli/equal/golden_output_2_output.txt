@@ -1,0 +1,12 @@
+
+CH-P2-TOR-1# sh l2route evpn mac evi 1001  mac 0000.01ff.9191
+
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link 
+(Dup):Duplicate (Spl):Split (Rcv):Recv (AD):Auto-Delete (D):Del Pending
+(S):Stale (C):Clear, (Ps):Peer Sync (O):Re-Originated (Nho):NH-Override
+(Pf):Permanently-Frozen
+
+Topology    Mac Address    Prod   Flags         Seq No     Next-Hops      
+----------- -------------- ------ ------------- ---------- ----------------
+1001        0000.01ff.9191 Local  L,            1          Eth1/11        
+CH-P2-TOR-1#       

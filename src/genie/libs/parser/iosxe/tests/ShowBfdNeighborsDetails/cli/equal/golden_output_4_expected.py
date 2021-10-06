@@ -29,6 +29,8 @@ expected_output = {
                         'your_discr': 1,
                     },
                     'ld_rd': '1/17',
+                    'ld': 1,
+                    'rd': 17,
                     'local_diag': 0,
                     'min_rx_int': 300000,
                     'min_tx_int': 500000,

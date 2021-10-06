@@ -1,0 +1,51 @@
+
+R1# show ip rip vrf all
+Process Name "rip-1" VRF "default"
+RIP routing table 
+
+> - indicates best RIP route
+
+>10.1.2.0/24 next-hops 0
+ via 10.1.2.1 Ethernet1/1.100, metric 1, tag 0, direct route
+
+>10.1.3.0/24 next-hops 1
+ via 10.1.3.1 Ethernet1/2.100, metric 1, tag 0, direct route
+ via 10.1.2.2 Ethernet1/1.100, metric 3, tag 0, timeout 00:00:05
+
+>10.2.3.0/24 next-hops 1
+ via 10.1.2.2 Ethernet1/1.100, metric 2, tag 0, timeout 00:00:05
+
+>172.16.22.0/24 next-hops 1
+ via 10.1.2.2 Ethernet1/1.100, metric 2, tag 0, timeout 00:00:05
+
+>172.16.33.0/24 next-hops 1
+ via 10.1.2.2 Ethernet1/1.100, metric 3, tag 0, timeout 00:00:05
+
+>192.168.2.2/32 next-hops 1
+ via 10.1.2.2 Ethernet1/1.100, metric 2, tag 0, timeout 00:00:05
+
+>192.168.3.3/32 next-hops 1
+ via 10.1.2.2 Ethernet1/1.100, metric 3, tag 0, timeout 00:00:05
+
+Process Name "rip-1" VRF "VRF1"
+RIP routing table 
+
+> - indicates best RIP route
+
+>10.1.2.0/24 next-hops 0
+ via 10.1.2.1 Ethernet1/1.200, metric 1, tag 0, direct route
+
+>10.1.3.0/24 next-hops 0
+ via 10.1.3.1 Ethernet1/2.200, metric 1, tag 0, direct route
+
+>10.2.3.0/24 next-hops 1
+ via 10.1.2.2 Ethernet1/1.200, metric 2, tag 0, timeout 00:02:52
+
+>172.16.11.0/24 next-hops 1
+ via 0.0.0.0, metric 15, tag 0, redistributed route
+
+>192.168.2.2/32 next-hops 1
+ via 10.1.2.2 Ethernet1/1.200, metric 2, tag 0, timeout 00:02:52
+
+>192.168.3.3/32 next-hops 1
+ via 10.1.2.2 Ethernet1/1.200, metric 3, tag 0, timeout 00:02:52

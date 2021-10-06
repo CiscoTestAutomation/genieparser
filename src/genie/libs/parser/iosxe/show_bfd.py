@@ -37,6 +37,8 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 				'neighbor_address': {
 					Any(): {
 						Optional('ld_rd'): str,
+						Optional('ld'): int,
+						Optional('rd'): int,
 						Optional('rh_rs'): str,
 						Optional('holdown_timer'): int,
 						Optional('holdown_timer_multiplier'): int,
@@ -69,6 +71,20 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 							Optional('last_ms_ago'): int
 						},
 						Optional('tx'): {
+							Optional('count'): int,
+							Optional('min_int_ms'): int,
+							Optional('max_int_ms'): int,
+							Optional('avg_int_ms'): int,
+							Optional('last_ms_ago'): int
+						},
+						Optional('echo_tx'): {
+							Optional('count'): int,
+							Optional('min_int_ms'): int,
+							Optional('max_int_ms'): int,
+							Optional('avg_int_ms'): int,
+							Optional('last_ms_ago'): int
+						},
+						Optional('echo_rx'): {
 							Optional('count'): int,
 							Optional('min_int_ms'): int,
 							Optional('max_int_ms'): int,
@@ -122,20 +138,20 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 	""" Parser for the following commands:
 			* 'show bfd neighbors details'
 			* 'show bfd neighbors client {client} details'
-            * 'show bfd neighbors interface {interface} details'
+			* 'show bfd neighbors interface {interface} details'
 			* 'show bfd neighbors ipv4 {ipv4_address} details',
 			* 'show bfd neighbors ipv6 {ipv6_address} details'
 	"""
-	
+
 	cli_command = ['show bfd neighbors details',
-		'show bfd neighbors client {client} details',
-        'show bfd neighbors interface {interface} details',
-		'show bfd neighbors ipv4 {ipv4_address} details',
-		'show bfd neighbors ipv6 {ipv6_address} details']
+				   'show bfd neighbors client {client} details',
+				   'show bfd neighbors interface {interface} details',
+				   'show bfd neighbors ipv4 {ipv4_address} details',
+				   'show bfd neighbors ipv6 {ipv6_address} details']
 
 	def cli(self, client='', interface=None, ipv4_address=None, ipv6_address=None, output= None):
 		if output is None:
-			#execute command to get output
+			# execute command to get output
 			if client:
 				out = self.device.execute(self.cli_command[1].format(client=client))
 			elif interface:
@@ -177,6 +193,9 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		p4 = re.compile(r'^(?P<our_neighbor>[\w\.\:]+)\s+(?P<ld_rd>\d+'\
 			'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
 			'[\w\W]+)$')
+
+		# 5/2
+		p4_1 = re.compile(r'^(?P<ld>\d+)\/(?P<rd>\d+)$')
 
 		# OurAddr: 10.186.213.12
 		p5 = re.compile(r'^OurAddr:\s+(?P<our_address>[\w\.\:]+)$')
@@ -241,6 +260,12 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			r'\/(?P<max_int_ms>\d+)\/(?P<avg_int_ms>\d+) +' \
 			r'last: +(?P<last_ms_ago>\d+) +ms +ago$')
 
+		# Echo Rx Count: 20777, Echo Rx Interval (ms) min/max/avg: 1505/2003/1751 last: 721 ms ago
+		p16_1 = re.compile(r'^Echo Rx Count: +(?P<count>\d+), '
+						   r'+Echo Rx Interval \(ms\) min\/max\/avg: '
+						   r'+(?P<min_int_ms>\d+)\/(?P<max_int_ms>\d+)\/(?P<avg_int_ms>\d+)'
+						   r' +last: +(?P<last_ms_ago>\d+) ms ago$')
+
 		# Rx Count: 5052
 		p17 = re.compile(r'^\s*Rx +Count: +(?P<count>\d+)$')
 
@@ -248,7 +273,13 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		p18 = re.compile(r'^\s*Tx +Count: +(?P<count>\d+), +Tx +Interval +' \
 			'\(ms\) +min\/max\/avg: +(?P<min_int_ms>\d+)\/(?P<max_int_ms>\d+)'\
 			'\/(?P<avg_int_ms>\d+) +last: +(?P<last_ms_ago>\d+) +ms +ago$')
-		
+
+		# Echo Tx Count: 20777, Echo Tx Interval (ms) min/max/avg: 1506/2003/1751 last: 722 ms ago
+		p18_1 = re.compile(r'^Echo Tx Count: +(?P<count>\d+), '
+						   r'+Echo Tx Interval \(ms\) min\/max\/avg: '
+						   r'+(?P<min_int_ms>\d+)\/(?P<max_int_ms>\d+)\/(?P<avg_int_ms>\d+) '
+						   r'+last: +(?P<last_ms_ago>\d+) ms ago$')
+
 		# Tx Count: 7490
 		p19 = re.compile(r'^\s*Tx +Count: +(?P<count>\d+)$')
 		
@@ -382,6 +413,11 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				our_neighbor.update({'state' : group['state']})
 				our_neighbor.update({'interface' : \
 					Common.convert_intf_name(group['interface'])})
+
+				# gets separated ld and rd values
+				s = p4_1.match(group['ld_rd'])
+				our_neighbor.update({'ld': int(s.groupdict()['ld'])})
+				our_neighbor.update({'rd': int(s.groupdict()['rd'])})
 				continue
 
 			# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
@@ -390,11 +426,15 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				group = m.groupdict()
 				neighbor = {}
 				our_neighbor = neighbor.setdefault(group['our_neighbor'], {})
-				our_neighbor.update({'ld_rd' : group['ld_rd']})
-				our_neighbor.update({'rh_rs' : group['rh_rs']})
-				our_neighbor.update({'state' : group['state']})
-				our_neighbor.update({'interface' : \
-					Common.convert_intf_name(group['interface'])})
+				our_neighbor.update({'ld_rd': group['ld_rd']})
+				our_neighbor.update({'rh_rs': group['rh_rs']})
+				our_neighbor.update({'state': group['state']})
+				our_neighbor.update({'interface': Common.convert_intf_name(group['interface'])})
+
+				# gets separated ld and rd values
+				s = p4_1.match(group['ld_rd'])
+				our_neighbor.update({'ld': int(s.groupdict()['ld'])})
+				our_neighbor.update({'rd': int(s.groupdict()['rd'])})
 				continue
 
 			# OurAddr: 10.186.213.12
@@ -526,6 +566,14 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				rx.update({k: int(v) for k, v in group.items()})
 				continue
 
+			# Echo Rx Count: 20777, Echo Rx Interval (ms) min/max/avg: 1505/2003/1751 last: 721 ms ago
+			m = p16_1.match(line)
+			if m:
+				group = m.groupdict()
+				echo_rx = our_neighbor.setdefault('echo_rx', {})
+				echo_rx.update({k: int(v) for k, v in group.items()})
+				continue
+
 			# Rx Count: 5052
 			m = p17.match(line)
 			if m:
@@ -540,6 +588,14 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				group = m.groupdict()
 				tx = our_neighbor.setdefault('tx', {})
 				tx.update({k: int(v) for k, v in group.items()})
+				continue
+
+			# Echo Tx Count: 20777, Echo Tx Interval (ms) min/max/avg: 1506/2003/1751 last: 722 ms ago
+			m = p18_1.match(line)
+			if m:
+				group = m.groupdict()
+				echo_tx = our_neighbor.setdefault('echo_tx', {})
+				echo_tx.update({k: int(v) for k, v in group.items()})
 				continue
 
 			# Tx Count: 7490

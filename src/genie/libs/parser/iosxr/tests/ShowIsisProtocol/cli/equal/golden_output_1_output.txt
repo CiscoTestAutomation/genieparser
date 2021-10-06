@@ -1,0 +1,35 @@
+
+#show isis protocol
+Wed Oct  9 13:07:59.452 EDT
+
+IS-IS Router: TEST
+  System Id: 0123.45ff.f077
+  Instance Id: 0
+  IS Levels: level-2-only
+  Manual area address(es):
+    90.0000
+  Routing for area address(es):
+    90.0000
+  Non-stop forwarding: Disabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Up
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Level-2
+	Metric style (generate/accept): Wide/Wide
+	Metric: 100000
+	ISPF status: Disabled
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: Yes
+  SRLB allocated: 15000 - 15999
+  SRGB allocated: 16000 - 81534
+  Interfaces supported by IS-IS:
+    GigabitEthernet0/0/0/1 is running suppressed (active in configuration)
+    GigabitEthernet0/0/0/2 is running suppressed (active in configuration)
+    GigabitEthernet0/0/0/3 is running suppressed (active in configuration)
+    Loopback0 is running passively (passive in configuration)
+    GigabitEthernet0/0/0/4 is running suppressed (active in configuration)
+    GigabitEthernet0/0/0/5 is running suppressed (active in configuration)
+    GigabitEthernet0/0/0/6 is disabled (active in configuration)
+    GigabitEthernet0/0/0/7 is disabled (active in configuration)

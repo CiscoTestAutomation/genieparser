@@ -21,6 +21,12 @@ PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
+try:
+    from genie.libs.cisco.telemetry import add_parser_usage_data
+    INTERNAL = True
+except:
+    INTERNAL = False
+
 
 class ParserNotFound(Exception):
     '''raise exception if parser command is not found
@@ -70,7 +76,7 @@ def _load_parser_json():
             summary = ext.output.pop('extend_info', None)
 
             merge_dict(parser_data, ext.output, update=True)
-            log.info("External parser counts: {}\nSummary:\n{}"
+            log.debug("External parser counts: {}\nSummary:\n{}"
                      .format(len(summary), json.dumps(summary, indent=2)))
 
     return parser_data
@@ -102,10 +108,7 @@ def format_output(parser_data, tab=2):
     if parser_data is None:
         return parser_data
     for k, v in sorted(parser_data.items()):
-        if isinstance(v, dict):
-            v = format_output(v, tab + 2)
-        else:
-            v = repr(v)
+        v = format_output(v, tab + 2) if isinstance(v, dict) else repr(v)
         s.append('%s%r: %s,\n' % ('  ' * tab, k, v))
     s.append('%s}' % ('  ' * (tab - 2)))
     return ''.join(s)
@@ -153,7 +156,24 @@ def get_parser(command, device, fuzzy=False):
         '''result is not valid. raise custom ParserNotFound exception'''
         raise ParserNotFound(command, lookup._tokens)
 
+    # Try to add parser to telemetry data 
+    if INTERNAL:
+        try:
+            # valid_results is a list of found parsers for a given show command
+            #  - first element in this list is the closest parser match found 
+            #  - each element has the format (show command, class, kwargs)
+            # valid_results[0] is the best parser match
+            add_parser_usage_data(valid_results[0], device)
+        except Exception as e:
+            log.debug("Encountered an unexpected error while adding parser "
+                      "telemetry data: %s" % e)
+
     if not fuzzy:
+        # valid_results is a list of found parsers for a given show command
+        #  - first element in this list is the closest parser match found 
+        #  - each element has the format (show command, class, kwargs)
+        # valid_results[0][1] is the class of the best match
+        # valid_results[0][2] is a dict of parser kwargs
         return valid_results[0][1], valid_results[0][2]
 
     return valid_results
@@ -583,6 +603,8 @@ class Common:
                     'Tw': 'TwoGigabitEthernet',
                     'Two': 'TwoGigabitEthernet',
                     'Twe': 'TwentyFiveGigE',
+                    'Fi': 'FiveGigabitEthernet',
+                    'Fiv': 'FiveGigabitEthernet',
                     'mgmt': 'mgmt',
                     'Vl': 'Vlan',
                     'Tu': 'Tunnel',

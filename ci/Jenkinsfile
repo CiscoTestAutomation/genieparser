@@ -11,10 +11,13 @@ pipeline {
         stage('Clone repos') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genielibs']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genielibs.git']]])
                 script {
                     sh """
                     ls -l
                     cd genie
+                    git remote -v
+                    cd ../genielibs
                     git remote -v
                     """
                 }
@@ -25,8 +28,12 @@ pipeline {
             steps {
                 script {
                     sh """
+                    uname -n
                     cd genie
                     # checkout same branch on genie, if it exists
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    # checkout same branch on genielibs, if it exists
+                    cd ../genielibs
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
@@ -50,11 +57,17 @@ pipeline {
                     pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
                     cd $WORKSPACE/genie
                     make develop
+                    cd $WORKSPACE/genielibs
+                    make develop
+                    make json
+                    git status
                     cd $WORKSPACE
                     make develop
                     env
                     pip list
                     pip freeze
+                    make json
+                    git status
                 """
             }
         }
@@ -67,17 +80,16 @@ pipeline {
                 """
             }
         }
-
-
-        stage("Run runAll") {
+        
+        stage("Test changelogs") {
             steps {
-                sh """
+                sh"""
                 . /scratch/genieparser-env/bin/activate
-                runAll --path tests --no-refresh --coverage
+                make changelogs
                 """
             }
         }
-
+        
         stage("Run folder_parsing_job") {
             steps {
                 sh """
@@ -104,6 +116,36 @@ pipeline {
                     reportFiles: "index.html",
                     reportName: 'Coverage report'
                 ])
+            }
+        }
+
+
+        stage("Run runAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                runAll --path tests --no-refresh --coverage
+                """
+            }
+        }
+        
+        stage("Genie runAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd genie/tests
+                runAll --no-refresh --coverage
+                """
+            }
+        }
+        
+        stage("Ops runAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd genielibs/tests
+                runAll --path ops --no-refresh --coverage
+                """
             }
         }
 

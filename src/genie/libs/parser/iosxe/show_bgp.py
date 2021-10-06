@@ -1132,7 +1132,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         p18 = re.compile(r'^mpls +labels +in\/out +(?P<in>\w+)\/(?P<out>\w+)$')
 
         # IGMP/MLD v1/v2/v3, exclude, max response time:
-        p19 = re.compile(r'^IGMP/MLD\s+(?P<version>v\d)(,\s+(?P<filter_mode>\w+))?$')
+        p19 = re.compile(r'^IGMP/MLD\s+(?P<version>v\d|v\d,\s*v\d)(,\s+(?P<filter_mode>\w+))?$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1184,12 +1184,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 else:
                     vrf = 'default'
 
-                if vrf not in ret_dict['instance']['default']['vrf']:
-                    vrf_dict = ret_dict.setdefault('instance', {}).setdefault('default', {}).\
+                vrf_dict = ret_dict.setdefault('instance', {}).setdefault('default', {}).\
                                         setdefault('vrf', {}).setdefault(vrf, {})
 
-                if 'address_family' not in vrf_dict:
-                    address_family_dict = vrf_dict.setdefault('address_family', {})
+                address_family_dict = vrf_dict.setdefault('address_family', {})
 
                 # Adding the new_address_family that contains the RD info
                 if new_address_family:
@@ -1327,9 +1325,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         nlri_data['rd'] = rt6_dict['rd']
                         nlri_data['eti'] = rt6_dict['eti']
                         nlri_data['mcast_src_len'] = rt6_dict['mcast_src_len']
-                        if int(rt6_dict['mcast_src_len']) > 0:
-                            if rt6_dict['mcast_src']:
-                                nlri_data['mcast_src'] = rt6_dict['mcast_src']
+                        nlri_data['mcast_src'] = rt6_dict['mcast_src']
                         nlri_data['mcast_group_len'] = rt6_dict['mcast_group_len']
                         nlri_data['mcast_group_addr'] = rt6_dict['mcast_group_addr']
                         nlri_data['orig_rtr_len'] = rt6_dict['orig_rtr_len']
@@ -1756,6 +1752,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # IGMP/MLD v3, include
             # IGMP/MLD v2
             # IGMP/MLD v1
+            # IGMP/MLD v2, v3, exclude
             m = p19.match(line)
             if m:
                 subdict['igmpmld'] = {}
@@ -4757,7 +4754,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
 
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
+                            '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
                             '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                             '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
@@ -4838,7 +4835,8 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
         # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
         # *>i  172.16.51.0/24    192.168.36.220          0    100      0 ?
-        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|b|h|\*|\>|\s)+)'
+        # r>i 0.0.0.0          10.250.6.1               0    300      0 65000 i
+        p3_2 = re.compile(r'^\s*(?P<status_codes>(r|s|x|S|d|b|h|\*|\>|\s)+)'
             '(?P<path_type>(i|e|c|l|a|r|I))?(\s+)?(?P<prefix>\S+) +(?P<next_hop>'
             '[a-zA-Z0-9\.\:]+) +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+) +'
             '(?P<origin_codes>(i|e|\?|\&|\|))$')
@@ -4909,6 +4907,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
             # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             # *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
+            # *>i 10.100.248.128/26
             m = p3_1.match(line)
             if m:
                 # New prefix, reset index count
@@ -4950,6 +4949,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             # *>r10.16.2.0         0.0.0.0               4444        100      32768 ?
             # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # r>i 0.0.0.0          10.250.6.1               0    300      0 65000 i
             # Condition placed to handle the situation of a long line that is
             # divided nto two lines while actually it is not another index.
             if not data_on_nextline:
@@ -5470,6 +5470,8 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
         data_on_nextline =  False
         index = 1
         bgp_table_version = local_router_id = ''
+        neighbor_id = str(neighbor)
+        original_address_family = address_family
 
         for line in output.splitlines():
             line = line.rstrip()
@@ -5477,7 +5479,6 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
             # For address family: IPv4 Unicast
             m = p1.match(line)
             if m:
-                neighbor_id = str(neighbor)
                 address_family = str(m.groupdict()['address_family']).lower()
                 original_address_family = address_family
                 continue
@@ -5823,29 +5824,37 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParse
 
 # ====================================================================
 # Parser for:
-#   * 'show bgp neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} vrf {vrf} neighbors {neighbor} received-routes'
 #   * 'show bgp {address_family} neighbors {neighbor} received-routes'
+#   * 'show bgp neighbors {neighbor} received-routes'
 # ====================================================================
 class ShowBgpNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, ShowBgpNeighborsReceivedRoutesSchema):
 
     ''' Parser for:
+        * 'show bgp {address_family} vrf {vrf} neighbors {neighbor} received-routes'
         * 'show bgp {address_family} neighbors {neighbor} received-routes'
         * 'show bgp neighbors {neighbor} received-routes'
     '''
 
-    cli_command = ['show bgp {address_family} neighbors {neighbor} received-routes',
-                   'show bgp neighbors {neighbor} received-routes',
-                   ]
+    cli_command = [
+        'show bgp neighbors {neighbor} received-routes',
+        'show bgp {address_family} neighbors {neighbor} received-routes',
+        'show bgp {address_family} vrf {vrf} neighbors {neighbor} received-routes',
+    ]
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor, address_family='', vrf='', output=None):
 
         if output is None:
             # Build command
-            if address_family and neighbor:
-                cmd = self.cli_command[0].format(address_family=address_family,
+            if address_family and vrf and neighbor:
+                cmd = self.cli_command[2].format(address_family=address_family,
+                                                 vrf=vrf,
+                                                 neighbor=neighbor)
+            elif address_family and neighbor:
+                cmd = self.cli_command[1].format(address_family=address_family,
                                                  neighbor=neighbor)
             elif neighbor:
-                cmd = self.cli_command[1].format(neighbor=neighbor)
+                cmd = self.cli_command[0].format(neighbor=neighbor)
             # Execute command
             show_output = self.device.execute(cmd)
         else:

@@ -1,0 +1,25 @@
+
+P1# show spanning-tree detail
+
+ MST0000 is executing the mstp compatible Spanning Tree protocol
+Bridge Identifier has priority 32768, sysid 0, address 00e3.04ff.ad03
+Configured hello time 10, max age 40, forward delay 30
+We are the root of the spanning tree
+Topology change flag not set, detected flag not set
+Number of topology changes 0 last change occurred 142:22:13 ago
+Times:  hold 1, topology change 70, notification 10
+      hello 10, max age 40, forward delay 30 
+Timers: hello 0, topology change 0, notification 0
+
+Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
+ce Inconsistent, VPC Peer-link Inconsistent)
+Port path cost 500, Port priority 128, Port Identifier 128.4125
+Designated root has priority 32768, address 0023.04ff.ad03
+Designated bridge has priority 61440, address 4055.39ff.fee7
+Designated port id is 128.4125, designated path cost 0
+Timers: message age 0, forward delay 0, hold 0
+Number of transitions to forwarding state: 0
+The port type is network
+Link type is point-to-point by default, Internal, Peer is STP
+PVST Simulation is enabled by default
+BPDU: sent 110, received 0

@@ -1,0 +1,82 @@
+R1-asr1k-43#show isis rib
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+1.1.1.0/24  prefix attr X:0 R:1 N:0
+  [115/L2/50] via 6.6.6.6(Tunnel65537), from 6.6.6.6, tag 0, LSP[221/221/99] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/33554438] via 12.12.12.2(GigabitEthernet0/0/3), from 2.2.2.2, tag 0, LSP[7/7/2056] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/33554438] via 13.13.1.2(TenGigabitEthernet0/0/5), from 3.3.3.3, tag 0, LSP[37/41/2046] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/67108866] via 13.13.1.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[37/13/2055] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/67108866] via 12.12.1.2(GigabitEthernet0/0/2), from 6.6.6.6, tag 0, LSP[7/30/2034] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/67108866] via 12.12.12.2(GigabitEthernet0/0/3), from 6.6.6.6, tag 0, LSP[7/30/2034] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+2.2.2.0/24  prefix attr X:0 R:0 N:0
+  [115/L1/16777224] via 12.12.1.2(GigabitEthernet0/0/2), from 2.2.2.2, tag 0, LSP[2/2/2060] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L1/16777224] via 12.12.12.2(GigabitEthernet0/0/3), from 2.2.2.2, tag 0, LSP[2/2/2060] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L2/16777224] via 12.12.1.2(GigabitEthernet0/0/2), from 2.2.2.2, tag 0, LSP[7/7/2056] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/16777224] via 12.12.12.2(GigabitEthernet0/0/3), from 2.2.2.2, tag 0, LSP[7/7/2056] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/16777234] via 13.13.1.2(TenGigabitEthernet0/0/5), from 3.3.3.3, tag 0, LSP[37/41/2046] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331652] via 12.12.1.2(GigabitEthernet0/0/2), from 6.6.6.6, tag 0, LSP[7/22/2059] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331652] via 12.12.12.2(GigabitEthernet0/0/3), from 6.6.6.6, tag 0, LSP[7/22/2059] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331662] via 13.13.1.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[37/14/2058] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+2.2.3.0/24  prefix attr X:0 R:0 N:0
+  [115/L1/16777224] via 12.12.1.2(GigabitEthernet0/0/2), from 2.2.2.2, tag 0, LSP[2/2/2060] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L1/16777224] via 12.12.12.2(GigabitEthernet0/0/3), from 2.2.2.2, tag 0, LSP[2/2/2060] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L2/16777224] via 12.12.1.2(GigabitEthernet0/0/2), from 2.2.2.2, tag 0, LSP[7/7/2056] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/16777224] via 12.12.12.2(GigabitEthernet0/0/3), from 2.2.2.2, tag 0, LSP[7/7/2056] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/16777234] via 13.13.1.2(TenGigabitEthernet0/0/5), from 3.3.3.3, tag 0, LSP[37/41/2046] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331652] via 12.12.1.2(GigabitEthernet0/0/2), from 6.6.6.6, tag 0, LSP[7/23/2058] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331652] via 12.12.12.2(GigabitEthernet0/0/3), from 6.6.6.6, tag 0, LSP[7/23/2058] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/50331662] via 13.13.1.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[37/14/2058] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None

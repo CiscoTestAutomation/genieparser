@@ -1,0 +1,19 @@
+
+N95_1# show processes
+
+PID    State  PC        Start_cnt    TTY   Type  Process
+-----  -----  --------  -----------  ----  ----  -------------
+    1      S  b8dffed3            1     -     O  init
+    4      S         0            1     -     O  kworker/0:0
+   10      S         0            1     -     O  ksoftirqd/1
+26668      S  cbdcd9b3            1     -     O  rsyslogd
+26675      S  9c608843            1     -     O  dbus-daemon
+26687      S  e4385a40            1     0     O  agetty
+    -     NR         -            0     -     X  ldap
+
+State: R(runnable), S(sleeping), Z(defunct)
+
+Type:  U(unknown), O(non sysmgr)
+       VL(vdc-local), VG(vdc-global), VU(vdc-unaware)
+       NR(not running), ER(terminated etc)
+

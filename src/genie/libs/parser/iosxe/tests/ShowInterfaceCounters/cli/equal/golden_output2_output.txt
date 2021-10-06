@@ -1,0 +1,3 @@
+Port                OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts 
+Po20               1595900388       16596739          24179              3 
+

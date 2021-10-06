@@ -1,0 +1,10 @@
+
+
+    DCS_vBond1# show orchestrator connections
+                                                                                         PEER                      PEER
+             PEER     PEER     PEER             SITE        DOMAIN      PEER             PRIVATE  PEER             PUBLIC                                   ORGANIZATION
+    INSTANCE TYPE     PROTOCOL SYSTEM IP        ID          ID          PRIVATE IP       PORT     PUBLIC IP        PORT    REMOTE COLOR     STATE           NAME                    UPTIME
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    0        vedge    dtls     10.114.254.5     202010012   1           10.114.11.1      12346    10.114.11.1      12346   custom1          up              sdwan-svs           25:15:44:55
+    0        vsmart   dtls     10.114.254.51    102030001   1           10.114.5.1       12446    10.114.5.1       12446   default          up              sdwan-svs           26:15:52:20
+    0        vmanage  dtls     10.114.254.21    102030001   0           10.114.2.1       12446    10.114.2.1       12446   default          up              sdwan-svs           25:15:46:00

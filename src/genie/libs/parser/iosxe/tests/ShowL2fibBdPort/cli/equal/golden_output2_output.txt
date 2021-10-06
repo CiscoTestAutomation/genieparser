@@ -1,0 +1,5 @@
+Bridge Domain Port List
+--------------------------------
+BD_PORT   Et0/1:11
+VXLAN_REP PL:1190(1) T:VXLAN_REP [IR]20011:2.2.2.2
+VXLAN_REP PL:1183(1) T:VXLAN_REP [IR]20011:3.3.3.2

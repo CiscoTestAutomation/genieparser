@@ -1,0 +1,12 @@
+
+# show eigrp ipv6 vrf all neighbors
+Mon Apr 15 18:03:36.307 UTC
+
+IPv6-EIGRP VR(test) Neighbors for AS(100) VRF VRF1
+
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+					    (sec)         (ms)       Cnt Num
+1   Link Local Address:     Gi0/0/0/1.390     12 01:40:51    9   200  0  14
+    fe80::5c00:ff:fe02:
+0   Link Local Address:     Gi0/0/0/0.390     12 02:29:54    4   200  0  9
+    fe80::f816:3eff:feb4:b131

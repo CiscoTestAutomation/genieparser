@@ -1,0 +1,20 @@
+mDNS Packet statistics:
+    Packets received from client  : 2760
+      Queries                     : 0
+        IPv4                      : 0
+        IPv6                      : 0
+      Advertisements              : 2760
+        IPv4                      : 2760
+        IPv6                      : 0
+    Packets sent to client        : 43064
+      Advertisements              : 0
+        IPv4                      : 0
+        IPv6                      : 0
+      Queries                     : 43064
+        IPv4                      : 43064
+        IPv6                      : 0
+    Packets sent to SDG           : 0
+      Queries                     : 0
+      Advertisements              : 0
+    Packets received from SDG     : 0
+

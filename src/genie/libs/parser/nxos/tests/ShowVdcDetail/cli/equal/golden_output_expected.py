@@ -1,0 +1,53 @@
+
+
+expected_output = {'vdc':
+                        {'1':
+                          {'name': 'PE1',
+                           'state': 'active',
+                           'mac_address': '84:78:ac:ff:e0:1c',
+                           'ha_policy': 'RELOAD',
+                           'dual_sup_ha_policy': 'SWITCHOVER',
+                           'boot_order': '1',
+                           'cpu_share': '5',
+                           'cpu_share_percentage': '33%',
+                           'create_time': 'Fri Apr 28 03:36:26 2017',
+                           'reload_count': '0',
+                           'uptime': '0 day(s), 10 hour(s), 35 minute(s), 47 second(s)',
+                           'restart_count': '1',
+                           'restart_time': 'Fri Apr 28 03:36:26 2017',
+                           'type': 'Ethernet',
+                           'supported_linecards': 'f3'},
+                        '2':
+                          {'name': 'PE2',
+                           'state': 'active',
+                           'mac_address': '84:78:ac:ff:e0:1d',
+                           'ha_policy': 'RESTART',
+                           'dual_sup_ha_policy': 'SWITCHOVER',
+                           'boot_order': '1',
+                           'cpu_share': '5',
+                           'cpu_share_percentage': '33%',
+                           'create_time': 'Fri Apr 28 03:48:01 2017',
+                           'reload_count': '0',
+                           'uptime': '0 day(s), 10 hour(s), 25 minute(s), 2 second(s)',
+                           'restart_count': '1',
+                           'restart_time': 'Fri Apr 28 03:48:01 2017',
+                           'type': 'Ethernet',
+                           'supported_linecards': 'f3'},
+                        '3':
+                          {'name': 'CORE',
+                           'state': 'active',
+                           'mac_address': '84:78:ac:ff:e0:1e',
+                           'ha_policy': 'RESTART',
+                           'dual_sup_ha_policy': 'SWITCHOVER',
+                           'boot_order': '1',
+                           'cpu_share': '5',
+                           'cpu_share_percentage': '33%',
+                           'create_time': 'Fri Apr 28 03:49:33 2017',
+                           'reload_count': '0',
+                           'uptime': '0 day(s), 10 hour(s), 23 minute(s), 39 second(s)',
+                           'restart_count': '1',
+                           'restart_time': 'Fri Apr 28 03:49:33 2017',
+                           'type': 'Ethernet',
+                           'supported_linecards': 'f3'}
+                        }
+                    }

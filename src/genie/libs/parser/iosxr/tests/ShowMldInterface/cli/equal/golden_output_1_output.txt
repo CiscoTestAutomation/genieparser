@@ -1,0 +1,16 @@
+
+RP/0/0/CPU0:ios#show mld interface
+
+GigabitEthernet0/0/0/0 is up, line protocol is up
+  Internet address is fe80::5054:ff:fefa:9ad7
+  MLD is enabled on interface
+  Current MLD version is 2
+  MLD query interval is 366 seconds
+  MLD querier timeout is 3666 seconds
+  MLD max query response time is 12 seconds
+  Last member query response interval is 1 seconds
+  MLD activity: 18 joins, 5 leaves
+  MLD querying router is fe80::5054:ff:fed7:c01f 
+  Time elapsed since last query sent 00:30:16
+  Time elapsed since IGMP router enabled 1d06h
+  Time elapsed since last report received 00:05:05

@@ -1,0 +1,6 @@
+
+RP/0/RP0/CPU0:R2_xr#show ipv6 neighbors Gi0/0/0/0.390
+Thu Sep 26 22:14:18.343 UTC
+IPv6 Address                             Age  Link-layer Add State Interface            Location
+fe80::f816:3eff:feff:384a                129  fa16.3eff.384a REACH Gi0/0/0/0.390        0/0/CPU0
+[Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0.390        0/0/CPU0

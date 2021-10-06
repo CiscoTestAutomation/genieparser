@@ -1,0 +1,21 @@
+
+
+IPv6 Multicast Routing Table for VRF "default"
+
+(*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+
+(*, ff30::/12), uptime: 10w5d, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
+
+
+IPv6 Multicast Routing Table for VRF "VRF1"
+
+
+IPv6 Multicast Routing Table for VRF "blue"
+
+(*, ff30::/12), uptime: 10w5d, pim6 ipv6 
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 0)
