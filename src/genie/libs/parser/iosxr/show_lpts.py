@@ -23,13 +23,13 @@ class ShowLptsPfibHardwarePoliceSchema(MetaParser):
                 "lpts_policer": ListOf(
                     {
                         "flow_type": str,
-                        "policer": str,
+                        "policer": int,
                         "type": str,
-                        "current_rate": str,
-                        "burst": str,
-                        "accepted": str,
-                        "dropped": str,
-                        "npu": str,
+                        "current_rate": int,
+                        "burst": int,
+                        "accepted": int,
+                        "dropped": int,
+                        "npu": int,
                     },
                 )
             }
@@ -80,6 +80,14 @@ class ShowLptsPfibHardwarePolice(ShowLptsPfibHardwarePoliceSchema):
             if m:
                 # Parse regexp
                 group = m.groupdict()
+                # Set some value types to int()
+                group.update({"policer": int(group['policer'])})
+                group.update({"current_rate": int(group['current_rate'])})
+                group.update({"policer": int(group['policer'])})
+                group.update({"burst": int(group['burst'])})
+                group.update({"accepted": int(group['accepted'])})
+                group.update({"dropped": int(group['dropped'])})
+                group.update({"npu": int(group['npu'])})
                 lpts_policer_list.append({k: v for k, v in group.items()})
                 continue
 
