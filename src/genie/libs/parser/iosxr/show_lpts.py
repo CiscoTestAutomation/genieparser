@@ -25,7 +25,7 @@ class ShowLptsPfibHardwarePoliceSchema(MetaParser):
                         "flow_type": str,
                         "policer": str,
                         "type": str,
-                        "curr_rate": str,
+                        "current_rate": str,
                         "burst": str,
                         "accepted": str,
                         "dropped": str,
@@ -50,15 +50,10 @@ class ShowLptsPfibHardwarePolice(ShowLptsPfibHardwarePoliceSchema):
         # Node 0/RP0/CPU0:
         p1 = re.compile(r'^(Node)\s(?P<node>[a-zA-Z0-9\/]+)')
 
-        # Fragment               2       np      474       1000      2            0            0
-        # OSPF-mc-known          3       np      1559      1000      0            0            0
-        # OSPF-mc-default        4       np      1017      1000      0            0            0
-        # OSPF-uc-known          5       np      474       1000      0            0            0
-        # OSPF-uc-default        6       np      474       1000      0            0            0
-        # BFD-default            10      np      7864      1000      75           0            0
         # BFD-MP-known           11      np      7864      1000      0            0            0
         # BGP-known              16      np      16272     1000      120267993    0            0
-        p2 = re.compile(r'^(?P<flow_type>[a-zA-Z-]+)\s+(?P<policer>\d+)\s+(?P<type>\S+)\s+(?P<curr_rate>\d+)\s+(?P<burst>\d+)\s+(?P<accepted>\d+)\s+(?P<dropped>\d+)\s+(?P<npu>\d+)$')
+        p2 = re.compile(r'^(?P<flow_type>[a-zA-Z-]+)\s+(?P<policer>\d+)\s+(?P<type>\S+)\s+(?P<current_rate>\d+)\s+('
+                        r'?P<burst>\d+)\s+(?P<accepted>\d+)\s+(?P<dropped>\d+)\s+(?P<npu>\d+)$') 
 
 
         # Init vars
@@ -66,15 +61,20 @@ class ShowLptsPfibHardwarePolice(ShowLptsPfibHardwarePoliceSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # Node 0/RP0/CPU0:
+
             m = p1.match(line)
             if m:
                 # Parse regexp
                 group = m.groupdict()
-                node = group['node'] or "None"
+                node = group.get('node', 'None')
                 lpts_policer_list = ret_dict.setdefault('lpts_policer_list', {})\
                     .setdefault(node, {})\
                     .setdefault('lpts_policer', [])
                 continue
+
+            # BFD-MP-known           11      np      7864      1000      0            0            0
 
             m = p2.match(line)
             if m:
