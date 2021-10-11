@@ -81,15 +81,10 @@ class ShowLptsPfibHardwarePolice(ShowLptsPfibHardwarePoliceSchema):
                 # Parse regexp
                 group = m.groupdict()
                 # Set some value types to int()
-                group.update({"policer": int(group['policer'])})
-                group.update({"current_rate": int(group['current_rate'])})
-                group.update({"policer": int(group['policer'])})
-                group.update({"burst": int(group['burst'])})
-                group.update({"accepted": int(group['accepted'])})
-                group.update({"dropped": int(group['dropped'])})
-                group.update({"npu": int(group['npu'])})
+                for val in ['policer', 'current_rate', 'burst', 'accepted', 'dropped', 'npu']:
+                    group.update({val: int(group[val])})
+
                 lpts_policer_list.append({k: v for k, v in group.items()})
                 continue
-
 
         return ret_dict
