@@ -1,0 +1,9 @@
+
+N95_2_R2# show ip msdp policy statistics sa-policy 10.144.6.6 in
+C: No. of comparisions, M: No. of matches
+
+ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0     
+ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32      M: 0     
+
+Total accept count for policy: 0     
+Total reject count for policy: 1 

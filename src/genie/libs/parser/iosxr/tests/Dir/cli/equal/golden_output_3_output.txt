@@ -1,0 +1,20 @@
+
+Directory of /misc/scratch
+   32 -rw-rw-rw- 1   824 Mar  7 06:29 cvac.log
+   43 -rwxr--r-- 1     0 Mar 22 08:58 fake_config_2.tcl
+   41 -rw-r--r-- 1  1985 Mar 12 14:35 status_file
+   13 -rw-r--r-- 1  1438 Mar  7 14:26 envoke_log
+   16 -rw-r--r-- 1    98 Mar  7 06:34 oor_aware_process
+ 8178 drwxr-xr-x 2  4096 Mar  7 14:27 kim
+ 8177 drwx---r-x 2  4096 Mar  7 14:27 clihistory
+   15 lrwxrwxrwx 1    12 Mar  7 14:26 config -> /misc/config
+   39 -rwxr--r-- 1     0 Mar 22 08:47 fake_config.tcl
+   12 drwxr-xr-x 2  4096 Mar  7 14:26 core
+   14 -rw-r--r-- 1 10429 Mar  7 14:26 pnet_cfg.log
+   11 drwx------ 2 16384 Mar  7 14:26 lost+found
+ 8179 drwxr-xr-x 8  4096 Mar  7 07:01 ztp
+   42 -rw------- 1     0 Mar 20 11:08 .python-history
+16354 drwxr-xr-x 2  4096 Mar  7 07:22 nvgen_traces
+16353 drwxrwxrwx 3  4096 Mar  7 14:29 cvac
+
+1012660 kbytes total (938440 kbytes free)

@@ -1,0 +1,6 @@
+cedge#show netconf-yang status 
+netconf-yang: enabled
+netconf-yang ssh port: 830
+netconf-yang candidate-datastore: enabled
+
+cedge#

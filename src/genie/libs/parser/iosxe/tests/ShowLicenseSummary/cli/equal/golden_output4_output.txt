@@ -1,0 +1,7 @@
+License Usage:
+License                  Entitlement Tag                Count Status
+-----------------------------------------------------------------------------
+C9300 48P DNA Advantage  (C9300-48 DNA Advantage)          2 AUTHORIZED
+C9300 48P Network Adv... (C9300-48 Network Advan...)       2 AUTHORIZED
+C9300 24P Network Adv... (C9300-24 Network Advan...)       1 AUTHORIZED
+C9300 24P DNA Advantage  (C9300-24 DNA Advantage)          1 AUTHORIZED

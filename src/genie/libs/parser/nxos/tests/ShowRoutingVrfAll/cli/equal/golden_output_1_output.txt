@@ -1,0 +1,41 @@
+
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+10.106.0.0/8, ubest/mbest: 1/0
+    *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
+10.16.1.0/24, ubest/mbest: 1/0
+    *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+10.106.0.5/8, ubest/mbest: 1/0
+    *via Null0, [1/0], 18:47:42, static
+
+
+IP Route Table for VRF "management"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+IP Route Table for VRF "VRF1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+10.121.0.0/8, ubest/mbest: 1/0
+    *via Null0, [55/0], 5w0d, bgp-100, discard, tag 100
+10.205.0.1/32, ubest/mbest: 1/0 time, attached
+    *via 10.205.0.1, Bdi1255, [0/0], 2w6d, local
+10.21.33.33/32, ubest/mbest: 1/1
+    *via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+    **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+10.189.1.0/24, ubest/mbest: 1/0 time
+    *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
+10.229.11.11/32, ubest/mbest: 2/0, attached
+    *via 10.229.11.11, Lo1, [0/0], 5w4d, local
+    *via 10.229.11.11, Lo1, [0/0], 5w4d, direct
+10.4.1.1/32, ubest/mbest: 2/0
+    *via 10.2.4.2, Eth2/4, [110/81], 00:18:35, ospf-1, intra (mpls)
+    *via 10.3.4.3, Eth2/1, [110/81], 00:18:35, ospf-1, intra (mpls)
+10.16.2.2/32, ubest/mbest: 1/0
+    *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)

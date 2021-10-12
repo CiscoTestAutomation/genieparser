@@ -1,0 +1,14 @@
+
+P/0/0/CPU0:Devicevr#show msdp statistics peer 
+Fri Jun 16 15:52:01.005 UTC
+MSDP Peer Statistics :- default
+Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
+TLV Rcvd : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses, 0 unknowns
+TLV Sent : 0 total
+	   0 keepalives, 0 notifications
+	   0 SAs, 0 SA Requests
+	   0 SA responses
+SA msgs  : 0 received, 0 sent

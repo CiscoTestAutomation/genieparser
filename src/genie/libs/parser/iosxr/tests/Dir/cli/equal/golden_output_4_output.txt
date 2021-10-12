@@ -1,0 +1,9 @@
+
+dir disk0:/prod2_vxlan_config
+Mon May 18 21:31:29.857 PDT
+
+Directory of disk0:
+
+10541310    -rwx  6142        Mon May 18 19:16:01 2020  prod2_vxlan_config
+
+12810436608 bytes total (12134223872 bytes free)

@@ -1,0 +1,9 @@
+
+Virtual Service List:
+
+Name                    Status             Package Name
+----------------------------------------------------------------------
+guestshell+             Activated          guestshell.ova
+lxc4                    Not Installed      Not Available
+sc_sanity_03            Installed          ft_mv_no_onep.ova
+lxc_upgrade             Activate Failed    c63lxc_no_onep.ova

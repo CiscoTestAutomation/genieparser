@@ -1,0 +1,60 @@
+
+RP/0/0/CPU0:R3_ospf_xr#show ospf mpls traffic-eng link
+Thu Nov  2 21:15:42.880 UTC
+
+	OSPF Router with ID (10.36.3.3) (Process ID 1)
+
+Area 0 has 2 MPLS TE links. Area instance is 2.
+Link is associated with fragment 1. Link instance is 2
+  Link connected to Broadcast network
+  Link ID : 10.3.4.4
+  Interface Address : 10.3.4.3
+  Admin Metric : TE: 1
+  (all bandwidths in bytes/sec)
+  Maximum bandwidth : 125000000
+  Maximum global pool reservable bandwidth : 93750000
+  Number of Priority : 8
+  Global pool unreserved BW
+  Priority 0 :             93750000  Priority 1 :             93750000
+  Priority 2 :             93750000  Priority 3 :             93750000
+  Priority 4 :             93750000  Priority 5 :             93750000
+  Priority 6 :             93750000  Priority 7 :             93750000
+  Out Interface ID : 4
+  Affinity Bit : 0
+  Extended Admin Group : 8
+   EAG[0]: 0
+   EAG[1]: 0
+   EAG[2]: 0
+   EAG[3]: 0
+   EAG[4]: 0
+   EAG[5]: 0
+   EAG[6]: 0
+   EAG[7]: 0
+
+Link is associated with fragment 2. Link instance is 2
+  Link connected to Broadcast network
+  Link ID : 10.2.3.3
+  Interface Address : 10.2.3.3
+  Admin Metric : TE: 1
+  (all bandwidths in bytes/sec)
+  Maximum bandwidth : 125000000
+  Maximum global pool reservable bandwidth : 93750000
+  Number of Priority : 8
+  Global pool unreserved BW
+  Priority 0 :             93750000  Priority 1 :             93750000
+  Priority 2 :             93750000  Priority 3 :             93750000
+  Priority 4 :             93750000  Priority 5 :             93750000
+  Priority 6 :             93750000  Priority 7 :             93750000
+  Out Interface ID : 6
+  Affinity Bit : 0
+  Extended Admin Group : 8
+   EAG[0]: 0
+   EAG[1]: 0
+   EAG[2]: 0
+   EAG[3]: 0
+   EAG[4]: 0
+   EAG[5]: 0
+   EAG[6]: 0
+   EAG[7]: 0
+
+Area 1 MPLS TE not initialized

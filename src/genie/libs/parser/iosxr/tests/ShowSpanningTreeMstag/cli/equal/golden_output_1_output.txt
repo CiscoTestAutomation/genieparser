@@ -1,0 +1,41 @@
+
+RP/0/RSP0/CPU0:router# show spanning-tree mstag A
+GigabitEthernet0/0/0/1
+  Preempt delay is disabled.
+  Name:            6161:6161:6161
+  Revision:        0
+  Max Age:         20
+  Provider Bridge: no
+  Bridge ID:       6161.61ff.c2c2
+  Port ID:         1
+  External Cost:   0
+  Hello Time:      2
+  Active:          no
+  BPDUs sent:      0
+    MSTI 0 (CIST):
+    VLAN IDs:         1-9,32-39,41-4094
+    Role:             Designated
+    Bridge Priority:  32768
+    Port Priority:    128
+    Cost:             0
+    Root Bridge:      6161.61ff.c2c2
+    Root Priority:    32768
+    Topology Changes: 123
+  MSTI 2
+    VLAN IDs:         10-31
+    Role:             Designated
+    Bridge Priority:  32768
+    Port Priority:    128
+    Cost:             0
+    Root Bridge:      6161.61ff.c2c2
+    Root Priority:    32768
+    Topology Changes: 123
+  MSTI 10
+VLAN IDs:         40
+    Role:             Root (Edge mode)
+    Bridge Priority:  32768
+	Port Priority:    128
+    Cost:             200000000
+    Root Bridge:      6161.61ff.c2c2
+    Root Priority:    61440
+    Topology Changes: 0

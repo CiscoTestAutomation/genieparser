@@ -1,0 +1,27 @@
+
+Mstatic-route for VRF "default"(1)
+IPv4 MStatic Routes:
+  10.49.0.0/8, configured nh: 0.0.0.0/32 Null0
+    (installed in urib)
+  192.168.64.0/8, configured nh: 0.0.0.0/32 Null0
+    (installed in urib)
+
+    Static-route for VRF "VRF1"(2)
+IPv4 Unicast Static Routes:
+  10.2.2.2/32, configured nh: 0.0.0.0/32%sanity1 Vlan2
+    (installed in urib)
+  10.2.2.3/32, configured nh: 0.0.0.0/32%sanity1 Vlan2
+    (installed in urib)
+
+Static-route for VRF "management"(3)
+IPv4 Unicast Static Routes:
+  0.0.0.0/0, configured nh: 172.31.200.1/32
+    (installed in urib)
+    rnh(installed in urib)
+
+Static-route for VRF "sanity1"(4)
+IPv4 Unicast Static Routes:
+  10.2.2.2/32, configured nh: 0.0.0.0/32 Vlan2
+    (installed in urib)
+  10.2.2.3/32, configured nh: 0.0.0.0/32 Vlan2
+    (installed in urib)

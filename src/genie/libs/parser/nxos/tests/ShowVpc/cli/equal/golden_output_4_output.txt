@@ -1,0 +1,18 @@
+
+Legend:
+(*) - local vpc is down, forwarding via vPC peer-link
+ 
+vPC domain id : 1
+Peer status : peer adjacency formed ok
+vPC keep-alive status : peer is alive
+Configuration consistency status: success
+vPC role : secondary
+Number of vPC configured : 3
+Track object : 12
+ 
+ 
+vPC peer-link status
+---------------------------------------------------------------------
+id Port Status Active vlans
+-- ---- ------ --------------------------------------------------
+1 Po10 up 1-100

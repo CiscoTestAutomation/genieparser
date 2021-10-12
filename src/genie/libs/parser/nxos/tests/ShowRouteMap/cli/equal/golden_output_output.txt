@@ -1,0 +1,84 @@
+
+route-map BGPPeers, permit, sequence 10 
+  Match clauses:
+    as-number (as-path-list filter): List1, List2 
+    as-number: 64496 64501-64510 
+  Set clauses:
+route-map bgp-to-rib, permit, sequence 10 
+  Match clauses:
+    community  (community-list filter): 100 
+  Set clauses:
+    distance: 10 
+route-map eigrp-distance, permit, sequence 10 
+  Match clauses:
+    ipv6 next-hop prefix-lists: ipv6-nexthop 
+  Set clauses:
+    distance: 10 
+route-map eigrp-filter, permit, sequence 10 
+  Match clauses:
+    ip next-hop prefix-lists: ipv4-nexthop 
+  Set clauses:
+route-map foo, permit, sequence 10 
+  Match clauses:
+    route-type: inter-area 
+  Set clauses:
+    distance: 150 
+route-map foo, permit, sequence 20 
+  Match clauses:
+    route-type: external 
+  Set clauses:
+    distance: 200 
+route-map isis-distance, permit, sequence 10 
+  Match clauses:
+    interface: Ethernet1/1 
+  Set clauses:
+    distance: 10 
+route-map isis-filter, permit, sequence 10 
+  Match clauses:
+    interface: Ethernet1/1 
+  Set clauses:
+route-map metric-range, permit, sequence 10 
+  Match clauses:
+    metric: 50 
+  Set clauses:
+    tag 5 
+route-map pbr-sample, permit, sequence 10 
+  Match clauses:
+    ip address (access-lists): pbr-sample 
+  Set clauses:
+    ip next-hop 192.168.1.1 
+route-map setrrnh, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+    ip next-hop peer-address
+route-map setrrnhv6, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+    ipv6 next-hop peer-address
+route-map test, permit, sequence 10 
+  Match clauses:
+    as-path (as-path filter): aspathlist1 
+    ip address prefix-lists: test-test 
+    ip next-hop prefix-lists: test 
+    ipv6 address prefix-lists: test-test 
+    ipv6 next-hop prefix-lists: test2 
+    interface: Ethernet2/2 
+    metric: 20 
+    tag: 23 100 
+    community  (community-list filter): test3 
+    route-type: level-1 level-2 
+    extcommunity  (extcommunity-list filter): testing 
+  Set clauses:
+    ip next-hop 10.64.4.4 
+    ipv6 next-hop 2001:db8:1::1 
+    tag 30 
+    metric 100 
+    metric-type external 
+    level level-1 
+    local-preference 20
+    origin igp 
+    comm-list test delete
+    community 100:1 no-export no-advertise additive 
+    as-path prepend 10 10 10 
+    extcomm-list cisco delete
+    extcommunity RT:100:10 additive 

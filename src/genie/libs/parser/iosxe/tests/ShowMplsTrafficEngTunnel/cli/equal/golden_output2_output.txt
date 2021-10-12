@@ -1,0 +1,123 @@
+P2P TUNNELS/LSPs:
+
+Name: R3_t100                             (Tunnel100) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 1, type dynamic (Basis for Setup, path weight 1)
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 500 [4000000] bw-based
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: dynamic path option 1 is active
+    BandwidthOverride: disabled  LockDown: disabled  Verbatim: disabled
+  Node Hop Count: 1
+
+  InLabel  :  -
+  OutLabel : Port-channel20, implicit-null
+  Next Hop : 192.1.1.2
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 100, Tun_Instance 301
+    RSVP Path Info:
+      My Address: 192.1.1.1   
+      Explicit Route: 192.1.1.2 2.2.2.2 
+      Record   Route:   NONE
+      Tspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+    RSVP Resv Info:
+      Record   Route:   NONE
+      Fspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+
+  History:
+    Tunnel:
+      Time since created: 21 hours, 59 minutes
+      Time since path change: 17 hours, 13 minutes
+      Number of LSP IDs (Tun_Instances) used: 301
+    Current LSP: [ID: 301]
+      Uptime: 17 hours, 13 minutes
+      Selection: reoptimization
+    Prior LSP: [ID: 300]
+      ID: path option unknown
+      Removal Trigger: configuration changed (severe)
+
+Name: R3_t101                             (Tunnel101) Destination: 2.2.2.2
+  Status:
+    Admin: admin-down Oper: down   Path: not valid   Signalling: Down
+    path option 1, type explicit R3_R5_R2
+
+  Config Parameters:
+    Bandwidth: 5000     kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 5000 [0] bw-based
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Reason for the tunnel being down: Tunnel interface is shutdown
+
+  History:
+    Tunnel:
+      Time since created: 20 minutes, 3 seconds
+      Time since path change: 1 minutes, 27 seconds
+      Number of LSP IDs (Tun_Instances) used: 11
+    Prior LSP: [ID: 11]
+      ID: path option unknown
+      Removal Trigger: tunnel shutdown
+
+Name: R3_t102                             (Tunnel102) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 1, type explicit R3_R5_R2 (Basis for Setup, path weight 2)
+    path option 2, type dynamic
+
+  Config Parameters:
+    Bandwidth: 5000     kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled [ignore: Explicit Path Option with all Strict Hops]
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 5000 [400000] bw-based
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: explicit path option 1 is active
+    BandwidthOverride: disabled  LockDown: disabled  Verbatim: disabled
+  Node Hop Count: 2
+
+  InLabel  :  -
+  OutLabel : Port-channel40, 19
+  Next Hop : 194.1.1.2
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 102, Tun_Instance 1
+    RSVP Path Info:
+      My Address: 194.1.1.1   
+      Explicit Route: 194.1.1.2 197.1.1.1 197.1.1.2 2.2.2.2 
+      Record   Route:   NONE
+      Tspec: ave rate=5000 kbits, burst=1000 bytes, peak rate=5000 kbits
+    RSVP Resv Info:
+      Record   Route:   NONE
+      Fspec: ave rate=5000 kbits, burst=1000 bytes, peak rate=5000 kbits
+
+  History:
+    Tunnel:
+      Time since created: 2 minutes, 21 seconds
+      Time since path change: 2 minutes, 10 seconds
+      Number of LSP IDs (Tun_Instances) used: 1
+    Current LSP: [ID: 1]
+      Uptime: 2 minutes, 10 seconds
+
+P2MP TUNNELS:
+
+P2MP SUB-LSPS:

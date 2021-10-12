@@ -1,0 +1,35 @@
+
+Device#show evpn internal-label
+Fri Jun 28 13:42:20.616 EST
+
+VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label
+---------- ------ --------------------------- ----------   --------
+1          MPLS   0055.55ff.aaaa.5555.5555    0            None
+
+1          MPLS   0055.55ff.aaaa.5555.5555    1            29348
+Summary pathlist:
+0xffffffff (P) 192.168.0.3                              29213
+
+1          MPLS   0055.55ff.aaaa.5555.5555    3            29352
+Summary pathlist:
+0xffffffff (P) 192.168.0.3                              29224
+
+1          MPLS   0088.88ff.1111.8888.8888    0            None
+
+1          MPLS   0088.88ff.1111.8888.8888    1            29350
+Summary pathlist:
+0xffffffff (P) 192.168.0.4                              29340
+
+1          MPLS   0088.88ff.1111.8888.8888    2            29349
+Summary pathlist:
+0xffffffff (P) 192.168.0.3                              29216
+0x00000000 (B) 192.168.0.4                              29341
+
+1          MPLS   0088.88ff.1111.8888.8888    3            29355
+Summary pathlist:
+0xffffffff (P) 192.168.0.4                              29352
+
+1          MPLS   0088.88ff.1111.8888.8888    4            29354
+Summary pathlist:
+0xffffffff (P) 192.168.0.3                              29226
+0x00000000 (B) 192.168.0.4                              29353

@@ -18,6 +18,7 @@ IOSXE parsers for the following show commands:
     * show ip dhcp database
     * show ip dhcp snooping database
     * show ip dhcp snooping database detail
+    * show ip dhcp snooping binding
 '''
 
 # Python
@@ -129,7 +130,7 @@ class ShowIPAliasDefaultVrf(ShowIPAlias):
 
 
 class ShowIpVrfSchema(MetaParser):
-    """Schema for 
+    """Schema for
         * 'show ip vrf'
         * 'show ip vrf <vrf>'"""
 
@@ -143,7 +144,7 @@ class ShowIpVrfSchema(MetaParser):
 
 
 class ShowIpVrf(ShowIpVrfSchema):
-    """Parser for: 
+    """Parser for:
         * 'show ip vrf'
         * 'show ip vrf <vrf>'"""
 
@@ -195,7 +196,7 @@ class ShowIpVrf(ShowIpVrfSchema):
 
 
 class ShowIpVrfDetail(ShowVrfDetailSuperParser):
-    """Parser for 
+    """Parser for
         * 'show ip vrf detail'
         * 'show ip vrf detail <vrf>'"""
     cli_command = ['show ip vrf detail' , 'show ip vrf detail {vrf}']
@@ -351,31 +352,31 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
     """
 
     cli_command = ['show ip nbar classification socket-cache {number_of_sockets}']
-                  
+
     def cli(self, number_of_sockets=None, output=None):
         if output is None:
             cmd = self.cli_command[0].format(number_of_sockets=number_of_sockets)
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # |10.169.188.209                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |633      |Infra|1      |
         p1 = re.compile(r'^\|(?P<server_ip>\S+)[\s|]+(?P<vrf>\d+)[\s|]+(?P<port>\d+)\|(?P<proto>\S+)[\s|]+(?P<app_name>\S+)[\s|]+(?P<is_valid>\w+)[\s|]+(?P<is_black_list>\w+)[\s|]+(?P<is_learn_ph>\w+)[\s|]+(?P<expiry_time>\d+)[\s|]+(?P<entry_type>\w+)\|(?P<hit_count>\d+)[\s|]+$')
-       
+
         ret_dict = {}
         first_line = 1
-        sess_num = 1 
+        sess_num = 1
         for line in out.splitlines():
             line = line.strip()
-            
+
             #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
-            m = p1.match(line)      
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 if(first_line == 1):
                     first_line = first_line + 1
                     sess_dict = ret_dict.setdefault('flow_cache',{})
-                
+
                 feature_dict = sess_dict.setdefault(sess_num, {})
                 feature_dict.update({'server_ip': groups['server_ip']})
                 feature_dict.update({'vrf': int(groups['vrf'])})
@@ -390,7 +391,7 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
                 feature_dict.update({'hit_count': int(groups['hit_count'])})
                 sess_num = sess_num + 1
 
-        
+
         return(ret_dict)
 
 
@@ -400,7 +401,7 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
 class ShowIpNbarVersionSchema(MetaParser):
     '''Schema for:
         * show ip nbar version'''
-    
+
     schema = {
         'nbar_software_version': str,
         'nbar_minimum_backward_compatible_version': str,
@@ -439,16 +440,16 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
         parsed_dict = {}
         loaded_protocol_packs_dict = {}
         version_dict = {}
-        
+
         # NBAR software version: 34
         p1 = re.compile('^NBAR software version:\s+(?P<nbar_software_version>.+)$')
-        
+
         # NBAR minimum backward compatible version: 41
         p2 = re.compile('^NBAR minimum backward compatible version:\s+(?P<nbar_minimum_backward_compatible_version>.+)$')
-        
+
         # Name: Advanced Protocol Pack
         p3 = re.compile('^Name:\s+(?P<name>.+)$')
-        
+
         # Version: 41.0
         p4 = re.compile('^Version:\s+(?P<version>.+)$')
 
@@ -457,33 +458,33 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
 
         # NBAR Engine Version: 31
         p6 = re.compile('^NBAR Engine Version:\s+(?P<nbar_engine_version>.+)$')
-        
+
         # Creation time:  Mon Feb 11 09:42:11 UTC 2019
         p7 = re.compile('^Creation time:\s+(?P<creation_time>.+)$')
-        
+
         # File: bootflash:sdavc/pp-adv-all-166.2-31-41.0.0.pack
         p8 = re.compile('^File:\s+(?P<file>.+)$')
-        
+
         # State: Active
         p9 = re.compile('^State:\s+(?P<state>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # NBAR software version: 34
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 parsed_dict.update({'nbar_software_version': groups['nbar_software_version']})
                 continue
-            
+
             # NBAR minimum backward compatible version: 41
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                parsed_dict.update({'nbar_minimum_backward_compatible_version': groups['nbar_minimum_backward_compatible_version']})                
+                parsed_dict.update({'nbar_minimum_backward_compatible_version': groups['nbar_minimum_backward_compatible_version']})
                 continue
-            
+
             # Name: Advanced Protocol Pack
             m = p3.match(line)
             if m:
@@ -497,7 +498,7 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
                 groups = m.groupdict()
                 version_dict = loaded_protocol_packs_dict.setdefault('version',{}).setdefault(groups['version'],{})
                 continue
-            
+
             # Publisher: Cisco Systems Inc.
             m = p5.match(line)
             if m:
@@ -511,21 +512,21 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
                 groups = m.groupdict()
                 version_dict.update({'nbar_engine_version':groups['nbar_engine_version']})
                 continue
-            
+
             # Creation time: Mon Feb 11 09:42:11 UTC 2019
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
                 version_dict.update({'creation_time':groups['creation_time']})
                 continue
-            
+
             # File: bootflash:sdavc/pp-adv-all-166.2-31-41.0.0.pack
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
                 version_dict.update({'file':groups['file']})
                 continue
-            
+
             # State: Active
             m = p9.match(line)
             if m:
@@ -547,7 +548,7 @@ class ShowIpNatTranslationsSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {  # name of vrf
-                'index': {  
+                'index': {
                     Any(): {  # 1, 2 ,3, ...
                         'protocol': str,
                         Optional('inside_global'): str,
@@ -615,16 +616,16 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         p1 = re.compile(r'^(?P<protocol>-+|udp|tcp|icmp|any) +(?P<inside_global>\S+) '
                         r'+(?P<inside_local>\S+) +(?P<outside_local>\S+) '
                         r'+(?P<outside_global>\S+)$')
-        
+
         # create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
         # create 04/09/11 10:51:48, use 04/09/11 10:52:31, timeout: 00:01:00
         p2 = re.compile(r'^create(?:\:)? +(?P<create>[\S ]+), '
                         r'+use(?:\:)? +(?P<use>[\S ]+), +timeout(?:\:)? '
                         r'+(?P<timeout>\S+)$')
 
-        # IOS-XE: 
+        # IOS-XE:
         # Map-Id(In): 1
-        # IOS: 
+        # IOS:
         # Map-Id(In):1, Mac-Address: 0000.0000.0000 Input-IDB: GigabitEthernet0/3/1
         p3 = re.compile(r'^Map\-Id\(In\)[\:|\s]+(?P<map_id_in>\d+)(?:[\,|\s]'
                         r'+Mac\-Address\: +(?P<mac_address>\S+) +Input\-IDB\: '
@@ -641,7 +642,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         # Total number of translations: 3
         p6 = re.compile(r'^Total +number +of +translations: '
                         r'+(?P<number_of_translations>\d+)$')
-        
+
         # Group_id:0   vrf: genie
         p7 = re.compile(r'^Group_id\:(?P<group_id>\d+) +vrf\: +(?P<vrf_name>\S+)$')
 
@@ -676,13 +677,13 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                     if vrf_flag:
                         protocol_dict = index_dict.setdefault(index, {})
                         protocol_dict.update(group)
-                        
+
                     elif vrf_flag == False and index >= 2:
                         default_dict = vrf_dict.setdefault('default', {})
                         index_dict = default_dict.setdefault('index', {})
                         protocol_dict = index_dict.setdefault(index, {})
                         protocol_dict.update(group)
-                        
+
                         if tmp_dict:
                             default_dict = vrf_dict.setdefault('default', {})
                             index_dict = default_dict.setdefault('index', {})
@@ -696,13 +697,13 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                     itemp_dict = tmp_dict.setdefault(index, {})
 
                     itemp_dict.update(group)
-                    
+
                     protocol_dict = index_dict.setdefault(index, {})
-                    
+
                 index += 1
 
                 continue
-            
+
             # create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
             # create 04/09/11 10:51:48, use 04/09/11 10:52:31, timeout: 00:01:00
             m2 = p2.match(line)
@@ -711,16 +712,16 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                 if protocol_dict:
                     details_dict = protocol_dict.setdefault('details', {})
                     details_dict.update(group)
-                        
+
                 else:
                     tmp_details_dict = tmp_dict[1].setdefault('details', {})
                     tmp_details_dict.update(group)
 
                 continue
-            
-            # IOS-XE: 
+
+            # IOS-XE:
             # Map-Id(In): 1
-            # IOS: 
+            # IOS:
             # Map-Id(In):1, Mac-Address: 0000.0000.0000 Input-IDB: GigabitEthernet0/3/1
             m3 = p3.match(line)
             if m3:
@@ -731,7 +732,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                     if group['mac_address']:
                         details_dict.update({'mac_address': group['mac_address']})
-                    
+
                     if group['input_idb']:
                         details_dict.update({'input_idb': group['input_idb']})
 
@@ -744,7 +745,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 continue
 
-            # IOS-XE: 
+            # IOS-XE:
             # Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
             m4 = p4.match(line)
             if m4:
@@ -756,7 +757,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                     tmp_details_dict.update(group)
 
                 continue
-            
+
             # entry-id: 0x0, use_count:1
             m5 = p5.match(line)
             if m5:
@@ -773,12 +774,12 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                 if tmp_dict:
                     default_dict = vrf_dict.setdefault('default', {})
                     index_dict = default_dict.setdefault('index', {})
-                    protocol_dict = index_dict.setdefault(index, {})   
+                    protocol_dict = index_dict.setdefault(index, {})
                     vrf_dict['default']['index'].update(tmp_dict)
                     tmp_dict.clear()
 
                 continue
-            
+
             # Total number of translations: 3
             m6 = p6.match(line)
             if m6:
@@ -802,7 +803,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 else:
                     protocol_dict.update({'group_id': int(group['group_id'])})
-                
+
                 continue
 
             # Format(H:M:S) Time-left :0:0:-1
@@ -893,7 +894,7 @@ class ShowIpNatStatisticsSchema(MetaParser):
         Optional('appl_doors'): int,
         Optional('normal_doors'): int,
     }
-    
+
 
 class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
     """
@@ -919,7 +920,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         'Appl doors': 'appl_doors',
         'Normal doors': 'normal_doors',
     }
-    
+
     # Mapping for string variables
     STR_MAPPING = {
         'occurred': 'occurred',
@@ -967,7 +968,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
 
         # Dynamic mappings:
         p5 = re.compile(r'^(?P<dynamic>\w+) +mappings\:$')
-        
+
         # -- Inside Source
         p6 = re.compile(r'^\-\- +(?P<source>\S+) +Source$')
 
@@ -998,11 +999,11 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                           r'+(?P<total_addresses>\d+)\, +allocated '
                           r'+(?P<allocated>\d+) +\((?P<allocated_percentage>\d+)'
                           r'+\%\)\, +misses +(?P<misses>\d+)$')
-                           
+
         # max entry: max allowed 2147483647, used 3, missed 0
         p11 = re.compile(r'^max +entry\: +max +allowed +(?P<max_allowed>\d+)\, '
                         r'+used +(?P<used>\d+)\, +missed +(?P<missed>\d+)$')
-        
+
         # longest chain in pool: pool1's addr-hash: 0, average len 0,chains 0/256
         # longest chain in pool: test-pool1's addr-hash: 0, average len 0,chains 0/256
         p12 = re.compile(r'^longest +chain +in +pool\: +(?P<pool_name>\S+)\'s '
@@ -1081,7 +1082,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                     olist = []
                     for item in outside_list:
                         olist.append(item)
-                    
+
                     if 'outside' in intf_dict:
                         intf_dict['outside'] += olist
                     else:
@@ -1175,7 +1176,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 name_dict.update({'match': access_name})
                 if 'access-list' == group['access_method']:
                     name_dict.update({'access_list': group['access_list']})
-                
+
                 elif 'route-map' == group['access_method']:
                     name_dict.update({'route_map': group['access_list']})
 
@@ -1189,7 +1190,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                     name_dict.update({'refcount': int(group['refcount'])})
 
                 continue
-            
+
             # pool mypool: netmask 255.255.255.0
             # pool inside-pool: id 1, netmask 255.255.255.0
             m8 = p8.match(line)
@@ -1200,7 +1201,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
 
                 if group['id']:
                     mypool_dict.update({'id': int(group['id'])})
-                
+
                 continue
             # start 10.5.5.1 end 10.5.5.5
             m9 = p9.match(line)
@@ -1228,7 +1229,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 mypool_dict.update({'misses': int(group['misses'])})
 
                 continue
-                
+
             # max entry: max allowed 2147483647, used 3, missed 0
             m11 = p11.match(line)
             if m11:
@@ -1253,7 +1254,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 mypool_dict.update({'chains': group['chains']})
 
                 continue
-        
+
         return parsed_dict
 
 
@@ -1376,7 +1377,7 @@ class ShowIpDhcpSnoopingDatabaseSchema(MetaParser):
     Schema for show ip dhcp snooping database
                show ip dhcp snooping database detail
     """
-    
+
     schema = {
         'agent_url': str,
         'write_delay_secs': int,
@@ -1424,218 +1425,219 @@ class ShowIpDhcpSnoopingDatabase(ShowIpDhcpSnoopingDatabaseSchema):
     Parser for show ip dhcp snooping database
     """
     cli_command = 'show ip dhcp snooping database'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-            
-        # Initializes the Python dictionary variable            
+
+        # Initializes the Python dictionary variable
         ret_dict = {}
-        
-        # Agent URL : 
+
+        # Agent URL :
         p1 = re.compile(r'^Agent URL +: +(?P<agent_url>\S*)$')
-        
+
         # Write delay Timer : 300 seconds
         p2 = re.compile(r'^Write delay Timer +: +(?P<write_delay_secs>\d+) seconds$')
-        
+
         # Abort Timer : 300 seconds
         p3 = re.compile(r'^Abort Timer +: +(?P<abort_timer_secs>\d+) seconds$')
-        
+
         # Agent Running : No
         p4 = re.compile(r'^Agent Running +: +(?P<agent_running>\w+)$')
-        
+
         # Delay Timer Expiry : Not Running
         p5 = re.compile(r'^Delay Timer Expiry +: +(?P<delay_timer_expiry>.+)$')
-        
+
         # Abort Timer Expiry : Not Running
         p6 = re.compile(r'^Abort Timer Expiry +: +(?P<abort_timer_expiry>.+)$')
-        
+
         # Last Succeded Time : None
         p7 = re.compile(r'^Last Succee?ded Time +: +(?P<last_succeeded_time>.+)$')
-        
+
         # Last Failed Time : None
         p8 = re.compile(r'^Last Failed Time +: +(?P<last_failed_time>.+)$')
-        
+
         # Last Failed Reason : No failure recorded.
         p9 = re.compile(r'^Last Failed Reason +: +(?P<last_failed_reason>[\w ]+)\.?$')
-        
+
         # Total Attempts       :        0   Startup Failures :        0
         p10 = re.compile(r'^Total Attempts +: +(?P<total_attempts>\d+) +Startup Failures +: +(?P<startup_failures>\d+)$')
-        
+
         # Successful Transfers :        0   Failed Transfers :        0
         p11 = re.compile(r'^Successful Transfers +: +(?P<successful_transfers>\d+) +Failed Transfers +: +(?P<failed_transfers>\d+)$')
-        
+
         # Successful Reads     :        0   Failed Reads     :        0
         p12 = re.compile(r'^Successful Reads +: +(?P<successful_reads>\d+) +Failed Reads +: +(?P<failed_reads>\d+)$')
-        
+
         # Successful Writes    :        0   Failed Writes    :        0
         p13 = re.compile(r'^Successful Writes +: +(?P<successful_writes>\d+) +Failed Writes +: +(?P<failed_writes>\d+)$')
-        
-        # Media Failures       :        0        
+
+        # Media Failures       :        0
         p14 = re.compile(r'^Media Failures +: +(?P<media_failures>\d+)$')
-        
+
         # First successful access: Read
         p15 = re.compile(r'^First successful access *: +(?P<first_successful_access>\w+)$')
-        
+
         # Last ignored bindings counters :
         p16 = re.compile(r'^Last ignored bindings counters *:$')
-        
+
         # Binding Collisions    :        0   Expired leases    :        0
         p17 = re.compile(r'^Binding Collisions +: +(?P<binding_collisions>\d+) +Expired leases +: +(?P<expired_leases>\d+)$')
-        
+
         # Invalid interfaces    :        0   Unsupported vlans :        0
         p18 = re.compile(r'^Invalid interfaces +: +(?P<invalid_interfaces>\d+) +Unsupported vlans : +(?P<unsupported_vlans>\d+)$')
-        
+
         # Parse failures        :        0
         p19 = re.compile(r'^Parse failures +: +(?P<parse_failures>\d+)$')
-        
+
         # Last Ignored Time : None
         p20 = re.compile(r'^Last Ignored Time +: +(?P<last_ignored_time>.+)$')
-        
+
         # Total ignored bindings counters :
         p21 = re.compile(r'^Total ignored bindings counters *:$')
-        
+
         # Processes the matched patterns
         for line in out.splitlines():
             line.strip()
-            
-            # Agent URL : 
+
+            # Agent URL :
             m = p1.match(line)
             if m:
                 ret_dict['agent_url'] = m.groupdict()['agent_url']
                 continue
-            
-            # Write delay Timer : 300 seconds    
+
+            # Write delay Timer : 300 seconds
             m = p2.match(line)
             if m:
                 ret_dict['write_delay_secs'] = int(m.groupdict()['write_delay_secs'])
                 continue
-            
-            # Abort Timer : 300 seconds    
+
+            # Abort Timer : 300 seconds
             m = p3.match(line)
             if m:
                 ret_dict['abort_timer_secs'] = int(m.groupdict()['abort_timer_secs'])
                 continue
-            
-            # Agent Running : No    
+
+            # Agent Running : No
             m = p4.match(line)
             if m:
                 ret_dict['agent_running'] = m.groupdict()['agent_running']
                 continue
-            
+
             # Delay Timer Expiry : Not Running
             m = p5.match(line)
             if m:
                 ret_dict['delay_timer_expiry'] = m.groupdict()['delay_timer_expiry']
                 continue
-            
+
             # Abort Timer Expiry : Not Running
             m = p6.match(line)
             if m:
                 ret_dict['abort_timer_expiry'] = m.groupdict()['abort_timer_expiry']
                 continue
-            
+
             # Last Succeded Time : None
             m = p7.match(line)
             if m:
                 ret_dict['last_succeeded_time'] = m.groupdict()['last_succeeded_time']
                 continue
-            
+
             # Last Failed Time : None
             m = p8.match(line)
             if m:
                 ret_dict['last_failed_time'] = m.groupdict()['last_failed_time']
                 continue
-            
+
             # Last Failed Reason : No failure recorded.
             m = p9.match(line)
             if m:
                 ret_dict['last_failed_reason'] = m.groupdict()['last_failed_reason']
                 continue
-            
+
             # Total Attempts       :        0   Startup Failures :        0
             m = p10.match(line)
             if m:
                 ret_dict['total_attempts'] = int(m.groupdict()['total_attempts'])
                 ret_dict['startup_failures'] = int(m.groupdict()['startup_failures'])
                 continue
-            
+
             # Successful Transfers :        0   Failed Transfers :        0
             m = p11.match(line)
             if m:
                 ret_dict['successful_transfers'] = int(m.groupdict()['successful_transfers'])
                 ret_dict['failed_transfers'] = int(m.groupdict()['failed_transfers'])
                 continue
-            
+
             # Successful Reads     :        0   Failed Reads     :        0
             m = p12.match(line)
             if m:
                 ret_dict['successful_reads'] = int(m.groupdict()['successful_reads'])
                 ret_dict['failed_reads'] = int(m.groupdict()['failed_reads'])
                 continue
-            
+
             # Successful Writes    :        0   Failed Writes    :        0
             m = p13.match(line)
             if m:
                 ret_dict['successful_writes'] = int(m.groupdict()['successful_writes'])
                 ret_dict['failed_writes'] = int(m.groupdict()['failed_writes'])
                 continue
-            
+
             # Media Failures       :        0
             m = p14.match(line)
             if m:
                 ret_dict['media_failures'] = int(m.groupdict()['media_failures'])
                 continue
-            
+
             # First successful access: Read
             m = p15.match(line)
             if m:
                 detail_dict = ret_dict.setdefault('detail', {})
                 detail_dict['first_successful_access'] = m.groupdict()['first_successful_access']
                 continue
-                
+
             # Last ignored bindings counters :
             m = p16.match(line)
             if m:
                 bindings_dict = detail_dict.setdefault('last_ignored_bindings_counters', {})
                 continue
-                
+
             # Binding Collisions    :        0   Expired leases    :        0
             m = p17.match(line)
             if m:
                 bindings_dict['binding_collisions'] = int(m.groupdict()['binding_collisions'])
                 bindings_dict['expired_leases'] = int(m.groupdict()['expired_leases'])
                 continue
-            
+
             # Invalid interfaces    :        0   Unsupported vlans :        0
             m = p18.match(line)
             if m:
                 bindings_dict['invalid_interfaces'] = int(m.groupdict()['invalid_interfaces'])
                 bindings_dict['unsupported_vlans'] = int(m.groupdict()['unsupported_vlans'])
                 continue
-            
+
             # Parse failures        :        0
             m = p19.match(line)
             if m:
                 bindings_dict['parse_failures'] = int(m.groupdict()['parse_failures'])
                 continue
-                
+
             # Last Ignored Time : None
             m = p20.match(line)
             if m:
                 detail_dict['last_ignored_time'] = m.groupdict()['last_ignored_time']
                 continue
-            
+
             # Total ignored bindings counters :
             m = p21.match(line)
             if m:
                 bindings_dict = detail_dict.setdefault('total_ignored_bindings_counters', {})
                 continue
-            
+
         return ret_dict
-    
+
+
 # ===================================================
 # Parser for 'show ip dhcp snooping database detail'
 # ===================================================
@@ -1652,3 +1654,79 @@ class ShowIpDhcpSnoopingDatabaseDetail(ShowIpDhcpSnoopingDatabase):
         return super().cli(output=output)
 
 
+# ===================================================
+# Schema for 'show ip dhcp snooping binding'
+# ===================================================
+class ShowIpDhcpSnoopingBindingSchema(MetaParser):
+    ''' Schema for:
+        * 'show ip dhcp snooping binding'
+    '''
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'vlan': {
+                    Any(): {
+                        'mac': str,
+                        'ip': str,
+                        'lease': int,
+                        'type': str,
+                    },
+                },
+            },
+        },
+    }
+
+
+# ===========================
+# Parser for:
+#   * 'show show ip dhcp snooping binding'
+# ===========================
+class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
+    ''' Parser for:
+        * 'show ip dhcp snooping binding'
+     '''
+
+    cli_command = ['show ip dhcp snooping binding']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+        # ------------------  ---------------  ----------  -------------  ----  --------------------
+        # 00:11:01:00:00:01   100.100.0.5      1124        dhcp-snooping   100   FiftyGigE6/0/25
+
+        p1 = re.compile(r'^(?P<mac>\S+) +(?P<ip>\S+) +(?P<lease>\d+) +(?P<type>\S+) +(?P<vlan>\d+) +(?P<interface>\S+)$')
+
+
+        for line in out.splitlines():
+
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = group['vlan']
+                interface = group['interface']
+
+                # Build Dict
+
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                vlan_dict = intf_dict.setdefault('vlan', {}).setdefault(vlan, {})
+
+                # Set values
+                vlan_dict.update({
+                    'mac': group['mac'],
+                    'ip': group['ip'],
+                    'lease': int(group['lease']),
+                    'type': group['type']
+                })
+                continue
+
+        return ret_dict

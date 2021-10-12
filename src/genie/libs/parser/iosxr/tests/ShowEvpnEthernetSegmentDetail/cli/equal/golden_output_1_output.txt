@@ -1,0 +1,69 @@
+
+Router#show evpn ethernet-segment detail
+Tue Jun 25 14:17:09.610 EDT
+Legend:
+A- PBB-EVPN load-balancing mode and Access Protection incompatible,
+B- no Bridge Ports PBB-EVPN enabled,
+C- Backbone Source MAC missing,
+E- ESI missing,
+H- Interface handle missing,
+I- Interface name missing,
+M- Interface in Down state,
+O- BGP End of Download missing,
+P- Interface already Access Protected,
+Pf-Interface forced single-homed,
+R- BGP RID not received,
+S- Interface in redundancy standby state,
+X- ESI-extracted MAC Conflict
+
+Ethernet Segment Id      Interface      Nexthops                                
+------------------------ -------------- ----------------------------------------
+0210.03ff.9e00.0210.0000 Gi0/3/0/0      10.1.100.100                           
+					10.204.100.100                           
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : GigabitEthernet0/3/0/0
+    IfHandle       : 0x1800300
+    State          : Up
+    Redundancy     : Not Defined
+Source MAC        : 0001.edff.9e9f (PBB BSA)
+Topology          :
+    Operational    : MHN
+    Configured     : A/A per service (default)
+Primary Services  : Auto-selection
+Secondary Services: Auto-selection
+Service Carving Results:
+    Bridge ports   : 3
+    Elected        : 0
+    Not Elected    : 3
+	I-Sid NE  :  1450101, 1650205, 1850309
+MAC Flushing mode : STP-TCN
+Peering timer     : 45 sec [not running]
+Recovery timer    : 20 sec [not running]
+Flushagain timer  : 60 sec
+
+be01.03ff.be01.ce00.0001 BE1            10.1.100.100                           
+					10.204.100.100                           
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : Bundle-Ether1
+    IfHandle       : 0x000480
+    State          : Up
+    Redundancy     : Active
+Source MAC        : 0024.beff.cf01 (Local)
+Topology          :
+    Operational    : MHN
+    Configured     : A/A per flow (default)
+Primary Services  : Auto-selection
+Secondary Services: Auto-selection
+Service Carving Results:
+    Bridge ports   : 3
+    Elected        : 3
+	I-Sid E   :  1450102, 1650206, 1850310
+    Not Elected    : 0
+MAC Flushing mode : STP-TCN
+Peering timer     : 45 sec [not running]
+Recovery timer    : 20 sec [not running]
+Flushagain timer  : 60 sec

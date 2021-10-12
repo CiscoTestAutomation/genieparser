@@ -1,0 +1,10 @@
+
+Fri Jun 16 15:47:02.865 UTC
+Out of Resource Handling Enabled
+Maximum External SA's Global : 20000
+Current External Active SAs : 0
+
+MSDP Peer Status Summary
+Peer Address    AS    State    Uptime/    Reset Peer    Active Cfg.Max    TLV
+Downtime    Count Name    SA Cnt Ext.SAs recv/sent
+10.64.4.4    200    Connect    20:35:48    0    R4    0    444    0/0

@@ -1,0 +1,65 @@
+
+#show controllers optics 0/0/1/2
+Sat Aug  3 03:11:51.141 EST
+
+ Controller State: Up 
+ Transport Admin State: In Service 
+ Laser State: On 
+ LED State: Green 
+ Optics Status 
+	 Optics Type:  CFP2 DWDM
+	 DWDM carrier Info: C BAND, MSA ITU Channel=97, Frequency=191.30THz,
+	 Wavelength=1567.133nm 
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms: None
+
+
+	 LOS/LOL/Fault Status:
+
+	 Alarm Statistics:
+
+	 -------------
+	 HIGH-RX-PWR = 0            LOW-RX-PWR = 1          
+	 HIGH-TX-PWR = 0            LOW-TX-PWR = 1          
+	 HIGH-LBC = 0               HIGH-DGD = 0          
+	 OOR-CD = 0                 OSNR = 0          
+	 WVL-OOL = 0                MEA  = 0          
+	 IMPROPER-REM = 0          
+	 TX-POWER-PROV-MISMATCH = 0          
+	 Laser Bias Current = 0.0 %
+	 Actual TX Power = 0.99 dBm 
+	 RX Power = -20.50 dBm 
+
+	 Performance Monitoring: Enable 
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          1.5      -30.0           0.0          0.0
+	 Tx Power Threshold(dBm)          3.5      -10.0           0.0          0.0
+	 LBC Threshold(mA)                N/A        N/A          0.00         0.00
+
+	 LBC High Threshold = 98 % 
+	 Configured Tx Power = 1.00 dBm 
+	 Configured OSNR lower Threshold = 0.00 dB 
+	 Configured DGD Higher Threshold = 180.00 ps 
+	 Chromatic Dispersion 5 ps/nm 
+	 Configured CD-MIN -10000 ps/nm  CD-MAX 16000 ps/nm 
+	 Optical Signal to Noise Ratio = 27.00 dB 
+	 Polarization Dependent Loss = 0.00 dB 
+	 Differential Group Delay = 2.00 ps 
+	  
+ Transceiver Vendor Details
+	  
+	 Form Factor            : CFP2
+	 Name                   : CISCO-ACACIA    
+	 Part Number            : AC200-D23-190   
+	 Rev Number             : 16672
+	 Serial Number          : 180653009       
+	 PID                    : ONS-C2-WDM-DE-1HL 
+	 VID                    : VES#
+	 Date Code(yy/mm/dd)    : 18/02/03

@@ -1,0 +1,51 @@
+Name: R3_t100                             (Tunnel100) Destination: 2.2.2.2
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 1, type dynamic (Basis for Setup, path weight 1)
+    path option 2, type dynamic
+    path option 3, type explicit R3_R5_R2
+
+  Config Parameters:
+    Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 500 [4000000] bw-based
+    auto-bw: disabled
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: dynamic path option 1 is active
+    BandwidthOverride: disabled  LockDown: disabled  Verbatim: disabled
+  Node Hop Count: 1
+
+  InLabel  :  -
+  OutLabel : Port-channel20, implicit-null
+  Next Hop : 192.1.1.2
+  RSVP Signalling Info:
+       Src 3.3.3.3, Dst 2.2.2.2, Tun_Id 100, Tun_Instance 19
+    RSVP Path Info:
+      My Address: 192.1.1.1   
+      Explicit Route: 192.1.1.2 2.2.2.2 
+      Record   Route:   NONE
+      Tspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+    RSVP Resv Info:
+      Record   Route:   NONE
+      Fspec: ave rate=500 kbits, burst=1000 bytes, peak rate=500 kbits
+  Shortest Unconstrained Path Info:
+    Path Weight: 1 (TE)
+    Explicit Route: 192.1.1.1 192.1.1.2 2.2.2.2 
+
+  History:
+    Tunnel:
+      Time since created: 9 hours, 59 minutes
+      Time since path change: 9 hours, 52 minutes
+      Number of LSP IDs (Tun_Instances) used: 19
+    Current LSP: [ID: 19]
+      Uptime: 9 hours, 52 minutes
+      Selection: reoptimization
+    Prior LSP: [ID: 18]
+      ID: path option unknown
+      Removal Trigger: configuration changed (medium)

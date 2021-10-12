@@ -1,0 +1,16 @@
+
+admin show diag chassis
+
+Mon Oct 14 17:45:40.649 EDT
+
+Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+MAIN:  board type 500060
+	800-25021-05 rev B0
+	dev 079239
+	S/N SAD0925050J
+PCA:   73-7648-08 rev B0
+PID:   CRS-MSC
+VID:   V02
+CLEI:  IPUCAC1BAA
+ECI:   132502
+RACK NUM: 0

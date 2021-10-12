@@ -1,0 +1,15 @@
+ PTP PORT DATASET: TenGigabitEthernet1/0/33
+  Port identity: clock identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Port identity: port number: 33
+  PTP version: 2
+  PTP port number: 33
+  PTP slot number: 1
+  Port state: MASTER
+  Delay request interval(log mean): 0
+  Announce receipt time out: 3
+  Announce interval(log mean): 0
+  Sync interval(log mean): 0
+  Delay Mechanism: End to End
+  Peer delay request interval(log mean): 0
+  Sync fault limit: 500000000
+ ptp role primary : Disabled

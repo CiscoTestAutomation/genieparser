@@ -1,0 +1,4 @@
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  Not Present
+1B  PWR-C1-715WAC       LIT150119Z1  OK              Good     Good     715

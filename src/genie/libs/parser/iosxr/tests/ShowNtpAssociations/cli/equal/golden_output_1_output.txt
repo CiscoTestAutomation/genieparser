@@ -1,0 +1,7 @@
+
+RP/0/RP0/CPU0:router# show ntp associations
+
+      address         ref clock     st  when  poll reach  delay  offset    disp
++~127.127.1.1      127.127.1.1       5     5  1024   37     0.0    0.00   438.3
+*~172.19.69.1      172.24.114.33     3    13  1024    1     2.0   67.16     0.0
+ * master (synced), # master (unsynced), + selected, - candidate, ~ configured

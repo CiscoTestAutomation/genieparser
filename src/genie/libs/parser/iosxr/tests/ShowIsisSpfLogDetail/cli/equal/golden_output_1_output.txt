@@ -1,0 +1,34 @@
+
+# show isis spf-log detail
+
+      ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+		   Time  Total Trig
+  Timestamp   Type (ms)  Nodes Count First Trigger LSP   Triggers
+    Mon Aug 16 2004
+  19:25:35.140  FSPF  1    1     1             12a5.00-00 NEWLSP0
+    Delay:              51ms (since first trigger)
+    SPT Calculation
+      CPU Time:         0ms
+      Real Time:        0ms
+    Prefix Updates
+      CPU Time:         1ms
+      Real Time:        1ms
+    New LSP Arrivals:    0
+    Next Wait Interval: 200ms
+				Results
+			  Reach Unreach Total
+     Nodes:                   1       0     1
+     Prefixes (Items)
+       Critical Priority:     0       0     0
+       High Priority:         0       0     0
+       Medium Priority        0       0     0
+       Low Priority           0       0     0
+
+       All Priorities         0       0     0
+     Prefixes (Routes)
+       Critical Priority:     0       -     0
+       High Priority:         0       -     0
+       Medium Priority        0        -    0
+       Low Priority:          0        -    0
+
+       All Priorities         0        -    0

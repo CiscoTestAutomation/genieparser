@@ -1,0 +1,5 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp session destination 141.141.141.141
+Thu Apr  1 05:30:40.193 JST
+Type Destination Add DPort  Proto/ExtTunID  PSBs  RSBs  Reqs
+---- --------------- ----- --------------- ----- ----- -----
+LSP4 141.141.141.141 53000     17.17.17.17     1     1     0

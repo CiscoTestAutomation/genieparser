@@ -1,0 +1,13 @@
+
+RP/0/RP0/CPU0:R3#show mpls label table private 
+Thu Aug 29 15:35:09.897 UTC
+Table Label   Owner                           State  Rewrite
+----- ------- ------------------------------- ------ -------
+0     0       LSD(A)                          InUse  Yes
+0     1       LSD(A)                          InUse  Yes
+0     2       LSD(A)                          InUse  Yes
+0     13      LSD(A)                          InUse  Yes
+0     15000   LSD(A)                          InUse  No
+0     16000   ISIS(A):SR                      InUse  No
+0     24000   ISIS(A):SR                      InUse  Yes
+0     24001   ISIS(A):SR                      InUse  Yes

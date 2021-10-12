@@ -1,0 +1,30 @@
+
+Virtual service guestshell+ detail
+  State                 : Activated
+  Package information
+    Name                : guestshell.ova
+    Path                : /isanboot/bin/guestshell.ova
+    Application
+      Name              : GuestShell
+      Installed version : 2.4(0.0)
+      Description       : Cisco Systems Guest Shell
+    Signing
+      Key type          : Cisco release key
+      Method            : SHA-1
+    Licensing
+      Name              : None
+      Version           : None
+  Resource reservation
+    Disk                : 1000 MB
+    Memory              : 500 MB
+    CPU                 : 1% system CPU
+
+  Attached devices
+    Type              Name        Alias
+    ---------------------------------------------
+    Disk              _rootfs
+    Disk              /cisco/cor
+    Serial/shell
+    Serial/aux
+    Serial/Syslog                 serial2
+    Serial/Trace                  serial3

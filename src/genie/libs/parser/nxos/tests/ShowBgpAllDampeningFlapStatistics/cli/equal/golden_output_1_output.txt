@@ -1,0 +1,147 @@
+
+Flap Statistics for VRF default, address family IPv4 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e 10.4.0.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e 10.4.1.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+
+Flap Statistics for VRF default, address family IPv4 Multicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e 10.9.0.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e 10.9.1.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+
+Flap Statistics for VRF default, address family IPv6 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e 2001::/112        2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+d e 2001::1:0/112     2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+
+Flap Statistics for VRF default, address family IPv6 Multicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e 2001:db8:961::/112        2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+d e 2001:db8:961::1:0/112     2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+
+Flap Statistics for VRF default, address family VPNv4 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+Route Distinguisher: 0:0
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e 10.25.1.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e 10.25.2.0/24        10.106.102.3                84   00:20:58 00:01:50  35/30/10
+
+Flap Statistics for VRF default, address family VPNv4 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+Route Distinguisher: 101:100
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family VPNv4 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+Route Distinguisher: 102:100
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family VPNv6 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 0 dampened paths
+
+Route Distinguisher: 100:200
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family VPNv6 Unicast:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 0 dampened paths
+
+Route Distinguisher: 0xbb00010000000000
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family L2VPN EVPN:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 4 dampened paths
+
+Route Distinguisher: 101:1000
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family L2VPN EVPN:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 4 dampened paths
+
+Route Distinguisher: 101:1001
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family L2VPN EVPN:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 4 dampened paths
+
+Route Distinguisher: 101:10001
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family L2VPN EVPN:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 4 dampened paths
+
+Route Distinguisher: 201:2000
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e [2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e [2]:[0]:[0]:[48]:[0201.02ff.0303]:[32]:[10.81.1.2]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e [5]:[0]:[0]:[24]:[10.100.1.0]:[0.0.0.0]/224 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e [5]:[0]:[0]:[24]:[10.100.2.0]:[0.0.0.0]/224 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+
+Flap Statistics for VRF default, address family L2VPN EVPN:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 4 dampened paths
+
+Route Distinguisher: 10.16.2.101:1002
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+Flap Statistics for VRF default, address family Link-State:
+Flaps - Flap count of prefix, Duration - Duration of flap statistics
+ReuseTime - Time after which a dampened path will be reused
+P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+Dampening configured, 0 history paths, 2 dampened paths
+
+    Network                 Peer              Flaps  Duration ReuseTime P / S / R
+d e [2]:[77][7,0][10.219.39.39,1,656877351][10.70.1.1,22][10.106.102.3,10.246.1.30]/616 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+d e [2]:[77][7,0][10.219.39.39,2,656877351][10.70.1.1,22][10.106.102.3,10.246.1.31]/616 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+       38   00:09:36 00:01:40 34/30/10

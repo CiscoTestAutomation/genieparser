@@ -1,0 +1,10 @@
+
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%' in via output denotes VRF
+
+show ip route static
+10.111.1.1/32, ubest/mbest: 1/0
+*via 10.144.10.2, [1/0], 13:35:01, static
+via 10.1.10.2, [4/0], 13:35:01, static

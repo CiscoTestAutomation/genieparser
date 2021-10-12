@@ -1,0 +1,4 @@
+{
+	"vrf": "VRF1",
+	"interface": "Loopback0"
+}

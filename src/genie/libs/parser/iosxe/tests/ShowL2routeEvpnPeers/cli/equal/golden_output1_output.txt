@@ -1,0 +1,6 @@
+Topo Name   EVI       ETAG         Peer-IP Encap Num Routes    Up Time
+--------- ----- ---------- --------------- ----- ---------- ----------
+    BD-12     2          0         2.2.2.1  MPLS          7      2d22h
+    BD-12     2          0         3.3.3.1  MPLS          4      2d22h
+    BD-20     2          1 AABB:BBCC:AABB:BBCC:AABB:BBCC:AABB:BBCC   MPLS         24      2d22h
+   GLOBAL     0          0         3.3.3.1  MPLS          2      2d22h

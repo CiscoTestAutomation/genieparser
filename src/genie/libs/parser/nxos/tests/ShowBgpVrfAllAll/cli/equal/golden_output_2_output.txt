@@ -1,0 +1,15 @@
+
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 381, Local Router ID is 10.4.1.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.4.1.2:32868    (L2VNI 5020)
+*>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[0]:[0.0.0.0]/216
+		      10.9.1.1                           100      32768 i
+*>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[32]:[10.220.20.44]/272
+		      10.9.1.1                           100      32768 i
+*>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[128]:[2001:db8:183c:4005::44]/368
+		      10.9.1.1                           100      32768 i

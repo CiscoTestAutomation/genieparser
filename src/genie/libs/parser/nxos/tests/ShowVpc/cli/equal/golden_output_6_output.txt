@@ -1,0 +1,24 @@
+
++++ N95_1: executing command 'show vpc' +++
+show vpc
+Legend:
+		(*) - local vPC is down, forwarding via vPC peer-link
+
+vPC domain id                     : Not configured
+Peer status                       : peer link not configured      
+vPC keep-alive status             : Disabled                      
+Configuration consistency status  : failed  
+Per-vlan consistency status       : failed                        
+Configuration inconsistency reason: vPC peer-link does not exist  
+Type-2 consistency status         : failed  
+Type-2 inconsistency reason       : vPC peer-link does not exist  
+vPC role                          : none established              
+Number of vPCs configured         : 0   
+Peer Gateway                      : Disabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Disabled (due to peer configuration)
+Auto-recovery status              : Disabled
+Delay-restore status              : Timer is off.(timeout = 30s)
+Delay-restore SVI status          : Timer is off.(timeout = 10s)
+Operational Layer3 Peer-router    : Disabled
+N95_1# 

@@ -1,0 +1,6 @@
+show mpls l2transport vc 10 detail | sect VC statistics
+  VC statistics:
+    transit packet totals: receive 1032, send 3367
+    transit byte totals:   receive 163962, send 387939
+    transit packet drops:  receive 0, seq error 0, send 0
+

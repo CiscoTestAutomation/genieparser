@@ -1,0 +1,290 @@
+
+Next Hop table for VRF default, address family IPv4 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 10.106.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.101.1, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.101.1/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.4, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.4, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.4/32
+Metric next advertise: Never
+RNH epoch: 1
+
+Nexthop: 10.186.101.99, Flags: 0, Refcount: 2, IGP cost: -1
+IGP Route type: 0, IGP preference: 0
+Nexthop is not-attached not-local unreachable not-labeled
+Nexthop last resolved: 00:52:09, using 0.0.0.0/0
+Metric next advertise: Never
+RNH epoch: 0
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family IPv4 Multicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Multicast Next-hops:
+
+Nexthop: 10.106.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 0
+
+Nexthop: 10.106.102.4, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.4, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.4/32
+Metric next advertise: Never
+RNH epoch: 0
+IPv6 Next-hop table
+
+IPv6 Multicast Next-hops:
+
+Next Hop table for VRF default, address family IPv6 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Nexthop: 2001:db8:8d82::1002, Flags: 0x5, Refcount: 3, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 2001:db8:8d82::1002, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 2001:db8:8d82::1002/128
+Metric next advertise: Never
+RNH epoch: 0
+
+Nexthop: 2001:db8:8d82::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 2001:db8:8d82::2002, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:19, using 2001:db8:8d82::2002/128
+Metric next advertise: Never
+RNH epoch: 0
+
+Next Hop table for VRF default, address family IPv6 Multicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Multicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Multicast Next-hops:
+
+Nexthop: 2001:db8:8d82::1002, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 2001:db8:8d82::1002, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 2001:db8:8d82::1002/128
+Metric next advertise: Never
+RNH epoch: 0
+
+Nexthop: 2001:db8:8d82::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 2001:db8:8d82::2002, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 2001:db8:8d82::2002/128
+Metric next advertise: Never
+RNH epoch: 0
+
+Next Hop table for VRF default, address family VPNv4 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 10.106.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.101.1, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.101.1/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.4, Flags: 0x5, Refcount: 4, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.4, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.4/32
+Metric next advertise: Never
+RNH epoch: 1
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family VPNv6 Unicast:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: ::ffff:10.106.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.101.1, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.101.1/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: ::ffff:10.106.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 2
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family IPv4 MVPN:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 10.106.103.10, Flags: 0x5, Refcount: 15, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.103.10, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.103.10/32
+Metric next advertise: Never
+RNH epoch: 1
+
+Nexthop: 10.106.103.20, Flags: 0x5, Refcount: 15, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.103.20, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.103.20/32
+Metric next advertise: Never
+RNH epoch: 1
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family IPv6 MVPN:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Nexthop: 2001:db8:4677:121::2, Flags: 0, Refcount: 10, IGP cost: -1
+IGP Route type: 0, IGP preference: 0
+Nexthop is not-attached not-local unreachable not-labeled
+Nexthop last resolved: 00:52:09, using 0::/0
+Metric next advertise: Never
+RNH epoch: 0
+
+Nexthop: 2001:db8:4677:441::2, Flags: 0, Refcount: 10, IGP cost: -1
+IGP Route type: 0, IGP preference: 0
+Nexthop is not-attached not-local unreachable not-labeled
+Nexthop last resolved: 00:52:09, using 0::/0
+Metric next advertise: Never
+RNH epoch: 0
+
+Next Hop table for VRF default, address family L2VPN EVPN:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 10.106.101.1, Flags: 0x5, Refcount: 9, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.101.1, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.101.1/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.3, Flags: 0x5, Refcount: 4, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.4, Flags: 0x5, Refcount: 4, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.4, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.4/32
+Metric next advertise: Never
+RNH epoch: 1
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+
+Next Hop table for VRF default, address family Link-State:
+Next-hop trigger-delay(miliseconds)
+  Critical: 3000 Non-critical: 10000
+IPv4 Next-hop table
+
+IPv4 Unicast Next-hops:
+
+Nexthop: 10.106.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.101.1, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.101.1/32
+Metric next advertise: Never
+RNH epoch: 2
+
+Nexthop: 10.106.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+IGP Route type: 0, IGP preference: 250
+Attached nexthop: 10.106.102.3, Interface: Ethernet1/1
+Nexthop is attached not-local reachable not-labeled
+Nexthop last resolved: 00:52:09, using 10.106.102.3/32
+Metric next advertise: Never
+RNH epoch: 2
+IPv6 Next-hop table
+
+IPv6 Unicast Next-hops:
+

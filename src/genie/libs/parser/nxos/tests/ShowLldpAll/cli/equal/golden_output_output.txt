@@ -1,0 +1,3 @@
+
+Interface Information: Eth1/64 Enable (tx/rx/dcbx): Y/Y/Y
+Interface Information: mgmt0 Enable (tx/rx/dcbx): Y/Y/N

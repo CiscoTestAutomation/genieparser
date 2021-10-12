@@ -1,0 +1,49 @@
+
+RP/0/RP0/CPU0:R1#show rip interface  
+Wed Jan 30 18:49:59.943 UTC                                                     
+									
+GigabitEthernet0/0/0/0.100                                                      
+Rip enabled?:               Passive                                             
+Out-of-memory state:        Normal                                              
+Broadcast for V2:           No                                                  
+Accept Metric 0:           No                                                   
+Send versions:              2                                                   
+Receive versions:           2                                                   
+Interface state:            Up                                                  
+IP address:                 10.1.2.1/24                                         
+Metric Cost:                0                                                   
+Split horizon:              Enabled                                             
+Poison Reverse:             Disabled                                            
+Socket set options:                                                             
+    Joined multicast group:    Yes                                              
+    LPTS filter set:           Yes                                              
+Authentication mode:        None                                                
+Authentication keychain:    Not set                                             
+										
+Total packets received: 4877                                                  
+Authentication mode is not set                                                
+RIP peers attached to this interface:                                           
+    10.1.2.2                                                                    
+	uptime (sec): 2    version: 2                                           
+	packets discarded: 0    routes discarded: 4733                          
+										
+GigabitEthernet0/0/0/1.100                                                      
+Rip enabled?:               Yes                                                 
+Out-of-memory state:        Normal                                              
+Broadcast for V2:           No                                                  
+Accept Metric 0:           No                                                   
+Send versions:              2                                                   
+Receive versions:           2                                                   
+Interface state:            Up                                                  
+IP address:                 10.1.3.1/24                                         
+Metric Cost:                0                                                   
+Split horizon:              Enabled                                             
+Poison Reverse:             Disabled                                            
+Socket set options:                                                             
+    Joined multicast group:    Yes                                              
+    LPTS filter set:           Yes                                              
+Authentication mode:        None                                                
+Authentication keychain:    Not set                                             
+										
+Total packets received: 0                                                     
+Authentication mode is not set

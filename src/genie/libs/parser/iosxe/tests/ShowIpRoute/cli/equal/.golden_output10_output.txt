@@ -1,0 +1,58 @@
+genie_Router#show ipv6 route vrf VRF1
+IPv6 Routing Table - VRF1 - 23 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+    B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+    I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+    EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+    NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter
+    OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
+    ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
+    ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy
+    a - Application
+LC  2001:1:1:1::1/128 [0/0]
+    via Loopback300, receive
+D   2001:2:2:2::2/128 [90/10752]
+    via FE80::F816:3EFF:FE21:73F6, GigabitEthernet2.390
+D   2001:3:3:3::3/128 [90/2570240]
+    via FE80::5C00:80FF:FE02:7, GigabitEthernet3.390
+C   2001:10:12:90::/64 [0/0]
+    via GigabitEthernet2.390, directly connected
+L   2001:10:12:90::1/128 [0/0]
+    via GigabitEthernet2.390, receive
+C   2001:10:12:110::/64 [0/0]
+    via GigabitEthernet2.410, directly connected
+L   2001:10:12:110::1/128 [0/0]
+    via GigabitEthernet2.410, receive
+C   2001:10:12:115::/64 [0/0]
+    via GigabitEthernet2.415, directly connected
+L   2001:10:12:115::1/128 [0/0]
+    via GigabitEthernet2.415, receive
+C   2001:10:12:120::/64 [0/0]
+    via GigabitEthernet2.420, directly connected
+L   2001:10:12:120::1/128 [0/0]
+    via GigabitEthernet2.420, receive
+C   2001:10:13:90::/64 [0/0]
+    via GigabitEthernet3.390, directly connected
+L   2001:10:13:90::1/128 [0/0]
+    via GigabitEthernet3.390, receive
+C   2001:10:13:110::/64 [0/0]
+    via GigabitEthernet3.410, directly connected
+L   2001:10:13:110::1/128 [0/0]
+    via GigabitEthernet3.410, receive
+C   2001:10:13:115::/64 [0/0]
+    via GigabitEthernet3.415, directly connected
+L   2001:10:13:115::1/128 [0/0]
+    via GigabitEthernet3.415, receive
+C   2001:10:13:120::/64 [0/0]
+    via GigabitEthernet3.420, directly connected
+L   2001:10:13:120::1/128 [0/0]
+    via GigabitEthernet3.420, receive
+D   2001:10:23:90::/64 [90/15360]
+    via FE80::F816:3EFF:FE21:73F6, GigabitEthernet2.390
+    via FE80::5C00:80FF:FE02:7, GigabitEthernet3.390
+I1  2001:10:23:115::/64 [115/50]
+    via FE80::5C00:80FF:FE02:7, GigabitEthernet3.415
+R   2001:10:23:120::/64 [120/2]
+    via FE80::5C00:80FF:FE02:7, GigabitEthernet3.420
+L   FF00::/8 [0/0]
+    via Null0, receive

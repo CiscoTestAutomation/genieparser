@@ -1,0 +1,41 @@
+genie_Router#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+    E1 - OSPF external type 1, E2 - OSPF external type 2
+    i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+    ia - IS-IS inter area, * - candidate default, U - per-user static route
+    o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+    a - application route
+    + - replicated route, % - next hop override, p - overrides from PfR
+Gateway of last resort is not set
+    10.1.0.0/32 is subnetted, 1 subnets
+C        10.4.1.1 is directly connected, Loopback0
+    10.4.0.0/32 is subnetted, 1 subnets
+D        10.16.2.2 [90/10752] via 10.12.90.2, 4d19h, GigabitEthernet2.90
+    10.9.0.0/32 is subnetted, 1 subnets
+D        10.36.3.3 [90/2570240] via 10.13.90.3, 4d19h, GigabitEthernet3.90
+    10.0.0.0/8 is variably subnetted, 20 subnets, 2 masks
+C        10.12.90.0/24 is directly connected, GigabitEthernet2.90
+L        10.12.90.1/32 is directly connected, GigabitEthernet2.90
+C        10.12.110.0/24 is directly connected, GigabitEthernet2.110
+L        10.12.110.1/32 is directly connected, GigabitEthernet2.110
+C        10.12.115.0/24 is directly connected, GigabitEthernet2.115
+L        10.12.115.1/32 is directly connected, GigabitEthernet2.115
+C        10.12.120.0/24 is directly connected, GigabitEthernet2.120
+L        10.12.120.1/32 is directly connected, GigabitEthernet2.120
+C        10.13.90.0/24 is directly connected, GigabitEthernet3.90
+L        10.13.90.1/32 is directly connected, GigabitEthernet3.90
+C        10.13.110.0/24 is directly connected, GigabitEthernet3.110
+L        10.13.110.1/32 is directly connected, GigabitEthernet3.110
+C        10.13.115.0/24 is directly connected, GigabitEthernet3.115
+L        10.13.115.1/32 is directly connected, GigabitEthernet3.115
+C        10.13.120.0/24 is directly connected, GigabitEthernet3.120
+L        10.13.120.1/32 is directly connected, GigabitEthernet3.120
+D        10.23.90.0/24 [90/15360] via 10.13.90.3, 4d19h, GigabitEthernet3.90
+                    [90/15360] via 10.12.90.2, 4d19h, GigabitEthernet2.90
+O        10.23.110.0/24 [110/2] via 10.12.110.2, 4d19h, GigabitEthernet2.110
+i L1     10.23.115.0/24 [115/20] via 10.12.115.2, 4d19h, GigabitEthernet2.115
+R        10.23.120.0/24
+        [120/1] via 10.13.120.3, 00:00:08, GigabitEthernet3.120
+        [120/1] via 10.12.120.2, 00:00:02, GigabitEthernet2.120

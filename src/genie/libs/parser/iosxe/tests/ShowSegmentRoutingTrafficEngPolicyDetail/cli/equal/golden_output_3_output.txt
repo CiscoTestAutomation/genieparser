@@ -1,0 +1,19 @@
+show segment-routing traffic-eng policy name r5-15-s detail
+
+Name: r5-15-s (Color: 0 End-point: )
+  Owners : CLI
+  Status:
+    Admin: up, Operational: down for 00:02:24 (since 09-22 10:10:35.361)
+  Candidate-paths:
+  Attributes:
+    Autoroute:
+  Per owner configs:
+    CLI
+      Binding SID: dynamic
+  Stats:
+    Packets: 0  Bytes: 0
+
+  Event history:
+    Timestamp                   Client                  Event type              Context: Value
+    ---------                   ------                  ----------              -------: -----
+    09-22 10:10:35.361          CLI                     Policy created          Name: CLI

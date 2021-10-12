@@ -1,7 +1,7 @@
 # Copyright (c) 2021 by Cisco Systems, Inc.
 # All rights reserved.
 
-expected_output ={ "path_ids": {
+expected_output ={ "pathlist_id": {
                                 2: {
                                     "eth_seg": "0000.0000.0000.0000.0000",
                                     "path_cnt": 1,

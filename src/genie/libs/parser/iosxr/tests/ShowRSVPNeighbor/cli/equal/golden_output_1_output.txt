@@ -1,0 +1,10 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp neighbors
+Thu Apr  1 05:30:37.942 JST
+Global Neighbor: 106.106.106.106
+  Interface Neighbor   Interface
+  -------------------- ------------
+  99.33.0.2            TenGigE0/2/0/0
+Global Neighbor: 141.141.141.141
+  Interface Neighbor   Interface
+  -------------------- ------------
+  20.50.0.1            HundredGigE0/0/0/0

@@ -1,0 +1,69 @@
+
+RP/0/RSP0/CPU0:vkg3#show spanning-tree pvrst a       
+Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
+State: FWD=Forwarding, LRN=Learning, BLK=Blocked
+
+
+VLAN 2:
+
+  Root ID    Priority    32768
+	     Address     0021.1bff.d973
+	     Max Age 20 sec, Forward Delay 15 sec
+
+
+  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	     Address     8cb6.4fff.6588
+	     Max Age 20 sec, Forward Delay 15 sec
+	     Transmit Hold count   6
+
+
+Interface    Port ID           Role State Designated           Port ID
+	     Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+------------ ------- --------- ---- ----- -------------------- -------
+Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1
+Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
+
+VLAN 3:
+
+  Root ID    Priority    32768
+	     Address     0021.1bff.d973
+	     Max Age 20 sec, Forward Delay 15 sec
+
+
+  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	     Address     8cb6.4fff.6588
+	     Max Age 20 sec, Forward Delay 15 sec
+	     Transmit Hold count  6
+
+
+Interface    Port ID           Role State Designated           Port ID
+	     Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+------------ ------- --------- ---- ----- -------------------- -------
+Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
+
+VLAN 4:
+
+  Root ID    Priority    32768
+	     Address     0021.1bff.d973
+	     Max Age 20 sec, Forward Delay 15 sec
+
+
+  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	     Address     8cb6.4fff.6588
+	     Max Age 20 sec, Forward Delay 15 sec
+	     Transmit Hold count  6
+
+
+Interface    Port ID           Role State Designated           Port ID
+	     Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+------------ ------- --------- ---- ----- -------------------- -------
+Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4
+

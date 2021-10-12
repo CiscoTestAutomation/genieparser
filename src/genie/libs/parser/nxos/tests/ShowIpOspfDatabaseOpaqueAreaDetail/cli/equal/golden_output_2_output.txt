@@ -1,0 +1,290 @@
+
++++ P1: executing command 'show ip ospf database opaque-area detail vrf all' +++
+show ip ospf database opaque-area detail vrf all
+
+	OSPF Router with ID (192.168.154.1) (Process ID 2 VRF default)
+
+	OSPF Router with ID (192.168.154.1) (Process ID 1 VRF default)
+
+		Opaque Area Link States (Area 0.0.0.0)
+
+   LS age: 720
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.0
+   Opaque Type: 1
+   Opaque ID: 0
+   Advertising Router: 192.168.4.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x8c2b
+   Length: 28
+   Fragment number: 0
+
+     MPLS TE router ID : 192.168.4.1
+
+     Number of Links : 0
+
+   LS age: 720
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.0
+   Opaque Type: 1
+   Opaque ID: 0
+   Advertising Router: 192.168.154.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x8e27
+   Length: 28
+   Fragment number: 0
+
+     MPLS TE router ID : 192.168.154.1
+
+     Number of Links : 0
+
+   LS age: 515
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.0
+   Opaque Type: 1
+   Opaque ID: 0
+   Advertising Router: 192.168.51.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x9023
+   Length: 28
+   Fragment number: 0
+
+     MPLS TE router ID : 192.168.51.1
+
+     Number of Links : 0
+
+   LS age: 497
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.0
+   Opaque Type: 1
+   Opaque ID: 0
+   Advertising Router: 192.168.205.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x921f
+   Length: 28
+   Fragment number: 0
+
+     MPLS TE router ID : 192.168.205.1
+
+     Number of Links : 0
+
+   LS age: 510
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.42
+   Opaque Type: 1
+   Opaque ID: 42
+   Advertising Router: 192.168.154.1
+   LS Seq Number: 0x80000002
+   Checksum: 0xcce3
+   Length: 116
+   Fragment number: 42
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.196.2
+     Interface Address :   Interface Address : 192.168.196.2
+     Admin Metric : 2
+     Maximum Bandwidth : 2500000000
+     Maximum reservable bandwidth : 1874999936
+     Number of Priority : 8
+       Priority 0 : 1874999936  Priority 1 : 1874999936
+       Priority 2 : 1874999936  Priority 3 : 1874999936
+       Priority 4 : 1874999936  Priority 5 : 1874999936
+       Priority 6 : 1874999936  Priority 7 : 1874999936
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 470
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.47
+   Opaque Type: 1
+   Opaque ID: 47
+   Advertising Router: 192.168.154.1
+   LS Seq Number: 0x80000002
+   Checksum: 0xcec3
+   Length: 116
+   Fragment number: 47
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.145.2
+     Interface Address :   Interface Address : 192.168.145.1
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 450
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.51
+   Opaque Type: 1
+   Opaque ID: 51
+   Advertising Router: 192.168.154.1
+   LS Seq Number: 0x80000002
+   Checksum: 0xd8b3
+   Length: 116
+   Fragment number: 51
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.106.2
+     Interface Address :   Interface Address : 192.168.106.1
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 510
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.55
+   Opaque Type: 1
+   Opaque ID: 55
+   Advertising Router: 192.168.4.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x3372
+   Length: 116
+   Fragment number: 55
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.196.2
+     Interface Address :   Interface Address : 192.168.196.1
+     Admin Metric : 2
+     Maximum Bandwidth : 2500000000
+     Maximum reservable bandwidth : 1874999936
+     Number of Priority : 8
+       Priority 0 : 1874999936  Priority 1 : 1874999936
+       Priority 2 : 1874999936  Priority 3 : 1874999936
+       Priority 4 : 1874999936  Priority 5 : 1874999936
+       Priority 6 : 1874999936  Priority 7 : 1874999936
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 475
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.233
+   Opaque Type: 1
+   Opaque ID: 233
+   Advertising Router: 192.168.51.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x9a3b
+   Length: 116
+   Fragment number: 233
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.145.2
+     Interface Address :   Interface Address : 192.168.145.2
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 455
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.0.237
+   Opaque Type: 1
+   Opaque ID: 237
+   Advertising Router: 192.168.51.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x7c40
+   Length: 116
+   Fragment number: 237
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.81.2
+     Interface Address :   Interface Address : 192.168.81.1
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 447
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.1.11
+   Opaque Type: 1
+   Opaque ID: 267
+   Advertising Router: 192.168.205.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x6537
+   Length: 116
+   Fragment number: 267
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.81.2
+     Interface Address :   Interface Address : 192.168.81.2
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+
+   LS age: 457
+   Options: 0x2 (No TOS-capability, No DC)
+   LS Type: Opaque Area Link
+   Link State ID: 10.1.1.15
+   Opaque Type: 1
+   Opaque ID: 271
+   Advertising Router: 192.168.205.1
+   LS Seq Number: 0x80000002
+   Checksum: 0x4765
+   Length: 116
+   Fragment number: 271
+
+     Link connected to Broadcast network
+     Link-ID :   Link ID : 192.168.106.2
+     Interface Address :   Interface Address : 192.168.106.2
+     Admin Metric : 1
+     Maximum Bandwidth : 5000000000
+     Maximum reservable bandwidth : 3749999872
+     Number of Priority : 8
+       Priority 0 : 3749999872  Priority 1 : 3749999872
+       Priority 2 : 3749999872  Priority 3 : 3749999872
+       Priority 4 : 3749999872  Priority 5 : 3749999872
+       Priority 6 : 3749999872  Priority 7 : 3749999872
+     Affinity Bit : 0x0
+
+     Number of Links : 1
+

@@ -1,0 +1,24 @@
+
+Service "__inst_001__ospf" ("ospf", 13):
+    UUID = 0x41000119, PID = 7154, SAP = 320
+    State: SRV_STATE_HANDSHAKED (entered at time Sat Jul  1 14:49:12 2017).
+    Restart count: 1
+    Time of last restart: Sat Jul  1 14:49:10 2017.
+    The service never crashed since the last reboot.
+    Tag = 1
+    Plugin ID: 1
+
+Service "__inst_002__ospf" ("ospf", 18):
+    UUID = 0x42000119, PID = 7150, SAP = 321
+    State: SRV_STATE_HANDSHAKED (entered at time Sat Jul  1 14:49:12 2017).
+    Restart count: 1
+    Time of last restart: Sat Jul  1 14:49:10 2017.
+    The service never crashed since the last reboot.
+    Tag = 100
+    Plugin ID: 1
+Service "__inst_007__ospf" ("ospf", 41):
+    UUID = 0x47000119, -- Currently not running --
+    State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Sat Jul  1 14:49:10 2017).
+    The service has never been started since the last reboot.
+    Tag = N/A
+    Plugin ID: 1

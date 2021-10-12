@@ -1,0 +1,5 @@
+{
+    "address_family": "l2vpn evpn",
+    "evi": "5",
+    "rt": "6"
+}

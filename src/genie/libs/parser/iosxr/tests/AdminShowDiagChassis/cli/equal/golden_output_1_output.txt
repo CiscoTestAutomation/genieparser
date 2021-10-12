@@ -1,0 +1,9 @@
+
+Rack 0 - ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+  RACK NUM: 0
+  S/N:   FOX1810G8LR
+  PID:   ASR-9006-AC-V2
+  VID:   V02
+  Desc:  ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+  CLEI:  IPMUP00BRB
+  Top Assy. Number:   68-4235-02

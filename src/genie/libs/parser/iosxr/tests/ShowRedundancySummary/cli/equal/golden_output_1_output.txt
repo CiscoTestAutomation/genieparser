@@ -1,0 +1,6 @@
+
+Active/Primary   Standby/Backup
+--------------   --------------
+0/RSP0/CPU0(A)   0/RSP1/CPU0(S) (Node Not Ready, NSR: Not Configured)
+0/RSP0/CPU0(P)   0/RSP1/CPU0(B) (Proc Group Not Ready, NSR: Ready)
+0/RSP0/CPU0(P)           N/A    (Proc Group Not Ready)

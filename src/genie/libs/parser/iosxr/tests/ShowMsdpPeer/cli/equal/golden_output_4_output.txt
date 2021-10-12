@@ -1,0 +1,28 @@
+
++++ Device: executing command 'show msdp vrf VRF1 peer 10.4.1.1' +++
+show msdp vrf VRF1 peer 10.4.1.1
+Wed Nov 20 16:32:18.700 UTC
+MSDP Peer 10.4.1.1 (?), AS 65000
+Description: 
+Connection status:
+State: Established, Resets: 0, Connection Source: 10.16.2.2
+Uptime(Downtime): 6d17h, SA messages received: 31080
+TLV messages sent/received: 19335/10361
+Output messages discarded: 0
+Connection and counters cleared 6d17h ago
+SA Filtering:
+Input (S,G) filter: none
+Input RP filter: none
+Output (S,G) filter: none
+Output RP filter: none
+SA-Requests:
+Input filter: none
+Sending SA-Requests to peer: disabled
+Password: None 
+Peer ttl threshold: 2
+Input queue size: 0, Output queue size: 0
+KeepAlive timer period: 30
+Peer Timeout timer period: 75
+NSR:
+State: Unknown, Oper-Downs: 0
+NSR-Uptime(NSR-Downtime): 6d17h

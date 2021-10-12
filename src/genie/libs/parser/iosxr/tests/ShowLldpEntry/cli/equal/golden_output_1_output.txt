@@ -1,0 +1,49 @@
+
+Mon Mar 19 18:23:32.251 UTC
+Capability codes:
+	(R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+	(W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/0
+Chassis id: 001e.49ff.24f7
+Port id: Gi2
+Port Description: GigabitEthernet2
+System Name: Ge_nie1000v.openstacklocal
+
+System Description:
+Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2017 by Cisco Systems, Inc.
+Compiled Sat 22-Jul-17 05:51 by
+
+Time remaining: 117 seconds
+Hold Time: 120 seconds
+System Capabilities: B,R
+Enabled Capabilities: R
+Management Addresses:
+ IPv4 address: 10.1.2.1
+
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/1
+Chassis id: 5e00.80ff.020b
+Port id: Ethernet1/2
+Port Description: Ethernet1/2
+System Name: G1_n9ie
+
+System Description:
+Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
+TAC support: http://www.cisco.com/tac
+Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+
+Time remaining: 103 seconds
+Hold Time: 120 seconds
+System Capabilities: B,R
+Enabled Capabilities: B,R
+Management Addresses - not advertised
+
+
+Total entries displayed: 2
+

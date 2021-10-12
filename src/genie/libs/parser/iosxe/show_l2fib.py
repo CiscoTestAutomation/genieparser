@@ -27,7 +27,7 @@ class ShowL2fibPathListIdSchema(MetaParser):
     """
 
     schema = {
-        'path_ids': {
+        'pathlist_id': {
             Any(): {
                'type': str,
                'eth_seg': str,
@@ -59,9 +59,9 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
 
         if output is None:
             if id:
-                cli_cmd = self.device.execute(self.cli_command[0].format(id=id))
+                cli_cmd = self.cli_command[0].format(id=id)
             else:
-                cli_cmd = self.device.execute(self.cli_command[1])
+                cli_cmd = self.cli_command[1]
 
             cli_output = self.device.execute(cli_cmd)
         else:
@@ -95,8 +95,8 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                path_ids = parser_dict.setdefault('path_ids', {})
-                path_list = path_ids.setdefault(int(group['path_list_id']), {})
+                path_list_ids_dict = parser_dict.setdefault('pathlist_id', {})
+                path_list = path_list_ids_dict.setdefault(int(group['path_list_id']), {})
                 paths = path_list.setdefault('path_list', [])
                 continue
 

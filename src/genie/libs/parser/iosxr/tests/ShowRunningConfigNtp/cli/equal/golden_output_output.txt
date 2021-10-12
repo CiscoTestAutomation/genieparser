@@ -1,0 +1,9 @@
++++ dev: executing command 'show running-config ntp' +++
+show running-config ntp
+
+Thu Sep 26 18:20:16.484 EDT
+ntp
+ server 10.4.1.1
+ server vrf management 10.4.1.1
+!
+

@@ -1,0 +1,7 @@
+
+RP/0/RSP0/CPU0:leaf-5#show igmp vrf vpn1 groups summary 
+Thu Jul  9 17:02:32.516 PDT
+IGMP Route Summary for vrf vpn1
+  No. of (*,G) routes = 4
+  No. of (S,G) routes = 22
+  No. of Group x Interfaces = 29

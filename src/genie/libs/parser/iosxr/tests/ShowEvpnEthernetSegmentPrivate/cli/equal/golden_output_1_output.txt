@@ -1,0 +1,379 @@
+
++++ Router: executing command 'show evpn ethernet-segment private' +++
+show evpn ethernet-segment private
+
+Mon Oct  7 16:18:27.805 EDT
+Legend:
+B   - No Forwarders EVPN-enabled,
+C   - Backbone Source MAC missing (PBB-EVPN),
+RT  - ES-Import Route Target missing,
+E   - ESI missing,
+H   - Interface handle missing,
+I   - Name (Interface or Virtual Access) missing,
+M   - Interface in Down state,
+O   - BGP End of Download missing,
+P   - Interface already Access Protected,
+Pf  - Interface forced single-homed,
+R   - BGP RID not received,
+S   - Interface in redundancy standby state,
+X   - ESI-extracted MAC Conflict
+SHG - No local split-horizon-group label allocated
+
+Ethernet Segment Id      Interface                          Nexthops (*stale)   
+------------------------ ---------------------------------- --------------------
+0001.00ff.aaab.00ff.0003 BE3                                10.154.219.84<
+ES to BGP Gates   : M
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : Bundle-Ether3
+Interface MAC  : 00c1.64ff.a415
+    IfHandle       : 0x080002a0
+    State          : Down
+    Redundancy     : Not Defined
+ESI type          : 0
+    Value          : 01.0000.aaff.abab.0003
+ES Import RT      : aaab.00ff.0003 (Local)
+Source MAC        : 0000.0000.0000 (N/A)
+Topology          :
+    Operational    : SH
+    Configured     : All-active (AApF) (default)
+Service Carving   : Auto-selection
+Peering Details   : 10.154.219.84[MOD:P:00][1]
+Service Carving Results:
+    Forwarders     : 1
+    Permanent      : 0
+    Elected        : 0
+    Not Elected    : 1
+MAC Flushing mode : STP-TCN
+Peering timer     : 3 sec [not running]
+Recovery timer    : 30 sec [not running]
+Carving timer     : 0 sec [not running]
+Local SHG label   : 100564
+Remote SHG labels : 0
+
+Object: EVPN ES
+Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+EVPN ES event history  [Num events: 55]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Aug 27 09:44:15.616  ES DB Bind                   00000000, 00000001 -  - 
+    Aug 27 09:44:15.616  Create                       00000000, 00000001 -  - 
+    Aug 27 09:44:15.616 API Config Ifname Add         00000000, 00000001 -  - 
+    Aug 27 09:44:15.616  Action Peering Sequence      00000000, c0160000 -  - 
+    Aug 27 09:44:15.616 API Config Local RT           00000000, 00000000 -  - 
+    Aug 27 09:44:15.616  ES DB Bind                   00000000, 00010001 -  - 
+    Aug 27 09:44:15.616  Action L2FIB Instance Upd    00000000, c1400000 -  - 
+    Aug 27 09:44:15.616  Action Peering Sequence      00000000, c0160000 -  - 
+    Aug 27 09:44:15.616 API Config ESI complete       00000000, 00000003 -  - 
+    Aug 27 09:44:15.616 API Provision                 00000000, 00000000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+Aug 27 09:46:04.160  Action Advertise MAC         00000000, 0000c014 -  - 
+    Aug 27 09:46:04.160 API BGP Replay                00000000, c0140000 -  - 
+    Aug 27 09:49:15.648  ES DB Unbind - tid           00100001, 00000000 -  - 
+    Aug 27 09:49:15.648  Action Create RT             00000000, aaab0000 -  - 
+    Aug 27 09:49:15.648  Action Advertise RT          00000000, 00010001 -  - 
+    Aug 27 09:49:15.648  Action Peering Sequence      00000000, c8040000 -  - 
+    Aug 27 09:49:15.648 API BP Ifname update          00000000, 03e803e8 M  - 
+    Aug 27 09:49:15.648  Action Peering Sequence      00000000, c8040000 -  - 
+    Aug 27 09:49:15.648 API BGP RID update            a5138011, 00011043 -  - 
+    Aug 27 09:49:16.160  Action EAD/EVI               00000add, 000103e8 -  - 
+    Aug 27 09:49:16.160  Action Peering Sequence      00000000, c0040000 -  - 
+    Aug 27 09:49:16.160 API Recv LSD Local SHGLabel   00000000, 000188d4 -  - 
+    Aug 27 09:49:16.160  Action EAD/EVI               00000add, 000103e8 -  - 
+    Aug 27 09:49:16.160  Action Peering Sequence      00000000, c0040000 -  - 
+    Aug 27 09:49:16.160 API BGP mark / sweep          00de1e7e, 00000001 -  - 
+    Aug 27 09:49:37.152  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:37.152 API L2FIB Replay              00000000, 00000000 -  - 
+----------------------------------------------------------------------------
+EVPN ES Statistics
+	    |Adv                             |Wdw                             
+	    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+	RT|   1 27/08 09:49:15.582 00000000|   0                    00000000
+    LocalBMAC|   0                    00000000|   0                    00000000
+    ESI|   0                    00000000|   0                    00000000
+    EAD/ES|   0                    00000000|   0                    00000000
+    EAD/EVI|   2 27/08 09:49:16.091 000003e8|   0                    00000000
+MST-AG VPW|   0                    00000000|   0                    00000000
+DF ElectFW|   1 27/08 09:49:15.582 00000000|
+    UpdateMAC|   0                    00000000|
+MacFlushPE|   0                    00000000|
+MacFlushCE|   0                    00000000|
+    Instance|   0                    00000000|   0                    00000000
+    MP Info|   1 27/08 09:49:37.024 00000000|   0                    00000000
+----------------------------------------------------------------------------
+Diagnostic ESI : N/A                     Interface Name : N/A
+Diagnostic Ifh : 0x00000000
+Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+Port Key       : 0x000088d4              MAC winner     : 1
+Number of EVIs : 1
+Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+Carving Timer  : 0    (global)  
+RT Advertised  : 1                       ESI Advertised : 0
+MSTi state mask: 0x0000                  HRW MSTi Set   : 0x3
+ES EAD Pulse   : 0                       MP Advertised  : 1
+NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+Peering Done   : 0                       Carving Done   : 1
+    Inval/RedundFWD: 0x00000000/0x00000000
+Inval/Redund NH: 0x00000000/0x00000000
+Chkpt ObjId    : 0x0
+ES EAD Update     :
+    Num RDs:       : 0
+
+0001.00ff.aaab.00ff.0004 BE4                                10.154.219.84<
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : Bundle-Ether4
+    Interface MAC  : 00c1.64ff.a414
+    IfHandle       : 0x080002e0
+    State          : Up
+    Redundancy     : Not Defined
+ESI type          : 0
+    Value          : 01.0000.aaff.abab.0004
+ES Import RT      : aaab.00ff.0004 (Local)
+Source MAC        : 0000.0000.0000 (N/A)
+Topology          :
+    Operational    : SH
+    Configured     : All-active (AApF) (default)
+Service Carving   : Auto-selection
+Peering Details   : 10.154.219.84[MOD:P:00][1]
+Service Carving Results:
+    Forwarders     : 1
+    Permanent      : 0
+    Elected        : 1
+    Not Elected    : 0
+MAC Flushing mode : STP-TCN
+Peering timer     : 3 sec [not running]
+Recovery timer    : 30 sec [not running]
+Carving timer     : 0 sec [not running]
+Local SHG label   : 100565
+Remote SHG labels : 0
+
+Object: EVPN ES
+Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+EVPN ES event history  [Num events: 64]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Aug 27 09:44:15.616 API Config Ifname Add         00000000, 00000001 -  - 
+    Aug 27 09:44:15.616  Action Peering Sequence      00000000, c0160000 -  - 
+    Aug 27 09:44:15.616 API Config Local RT           00000000, 00000000 -  - 
+    Aug 27 09:44:15.616  ES DB Bind                   00000000, 00010001 -  - 
+Aug 27 09:44:15.616  Action L2FIB Instance Upd    00000000, c1400000 -  - 
+    Aug 27 09:44:15.616  Action Peering Sequence      00000000, c0160000 -  - 
+    Aug 27 09:44:15.616 API Config ESI complete       00000000, 00000003 -  - 
+    Aug 27 09:44:15.616 API Provision                 00000000, 00000000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:44:15.616  Action Advertise MAC         00000000, 0000c016 -  - 
+    Aug 27 09:44:15.616 API BGP Replay                00000000, c0160000 -  - 
+    Aug 27 09:46:04.160  Action Advertise MAC         00000000, 0000c014 -  - 
+    Aug 27 09:46:04.160 API BGP Replay                00000000, c0140000 -  - 
+    Aug 27 09:49:15.648  ES DB Unbind - tid           00100001, 00000000 -  - 
+    Aug 27 09:49:15.648  Action Create RT             00000000, aaab0000 -  - 
+    Aug 27 09:49:15.648  Action Advertise RT          00000000, 00010001 -  - 
+    Aug 27 09:49:15.648  Action Peering Sequence      00000000, c8040000 -  - 
+    Aug 27 09:49:15.648 API BP Ifname update          00000000, 03e803e8 M  - 
+    Aug 27 09:49:15.648  Action Peering Sequence      00000000, c8040000 -  - 
+    Aug 27 09:49:15.648 API BGP RID update            a5138011, 00011043 -  - 
+    Aug 27 09:49:16.160  Action EAD/EVI               00000add, 000103e8 -  - 
+    Aug 27 09:49:16.160  Action Peering Sequence      00000000, c0040000 -  - 
+    Aug 27 09:49:16.160 API Recv LSD Local SHGLabel   00000000, 000188d5 -  - 
+    Aug 27 09:49:16.160  Action EAD/EVI               00000add, 000103e8 -  - 
+    Aug 27 09:49:16.160  Action Peering Sequence      00000000, c0040000 -  - 
+Aug 27 09:49:16.160 API BGP mark / sweep          00de1e7e, 00000001 -  - 
+    Aug 27 09:49:37.152  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:37.152 API L2FIB Replay              00000000, 00000000 -  - 
+    Aug 27 09:49:41.760  Action L2FIB Instance Upd    000f0001, 00000000 -  - 
+    Aug 27 09:49:41.760  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:41.760  Action Advertise ESI         00000000, 00010001 -  - 
+    Aug 27 09:49:41.760  Action EAD/ES                00000001, 000188d5 -  - 
+    Aug 27 09:49:41.760  Action EAD/EVI               00000add, 000103e8 -  - 
+    Aug 27 09:49:41.760  Action Peering Sequence      00000000, 00000000 -  - 
+    Aug 27 09:49:41.760 API IM MP | AToM state        00000000, 00320002 -  - 
+    Aug 27 09:49:41.760  Action EAD/ES                00000add, 000b89d5 -  - 
+    Aug 27 09:49:44.832  Action L2FIB Instance Upd    000f7fff, 00000000 -  - 
+    Aug 27 09:49:44.832  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:44.832 API Peer Timer Expiry         00000000, 00000001 -  - 
+----------------------------------------------------------------------------
+EVPN ES Statistics
+	    |Adv                             |Wdw                             
+	    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+	RT|   1 27/08 09:49:15.582 00000000|   0                    00000000
+    LocalBMAC|   0                    00000000|   0                    00000000
+	ESI|   1 27/08 09:49:41.604 00000001|   0                    00000000
+    EAD/ES|   1 27/08 09:49:41.606 0000000a|   0                    00000000
+    EAD/EVI|   3 27/08 09:49:41.604 000003e8|   0                    00000000
+    MST-AG VPW|   0                    00000000|   0                    00000000
+DF ElectFW|   1 27/08 09:49:15.582 00000000|
+    UpdateMAC|   0                    00000000|
+MacFlushPE|   0                    00000000|
+MacFlushCE|   0                    00000000|
+    Instance|   2 27/08 09:49:44.606 00007fff|   0                    00000000
+    MP Info|   3 27/08 09:49:44.606 00000000|   0                    00000000
+----------------------------------------------------------------------------
+Diagnostic ESI : N/A                     Interface Name : N/A
+Diagnostic Ifh : 0x00000000
+Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+Port Key       : 0x000088d5              MAC winner     : 1
+Number of EVIs : 1
+Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+Carving Timer  : 0    (global)  
+RT Advertised  : 1                       ESI Advertised : 1
+MSTi state mask: 0x7fff                  HRW MSTi Set   : 0x3
+ES EAD Pulse   : 0                       MP Advertised  : 1
+NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+Peering Done   : 1                       Carving Done   : 1
+Inval/RedundFWD: 0x00000000/0x00000000
+Inval/Redund NH: 0x00000000/0x00000000
+Chkpt ObjId    : 0x40002f18
+    MSTi Mask      : 0x7fff
+ES EAD Update     :
+    Num RDs:       : 1
+
+    RD: 10.154.219.84:1, Num RTs: 1      RT List:
+	4:1000, 
+N/A                      Gi0/0/0/12                         10.154.219.84<
+ES to BGP Gates   : Ready
+ES to L2FIB Gates : Ready
+Main port         :
+    Interface name : GigabitEthernet0/0/0/12
+    Interface MAC  : 00c1.64ff.7f67
+    IfHandle       : 0x000005c0
+    State          : Up
+    Redundancy     : Not Defined
+ESI type          : Invalid
+ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
+Source MAC        : 00c1.64ff.a411 (PBB BSA, no ESI)
+Topology          :
+    Operational    : SH
+    Configured     : Single-active (AApS) (default)
+Service Carving   : Auto-selection
+Peering Details   : 10.154.219.84[MOD:P:00][1]
+Service Carving Results:
+    Forwarders     : 1
+    Permanent      : 1
+    Elected        : 0
+    Not Elected    : 0
+MAC Flushing mode : STP-TCN
+Peering timer     : 3 sec [not running]
+Recovery timer    : 30 sec [not running]
+Carving timer     : 0 sec [not running]
+Local SHG label   : None
+Remote SHG labels : 0
+
+Object: EVPN ES
+Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+EVPN ES event history  [Num events: 20]
+----------------------------------------------------------------------------
+    Time                Event                         Flags      Flags      
+    ====                =====                         =====      =====      
+    Aug 27 09:49:15.648  ES DB Bind                   00000000, 00000001 -  - 
+    Aug 27 09:49:15.648  Create                       00000000, 00000001 -  - 
+    Aug 27 09:49:15.648  Action L2FIB Instance Upd    000f7fff, 00000000 -  - 
+    Aug 27 09:49:15.648  Action Advertise RT          a5138016, 0000ffff -  - 
+    Aug 27 09:49:15.648  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+Aug 27 09:49:15.648  Action Peering Sequence      00000000, 00008001 -  - 
+    Aug 27 09:49:15.648 API BP Ifname update          00000000, 08400000 M  - 
+    Aug 27 09:49:15.648  Action Advertise RT          a5138016, 0000ffff -  - 
+    Aug 27 09:49:15.648  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:15.648  Action Peering Sequence      00000000, 00008001 -  - 
+    Aug 27 09:49:15.648 API BGP RID update            a5138011, 00010040 -  - 
+    Aug 27 09:49:16.160  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:16.160 API L2FIB Replay              00000000, 00000000 -  - 
+    Aug 27 09:49:16.160 API BGP mark / sweep          00de1e7e, 00000001 -  - 
+    Aug 27 09:49:18.720  Action L2FIB Instance Upd    000f7fff, 00000000 -  - 
+    Aug 27 09:49:18.720  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:18.720 API Peer Timer Expiry         00000000, 00000001 -  - 
+    Aug 27 09:49:37.152  Action L2FIB Instance Upd    000f7fff, 00000000 -  - 
+    Aug 27 09:49:37.152  Action L2FIB MP Info Upd     00000000, 00000001 -  - 
+    Aug 27 09:49:37.152 API L2FIB Replay              00000000, 00000000 -  - 
+----------------------------------------------------------------------------
+EVPN ES Statistics
+	    |Adv                             |Wdw                             
+	    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+	RT|   2 27/08 09:49:15.583 a5138016|   0                    00000000
+    LocalBMAC|   0                    00000000|   0                    00000000
+	ESI|   0                    00000000|   0                    00000000
+    EAD/ES|   0                    00000000|   0                    00000000
+EAD/EVI|   0                    00000000|   0                    00000000
+MST-AG VPW|   0                    00000000|   0                    00000000
+DF ElectFW|   0                    00000000|
+    UpdateMAC|   0                    00000000|
+MacFlushPE|   0                    00000000|
+MacFlushCE|   0                    00000000|
+    Instance|   3 27/08 09:49:37.025 00007fff|   0                    00000000
+    MP Info|   5 27/08 09:49:37.025 00000000|   0                    00000000
+----------------------------------------------------------------------------
+Diagnostic ESI : N/A                     Interface Name : N/A
+Diagnostic Ifh : 0x00000000
+Diagnostic Flag: 0x00000040              DiagnosticES-RT: 0000.0000.0000
+Port Key       : 0x00000001              MAC winner     : 1
+Number of EVIs : 1
+Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+Carving Timer  : 0    (global)  
+RT Advertised  : 0                       ESI Advertised : 0
+MSTi state mask: 0x7fff                  HRW MSTi Set   : 0x3
+ES EAD Pulse   : 0                       MP Advertised  : 1
+NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+Peering Done   : 1                       Carving Done   : 1
+Inval/RedundFWD: 0x00000000/0x00000000
+Inval/Redund NH: 0x00000000/0x00000000
+    Chkpt ObjId    : 0x40002f58
+MSTi Mask      : 0x7fff
+ES EAD Update     :
+    Num RDs:       : 0
+
+Router#

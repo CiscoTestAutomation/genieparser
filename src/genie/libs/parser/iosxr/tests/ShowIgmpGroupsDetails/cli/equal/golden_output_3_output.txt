@@ -1,0 +1,11 @@
+
+R2_xr#show igmp groups detail
+    Interface:      GigabitEthernet0/0/0/2
+    Group:          232.1.1.1
+    Uptime:         00:04:55
+    Router mode:    INCLUDE
+    Host mode:      INCLUDE
+    Last reporter:  192.168.1.42
+    Group source list:
+      Source Address   Uptime    Expires   Fwd  Flags
+      192.168.1.18     00:04:55  00:01:28  Yes  Remote

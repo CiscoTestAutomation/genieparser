@@ -1,0 +1,19 @@
+
+
+       4096    Apr 20 10:23:05 2017  .patch/
+       1398    Feb 02 00:48:18 2017  20170202_074746_poap_7537_init.log
+     251599    Mar 15 10:35:50 2017  ethpm_act_logs.log
+    1171318    Mar 15 10:35:55 2017  ethpm_im_tech.log
+       3837    Mar 15 10:35:50 2017  ethpm_mts_details.log
+      81257    Mar 15 10:35:50 2017  ethpm_syslogs.log
+    3930383    Mar 15 10:35:55 2017  ethpm_tech.log
+      24576    Apr 21 04:18:28 2017  fault-management-logs/
+       4096    Nov 23 08:25:40 2016  lost+found/
+    4073830    Apr 20 10:19:08 2017  n7000-s2-debug-sh.10.81.0.125.gbin
+       4096    Apr 20 10:28:55 2017  virtual-instance-stby-sync/
+
+Usage for bootflash://
+  108449792 bytes used
+ 1674481664 bytes free
+ 1782931456 bytes total
+

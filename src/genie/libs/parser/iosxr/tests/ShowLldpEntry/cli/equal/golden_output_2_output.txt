@@ -1,0 +1,67 @@
+
+    Mon Oct 21 18:41:43.442 EDT
+Capability codes:
+    (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+    (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+------------------------------------------------
+Local Interface: TenGigE0/0/0/41
+Chassis id: 00bc.60ff.7ff0
+Port id: TenGigE0/0/0/0/0
+Port Description - not advertised
+System Name: genie1-ggN1.ie-genie1
+
+System Description: 
+ 6.5.3, NCS-5500
+
+Time remaining: 100 seconds
+Hold Time: 120 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.10.10.2
+
+Peer MAC Address: 00:bc:60:ff:7f:17
+
+
+------------------------------------------------
+Local Interface: HundredGigE0/0/1/1
+Chassis id: 008a.96ff.2f8c
+Port id: HundredGigE0/0/0/2
+Port Description: to gen-8 nie  0/0/1/1 via gee1.dev 29-30 
+System Name: system2
+
+System Description: 
+ 7.0.1, NCS-5500
+
+Time remaining: 97 seconds
+Hold Time: 120 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.10.10.10
+
+Peer MAC Address: 00:8a:96:ff:2b:13
+
+
+------------------------------------------------
+Local Interface: HundredGigE0/0/1/0
+Chassis id: 008a.96ff.178c
+Port id: HundredGigE0/0/0/2
+Port Description: to gen-8 nie  0/0/1/0 via gee1.dev 31-32 
+System Name: system1
+
+System Description: 
+ 7.0.1, NCS-5500
+
+Time remaining: 117 seconds
+Hold Time: 120 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.10.10.11
+
+Peer MAC Address: 00:8a:96:ff:13:13
+
+
+Total entries displayed: 3

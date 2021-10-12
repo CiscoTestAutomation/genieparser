@@ -1,0 +1,14 @@
+202-xTR1#show lisp eid-table vrf red dynamic-eid summary
+LISP Dynamic EID Summary for router 0, IID 4100, EID-table VRF "red"
+
+^ = Dyn-EID learned by EID Notify
+* = Dyn-EID learned by Site-Based Map-Notify
+n = Dyn-EID learned by NSF Replay
+> = Dyn-EID learned by Roaming detection
+
+Dyn-EID Name         Dynamic-EID             Interface     Uptime    Last      Pending
+                                                                     Packet    Ping Count
+192_168_1_0          192.168.1.1             Vl101         1d22h     never     0 
+192_168_1_0          192.168.1.71            Vl101         1d22h     never     0 
+2001_192_168_1       2001:192:168:1::1       Vl101         1d22h     never     0 
+2001_192_168_1       2001:192:168:1::71      Vl101         1d22h     never     0 

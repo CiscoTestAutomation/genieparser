@@ -1,0 +1,6 @@
+
+nexus# show ip msdp sa-cache detail vrf all
+MSDP SA Route Cache for VRF "default" - 1 entries
+Source          Group            RP               ASN         Uptime
+172.16.25.2       228.1.1.1        10.106.106.106   100         00:02:43
+Peer: 10.106.106.106, Expires: 00:02:32

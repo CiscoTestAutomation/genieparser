@@ -1,0 +1,89 @@
+
+RP/0/1/CPU0:rtr1#show mrib vrf default ipv4 route
+Mon Nov  2 15:26:01.015 PST
+
+IP Multicast Routing Information Base
+Entry flags: L - Domain-Local Source, E - External Source to the Domain,
+C - Directly-Connected Check, S - Signal, IA - Inherit Accept,
+IF - Inherit From, D - Drop, ME - MDT Encap, EID - Encap ID,
+MD - MDT Decap, MT - MDT Threshold Crossed, MH - MDT interface handle
+CD - Conditional Decap, MPLS - MPLS Decap, EX - Extranet
+MoFE - MoFRR Enabled, MoFS - MoFRR State, MoFP - MoFRR Primary
+MoFB - MoFRR Backup, RPFID - RPF ID Set, X - VXLAN
+Interface flags: F - Forward, A - Accept, IC - Internal Copy,
+NS - Negate Signal, DP - Don't Preserve, SP - Signal Present,
+II - Internal Interest, ID - Internal Disinterest, LI - Local Interest,
+LD - Local Disinterest, DI - Decapsulation Interface
+EI - Encapsulation Interface, MI - MDT Interface, LVIF - MPLS Encap,
+EX - Extranet, A2 - Secondary Accept, MT - MDT Threshold Crossed,
+MA - Data MDT Assigned, LMI - mLDP MDT Interface, TMI - P2MP-TE MDT Interface
+IRMI - IR MDT Interface
+
+(*,224.0.0.0/4) RPF nbr: 0.0.0.0 Flags: C RPF P
+    Up: 00:00:58
+
+(*,224.0.0.0/24) Flags: D P
+    Up: 00:00:58
+
+(*,224.0.1.39) Flags: S P
+    Up: 00:00:58
+
+(*,227.1.1.1) RPF nbr: 0.0.0.0 Flags: C RPF MD MH CD
+    MVPN TID: 0xe000001f
+    MVPN Remote TID: 0x0
+    MVPN Payload: IPv4
+    MDT IFH: 0x803380
+    Up: 00:00:54
+    Outgoing Interface List
+	Loopback0 Flags: F NS, Up: 00:00:54
+
+(192.168.0.12,227.1.1.1) RPF nbr: 192.168.0.12 Flags: RPF ME MH
+    MVPN TID: 0xe000001f
+    MVPN Remote TID: 0x0
+    MVPN Payload: IPv4
+    MDT IFH: 0x803380
+    Up: 00:00:54
+    Incoming Interface List
+	Loopback0 Flags: F NS, Up: 00:00:58
+    Outgoing Interface List
+	Loopback0 Flags: F A, Up: 00:00:54
+
+(*,232.0.0.0/8) Flags: D P
+    Up: 00:00:58
+
+(172.16.1.2,232.1.1.1) RPF nbr: 10.100.1.1 Flags: RPF
+    Up: 13w2d
+    Incoming Interface List
+	Bundle-Ether2.200 Flags: A, Up: 1w3d
+    Outgoing Interface List
+	Bundle-Ether1.100 (0/12/CPU0) Flags: F NS, Up: 5d22h
+
+(*,236.5.5.5) RPF nbr: 0.0.0.0 Flags: C RPF MD MH CD
+    MVPN TID: 0xe0000018
+    MVPN Remote TID: 0xe0800018
+    MVPN Payload: IPv4 IPv6
+    MDT IFH: 0x803480
+    Up: 00:00:54
+    Outgoing Interface List
+	Loopback0 Flags: F NS, Up: 00:00:54
+
+(192.168.0.12,236.5.5.5) RPF nbr: 192.168.0.12 Flags: RPF ME MH
+    MVPN TID: 0xe0000018
+    MVPN Remote TID: 0xe0800018
+    MVPN Payload: IPv4 IPv6
+    MDT IFH: 0x803480
+    Up: 00:00:54
+    Incoming Interface List
+    Loopback0 Flags: F A, Up: 00:00:54
+    Outgoing Interface List
+	Loopback0 Flags: F A, Up: 00:00:54
+
+(192.168.0.22,236.5.5.5) RPF nbr: 10.121.1.22 Flags: C RPF MD MH CD
+    MVPN TID: 0xe0000018
+    MVPN Remote TID: 0xe0800018
+    MVPN Payload: IPv4 IPv6
+    MDT IFH: 0x803480
+    Up: 00:00:13
+    Outgoing Interface List
+	Loopback0 Flags: F NS, Up: 00:00:13
+	GigabitEthernet0/1/0/1 Flags: NS, Up: 00:00:01

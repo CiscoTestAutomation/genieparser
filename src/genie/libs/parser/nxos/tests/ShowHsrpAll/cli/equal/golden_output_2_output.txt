@@ -1,0 +1,41 @@
+
+Ethernet1/3 - Group 0 (HSRP-V2) (IPv4)
+Local state is Active, priority 110 (Cfged 110), may preempt
+  Forwarding threshold(for vPC), lower: 0 upper: 110 
+Hellotime 1 sec, holdtime 3 sec
+Next hello sent in 0.502000 sec(s)
+Virtual IP address is 192.168.1.254 (Cfged)
+Active router is local
+Standby router is 192.168.1.2 , priority 90 expires in 2.429000 sec(s)
+Authentication MD5, key-string "cisco123"
+Virtual mac address is 0000.0cff.909f (Default MAC)
+10 state changes, last state change 00:01:43
+  Track object 1 state UP decrement 22        
+IP redundancy name is hsrp-Eth1/3-0 (default)
+
+Ethernet1/3 - Group 2 (HSRP-V2) (IPv4)
+Local state is Disabled(Virtual IP not cfged), priority 1 (Cfged 1)
+  Forwarding threshold(for vPC), lower: 0 upper: 1 
+Hellotime 3 sec, holdtime 10 sec
+Virtual IP address is unknown 
+Active router is unknown
+Standby router is unknown 
+Authentication text "cisco"
+Virtual mac address is 0000.0cff.90a1 (Default MAC)
+0 state changes, last state change never
+IP redundancy name is hsrp-Eth1/3-2 (default)
+
+Ethernet1/3 - Group 2 (HSRP-V2) (IPv6)
+Local state is Active, priority 100 (Cfged 100)
+  Forwarding threshold(for vPC), lower: 0 upper: 100 
+Hellotime 3 sec, holdtime 10 sec
+Next hello sent in 0.455000 sec(s)
+Virtual IP address is fe80::5:73ff:feff:a0a2 (Auto)
+Active router is local
+Standby router is fe80::20c:29ff:fe69:14bb , priority 90 expires in 8.960000 sec(s)
+Authentication text "cisco"
+Virtual mac address is 0005.73ff.a0a2 (Default MAC)
+2 state changes, last state change 02:43:40
+IP redundancy name is hsrp-Eth1/3-2-V6 (default)
+Secondary VIP(s):
+		2001:db8:7746:fa41::1

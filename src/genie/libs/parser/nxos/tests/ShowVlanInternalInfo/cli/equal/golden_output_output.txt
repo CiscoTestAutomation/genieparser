@@ -1,0 +1,43 @@
+
+
+VLAN_INFO_GLOBAL
+
+Build date: Feb 10 2017 05:12:28
+
+vlan-mgr MTS appcode: 23
+
+Global Lock(1) NOT Locked
+Is VTP Reserved VLANs Present: No
+vdc_info_db.requester_sap 0
+PVLAN fex trunk knob - FEX_TRUNK_KNOB_INVALID
+All PVLANs in system - 
+
+Write to file Variable           : -1
+Log Trace to file Variable       : 0
+Log Errors to file Variable      : 0
+Log debug pss to file Variable   : 0
+Log debug db to file Variable    : 0
+Log debug vpc to file Variable   : 0
+Per VLAN Details
+
+================
+
+vlan configuration 3-5,8
+VLAN configmode operation in progress flag 0
+config pss uri volatile:/dev/shm/vlan_mgr_config
+saved config pss uri readonly:/var/sysmgr/startup-cfg/bin/vlan_mgr_config
+vlan_mgr_init_done flag 1
+long vlan name knob 0(in gsdb 0)
+
+Entry No: 0
+------------
+vlan id 1
+vdc 1 bd_id = 1, bd_id_orig = 1, vlan_type = USER_VLAN(1)
+sdb_vlan_type USER_VLAN(1, err 0x0), oper =down
+vlan_state = active, vlan_oper = down,  sdb_oper_state unknown(0, err 0x0)
+oper up technologies:   oper down technologies:  configured technologies:  
+vlan_shut_state = no-shutdown, vlan_modes = (0)ce
+sdb_vlan_mode 0(ce, err 0x0), n_access_ports 0, n_native_ports 0
+mtu = 1500, internal_state = 0, cfg_flags 0 
+vlan_name = default  segment_id = 0(err 0x0, sdb 0) 
+

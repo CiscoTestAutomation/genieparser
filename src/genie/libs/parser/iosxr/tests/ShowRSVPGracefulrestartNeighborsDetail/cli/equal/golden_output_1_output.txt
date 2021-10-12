@@ -1,0 +1,21 @@
+RP/0/RP0/CPU0:F17-ASR9922#show rsvp graceful-restart neighbors detail
+Thu Apr  1 05:30:39.062 JST
+Neighbor: 106.106.106.106 Source: 17.17.17.17 (MPLS)
+  Recovery State: DONE
+  Number of Interface neighbors: 1
+    address: 99.33.0.2
+  Restart time: 0 seconds  Recovery time: 0 seconds
+  Restart timer: Not running
+  Recovery timer: Not running
+  Hello interval: 5000 milliseconds  Maximum allowed missed Hello messages: 3
+  Pending states: 0
+
+Neighbor: 141.141.141.141 Source: 17.17.17.17 (MPLS)
+  Recovery State: DONE
+  Number of Interface neighbors: 1
+    address: 20.50.0.1
+  Restart time: 0 seconds  Recovery time: 0 seconds
+  Restart timer: Not running
+  Recovery timer: Not running
+  Hello interval: 5000 milliseconds  Maximum allowed missed Hello messages: 3
+  Pending states: 0

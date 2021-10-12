@@ -1,0 +1,19 @@
+Switch 1 FAN 1 is OK
+Switch 1 FAN 2 is OK
+Switch 1 FAN 3 is OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+SYSTEM TEMPERATURE is OK
+System Temperature Value: 41 Degree Celsius
+System Temperature State: GREEN
+Yellow Threshold : 66 Degree Celsius
+Red Threshold    : 76 Degree Celsius
+POWER SUPPLY 1A TEMPERATURE: OK
+POWER SUPPLY 1B TEMPERATURE: Not Present
+SW   PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+---  ------------------  ----------  ---------------  -------  -------  -----
+1A   PWR-C2-1025WAC      DCB1636C003 OK               Good     Good     250/775
+1B   Not Present
+SW   Status          RPS Name          RPS Serial#  RPS Port#
+--   -------------   ----------------  -----------  ---------
+1    Not Present     <>

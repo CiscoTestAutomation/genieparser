@@ -14,10 +14,12 @@
     * show interfaces link
     * show interfaces {interface} link
     * show interfaces status
+    * show interfaces {interface} status
     * show interfaces transceiver
     * show interfaces {interface} transceiver
     * show interfaces transceiver detail
     * show interfaces {interface} transceiver detail
+    * show macro auto interface
 """
 
 import os
@@ -3497,12 +3499,14 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
         return result_dict
 
 
-# ====================================================
-#  schema for show interfaces status
-# ====================================================
+# =====================================
+#  schema for "show interfaces status"
+# =====================================
 class ShowInterfacesStatusSchema(MetaParser):
     """Schema for:
-        show interfaces status"""
+        * show interfaces status
+        * show interfaces {interface} status
+    """
 
     schema = {
         'interfaces': {
@@ -3524,16 +3528,20 @@ class ShowInterfacesStatusSchema(MetaParser):
 class ShowInterfacesStatus(ShowInterfacesStatusSchema):
     """parser for 
             * show interfaces status
+            * show interfaces {interface} status
         """
 
-    cli_command = 'show interfaces status'
+    cli_command = ['show interfaces status',
+                   'show interfaces {interface} status']
 
-    def cli(self, output=None):
+    def cli(self, interface="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface) 
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
         result_dict = {}
 
         # Port      Name               Status       Vlan       Duplex  Speed Type
@@ -3551,11 +3559,12 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
                         r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
                         r'\s+(?P<vlan>\S+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             m = p1.match(line)
             if m:
+                
                 group = m.groupdict()
 
                 intf_dict = result_dict.setdefault('interfaces', {}).\
@@ -3577,6 +3586,61 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         return result_dict
 
 
+# ====================================================
+#  schema for show interfaces status err-disabled
+# ====================================================
+class ShowInterfacesStatusErrDisabledSchema(MetaParser):
+    """Schema for:
+        show interfaces status err-disabled"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'status': str,
+                'reason': str,
+                Optional('err_disabled_vlans'): str
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for show interfaces status err-disabled
+# ====================================================
+class ShowInterfacesStatusErrDisabled(ShowInterfacesStatusErrDisabledSchema):
+    """parser for
+            * show interfaces status err-disabled
+        """
+
+    cli_command = 'show interfaces status err-disabled'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Fi1/7/0/13     Hello World  err-disabled loopdetect
+        # Fi1/7/0/14                  err-disabled loopdetect
+        p1= re.compile(r'^(?P<interfaces>\S+)\s+(?P<name>.+?)?\s+(?P<status>err-disabled)\s+(?P<reason>loopdetect)\s*(?P<err_disabled_vlans>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
+
+                # Update intf_dict, ignore None or '' empty values. Ignore 'interfaces' key
+                intf_dict.update({k:v for k, v in group.items() if v and k != 'interfaces'})
+                continue
+
+        return ret_dict
 # ==========================================================
 #  Parser for show interface {interface} transceiver detail
 # ==========================================================
@@ -3774,3 +3838,80 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
                 continue
 
         return result_dict
+
+
+# ====================================================
+#  schema for show macro auto interfaces
+# ====================================================
+class ShowMacroAutoInterfaceSchema(MetaParser):
+    """Schema for:
+        show macro auto interface"""
+
+    schema = {
+        'asp_status': str,
+        'fallback': {
+            'type': str,
+            'status': str
+        },
+        'interfaces': {
+            Any(): {
+                'asp': str,
+                'fallback': str,
+                'macro': str
+            },
+        }
+    }
+# ==========================================================
+#  Parser for show macro auto interface
+# ==========================================================
+class ShowMacroAutoInterface(ShowMacroAutoInterfaceSchema):
+    """
+    parser for
+            * show macro auto interface
+    """
+
+    cli_command = 'show macro auto interface'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Auto Smart Ports Enabled
+        p1 = re.compile(r'^Auto Smart Ports+\s(?P<asp_status>\S+)')
+        # Fallback : CDP  Disabled
+        p2 = re.compile(r'Fallback :\s+(?P<type>\S+)\s+(?P<status>\S+)')
+        # Gi2/0/21      TRUE              None        CISCO_IPVSC_EVENT
+        p3 = re.compile(
+            r'^(?P<interface>\S+\d+\/\d+\/\d+|\S+)\s+(?P<asp>\w+)\s\s+(?P<fallback>\w+)\s+(?P<macro>\S+|\S+(?:\s+)?\S+(?:\s+)?\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['asp_status'] = group['asp_status']
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                fallback_dict = ret_dict.setdefault('fallback',{})
+                fallback_dict['type'] = group['type']
+                fallback_dict['status'] = group['status']
+
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name\
+                        (intf=group['interface'].strip())
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['asp'] = group['asp']
+                intf_dict['fallback'] = group['fallback']
+                intf_dict['macro'] = group['macro']
+
+        return ret_dict

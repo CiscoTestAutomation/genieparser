@@ -2134,3 +2134,336 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
 
 
         return cts_ap_dict
+
+
+# =========================
+# Schema for:
+#  * 'show cts interface'
+# =========================
+class ShowCtsInterfaceSchema(MetaParser):
+    """Schema for show cts interface'"""
+
+    schema = {
+        'global_dot1x_feature': str,
+        'interfaces': {
+            Any(): {
+                'cts': {
+                    'cts_status': str,
+                    Optional('mode'): str
+                },
+                Optional('ifc_state'): str,
+                Optional('intf_active_for'): str,
+                Optional('authentication'): {
+                    'status': str,
+                    Optional('peer_identity'): str,
+                    Optional('peer_advertised_capabilities'): str
+                },
+                Optional('authorization'): {
+                    'status': str,
+                    Optional('peer_sgt'): int,
+                    Optional('peer_sgt_assignment'): str
+                },
+                Optional('sap_status'): str,
+                Optional('propagate_sgt'): str,
+                Optional('cache_info'): {
+                    'expiration': str,
+                    'cache_applied_to_link': str
+                },
+                Optional('statistics'): {
+                    'authc_success': int,
+                    'authc_reject': int,
+                    'authc_failure': int,
+                    'authc_no_response': int,
+                    'authc_logoff': int,
+                    'sap_success': int,
+                    'sap_fail': int,
+                    'authz_success': int,
+                    'authz_fail': int,
+                    'port_auth_fail': int
+                },
+                'l3_ipm': str
+            },
+        }
+    }
+
+
+# =========================
+# Parser for:
+#  * 'show cts interface'
+# =========================
+class ShowCtsInterface(ShowCtsInterfaceSchema):
+    """Parser for show cts interface"""
+
+    cli_command = 'show cts interface'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Global Dot1x feature is Disabled
+        p1 = re.compile(r'^Global Dot1x feature is\s+(?P<global_dot1x_feature>\w+)')
+
+        # TenGigabitEthernet1/0/6:
+        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+):')
+
+        # CTS_status : enabled,mode: MANUAL
+        p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+),\s+mode:\s+(?P<mode>\S+)')
+
+        # IFC state: OPEN
+        p4 = re.compile(r'^IFC state:\s+(?P<ifc_state>\S+)')
+
+        # Intf_active_for: 00:29:30.798
+        p5 = re.compile(r'^Interface Active for\s+(?P<intf_active_for>\d+:\d+:\d+.\d+)')
+
+        # Authentication Status:   NOT APPLICABLE
+        p6 = re.compile(r'^Authentication Status:\s+(?P<status>\w+(?:\s+)?\w+)$')
+
+        # Peer_identity:       "unknown"
+        p7 = re.compile(r'^Peer identity:\s+\W(?P<peer_identity>(?:\w+)?)\W')
+
+        # Peer's advertised capabilities: ""
+        p8 = re.compile(r"^Peer's advertised capabilities:\s+\W(?P<peer_advertised_capabilities>(?:\w+)?)\W")
+
+        # Authorization Status:    SUCCEEDED
+        p9 = re.compile(r'^Authorization Status:\s+(?P<status>\w+(?:\s+)?\w+)$')
+
+        # Peer_SGT:            2000
+        p10 = re.compile(r'^Peer SGT:\s+(?P<peer_sgt>\d+)')
+
+        # Peer SGT assignment: Trusted
+        p11 = re.compile(r'^Peer SGT assignment:\s+(?P<peer_sgt_assignment>\w+)')
+
+        # SAP Status:              NOT APPLICABLE
+        p12 = re.compile(r'^SAP Status:\s+(?P<sap_status>\w+(?:\s+)?\w+)$')
+
+        # Propagate_SGT: Enabled
+        p13 = re.compile(r'^Propagate SGT:\s+(?P<propagate_sgt>\S+)')
+
+        # Expiration            : N/A
+        p14 = re.compile(r'^Expiration\s+:\s+(?P<expiration>\S+)')
+
+        # Cache applied to link : NONE
+        p15 = re.compile(r'Cache applied to link\s+:\s+(?P<cache_applied_to_link>\S+)')
+
+        # authc success:              0
+        p16 = re.compile(r'^authc success:\s+(?P<authc_success>\d+)')
+
+        # authc reject:               0
+        p17 = re.compile(r'^authc reject:\s+(?P<authc_reject>\d+)')
+
+        # authc failure:              0
+        p18 = re.compile(r'^authc failure:\s+(?P<authc_failure>\d+)')
+
+        # authc no response:          0
+        p19 = re.compile(r'^authc no response:\s+(?P<authc_no_response>\d+)')
+
+        # authc logoff:               0
+        p20 = re.compile(r'^authc logoff:\s+(?P<authc_logoff>\d+)')
+
+        # sap success:                0
+        p21 = re.compile(r'^sap success:\s+(?P<sap_success>\d+)')
+
+        # sap fail:                   0
+        p22 = re.compile(r'^sap fail:\s+(?P<sap_fail>\d+)')
+
+        # authz success:              0
+        p23 = re.compile(r'^authz success:\s+(?P<authz_success>\d+)')
+
+        # authz fail:                 0
+        p24 = re.compile(r'^authz fail:\s+(?P<authz_fail>\d+)')
+
+        # port auth fail:             0
+        p25 = re.compile(r'^port auth fail:\s+(?P<port_auth_fail>\d+)')
+
+        # L3_IPM:   disabled.
+        p26 = re.compile(r'^L3 IPM:\s+(?P<l3_ipm>\S+).')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Global Dot1x feature is Disabled
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                global_dot1x_feature = group['global_dot1x_feature']
+                ret_dict['global_dot1x_feature'] = global_dot1x_feature
+
+            # TenGigabitEthernet1/0/6:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+            # CTS_status : enabled,mode: MANUAL
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                cts_status = group['cts_status']
+                mode = group['mode']
+                cts_dict = intf_dict.setdefault('cts', {})
+                cts_dict['cts_status'] = cts_status
+                cts_dict['mode'] = mode
+
+            # IFC state: OPEN
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ifc_state = group['ifc_state']
+                intf_dict['ifc_state'] = ifc_state
+
+            # Intf_active_for: 00:29:30.798
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_active_for = group['intf_active_for']
+                intf_dict['intf_active_for'] = intf_active_for
+
+            # Authentication Status:   NOT APPLICABLE
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                auth_dict = intf_dict.setdefault('authentication', {})
+                auth_dict['status'] = status
+
+            # Peer_identity:       "unknown"
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                peer_identity = group['peer_identity']
+                auth_dict['peer_identity'] = str(peer_identity)
+
+            # Peer's advertised capabilities: ""
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                peer_advertised_capabilities = group['peer_advertised_capabilities']
+                auth_dict['peer_advertised_capabilities'] = str(peer_advertised_capabilities)
+
+            # Authorization Status:    SUCCEEDED
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                authr_dict = intf_dict.setdefault('authorization', {})
+                authr_dict['status'] = status
+
+            # Peer_SGT:            2000
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                peer_sgt = int(group['peer_sgt'])
+                authr_dict['peer_sgt'] = peer_sgt
+
+            # Peer SGT assignment: Trusted
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                peer_sgt_assignment = group['peer_sgt_assignment']
+                authr_dict['peer_sgt_assignment'] = peer_sgt_assignment
+
+            # SAP Status:              NOT APPLICABLE
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                sap_status = group['sap_status']
+                intf_dict['sap_status'] = sap_status
+
+            # Propagate_SGT: Enabled
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                propagate_sgt = group['propagate_sgt']
+                intf_dict['propagate_sgt'] = propagate_sgt
+
+            # Expiration            : N/A
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                expiration = group['expiration']
+                cache_dict = intf_dict.setdefault('cache_info', {})
+                cache_dict['expiration'] = expiration
+
+            # Cache applied to link : NONE
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                cache_applied_to_link = group['cache_applied_to_link']
+                cache_dict['cache_applied_to_link'] = cache_applied_to_link
+
+            # authc success:              0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict = intf_dict.setdefault('statistics', {})
+                stat_dict['authc_success'] = int(group['authc_success'])
+
+            # authc reject:               0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authc_reject'] = int(group['authc_reject'])
+
+            # authc failure:              0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authc_failure'] = int(group['authc_failure'])
+
+            # authc no response:          0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authc_no_response'] = int(group['authc_no_response'])
+
+            # authc logoff:               0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authc_logoff'] = int(group['authc_logoff'])
+
+            # sap success:                0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['sap_success'] = int(group['sap_success'])
+
+            # sap fail:                   0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['sap_fail'] = int(group['sap_fail'])
+
+            # authz success:              0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authz_success'] = int(group['authz_success'])
+
+            # authz fail:                 0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['authz_fail'] = int(group['authz_fail'])
+
+            # port auth fail:             0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                stat_dict['port_auth_fail'] = int(group['port_auth_fail'])
+
+            # L3_IPM:   disabled.
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                l3_ipm = group['l3_ipm']
+                intf_dict['l3_ipm'] = l3_ipm
+
+        return ret_dict
+
+

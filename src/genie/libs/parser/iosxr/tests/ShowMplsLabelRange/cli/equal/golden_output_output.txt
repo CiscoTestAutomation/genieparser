@@ -1,0 +1,4 @@
+
+RP/0/RP0/CPU0:R3#show mpls label range 
+Thu Aug 29 5:24:12.183 UTC
+Range for dynamic labels: Min/Max: 24000/1048575
