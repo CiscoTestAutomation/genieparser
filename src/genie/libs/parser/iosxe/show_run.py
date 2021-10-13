@@ -23,38 +23,38 @@ from genie.libs.parser.utils.common import Common
 # ==================================================
 class ShowRunPolicyMapSchema(MetaParser):
 
-	schema = {
-		'policy_map': {
-			Any(): {
-				'class': {
-					Any(): {
-						Optional('qos_set'): {
-							Optional('ip precedence'): str,
-							Optional('precedence'): str,
-							Optional('dscp'): str,
-							Optional('cos'): str,
-							Optional('qos-group'): str,
-							},
-						Optional('police'): {
-							Optional('cir_bps'): str,
-							Optional('pir_bps'): str,
-							Optional('cir_bc_bytes'): str,
-							Optional('cir_be_bytes'): str,
-							Optional('conformed'): str,
-							Optional('exceeded'): str,
-							},
-						Optional('bandwidth_percent'): str,
-						Optional('priority_percent'): str,
-						Optional('priority_level'): str,
-						Optional('target_shape_rate'): str,
-						Optional('service_policy'): str,
-						Optional('service_policy_input'): str,
-						Optional('service_policy_output'): str,
-					},
-				}
-			},
-		}
-	}
+    schema = {
+        'policy_map': {
+            Any(): {
+                'class': {
+                    Any(): {
+                        Optional('qos_set'): {
+                            Optional('ip precedence'): str,
+                            Optional('precedence'): str,
+                            Optional('dscp'): str,
+                            Optional('cos'): str,
+                            Optional('qos-group'): str,
+                            },
+                        Optional('police'): {
+                            Optional('cir_bps'): str,
+                            Optional('pir_bps'): str,
+                            Optional('cir_bc_bytes'): str,
+                            Optional('cir_be_bytes'): str,
+                            Optional('conformed'): str,
+                            Optional('exceeded'): str,
+                            },
+                        Optional('bandwidth_percent'): str,
+                        Optional('priority_percent'): str,
+                        Optional('priority_level'): str,
+                        Optional('target_shape_rate'): str,
+                        Optional('service_policy'): str,
+                        Optional('service_policy_input'): str,
+                        Optional('service_policy_output'): str,
+                    },
+                }
+            },
+        }
+    }
 
 
 # ===================================
@@ -101,7 +101,7 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         # set ip precedence 4
         p3_1 = re.compile(r'^set +ip +precedence +(?P<ip_precedence>(\w+))$')
 
-		# set precedence 5
+        # set precedence 5
         p3_2 = re.compile(r'^set +precedence +(?P<precedence>(\w+))$')
 
         # set qos-group 4
@@ -123,7 +123,7 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         # set dscp 46
         p8 = re.compile(r'^set +dscp +(?P<dscp>(\w+))$')
 
-		# set cos 0
+        # set cos 0
         p9 = re.compile(r'^set +cos +(?P<cos>(\d+))$')
 
         for line in out.splitlines():
