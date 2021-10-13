@@ -1,0 +1,50 @@
+Thu Sep 30 14:07:40.095 UTC
+
+-------------------------------------------------------------
+                Node 0/RP0/CPU0:
+-------------------------------------------------------------
+FlowType               Policer Type    Cur. Rate Burst     Accepted     Dropped      npu
+---------------------- ------- ------- --------- --------- ------------ ------------ ---------
+Fragment               2       np      474       1000      2            0            0
+OSPF-mc-known          3       np      1559      1000      0            0            0
+OSPF-mc-default        4       np      1017      1000      0            0            0
+OSPF-uc-known          5       np      474       1000      0            0            0
+OSPF-uc-default        6       np      474       1000      0            0            0
+BFD-default            10      np      7864      1000      75           0            0
+BFD-MP-known           11      np      7864      1000      0            0            0
+BGP-known              16      np      16272     1000      120267993    0            0
+BGP-cfg-peer           17      np      1559      1000      294          0            0
+BGP-default            18      np      1017      1000      553          0            0
+PIM-mcast-default      19      np      474       1000      0            0            0
+PIM-mcast-known        20      np      1559      1000      0            0            0
+PIM-ucast              21      np      474       1000      135624       0            0
+IGMP                   22      np      1559      1000      0            0            0
+ICMP-local             23      np      474       1000      1165931      0            0
+ICMP-control           25      np      2101      1000      145677506    0            0
+LDP-TCP-known          28      np      2101      1000      186297       0            0
+LDP-TCP-cfg-peer       29      np      1017      1000      8            0            0
+LDP-TCP-default        30      np      474       1000      0            0            0
+LDP-UDP                31      np      474       1000      520734       0            0
+All-routers            32      np      474       1000      0            0            0
+RSVP-default           38      np      474       1000      0            0            0
+RSVP-known             39      np      1559      1000      0            0            0
+SNMP                   47      np      474       1000      87256864     0            0
+SSH-known              48      np      474       1000      4775896      0            0
+SSH-default            49      np      474       1000      0            0            0
+HTTP-known             50      np      474       1000      0            0            0
+SHTTP-known            52      np      474       1000      0            0            0
+TELNET-known           54      np      474       1000      0            0            0
+TELNET-default         55      np      474       1000      0            0            0
+UDP-known              60      np      23865     1000      0            0            0
+UDP-default            63      np      474       1000      443643       0            0
+TCP-known              64      np      23865     1000      1902746      0            0
+TCP-default            67      np      474       1000      2132524      0            0
+Raw-default            71      np      474       1000      1235342      0            0
+GRE                    77      np      474       1000      0            0            0
+VRRP                   78      np      474       1000      0            0            0
+DNS                    83      np      474       1000      0            0            0
+NTP-known              87      np      474       1000      93812        0            0
+DHCPv4                 93      np      3661      1000      0            0            0
+DHCPv6                 94      np      3661      1000      0            0            0
+TPA                    96      np      1559      1000      0            0            0
+PM-TWAMP               99      np      1559      1000      0            0            0
