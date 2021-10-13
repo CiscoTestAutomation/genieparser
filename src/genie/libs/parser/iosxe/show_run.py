@@ -34,7 +34,7 @@ class ShowRunPolicyMapSchema(MetaParser):
                             Optional('dscp'): str,
                             Optional('cos'): str,
                             Optional('qos-group'): str,
-                            },
+                        },
                         Optional('police'): {
                             Optional('cir_bps'): str,
                             Optional('pir_bps'): str,
@@ -42,7 +42,7 @@ class ShowRunPolicyMapSchema(MetaParser):
                             Optional('cir_be_bytes'): str,
                             Optional('conformed'): str,
                             Optional('exceeded'): str,
-                            },
+                        },
                         Optional('bandwidth_percent'): str,
                         Optional('priority_percent'): str,
                         Optional('priority_level'): str,
