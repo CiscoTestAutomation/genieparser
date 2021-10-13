@@ -1,0 +1,50 @@
+[1] 2021 Aug 13 14:31:10.255479 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00054240, Ret:SUCCESS
+    Src:0x00001B01/41673, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00054240, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 38 
+[2] 2021 Aug 13 14:30:41.186382 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00053B22, Ret:SUCCESS
+    Src:0x00001B01/41228, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00053B22, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 37 
+[3] 2021 Aug 13 14:30:40.981189 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00053B11, Ret:SUCCESS
+    Src:0x00001B01/41228, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00053B11, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 37 
+[4] 2021 Aug 13 14:30:11.756832 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0005305C, Ret:SUCCESS
+    Src:0x00001B01/41128, Dst:0x00001B01/0, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3340
+    Payload:    
+    0x0000:  a8 a0 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+[5] 2021 Aug 13 14:30:11.709893 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X00052FBE, Ret:SUCCESS
+    Src:0x00001B01/41124, Dst:0x00001B01/0, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3340
+    Payload:    
+    0x0000:  a4 a0 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+[6] 2021 Aug 13 14:29:44.876706 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00052EC6, Ret:SUCCESS
+    Src:0x00001B01/41108, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00052EC6, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 37 
+[7] 2021 Aug 13 14:29:44.598346 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00052EC3, Ret:SUCCESS
+    Src:0x00001B01/41108, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00052EC3, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 37 
+[8] 2021 Aug 13 14:29:01.550093 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X00051DD7, Ret:SUCCESS
+    Src:0x00001B01/40606, Dst:0x00001B01/0, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3340
+    Payload:    
+    0x0000:  9e 9e 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+[9] 2021 Aug 13 14:29:01.537513 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X00051D6E, Ret:SUCCESS
+    Src:0x00001B01/40603, Dst:0x00001B01/0, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3340
+    Payload:    
+    0x0000:  9b 9e 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+[10] 2021 Aug 13 14:28:38.672917 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00051C5A, Ret:SUCCESS
+    Src:0x00001B01/40584, Dst:0x00001B01/340, Flags:None
+    HA_SEQNO:0X00000000, RRtoken:0x00051C5A, Sync:UNKNOWN, Payloadsize:300
+    Payload:    
+    0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 32 36
