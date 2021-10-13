@@ -51,6 +51,7 @@ class ShowControllers(ShowControllersSchema):
             out = output
 
         parsed_dict = {}
+        registers_dict = {}
         reg_index = 0  # Registers ID could be the same, hence abstraction iterator is needed
 
         # --------------------------------------------------------------
@@ -62,7 +63,7 @@ class ShowControllers(ShowControllersSchema):
         #  0000 : 1140                  Control Register :  0001 0001 0100 0000
         #  0001 : 796d                    Control STATUS :  0111 1001 0110 1101
         registers_reg = re.compile(
-            r'(?P<register_number>\S{4})\s\:\s(?P<hex_bit_valuer>\S{4})\s+(?P<register_name>.*)\s\:\s+(?P<bits>.*)')
+            r'(?P<register_number>\S{4})\s\:\s(?P<hex_bit_value>\S{4})\s+(?P<register_name>.*)\s\:\s+(?P<bits>.*)')
 
         # --------------------------------------------------------------
         # Build the parsed output
@@ -84,10 +85,11 @@ class ShowControllers(ShowControllersSchema):
             register_line = registers_reg.match(line)
             if register_line:
                 group = register_line.groupdict()
-                parsed_dict['registers'][reg_index] = {'register_number': group['register_number'],
-                                            'hex_bit_value': group['hex_bit_value'],
-                                            'register_name': group['register_name'],
-                                            'bits': group['bits'].replace(' ', '')}
+                registers_dict[str(reg_index)] = {'register_number': group['register_number'],
+                                                  'hex_bit_value': group['hex_bit_value'],
+                                                  'register_name': group['register_name'],
+                                                  'bits': group['bits'].replace(' ', '')}
                 reg_index += 1
                 continue
+            parsed_dict['registers'] = registers_dict
         return parsed_dict
