@@ -3,7 +3,7 @@ expected_output = {
         "GigabitEthernet0/0/0.101": {
             "encapsulation": {
                 'type': 'dot1Q',
-                'dot1q': 101,
+                'first_dot1q': 101,
                 'dot1q_native': False
             },
             "encapsulation_dot1q": "101",

@@ -3,7 +3,7 @@ expected_output = {
   'interfaces':{
     'Port-channel1.1': {
       'encapsulation': {
-        'dot1q': 1,
+        'first_dot1q': 1,
         'dot1q_native': True,
         'type': 'dot1Q'
         },

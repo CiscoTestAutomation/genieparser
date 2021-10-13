@@ -4,7 +4,7 @@ expected_output = {
             "encapsulation_dot1q": "201",
             "encapsulation": {
                 'type': 'dot1Q',
-                'dot1q': 201,
+                'first_dot1q': 201,
                 'dot1q_native': False
             },
             "ipv4": {"ip": "192.168.4.1", "netmask": "255.255.255.0",},

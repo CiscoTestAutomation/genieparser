@@ -244,7 +244,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('shutdown'): bool,
                 Optional('encapsulation'): {
                     'type': str,
-                    Optional('dot1q'): int,
+                    Optional('first_dot1q'): int,
                     Optional('dot1q_native'): bool,
                     Optional('second_dot1q'): str
                 },
@@ -708,7 +708,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                     if not group['second_dot1q'] and not group['native']:
                         intf_dict.update({'encapsulation_dot1q': group['dot1q']})
 
-                    encapsulation_dict['dot1q'] = int(group['dot1q'])
+                    encapsulation_dict['first_dot1q'] = int(group['dot1q'])
                     encapsulation_dict['dot1q_native'] = bool(group['native'])
                     if group['second_dot1q']:
                         encapsulation_dict['second_dot1q'] = group['second_dot1q']
