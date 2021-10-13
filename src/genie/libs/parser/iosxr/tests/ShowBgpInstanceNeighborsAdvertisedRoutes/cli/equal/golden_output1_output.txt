@@ -1,0 +1,13 @@
+BGP instance 0: 'default'
+=========================
+
+Address Family: IPv4 Unicast
+----------------------------
+
+Network            Next Hop        From            AS Path
+10.8.8.8/32        10.10.10.108    Local           65108.65108?
+10.10.10.0/24      10.10.10.108    Local           65108.65108?
+192.168.52.0/24    10.10.10.108    Local           65108.65108?
+
+Processed 3 prefixes, 3 paths
+
