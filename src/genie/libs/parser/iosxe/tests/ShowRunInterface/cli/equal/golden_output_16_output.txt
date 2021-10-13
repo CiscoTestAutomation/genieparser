@@ -1,0 +1,6 @@
+interface Port-channel1.1
+ encapsulation dot1Q 1 native
+ vrf forwarding TEST
+ ip address 2.2.2.2 255.255.255.252 secondary
+ ip address 3.3.3.2 255.255.255.252 secondary
+ ip address 1.1.1.1 255.255.255.252

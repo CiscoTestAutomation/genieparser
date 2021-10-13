@@ -1,0 +1,23 @@
+interface Dialer2
+ description TEST
+ bandwidth 250000
+ ip address negotiated
+ ip verify unicast source reachable-via rx allow-default allow-self-ping
+ encapsulation ppp
+ ip tcp adjust-mss 1452
+ dialer pool 2
+ dialer idle-timeout 0
+ dialer down-with-vInterface
+ dialer-group 2
+ no cdp enable
+ ipv6 address FE80::C100:14:100 link-local
+ ipv6 address IPV6-DELEGATION2 ::B/64
+ ipv6 enable
+ ipv6 nd ra suppress all
+ ipv6 tcp adjust-mss 1432
+ ipv6 dhcp client pd IPV6-DELEGATION
+ ipv6 verify unicast source reachable-via rx allow-default
+ ppp chap hostname user@realm.isp
+ ppp chap password 0 password
+ service-policy output SHAPING
+end
