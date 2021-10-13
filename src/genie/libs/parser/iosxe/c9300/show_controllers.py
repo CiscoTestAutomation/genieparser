@@ -44,9 +44,9 @@ class ShowControllers(ShowControllersSchema):
 
     cli_command = 'show controllers ethernet-controllers {interface} phy detail'
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
 
@@ -89,4 +89,5 @@ class ShowControllers(ShowControllersSchema):
                                             'register_name': group['register_name'],
                                             'bits': group['bits'].replace(' ', '')}
                 reg_index += 1
+                continue
         return parsed_dict
