@@ -1,0 +1,9 @@
+interface GigabitEthernet0/0/0
+ description WAN
+ mtu 1508
+ no ip address
+ negotiation auto
+ pppoe enable group global
+ pppoe-client dial-pool-number 2
+ pppoe-client ppp-max-payload 1500
+ service-policy output SHAPING

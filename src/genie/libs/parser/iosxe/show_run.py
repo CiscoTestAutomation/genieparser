@@ -338,6 +338,14 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_arp_inspection_trust'): bool,
                 Optional('mac_address_sticky'):str,
                 Optional('source_template'):str,
+                Optional('pppoe'): {
+                    'enabled': bool,
+                    Optional('group'): str
+                },
+                Optional('pppoe_client'): {
+                    Optional('dial_pool_number'): int,
+                    Optional('ppp_max_payload'): int,
+                },
                 Optional('dialer_pool'): int,
                 Optional('dialer_group'): int,
                 Optional('dialer_down_with_vinterface'): bool,
@@ -640,6 +648,16 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # mpls mtu 1400
         # clns mtu 1497
         p70=re.compile(r"^((?P<protocol>(ip|ipv6|mpls|clns)) +)?mtu +(?P<mtu>\d+)$")
+
+        # pppoe enable group global
+        # pppoe enable
+        p71=re.compile(r"^pppoe +enable( +group +(?P<group>[\w\-\.]+))?$")
+
+        # pppoe-client dial-pool-number 2
+        p72=re.compile(r"^pppoe-client +dial-pool-number +(?P<number>\d+)$")
+
+        # pppoe-client ppp-max-payload 1500
+        p73=re.compile(r"^pppoe-client +ppp-max-payload +(?P<max_payload>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1265,6 +1283,40 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 else:
                     dict_key = f"{group['protocol']}_mtu"
                     intf_dict.update({dict_key: int(group['mtu'])})
+                continue
+
+            # pppoe enable group global
+            # pppoe enable
+            m = p71.match(line)
+            if m:
+                group = m.groupdict()
+                if group['group']:
+                    intf_dict.update({'pppoe': 
+                        {
+                        'enabled': True,
+                        'group': group['group']
+                        }
+                    })
+                else:
+                    intf_dict.update({'pppoe': True })
+                continue
+
+            # pppoe-client dial-pool-number 2
+            m = p72.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('pppoe_client', {}).update({
+                    'dial_pool_number': int(group['number']),
+                })
+                continue
+
+            # pppoe-client ppp-max-payload 1500
+            m = p73.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('pppoe_client', {}).update({
+                    'ppp_max_payload': int(group['max_payload']),
+                })
                 continue
 
 
