@@ -32,7 +32,12 @@ class ShowLldpNeighborsSchema(MetaParser):
                     Any(): {
                         'remote_chassis_id': str,
                         'remote_interface_name': str,
-                        Optional('remote_system_name'): str
+                        Optional('remote_system_name'): str,
+                        'dead_interval': int,
+                        'remaining_life': int,
+                        Optional('remote_port_descr'): str,
+                        'tx': int,
+                        'rx': int
                     }
                 }
             }
@@ -64,11 +69,20 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
         # Eth 0/8       120            107             Ethernet 0/1                      U_                                d884.66ea.fe14   382863       77092        SLX
         # Eth 0/44      120            97              71                                                                  0004.96a3.4b5d   1950327      299888       switch-01
         # Eth 0/45      120            97              72                                                                  0004.96a3.4b5d   1950327      299888       switch-01
+        #p2 = re.compile(
+        #    r'^(?P<local_port>[\w\/\.\-\:]+(?:\s[\w\/\.\-\:]+|()))\s+'
+        #    r'(?P<dead_interval>\d+)\s+\d+\s+'
+        #    r'(?P<remote_port>[\w\/\.\-\:]+(?:\s[\w\/\.\-\:]+|())).*'
+        #    r'(?P<remote_chassis_id>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+\d+\s+\d+'
+        #    r'(?:|\s+(?P<remote_chassis_name>\S*)|())$')
         p2 = re.compile(
             r'^(?P<local_port>[\w\/\.\-\:]+(?:\s[\w\/\.\-\:]+|()))\s+'
-            r'(?P<dead_interval>\d+)\s+\d+\s+'
-            r'(?P<remote_port>[\w\/\.\-\:]+(?:\s[\w\/\.\-\:]+|())).*'
-            r'(?P<remote_chassis_id>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+\d+\s+\d+'
+            r'(?P<dead_interval>\d+)\s+'
+            r'(?P<remaining_life>\d+)\s+'
+            r'(?P<remote_port>[\w\/\.\-\:]+(?:\s[\w\/\.\-\:]+|()))\s+'
+            r'(?P<remote_port_descr>\S*.*\S)?\s+'
+            r'(?P<remote_chassis_id>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+            r'(?P<tx>\d+)\s+(?P<rx>\d+)'
             r'(?:|\s+(?P<remote_chassis_name>\S*)|())$')
 
         for line in out.splitlines():
@@ -101,8 +115,14 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
                 neighbor = neighbors.setdefault(group['remote_port'], {})
                 neighbor['remote_chassis_id'] = group['remote_chassis_id']
                 neighbor['remote_interface_name'] = group['remote_port']
-                if group['remote_chassis_name'] is not None:
+                neighbor['dead_interval'] = int(group['dead_interval'])
+                neighbor['remaining_life'] = int(group['remaining_life'])
+                neighbor['tx'] = int(group['tx'])
+                neighbor['rx'] = int(group['rx'])
+                if group['remote_chassis_name']:
                     neighbor['remote_system_name'] = group['remote_chassis_name']
+                if group['remote_port_descr']:
+                    neighbor['remote_port_descr'] = group['remote_port_descr']
             continue
 
         return lldp_dict
@@ -146,6 +166,16 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
                             neighbor['remote_chassis_id'] = iter.text
                         elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}remote-system-name':
                             neighbor['remote_system_name'] = iter.text
+                        elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}remote-port-description':
+                            neighbor['remote_port_descr'] = iter.text
+                        elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}dead-interval':
+                            neighbor['dead_interval'] = int(iter.text)
+                        elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}remaining-life':
+                            neighbor['remaining_life'] = int(iter.text)
+                        elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}lldp-pdu-transmitted':
+                            neighbor['tx'] = int(iter.text)
+                        elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}lldp-pdu-received':
+                            neighbor['rx'] = int(iter.text)
                         elif iter.tag == '{urn:brocade.com:mgmt:brocade-lldp-ext}local-interface-ifindex':
                             last_rcvd_ifindex = iter.text
                     lldp_dict.setdefault('total_entries', 0)

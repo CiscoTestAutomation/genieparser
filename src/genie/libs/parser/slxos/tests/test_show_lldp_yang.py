@@ -22,9 +22,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/2",
                 "neighbors": {
                     "Bundle-Ether1": {
+                        "dead_interval": 120,
+                        "remaining_life": 91,
                         "remote_chassis_id": "94ae.f095.f4d9",
                         "remote_interface_name": "Bundle-Ether1",
+                        "remote_port_descr": 'Connection to CE',
                         "remote_system_name": "lab-ncs5501-pe1",
+                        "rx": 51673,
+                        "tx": 51417
                     }
                 },
             },
@@ -32,9 +37,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/43",
                 "neighbors": {
                     "000a.f741.5d92": {
+                        "dead_interval": 120,
+                        "remaining_life": 95,
                         "remote_chassis_id": "000a.f741.5d92",
                         "remote_interface_name": "000a.f741.5d92",
+                        "remote_port_descr": 'p1p2',
                         "remote_system_name": "trafficgen-server",
+                        "rx": 257089,
+                        "tx": 154255
                     }
                 },
             },
@@ -42,9 +52,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/44",
                 "neighbors": {
                     "000a.f741.5d90": {
+                        "dead_interval": 120,
+                        "remaining_life": 96,
                         "remote_chassis_id": "000a.f741.5d90",
                         "remote_interface_name": "000a.f741.5d90",
+                        "remote_port_descr": 'p1p1',
                         "remote_system_name": "trafficgen-server",
+                        "rx": 257089,
+                        "tx": 154255
                     }
                 },
             },
@@ -52,8 +67,12 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/46",
                 "neighbors": {
                     "90b1.1c08.a4a3": {
+                        "dead_interval": 120,
+                        "remaining_life": 116,
                         "remote_chassis_id": "90b1.1c08.a4a3",
                         "remote_interface_name": "90b1.1c08.a4a3",
+                        "rx": 50910,
+                        "tx": 51417
                     }
                 },
             },
@@ -61,8 +80,12 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/47",
                 "neighbors": {
                     "90b1.1c08.a4a5": {
+                        "dead_interval": 120,
+                        "remaining_life": 117,
                         "remote_chassis_id": "90b1.1c08.a4a5",
                         "remote_interface_name": "90b1.1c08.a4a5",
+                        "rx": 50910,
+                        "tx": 51417
                     }
                 },
             },
@@ -70,9 +93,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/5",
                 "neighbors": {
                     "Bundle-Ether1": {
+                        "dead_interval": 120,
+                        "remaining_life": 104,
                         "remote_chassis_id": "94ae.f09c.94d9",
                         "remote_interface_name": "Bundle-Ether1",
+                        "remote_port_descr": 'Connection to CE',
                         "remote_system_name": "lab-ncs5501-pe2",
+                        "rx": 51673,
+                        "tx": 51417
                     }
                 },
             },
@@ -80,9 +108,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/50",
                 "neighbors": {
                     "HundredGigE0/0/0/32": {
+                        "dead_interval": 120,
+                        "remaining_life": 101,
                         "remote_chassis_id": "94ae.f07b.c0d9",
                         "remote_interface_name": "HundredGigE0/0/0/32",
+                        "remote_port_descr": 'P',
                         "remote_system_name": "lab-ncs5502-p1",
+                        "rx": 51674,
+                        "tx": 51417
                     }
                 },
             },
@@ -90,9 +123,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/51",
                 "neighbors": {
                     "HundredGigE0/0/1/0": {
+                        "dead_interval": 120,
+                        "remaining_life": 99,
                         "remote_chassis_id": "94ae.f095.f4d9",
                         "remote_interface_name": "HundredGigE0/0/1/0",
+                        "remote_port_descr": 'P',
                         "remote_system_name": "lab-ncs5501-pe1",
+                        "rx": 51674,
+                        "tx": 51417
                     }
                 },
             },
@@ -100,9 +138,14 @@ class test_show_lldp_neighbors_yang(unittest.TestCase):
                 "local_interface_name": "Ethernet 0/52",
                 "neighbors": {
                     "HundredGigE0/0/1/1": {
+                        "dead_interval": 120,
+                        "remaining_life": 108,
                         "remote_chassis_id": "94ae.f095.f4d9",
                         "remote_interface_name": "HundredGigE0/0/1/1",
+                        "remote_port_descr": 'P',
                         "remote_system_name": "lab-ncs5501-pe1",
+                        "rx": 32,
+                        "tx": 58638
                     }
                 },
             },
