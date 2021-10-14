@@ -349,7 +349,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 },
                 Optional('service_policy_input'): str,
                 Optional('service_policy_output'): str,
-                Optional('ipv4_verify'): {
+                Optional('ip_verify'): {
                     'mode': str,
                     Optional('options'): list
                 },
@@ -360,6 +360,11 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('bandwidth'): int,
                 Optional('ip_tcp_adjust_mss'): int,
                 Optional('ipv6_tcp_adjust_mss'): int,
+                Optional('mtu'): int,
+                Optional('ip_mtu'): int,
+                Optional('ipv6_mtu'): int,
+                Optional('clns_mtu'): int,
+                Optional('mpls_mtu'): int,
             }
         }
     }
@@ -628,6 +633,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # ipv6 tcp adjust-mss 1432
         # ip tcp adjust-mss 1452
         p69=re.compile(r"^(?P<protocol>(ip|ipv6)) +tcp +adjust-mss +(?P<mss>\d+)$")
+
+        # mtu 1492
+        # ip mtu 1492
+        # ipv6 mtu 1492
+        # mpls mtu 1400
+        # clns mtu 1497
+        p70=re.compile(r"^((?P<protocol>(ip|ipv6|mpls|clns)) +)?mtu +(?P<mtu>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1204,7 +1216,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 if group['protocol'] == 'ip':
-                    verify_dict = intf_dict.setdefault('ipv4_verify', {})
+                    verify_dict = intf_dict.setdefault('ip_verify', {})
                 else:
                     verify_dict = intf_dict.setdefault('ipv6_verify', {})
                 verify_dict.update({
@@ -1238,6 +1250,21 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                     intf_dict.update({'ip_tcp_adjust_mss': int(group['mss'])})
                 else:
                     intf_dict.update({'ipv6_tcp_adjust_mss': int(group['mss'])})
+                continue
+
+            # mtu 1492
+            # ip mtu 1492
+            # ipv6 mtu 1492
+            # mpls mtu 1400
+            # clns mtu 1497
+            m = p70.match(line)
+            if m:
+                group = m.groupdict()
+                if not group['protocol']:
+                    intf_dict.update({'mtu': int(group['mtu'])})
+                else:
+                    dict_key = f"{group['protocol']}_mtu"
+                    intf_dict.update({dict_key: int(group['mtu'])})
                 continue
 
 

@@ -23,3 +23,7 @@
             * bandwidth
             * ip|ipv6 tcp adjust-mss
             * service-policy input|output
+            * mtu
+            * ip mtu
+            * ipv6 mtu
+            * clns mtu

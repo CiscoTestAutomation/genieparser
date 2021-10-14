@@ -1,6 +1,9 @@
 interface Dialer2
  description TEST
  bandwidth 250000
+ mtu 1492
+ ip mtu 1492
+ ipv6 mtu 1492
  ip address negotiated
  ip verify unicast source reachable-via rx allow-default allow-self-ping
  encapsulation ppp

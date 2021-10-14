@@ -1,5 +1,7 @@
 interface Port-channel1.3
  encapsulation dot1Q 10 second-dot1q 20
- vrf forwarding TEST
  ip address 4.4.4.4 255.255.255.248
+ mtu 9000
+ mpls mtu 9000
+ clns mtu 1497
  
