@@ -13,8 +13,6 @@ R1_xe.00-00         * 0x0000011D   0x2165                 519/*         0/0/0
   Metric: 10         IS (MT-IPv6) R1_xe.02
   Metric: 10         IS-Extended R1_xe.01
   Metric: 10         IS (MT-IPv6) R1_xe.01
-  Metric: 20         IS-Extended R1_xe.01
-  Metric: 20         IS (MT-IPv6) R1_xe.01
   IP Address:   10.13.115.1
   Metric: 10         IP 10.12.115.0/24
   Metric: 10         IP 10.13.115.0/24
