@@ -27,3 +27,6 @@
             * ip mtu
             * ipv6 mtu
             * clns mtu
+            * pppoe enable
+            * pppoe-client dial-pool-number
+            * pppoe-client ppp-max-payload
