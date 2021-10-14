@@ -19,12 +19,10 @@ expected_output = {
                         "extended_is_neighbor": {
                             "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
                             "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R1_xe.01_1": {"neighbor_id": "R1_xe.01", "metric": 20},
                         },
                         "mt_is_neighbor": {
                             "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
                             "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R1_xe.01_1": {"neighbor_id": "R1_xe.01", "metric": 20},
                         },
                         "ip_address": "10.13.115.1",
                         "ipv4_internal_reachability": {
