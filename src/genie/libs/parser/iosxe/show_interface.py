@@ -2085,8 +2085,10 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             p3 = re.compile(r'^Broadcast +address +is +(?P<address>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
-                interface_dict[interface]['ipv4'][address]['broadcast_address'] = \
-                    m.groupdict()['address']
+                if 'ipv4' in interface_dict[interface]:
+                    if address in interface_dict[interface]['ipv4']:
+                        interface_dict[interface]['ipv4'][address]['broadcast_address'] = \
+                            m.groupdict()['address']
                 continue
 
             # Address determined by configuration file
