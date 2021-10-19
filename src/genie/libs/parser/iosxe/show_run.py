@@ -306,6 +306,12 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_violation'): str,
                 Optional('carrier_delay'): list,
                 Optional('shutdown'): bool,
+                Optional('encapsulation'): {
+                    'type': str,
+                    Optional('first_dot1q'): int,
+                    Optional('dot1q_native'): bool,
+                    Optional('second_dot1q'): str
+                },
                 Optional('encapsulation_dot1q'): str,
                 Optional('description'): str,
                 Optional('dot1x_pae_authenticator'): bool,
@@ -323,6 +329,13 @@ class ShowRunInterfaceSchema(MetaParser):
                     'ip': str,
                     'netmask': str,
                 },
+                Optional('ipv4_secondary'): {
+                    Any(): {
+                        'ip': str,
+                        'netmask': str,
+                    },
+                },
+                Optional('ipv4_negotiated'): bool,
                 Optional('ipv6'): list,
                 Optional('ipv6_ospf'): {
                     Any(): {
@@ -389,6 +402,41 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_arp_inspection_trust'): bool,
                 Optional('mac_address_sticky'):str,
                 Optional('source_template'):str,
+                Optional('pppoe'): {
+                    'enabled': bool,
+                    Optional('group'): str
+                },
+                Optional('pppoe_client'): {
+                    Optional('dial_pool_number'): int,
+                    Optional('ppp_max_payload'): int,
+                },
+                Optional('dialer_pool'): int,
+                Optional('dialer_group'): int,
+                Optional('dialer_down_with_vinterface'): bool,
+                Optional('encapsulation_ppp'): bool,
+                Optional('ppp_chap_hostname'): str,
+                Optional('ppp_chap_password'): {
+                    'encryption_type': int,
+                    'password': str,
+                },
+                Optional('service_policy_input'): str,
+                Optional('service_policy_output'): str,
+                Optional('ip_verify'): {
+                    'mode': str,
+                    Optional('options'): list
+                },
+                Optional('ipv6_verify'): {
+                    'mode': str,
+                    Optional('options'): list
+                },
+                Optional('bandwidth'): int,
+                Optional('ip_tcp_adjust_mss'): int,
+                Optional('ipv6_tcp_adjust_mss'): int,
+                Optional('mtu'): int,
+                Optional('ip_mtu'): int,
+                Optional('ipv6_mtu'): int,
+                Optional('clns_mtu'): int,
+                Optional('mpls_mtu'): int,
             }
         }
     }
@@ -435,7 +483,10 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p3 = re.compile(r'^(ip )?vrf +forwarding +(?P<vrf>[\S\s]+)$')
 
         # ip address 10.1.21.249 255.255.255.0
-        p4 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')
+        p4_1 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')
+
+        # ip address 10.1.21.249 255.255.255.0 secondary
+        p4_2 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+) +secondary$')
 
         # ipv6 address 2001:db8:4:1::1/64
         # ipv6 address 2001:db8:400:1::2/112
@@ -445,7 +496,15 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p6 = re.compile(r'^(?P<shutdown>shutdown)$')
 
         # encapsulation dot1Q 201
-        p7 = re.compile(r'^encapsulation +dot1Q +(?P<dot1q>[\d]+)$')
+        # encapsulation dot1Q 201 native
+        # encapsulation dot1Q 10 second-dot1q 15
+        # encapsulation dot1Q 10 second-dot1q 100,200-300,400,500-600
+        # encapsulation dot1Q 10 second-dot1q any
+        # encapsulation ppp
+        p7 = re.compile(
+            r'^encapsulation +(?P<type>[a-zA-Z0-9]+)(( +(?P<dot1q>[\d]+))'
+            + r'(((?P<native>( +native)))|( +second-dot1q +(?P<second_dot1q>[\w\d\,\-]+)))?)?$'
+            )
 
         # carrier-delay up 60
         # carrier-delay down 60
@@ -612,6 +671,58 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # source template USER_NoAuth
         p60=re.compile(r"^source template (?P<template>\w+)$")
 
+        # ip address negotiated
+        p61=re.compile(r"^ip +address +negotiated$")
+
+        # dialer pool 2
+        p62=re.compile(r"^dialer +pool +(?P<dialer_pool>[0-9]+)$")
+
+        # dialer-group 2
+        p63=re.compile(r"^dialer-group +(?P<dialer_group>[0-9]+)$")
+
+        # ppp chap hostname user@realm.isp
+        p64_1=re.compile(r"^ppp +chap +hostname +(?P<ppp_chap_hostname>[a-zA-Z0-9@_$/\.\-]+)$")
+
+        # ppp chap password 0 password
+        p64_2=re.compile(r"^ppp +chap +password +(?P<type>[0-9]) +(?P<ppp_chap_password>[a-zA-Z0-9@_$/\.\-]+)$")
+
+        # service-policy output SHAPING
+        # service-policy input POLICE
+        p65=re.compile(r"^service-policy( +(?P<direction>(\w+)))? +(?P<service_policy>([\w\-\_]+))$")
+
+        # ip verify unicast source reachable-via any allow-default
+        # ipv6 verify unicast source reachable-via rx allow-default 1300
+        # ip verify unicast source reachable-via any
+        # ipv6 verify unicast source reachable-via rx allow-self-ping allow-default
+        p66=re.compile(r"^(?P<protocol>(ip|ipv6)) +verify +unicast +source +reachable-via +(?P<mode>(rx|any))( +(?P<options>[\w\d\- ]+))?$")
+
+        # dialer down-with-vInterface
+        p67=re.compile(r"^dialer +down-with-vInterface$")
+
+        # bandwidth 250000
+        p68=re.compile(r"^bandwidth +(?P<bandwidth>\d+)$")
+
+        # ipv6 tcp adjust-mss 1432
+        # ip tcp adjust-mss 1452
+        p69=re.compile(r"^(?P<protocol>(ip|ipv6)) +tcp +adjust-mss +(?P<adjust_tcp_mss>\d+)$")
+
+        # mtu 1492
+        # ip mtu 1492
+        # ipv6 mtu 1492
+        # mpls mtu 1400
+        # clns mtu 1497
+        p70=re.compile(r"^((?P<protocol>(ip|ipv6|mpls|clns)) +)?mtu +(?P<mtu>\d+)$")
+
+        # pppoe enable group global
+        # pppoe enable
+        p71=re.compile(r"^pppoe +enable( +group +(?P<pppoe_group>[\w\-\.]+))?$")
+
+        # pppoe-client dial-pool-number 2
+        p72=re.compile(r"^pppoe-client +dial-pool-number +(?P<dial_pool_number>\d+)$")
+
+        # pppoe-client ppp-max-payload 1500
+        p73=re.compile(r"^pppoe-client +ppp-max-payload +(?P<ppp_max_payload>\d+)$")
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -638,13 +749,25 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 continue
 
             # # ip address 10.1.21.249 255.255.255.0
-            m = p4.match(line)
+            m = p4_1.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'ipv4':{
                                     'ip': group['ip'],
                                     'netmask': group['netmask']},
                                 })
+                continue
+
+            # ip address 10.1.21.249 255.255.255.0 secondary
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('ipv4_secondary', {}).update({
+                    group['ip']: {
+                        'ip': group['ip'],
+                        'netmask': group['netmask'],
+                    }
+                })
                 continue
             
             # ipv6 address 2001:db8:4:1::1/64
@@ -662,10 +785,29 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 continue
 
             # encapsulation dot1Q 201
+            # encapsulation dot1Q 201 native
+            # encapsulation dot1Q 10 second-dot1q 15
+            # encapsulation dot1Q 10 second-dot1q 100,200-300,400,500-600
+            # encapsulation dot1Q 10 second-dot1q any
+            # encapsulation ppp
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'encapsulation_dot1q': group['dot1q']})
+                encapsulation_dict = {
+                    'type': group['type']
+                }
+                if group['type'] == 'dot1Q':
+
+                    # Backward compatibility. Emulates previous regex behavior
+                    if not group['second_dot1q'] and not group['native']:
+                        intf_dict.update({'encapsulation_dot1q': group['dot1q']})
+
+                    encapsulation_dict['first_dot1q'] = int(group['dot1q'])
+                    encapsulation_dict['dot1q_native'] = bool(group['native'])
+                    if group['second_dot1q']:
+                        encapsulation_dict['second_dot1q'] = group['second_dot1q']
+
+                intf_dict.update({'encapsulation': encapsulation_dict})
                 continue
 
             # carrier-delay up 60
@@ -1099,6 +1241,147 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'source_template':group['template']})
                 continue
 
+            # ip address negotiated
+            m = p61.match(line)
+            if m:
+                intf_dict.update({'ipv4_negotiated': True})
+                continue
+
+            # dialer pool 2
+            m = p62.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'dialer_pool': int(group['dialer_pool'])})
+                continue
+
+            # dialer-group 2
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'dialer_group': int(group['dialer_group'])})
+                continue
+
+            # ppp chap hostname user@realm.isp
+            m = p64_1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ppp_chap_hostname': group['ppp_chap_hostname']})
+                continue
+
+            # ppp chap password 0 password
+            m = p64_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ppp_chap_password': {
+                            'encryption_type': int(group['type']),
+                            'password': group['ppp_chap_password']
+                        }
+                    })
+                continue
+
+            # service-policy output SHAPING
+            # service-policy input POLICE
+            m = p65.match(line)
+            if m:
+                group = m.groupdict()
+                if group['direction'] == 'input':
+                    intf_dict.update({'service_policy_input': group['service_policy']})
+                elif group['direction'] == 'output':
+                    intf_dict.update({'service_policy_output': group['service_policy']})
+                continue
+
+            # ip verify unicast source reachable-via any allow-default
+            # ipv6 verify unicast source reachable-via rx allow-default 1300
+            # ip verify unicast source reachable-via any
+            # ipv6 verify unicast source reachable-via rx allow-self-ping allow-default
+            m = p66.match(line)
+            if m:
+                group = m.groupdict()
+                if group['protocol'] == 'ip':
+                    verify_dict = intf_dict.setdefault('ip_verify', {})
+                else:
+                    verify_dict = intf_dict.setdefault('ipv6_verify', {})
+                verify_dict.update({
+                    'mode': group['mode']
+                })
+                if group['options']:
+                    verify_dict.update({
+                        'options': [option for option in group['options'].split(' ')]
+                    })
+                continue
+
+            # dialer down-with-vInterface
+            m = p67.match(line)
+            if m:
+                intf_dict.update({'dialer_down_with_vinterface': True})
+                continue
+
+            # bandwidth 250000
+            m = p68.match(line)
+            if m:
+               group = m.groupdict()
+               intf_dict.update({'bandwidth': int(group['bandwidth'])})
+               continue 
+
+            # ipv6 tcp adjust-mss 1432
+            # ip tcp adjust-mss 1452
+            m = p69.match(line)
+            if m:
+                group = m.groupdict()
+                if group['protocol'] == 'ip':
+                    intf_dict.update({'ip_tcp_adjust_mss': int(group['adjust_tcp_mss'])})
+                else:
+                    intf_dict.update({'ipv6_tcp_adjust_mss': int(group['adjust_tcp_mss'])})
+                continue
+
+            # mtu 1492
+            # ip mtu 1492
+            # ipv6 mtu 1492
+            # mpls mtu 1400
+            # clns mtu 1497
+            m = p70.match(line)
+            if m:
+                group = m.groupdict()
+                if not group['protocol']:
+                    intf_dict.update({'mtu': int(group['mtu'])})
+                else:
+                    dict_key = f"{group['protocol']}_mtu"
+                    intf_dict.update({dict_key: int(group['mtu'])})
+                continue
+
+            # pppoe enable group global
+            # pppoe enable
+            m = p71.match(line)
+            if m:
+                group = m.groupdict()
+                if group['pppoe_group']:
+                    intf_dict.update({'pppoe': 
+                        {
+                        'enabled': True,
+                        'group': group['pppoe_group']
+                        }
+                    })
+                else:
+                    intf_dict.update({'pppoe': True })
+                continue
+
+            # pppoe-client dial-pool-number 2
+            m = p72.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('pppoe_client', {}).update({
+                    'dial_pool_number': int(group['dial_pool_number']),
+                })
+                continue
+
+            # pppoe-client ppp-max-payload 1500
+            m = p73.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('pppoe_client', {}).update({
+                    'ppp_max_payload': int(group['ppp_max_payload']),
+                })
+                continue
 
 
         return config_dict

@@ -18,6 +18,8 @@ expected_output = {
             "switchport_mode": "access",
             "spanning_tree_portfast": True,
             "ip_dhcp_snooping_limit_rate": "10",
+            'service_policy_input': 'IN-PM',
+            'service_policy_output': 'OUT-PM',
         },
         "GigabitEthernet1/0/2": {
             "description": "DA1202B_21_13 ap-100",
@@ -25,6 +27,8 @@ expected_output = {
             "switchport_mode": "access",
             "spanning_tree_portfast": True,
             "ip_dhcp_snooping_limit_rate": "10",
+            'service_policy_input': 'IN-PM',
+            'service_policy_output': 'OUT-PM',
         },
     }
 }
