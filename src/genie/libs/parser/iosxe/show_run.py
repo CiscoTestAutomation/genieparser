@@ -611,16 +611,16 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p61=re.compile(r"^ip +address +negotiated$")
 
         # dialer pool 2
-        p62=re.compile(r"^dialer +pool +(?P<pool>[0-9]+)$")
+        p62=re.compile(r"^dialer +pool +(?P<dialer_pool>[0-9]+)$")
 
         # dialer-group 2
-        p63=re.compile(r"^dialer-group +(?P<group>[0-9]+)$")
+        p63=re.compile(r"^dialer-group +(?P<dialer_group>[0-9]+)$")
 
         # ppp chap hostname user@realm.isp
-        p64_1=re.compile(r"^ppp +chap +hostname +(?P<hostname>[a-zA-Z0-9@_$/\.\-]+)$")
+        p64_1=re.compile(r"^ppp +chap +hostname +(?P<ppp_chap_hostname>[a-zA-Z0-9@_$/\.\-]+)$")
 
         # ppp chap password 0 password
-        p64_2=re.compile(r"^ppp +chap +password +(?P<type>[0-9]) +(?P<password>[a-zA-Z0-9@_$/\.\-]+)$")
+        p64_2=re.compile(r"^ppp +chap +password +(?P<type>[0-9]) +(?P<ppp_chap_password>[a-zA-Z0-9@_$/\.\-]+)$")
 
         # service-policy output SHAPING
         # service-policy input POLICE
@@ -640,7 +640,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ipv6 tcp adjust-mss 1432
         # ip tcp adjust-mss 1452
-        p69=re.compile(r"^(?P<protocol>(ip|ipv6)) +tcp +adjust-mss +(?P<mss>\d+)$")
+        p69=re.compile(r"^(?P<protocol>(ip|ipv6)) +tcp +adjust-mss +(?P<adjust_tcp_mss>\d+)$")
 
         # mtu 1492
         # ip mtu 1492
@@ -651,13 +651,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # pppoe enable group global
         # pppoe enable
-        p71=re.compile(r"^pppoe +enable( +group +(?P<group>[\w\-\.]+))?$")
+        p71=re.compile(r"^pppoe +enable( +group +(?P<pppoe_group>[\w\-\.]+))?$")
 
         # pppoe-client dial-pool-number 2
-        p72=re.compile(r"^pppoe-client +dial-pool-number +(?P<number>\d+)$")
+        p72=re.compile(r"^pppoe-client +dial-pool-number +(?P<dial_pool_number>\d+)$")
 
         # pppoe-client ppp-max-payload 1500
-        p73=re.compile(r"^pppoe-client +ppp-max-payload +(?P<max_payload>\d+)$")
+        p73=re.compile(r"^pppoe-client +ppp-max-payload +(?P<ppp_max_payload>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1187,21 +1187,21 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             m = p62.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'dialer_pool': int(group['pool'])})
+                intf_dict.update({'dialer_pool': int(group['dialer_pool'])})
                 continue
 
             # dialer-group 2
             m = p63.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'dialer_group': int(group['group'])})
+                intf_dict.update({'dialer_group': int(group['dialer_group'])})
                 continue
 
             # ppp chap hostname user@realm.isp
             m = p64_1.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'ppp_chap_hostname': group['hostname']})
+                intf_dict.update({'ppp_chap_hostname': group['ppp_chap_hostname']})
                 continue
 
             # ppp chap password 0 password
@@ -1210,7 +1210,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'ppp_chap_password': {
                             'encryption_type': int(group['type']),
-                            'password': group['password']
+                            'password': group['ppp_chap_password']
                         }
                     })
                 continue
@@ -1265,9 +1265,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 if group['protocol'] == 'ip':
-                    intf_dict.update({'ip_tcp_adjust_mss': int(group['mss'])})
+                    intf_dict.update({'ip_tcp_adjust_mss': int(group['adjust_tcp_mss'])})
                 else:
-                    intf_dict.update({'ipv6_tcp_adjust_mss': int(group['mss'])})
+                    intf_dict.update({'ipv6_tcp_adjust_mss': int(group['adjust_tcp_mss'])})
                 continue
 
             # mtu 1492
@@ -1290,11 +1290,11 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             m = p71.match(line)
             if m:
                 group = m.groupdict()
-                if group['group']:
+                if group['pppoe_group']:
                     intf_dict.update({'pppoe': 
                         {
                         'enabled': True,
-                        'group': group['group']
+                        'group': group['pppoe_group']
                         }
                     })
                 else:
@@ -1306,7 +1306,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('pppoe_client', {}).update({
-                    'dial_pool_number': int(group['number']),
+                    'dial_pool_number': int(group['dial_pool_number']),
                 })
                 continue
 
@@ -1315,7 +1315,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('pppoe_client', {}).update({
-                    'ppp_max_payload': int(group['max_payload']),
+                    'ppp_max_payload': int(group['ppp_max_payload']),
                 })
                 continue
 
