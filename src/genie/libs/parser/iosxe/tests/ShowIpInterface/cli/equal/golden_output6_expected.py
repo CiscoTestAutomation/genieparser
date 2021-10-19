@@ -1,0 +1,45 @@
+expected_output = {
+    'NVI0': {
+        'bgp_policy_mapping': False,
+        'directed_broadcast_forwarding': False,
+        'enabled': True,
+        'icmp': {
+            'mask_replies': 'never sent',
+            'redirects': 'always sent',
+            'unreachables': 'always sent',
+        },
+        'input_features': ['MCI Check'],
+        'ip_access_violation_accounting': False,
+        'ip_cef_switching': False,
+        'ip_fast_switching': False,
+        'ip_flow_switching': False,
+        'ip_multicast_distributed_fast_switching': False,
+        'ip_multicast_fast_switching': True,
+        'ip_null_turbo_vector': True,
+        'ip_output_packet_accounting': False,
+        'ip_route_cache_flags': ['CEF', 'Fast'],
+        'local_proxy_arp': False,
+        'mtu': 9216,
+        'network_address_translation': False,
+        'oper_status': 'up',
+        'policy_routing': False,
+        'probe_proxy_name_replies': False,
+        'router_discovery': False,
+        'rtp_ip_header_compression': False,
+        'security_level': 'default',
+        'split_horizon': True,
+        'tcp_ip_header_compression': False,
+        'unicast_routing_topologies': {
+            'topology': {
+                'base': {
+                    'status': 'up',
+                },
+            },
+        },
+        'wccp': {
+            'redirect_exclude': False,
+            'redirect_inbound': False,
+            'redirect_outbound': False,
+        },
+    },
+}
