@@ -1480,6 +1480,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         lag_int_type = ''
         lacp_flag = ''
         if_dist_dict = {}
+        address_family_dict = {}
         for line in out.splitlines():
             line = line.strip()
             if not line:
