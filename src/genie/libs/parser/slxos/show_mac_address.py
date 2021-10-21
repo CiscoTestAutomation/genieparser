@@ -24,19 +24,16 @@ class ShowMacAddressTableSchema(MetaParser):
     ''' Schema for "show mac-address-table" '''
 
     schema = {
-        'total-mac-addresses': int,
-        Optional('macs'): {
+        'total_mac_addresses': int,
+        Optional('mac_address'): {
             Any(): {  # mac
-                'mac': str,
-                'domain-types': {
+                'domain_type': {
                     Any(): {
-                        'domain-type': str,
-                        'domain-ids': {
+                        'domain_id': {
                             Any(): {  # domain-id
-                                'domain-id': int,
-                                'port-lif-pw-t': str,
-                                'mac-type': str,
-                                'mac-state': str
+                                'port_lif_pw_t': str,
+                                'mac_type': str,
+                                'mac_state': str
                             }
                         }
                     }
@@ -84,23 +81,20 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
 
             m = p1.match(line)
             if m:
-                res_dict['total-mac-addresses'] = int(m.groupdict()['total_mac'])
+                res_dict['total_mac_addresses'] = int(m.groupdict()['total_mac'])
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                macs = res_dict.setdefault('macs', {})
-                mac = macs.setdefault(group['mac'], {})
-                mac['mac'] = group['mac']
-                domain_types = mac.setdefault('domain-types', {})
+                mac_address = res_dict.setdefault('mac_address', {})
+                mac = mac_address.setdefault(group['mac'], {})
+                domain_types = mac.setdefault('domain_type', {})
                 domain_type = domain_types.setdefault(group['domain_type'], {})
-                domain_type['domain-type'] = group['domain_type']
-                domain_ids = domain_type.setdefault('domain-ids', {})
+                domain_ids = domain_type.setdefault('domain_id', {})
                 domain_id = domain_ids.setdefault(int(group['domain_id']), {})
-                domain_id['domain-id'] = int(group['domain_id'])
-                domain_id['port-lif-pw-t'] = group['port_lif_pw_t']
-                domain_id['mac-type'] = group['mac_type']
-                domain_id['mac-state'] = group['mac_state']
+                domain_id['port_lif_pw_t'] = group['port_lif_pw_t']
+                domain_id['mac_type'] = group['mac_type']
+                domain_id['mac_state'] = group['mac_state']
                 continue
         return res_dict
