@@ -6,9 +6,9 @@ NXOS parsers for the following show commands:
     * show hsrp internal event-history msgs
 
 '''
+import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
-import re
 
 # ====================================================
 # Schema for 'show hsrp internal event-history errors'
@@ -20,7 +20,7 @@ class ShowHsrpEventHistoryErrorsSchema(MetaParser):
     schema = {  
         'event_type':{
             'error':{
-                Any() : {
+                int : {
                     'date' : str,
                     'time' : str,
                     'proc_name' : str,
@@ -50,7 +50,8 @@ class ShowHsrpEventHistoryErrors(ShowHsrpEventHistoryErrorsSchema):
         p1 = re.compile(r'^\[(?P<log_num>\d+)\]\s+(?P<date>\d{4} [a-zA-Z]+ [0-9]{1,2}) (?P<time>[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\.[0-9]{6}) \[(?P<proc_name>.+)\] E_DEBUG\s+\[(?P<pid>\d+)\]:(?P<msg>.+)$')
 
         for line in out.splitlines():
-            line = line.strip()  
+            line = line.strip()
+            #[2] 2021 Apr 21 12:28:21.913775 [hsrp_engine] E_DEBUG    [24399]:(Acast) Get Bundle For IOD Failed: Reason='No bundle found for VLAN', AddrType=IPv4, VLAN=1001  
             m = p1.match(line)
             if m:
                 result_dict = event_history_errors_dict.setdefault('event_type',{})
@@ -78,7 +79,7 @@ class ShowHsrpEventHistoryDebugsSchema(MetaParser):
     schema = {  
         'event_type':{
             'debug':{
-                Any() : {
+                int : {
                     'date' : str,
                     'time' : str,
                     'proc_name' : str,
@@ -110,6 +111,7 @@ class ShowHsrpEventHistoryDebugs(ShowHsrpEventHistoryDebugsSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            #[1] 2021 Apr 30 05:43:16.822827 [hsrp_engine] E_DEBUG    [24399]:[0]:  Time Taken For Show Run: Time=0.015553
             m = p1.match(line)
             if m:
                 result_dict = event_history_debugs_dict.setdefault('event_type',{})
@@ -137,7 +139,7 @@ class ShowHsrpEventHistoryMsgsSchema(MetaParser):
     schema = {
         'event_type': {
             'message': {
-                Any() : {
+                int : {
                     'date' : str,
                     'time' : str,
                     'proc_name' : str,
@@ -187,6 +189,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            #[37] 2021 Aug 13 13:26:35.415873 [hsrp_engine] E_DEBUG_DSF    [/Class.cc:331]initRnPrefixTable
             m = p1_1.match(line)
             if m:
                 result_dict = event_history_msgs_dict.setdefault('event_type',{})
@@ -203,6 +206,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
                 log_dict.update({'msg': groups['msg']})
                 continue
 
+            #[1] 2021 May 10 12:08:54.364555 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X0A8359C5, Ret:SUCCESS
             m = p1_2.match(line)
             if m:
                 result_dict = event_history_msgs_dict.setdefault('event_type',{})
@@ -221,6 +225,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
                 log_dict.update({'ret_val': groups['ret_val']})
                 continue
             
+            #Src:0x00000101/46265, Dst:0x00000101/340, Flags:None
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -231,6 +236,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
                 log_dict.update({'flags': groups['flags']})
                 continue
             
+            #HA_SEQNO:0X00000000, RRtoken:0x0A8359C5, Sync:UNKNOWN, Payloadsize:308
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
