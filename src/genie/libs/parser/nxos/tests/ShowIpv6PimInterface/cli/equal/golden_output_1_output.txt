@@ -1,0 +1,105 @@
+
+R1#show ipv6 pim interface vrf all
+PIM6 Interface Status for VRF "default"
+Ethernet2/1, Interface status: protocol-up/link-up/admin-up
+  IPv6 address:
+    2001:db8:1:5::1/64 [VALID]
+  PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 1
+  PIM6 neighbor count: 0
+  PIM6 hello interval: 30 secs, next hello sent in: 00:00:13
+  PIM6 neighbor holdtime: 105 secs
+  PIM6 configured DR priority: 1
+  PIM6 border interface: no
+  PIM6 GenID sent in Hellos: 0x25f72e3c
+  PIM6 Hello MD5-AH Authentication: disabled
+  PIM6 Neighbor policy: none configured
+  PIM6 Join-Prune inbound policy: none configured
+  PIM6 Join-Prune outbound policy: none configured
+  PIM passive interface: no
+  PIM Auto Enabled: no
+  PIM6 BFD enabled: no
+  PIM6 Interface Statistics, last reset: never
+    General (sent/received):
+      Hellos: 240/0, JPs: 0/0, Asserts: 0/0
+      Grafts: 0/0, Graft-Acks: 0/0
+      DF-Offers: 0/0, DF-Winners: 0/0, DF-Backoffs: 0/0, DF-Passes: 0/0
+    Errors:
+      Checksum errors: 0, Invalid packet types/DF subtypes: 0/0
+      Authentication failed: 0
+      Packet length errors: 0, Bad version packets: 0, Packets from self: 0
+      Packets from non-neighbors: 0
+      Packets received on passiveinterface: 0
+      JPs received on RPF-interface: 0
+      (*,G) Joins received with no/wrong RP: 0/0
+      (*,G)/(S,G) JPs received for SSM/Bidir groups: 0/0
+      JPs filtered by inbound policy: 0
+      JPs filtered by outbound policy: 0
+Ethernet2/5, Interface status: protocol-up/link-up/admin-up
+  IPv6 address:
+    2001:db8:1:2::1/64 [VALID]
+    2001:db8:1:2::2/64 [VALID]
+  PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 1
+  PIM6 neighbor count: 0
+  PIM6 hello interval: 30 secs, next hello sent in: 00:00:07
+  PIM6 neighbor holdtime: 105 secs
+  PIM6 configured DR priority: 1
+  PIM6 border interface: no
+  PIM6 GenID sent in Hellos: 0x30a2ad71
+  PIM6 Hello MD5-AH Authentication: disabled
+  PIM6 Neighbor policy: none configured
+  PIM6 Join-Prune inbound policy: none configured
+  PIM6 Join-Prune outbound policy: none configured
+  PIM passive interface: no
+  PIM Auto Enabled: no
+  PIM6 BFD enabled: no
+  PIM6 Interface Statistics, last reset: never
+    General (sent/received):
+      Hellos: 489/0, JPs: 0/0, Asserts: 0/0
+      Grafts: 0/0, Graft-Acks: 0/0
+      DF-Offers: 0/0, DF-Winners: 0/0, DF-Backoffs: 0/0, DF-Passes: 0/0
+    Errors:
+      Checksum errors: 0, Invalid packet types/DF subtypes: 0/0
+      Authentication failed: 0
+      Packet length errors: 0, Bad version packets: 0, Packets from self: 0
+      Packets from non-neighbors: 0
+      Packets received on passiveinterface: 0
+      JPs received on RPF-interface: 0
+      (*,G) Joins received with no/wrong RP: 0/0
+      (*,G)/(S,G) JPs received for SSM/Bidir groups: 0/0
+      JPs filtered by inbound policy: 0
+      JPs filtered by outbound policy: 0
+
+PIM6 Interface Status for VRF "VRF1"
+Ethernet2/2, Interface status: protocol-up/link-up/admin-up
+  IPv6 address:
+    2001:db8:11:33::11/64 [VALID]
+  PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 166
+  PIM6 neighbor count: 1
+  PIM6 hello interval: 67 secs (configured 66666 ms), next hello sent in: 00:00:34
+  PIM6 neighbor holdtime: 236 secs
+  PIM6 configured DR priority: 166
+  PIM6 border interface: yes
+  PIM6 GenID sent in Hellos: 0x08f0f420
+  PIM6 Hello MD5-AH Authentication: disabled
+  PIM6 Neighbor policy: v6neighbor-policy
+  PIM6 Join-Prune inbound policy: v6jp-policy
+  PIM6 Join-Prune outbound policy: v6jp-policy
+  PIM passive interface: no
+  PIM Auto Enabled: no
+  PIM6 BFD enabled: no
+  PIM6 Interface Statistics, last reset: never
+    General (sent/received):
+      Hellos: 274/477, JPs: 0/0, Asserts: 0/0
+      Grafts: 0/0, Graft-Acks: 0/0
+      DF-Offers: 0/0, DF-Winners: 0/0, DF-Backoffs: 0/0, DF-Passes: 0/0
+    Errors:
+      Checksum errors: 0, Invalid packet types/DF subtypes: 0/0
+      Authentication failed: 0
+      Packet length errors: 0, Bad version packets: 0, Packets from self: 0
+      Packets from non-neighbors: 0
+      Packets received on passiveinterface: 0
+      JPs received on RPF-interface: 0
+      (*,G) Joins received with no/wrong RP: 0/0
+      (*,G)/(S,G) JPs received for SSM/Bidir groups: 0/0
+      JPs filtered by inbound policy: 0
+      JPs filtered by outbound policy: 0

@@ -1,0 +1,11 @@
+
+Router# show msdp vrf VRF1 summary
+
+Maximum External SA's Global : 20000
+Current External Active SAs : 0
+
+MSDP Peer Status Summary
+Peer Address    AS    State    Uptime/    Reset Peer    Active Cfg.Max    TLV
+Downtime    Count Name    SA Cnt Ext.SAs recv/sent
+10.4.1.1    0    Listen    18:25:02    0    R1    0    0    0/0
+10.229.11.11    0    Listen    18:14:53    0    ?    0    0    0/0

@@ -3,6 +3,8 @@
 IOSXE parsers for the following show commands:
     * show license
     * show license udi
+    * show license summary
+    * show license rum id all
 '''
 
 # Python
@@ -239,3 +241,52 @@ class ShowLicenseSummary(ShowLicenseSummarySchema):
                 result_dict[license]['status'] = status
                 continue
         return license_summ_dict
+
+# =================
+# Schema for:
+#  * 'show license rum id all'
+# =================
+
+class ShowLicenseRumIdAllSchema(MetaParser):
+    """Schema for show license rum id all."""
+    schema = {
+        'smart_license_usage_reports': {
+            Any(): {
+                'state': str,
+                'flag': str,
+                'feature_name': str
+                }
+        }
+    }
+
+# =================
+# Parser for:
+#  * 'show license rum id all'
+# =================
+class ShowLicenseRumIdAll(ShowLicenseRumIdAllSchema):
+    """Parser for show license rum id all"""
+
+    cli_command = 'show license rum id all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        ret_dict = {}
+
+        # 1629870048          CLOSED    N     network-premier_2.5G
+        p1 = re.compile(r'^(?P<report_id>\d+)\s+(?P<state>\S+)\s+(?P<flag>\w+)\s+(?P<feature_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m =p1.match(line)
+            if m:
+                groups =m.groupdict()
+                report_id = int(groups['report_id'])
+                rum_id_dict = ret_dict.setdefault('smart_license_usage_reports', {}).setdefault(report_id, {})
+                rum_id_dict['state'] = groups['state']
+                rum_id_dict['flag'] =  groups['flag']
+                rum_id_dict['feature_name'] = groups['feature_name']
+                continue
+        return ret_dict

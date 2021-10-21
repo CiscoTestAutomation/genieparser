@@ -35,6 +35,24 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
     * show lisp all instance-id <instance_id> ethernet statistics
+    * show lisp {lisp_id} instance-id {instance_id} dynamic-eid summary
+    * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid summary
+    * show lisp instance-id {instance_id} dynamic-eid summary
+    * show lisp eid-table vrf {vrf} dynamic-eid summary
+    * show lisp eid-table vlan {vlan} dynamic-eid summary
+    * show lisp eid-table {eid_table} dynamic-eid summary
+    * show lisp {lisp_id} instance-id {instance_id} dynamic-eid
+    * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid
+    * show lisp instance-id {instance_id} dynamic-eid
+    * show lisp eid-table {eid_table} dynamic-eid
+    * show lisp eid-table vrf {vrf} dynamic-eid
+    * show lisp eid-table vlan {vlan} dynamic-eid
+    * show lisp {lisp_id} instance-id {instance_id} dynamic-eid detail
+    * show lisp locator-table {vrf} instance-id {instance-id} dynamic-eid detail
+    * show lisp instance-id {instance_id} dynamic-eid detail
+    * show lisp eid-table {eid-table} dynamic-eid detail
+    * show lisp eid-table vrf {vrf} dynamic-eid detail
+    * show lisp eid-table vlan {vlan} dynamic-eid detail
 '''
 
 # Python
@@ -42,7 +60,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 from genie.libs.parser.utils.common import Common
 
 
@@ -3882,4 +3900,426 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
                 continue
 
         return tele_info_obj
-              
+
+
+class ShowLispDynamicEidSummarySchema(MetaParser):
+
+    ''' Schema for
+            * show lisp {lisp_id} instance-id {instance_id} dynamic-eid summary
+            * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid summary
+            * show lisp instance-id {instance_id} dynamic-eid summary
+            * show lisp eid-table vrf {vrf} dynamic-eid summary
+            * show lisp eid-table vlan {vlan} dynamic-eid summary
+            * show lisp eid-table {eid_table} dynamic-eid summary
+    '''
+
+    schema = {
+        "lisp_id": {
+            int: {
+                "instance_id": {
+                    int: {
+                        Optional("eid_table"): str,
+                        Optional("dynamic_eids"): {
+                            str: {
+                                "eids": {
+                                    str: {
+                                        "interface": str,
+                                        "uptime": str,
+                                        "last_packet": str,
+                                        "pending_ping_count": int,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowLispDynamicEidSummary(ShowLispDynamicEidSummarySchema):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid summary
+        * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid summary
+        * show lisp instance-id {instance_id} dynamic-eid summary
+        * show lisp eid-table vrf {vrf} dynamic-eid summary
+        * show lisp eid-table vlan {vlan} dynamic-eid summary
+        * show lisp eid-table {eid_table} dynamic-eid summary
+    """
+
+    cli_command = [
+       'show lisp {lisp_id} instance-id {instance_id} dynamic-eid summary',
+       'show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid summary',
+       'show lisp instance-id {instance_id} dynamic-eid summary',
+       'show lisp eid-table vrf {vrf} dynamic-eid summary',
+       'show lisp eid-table vlan {vlan} dynamic-eid summary',
+       'show lisp eid-table {eid_table} dynamic-eid summary',
+       ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, vlan=None, eid_table=None):
+
+        # init ret_dict
+        ret_dict = {}
+
+        if output is None:
+            if lisp_id and instance_id:
+                out = self.device.execute(self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id))
+            elif vrf and instance_id:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf, instance_id=instance_id))
+            elif instance_id:
+                out = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            elif vrf:
+                out = self.device.execute(self.cli_command[3].format(vrf=vrf))
+            elif vlan:
+                out = self.device.execute(self.cli_command[4].format(vlan=vlan))
+            elif eid_table:
+                out = self.device.execute(self.cli_command[5].format(eid_table=eid_table))
+            else:
+                return ret_dict
+        else:
+            out = output
+
+
+        # LISP Dynamic EID Summary for router 0, IID 4100, EID-table VRF "red"
+        # LISP Dynamic EID Summary for router 0, IID 101
+        p1 = re.compile(r'^LISP +Dynamic +EID +Summary +for +router\s+(?P<lisp_id>\d+),\s+IID\s+'
+                        r'(?P<instance_id>\d+)(, EID-table VRF\s+)?(?P<eid_table>.+)?$')
+
+        # 192_168_1_0          192.168.1.1             Vl101         1d22h     never     0
+        p2 = re.compile(r'^(?P<dynamic_eid_name>\S+)\s+(?P<eid>\S+)\s+(?P<interface>\S+)'
+                        r'\s+(?P<uptime>\S+)\s+(?P<last_packet>\S+)\s+(?P<pending_ping_count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # LISP Dynamic EID Summary for router 0, IID 4100, EID-table VRF "red"
+            # LISP Dynamic EID Summary for router 0, IID 101
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_id_dict = \
+                    ret_dict.setdefault('lisp_id', {}) \
+                        .setdefault(int(group['lisp_id']), {}) \
+                        .setdefault('instance_id', {}) \
+                        .setdefault(int(group['instance_id']), {})
+                if group['eid_table']:
+                    eid_table = group['eid_table'].replace('"','')
+                    lisp_id_dict.update({'eid_table': eid_table})
+                continue
+
+            # 192_168_1_0          192.168.1.1             Vl101         1d22h     never     0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dynamic_eid_dict = \
+                    lisp_id_dict.setdefault('dynamic_eids', {})\
+                                .setdefault(group['dynamic_eid_name'], {})
+                each_eid_dict = \
+                    dynamic_eid_dict.setdefault('eids', {})\
+                                    .setdefault(group['eid'], {})
+
+                # convert interface to full name
+                interface = Common.convert_intf_name(group['interface'])
+
+                each_eid_dict.update({
+                    'interface': interface,
+                    'uptime': group['uptime'],
+                    'last_packet': group['last_packet'],
+                    'pending_ping_count': int(group['pending_ping_count'])
+                })
+                continue
+
+        return ret_dict
+
+class ShowLispDynamicEidSchema(MetaParser):
+
+    ''' Schema for
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid
+        * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid
+        * show lisp instance-id {instance_id} dynamic-eid
+        * show lisp eid-table {eid_table} dynamic-eid
+        * show lisp eid-table vrf {vrf} dynamic-eid
+        * show lisp eid-table vlan {vlan} dynamic-eid
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid detail
+        * show lisp locator-table {vrf} instance-id {instance-id} dynamic-eid detail
+        * show lisp instance-id {instance_id} dynamic-eid detail
+        * show lisp eid-table {eid-table} dynamic-eid detail
+        * show lisp eid-table vrf {vrf} dynamic-eid detail
+        * show lisp eid-table vlan {vlan} dynamic-eid detail
+    '''
+
+    schema = {
+        'lisp_id': {
+            int: {
+                'instance_id': {
+                    int: {
+                        Optional('eid_table'): str,
+                        Optional('dynamic_eids'): {
+                            str: {
+                                'database_mapping': {
+                                    'eid_prefix': str,
+                                    'locator_set': str
+                                },
+                                'map_servers': ListOf(str),
+                                Optional('num_of_dynamic_eid'): int,
+                                Optional('last_dyn_eid_discovered'): str,
+                                Optional('eid_entries'): {
+                                    str: {
+                                        'interface': str,
+                                        'uptime': str,
+                                        'last_activity': str,
+                                        'discovered_by': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowLispDynamicEidSuperParser(ShowLispDynamicEidSchema):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid
+        * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid
+        * show lisp instance-id {instance_id} dynamic-eid
+        * show lisp eid-table {eid_table} dynamic-eid
+        * show lisp eid-table vrf {vrf} dynamic-eid
+        * show lisp eid-table vlan {vlan} dynamic-eid
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid detail
+        * show lisp locator-table {vrf} instance-id {instance-id} dynamic-eid detail
+        * show lisp instance-id {instance_id} dynamic-eid detail
+        * show lisp eid-table {eid-table} dynamic-eid detail
+        * show lisp eid-table vrf {vrf} dynamic-eid detail
+        * show lisp eid-table vlan {vlan} dynamic-eid detail
+    """
+
+    def cli(self, output=None):
+
+        ret_dict = {}
+
+        # LISP Dynamic EID Information for router 0, IID 4100, EID-table VRF "red"
+        # LISP Dynamic EID Information for router 0, IID 4100
+        p1 = re.compile(r'^LISP +Dynamic +EID +Information +for +router\s+(?P<lisp_id>\d+),\s+IID\s+'
+                        r'(?P<instance_id>\d+)(, EID-table VRF\s+)?(?P<eid_table>.+)?$')
+
+        # Dynamic-EID name: 192_168_1_0
+        p2 = re.compile(r'^Dynamic-EID name:\s+(?P<dynamic_eids>.+)$')
+
+        # Database-mapping EID-prefix: 192.168.1.0/24, locator-set RLOC
+        p3 = re.compile(r'^Database-mapping +EID-prefix:\s+(?P<eid_prefix>[\d.:\/\w\-]+),'
+                        r'\s+locator-set\s+(?P<locator_set>.+)$')
+
+        # Map-Server(s): none configured, use global Map-Server
+        p4 = re.compile(r'^Map-Server\(s\):\s+(?P<map_servers>.+),.+$')
+
+        # Map-Server(s): 1.1.1.1
+        p4_1 = re.compile(r'^Map-Server\(s\):\s+(?P<map_servers>\d{1,3}\.\d{1,3}'
+                          r'\.\d{1,3}\.\d{1,3})$')
+
+        # Number of roaming dynamic-EIDs discovered: 2
+        p5 = re.compile(r'^Number +of +roaming +dynamic-EIDs +discovered:'
+                        r'\s+(?P<num_of_dynamic_eid>\d+)$')
+
+        # Last dynamic-EID discovered: 192.168.1.1, 1d22h ago
+        p6 = re.compile(r'^Last +dynamic-EID +discovered:\s+(?P<last_dyn_eid>[\d.:\/\w\-]+),.+$')
+
+        # 2001:192:168:1::1, Vlan101, uptime: 1d22h
+        p7 = re.compile(r'^(?P<eid>[\d.:\/\w\-]+),\s+(?P<interface>.+),\s+uptime:\s+(?P<uptime>.+)$')
+
+        # last activity: never, discovered by: Device-tracking, do not register, no-roam
+        p8 = re.compile(r'^last +activity:\s+(?P<last_activity>.+),\s+discovered +by:'
+                        r'\s+(?P<discovered_by>([^,]+)).+$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # LISP Dynamic EID Information for router 0, IID 4100, EID-table VRF "red"
+            # LISP Dynamic EID Information for router 0, IID 4100
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_id_dict = \
+                    ret_dict.setdefault('lisp_id', {}) \
+                        .setdefault(int(group['lisp_id']), {}) \
+                        .setdefault('instance_id', {}) \
+                        .setdefault(int(group['instance_id']), {})
+                if group['eid_table']:
+                    eid_table = group['eid_table'].replace('"','')
+                    lisp_id_dict.update({'eid_table': eid_table})
+                continue
+
+            # Dynamic-EID name: 192_168_1_0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_eid_dict = \
+                    lisp_id_dict.setdefault('dynamic_eids', {})\
+                                .setdefault(group['dynamic_eids'], {})
+                continue
+
+            # Database-mapping EID-prefix: 192.168.1.0/24, locator-set RLOC
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                database_mapping_dict = dyn_eid_dict.setdefault('database_mapping', {})
+                database_mapping_dict.update({
+                    'eid_prefix': group['eid_prefix'],
+                    'locator_set': group['locator_set']
+                })
+                continue
+
+            # Map-Server(s): none configured, use global Map-Server
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                map_server_list = dyn_eid_dict.setdefault('map_servers', [])
+                continue
+
+            # Map-Server(s): 1.1.1.1
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                map_server = group['map_servers']
+                map_server_list = dyn_eid_dict.setdefault('map_servers', [])
+                map_server_list.append(map_server)
+                continue
+
+            # Number of roaming dynamic-EIDs discovered: 2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_eid_dict.update({'num_of_dynamic_eid': int(group['num_of_dynamic_eid'])})
+                continue
+
+            # Last dynamic-EID discovered: 192.168.1.1, 1d22h ago
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_eid_dict.update({'last_dyn_eid_discovered': group['last_dyn_eid']})
+                continue
+
+            # 2001:192:168:1::1, Vlan101, uptime: 1d22h
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                entries_dict = \
+                    dyn_eid_dict.setdefault('eid_entries', {})\
+                                .setdefault(group['eid'], {})
+
+                # convert interface to full name
+                interface = Common.convert_intf_name(group['interface'])
+
+                entries_dict.update({
+                    'interface': interface,
+                    'uptime': group['uptime']
+                })
+                continue
+
+            # last activity: never, discovered by: Device-tracking, do not register, no-roam
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entries_dict.update({
+                    'last_activity': group['last_activity'],
+                    'discovered_by': group['discovered_by']
+                })
+
+        return ret_dict
+
+class ShowLispDynamicEid(ShowLispDynamicEidSuperParser, ShowLispDynamicEidSchema):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid
+        * show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid
+        * show lisp instance-id {instance_id} dynamic-eid
+        * show lisp eid-table {eid_table} dynamic-eid
+        * show lisp eid-table vrf {vrf} dynamic-eid
+        * show lisp eid-table vlan {vlan} dynamic-eid
+    """
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} dynamic-eid',
+        'show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid',
+        'show lisp instance-id {instance_id} dynamic-eid',
+        'show lisp eid-table {eid_table} dynamic-eid',
+        'show lisp eid-table vrf {vrf} dynamic-eid',
+        'show lisp eid-table vlan {vlan} dynamic-eid',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, vlan=None,
+            eid_table=None):
+
+        #init ret_dict
+        ret_dict = {}
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+            elif vrf and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                             format(vrf=vrf, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[3].format(eid_table=eid_table))
+            elif vrf:
+                output = self.device.execute(self.cli_command[4].format(vrf=vrf))
+            elif vlan:
+                output = self.device.execute(self.cli_command[5].format(vlan=vlan))
+            else:
+                return ret_dict
+        else:
+            output = output
+
+        return super().cli(output=output)
+
+
+class ShowLispDynamicEidAllDetail(ShowLispDynamicEidSuperParser, ShowLispDynamicEidSchema):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} dynamic-eid detail
+        * show lisp locator-table {vrf} instance-id {instance-id} dynamic-eid detail
+        * show lisp instance-id {instance_id} dynamic-eid detail
+        * show lisp eid-table {eid-table} dynamic-eid detail
+        * show lisp eid-table vrf {vrf} dynamic-eid detail
+        * show lisp eid-table vlan {vlan} dynamic-eid detail
+    """
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} dynamic-eid detail',
+        'show lisp locator-table {vrf} instance-id {instance_id} dynamic-eid detail',
+        'show lisp instance-id {instance_id} dynamic-eid detail',
+        'show lisp eid-table {eid_table} dynamic-eid detail',
+        'show lisp eid-table vrf {vrf} dynamic-eid detail',
+        'show lisp eid-table vlan {vlan} dynamic-eid detail',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, vlan=None,
+            eid_table=None):
+
+        # init ret_dict
+        ret_dict = {}
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+            elif vrf and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                             format(vrf=vrf, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[3].format(eid_table=eid_table))
+            elif vrf:
+                output = self.device.execute(self.cli_command[4].format(vrf=vrf))
+            elif vlan:
+                output = self.device.execute(self.cli_command[5].format(vlan=vlan))
+            else:
+                return ret_dict
+        else:
+            output = output
+
+        return super().cli(output=output)
+

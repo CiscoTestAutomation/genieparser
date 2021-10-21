@@ -1,10 +1,26 @@
+''' show_route_map.py
+
+IOSXE parsers for the following show commands:
+
+    * 'show route-map all'
+    * 'show route-map {name}'
+    
+'''
+
+#Python
 import re
+
+#MetaParser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 
 class ShowRouteMapAllSchema(MetaParser):
-    """Schema for show route-map all"""
+    """
+    Schema for 
+    * show route-map all
+    * show route-map {name}
+    """
     schema = {
         Any(): {
             Optional('description'): str,
@@ -22,6 +38,7 @@ class ShowRouteMapAllSchema(MetaParser):
                         Optional('match_as_path_list'): str,
                         Optional('match_interface'): str,
                         Optional('match_prefix_list'): str,
+                        Optional('match_access_list'): str,
                         Optional('match_as_number_list'): str,
                         Optional('match_prefix_list_v6'): str,
                         Optional('match_tag_list'): str,
@@ -65,15 +82,21 @@ class ShowRouteMapAllSchema(MetaParser):
 
 
 class ShowRouteMapAll(ShowRouteMapAllSchema):
-    """Parser for show route-map all"""
-    cli_command = 'show route-map all'
+    """
+    Parser for 
+    * show route-map all
+    * show route-map {name}
+    """
+    cli_command = ['show route-map all',
+                   'show route-map {name}']
 
-    def cli(self, output=None):
+    def cli(self, name="", output=None):
         if output is None:
-            # get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if name:
+                cmd = self.cli_command[1].format(name=name) 
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         route_map_dict = {}
         clause_type = ''
@@ -101,12 +124,15 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # ip address prefix-lists: test-test
         p3 = re.compile(r'^\s*ip *address *prefix-lists:'
                         r' *(?P<match_prefix_list>.+)$')
-
+        
+        #ip address (access-lists): pbr-acl
+        p3_1 = re.compile(r'^\s*ip\saddress\s\(access\-lists\)\:\s(?P<match_access_list>.+)')
+       
         #ip next-hop prefix-lists: test
         #ip next-hop (access-lists): 1
         p4 =  re.compile(r'^\s*ip *next-hop *(?P<match_type>[a-zA-Z0-9\S\(\)]+):'
                          r' *(?P<match_nexthop_in>.+)$')
-
+        
         # ipv6 address prefix-list test-test
         p5 = re.compile(r'^\s*ipv6 *address *prefix-list(?:s\:)?'
                         r' *(?P<match_prefix_list_v6>.+)$')
@@ -139,6 +165,9 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # ip next-hop self
         p12_1 = re.compile(r'^\s*ip *next-hop self$')
 
+        #ip default next-hop 100.0.0.2                                          
+        p12_2 = re.compile(r'^\s*ip\s(?P<match_type>\S+)\snext\-hop\s(?P<set_next_hop>.+)$')
+      
         # ipv6 next-hop 2001:db8:1::1
         # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
         p13 = re.compile(r'^\s*ipv6 *next-hop *(?P<set_next_hop_v6>[a-zA-Z0-9\:\s]+)$')
@@ -202,7 +231,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # Policy routing matches: 0 packets, 0 bytes
         p26 = re.compile(r'^\s*Policy\s+routing\s+matches:\s+(?P<packets>\d+)\spackets,\s+(?P<bytes>\d+)\s+bytes')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # route-map test, permit, sequence 10
@@ -267,7 +296,14 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_prefix_list'] = str(m.groupdict()['match_prefix_list'])
                 continue
-
+            
+            # ip address (access-lists): pbr-acl
+            m = p3_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['conditions']\
+                ['match_access_list'] = m.groupdict()['match_access_list']
+                continue
+            
             #ip next-hop prefix-lists: test
             #ip next-hop (access-lists): 1
             m = p4.match(line)
@@ -275,7 +311,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_nexthop_in'] = m.groupdict()['match_nexthop_in'].split()
                 continue
-
+            
             # ipv6 address prefix-list test-test
             m = p5.match(line)
             if m:
@@ -351,6 +387,13 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop_self'] = True
                 continue
+
+            #ip default next-hop 100.0.0.2                                      
+            m = p12_2.match(line)                                                
+            if m:                                                               
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_next_hop'] = m.groupdict()['set_next_hop'].split()
+                continue 
 
             # ipv6 next-hop 2001:db8:1::1
             # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1

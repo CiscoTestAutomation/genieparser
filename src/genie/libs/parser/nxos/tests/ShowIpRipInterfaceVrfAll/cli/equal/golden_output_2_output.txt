@@ -1,0 +1,12 @@
+
+R3_nx# show ip rip interface
+R3_nx# show ip rip interface vrf default
+Process Name "rip-1" VRF "default"
+RIP-configured interface information
+
+Ethernet1/1.120, protocol-up/link-up/admin-up, RIP state : up
+address/mask 10.23.120.3/24, metric 1, split-horizon
+Ethernet1/2.120, protocol-up/link-up/admin-up, RIP state : up
+address/mask 10.13.120.3/24, metric 1, split-horizon
+loopback0, protocol-up/link-up/admin-up, RIP state : up
+address/mask 10.36.3.3/32, metric 1, split-horizon

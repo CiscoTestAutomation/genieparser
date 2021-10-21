@@ -1,0 +1,61 @@
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            BGP
+MAC Address:              0012.0012.0012
+Num of MAC IP Route(s):   2
+Sequence Number:          0
+ESI:                      0000.0000.0000.0000.0000
+Flags:                    BInt(Brm)
+Num of Default Gateways:  2
+Next Hop(s):              L:16 2.2.2.1, L:17 5.5.5.1
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            L2VPN
+MAC Address:              0012.0012.0012
+Num of MAC IP Route(s):   2
+Sequence Number:          0
+ESI:                      0000.0000.0000.0000.0000
+Flags:                    Int(Brm)
+Num of Default Gateways:  2
+Next Hop(s):              BD12:0, L:16 2.2.2.1, Et1/0:12
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            BGP
+MAC Address:              aabb.0012.0002
+Num of MAC IP Route(s):   1
+Sequence Number:          0
+ESI:                      0000.0000.0000.0000.0000
+Flags:                    B()
+Next Hop(s):              L:16 2.2.2.1
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            L2VPN
+MAC Address:              aabb.cc02.2800
+Num of MAC IP Route(s):   0
+Sequence Number:          0
+ESI:                      03AA.BB00.0000.0200.0001
+Flags:                    B()
+Next Hop(s):              Et1/0:12
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            L2VPN
+MAC Address:              aabb.cc82.2800
+Num of MAC IP Route(s):   2
+Sequence Number:          0
+ESI:                      03AA.BB00.0000.0200.0001
+Flags:                    B()
+Next Hop(s):              Et1/0:12
+
+EVPN Instance:            2
+Ethernet Tag:             0
+Producer Name:            BGP
+MAC Address:              aabb.cc82.2800
+Num of MAC IP Route(s):   2
+Sequence Number:          0
+ESI:                      03AA.BB00.0000.0200.0001
+Flags:                    Int()
+Next Hop(s):              L:17 5.5.5.1

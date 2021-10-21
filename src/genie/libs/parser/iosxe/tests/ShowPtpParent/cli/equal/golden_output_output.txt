@@ -1,0 +1,15 @@
+ PTP PARENT PROPERTIES
+  Parent Clock:
+  Parent Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Parent Port Number: 0
+  Observed Parent Offset (log variance): 17258
+  Observed Parent Clock Phase Change Rate: N/A
+
+  Grandmaster Clock:
+  Grandmaster Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+  Grandmaster Clock Quality:
+        Class: 248
+        Accuracy: Unknown
+        Offset (log variance): N/A
+        Priority1: 128
+        Priority2: 128

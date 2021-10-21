@@ -3684,10 +3684,14 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Vlan366       BigData            connected routed    auto    auto    --
         # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
         # Lo0            --                  connected  routed     auto     --       --
+        # Eth1/19       --                 connected 105       full    10G     SFP-H10GB-C
+        # Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
+        # Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
+        # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
         p1 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>(\S+))?\s'
                         r'+(?P<status>(\S+))?\s+(?P<vlan>(\S+))'
                         r' +(?P<duplex_code>(\S+))\s'
-                        r'+(?P<port_speed>(\S+))(\s+(?P<type>(\S+)))?$')
+                        r'+(?P<port_speed>(\S+))(\s*(?P<type>(\S*)))?$')
 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
@@ -3696,8 +3700,8 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                           r'(?P<status>(\S+))\s+'
                           r'(?P<vlan>(\S+))\s+'
                           r'(?P<duplex_code>([a-z]+))\s+'
-                          r'(?P<port_speed>(\S+))\s+'
-                          r'(?P<type>([\S\s]+))$')
+                          r'(?P<port_speed>(\S+))\s*'
+                          r'(?P<type>([\S\s]*))$')
 
         # Tunnel7       --                  up        no-reason 
         p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')

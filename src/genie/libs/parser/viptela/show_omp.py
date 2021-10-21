@@ -369,3 +369,154 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
 
 
         return tloc_data
+
+# =====================================
+# Schema for 'show omp routes'
+# =====================================
+class ShowOmpRoutesSchema(MetaParser):
+
+    """ Schema for show omp routes
+        * show omp routes <prefix>
+        * show omp routes vpn <vpn>
+        * show omp routes <prefix> vpn <vpn>
+        * show omp routes family <af> vpn <vpn> 
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'prefixes': {
+                    Any(): {
+                        'prefix': str,
+                        'from_peer': {
+                            Any(): {
+                                'peer': str,
+                                'path_list': {
+                                    Any(): {  # index
+                                        'index': int,
+                                        'path_id': str,
+                                        'label': str,
+                                        'status': list,
+                                        'attr_type': str,
+                                        'tloc_ip': str,
+                                        'color': str,
+                                        'encap': str,
+                                        'preference': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================
+# Parser for 'show omp routes'
+# =====================================
+class ShowOmpRoutes(ShowOmpRoutesSchema):
+
+    """parser for show omp routes
+                  show omp routes <prefix>
+                  show omp routes vpn <vpn>
+                  show omp routes <prefix> vpn <vpn>
+                  show omp routes family <af> vpn <vpn>"""
+
+    cli_command = ['show omp routes',
+                  'show omp routes {prefix}',
+                  'show omp routes vpn {vpn}',
+                  'show omp routes {prefix} vpn {vpn}',
+                  'show omp routes family {af} vpn {vpn}']
+
+    def cli(self, prefix=None, vpn=None, af='ipv4', output=None):
+
+        if output is None:
+            if prefix and vpn:
+                cmd = self.cli_command[3].format(prefix=prefix, vpn=vpn)
+            elif af and vpn:
+                cmd = self.cli_command[4].format(af=af, vpn=vpn)
+            elif prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
+            elif vpn:
+                cmd = self.cli_command[2].format(vpn=vpn)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        #                                             PATH                      ATTRIBUTE                                                       
+        # VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE
+        # --------------------------------------------------------------------------------------------------------------------------------------
+        # 4      10.0.0.0/8          1.1.1.3          936    1002     C,I,R     installed  100.1.1.1        green            ipsec  200
+        p1 = re.compile(r'(?P<vrf>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)')
+
+        #                            1.1.1.3          937    1002     C,I,R     installed  100.1.1.1        blue             ipsec  200         
+        #                            1.1.1.3          938    1002     C,I,R     installed  100.1.1.2        green            ipsec  200         
+        #                            1.1.1.3          939    1002     C,I,R     installed  100.1.1.2        blue             ipsec  200 
+        p2 = re.compile(r'(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)')
+
+        index = 1
+        prefix = peer = ""
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 4      10.0.0.0/8          1.1.1.3          936    1002     C,I,R     installed  100.1.1.1        green            ipsec  200
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if group['vrf']:
+                    vrf = group['vrf']
+                if prefix != group['prefix'] or peer != group['from_peer']:
+                    prefix = group['prefix']
+                    peer = group['from_peer']
+                    index = 1
+
+                route_info = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('prefixes', {}).setdefault(prefix, {})
+                route_info['prefix'] = prefix
+                route_info.setdefault('from_peer', {})
+
+                from_peer_dict = route_info['from_peer'].setdefault(peer, {})
+                from_peer_dict['peer'] = peer
+                path_list_dict = from_peer_dict.setdefault('path_list', {})
+                idx_dict = path_list_dict.setdefault(index, {})
+                idx_dict['index'] = index
+                idx_dict['path_id'] = group['path_id']
+                idx_dict['label'] = group['label']
+                idx_dict['status'] = group['status'].split(",")
+                idx_dict['attr_type'] = group['attr_type']
+                idx_dict['tloc_ip'] = group['tloc_ip']
+                idx_dict['color'] = group['color']
+                idx_dict['encap'] = group['encap']
+                idx_dict['preference'] = group['preference']
+                index += 1
+
+            #                            1.1.1.3          937    1002     C,I,R     installed  100.1.1.1        blue             ipsec  200
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                if peer != group['from_peer']:
+                    peer = group['from_peer']
+                    index = 1
+
+                from_peer_dict = route_info['from_peer'].setdefault(peer, {})
+                from_peer_dict['peer'] = peer
+                path_list_dict = from_peer_dict.setdefault('path_list', {})
+                idx_dict = path_list_dict.setdefault(index, {})
+                idx_dict['index'] = index
+                idx_dict['path_id'] = group['path_id']
+                idx_dict['label'] = group['label']
+                idx_dict['status'] = group['status'].split(",")
+                idx_dict['attr_type'] = group['attr_type']
+                idx_dict['tloc_ip'] = group['tloc_ip']
+                idx_dict['color'] = group['color']
+                idx_dict['encap'] = group['encap']
+                idx_dict['preference'] = group['preference']
+                index += 1
+
+        return parsed_dict

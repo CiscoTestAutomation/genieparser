@@ -1,0 +1,18 @@
+
+
+Diag Information For : 
+0 Rack 0-IDPROM Info
+    Product ID      : NCS-5501
+    VID             : V01
+    Serial Number   : FOC23158XXX
+    CLEI Code       : INM1J10ARA
+    Part Number     : 73-101057-02
+    Part Revision   : D0
+    H/W Version     : 1.0
+Top Assembly Block:
+    Serial Number   : FOC231XXXHW
+    Part Number     : 68-6098-01
+    Part Revision   : F0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 1

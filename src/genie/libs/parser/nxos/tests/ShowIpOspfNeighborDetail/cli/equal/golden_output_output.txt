@@ -1,0 +1,72 @@
+
+R2_ospf_nx# show ip ospf neighbors detail vrf all
+  Neighbor 10.36.3.3, interface address 10.2.3.3
+    Process ID 1 VRF default, in area 0.0.0.0 via interface Ethernet2/2
+    State is FULL, 5 state changes, last change 08:38:40
+    Neighbor priority is 1
+    DR is 10.2.3.3 BDR is 10.2.3.2
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received never
+    Dead timer due in 00:00:39
+  Neighbor 10.64.4.4, interface address 10.2.4.4
+    Process ID 1 VRF default, in area 0.0.0.0 via interface Ethernet2/3
+    State is FULL, 6 state changes, last change 08:38:42
+    Neighbor priority is 1
+    DR is 10.2.4.4 BDR is 10.2.4.2
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received never
+    Dead timer due in 00:00:33
+  Neighbor 10.4.1.1, interface address 10.1.2.1
+    Process ID 1 VRF default, in area 0.0.0.0 via interface Ethernet2/4
+    State is FULL, 5 state changes, last change 08:38:41
+    Neighbor priority is 1
+    DR is 10.1.2.1 BDR is 10.1.2.2
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received never
+    Dead timer due in 00:00:35
+  Neighbor 10.229.11.11, interface address 10.229.11.11
+    Process ID 1 VRF VRF1, in area 0.0.0.1 via interface SL1-0.0.0.0-10.151.22.22-10.229.11.11
+    State is FULL, 8 state changes, last change 08:16:20
+    Hello options 0x32, dbd options 0x72
+    Last non-hello packet received never
+    Dead timer due in 00:00:41
+  Neighbor 10.84.66.66, interface address 10.229.6.6
+    Process ID 1 VRF VRF1, in area 0.0.0.1 via interface Ethernet2/1
+    State is FULL, 6 state changes, last change 08:38:39
+    Neighbor priority is 1
+    DR is 10.229.6.6 BDR is 10.229.6.2
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received never
+    Dead timer due in 00:00:38
+  Neighbor 10.64.4.4, interface address 10.19.4.4
+    Process ID 1 VRF default, in area 0.0.0.0 via interface VL1-0.0.0.1-10.64.4.4
+    State is FULL, 5 state changes, last change 00:00:23
+    We are slave in DBD exchange, seqnr 0x26aa , all DBDs sent and acked
+    Hello options 0x32, dbd options 0x72
+    Last non-hello packet received 00:00:18
+      Dead timer due in 00:00:43
+      DBD rxmit timer due in 00:00:22
+  Neighbor 10.4.1.1, interface address 10.1.3.1
+    Process ID 1 VRF default, in area 0.0.0.0 via interface Ethernet1/2
+    State is FULL, 5 state changes, last change 11:04:28
+    Neighbor priority is 1
+    DR is 10.1.3.1 BDR is 10.1.3.3
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received 00:00:15
+      Dead timer due in 00:00:36
+  Neighbor 10.100.2.2, interface address 10.229.3.2
+    Process ID 1 VRF default, in area 0.0.0.1 via interface Ethernet1/3
+    State is FULL, 5 state changes, last change 11:04:25
+    Neighbor priority is 1
+    DR is 10.229.3.2 BDR is 10.229.3.3
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received 00:00:18
+      Dead timer due in 00:00:36
+  Neighbor 10.64.4.4, interface address 10.19.4.4
+    Process ID 1 VRF default, in area 0.0.0.1 via interface Ethernet1/5
+    State is FULL, 6 state changes, last change 11:04:28
+    Neighbor priority is 1
+    DR is 10.19.4.4 BDR is 10.19.4.3
+    Hello options 0x12, dbd options 0x52
+    Last non-hello packet received 00:00:18
+      Dead timer due in 00:00:36

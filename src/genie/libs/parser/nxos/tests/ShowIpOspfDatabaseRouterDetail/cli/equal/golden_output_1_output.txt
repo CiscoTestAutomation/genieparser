@@ -1,0 +1,291 @@
+
+R2_ospf_nx# show ip ospf database router detail vrf all
+OSPF Router with ID (10.100.2.2) (Process ID 1 VRF default)
+
+	Router Link States (Area 0.0.0.0)
+
+LS age: 723
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.4.1.1
+Advertising Router: 10.4.1.1
+LS Seq Number: 0x8000003e
+Checksum: 0x6029
+Length: 60
+Number of links: 3
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.4.1.1
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.1.2.1
+  (Link Data) Router Interface address: 10.1.2.1
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.1.4.4
+  (Link Data) Router Interface address: 10.1.4.1
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 1683
+Options: 0x2 (No TOS-capability, No DC)
+LS Type: Router Links
+Link State ID: 10.100.2.2
+Advertising Router: 10.100.2.2
+LS Seq Number: 0x80000014
+Checksum: 0x652b
+Length: 72
+Number of links: 4
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.100.2.2
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.2.3.3
+  (Link Data) Router Interface address: 10.2.3.2
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.2.4.4
+  (Link Data) Router Interface address: 10.2.4.2
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.1.2.1
+  (Link Data) Router Interface address: 10.1.2.2
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 217
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.36.3.3
+Advertising Router: 10.36.3.3
+LS Seq Number: 0x80000034
+Checksum: 0x73f9
+Length: 60
+Number of links: 3
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.36.3.3
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.3.4.4
+  (Link Data) Router Interface address: 10.3.4.3
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.2.3.3
+  (Link Data) Router Interface address: 10.2.3.3
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 1433
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.64.4.4
+Advertising Router: 10.64.4.4
+LS Seq Number: 0x80000037
+Checksum: 0xa37d
+Length: 72
+AS border router
+Number of links: 4
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.64.4.4
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.2.4.4
+  (Link Data) Router Interface address: 10.2.4.4
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.3.4.4
+  (Link Data) Router Interface address: 10.3.4.4
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.1.4.4
+  (Link Data) Router Interface address: 10.1.4.4
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+
+    OSPF Router with ID (10.151.22.22) (Process ID 1 VRF VRF1)
+
+	    Router Link States (Area 0.0.0.1)
+
+LS age: 1148
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.36.3.3
+Advertising Router: 10.36.3.3
+LS Seq Number: 0x80000036
+Checksum: 0x5646
+Length: 36
+Area border router
+AS border router
+Number of links: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.19.7.7
+  (Link Data) Router Interface address: 10.19.7.3
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 646
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.229.11.11
+Advertising Router: 10.229.11.11
+LS Seq Number: 0x8000003f
+Checksum: 0x9ae4
+Length: 48
+Area border router
+AS border router
+Number of links: 2
+
+ Link connected to: a Router (point-to-point)
+ (Link ID) Neighboring Router ID: 10.151.22.22
+ (Link Data) Router Interface address: 0.0.0.14
+   Number of TOS metrics: 0
+     TOS   0 Metric: 111
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.186.5.1
+  (Link Data) Router Interface address: 10.186.5.1
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 642
+Options: 0x2 (No TOS-capability, No DC)
+LS Type: Router Links
+Link State ID: 10.151.22.22
+Advertising Router: 10.151.22.22
+LS Seq Number: 0x8000001a
+Checksum: 0xc21b
+Length: 48
+Area border router
+AS border router
+Number of links: 2
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.229.6.6
+  (Link Data) Router Interface address: 10.229.6.2
+   Number of TOS metrics: 0
+     TOS   0 Metric: 40
+
+ Link connected to: a Router (point-to-point)
+ (Link ID) Neighboring Router ID: 10.229.11.11
+ (Link Data) Router Interface address: 0.0.0.6
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 304
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.115.55.55
+Advertising Router: 10.115.55.55
+LS Seq Number: 0x80000038
+Checksum: 0xe5bd
+Length: 60
+Number of links: 3
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.115.55.55
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.115.6.6
+  (Link Data) Router Interface address: 10.115.6.5
+   Number of TOS metrics: 0
+     TOS   0 Metric: 30
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.186.5.1
+  (Link Data) Router Interface address: 10.186.5.5
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+LS age: 524
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.84.66.66
+Advertising Router: 10.84.66.66
+LS Seq Number: 0x8000003d
+Checksum: 0x1083
+Length: 72
+Number of links: 4
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.84.66.66
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.166.7.6
+  (Link Data) Router Interface address: 10.166.7.6
+   Number of TOS metrics: 0
+     TOS   0 Metric: 30
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.229.6.6
+  (Link Data) Router Interface address: 10.229.6.6
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.115.6.6
+  (Link Data) Router Interface address: 10.115.6.6
+   Number of TOS metrics: 0
+     TOS   0 Metric: 30
+
+LS age: 237
+Options: 0x22 (No TOS-capability, DC)
+LS Type: Router Links
+Link State ID: 10.1.77.77
+Advertising Router: 10.1.77.77
+LS Seq Number: 0x80000031
+Checksum: 0x117a
+Length: 60
+Number of links: 3
+
+ Link connected to: a Stub Network
+  (Link ID) Network/Subnet Number: 10.1.77.77
+  (Link Data) Network Mask: 255.255.255.255
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.166.7.6
+  (Link Data) Router Interface address: 10.166.7.7
+   Number of TOS metrics: 0
+     TOS   0 Metric: 30
+
+ Link connected to: a Transit Network
+  (Link ID) Designated Router address: 10.19.7.7
+  (Link Data) Router Interface address: 10.19.7.7
+   Number of TOS metrics: 0
+     TOS   0 Metric: 1

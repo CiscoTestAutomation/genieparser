@@ -1,0 +1,242 @@
+
+pinxdt-n9kv-3# show run bgp
+
+!Command: show running-config bgp
+!Time: Wed Jun 28 06:23:27 2017
+
+version 7.0(3)I7(1)
+feature bgp
+
+router bgp 333
+  dynamic-med-interval 70
+  shutdown
+  cluster-id 3
+  no graceful-restart
+  flush-routes
+  isolate
+  disable-policy-batching ipv4 prefix-list s
+  no enforce-first-as
+  event-history objstore size large
+  address-family l2vpn evpn
+    advertise-pip
+  address-family ipv4 multicast
+    dampening 1 10 30 2
+    redistribute static route-map PERMIT_ALL_RM
+  address-family ipv4 unicast
+    dampening 1 10 30 2
+    network 10.4.1.0/24
+    redistribute static route-map ADD_RT_400_400
+    aggregate-address 10.4.1.0/24
+    inject-map ORIGINATE_IPV4 exist-map INJECTED_IPV4 copy-attributes
+    allocate-label all
+  address-family ipv6 multicast
+    dampening 1 10 30 2
+    redistribute static route-map PERMIT_ALL_RM
+  address-family ipv6 unicast
+    dampening 1 10 30 2
+    redistribute static route-map PERMIT_ALL_RM
+    inject-map ORIGINATE_IPV6 exist-map INJECTED_IPV6 copy-attributes
+  address-family vpnv4 unicast
+    dampening route-map PASS-ALL
+    nexthop trigger-delay critical 4 non-critical 5
+  address-family vpnv6 unicast
+    dampening 1 10 30 2
+  address-family ipv4 labeled-unicast
+  address-family link-state
+    dampening 1 10 30 2
+  template peer-session PEER-SESSION
+    ebgp-multihop 3
+  neighbor 2001:db8:8b05::1002
+    remote-as 333
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+  neighbor 2001:db8:8b05::2002
+    remote-as 888
+    update-source loopback0
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family ipv6 multicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family ipv6 unicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family link-state
+      send-community
+      send-community extended
+  neighbor 10.64.4.4
+  neighbor 10.186.101.1
+    inherit peer GENIE-BGP
+    remote-as 333
+    address-family ipv4 multicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv6 multicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv6 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family vpnv4 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+    address-family vpnv6 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+    address-family link-state
+      send-community
+      send-community extended
+      route-reflector-client
+  neighbor 10.186.102.1
+    remote-as 333
+    peer-type fabric-external
+    address-family l2vpn evpn
+      rewrite-evpn-rt-asn
+      send-community
+      send-community extended
+    address-family ipv4 multicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv6 multicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family ipv6 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family vpnv4 unicast
+      send-community
+      send-community extended
+    address-family vpnv6 unicast
+      send-community
+      send-community extended
+      route-reflector-client
+    address-family link-state
+      send-community
+      send-community extended
+      route-reflector-client
+  neighbor 10.186.201.1
+    remote-as 888
+    address-family ipv4 multicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family ipv4 unicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family ipv6 multicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family ipv6 unicast
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+    address-family vpnv4 unicast
+      send-community
+      send-community extended
+    address-family vpnv6 unicast
+      send-community
+      send-community extended
+    address-family link-state
+      send-community
+      send-community extended
+  vrf ac
+    bestpath always-compare-med
+    address-family ipv4 unicast
+    neighbor 10.16.2.2
+      bfd
+      local-as 222
+      description ja
+      remove-private-as
+      disable-connected-check
+      capability suppress 4-byte-as
+      address-family ipv4 unicast
+	allowas-in 3
+	send-community
+	send-community extended
+	maximum-prefix 2
+  vrf management
+    neighbor 10.100.5.5
+      password 3 386c0565965f89de
+  vrf vpn1
+    address-family ipv4 multicast
+      redistribute static route-map PERMIT_ALL_RM
+    address-family ipv4 unicast
+      dampening 1 10 30 2
+      redistribute static route-map PERMIT_ALL_RM
+    address-family ipv6 multicast
+      dampening 1 10 30 2
+      redistribute static route-map PERMIT_ALL_RM
+    address-family ipv6 unicast
+      dampening 1 10 30 2
+      redistribute static route-map PERMIT_ALL_RM
+evpn
+  vni 8100 l2
+    rd auto
+    route-target import auto
+    route-target import 200:8100
+    route-target export auto
+  vni 8101 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 8103 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+vrf context vpn1
+  rd 1:100
+  address-family ipv4 unicast
+    route-target import 100:1
+    route-target export 100:1
+    route-target export 400:400
+    export map PERMIT_ALL_RM
+    import map PERMIT_ALL_RM
+    import vrf default map PERMIT_ALL_RM
+    export vrf default map PERMIT_ALL_RM
+  address-family ipv6 unicast
+    route-target import 1:100
+    route-target export 1:100
+    route-target export 600:600
+    export map PERMIT_ALL_RM
+    import map PERMIT_ALL_RM
+    import vrf default map PERMIT_ALL_RM
+    export vrf default map PERMIT_ALL_RM
+vrf context vpn2
+  rd 2:100
+  address-family ipv4 unicast
+    route-target import 400:400
+  address-family ipv6 unicast
+    route-target import 600:600

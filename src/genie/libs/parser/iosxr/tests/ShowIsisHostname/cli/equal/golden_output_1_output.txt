@@ -1,0 +1,12 @@
+
+show isis hostname
+
+Thu Oct  3 10:53:16.534 EDT
+
+IS-IS TEST1 hostnames
+Level  System ID      Dynamic Hostname
+ 2     5286.44ff.91b9 host-1.bla-site3
+ 2     9839.23ff.9c50 host3-bla
+ 2     3549.63ff.9ab5 abc-3.bla-site4
+ 2     0670.70ff.b1b1 host2-abc
+ 2   * 9853.99ff.fb21 abc2-xyz

@@ -1,0 +1,52 @@
+
+R3_nx# show ipv6 route vrf all
+IPv6 Routing Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:1:1:1::1/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/2848], 03:55:29, eigrp-test, internal
+2001:2:2:2::2/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
+2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct,
+    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, local
+2001:10:12:90::/64, ubest/mbest: 2/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/3072], 03:51:46, eigrp-test, internal
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:55:29, eigrp-test, internal
+2001:10:12:120::/64, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:39:27, eigrp-test, internal
+2001:10:13:90::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct,
+2001:10:13:90::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, local
+2001:10:23:120::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct,
+2001:10:23:120::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, local
+
+    IPv6 Routing Table for VRF "VRF1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:1:1:1::1/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/2848], 03:55:29, eigrp-test, internal
+2001:2:2:2::2/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
+2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct,
+    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, local
+2001:10:12:90::/64, ubest/mbest: 2/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/3072], 03:51:47, eigrp-test, internal
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:55:29, eigrp-test, internal
+2001:10:12:120::/64, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:25:35, eigrp-test, internal
+2001:10:13:90::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct,
+2001:10:13:110::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:13:110::3, Eth1/2.410, [0/0], 03:55:43, local
+2001:10:13:115::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct,
+2001:10:13:120::3/128, ubest/mbest: 1/0, attached

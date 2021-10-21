@@ -1,0 +1,81 @@
+
+Routing Process 1 with ID 10.100.2.2 VRF default
+Routing Process Instance Number 1
+Stateful High Availability enabled
+Graceful-restart is configured
+Grace period: 60 state: Inactive
+BFD is enabled
+Last graceful restart exit status: None
+Supports only single TOS(TOS0) routes
+Supports opaque LSA
+Administrative distance 110
+Originating router LSA with maximum metric
+Reference Bandwidth is 40000 Mbps
+SPF throttling delay time of 200.000 msecs,
+SPF throttling hold time of 1000.000 msecs,
+SPF throttling maximum wait time of 5000.000 msecs
+LSA throttling start time of 0.000 msecs,
+LSA throttling hold interval of 5000.000 msecs,
+LSA throttling maximum wait time of 5000.000 msecs
+Minimum LSA arrival 1000.000 msec
+LSA group pacing timer 10 secs
+Maximum number of non self-generated LSA allowed 123
+Maximum paths to destination 8
+Number of external LSAs 1, checksum sum 0x7d61
+Number of opaque AS LSAs 0, checksum sum 0
+Number of areas is 1, 1 normal, 0 stub, 0 nssa
+Number of active areas is 1, 1 normal, 0 stub, 0 nssa
+Install discard route for summarized external routes.
+Install discard route for summarized internal routes.
+Area BACKBONE(0.0.0.0)
+    Area has existed for 08:30:42
+    Interfaces in this area: 4 Active interfaces: 4
+    Passive interfaces: 0  Loopback interfaces: 1
+    No authentication available
+    SPF calculation has run 8 times
+     Last SPF ran for 0.001386s
+    Area ranges are
+    10.4.1.0/24 Passive (Num nets: 0) Advertise Cost configured 33
+    Number of LSAs: 19, checksum sum 0x7a137
+
+Routing Process 1 with ID 10.151.22.22 VRF VRF1
+Routing Process Instance Number 1
+Domain ID type 0x0005, Value 0.0.0.0
+Stateful High Availability enabled
+Graceful-restart is configured
+Grace period: 60 state: Inactive
+Last graceful restart exit status: None
+Supports only single TOS(TOS0) routes
+Supports opaque LSA
+This router is an area border and autonomous system boundary.
+Redistributing External Routes from
+bgp-100
+Administrative distance 110
+Reference Bandwidth is 40000 Mbps
+SPF throttling delay time of 200.000 msecs,
+SPF throttling hold time of 1000.000 msecs,
+SPF throttling maximum wait time of 5000.000 msecs
+LSA throttling start time of 0.000 msecs,
+LSA throttling hold interval of 5000.000 msecs,
+LSA throttling maximum wait time of 5000.000 msecs
+Minimum LSA arrival 1000.000 msec
+LSA group pacing timer 10 secs
+Maximum paths to destination 8
+Number of external LSAs 0, checksum sum 0
+Number of opaque AS LSAs 0, checksum sum 0
+Number of areas is 1, 1 normal, 0 stub, 0 nssa
+Number of active areas is 1, 1 normal, 0 stub, 0 nssa
+Install discard route for summarized external routes.
+Install discard route for summarized internal routes.
+Area (0.0.0.1)
+    This area is a STUB area
+    Generates stub default route with cost 1
+    Area has existed for 08:30:42
+    Interfaces in this area: 3 Active interfaces: 3
+    Passive interfaces: 0  Loopback interfaces: 0
+    No authentication available
+    SPF calculation has run 33 times
+     Last SPF ran for 0.000464s
+    Area ranges are
+    10.4.0.0/16 Active (Num nets: 1) DoNotAdvertise Cost configured 31
+    Number of LSAs: 11, checksum sum 0x527f9

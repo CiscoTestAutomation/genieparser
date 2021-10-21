@@ -1,0 +1,8 @@
+Displaying data for domain number 0
+=======================================
+
+Profile Type : DEFAULT
+Profile State: disabled
+Transport Method : 802.3
+Message general ip dscp  : 47
+Message event ip dscp    : 59

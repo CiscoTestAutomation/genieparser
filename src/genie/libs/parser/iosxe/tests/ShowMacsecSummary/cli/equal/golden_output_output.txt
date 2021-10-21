@@ -1,0 +1,3 @@
+Interface                     Transmit SC         Receive SC
+Te1/0/6                            1                   1   
+Te2/0/13                           1                   1 

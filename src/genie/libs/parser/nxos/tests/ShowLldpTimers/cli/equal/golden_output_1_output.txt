@@ -1,0 +1,6 @@
+
+LLDP Timers:
+
+Holdtime in seconds: 120
+Reinit-time in seconds: 2
+Transmit interval in seconds: 30

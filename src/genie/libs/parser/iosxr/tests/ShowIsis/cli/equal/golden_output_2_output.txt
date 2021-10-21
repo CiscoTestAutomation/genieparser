@@ -1,0 +1,41 @@
+
++++ genie-Router: executing command 'show isis' +++
+show isis
+
+Mon Oct  7 16:22:11.993 EDT
+
+IS-IS Router: Cisco
+System Id: 1781.81ff.43c7
+Instance Id: 0
+IS Levels: level-2-only
+Manual area address(es):
+    49.0000
+Routing for area address(es):
+    49.0000
+Non-stop forwarding: Disabled
+Most recent startup mode: Cold Restart
+TE connection status: Up
+Topologies supported by IS-IS:
+    IPv4 Unicast
+    Level-2
+	Metric style (generate/accept): Wide/Wide
+	Metric: 100000
+	ISPF status: Disabled
+    Redistributing:
+	Connected
+	Static
+	OSPF process 65001
+	OSPF process 65002
+	OSPF process 65003
+    Distance: 115
+    Advertise Passive Interface Prefixes Only: Yes
+SRLB allocated: 15000 - 15999
+SRGB allocated: 16000 - 81534
+Interfaces supported by IS-IS:
+    Bundle-Ether1 is running suppressed (active in configuration)
+    Bundle-Ether2 is running suppressed (active in configuration)
+    Loopback0 is running passively (passive in configuration)
+    TenGigE0/0/1/2 is running suppressed (active in configuration)
+    TenGigE0/0/1/3 is disabled (active in configuration)
+    TenGigE0/5/0/1 is disabled (active in configuration)
+RP/0/RSP0/CPU0:genie-Router#

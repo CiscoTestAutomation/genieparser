@@ -1,0 +1,36 @@
+MLDP peer ID    : 2.2.2.2:0, uptime 00:06:08 Up,
+  Target Adj     : No
+  Session hndl   : 28
+  Upstream count : 0
+  Branch count   : 1
+  LDP GR         : Enabled
+                 : Reconnect time: 120 Seconds
+                 : Instance: 1
+  Path count     : 1
+  Path(s)        : 26.1.1.1          LDP Port-channel30
+  Nhop count     : 0
+
+ MLDP peer ID    : 4.4.4.4:0, uptime 00:06:00 Up,
+  Target Adj     : No
+  Session hndl   : 29
+  Upstream count : 1
+  Branch count   : 0
+  LDP GR         : Enabled
+                 : Reconnect time: 120 Seconds
+                 : Instance: 2
+  Path count     : 1
+  Path(s)        : 27.1.1.2          LDP Port-channel40
+  Nhop count     : 1
+  Nhop list      : 27.1.1.2
+
+ MLDP peer ID    : 6.6.6.6:0, uptime 00:05:29 Up,
+  Target Adj     : No
+  Session hndl   : 30
+  Upstream count : 0
+  Branch count   : 1
+  LDP GR         : Enabled
+                 : Reconnect time: 120 Seconds
+                 : Instance: 3
+  Path count     : 1
+  Path(s)        : 29.1.1.2          LDP TenGigabitEthernet2/0/40
+  Nhop count     : 0

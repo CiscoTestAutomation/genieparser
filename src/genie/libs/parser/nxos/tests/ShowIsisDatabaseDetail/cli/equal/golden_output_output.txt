@@ -1,0 +1,315 @@
+
+R3_nx# show isis database detail vrf all
+IS-IS Process: test LSP database VRF: default
+IS-IS Level-1 Link State Database
+LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+R1_xe.00-00           0x000007CD   0xAD22    1199       0/0/0/3
+    Instance      :  0x000007C9
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Hostname      :  R1_xe              Length : 5
+    Extended IS   :  R1_xe.02           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 10
+    Extended IS   :  R1_xe.01           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.01           Metric : 10
+    IP Address    :  10.13.115.1
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.13.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    IPv6 Address  :  2001:10:13:115::1
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:13:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Digest Offset :  0
+R1_xe.01-00           0x000007C7   0x14CA    846        0/0/0/3
+    Instance      :  0x000007C6
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R2_xr.00           Metric : 0
+    Digest Offset :  0
+R1_xe.02-00           0x000007C7   0x0D6A    852        0/0/0/3
+    Instance      :  0x000007C6
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R2_xr.00-00           0x000007C5   0x94D6    887        0/0/0/3
+    Instance      :  0x000007BD
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    IP Address    :  10.16.2.2
+    Extended IP   :         10.16.2.2/32  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.23.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Hostname      :  R2_xr              Length : 5
+    IPv6 Address  :  2001:2:2:2::2
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:2:2:2::2/128  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:23:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Extended IS   :  R1_xe.01           Metric : 10
+    Extended IS   :  R2_xr.03           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.01           Metric : 10
+		    R2_xr.03           Metric : 10
+    Digest Offset :  0
+R2_xr.03-00           0x000007C6   0x86AC    594        0/0/0/3
+    Instance      :  0x000007C5
+    Extended IS   :  R2_xr.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R3_nx.00-00         * 0x00000B05   0x7FA7    653        0/0/0/3
+    Instance      :  0x00000B05
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    Router ID     :  10.36.3.3
+    IP Address    :  10.36.3.3
+    MT TopoId     : TopoId:2 Att: 0 Ol: 0
+		    TopoId:0 Att: 0 Ol: 0
+    Hostname      :  R3_nx              Length : 5
+    TopoId: 2
+    MtExtend IS   :  R2_xr.03           Metric : 40
+		    R1_xe.02           Metric : 40
+    Extended IS   :  R2_xr.03           Metric : 40
+    Extended IS   :  R1_xe.02           Metric : 40
+    Extended IP   :         10.36.3.3/32  Metric : 1           (U)
+    Extended IP   :     10.13.115.0/24  Metric : 40          (U)
+    Extended IP   :     10.23.115.0/24  Metric : 40          (U)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:3:3:3::3/128  Metric : 1           (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:13:115::/64  Metric : 40          (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:23:115::/64  Metric : 40          (U/I)
+    Digest Offset :  0
+
+IS-IS Level-2 Link State Database
+LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+R1_xe.00-00           0x000007C9   0xBB89    1087       0/0/0/3
+    Instance      :  0x000007C4
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Hostname      :  R1_xe              Length : 5
+    Extended IS   :  R1_xe.02           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 10
+    Extended IS   :  R1_xe.01           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.01           Metric : 10
+    IP Address    :  10.13.115.1
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.13.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.23.115.0/24  Metric : 20          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    IPv6 Address  :  2001:10:13:115::1
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:13:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:23:115::/64  Metric : 20          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Digest Offset :  0
+R1_xe.01-00           0x000007C0   0x3A34    1137       0/0/0/3
+    Instance      :  0x000007BF
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R2_xr.00           Metric : 0
+    Digest Offset :  0
+R1_xe.02-00           0x000007C8   0x23DB    867        0/0/0/3
+    Instance      :  0x000007C7
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R2_xr.00-00           0x000007D1   0xE002    813        0/0/0/3
+    Instance      :  0x000007C9
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    IP Address    :  10.16.2.2
+    Extended IP   :         10.16.2.2/32  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.23.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :         10.36.3.3/32  Metric : 11          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.13.115.0/24  Metric : 20          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Hostname      :  R2_xr              Length : 5
+    IPv6 Address  :  2001:2:2:2::2
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:2:2:2::2/128  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:23:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:3:3:3::3/128  Metric : 11          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:13:115::/64  Metric : 20          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Extended IS   :  R2_xr.03           Metric : 10
+    Extended IS   :  R1_xe.01           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R2_xr.03           Metric : 10
+		    R1_xe.01           Metric : 10
+    Digest Offset :  0
+R2_xr.03-00           0x000007C2   0x8EA8    784        0/0/0/3
+    Instance      :  0x000007C1
+    Extended IS   :  R2_xr.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R3_nx.00-00         * 0x00000B05   0x7FA7    1040       0/0/0/3
+    Instance      :  0x00000B05
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    Router ID     :  10.36.3.3
+    IP Address    :  10.36.3.3
+    MT TopoId     : TopoId:2 Att: 0 Ol: 0
+		    TopoId:0 Att: 0 Ol: 0
+    Hostname      :  R3_nx              Length : 5
+    TopoId: 2
+    MtExtend IS   :  R2_xr.03           Metric : 40
+		    R1_xe.02           Metric : 40
+    Extended IS   :  R2_xr.03           Metric : 40
+    Extended IS   :  R1_xe.02           Metric : 40
+    Extended IP   :         10.36.3.3/32  Metric : 1           (U)
+    Extended IP   :     10.13.115.0/24  Metric : 40          (U)
+    Extended IP   :     10.23.115.0/24  Metric : 40          (U)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:3:3:3::3/128  Metric : 1           (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:13:115::/64  Metric : 40          (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:23:115::/64  Metric : 40          (U/I)
+    Digest Offset :  0
+
+IS-IS Process: test LSP database VRF: VRF1
+IS-IS Level-1 Link State Database
+LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+R1_xe.00-00           0x000007CA   0xC7FC    616        0/0/0/3
+    Instance      :  0x000007C6
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Hostname      :  R1_xe              Length : 5
+    Extended IS   :  R1_xe.02           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 10
+    IP Address    :  10.13.115.1
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.13.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    IPv6 Address  :  2001:10:13:115::1
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:13:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Digest Offset :  0
+R1_xe.02-00           0x000007C7   0x0D6A    625        0/0/0/3
+    Instance      :  0x000007C6
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R3_nx.00-00         * 0x00000B09   0x68C0    841        0/0/0/3
+    Instance      :  0x00000B09
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    Router ID     :  10.36.3.3
+    IP Address    :  10.36.3.3
+    MT TopoId     : TopoId:2 Att: 0 Ol: 0
+		    TopoId:0 Att: 0 Ol: 0
+    Hostname      :  R3_nx              Length : 5
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 40
+    Extended IS   :  R1_xe.02           Metric : 40
+    Extended IP   :         10.36.3.3/32  Metric : 1           (U)
+    Extended IP   :     10.13.115.0/24  Metric : 40          (U)
+    Extended IP   :     10.23.115.0/24  Metric : 40          (U)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:3:3:3::3/128  Metric : 1           (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:13:115::/64  Metric : 40          (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:23:115::/64  Metric : 40          (U/I)
+    Digest Offset :  0
+
+IS-IS Level-2 Link State Database
+LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+R1_xe.00-00           0x000007CB   0x25D3    908        0/0/0/3
+    Instance      :  0x000007C6
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    MT TopoId     : TopoId:0 Att: 0 Ol: 0
+		    TopoId:2 Att: 0 Ol: 0
+    Hostname      :  R1_xe              Length : 5
+    Extended IS   :  R1_xe.02           Metric : 10
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 10
+    IP Address    :  10.13.115.1
+    Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.13.115.0/24  Metric : 10          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Extended IP   :     10.23.115.0/24  Metric : 50          (U)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    IPv6 Address  :  2001:10:13:115::1
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:12:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:13:115::/64  Metric : 10          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+2001:10:23:115::/64  Metric : 50          (U/I)
+    Unknown Sub-TLV      :  Length : 1  Type :   4
+    Digest Offset :  0
+R1_xe.02-00           0x000007C6   0x27D9    1174       0/0/0/3
+    Instance      :  0x000007C5
+    Extended IS   :  R1_xe.00           Metric : 0
+    Extended IS   :  R3_nx.00           Metric : 0
+    Digest Offset :  0
+R3_nx.00-00         * 0x00000B06   0x6EBD    1136       0/0/0/3
+    Instance      :  0x00000B06
+    Area Address  :  49.0001
+    NLPID         :  0xCC 0x8E
+    Router ID     :  10.36.3.3
+    IP Address    :  10.36.3.3
+    MT TopoId     : TopoId:2 Att: 0 Ol: 0
+		    TopoId:0 Att: 0 Ol: 0
+    Hostname      :  R3_nx              Length : 5
+    TopoId: 2
+    MtExtend IS   :  R1_xe.02           Metric : 40
+    Extended IS   :  R1_xe.02           Metric : 40
+    Extended IP   :         10.36.3.3/32  Metric : 1           (U)
+    Extended IP   :     10.13.115.0/24  Metric : 40          (U)
+    Extended IP   :     10.23.115.0/24  Metric : 40          (U)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:3:3:3::3/128  Metric : 1           (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:13:115::/64  Metric : 40          (U/I)
+    MT-IPv6 Prefx :  TopoId : 2
+		    2001:10:23:115::/64  Metric : 40          (U/I)
+    Digest Offset :  0
+
+R3_nx#

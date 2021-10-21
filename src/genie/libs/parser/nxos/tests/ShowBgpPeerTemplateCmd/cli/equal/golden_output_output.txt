@@ -1,0 +1,168 @@
+
+ BGP peer-template is PEER1
+
+  For address family: IPv4 Unicast
+  Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop always set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  SOO Extcommunity: SOO:10.4.1.1:88
+  Weight: 222
+  Allow my ASN 4 times
+  ASN override is enabled
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Default information originate  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: IPv4 Multicast
+  Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  SOO Extcommunity: SOO:10.4.1.1:88
+  Weight: 222
+  Allow my ASN 4 times
+  ASN override is enabled
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Default information originate  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: IPv6 Unicast
+  Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop always set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  SOO Extcommunity: SOO:10.4.1.1:88
+  Weight: 222
+  Allow my ASN 4 times
+  ASN override is enabled
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Default information originate  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: IPv6 Multicast
+  Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+  Inbound soft reconfiguration allowed(always)
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop always set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  SOO Extcommunity: SOO:10.4.1.1:88
+  Weight: 222
+  Allow my ASN 4 times
+  ASN override is enabled
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Default information originate  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: VPNv4 Unicast
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop always set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  Weight: 222
+  Allow my ASN 4 times
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: VPNv6 Unicast
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Nexthop always set to local peering address, 0.0.0.0
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Advertisement Interval 333 seconds, timer not running
+  Weight: 222
+  Allow my ASN 4 times
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  Unsuppress-map PERMIT_ALL_RM configured
+
+  For address family: IPv4 MVPN
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Allow my ASN 4 times
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  For address family: IPv6 MVPN
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Allow my ASN 4 times
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  For address family: L2VPN EVPN
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Allow my ASN 4 times
+  ASN override is enabled
+  Peer ASN check is disabled
+  Inbound route-map configured is PASS-ALL
+  Outbound route-map configured is PASS-ALL
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  For address family: Link-State
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Maximum prefixes allowed 1000000
+  Allow my ASN 4 times
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+Members of peer-template PEER1:
+default: 10.106.200.200
+

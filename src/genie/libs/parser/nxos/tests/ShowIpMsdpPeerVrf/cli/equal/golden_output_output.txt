@@ -1,0 +1,52 @@
+
+R3_titatnium# show ip msdp peer vrf all
+MSDP peer 10.4.1.1 for VRF "default"
+AS 100, local address: 10.36.3.3 (loopback0)
+Description: R1
+Connection status: Established
+Uptime(Downtime): 01:27:25
+Last reset reason: Keepalive timer expired
+Password: not set
+Keepalive Interval: 60 sec
+Keepalive Timeout: 90 sec
+Reconnection Interval: 33 sec
+Policies:
+SA in: none, SA out: none
+SA limit: 111
+Member of mesh-group: 1
+Statistics (in/out):
+Last messaged received: 00:00:22
+SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
+In/Out Ctrl Msgs: 0/0, In/Out Data Msgs: 0/0
+Remote/Local Port 26743/639
+Keepalives: 92/119, Notifications: 0/6
+RPF check failures: 0
+Cache Lifetime: 00:03:30
+Established Transitions: 6
+Connection Attempts: 0
+Discontinuity Time: 01:27:25
+
+MSDP peer 10.94.44.44 for VRF "VRF1"
+AS 200, local address: 10.21.33.34 (loopback3)
+Description: R4
+Connection status: Inactive, Connecting in: 00:00:23
+Uptime(Downtime): 01:03:22
+Password: not set
+Keepalive Interval: 60 sec
+Keepalive Timeout: 90 sec
+Reconnection Interval: 44 sec
+Policies:
+SA in: none, SA out: none
+SA limit: 44
+Member of mesh-group: 2
+Statistics (in/out):
+Last messaged received: never
+SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
+In/Out Ctrl Msgs: 0/0, In/Out Data Msgs: 0/0
+Remote/Local Port 0/0
+Keepalives: 0/0, Notifications: 0/0
+RPF check failures: 0
+Cache Lifetime: 00:03:30
+Established Transitions: 0
+Connection Attempts: 88
+Discontinuity Time: 00:00:20

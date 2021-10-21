@@ -1,0 +1,81 @@
+202-xTR1# show lisp instance-id * dynamic-eid detail
+
+=================================================
+Output for router lisp 0 instance-id 100
+=================================================
+LISP Dynamic EID Information for router 0, IID 100
+
+Dynamic-EID name: Auto-L2-group-100
+  Database-mapping EID-prefix: any-mac, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 0
+
+
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+LISP Dynamic EID Information for router 0, IID 101
+
+Dynamic-EID name: Auto-L2-group-101
+  Database-mapping EID-prefix: any-mac, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: aabb.cc80.ca00, 1d22h ago
+    aabb.cc00.c901, N/A, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking
+    aabb.cc80.ca00, N/A, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam
+
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Dynamic EID Information for router 0, IID 4100, EID-table VRF "red"
+
+Dynamic-EID name: 192_168_1_0
+  Database-mapping EID-prefix: 192.168.1.0/24, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: 192.168.1.1, 1d22h ago
+    192.168.1.1, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam
+    192.168.1.71, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking
+
+Dynamic-EID name: 2001_192_168_1
+  Database-mapping EID-prefix: 2001:192:168:1::/64, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: 2001:192:168:1::1, 1d22h ago
+    2001:192:168:1::1, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking, do not register, no-roam
+    2001:192:168:1::71, Vlan101, uptime: 1d22h
+      last activity: never, discovered by: Device-tracking
+
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+LISP Dynamic EID Information for router 0, IID 4101, EID-table VRF "blue"
+
+Dynamic-EID name: 193_168_1_0
+  Database-mapping EID-prefix: 193.168.1.0/24, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 0
+
+Dynamic-EID name: 2001_193_168_1
+  Database-mapping EID-prefix: 2001:193:168:1::/64, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 0

@@ -1,0 +1,15 @@
+
+NOTE: Clear lacp counters to get accurate statistics
+
+------------------------------------------------------------------------------
+			     LACPDUs                      Markers/Resp LACPDUs
+Port              Sent                Recv                  Recv Sent  Pkts Err
+------------------------------------------------------------------------------
+port-channel1
+Ethernet1/1        92                   85                     0      0    0
+Ethernet1/2        79                   87                     0      0    0
+
+port-channel2
+Ethernet1/3        136                  112                    0      0    0
+Ethernet1/4        95                   90                     0      0    0
+Ethernet1/5        118                  146                    0      0    0

@@ -1,0 +1,60 @@
+RP/0/RP0/CPU0:F17-ASR9922#show mpls traffic-eng tunnels 50000
+Tue Apr 27 17:57:44.629 JST
+
+
+Name: tunnel-te50000  Destination: 109.109.109.109  Ifhandle:0x20e0
+  Signalled-Name: 50000_F17-ASR9922_F109-ASR9001
+  Status:
+    Admin:    up Oper:   up   Path:  valid   Signalling: connected
+
+    path option 10,  type explicit 50000-EPath_10 (Basis for Setup, path weight 160)
+      Accumulative metrics: TE 160 IGP 160 Delay 600000
+    path option 20,  type explicit 50000-EPath_20
+    path option 100,  type dynamic
+    Last PCALC Error: Tue Apr 27 16:21:21 2021
+      Info: No path to destination, 109.109.109.109 (reverselink)
+    G-PID: 0x0800 (derived from egress interface properties)
+    Bandwidth Requested: 0 kbps  CT0
+    Creation Time: Tue Apr 27 16:21:14 2021 (01:36:30 ago)
+  Config Parameters:
+    Bandwidth:        0 kbps (CT0) Priority:  3  3 Affinity: 0x0/0xffff
+    Metric Type: IGP (interface)
+    Path Selection:
+      Tiebreaker: Min-fill (default)
+    Hop-limit: disabled
+    Cost-limit: disabled
+    Delay-limit: disabled
+    Delay-measurement: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear (default)
+    AutoRoute:  enabled  LockDown: disabled   Policy class: not set
+    Forward class: 0 (not enabled)
+    Forwarding-Adjacency: disabled
+    Autoroute Destinations: 0
+    Loadshare:          0 equal loadshares
+    Auto-bw: disabled
+    Auto-Capacity: Disabled:
+    Fast Reroute: Enabled, Protection Desired: Any
+    Path Protection: Not Enabled
+    BFD Fast Detection: Disabled
+    Reoptimization after affinity failure: Enabled
+    Soft Preemption: Disabled
+  History:
+    Tunnel has been up for: 01:36:23 (since Tue Apr 27 16:21:21 JST 2021)
+    Current LSP:
+      Uptime: 00:26:32 (since Tue Apr 27 17:31:12 JST 2021)
+    Reopt. LSP:
+      Last Failure:
+        LSP not signalled, identical to the [CURRENT] LSP
+        Date/Time: Tue Apr 27 16:26:11 JST 2021 [01:31:33 ago]
+    Prior LSP:
+      ID: 5 Path Option: 20
+      Removal Trigger: reoptimization completed
+
+  Path info (OSPF mpls1 area 0):
+  Node hop count: 2
+  Hop0: 20.50.0.1
+  Hop1: 21.50.0.2
+  Hop2: 109.109.109.109
+
+Displayed 1 (of 9) heads, 0 (of 10) midpoints, 0 (of 6) tails
+Displayed 1 up, 0 down, 0 recovering, 0 recovered heads

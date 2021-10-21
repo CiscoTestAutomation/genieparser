@@ -1,0 +1,32 @@
+Interface   Grp  Fwd Pri State    Address         Active router   Standby router
+Vl220       1    -   255 Active   122.1.1.254     local           122.1.1.2
+Vl220       1    1   -   Active   0007.b400.0101  local           -
+Vl220       1    3   -   Listen   0007.b400.0103  122.1.1.2       -
+Vl221       2    -   255 Active   122.1.2.254     local           122.1.2.2
+Vl221       2    1   -   Active   0007.b400.0201  local           -
+Vl221       2    3   -   Listen   0007.b400.0203  122.1.2.2       -
+Vl222       3    -   255 Active   122.1.3.254     local           122.1.3.2
+Vl222       3    1   -   Active   0007.b400.0301  local           -
+Vl222       3    3   -   Listen   0007.b400.0303  122.1.3.2       -
+Vl223       4    -   255 Active   122.1.4.254     local           122.1.4.2
+Vl223       4    1   -   Active   0007.b400.0401  local           -
+Vl223       4    3   -   Listen   0007.b400.0403  122.1.4.2       -
+Vl224       5    -   255 Active   122.1.5.254     local           122.1.5.2
+Vl224       5    1   -   Active   0007.b400.0501  local           -
+Vl224       5    3   -   Listen   0007.b400.0503  122.1.5.2       -
+Vl225       6    -   255 Active   122.1.6.254     local           122.1.6.2
+Vl225       6    1   -   Active   0007.b400.0601  local           -
+Vl225       6    3   -   Listen   0007.b400.0603  122.1.6.2       -
+Vl226       7    -   255 Active   122.1.7.254     local           122.1.7.2
+Vl226       7    1   -   Active   0007.b400.0701  local           -
+Vl226       7    3   -   Listen   0007.b400.0703  122.1.7.2       -
+Vl227       8    -   255 Active   122.1.8.254     local           122.1.8.2
+Vl227       8    1   -   Active   0007.b400.0801  local           -
+Vl227       8    3   -   Listen   0007.b400.0803  122.1.8.2       -
+Vl228       9    -   255 Active   122.1.9.254     local           122.1.9.2
+Vl228       9    1   -   Active   0007.b400.0901  local           -
+Vl228       9    3   -   Listen   0007.b400.0903  122.1.9.2       -
+Vl229       10   -   255 Active   122.1.10.254    local           122.1.10.2
+Vl229       10   1   -   Active   0007.b400.0a01  local           -
+Vl229       10   3   -   Listen   0007.b400.0a03  122.1.10.2      -
+

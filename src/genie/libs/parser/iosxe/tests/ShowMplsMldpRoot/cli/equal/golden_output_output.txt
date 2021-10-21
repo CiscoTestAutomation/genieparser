@@ -1,0 +1,8 @@
+
+ Root node    : 5.5.5.5
+  Metric      : 5
+  Distance    : 110
+  Interface   : Port-channel20 (via unicast RT)
+  FEC count   : 1
+  Path count  : 1
+  Path(s)     : 104.1.1.2        LDP nbr: 2.2.2.2:0         Port-channel20

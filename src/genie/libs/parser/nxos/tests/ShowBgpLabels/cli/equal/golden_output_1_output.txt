@@ -1,0 +1,18 @@
+
+BGP routing table information for VRF default, address family IPv4 Unicast
+BGP table version is 7, Local Router ID is 10.106.0.6
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            In label/Out label
+*>i10.36.210.0/24       10.106.101.1          nolabel/nolabel
+* i                   10.106.102.4          nolabel/nolabel
+*>i10.36.211.0/24       10.106.101.1          nolabel/nolabel
+* i                   10.106.102.4          nolabel/nolabel
+*>i10.36.212.0/24       10.106.101.1          nolabel/nolabel
+* i                   10.106.102.4          nolabel/nolabel
+*>i10.36.213.0/24       10.106.101.1          nolabel/nolabel
+* i                   10.106.102.4          nolabel/nolabel
+*>i10.36.214.0/24       10.106.101.1          nolabel/nolabel
+* i                   10.106.102.4          nolabel/nolabel

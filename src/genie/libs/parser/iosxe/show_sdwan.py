@@ -17,6 +17,7 @@
 * 'show sdwan omp peers'
 * 'show sdwan omp tlocs'
 * 'show sdwan omp tloc-paths'
+* 'show sdwan omp routes'
 * 'show sdwan policy ipv6 access-list-associations'
 * 'show sdwan policy access-list-associations'
 * 'show sdwan policy access-list-counters'
@@ -45,6 +46,7 @@ from genie.libs.parser.viptela.show_omp import ShowOmpSummary as ShowOmpSummary_
 from genie.libs.parser.viptela.show_omp import ShowOmpTlocs as ShowOmpTlocs_viptela
 from genie.libs.parser.viptela.show_omp import ShowOmpPeers as ShowOmpPeers_viptela
 from genie.libs.parser.viptela.show_omp import ShowOmpTlocPath as ShowOmpTlocPath_viptela
+from genie.libs.parser.viptela.show_omp import ShowOmpRoutes as ShowOmpRoutes_viptela
 from genie.libs.parser.viptela.show_reboot import ShowRebootHistory as ShowRebootHistory_viptela
 from genie.libs.parser.viptela.show_software import ShowSoftwaretab as ShowSoftwaretab_viptela
 from genie.libs.parser.viptela.show_system import ShowSystemStatus as ShowSystemStatus_viptela
@@ -1115,6 +1117,38 @@ class ShowSdwanOmpTlocPath(ShowOmpTlocPath_viptela):
         if not output:
             show_output = self.device.execute(self.cli_command)
     
+        return super().cli(output = show_output)
+
+
+# ===============================================
+# Parser for 'show sdwan omp routes'
+# ===============================================
+class ShowSdwanOmpRoutes(ShowOmpRoutes_viptela):
+
+    """ Parser for "show sdwan omp routes" """
+    cli_command = ['show sdwan omp routes',
+                  'show sdwan omp routes {prefix}',
+                  'show sdwan omp routes vpn {vpn}',
+                  'show sdwan omp routes {prefix} vpn {vpn}',
+                  'show sdwan omp routes family {af} vpn {vpn}']
+
+    def cli(self, prefix=None, vpn=None, af='ipv4', output=None):
+
+        if output is None:
+            if prefix and vpn:
+                cmd = self.cli_command[3].format(prefix=prefix, vpn=vpn)
+            elif af and vpn:
+                cmd = self.cli_command[4].format(af=af, vpn=vpn)
+            elif prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
+            elif vpn:
+                cmd = self.cli_command[2].format(vpn=vpn)
+            else:
+                cmd = self.cli_command[0]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
         return super().cli(output = show_output)
 
 

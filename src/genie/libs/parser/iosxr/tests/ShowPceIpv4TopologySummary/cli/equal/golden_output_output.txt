@@ -1,0 +1,29 @@
+
+PCE's topology database summary:
+--------------------------------
+
+Topology nodes:                0
+Prefixes:                      0
+Prefix SIDs:
+  Total:                       0
+  Regular:                     0
+  Strict:                      0
+Links:
+  Total:                       0
+  EPE:                         0
+Adjacency SIDs:
+  Total:                       0
+  Unprotected:                 0
+  Protected:                   0
+  EPE:                         0
+
+Private Information:
+Lookup Nodes                   0
+Consistent                   yes
+Update Stats (from IGP and/or BGP):
+  Noded added:                 0
+  Noded deleted:               0
+  Links added:                 0
+  Links deleted:               0
+  Prefix added:                0
+  Prefix deleted:              0

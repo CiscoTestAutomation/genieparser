@@ -1,0 +1,19 @@
+
+RP/0/RP0/CPU0:iosxrv9000-1#show mpls label table detail 
+Mon Sep 30 13:26:56.133 EDT
+Table Label   Owner                           State  Rewrite
+----- ------- ------------------------------- ------ -------
+0     0       LSD(A)                          InUse  Yes
+0     1       LSD(A)                          InUse  Yes
+0     2       LSD(A)                          InUse  Yes
+0     13      LSD(A)                          InUse  Yes
+0     16000   ISIS(A):SR                      InUse  No
+  (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
+0     24000   ISIS(A):SR                      InUse  Yes
+  (SR Adj Segment IPv4, vers:0, index=0, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
+0     24001   ISIS(A):SR                      InUse  Yes
+  (SR Adj Segment IPv4, vers:0, index=2, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
+0     24002   ISIS(A):SR                      InUse  Yes
+  (SR Adj Segment IPv4, vers:0, index=1, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
+0     24003   ISIS(A):SR                      InUse  Yes
+  (SR Adj Segment IPv4, vers:0, index=3, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)

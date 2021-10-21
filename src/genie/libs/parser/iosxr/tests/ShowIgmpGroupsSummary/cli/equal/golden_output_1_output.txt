@@ -1,0 +1,7 @@
+
+RP/0/RP0/CPU0:leaf-3#show igmp groups summ
+Mon Jul 13 15:45:02.517 PDT
+IGMP Route Summary for vrf default
+  No. of (*,G) routes = 4
+  No. of (S,G) routes = 0
+  No. of Group x Interfaces = 19

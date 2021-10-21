@@ -1,0 +1,41 @@
+
+show isis database detail
+
+Mon Oct 22 10:40:56.529 EDT
+
+IS-IS Genie (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+core1-genie.00-00  0x0000a302   0x1a0e        58285/65534        0/0/0
+Area Address:   49.0000
+NLPID:          0xcc
+IP Address:     10.154.219.57
+Hostname:       core1-genie
+Router Cap:     10.154.219.57 D:0 S:0
+Metric: 0          IP-Extended 10.154.219.57/32
+Metric: 50         IS-Extended core2-genie.00
+Metric: 250        IS-Extended tcore4-genie.00
+Metric: 1000       IS-Extended bl1-genie.00
+Metric: 1000       IS-Extended bl2-genie.00
+core2-genie.00-00  0x0000a15b   0xfcfe        60939/65534        0/0/0
+Area Address:   49.0000
+NLPID:          0xcc
+IP Address:     10.154.219.58
+Hostname:       core2-genie
+Router Cap:     10.154.219.58 D:0 S:0
+Metric: 0          IP-Extended 10.154.219.58/32
+Metric: 50         IS-Extended core1-genie.00
+Metric: 1000       IS-Extended bl2-genie.00
+Metric: 1000       IS-Extended bl1-genie.00
+Metric: 250        IS-Extended tcore3-genie.00
+dis17-genie_RE1.00-00  0x00000215   0xf5f4        32551/65535        0/0/0
+Area Address:   49.0000
+TLV 14:         Length: 2
+NLPID:          0xcc
+NLPID:          0x8e
+Router ID:      10.154.219.102
+IP Address:     10.154.219.102
+Hostname:       dis17-genie_RE1
+Metric: 100        IS-Extended tcore4-genie.00
+Metric: 100        IS-Extended tcore3-genie.00
+Metric: 0          IP-Extended 10.154.219.102/32
+Router Cap:     10.154.219.102 D:0 S:0

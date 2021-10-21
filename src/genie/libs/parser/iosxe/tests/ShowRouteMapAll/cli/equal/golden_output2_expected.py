@@ -17,7 +17,9 @@ expected_output = {
     "statements": {
       "5": {
         "actions": { "set_next_hop_self": False, "route_disposition": "deny" },
-        "conditions": {},
+        "conditions":{
+          "match_access_list": "PBR-EXCLUSION-SITE-SUBNET"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       },
       "10": {
@@ -26,7 +28,9 @@ expected_output = {
           "route_disposition": "permit",
           "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
-        "conditions": {},
+        "conditions":{
+          "match_access_list": "ACL-APPLICATION-SAP-DC"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       },
       "20": {
@@ -35,7 +39,9 @@ expected_output = {
           "route_disposition": "permit",
           "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
-        "conditions": {},
+        "conditions":{
+          "match_access_list": "ACL-APPLICATION-SAP_PLM-DC"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       },
       "30": {
@@ -44,7 +50,9 @@ expected_output = {
           "route_disposition": "permit",
           "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
-        "conditions": {},
+        "conditions":{
+          "match_access_list": "ACL-APPLICATION-ABACUS_EUREKA-DC"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       },
       "40": {
@@ -53,7 +61,9 @@ expected_output = {
           "route_disposition": "permit",
           "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
-        "conditions": {},
+        "conditions":{
+          "match_access_list": "ACL-APPLICATION-INTERSPEC-DC"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       }
     }
