@@ -1,0 +1,14 @@
+show ip bgp vpnv4 vrf internal community 65000:11111
+BGP table version is 88855359, local router ID is 10.90.2.45
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+              t secondary path,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 65026:3601 (default for vrf internal)
+ *>   10.0.0.0         10.10.10.10                           0 65002 65000 i
+ *>   172.16.0.0/12    10.10.10.10                           0 65002 65000 i
+ *>   192.168.0.0/16   10.10.10.10                           0 65002 65000 i
