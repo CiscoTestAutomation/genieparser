@@ -1,3 +1,3 @@
 expected_output = {
-    "total-mac-addresses": 0,
+    "total_mac_addresses": 0,
 }
