@@ -1,0 +1,38 @@
+show mpls l2transport vc 1 detail
+Local interface: Et0/3 up, line protocol up, Eth VLAN 1000 up
+  Interworking type is Ethernet
+  Destination address: 1.1.1.1, VC ID: 1, VC status: up
+    Output interface: Et0/1, imposed label stack {24 21}
+    Preferred path: not configured  
+    Default path: active
+    Next hop: 30.1.2.1
+  Create time: 00:01:05, last status change time: 00:01:05
+    Last label FSM state change time: 00:01:05
+  Signaling protocol: LDP, peer 1.1.1.1:0 up
+    Targeted Hello: 4.4.4.4(LDP Id) -> 1.1.1.1, LDP is UP
+    Graceful restart: not configured and not enabled
+    Non stop routing: configured and not enabled
+    Status TLV support (local/remote)   : enabled/supported
+      LDP route watch                   : enabled
+      Label/status state machine        : established, LruRru
+      Last local dataplane   status rcvd: No fault
+      Last BFD dataplane     status rcvd: Not sent
+      Last BFD peer monitor  status rcvd: No fault
+      Last local AC  circuit status rcvd: No fault
+      Last local AC  circuit status sent: No fault
+      Last local PW i/f circ status rcvd: No fault
+      Last local LDP TLV     status sent: No fault
+      Last remote LDP TLV    status rcvd: No fault
+      Last remote LDP ADJ    status rcvd: No fault
+    MPLS VC labels: local 21, remote 21 
+    Group ID: local 5, remote 4
+    MTU: local 1500, remote 1500
+    Remote interface description: 
+  Sequencing: receive disabled, send disabled
+  Control Word: On (configured: autosense)
+  Dataplane:
+    SSM segment/switch IDs: 4098/8193 (used), PWID: 2
+  VC statistics:
+    transit packet totals: receive 0, send 0
+    transit byte totals:   receive 0, send 0
+    transit packet drops:  receive 0, seq error 0, send 0

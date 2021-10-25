@@ -1607,13 +1607,16 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
 
 
 class ShowMplsForwardingTableSchema(MetaParser):
-    """Schema for
+    """
+    Schema for
         show mpls forwarding-table
         show mpls forwarding-table {prefix}
         show mpls forwarding-table vrf <vrf>
         show mpls forwarding-table detail
         show mpls forwarding-table interface tunnel <tunnelid>
-        show mpls forwarding-table vrf <vrf> detail"""
+        show mpls forwarding-table vrf <vrf> detail
+        show mpls forwarding-table <prefix> <mask> algo <algo>
+    """
 
     schema = {
         'vrf':{
@@ -1644,6 +1647,12 @@ class ShowMplsForwardingTableSchema(MetaParser):
                                                     Optional('slots'): list,
                                                 },
                                                 Optional('broadcast'): bool,
+                                                Optional('flexalgo_info'): {
+                                                    'pdb_index': int,
+                                                    'metric': int,
+                                                    'algo': int,
+                                                    'via_srms': int,
+                                                },
                                             }
                                         }
                                     },
@@ -1657,18 +1666,22 @@ class ShowMplsForwardingTableSchema(MetaParser):
     }
 
 class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
-    """Parser for
+    """
+    Parser for
         show mpls forwarding-table
         show mpls forwarding-table {prefix}
         show mpls forwarding-table vrf {vrf}
-        show mpls forwarding-table interface tunnel <tunnelid>"""
+        show mpls forwarding-table interface tunnel <tunnelid>
+        show mpls forwarding-table <prefix> <mask> algo <algo>
+    """
 
     cli_command = ['show mpls forwarding-table vrf {vrf}',
                    'show mpls forwarding-table {prefix}',
                    'show mpls forwarding-table',
-                   'show mpls forwarding-table interface tunnel {tunnelid}']
+                   'show mpls forwarding-table interface tunnel {tunnelid}',
+                   'show mpls forwarding-table {prefix} {mask} algo {algo}',]
 
-    def cli(self, vrf="", prefix="",tunnelid="",output=None):
+    def cli(self, vrf="", prefix="",tunnelid="", mask="", algo="", output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -1676,6 +1689,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 cmd = self.cli_command[1].format(prefix=prefix)
             elif tunnelid:
                 cmd = self.cli_command[3].format(tunnelid=tunnelid)
+            elif prefix and mask and algo:
+                cmd = self.cli_command[4].format(prefix=prefix, mask=mask, algo=algo)
             else:
                 cmd = self.cli_command[2]
 
@@ -1701,24 +1716,29 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                             0             Gi0/1/6    192.168.10.253
         #            107829     172.16.100.1/32   \
         #                             0             Gi0/1/7    192.168.10.254
-        p1 = re.compile(r'((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
-                        r'(?P<outgoing_label>(\w+|(No|Pop) +Label)) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
-
-        p2 = re.compile(r'^(?P<bytes_label_switched>\d*)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+        # 25         16021      0-23.23.23.23/32-4 (10:30:130:1)   \
+        #                              0             Et0/2      13.1.1.2
+        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<info_tag>(?:T|M)+)\] +)?'
+                        r'(?P<outgoing_label>(\w+|(No|Pop) +Label)) +(?P<prefix_or_tunnel_id>[\S]+) '
+                        r'+\(?(?P<flexalgo_info>\d+:\d+:\d+:\d+)?\)?'
+                        r'(?P<bytes_label_switched>\d*)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
         # 22    [M]  Pop Label  192.168.0.1/32   0             Gi2        192.168.0.2
         # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
-        p2_2 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
-                           '(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
-                           'Label|(?:No|Pop) (?:T|t)ag|\d\/\w*|\d|\d\/)+)(?:\['
-                           '(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:|\S]+)'
-                           ' +(?P<bytes_label_switched>\d*)(?: +(?P<interface>\S+))?(?: +'
-                           '(?P<next_hop>[\w\.]+))?$')
+        p2_1 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<info_tag>(?:T|M)+)\] +)?'
+                           r'(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
+                           r'Label|(?:No|Pop) (?:T|t)ag|\d\/\w*|\d|\d\/)+)(?:\['
+                           r'(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:|\S]+) '
+                           r'+\(?(?P<flexalgo_info>\d+:\d+:\d+:\d+)?\)?'
+                           r' +(?P<bytes_label_switched>\d*)(?: +(?P<interface>\S+))?(?: +'
+                           r'(?P<next_hop>[\w\.]+))?$')
 
-        p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
+        # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        p2_2 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<info_tag>(T)+)\] +)?'
                           r'(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?'
-                          r'(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
+                          r'(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+) '
+                          r'+\(?(?P<flexalgo_info>\d+:\d+:\d+:\d+)?\)?'
                           r' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
@@ -1740,13 +1760,22 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #      Broadcast
         p8 = re.compile(r'^(B|b)roadcast$')
 
+        partial_line = None
+        local_label = "No Label"
+        feature_dict = {}
+
         for line in out.splitlines():
             line = line.strip()
             line = line.replace('\t',' ')
+            if '\\' in line:
+                partial_line = line.replace('\\',' ')
+                continue
+            if partial_line is not None:
+                line = partial_line + line
+                partial_line = None
 
             # 9301       No Label   172.16.100.1/32[V]   \
             #                                       0             Po1.51     192.168.10.253
-            local_label = "No Label"
             outgoing_label = "No Label"
             prefix_or_tunnel_id = "None"
             m = p1.match(line)
@@ -1758,11 +1787,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                         local_label = int(local_label)
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
-                continue
 
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
                 base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('local_label', {}).\
                                            setdefault(local_label, {}).\
@@ -1778,12 +1803,25 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict = base_feature_dict.setdefault('outgoing_interface',{}).setdefault(interface, {})
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
+                if group['info_tag']:
+                    if 'T' in group['info_tag']:
+                        feature_dict.update({'tsp_tunnel': True})
+                    if 'M' in group['info_tag']:
+                        feature_dict.update({'merged': True})
                 if group['bytes_label_switched']:
                     feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
-
+                if group['flexalgo_info']:
+                    pdb_index, metric, algo, via_srms = group['flexalgo_info'].split(':')
+                    feature_dict.update({'flexalgo_info': {
+                            'pdb_index': int(pdb_index),
+                            'metric': int(metric),
+                            'algo': int(algo),
+                            'via_srms': int(via_srms),
+                        }
+                    })
                 continue
 
-            m = p2_2.match(line)
+            m = p2_1.match(line)
             if m:
                 group = m.groupdict()
                 if group['local_label']:
@@ -1810,18 +1848,27 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
-                if group['t']:
-                    if 'T' in group['t']:
+                if group['info_tag']:
+                    if 'T' in group['info_tag']:
                         feature_dict.update({'tsp_tunnel': True})
-                    if 'M' in group['t']:
+                    if 'M' in group['info_tag']:
                         feature_dict.update({'merged': True})
                 if group['t1']:
                     feature_dict.update({'tsp_tunnel': True})
                 if group['bytes_label_switched']:
                     feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                if group['flexalgo_info']:
+                    pdb_index, metric, algo, via_srms = group['flexalgo_info'].split(':')
+                    feature_dict.update({'flexalgo_info': {
+                            'pdb_index': int(pdb_index),
+                            'metric': int(metric),
+                            'algo': int(algo),
+                            'via_srms': int(via_srms),
+                        }
+                    })
                 continue
 
-            m = p2_3.match(line)
+            m = p2_2.match(line)
             if m:
                 group = m.groupdict()
                 if group['local_label']:
@@ -1848,12 +1895,24 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
-                if group['t']:
-                    feature_dict.update({'tsp_tunnel': True})
+                if group['info_tag']:
+                    if 'T' in group['info_tag']:
+                        feature_dict.update({'tsp_tunnel': True})
+                    if 'M' in group['info_tag']:
+                        feature_dict.update({'merged': True})
                 if group['t1']:
                     feature_dict.update({'tsp_tunnel': True})
                 if group['bytes_label_switched']:
                     feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                if group['flexalgo_info']:
+                    pdb_index, metric, algo, via_srms = group['flexalgo_info'].split(':')
+                    feature_dict.update({'flexalgo_info': {
+                            'pdb_index': int(pdb_index),
+                            'metric': int(metric),
+                            'algo': int(algo),
+                            'via_srms': int(via_srms),
+                        }
+                    })
                 continue
 
             #     MAC/Encaps=18/18, MRU=1530, Label Stack{}
@@ -2315,16 +2374,18 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         p5_1 = re.compile(r'^Next +hop: +(?P<next_hop>[\S\s]+)$')
 
         #   Output interface: Se2/0/2, imposed label stack {16}
+        #   Output interface: Et0/1, imposed label stack {24 21}
         p6 = re.compile(r'^Output +interface: +(?P<output_interface>\S+),'
-                         ' +imposed +label +stack +(?P<imposed_label_stack>\S+)$')
+                         ' +imposed +label +stack +(?P<imposed_label_stack>[^}]+})')
 
         #   Create time: 1d00h, last status change time: 00:00:03
         p7 = re.compile(r'^Create +time: +(?P<create_time>\S+),'
                          ' +last +status +change +time: +(?P<last_status_change_time>\S+)$')
 
         #   Signaling protocol: LDP, peer 10.2.2.2:0 down
+        #   Signaling protocol: LDP, peer unknown
         p8 = re.compile(r'^Signaling +protocol: +(?P<signaling_protocol>\S+)(,'
-                         ' +peer +(?P<peer_id>\S+) +(?P<peer_state>\w+))?$')
+                         ' +peer +(?P<peer_id>\S+)( +(?P<peer_state>\w+))?)?$')
 
         #   MPLS VC labels: local 21, remote 16
         #   MPLS VC labels: local 21, remote unassigned
@@ -4235,3 +4296,50 @@ class ShowMplsTrafficEngTunnelBrief(ShowMplsTrafficEngTunnelBriefSchema):
                 for item, value in r4.items():
                     result_dict[key]['auto_tunnel'][item] = value
         return result_dict
+
+class ShowMplsLabelRangeSchema(MetaParser):
+    '''
+    Search for
+    show mpls label range
+    '''
+
+    schema = {
+        'downstream_generic_label_region': {
+            'min_label': int,
+            'max_label': int
+        },
+    }
+
+class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
+    '''
+    Parser for
+    show mpls label range
+    '''
+
+    cli_command = 'show mpls label range'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        p1 = re.compile(r'^Downstream Generic label region: Min/Max label: (?P<min_label>\d+)\/(?P<max_label>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Downstream Generic label region: Min/Max label: 16/983039
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'downstream_generic_label_region' not in ret_dict:
+                    downstream_generic_label_region = ret_dict.setdefault('downstream_generic_label_region',{})
+                downstream_generic_label_region.update({
+                    'min_label': int(group['min_label']),
+                    'max_label': int(group['max_label'])})
+                continue
+
+        return ret_dict

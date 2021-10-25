@@ -576,10 +576,10 @@ class ShowIpMulticastMplsvif(ShowIpMulticastMplsvifSchema):
         p1=re.compile(r"(?P<interface>[a-zA-Z0-9]+)\s+(?P<next_hop>\d+\.\d+\.\d+\.\d+)\s+"
                     "(?P<application>\S+)\s+(?P<ref_count>\S+)\s+(?P<table>\S+)\s+[a-zA-Z\(]*\s*"
                     "(?P<vrf>[a-z0-9]+)\)*\s+(?P<flags>\S+)")
-        
+
         for line in out.splitlines():
             line=line.strip()
-            
+
             ## Lspvif9     0.0.0.0              MDT               N/A       11   (vrf vrf3001) 0x1
             m=p1.match(line)
             if m:
@@ -588,6 +588,84 @@ class ShowIpMulticastMplsvif(ShowIpMulticastMplsvifSchema):
                 r.pop('interface')
                 for key,value in r.items():
                     intf_dict.update({key:int(value) if value.isdigit() else value})
-                
+
         return ret_dict
-        
+
+class ShowIpMrouteCountSchema(MetaParser):
+    ''' search for
+        show ip mroute count
+    '''
+
+    schema = {
+        'routes': int,
+        'bytes_of_memory': int,
+        'groups': int,
+        'average': float,
+        'group_id': {
+            Any(): {
+                'source_count': int,
+                'pkt_forwarded': int,
+                'pkt_received': int
+            }
+        },
+    }
+
+
+class ShowIpMrouteCount(ShowIpMrouteCountSchema):
+    ''' Parser for
+        show ip mroute count
+    '''
+
+    cli_command = 'show ip mroute count'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # 1009 routes using 1103272 bytes of memory
+        p1 = re.compile(r'(?P<routes>\d+)\s+routes\s+using\s+(?P<bytes_of_memory>\d+)')
+
+        # 1005 groups, 0.00 average sources per group
+        p2 = re.compile(r'(?P<groups>\d+)\s+groups,\s(?P<average>[\d\.]+)\s+average')
+
+        # Group: 232.3.6.233, Source count: 0, Packets forwarded: 0, Packets received: 0
+        p3 = re.compile(
+            r'Group:\s+(?P<group>[\w.]+),\s+Source\scount:\s(?P<source_count>\d+),\s+Packets\sforwarded:\s(?P<pkt_forwarded>\d+),\s+Packets\sreceived:\s(?P<pkt_received>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 1009 routes using 1103272 bytes of memory
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'routes': int(group['routes'])})
+                ret_dict.update({'bytes_of_memory': int(group['bytes_of_memory'])})
+                continue
+
+            # 1005 groups, 0.00 average sources per group
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'groups': int(group['groups'])})
+                ret_dict.update({'average': float(group['average'])})
+                continue
+
+            # Group: 232.3.6.233, Source count: 0, Packets forwarded: 0, Packets received: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                groupid = group['group']
+                if 'group_id' not in ret_dict:
+                    group_dict = ret_dict.setdefault('group_id', {})
+                group_dict[groupid] = {}
+                group_dict[groupid]['source_count'] = int(group['source_count'])
+                group_dict[groupid]['pkt_forwarded'] = int(group['pkt_forwarded'])
+                group_dict[groupid]['pkt_received'] = int(group['pkt_received'])
+                continue
+
+        return ret_dict

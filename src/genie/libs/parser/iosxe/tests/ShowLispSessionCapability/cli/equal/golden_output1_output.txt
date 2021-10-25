@@ -1,0 +1,5 @@
+Peer                           Tx Flags   Rx Flags   Rx count  Err count 
+44.44.44.44:4342               0x1FF      0x1FF      1         0         
+66.66.66.66:4342               0x1FF      0x1FF      1         0         
+66.66.66.66:44538              0x1FF      0x1FF      1         0         
+100.100.100.100:4342           0x1FF      0x1FF      1         0 

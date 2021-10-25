@@ -1,0 +1,26 @@
+R1#show mpls forwarding-table
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface   
+17         Pop Label  13.1.1.2-A       0             Et0/2      13.1.1.2    
+19         Pop Label  12.1.1.2-A       0             Et0/1      12.1.1.2    
+16021      No Label   2.2.2.2/32       0             drop       
+16022      Pop Label  0-2.2.2.2/32-2 (1:100:1:0)  \
+                                       0             Et0/1      12.1.1.2    
+16023      Pop Label  0-2.2.2.2/32-32772 (2:100:128:0)  \
+                                       0             Et0/1      12.1.1.2    
+16025      Pop Label  0-2.2.2.2/32-38404 (3:200:128:0)  \
+                                       0             Et0/1      12.1.1.2    
+16031      No Label   3.3.3.3/32       0             drop       
+16032      Pop Label  0-3.3.3.3/32-2 (4:100:1:0)  \
+                                       0             Et0/2      13.1.1.2    
+16033      Pop Label  0-3.3.3.3/32-32772 (5:100:128:0)  \
+                                       0             Et0/2      13.1.1.2    
+16035      Pop Label  0-3.3.3.3/32-38404 (6:220:128:0)  \
+                                       0             Et0/2      13.1.1.2  
+
+[T]     Forwarding through a LSP tunnel.
+        View additional labelling info with the 'detail' option
+
+A  - Adjacency SID
+
+[M] - Merged

@@ -1,0 +1,56 @@
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+
+  EID-prefix: 192.168.1.71/32
+    First published:      00:02:00
+    Last published:       00:02:00
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 100.100.100.100:4342, last published 00:02:00, TTL never
+                                    publisher epoch 1, entry epoch 1
+                                    entry-state complete
+                                    xTR-ID 0xA7A12E1D-0xD3DF8ED1-0x26D0DE04-0x436FDB9F
+                                    site-ID unspecified
+                                    Domain-ID unset
+                                    Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      11.11.11.11   10/10   up        -         
+
+    Publisher 44.44.44.44:4342, last published 00:02:00, TTL never
+                                publisher epoch 1, entry epoch 1
+                                entry-state complete
+                                xTR-ID 0xA7A12E1D-0xD3DF8ED1-0x26D0DE04-0x436FDB9F
+                                site-ID unspecified
+                                Domain-ID unset
+                                Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      11.11.11.11   10/10   up        -         
+
+  EID-prefix: 192.168.1.72/32
+    First published:      00:02:00
+    Last published:       00:02:00
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 100.100.100.100:4342, last published 00:02:00, TTL never
+                                    publisher epoch 1, entry epoch 1
+                                    entry-state complete
+                                    xTR-ID 0x9F3E4AEF-0x3A7D7CB2-0x07D07E0F-0xE7F04B7E
+                                    site-ID unspecified
+                                    Domain-ID unset
+                                    Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      22.22.22.22   10/10   up        -         
+
+    Publisher 44.44.44.44:4342, last published 00:02:00, TTL never
+                                publisher epoch 1, entry epoch 1
+                                entry-state complete
+                                xTR-ID 0x9F3E4AEF-0x3A7D7CB2-0x07D07E0F-0xE7F04B7E
+                                site-ID unspecified
+                                Domain-ID unset
+                                Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      22.22.22.22   10/10   up        -         
+

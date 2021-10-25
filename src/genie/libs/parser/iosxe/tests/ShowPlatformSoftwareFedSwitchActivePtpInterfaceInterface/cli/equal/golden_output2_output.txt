@@ -12,17 +12,15 @@ Delay mechanism: End-to-End
 port_enabled: TRUE
 ptt_port_enabled: TRUE
 Port state: : MASTER
-sync_seq_num 56087
+sync_seq_num 44364
 delay_req_seq_num 0
 log mean sync interval 0
 log mean delay interval 0
-IP Address : 0.0.0.0
-num sync messages transmitted  761
-num followup messages transmitted  761
+num sync messages transmitted  1710
+num followup messages transmitted  1710
 num sync messages received  0
 num followup messages received  0
 num delay requests transmitted  0
 num delay responses received 0
-num delay requests received  768
-num delay responses transmitted  768
-
+num delay requests received  0
+num delay responses transmitted  0

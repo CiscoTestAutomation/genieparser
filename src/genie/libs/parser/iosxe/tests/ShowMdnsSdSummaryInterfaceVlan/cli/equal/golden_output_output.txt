@@ -1,0 +1,8 @@
+        Interface : Vlan300
+        mDNS Gateway : Enabled
+        mDNS Service Policy : Not-Configured
+        Active Query : Enabled
+        Periodicity Seconds : 60 
+        Transport Type : IPv6
+        Service Instance Suffix : Not-Configured
+        mDNS Query Type : PTR Only

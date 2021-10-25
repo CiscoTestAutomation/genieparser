@@ -1,0 +1,6 @@
+Interface Gi1/0/7
+---
+Port enable administrative configuration setting: Enabled
+Port enable operational state: Enabled
+Current bidirectional state: Bidirectional
+

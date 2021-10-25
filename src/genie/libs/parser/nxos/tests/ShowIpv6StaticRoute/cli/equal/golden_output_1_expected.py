@@ -1,8 +1,6 @@
-
-
 expected_output = {
-    'vrf':{
-        'default':{
+    'vrf': {
+        'default': {
             'address_family': {
                 'ipv6': {
                     'routes': {

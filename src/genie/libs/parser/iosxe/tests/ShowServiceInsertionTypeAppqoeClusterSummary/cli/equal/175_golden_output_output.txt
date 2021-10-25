@@ -1,0 +1,17 @@
+show service-insertion type appqoe cluster-summary
+Service Context                             : appqoe/1
+ Enabled                                    : TRUE
+ Cluster type                               : Integrated Service-node
+
+ Service Controller Group      : ACG-APPQOE
+   Service Controller IP       : 192.168.2.1
+   Service Controller System IP: 30.0.0.30
+   Service Controller Site ID  : 30
+
+ Service Node Group            : SNG-APPQOE
+
+ ---------------------------------------------------------------------------- ----
+| Service Node IP |    System IP    |  Site Id  |  Status |         Error          |
+ ----------------------------------------------------------------------------------
+| 192.168.2.2     | 30.0.0.30       | 30        | GREEN   |                        |
+ ----------------------------------------------------------------------------------

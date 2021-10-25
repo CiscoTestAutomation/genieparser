@@ -5099,11 +5099,12 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
         # Init vars
         ret_dict = {}
-        af = 'ipv4'
+        address_family = 'ipv4'
         default_mt_id = 0
         capabilities_flag = False
         tlv_type_flag = False
         sub_tlv_type_flag = False
+        sub_tlv_temp = []
 
         # Router
         # Network Link
@@ -5342,13 +5343,13 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     ret_dict['vrf'][vrf] = {}
                 if 'address_family' not in ret_dict['vrf'][vrf]:
                     ret_dict['vrf'][vrf]['address_family'] = {}
-                if af not in ret_dict['vrf'][vrf]['address_family']:
-                    ret_dict['vrf'][vrf]['address_family'][af] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
-                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if address_family not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][address_family]:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][address_family]\
                         ['instance']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance] = {}
                 continue
 
@@ -5372,31 +5373,31 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     area = '0.0.0.0'
 
                 # Create dict structure
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][address_family]\
                         ['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if area not in ret_dict['vrf'][vrf]['address_family'][address_family]\
                         ['instance'][instance]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance]['areas'][area] = {}
-                if 'database' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if 'database' not in ret_dict['vrf'][vrf]['address_family'][address_family]\
                         ['instance'][instance]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance]['areas'][area]['database'] = {}
                 if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]['database']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [address_family]['instance'][instance]['areas'][area]['database']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance]['areas'][area]['database']['lsa_types'] = {}
-                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][address_family]\
                         ['instance'][instance]['areas'][area]['database']\
                         ['lsa_types']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    ret_dict['vrf'][vrf]['address_family'][address_family]['instance']\
                         [instance]['areas'][area]['database']['lsa_types']\
                         [lsa_type] = {}
 
                 # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][address_family]\
                             ['instance'][instance]['areas'][area]['database']\
                             ['lsa_types'][lsa_type]
 
@@ -6230,9 +6231,11 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     index = 1
 
                 sub_tlv_types_dict = tlv_type_dict.setdefault('sub_tlvs', {}).setdefault(index, {})
-
                 sub_tlv_types_dict['type'] = sub_tlv_type
-
+                if sub_tlv_temp:
+                    for i in sub_tlv_temp:
+                        sub_tlv_types_dict.update(i)
+                    sub_tlv_temp.clear()
                 continue
 
             # Remote Interface Address   : 192.168.0.1
@@ -6248,7 +6251,11 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 group = m.groupdict()
                 local_interface_id = int(group['local_interface_id'])
-                sub_tlv_types_dict['local_interface_id'] = local_interface_id
+                try:
+                    sub_tlv_types_dict['local_interface_id'] = local_interface_id
+                except UnboundLocalError:
+                    sub_tlv_temp.append({'local_interface_id': local_interface_id})
+
                 continue            
 
             # Remote Interface ID   : 20
@@ -6256,7 +6263,11 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 group = m.groupdict()
                 remote_interface_id = int(group['remote_interface_id'])
-                sub_tlv_types_dict['remote_interface_id'] = remote_interface_id
+                try:
+                    sub_tlv_types_dict['remote_interface_id'] = remote_interface_id
+                except UnboundLocalError:
+                    sub_tlv_temp.append({'remote_interface_id': remote_interface_id})
+
                 continue
 
             # SID   : 1
@@ -6737,6 +6748,8 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                                         'type': str,
                                                                                         'length': int,
                                                                                         'label': int,
+                                                                                        Optional('local_interface_id'): int,
+                                                                                        Optional('remote_interface_id'): int,
                                                                                     }
                                                                                 }
                                                                             }

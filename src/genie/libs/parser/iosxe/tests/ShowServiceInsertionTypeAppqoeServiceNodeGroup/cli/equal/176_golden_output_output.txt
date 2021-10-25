@@ -1,0 +1,75 @@
+Service Node Group name         : SNG-APPQOE1
+    Service Context             : appqoe/1
+    Member Service Node count   : 2
+
+
+Service Node (SN)                   : 26.126.0.1
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE1
+Current status of SN                : Alive
+System IP                           : 26.1.0.1
+Site ID                             : 26
+Time current status was reached               : Mon Aug 23 12:48:32 2021
+
+Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1631666073
+Cluster protocol last received sequence number: 664135
+Cluster protocol last received ack number     : 1631666072
+
+Health Markers:
+              AO       Load State
+
+             tcp          GREEN 43%
+             ssl          GREEN 43%
+             dre          GREEN 50%
+            http  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 26.126.0.2
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE1
+Current status of SN                : Alive
+System IP                           : 26.1.0.2
+Site ID                             : 26
+Time current status was reached               : Mon Aug 23 12:48:32 2021
+
+Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1631666074
+Cluster protocol last received sequence number: 662799
+Cluster protocol last received ack number     : 1631666073
+
+Health Markers:
+              AO       Load State
+
+             tcp          GREEN 43%
+             ssl          GREEN 43%
+             dre          GREEN 50%
+            http  RED/NOT AVAILABLE
+
+Service Node Group name         : SNG-APPQOE2
+    Service Context             : appqoe/1
+    Member Service Node count   : 1
+
+
+Service Node (SN)                   : 26.126.0.3
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE2
+Current status of SN                : Alive
+System IP                           : 26.1.0.3
+Site ID                             : 26
+Time current status was reached               : Mon Aug 23 12:48:32 2021
+
+Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1631666075
+Cluster protocol last received sequence number: 661599
+Cluster protocol last received ack number     : 1631666074
+
+Health Markers:
+              AO       Load State
+
+             tcp          GREEN 31%
+             ssl          GREEN 37%
+             dre          GREEN 37%
+            http  RED/NOT AVAILABLE

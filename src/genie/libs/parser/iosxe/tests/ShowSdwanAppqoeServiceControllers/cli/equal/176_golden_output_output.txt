@@ -1,0 +1,10 @@
+Service health status:
+TCP : Green (0%)
+SSL : Green (0%)
+DRE : Green (37%)
+
+
+Service controllers :
+LAN IP           System IP           Site ID  SN LAN IP
+-------------------------------------------------------------
+8.3.2.1          25.0.0.25                25  192.168.2.2

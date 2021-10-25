@@ -14,6 +14,7 @@ IOSXE parsers for the following show commands:
     * show ethernet service instance
     * show ethernet service instance id {service_instance_id} interface {interface} detail
     * show ethernet service instance id {service_instance_id} interface {interface} stats
+    * show l2vpn atom preferred-path
     * show l2vpn evpn ethernet-segment detail
     * show l2vpn evpn ethernet-segment interface {interface} detail
     * show l2vpn evpn ethernet-segment
@@ -143,6 +144,22 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv4_addr}
     * show l2vpn evpn mac ip vlan {vlan_id} mac {mac_addr} address {ipv6_addr}
     * show l2vpn evpn mac ip vlan {vlan_id} remote
+    * show l2vpn evpn default-gateway detail
+    * show l2vpn evpn default-gateway summary
+    * show l2vpn evpn default-gateway evi <evi_id> detail
+    * show l2vpn evpn default-gateway evi <evi_id> summary
+    * show l2vpn evpn default-gateway bridge-domain {bd_id} detail
+    * show l2vpn evpn default-gateway bridge-domain {bd_id} summary
+    * show l2vpn evpn default-gateway vlan <vlan_id> detail
+    * show l2vpn evpn default-gateway vlan <vlan_id> summary
+    * show l2vpn evpn peers vxlan detail
+    * show l2vpn evpn peers vxlan address <peer_addr> detail
+    * show l2vpn evpn peers vxlan global detail
+    * show l2vpn evpn peers vxlan global address <peer_addr> detail
+    * show l2vpn evpn peers vxlan vni <vni_id> detail
+    * show l2vpn evpn peers vxlan vni <vni_id> address <peer_addr> detail
+    * show l2vpn evpn peers vxlan interface <nve_interface> detail
+    * show l2vpn evpn peers vxlan interface <nve_interface> address <peer_addr> detail
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -3278,14 +3295,13 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
         return parser_dict
 
 
-
 class ShowStormControlSchema(MetaParser):
     ''' Schema for
         show storm-control {interface}
     '''
 
     schema = {
-        'storm_control': {
+        'traffic_type': {
             Any(): {
                 'interface': str,
                 'state': str,
@@ -3297,7 +3313,6 @@ class ShowStormControlSchema(MetaParser):
         }
     }
 
-
 class ShowStormControl(ShowStormControlSchema):
     ''' Parser for
     show storm-control {interface}
@@ -3305,7 +3320,7 @@ class ShowStormControl(ShowStormControlSchema):
 
     cli_command = 'show storm-control {interface}'
 
-    def cli(self, interface, output=None):
+    def cli(self, interface="", output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
 
@@ -3323,8 +3338,8 @@ class ShowStormControl(ShowStormControlSchema):
 
             if m:
                 group = m.groupdict()
-                if 'storm_control' not in ret_dict:
-                    control_dict = ret_dict.setdefault('storm_control', {})
+                if 'traffic_type' not in ret_dict:
+                    control_dict = ret_dict.setdefault('traffic_type', {})
                 traffic_type = str(group['type'])
                 control_dict[traffic_type] = {}
                 control_dict[traffic_type]['interface'] = str(group['interface'])
@@ -3336,3 +3351,545 @@ class ShowStormControl(ShowStormControlSchema):
                 continue
 
         return ret_dict
+
+
+# ===============================================
+# Schema for 'show l2vpn evpn peers vxlan detail'
+# ===============================================
+class ShowL2vpnEvpnPeersVxlanDetailSchema(MetaParser):
+    """ Schema for show l2vpn evpn peers vxlan detail
+                   show l2vpn evpn peers vxlan address <peer_addr> detail
+                   show l2vpn evpn peers vxlan global detail
+                   show l2vpn evpn peers vxlan global address <peer_addr> detail
+                   show l2vpn evpn peers vxlan vni <vni_id> detail
+                   show l2vpn evpn peers vxlan vni <vni_id> address <peer_addr> detail
+                   show l2vpn evpn peers vxlan interface <nve_interface> detail
+                   show l2vpn evpn peers vxlan interface <nve_interface> address <peer_addr> detail
+    """
+
+    schema = {
+        'peer_address': {
+            Any(): {
+                'peer_vni': {
+                    Any(): {
+                        'local_vni': str,
+                        'interface': str,
+                        'up_time': str,
+                        Optional('number_of_routes'): {
+                            Optional('ead_per_evi'): int,
+                            Optional('mac'): int,
+                            Optional('mac_ip'): int,
+                            Optional('imet'): int,
+                            Optional('es'): int,
+                            Optional('ead_per_es'): int,
+                            Optional('total'): int,
+                        }
+                    },
+                },
+            },
+        },
+    }
+
+
+# ===============================================
+# Parser for 'show l2vpn evpn peers vxlan detail'
+# ===============================================
+class ShowL2vpnEvpnPeersVxlanDetail(ShowL2vpnEvpnPeersVxlanDetailSchema):
+    """ Parser for show l2vpn evpn peers vxlan detail
+                   show l2vpn evpn peers vxlan address <peer_addr> detail
+                   show l2vpn evpn peers vxlan global detail
+                   show l2vpn evpn peers vxlan global address <peer_addr> detail
+                   show l2vpn evpn peers vxlan vni <vni_id> detail
+                   show l2vpn evpn peers vxlan vni <vni_id> address <peer_addr> detail
+                   show l2vpn evpn peers vxlan interface <nve_interface> detail
+                   show l2vpn evpn peers vxlan interface <nve_interface> address <peer_addr> detail
+    """
+
+    cli_command = ['show l2vpn evpn peers vxlan detail',
+                   'show l2vpn evpn peers vxlan address {peer_addr} detail',
+                   'show l2vpn evpn peers vxlan global detail',
+                   'show l2vpn evpn peers vxlan global address {peer_addr} detail',
+                   'show l2vpn evpn peers vxlan vni {vni_id} detail',
+                   'show l2vpn evpn peers vxlan vni {vni_id} address {peer_addr} detail',
+                   'show l2vpn evpn peers vxlan interface {nve_interface} detail',
+                   'show l2vpn evpn peers vxlan interface {nve_interface} address {peer_addr} detail']
+
+    def cli(self, peer_addr=None, vni_id=None, nve_intf=None, glob=None, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            if glob and peer_addr:
+                output = self.device.execute(
+                    self.cli_command[3].format(peer_addr=peer_addr))
+            elif glob:
+                output = self.device.execute(self.cli_command[2])
+            elif nve_intf and peer_addr:
+                output = self.device.execute(
+                    self.cli_command[7].format(nve_interface=nve_intf, peer_addr=peer_addr))
+            elif nve_intf:
+                output = self.device.execute(
+                    self.cli_command[6].format(nve_interface=nve_intf))
+            elif vni_id and peer_addr:
+                output = self.device.execute(
+                    self.cli_command[5].format(vni_id=vni_id, peer_addr=peer_addr))
+            elif vni_id:
+                output = self.device.execute(
+                    self.cli_command[4].format(vni_id=vni_id))
+            elif peer_addr:
+                output = self.device.execute(
+                    self.cli_command[1].format(peer_addr=peer_addr))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Interface:        nve1
+        # Interface:        Global
+        p1 = re.compile(r'^Interface:\s+(?P<name>\w*)$')
+
+        # Local VNI:        20011
+        # Local VNI:        N/A
+        p2 = re.compile(r'^Local VNI:\s+((?P<vni>\d+)|N/A)$')
+
+        # Peer VNI:         20011
+        # Peer VNI:         N/A
+        p3 = re.compile(r'^Peer VNI:\s+((?P<vni>\d+)|N/A)$')
+
+        # Peer IP Address:  11.11.11.2
+        p4 = re.compile(r'^Peer IP Address:\s+(?P<address>[0-9a-fA-F\.:]+)$')
+
+        # UP time:          1w6d
+        p5 = re.compile(r'^UP time:\s+(?P<time>\w*)$')
+
+        # Number of routes
+        p6 = re.compile(r'^Number of routes$')
+
+        # EAD per-EVI:    0
+        p7 = re.compile(r'^EAD per-EVI:\s+(?P<routes>\d+)$')
+
+        # MAC:            1
+        p8 = re.compile(r'^MAC:\s+(?P<routes>\d+)$')
+
+        # MAC/IP:         0
+        p9 = re.compile(r'^MAC/IP:\s+(?P<routes>\d+)$')
+
+        # IMET:           1
+        p10 = re.compile(r'^IMET:\s+(?P<routes>\d+)$')
+
+        # Total:          1
+        p11 = re.compile(r'^Total:\s+(?P<routes>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface:        nve1
+            # Interface:        Global
+            m = p1.match(line)
+            if m:
+                interface = str(m.groupdict()['name'])
+                continue
+
+            # Local VNI:        20011
+            # Local VNI:        N/A
+            m = p2.match(line)
+            if m:
+                if m.groupdict()['vni']:
+                    local_vni = str(m.groupdict()['vni'])
+                else:
+                    local_vni = 'N/A'
+                continue
+
+            # Peer VNI:         20011
+            # Peer VNI:         N/A
+            m = p3.match(line)
+            if m:
+                if m.groupdict()['vni']:
+                    peer_vni = str(m.groupdict()['vni'])
+                else:
+                    peer_vni = 'N/A'
+                continue
+
+            # Peer IP Address:  11.11.11.2
+            m = p4.match(line)
+            if m:
+                peer_address = str(m.groupdict()['address'])
+                peer_dict = parsed_dict.setdefault('peer_address', {}).\
+                                        setdefault(peer_address, {})
+                peer_vni_dict = peer_dict.setdefault('peer_vni', {}).\
+                                          setdefault(peer_vni, {})
+                peer_vni_dict['local_vni'] = local_vni
+                peer_vni_dict['interface'] = interface
+                continue
+
+            # UP time:          1w6d
+            m = p5.match(line)
+            if m:
+                peer_vni_dict['up_time'] = str(m.groupdict()['time'])
+                continue
+
+            # Number of routes
+            m = p6.match(line)
+            if m:
+                routes_dict = peer_vni_dict.setdefault('number_of_routes', {})
+                continue
+
+            # EAD per-EVI:    0
+            m = p7.match(line)
+            if m:
+                routes_dict['ead_per_evi'] = int(m.groupdict()['routes'])
+                continue
+
+            # MAC:            1
+            m = p8.match(line)
+            if m:
+                routes_dict['mac'] = int(m.groupdict()['routes'])
+                continue
+
+            # MAC/IP:         0
+            m = p9.match(line)
+            if m:
+                routes_dict['mac_ip'] = int(m.groupdict()['routes'])
+                continue
+
+            # IMET:           1
+            m = p10.match(line)
+            if m:
+                routes_dict['imet'] = int(m.groupdict()['routes'])
+                continue
+
+            # Total:          1
+            m = p11.match(line)
+            if m:
+                routes_dict['total'] = int(m.groupdict()['routes'])
+                continue
+
+        return parsed_dict
+
+
+# ===================================================
+# Schema for 'show l2vpn evpn default-gateway detail'
+# ===================================================
+class ShowL2vpnEvpnDefaultGatewayDetailSchema(MetaParser):
+    """ Schema for show l2vpn evpn default-gateway detail
+                   show l2vpn evpn default-gateway evi <evi_id> detail
+                   show l2vpn evpn default-gateway bridge-domain {bd_id} detail
+                   show l2vpn evpn default-gateway vlan <vlan_id> detail
+    """
+
+    schema = {
+        'evi': {
+            Any(): {
+                'bd_id': {
+                    Any(): {
+                        'dg_addr': {
+                            Any(): {
+                                'source': {
+                                    Any(): {
+                                        'eth_tag': int,
+                                        'mac_addr': str,
+                                        'valid': bool,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ===================================================
+# Parser for 'show l2vpn evpn default-gateway detail'
+# ===================================================
+class ShowL2vpnEvpnDefaultGatewayDetail(ShowL2vpnEvpnDefaultGatewayDetailSchema):
+    """ Parser for show l2vpn evpn default-gateway detail
+                   show l2vpn evpn default-gateway evi <evi_id> detail
+                   show l2vpn evpn default-gateway bridge-domain {bd_id} detail
+                   show l2vpn evpn default-gateway vlan <vlan_id> detail
+    """
+
+    cli_command = ['show l2vpn evpn default-gateway detail',
+                   'show l2vpn evpn default-gateway evi {evi_id} detail',
+                   'show l2vpn evpn default-gateway bridge-domain {bd_id} detail',
+                   'show l2vpn evpn default-gateway vlan {vlan_id} detail']
+
+    def cli(self, evi_id=None, bd_id=None, vlan_id=None, output=None):
+
+        # Init vars
+        parsed_dict = {}
+        valid = True
+
+        if output is None:
+            # Execute command
+            if evi_id:
+                output = self.device.execute(
+                    self.cli_command[1].format(evi_id=evi_id))
+            elif bd_id:
+                output = self.device.execute(
+                    self.cli_command[2].format(bd_id=bd_id))
+            elif vlan_id:
+                output = self.device.execute(
+                    self.cli_command[3].format(vlan_id=vlan_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Default Gateway Address:   10.3.1.254 (invalid)
+        p0 = re.compile(r'^Default Gateway Address:\s+(?P<address>[0-9a-fA-F\.:]+)\s+\(invalid\)$')
+
+        # Default Gateway Address:   10.3.1.254
+        p1 = re.compile(r'^Default Gateway Address:\s+(?P<address>[0-9a-fA-F\.:]+)$')
+
+        # EVPN Instance:             103
+        p2 = re.compile(r'^EVPN Instance:\s+(?P<evi>\d+)$')
+
+        # Vlan:                      103
+        # Bridge Domain:             103
+        p3 = re.compile(r'^(Vlan|Bridge Domain):\s+(?P<bd_id>\d+)$')
+
+        # MAC Address:               549f.c6f4.53bf
+        p4 = re.compile(r'^MAC Address:\s+(?P<mac>[0-9a-fA-F\.]+)$')
+
+        # Ethernet Tag ID:           0
+        p5 = re.compile(r'^Ethernet Tag ID:\s+(?P<etag>\d+)$')
+
+        # Source:                    V:2000103 Vlan103
+        # Source:                    V:2000103 20.0.101.1
+        p6 = re.compile(r'^Source:\s+(?P<source>[\w\.\: ]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Default Gateway Address:   10.3.1.254 (invalid)
+            m = p0.match(line)
+            if m:
+                dg_address = str(m.groupdict()['address'])
+                valid = False
+                continue
+
+            # Default Gateway Address:   10.3.1.254
+            m = p1.match(line)
+            if m:
+                dg_address = str(m.groupdict()['address'])
+                continue
+
+            # EVPN Instance:             103
+            m = p2.match(line)
+            if m:
+                evi = int(m.groupdict()['evi'])
+                evi_dict = parsed_dict.setdefault('evi', {}).\
+                                       setdefault(evi, {})
+                continue
+
+            # Vlan:                      103
+            # Bridge Domain:             103
+            m = p3.match(line)
+            if m:
+                bd_id = int(m.groupdict()['bd_id'])
+                bd_dict = evi_dict.setdefault('bd_id', {}).\
+                                   setdefault(bd_id, {})
+                dg_dict = bd_dict.setdefault('dg_addr', {}).\
+                                  setdefault(dg_address, {})
+                continue
+
+            # MAC Address:               549f.c6f4.53bf
+            m = p4.match(line)
+            if m:
+                mac_address = str(m.groupdict()['mac'])
+                continue
+
+            # Ethernet Tag ID:           0
+            m = p5.match(line)
+            if m:
+                eth_tag = int(m.groupdict()['etag'])
+                continue
+
+            # Source:                    V:2000103 Vlan103
+            # Source:                    V:2000103 20.0.101.1
+            m = p6.match(line)
+            if m:
+                source = str(m.groupdict()['source'])
+                source_dict = dg_dict.setdefault('source', {}).\
+                                      setdefault(source, {})
+                source_dict['mac_addr'] = mac_address
+                source_dict['eth_tag'] = eth_tag
+                source_dict['valid'] = valid
+                continue
+
+        return parsed_dict
+
+
+# ====================================================
+# Schema for 'show l2vpn evpn default-gateway summary'
+# ====================================================
+class ShowL2vpnEvpnDefaultGatewaySummarySchema(MetaParser):
+    """ Schema for show l2vpn evpn default-gateway summary
+                   show l2vpn evpn default-gateway evi <evi_id> summary
+                   show l2vpn evpn default-gateway bridge-domain {bd_id} summary
+                   show l2vpn evpn default-gateway vlan <vlan_id> summary
+    """
+
+    schema = {
+        'evi': {
+            int: {
+                'bd_id': {
+                    int: {
+                        'eth_tag': int,
+                        'remote_dg': int,
+                        'local_dg': int,
+                    },
+                },
+            },
+        },
+        Optional('total'): {
+            Optional('remote_dg'): int,
+            Optional('local_dg'): int,
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show l2vpn evpn default-gateway summary'
+# ====================================================
+class ShowL2vpnEvpnDefaultGatewaySummary(ShowL2vpnEvpnDefaultGatewaySummarySchema):
+    """ Parser for show l2vpn evpn default-gateway summary
+                   show l2vpn evpn default-gateway evi <evi_id> summary
+                   show l2vpn evpn default-gateway bridge-domain {bd_id} summary
+                   show l2vpn evpn default-gateway vlan <vlan_id> summary
+    """
+
+    cli_command = ['show l2vpn evpn default-gateway summary',
+                   'show l2vpn evpn default-gateway evi {evi_id} summary',
+                   'show l2vpn evpn default-gateway bridge-domain {bd_id} summary',
+                   'show l2vpn evpn default-gateway vlan {vlan_id} summary']
+
+    def cli(self, evi_id=None, bd_id=None, vlan_id=None, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            if evi_id:
+                output = self.device.execute(
+                    self.cli_command[1].format(evi_id=evi_id))
+            elif bd_id:
+                output = self.device.execute(
+                    self.cli_command[2].format(bd_id=bd_id))
+            elif vlan_id:
+                output = self.device.execute(
+                    self.cli_command[3].format(vlan_id=vlan_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # 103   103   0          4          4
+        p1 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<eth_tag>\d+)\s+(?P<remote_dg>\d+)\s+(?P<local_dg>\d+)$')
+
+        # Total                  4          4
+        p2 = re.compile(r'^Total\s+(?P<remote_dg>\d+)\s+(?P<local_dg>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 103   103   0          4          4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi_dict = parsed_dict.setdefault('evi', {}).\
+                                       setdefault(int(group['evi']), {})
+                bd_dict = evi_dict.setdefault('bd_id', {}).\
+                                      setdefault(int(group['bd_id']), {})
+                bd_dict['eth_tag'] = int(group['eth_tag'])
+                bd_dict['remote_dg'] = int(group['remote_dg'])
+                bd_dict['local_dg'] = int(group['local_dg'])
+                continue
+
+            # Total                  4          4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                total_vals = parsed_dict.setdefault('total', {})
+                total_vals['remote_dg'] = int(group['remote_dg'])
+                total_vals['local_dg'] = int(group['local_dg'])
+                continue
+
+        return parsed_dict
+
+
+# ============================================
+# Schema for 'show l2vpn atom preferred-path'
+# ============================================
+class ShowL2vpnAtomPreferredPathSchema(MetaParser):
+    """ Schema for show l2vpn atom preferred-path """
+    schema = {
+        'vc_id': {
+            Any(): {  # id of vc
+                'peer_id': {
+                    Any(): {  # id of peer
+                        Optional('bandwidth'): {
+                            'total': int,
+                            'available': int,
+                            'reserved': int
+                        },
+                        'interface': str,
+                    }
+                 }
+            }
+        }
+    }
+
+# ==================================================
+# Parser for 'show l2vpn atom preferred-path'
+# ==================================================
+class ShowL2vpnAtomPreferredPath(ShowL2vpnAtomPreferredPathSchema):
+    """ Parser for: show l2vpn atom preferred-path """
+
+    cli_command = 'show l2vpn atom preferred-path'
+
+    def cli(self, output=None):
+
+        # initial return dictionary
+        ret_dict = {}
+
+        if output is None:
+            # Execute command
+            output = self.device.execute(self.cli_command)
+
+        # Tunnel interface    Bandwidth Tot/Avail/Resv         Peer ID         VC ID
+        # ------------------- -------------------------------- --------------- ----------
+        # Tunnel1             500/100/400                      1.1.1.1         1
+        # Tunnel65536                                          20.20.20.20     2
+
+        p1 = re.compile(r'^(?P<interface>\S+) +(?:(?P<total_bandwidth>\d+)\/(?P<avail_bandwidth>\d+)'
+                         '\/(?P<reserved_bandwidth>\d+))? +(?P<peer_id>[\d.]+) +(?P<vc_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vc_id = group['vc_id']
+                peer_id = group['peer_id']
+
+                peer_id_dict = ret_dict.\
+                    setdefault('vc_id', {}).\
+                    setdefault(vc_id, {}).\
+                    setdefault('peer_id', {}).\
+                    setdefault(peer_id, {})
+
+                peer_id_dict.update({'interface': group['interface']})
+
+                if group['total_bandwidth'] and \
+                   group['avail_bandwidth'] and \
+                   group['reserved_bandwidth']:
+                    bandwidth_dict = peer_id_dict.setdefault('bandwidth', {})
+                    bandwidth_dict.update({
+                        'total': int(group['total_bandwidth']),
+                        'available': int(group['avail_bandwidth']),
+                        'reserved': int(group['reserved_bandwidth'])
+                    })
+
+        return ret_dict
+

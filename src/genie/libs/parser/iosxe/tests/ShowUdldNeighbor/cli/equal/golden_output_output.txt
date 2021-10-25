@@ -1,0 +1,5 @@
+Port           Device Name     Device ID    Port ID         Neighbor State
+----           -----------     ---------    -------         --------------
+Gi1/0/7        A4B43937780     1            A4:B4:39:37:78: Bidirectional
+
+Total number of bidirectional entries displayed: 1

@@ -1,0 +1,3 @@
+====================== Role policy association ======================== 
+Mac               Service-policy           Lg-Id      Role
+0242.6601.0205    ISE_POLICY_1             4096       Teacher

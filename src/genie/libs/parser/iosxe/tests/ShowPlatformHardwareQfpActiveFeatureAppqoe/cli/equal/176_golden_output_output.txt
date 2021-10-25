@@ -1,0 +1,58 @@
+show platform hardware qfp active feature appqoe stats
+ APPQOE Feature Statistics:
+ Global:
+	 ip-non-tcp-pkts: 3455
+	 not-enabled: 0
+	 cft_handle_pkt: 0
+	 sdvt_divert_req_fail: 852
+	 appqoe_sn_data_pkts_processed: 0
+	 appqoe_alloc_empty_ht_entry: 99
+	 appqoe_cvla_alloc_failure: 0
+	 appqoe_bulk_upd_mem_bm_no_sng: 0
+	 appqoe_srv_chain_transit_dre_bypass: 0
+	 appqoe_srv_chain_sn_unhealthy_bypass: 0
+	 appqoe_srv_chain_tcp_mid_flow_bypass: 0
+	 appqoe_srv_chain_non_tcp_bypass: 0
+	 appqoe_srv_chain_frag_bypass: 0
+	 appqoe_lb_without_dre: 57025
+	 appqoe_svc_on_appqoe_vpn_drop: 0
+   SDVT Global stats:
+     within SDVT syn policer limit: 9076461
+ SNG: 0 SN Index [0 (Green)], IP: 192.168.2.2, oce_id: 3367026048
+	 del 0, serv 3, id 1, ver 1, status 1, type 3, sng 0
+	 APPNAV STATS: toSN 456973831/263146043275, fromSN 501662244/319247144723
+   SDVT Count stats:
+     Active Connections: 2561
+     decaps: 494350592
+     encaps: 456973723
+     Expired Connections: 7311465
+     decaps: Processed control messages from SN: 7311534
+     decaps: delete requests received total: 7311534
+       decaps: delete - protocol decision: 7311534
+   SDVT Packet stats:
+     Divert packets/bytes: 456973723/241211289310
+     Reinject packets/bytes: 494347901/287287444558
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 1 SN Index [1 (Green)], IP: 8.3.2.2, oce_id: 3367025888
+	 del 0, serv 3, id 2, ver 1, status 1, type 3, sng 1
+	 APPNAV STATS: toSN 262988664/116438937751, fromSN 345076325/259410202081
+   SDVT Count stats:
+     Active Connections: 4334
+     decaps: 343318231
+     encaps: 262988666
+     Expired Connections: 1758078
+     decaps: Processed control messages from SN: 1758098
+     decaps: delete requests received total: 1758098
+       decaps: delete - protocol decision: 1758098
+   SDVT Packet stats:
+     Divert packets/bytes: 262988666/103815481983
+     Reinject packets/bytes: 342206474/237258380103
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SN Index [Default]
+   SDVT Count stats:
+     Non-SYN divert requests: 852
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:

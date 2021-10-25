@@ -11,7 +11,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-
+from genie.libs.parser.utils.common import Common
 
 # ==========================
 # Schema for 'show snmp mib'
@@ -808,3 +808,54 @@ class ShowSnmpUser(ShowSnmpUserSchema):
 
         return snmp_user_obj
 
+# ==========================================================
+#  Parser for snmp mib ifmib ifindex
+# ==========================================================
+class ShowSnmpMibIfmibIfindexSchema(MetaParser):
+    """Schema for:
+        * show snmp mib ifmib ifindex
+        * show snmp mib ifmib ifindex | include {interface}
+    """
+
+    schema = {
+        'interface': {
+            Any(): { 
+                'ifIndex': str 
+            },
+        }
+    }
+
+
+class ShowSnmpMibIfmibIfindex(ShowSnmpMibIfmibIfindexSchema):
+    """
+    parser for
+        * show snmp mib ifmib ifindex
+        * show snmp mib ifmib ifindex | include {interface}
+    """
+
+    cli_command = ['show snmp mib ifmib ifindex | include {interface}', 
+                   'show snmp mib ifmib ifindex']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+			
+        interface_dict = {}
+
+        #GigabitEthernet3/0/28: Ifindex = 36
+        p1 =  re.compile(r'(?P<interface_index>\S+) +Ifindex = +(?P<ifIndex>\d+)$')
+
+        for line in out.splitlines():
+            m = p1.match(line)
+            group = m.groupdict()
+            intf = Common.convert_intf_name(group.pop('interface_index')) 
+            intf = (intf.split(':'))[0]
+            int_dict = interface_dict.setdefault('interface',{}).setdefault(intf, group)
+            interface_dict.update() 
+
+        return interface_dict

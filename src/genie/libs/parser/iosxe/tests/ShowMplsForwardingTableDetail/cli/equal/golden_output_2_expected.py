@@ -19,13 +19,6 @@ expected_output = {
                                             'lstack': '00010000',
                                             'output_feature_configured': False,
                                             'broadcast': True}}}}}}},
-                'No Label': {
-                    'outgoing_label_or_vc': {
-                        'No Label': {
-                            'prefix_or_tunnel_id': {
-                                'None': {
-                                    'outgoing_interface': {
-                                        'No Label': {}}}}}}},
                 17: {
                     'outgoing_label_or_vc': {
                         'No Label': {

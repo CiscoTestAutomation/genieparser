@@ -1,0 +1,20 @@
+Displaying port data for if_id 29
+=======================================
+
+Port Mac Address 34:ED:1B:7D:F2:A1
+Port Clock Identity 34:ED:1B:FF:FE:7D:F2:80
+Port number 33
+PTP Version 2
+domain_value 0
+Profile Type: : DEFAULT
+Clock Mode : BOUNDARY CLOCK
+Delay mechanism: End-to-End
+port_enabled: TRUE
+ptt_port_enabled: TRUE
+Port state: : MASTER
+sync_seq_num 44364
+delay_req_seq_num 0
+num sync messages transmitted  1710
+num followup messages transmitted  1710
+num sync messages received  0
+num followup messages received  0

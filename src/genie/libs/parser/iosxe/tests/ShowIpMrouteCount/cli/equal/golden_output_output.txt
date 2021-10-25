@@ -1,0 +1,25 @@
+Use "show ip mfib count" to get better response time for a large number of mroutes.
+
+IP Multicast Statistics
+9 routes using 7272 bytes of memory
+5 groups, 0.80 average sources per group
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+
+Group: 239.10.1.85, Source count: 1, Packets forwarded: 7, Packets received: 5172
+  RP-tree: Forwarding: 0/0/0/0, Other: 0/0/0
+  Source: 4.4.4.4/32, Forwarding: 7/0/73/0, Other: 5172/1/5164
+
+Group: 239.10.1.84, Source count: 1, Packets forwarded: 7, Packets received: 5172
+  RP-tree: Forwarding: 0/0/0/0, Other: 0/0/0
+  Source: 4.4.4.4/32, Forwarding: 7/0/70/0, Other: 5172/1/5164
+
+Group: 239.10.1.83, Source count: 1, Packets forwarded: 7, Packets received: 5172
+  RP-tree: Forwarding: 0/0/0/0, Other: 0/0/0
+  Source: 4.4.4.4/32, Forwarding: 7/0/73/0, Other: 5172/1/5164
+
+Group: 239.10.1.82, Source count: 1, Packets forwarded: 7, Packets received: 5172
+  RP-tree: Forwarding: 0/0/0/0, Other: 0/0/0
+  Source: 4.4.4.4/32, Forwarding: 7/0/73/0, Other: 5172/1/5164
+
+Group: 224.0.1.40, Source count: 0, Packets forwarded: 0, Packets received: 0

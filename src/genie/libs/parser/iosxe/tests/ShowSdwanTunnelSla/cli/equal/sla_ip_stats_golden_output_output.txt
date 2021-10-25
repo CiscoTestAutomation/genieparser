@@ -1,0 +1,9 @@
+show sdwan tunnel remote-system-ip 23.0.0.23 sla
+tunnel system-ips 23.0.0.23
+ tunnel-count 4
+#  PROTO  SRC IP     DST IP     LOCAL COLOR      REMOTE COLOR  SLA CLASS NAME
+----------------------------------------------------------------------------------------
+0  ipsec  150.0.5.1  150.0.3.1  public-internet  biz-internet  __all_tunnels__, aarSla
+1  ipsec  151.0.5.1  150.0.3.1  silver           biz-internet  __all_tunnels__, aarSla
+2  ipsec  150.0.5.1  151.0.3.1  public-internet  bronze        __all_tunnels__, aarSla
+3  ipsec  151.0.5.1  151.0.3.1  silver           bronze        __all_tunnels__, aarSla

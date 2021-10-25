@@ -1,0 +1,43 @@
+show platform hardware qfp active feature sdwan datapath fec session summary
+TUN_IDX Flags   Tx_data   Tx_parity Rx_data   Rx_parity ReConstruct 
+----------------------------------------------------------------------
+29      0x0     0         0         5764      1441      1         
+
+     TX Win and Rx Wins open :
+     WinNo Flags   Cnt   ISN       TOS   ParityLen FecLen    FecData 
+     ------------------------------------------------------------------
+     0     0X1     0     0         0     0         0         0x0
+
+34      0x0     0         0         4615      1153      2         
+
+     TX Win and Rx Wins open :
+     WinNo Flags   Cnt   ISN       TOS   ParityLen FecLen    FecData 
+     ------------------------------------------------------------------
+     0     0X1     0     0         0     0         0         0x0
+
+     129   0X2     3     4612      0     0         56        0xC8556540
+54      0x0     0         0         75        19        1         
+
+     TX Win and Rx Wins open :
+     WinNo Flags   Cnt   ISN       TOS   ParityLen FecLen    FecData 
+     ------------------------------------------------------------------
+     0     0X1     0     0         0     0         0         0x0
+
+     435   0X6     2     327372    0     0         0         0xC86F50B0
+     454   0X2     1     327448    0     0         578       0xC8584B00
+68      0x0     0         0         6802      1700      0         
+
+     TX Win and Rx Wins open :
+     WinNo Flags   Cnt   ISN       TOS   ParityLen FecLen    FecData 
+     ------------------------------------------------------------------
+     0     0X1     0     0         0     0         0         0x0
+
+     164   0X2     2     6800      0     0         0         0xC84A2F00
+73      0x0     0         0         11846     2961      1         
+
+     TX Win and Rx Wins open :
+     WinNo Flags   Cnt   ISN       TOS   ParityLen FecLen    FecData 
+     ------------------------------------------------------------------
+     0     0X1     0     0         0     0         0         0x0
+
+     401   0X2     2     11844     0     0         0         0xC8422F20
