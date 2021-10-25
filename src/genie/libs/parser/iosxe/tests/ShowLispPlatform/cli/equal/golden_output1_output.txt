@@ -10,4 +10,3 @@ IPv6 RLOC, remote:                OK
 MAC RLOC, remote:                 Unsupported
 Latest supported config style:     Service and instance
 Current config style:              Service and instance
-        

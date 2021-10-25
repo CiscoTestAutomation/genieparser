@@ -12,12 +12,15 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genielibs']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genielibs.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'unicon']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/unicon.git']]])
                 script {
                     sh """
                     ls -l
                     cd genie
                     git remote -v
                     cd ../genielibs
+                    git remote -v
+                    cd ../unicon
                     git remote -v
                     """
                 }
@@ -35,6 +38,8 @@ pipeline {
                     # checkout same branch on genielibs, if it exists
                     cd ../genielibs
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../unicon
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
             }
@@ -50,7 +55,7 @@ pipeline {
                     export LC_ALL=C.UTF-8
                     rm -rf /scratch/genieparser-env
                     cd /scratch
-                    /usr/bin/python3.6 -m venv genieparser-env
+                    /scratch/pyadm/.pyenv/versions/3.8.8/bin/python -m venv genieparser-env
                     . /scratch/genieparser-env/bin/activate
                     pip install --upgrade pip setuptools
                     pip3 install --no-cache-dir wheel pytest pytest-xdist coverage
@@ -61,6 +66,8 @@ pipeline {
                     make develop
                     make json
                     git status
+                    cd $WORKSPACE/unicon
+                    make develop
                     cd $WORKSPACE
                     make develop
                     env
@@ -72,11 +79,11 @@ pipeline {
             }
         }
 
-        stage("Run compileAll") {
+        stage("Run compileAll for Genieparser") {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate
-                compileAll
+                compileAll --path src
                 """
             }
         }
@@ -144,7 +151,7 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 cd genielibs/tests
-                runAll --path ops --no-refresh --coverage
+                runAll --path ops --no-refresh
                 """
             }
         }

@@ -1,0 +1,5 @@
+LISP Away Table for router lisp 0 (blue) IID 102
+Entries: 1
+
+Prefix                                  Producer                       Created    
+10.1.0.0/16                             dyn-eid                        4d21h  

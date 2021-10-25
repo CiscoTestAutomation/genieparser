@@ -106,3 +106,61 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
                 client_dict.update(res.groupdict())
 
         return ret_dict
+
+# ====================================================
+#  Schema for show mab all summary
+# ====================================================
+class ShowMabAllSummarySchema(MetaParser):
+    ''' Schema for:
+        * 'show mab all summary'
+    '''
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'mac': {
+                    Any(): {                
+                        'auth_status': str
+                    },
+                },
+            },
+        },
+    }
+
+
+# ===========================
+# Parser for:
+#   * 'show mab all summary'
+# ===========================
+class ShowMabAllSummary(ShowMabAllSummarySchema):
+    ''' Parser for:
+        * 'show mab all summary'
+     '''
+
+    cli_command = ['show mab all summary']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Init vars
+        ret_dict = {}
+
+        # Gi1/0/5         0005.0000.0001  SUCCESS
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<mac>\S+) +(?P<auth_status>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Gi1/0/5         0005.0000.0001  SUCCESS
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                mac = m.groupdict()['mac']
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                mac_dict = intf_dict.setdefault('mac', {}).setdefault(mac, {})
+                mac_dict['auth_status'] = str(m.groupdict()['auth_status'])
+                continue
+
+        return ret_dict

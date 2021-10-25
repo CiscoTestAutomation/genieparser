@@ -1,0 +1,11 @@
+206-PxTR#show lisp all instance-id * ipv6 publication
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Publication Information
+Entries total 2
+Publisher       Last        EID Prefix               Locators        Encap-IID
+                Published                                            
+44.44.44.44     00:00:04    2001:192:168:1::71/128   11.11.11.11     -
+44.44.44.44     00:00:04    2001:192:168:1::72/128   22.22.22.22     -

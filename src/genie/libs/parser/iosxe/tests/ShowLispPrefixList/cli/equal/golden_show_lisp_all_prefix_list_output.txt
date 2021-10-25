@@ -1,0 +1,45 @@
+206-PxTR#show lisp all prefix-list site1
+
+=================================================
+Output for router lisp 0
+=================================================
+LISP Prefix List information for router lisp 0
+
+Prefix List: site1
+    Number of entries: 4       
+    Users:
+	ITR Map Resolver    100.100.100.100
+	ITR Map Resolver    44.44.44.44
+	ETR Map Server      100.100.100.100
+	ETR Map Server      44.44.44.44
+	ITR Map Resolver    100.100.100.100
+	ITR Map Resolver    44.44.44.44
+	ETR Map Server      100.100.100.100
+	ETR Map Server      44.44.44.44
+	ITR Map Resolver    100.100.100.100
+	ITR Map Resolver    44.44.44.44
+	ETR Map Server      100.100.100.100
+	ETR Map Server      44.44.44.44
+	Route Import        
+	Import Publication  
+	Import              
+	ITR Map Resolver    100.100.100.100
+	ITR Map Resolver    44.44.44.44
+	ETR Map Server      100.100.100.100
+	ETR Map Server      100.100.100.100
+	ETR Map Server      44.44.44.44
+	ETR Map Server      44.44.44.44
+    Entries:
+	2001:192:168:1::/64
+	    Sources: static
+	    First added: 23:00:39, last verified: by static, 23:00:39
+	2001:193:168:1::/64
+	    Sources: static
+	    First added: 23:00:39, last verified: by static, 23:00:39
+	192.168.1.0/24
+	    Sources: static
+	    First added: 23:00:39, last verified: by static, 23:00:39
+	193.168.1.0/24
+	    Sources: static
+	    First added: 23:00:39, last verified: by static, 23:00:39
+206-PxTR#

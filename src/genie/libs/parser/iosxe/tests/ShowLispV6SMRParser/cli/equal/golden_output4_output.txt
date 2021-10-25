@@ -1,0 +1,7 @@
+LISP SMR Table for router lisp 0 (red) IID 4100
+Entries: 3
+
+Prefix                                  Producer                      
+2001:192:168:1::/64                     away table                    
+2001:192:168:1::1/128                   local EID                     
+2001:192:168:1::71/128                  local EID                     

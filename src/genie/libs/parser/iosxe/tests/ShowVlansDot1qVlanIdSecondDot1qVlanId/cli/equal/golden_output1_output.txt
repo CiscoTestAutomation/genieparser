@@ -1,0 +1,4 @@
+Total statistics for Outer/Inner VLAN 2/3:
+   105331037 packets, 147884775948 bytes input
+   105334310 packets, 148310655960 bytes output
+

@@ -1,0 +1,253 @@
+show sdwan tunnel statistics ipsec
+tunnel stats ipsec 150.0.5.1 150.0.0.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.1.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.2.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.3.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.4.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.8.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.10.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 150.0.40.4 12346 12366
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.0.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.1.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.2.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.3.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.4.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.6.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.7.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 150.0.5.1 151.0.40.4 12346 12366
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.0.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.1.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.2.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.3.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.4.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.6.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.7.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.8.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.10.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 150.0.40.4 12346 12366
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.0.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.1.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.2.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.3.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.4.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.6.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.7.1 12346 12346
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0
+tunnel stats ipsec 151.0.5.1 151.0.40.4 12346 12366
+ ipsec-decrypt-inbound  0
+ ipsec-rx-auth-failures 0
+ ipsec-rx-failures      0
+ ipsec-encrypt-outbound 0
+ ipsec-tx-auth-failures 0
+ ipsec-tx-failures      0

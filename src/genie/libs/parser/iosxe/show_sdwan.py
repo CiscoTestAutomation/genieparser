@@ -29,6 +29,23 @@
 * 'show sdwan zonebfwdp sessions'
 * 'show sdwan zbfw zonepair-statistics'
 * 'show sdwan tunnel sla index 0'
+* 'show sdwan system on-demand'
+* 'show sdwan system on-demand {remote_system}'
+* 'show sdwan appqoe service-controllers'
+* 'show sdwan app-route sla-class'
+* 'show sdwan app-route sla-class name <name>'
+* 'show sdwan app-route stats local-color <color>'
+* 'show sdwan app-route stats remote-color <color>'
+* 'show sdwan app-route stats remote-system-ip <ip>'
+* 'show sdwan tunnel sla'
+* 'show sdwan tunnel sla index <index>'
+* 'show sdwan tunnel sla name <name>'
+* 'show sdwan tunnel statistics'
+* 'show sdwan tunnel statistics bfd'
+* 'show sdwan tunnel statistics fec'
+* 'show sdwan tunnel statistics ipsec'
+* 'show sdwan tunnel statistics pkt-dup'
+* 'show sdwan tunnel statistics table'
 '''
 
 # Python
@@ -504,7 +521,6 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
 
         return ret_dict
 
-
 class ShowSdwanAppqoeFlowAllSchema(MetaParser):
     ''' Schema for show sdwan appqoe flow all'''
     schema = {
@@ -523,7 +539,6 @@ class ShowSdwanAppqoeFlowAllSchema(MetaParser):
                 }
             },
         }
-
 
 class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
 
@@ -576,6 +591,81 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
                         flow_id_dict[k] = group[k]
         return parsed_dict
 
+# =================================================
+#  Schema for 'show sdwan appqoe service-controllers'
+# =================================================
+class ShowSdwanAppqoeServiceControllersSchema(MetaParser):
+    """Schema for show sdwan appqoe service-controllers"""
+    schema = {
+        Optional("service_health_status"): {
+            Any(): { # Servvice Types TCP/SSL/DRE/HTTP
+                "color": str,
+                "percentage": int
+            }
+        },
+        "service_controllers": {
+            "lan_ip": {
+                str: {
+                    "system_ip": {
+                        str: {
+                            "site_id": int,
+                            "sn_lan_ip": str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ===================================================
+#  Parser for 'show sdwan appqoe service-controllers'
+# ===================================================
+class ShowSdwanAppqoeServiceControllers(ShowSdwanAppqoeServiceControllersSchema):
+    """Parser for show sdwan appqoe service-controllers"""
+
+    cli_command = 'show sdwan appqoe service-controllers'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # TCP : Red (0%)
+        # SSL : Red (0%)
+        # DRE : Green (37%)
+        p1 = re.compile(r'^(?P<service>[\s\S]+)\s+:\s+(?P<service_color>[\s\S]+)\s+\((?P<percent>[\d]+)\%\)$')
+
+        # 193.0.2.2        192.168.13.1            105  193.0.2.3
+        p2 = re.compile(r'^(?P<lan_ip>[\d\.]+)\s+(?P<system_ip>[\d\.]+)\s+(?P<site_id>[\d]+)\s+(?P<sn_lan_ip>[\d\.]+)$')
+
+        # Initialize Return Dictionary...
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                service = groups['service'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
+                color = groups['service_color'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
+                percentage = int(groups['percent'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower())
+                svc_type_dict = ret_dict.setdefault('service_health_status', {}).setdefault(service, {})
+                svc_type_dict.update({'color':color})
+                svc_type_dict.update({'percentage':percentage})
+                continue 
+            # 193.0.2.2        192.168.13.1            105  193.0.2.3
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                lan_ip = groups['lan_ip'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
+                system_ip = groups['system_ip'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
+                sys_ip_dict = ret_dict.setdefault('service_controllers',{}).\
+                    setdefault('lan_ip', {}).setdefault(lan_ip, {}).\
+                    setdefault('system_ip',{}).setdefault(system_ip, {})
+                site_id = int(groups['site_id'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower())
+                sn_lan_ip = groups['sn_lan_ip'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
+                sys_ip_dict.update({'site_id':site_id,'sn_lan_ip':sn_lan_ip})
+                continue
+
+        return ret_dict
 
 class ShowSdwanBfdHistorySchema(MetaParser):
     
@@ -669,7 +759,6 @@ class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
 
         return out_dict
 
-
 # =====================================
 # Parser for 'show sdwan bfd sessions'
 # =====================================
@@ -685,7 +774,6 @@ class ShowSdwanBfdSessions(ShowBfdSessions_viptela):
             show_output = output
     
         return super().cli(output = show_output)
-
 
 # ===============================================
 # Parser for 'show sdwan bfd summary'
@@ -703,7 +791,6 @@ class ShowSdwanBfdSummary(ShowBfdSummary_viptela):
     
         return super().cli(output = show_output)
 
-
 # ===========================================
 # Schema for 'show sdwan control summary'
 # ===========================================
@@ -717,7 +804,6 @@ class ShowSdwanControlSummarySchema(MetaParser):
         "vmanage_counts": int,
         "vsmart_counts": int,
     }
-
 
 # ===========================================
 # Parser for 'show sdwan control summary'
@@ -772,11 +858,9 @@ class ShowSdwanControlConnections(ShowControlConnections_viptela):
     
         return super().cli(output = show_output)
 
-
 # ===============================================
 # Parser for 'show sdwan control local-properties'
 # ===============================================
-
 class ShowSdwanControlLocalProperties(ShowControlLocalProperties_viptela):
 
     """ Parser for "show sdwan control local-properties" """
@@ -789,13 +873,10 @@ class ShowSdwanControlLocalProperties(ShowControlLocalProperties_viptela):
             show_output = output
     
         return super().cli(output = show_output)
-    
 
 # =================================================
 # Schema for 'show sdwan ipsec inbound-connections'
 # =================================================
-
-
 class ShowSdwanIpsecInboundConnectionsSchema(MetaParser):
     """ Schema for "show sdwan ipsec inbound-connections" command """
 
@@ -818,12 +899,9 @@ class ShowSdwanIpsecInboundConnectionsSchema(MetaParser):
         },
     }
 
-
 # =================================================
 # Schema for 'show sdwan ipsec outbound-connections'
 # =================================================
-
-
 class ShowSdwanIpsecOutboundConnectionsSchema(MetaParser):
     """ Schema for "show sdwan ipsec outbound-connections" command """
 
@@ -847,7 +925,6 @@ class ShowSdwanIpsecOutboundConnectionsSchema(MetaParser):
             },
         },
     }
-
 
 # =================================================
 # Schema for 'show sdwan ipsec local-sa <WORD>'
@@ -876,12 +953,9 @@ class ShowSdwanIpsecLocalsaSchema(MetaParser):
         },
     }
 
-
 # =================================================
 # Parser for 'show sdwan ipsec inbound-connections'
 # =================================================
-
-
 class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
     """ Parser for "show sdwan ipsec inbound-connections" """
 
@@ -940,12 +1014,9 @@ class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
 
         return parsed_dict
 
-
 # =================================================
 # Parser for 'show sdwan ipsec outbound-connections'
 # =================================================
-
-
 class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema
                                         ):
     """ Parser for "show sdwan ipsec outbound-connections" """
@@ -1010,12 +1081,9 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema
 
         return parsed_dict
 
-
 # =================================================
 # Parser for 'show sdwan ipsec local-sa <WORD>'
 # =================================================
-
-
 class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
     """ Parser for "show sdwan ipsec local-sa <WORD>" """
 
@@ -1062,7 +1130,6 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
                     ] else groups[k]
         return parsed_dict
     
-
 # ===============================================
 # Parser for 'show sdwan omp summary'
 # ===============================================
@@ -1166,7 +1233,6 @@ class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
         }
     }
 
-
 class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAssociationsSchema):
 
     """ Parser for "show sdwan policy ipv6 access list associations" """
@@ -1213,7 +1279,6 @@ class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAss
             parsed_dict['name'] = return_dict
         return parsed_dict
 
-
 class ShowSdwanPolicyAccessListAssociations(ShowSdwanPolicyIpv6AccessListAssociationsSchema):
     """ Parser for "show sdwan policy ipv6 access list associations" """
 
@@ -1259,7 +1324,6 @@ class ShowSdwanPolicyAccessListAssociations(ShowSdwanPolicyIpv6AccessListAssocia
                         return_dict[key]['interface_direction']['out']['interface_name'] = list_out
             parsed_dict['name'] = return_dict
         return parsed_dict
-
 
 class ShowSdwanPolicyAccessListCountersSchema(MetaParser):
     ''' Schema for show sdwan policy access-list-counters'''
@@ -1347,7 +1411,6 @@ class ShowSdwanPolicyAccessListCounters(ShowSdwanPolicyAccessListCountersSchema)
             parsed_dict['name'] = return_dict
         return parsed_dict
 
-
 class ShowSdwanPolicyIpv6AccessListCounters(ShowSdwanPolicyAccessListCountersSchema):
     """ Parser for "show sdwan policy access-list-counters" """
 
@@ -1389,8 +1452,7 @@ class ShowSdwanPolicyIpv6AccessListCounters(ShowSdwanPolicyAccessListCountersSch
                         return_dict[key]['counter_name'][groups['counter_name']] = local_dict
             parsed_dict['name'] = return_dict
         return parsed_dict
-    
-    
+
 # =====================================
 # Parser for 'show sdwan reboot history'
 # =====================================
@@ -1405,7 +1467,6 @@ class ShowSdwanRebootHistory(ShowRebootHistory_viptela):
         else:
             show_output = output
         return super().cli(output = show_output)
-    
 
 # =====================================
 # Parser for 'show sdwan software'
@@ -1425,7 +1486,6 @@ class ShowSdwanSoftware(ShowSoftwaretab_viptela):
             show_output=show_output.replace(fin.group(0),' ')
             
         return super().cli(output = show_output)
-    
 
 # =====================================
 # Parser for 'show sdwan system status'
@@ -1441,7 +1501,6 @@ class ShowSdwanSystemStatus(ShowSystemStatus_viptela):
         else:
             show_output = output
         return super().cli(output = show_output)
-    
 
 # =====================================
 # Parser for 'show sdwan version'
@@ -1457,7 +1516,6 @@ class ShowSdwanVersion(ShowVersion_viptela):
         else:
             show_output = output
         return super().cli(output = show_output)
-    
 
 class ShowSdwanZonebfwdpSessionsSchema(MetaParser):
     schema = {
@@ -1569,7 +1627,6 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
         
         return(ret_dict)
 
-
 class ShowSdwanZbfwStatisticsSchema(MetaParser):
     schema = {
         'zonepair_name': {
@@ -1633,8 +1690,6 @@ class ShowSdwanZbfwStatisticsSchema(MetaParser):
             }
         }
     }        
-
-
 
 class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
     """Parser for show sdwan zbfw zonepair-statistics
@@ -1749,11 +1804,9 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
 
         return(ret_dict) 
 
-
 # ========================================================
 # Schema for "show sdwan tunnel sla index 0"
 # ========================================================
-
 class ShowSdwanTunnelSlaIndex0Schema(MetaParser):
     schema = {
         "lines": {
@@ -1828,3 +1881,813 @@ class ShowSdwanTunnelSlaIndex0(ShowSdwanTunnelSlaIndex0Schema):
                 result_dict[destip]["slaclass"] = slaclass
                 continue
         return sla_dict
+
+class ShowSdwanSystemOnDemandSchema(MetaParser):
+    schema = {
+        'on_demand_tunnel': {
+            Any(): {
+                'system-ip': str,
+                'on-demand': str,
+                Optional('status'): str,
+                Optional('timeout'): int          
+            }
+        }
+    }
+
+class ShowSdwanSystemOnDemand(ShowSdwanSystemOnDemandSchema):
+    """Parser for 
+                  'show sdwan system on-demand'
+                  'show sdwan system on-demand remote-system'
+                  'show sdwan system on-demand remote-system system-ip <ip>' 
+    """
+
+    cli_command = ['show sdwan system on-demand', 
+                  'show sdwan system on-demand {remote_system}',
+                  'show sdwan system on-demand {remote_system} system-ip {system_ip}']
+
+    def cli(self, remote_system='', system_ip='',output=None):
+        if output is None:
+            if system_ip:
+                remote_system = "remote-system"
+                cmd = self.cli_command[2].format(remote_system=remote_system, system_ip=system_ip)
+            elif remote_system:
+                cmd = self.cli_command[1].format(remote_system=remote_system)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # Initialization return dictionary
+        ret_dict = {}
+
+        # 21       21.0.0.21          yes          active              6
+        # 23       21.0.0.23          no             -                 -
+        p1 = re.compile(r'^(?P<site_id>[\d]+)\s+(?P<system_ip>[0-9\.]+)\s+(?P<on_demand>[A-Za-z]+)\s+(?P<status>[\S]+)\s+(?P<timeout>[\S]+)')
+        
+        for line in output.splitlines():
+            # ret_dict_ptr = ret_dict.setdefault('on_demand_tunnel',{})  
+            line = line.strip() 
+            # 21       21.0.0.21          yes          active              6
+            # 23       21.0.0.23          no             -                 -
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                site_id = groups['site_id']
+                site_dict = ret_dict.setdefault('on_demand_tunnel',{}).setdefault(site_id,{})
+                last_dict_ptr = site_dict
+                last_dict_ptr.update({'system-ip':groups['system_ip']})
+                last_dict_ptr.update({'on-demand':groups['on_demand']})
+                if re.match("yes", groups['on_demand'], re.I):
+                    last_dict_ptr.update({'status':groups['status']})
+                    if re.match("active", groups['status'], re.I):
+                        last_dict_ptr.update({'timeout':int(groups['timeout'])})
+                continue
+        return ret_dict
+
+
+# =======================================================================
+# Parser Schema for 'show sdwan Tunnel statitics'                       #
+# I have made most of the keys as optional as it is common schema for   #
+# 3-4 CLI commands as listed below.                                     #
+# =======================================================================
+class ShowSdwanTunnelStatisticsSchema(MetaParser):
+    schema = {
+        'tunnel': {
+            Any(): {  # Local TLOC IP
+                'remote': {
+                    Any(): {  # Remote TLOC IP
+                        Optional('protocol'): str,
+                        "src_port": int,
+                        "dst_port": int,
+                        Optional("remote_sys_ip"): str,
+                        Optional("local_color"): str,
+                        Optional("remote_color"): str,
+                        Optional("tunnel_mtu"): int,
+                        Optional("tcp_mss_adjust"): int,
+                        Optional("tx"): {
+                            "tx_pkts": int,
+                            "tx_octets": int,
+                            "tx_ipv4_mcast_pkts": int,
+                            "tx_ipv4_mcast_octets": int
+                        },
+                        Optional("rx"): {
+                            "rx_pkts": int,
+                            "rx_octets": int,
+                            "rx_ipv4_mcast_pkts": int,
+                            "rx_ipv4_mcast_octets": int
+                        },
+                        Optional("ipv6_tx"): {
+                            "ipv6_tx_pkts": int,
+                            "ipv6_tx_octets": int
+                        },
+                        Optional("ipv6_rx"): {
+                            "ipv6_rx_pkts": int,
+                            "ipv6_rx_octets": int
+                        },
+                        Optional("bfd"): {
+                            Optional("echo"): {
+                                "bfd_echo_tx_pkts": int,
+                                "bfd_echo_rx_pkts": int,
+                                "bfd_echo_tx_octets": int,
+                                "bfd_echo_rx_octets": int
+                            },
+                            Optional("pmtu"): {
+                                "bfd_pmtu_tx_pkts": int,
+                                "bfd_pmtu_rx_pkts": int,
+                                "bfd_pmtu_tx_octets": int,
+                                "bfd_pmtu_rx_octets": int
+                            }
+                        },
+                        Optional("fec"): {
+                            "fec_rx_data_pkts": int,
+                            "fec_rx_parity_pkts": int,
+                            "fec_tx_data_pkts": int,
+                            "fec_tx_parity_pkts": int,
+                            "fec_reconstruct_pkts": int,
+                            "fec_capable": str,
+                            "fec_dynamic": str,
+                        },
+                        Optional("ipsec"): {
+                            "ipsec_decrypt_inbound": int,
+                            "ipsec_rx_auth_failures": int,
+                            "ipsec_rx_failures": int,
+                            "ipsec_encrypt_outbound": int,
+                            "ipsec_tx_auth_failures": int,
+                            "ipsec_tx_failures": int
+                        },
+                        Optional("pktdup"): {
+                            "pktdup_rx": int,
+                            "pktdup_rx_other": int,
+                            "pktdup_rx_this": int,
+                            "pktdup_tx": int,
+                            "pktdup_tx_other": int,
+                            "pktdup_capable": str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================================
+# Parser for 'show sdwan tunnel statistics',                            #
+# 'show sdwan tunnel statistics bfd',                                   #
+# 'show sdwan tunnel statistics fec',                                   #
+# 'show sdwan tunnel statistics ipsec',                                 #
+# 'show sdwan tunnel statistics pkt-dup'                                #
+# 'show sdwan tunnel statistics table'                                  #
+# =======================================================================
+class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
+    """Parser for 
+          'show sdwan tunnel statistics'
+          'show sdwan tunnel statistics bfd'
+          'show sdwan tunnel statistics fec'
+          'show sdwan tunnel statistics ipsec'
+          'show sdwan tunnel statistics pkt-dup'
+          'show sdwan tunnel statistics table'
+    """
+    cli_command = ['show sdwan tunnel statistics', 'show sdwan tunnel statistics {stats_type}']
+
+    def cli(self, stats_type='', output=None):
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if output is None:
+            if stats_type:
+                output = self.device.execute(self.cli_command[1].format(stats_type=stats_type))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+        # tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+        p1 = re.compile(
+            r'^tunnel\s+stats\s+ipsec\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)'
+            r'\s+(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
+
+        # fec-rx-data-pkts     0
+        # fec-tx-data-pkts     0
+        # fec-capable          true
+        # fec-dynamic          false
+        p2 = re.compile(r'^(?P<key>[a-zA-Z0-9\-\_]+)\s+(?P<value>[a-zA-Z0-9\-\_]+)$')
+
+        # # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0                     
+        # # ipsec     150.0.5.1  151.0.2.1   12346   12346  22.0.0.22    public-internet  private2        1438    324964     28472293     324963     39521236      1358    0             0               0             0               0                   0                     0                   0
+        p3 = re.compile(r'^(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dest_ip>[a-zA-Z0-9\.\:]+)\s+'
+                        r'(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)\s+'
+                        r'(?P<remote_sys_ip>[\S]+)\s+(?P<local_color>[0-9a-zA-Z\-\_]+)'
+                        r'\s+(?P<remote_color>[0-9a-zA-Z\-\_]+)\s+(?P<tunnel_mtu>[\d]+)\s+'
+                        r'(?P<tx_pkts>[\d]+)\s+(?P<tx_octets>[\d]+)\s+'
+                        r'(?P<rx_pkts>[\d]+)\s+(?P<rx_octets>[\d]+)\s+(?P<tcp_mss_adjust>[\d]+)\s+'
+                        r'(?P<ipv6_tx_pkts>[\d]+)\s+(?P<ipv6_tx_octets>[\d]+)'
+                        r'\s+(?P<ipv6_rx_pkts>[\d]+)\s+(?P<ipv6_rx_octets>[\d]+)\s+'
+                        r'(?P<tx_ipv4_mcast_pkts>[\d]+)\s+(?P<tx_ipv4_mcast_octets>[\d]+)'
+                        r'\s+(?P<rx_ipv4_mcast_pkts>[\d]+)\s+(?P<rx_ipv4_mcast_octets>[\d]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            # tun_dict = ret_dict.setdefault("tunnel",{})
+            # tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+            # tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                dest_dict = ret_dict.setdefault("tunnel", {}). \
+                    setdefault(groups['source'], {}). \
+                    setdefault('remote', {}). \
+                    setdefault(groups['destination'], {})
+                dest_dict.update({
+                    "src_port": int(groups['src_port']),
+                    "dst_port": int(groups['dst_port'])
+                })
+                continue
+            # fec-rx-data-pkts     0
+            # fec-tx-data-pkts     0
+            # fec-capable          true
+            # fec-dynamic          false
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                value = groups['value']
+                # Here I am checking this numeric as i am iterating through
+                # different keys/values and needs to assign it accordingly.
+                key = groups['key']
+                if value.isnumeric():
+                    value = int(value)
+                # dest_dict.update({groups['key'].replace(' ','_').replace('-','_').lower():value})
+                if re.search("pktdup", key):
+                    key_dict = dest_dict.setdefault("pktdup",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("ipsec", key):
+                    key_dict = dest_dict.setdefault("ipsec",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("fec", key):
+                    key_dict = dest_dict.setdefault("fec",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("bfd", key):
+                    if re.search("echo", key):
+                        key_dict = dest_dict.setdefault("bfd",{}).setdefault("echo",{})
+                    else:
+                        key_dict = dest_dict.setdefault("bfd",{}).setdefault("pmtu",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("ipv6_tx", key):
+                    key_dict = dest_dict.setdefault("ipv6_tx",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("ipv6_rx", key):
+                    key_dict = dest_dict.setdefault("ipv6_rx",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("tx", key):
+                    key_dict = dest_dict.setdefault("tx",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                elif re.search("rx", key):
+                    key_dict = dest_dict.setdefault("rx",{})
+                    lst_dict_ptr = key_dict
+                    lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                else:
+                    dest_dict.update({key.replace(' ','_').replace('-','_').lower():value})
+                continue
+
+            # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0                     
+            # ipsec     150.0.5.1  151.0.2.1   12346   12346  22.0.0.22    public-internet  private2        1438    324964     28472293     324963     39521236      1358    0             0               0             0               0                   0                     0                   0 
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                dest_dict = ret_dict.setdefault("tunnel",{}).\
+                    setdefault(groups['src_ip'],{}).\
+                    setdefault('remote',{}).\
+                    setdefault(groups['dest_ip'],{})
+                del groups['src_ip']
+                del groups['dest_ip']
+                for key in groups.keys():
+                    value = groups[key]
+                    # Check is Mandatory as i am iteratig through different key/values pairs
+                    # of different types.
+                    if groups[key].isnumeric():
+                        value = int(groups[key])
+                    if re.search("pktdup", key):
+                        key_dict = dest_dict.setdefault("pktdup",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("ipsec", key):
+                        key_dict = dest_dict.setdefault("ipsec",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("fec", key):
+                        key_dict = dest_dict.setdefault("fec",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("bfd", key):
+                        if re.search("echo", key):
+                            key_dict = dest_dict.setdefault("bfd",{}).setdefault("echo",{})
+                        else:
+                            key_dict = dest_dict.setdefault("bfd",{}).setdefault("pmtu",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("ipv6_tx", key):
+                        key_dict = dest_dict.setdefault("ipv6_tx",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("ipv6_rx", key):
+                        key_dict = dest_dict.setdefault("ipv6_rx",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("tx", key):
+                        key_dict = dest_dict.setdefault("tx",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    elif re.search("rx", key):
+                        key_dict = dest_dict.setdefault("rx",{})
+                        lst_dict_ptr = key_dict
+                        lst_dict_ptr.update({key.replace(' ','_').replace('-','_').lower():value})
+                    else:
+                        dest_dict.update({key.replace(' ','_').replace('-','_').lower():value})
+                continue
+
+        return ret_dict
+
+
+# =======================================================================
+# Parser Schema for 'show sdwan Tunnel sla'                             #
+# 'show sdwan tunnel sla index <index>',                                #
+# 'show sdwan tunnel sla name <name>',                                  #
+# 'show sdwan tunnel remote-system-ip <ip> sla                          #
+# =======================================================================
+class ShowSdwanTunnelSlaSchema(MetaParser):
+    schema = {
+        'tunnel_sla_class': {
+            Any(): { # Tunnel SLA Class Index/Name/System IP value
+                Optional("sla_name") : str,
+                Optional("sla_loss"): int,
+                Optional("sla_latency"): int,
+                Optional("sla_jitter"): int,
+                Optional("tunnel_count") : int,
+                Any(): { # Local TLOC IP
+                    'remote': {
+                        Any(): { # Remote TLOC IP
+                            Optional("index") : int,
+                            "protocol" : str,
+                            "src_ip" : str,
+                            "dst_ip" : str,
+                            Optional("src_port") : int,
+                            Optional("dst_port") : int,
+                            Optional("remote_system_ip") : str,
+                            Optional("t_local_color") : str,
+                            Optional("t_remote_color") : str,
+                            Optional("local_color") : str,
+                            Optional("remote_color") : str,
+                            Optional("mean_loss") : int,
+                            Optional("mean_latency") : int,
+                            Optional("mean_jitter") : int,
+                            Optional("sla_class_index") : str,
+                            "sla_class_name" : str,
+                            Optional("fallback_sla_class_index") : str
+                        }  
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================================
+# Parser for 'show sdwan tunnel sla',                                   #
+# 'show sdwan tunnel sla index <index>',                                #
+# 'show sdwan tunnel sla name <name>',                                  #
+# 'show sdwan tunnel remote-system-ip <ip> sla                          #
+# =======================================================================
+class ShowSdwanTunnelSla(ShowSdwanTunnelSlaSchema):
+    """Parser for 
+           'show sdwan tunnel sla'
+           'show sdwan tunnel sla index <index>'
+           'show sdwan tunnel sla name <name>'
+           'show sdwan tunnel remote-system-ip <ip> sla'
+    """
+    cli_command = ['show sdwan tunnel sla', 
+                'show sdwan tunnel sla index {index}', 
+                'show sdwan tunnel sla name {name}', 
+                'show sdwan tunnel remote-system-ip {system_ip} sla']
+    def cli(self, index='', name="", system_ip= "", output=None):
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if output is None:
+            if index:
+                output = self.device.execute(self.cli_command[1].format(index=index))
+            elif name:
+                output = self.device.execute(self.cli_command[2].format(name=name))
+            elif system_ip:
+                output = self.device.execute(self.cli_command[3].format(system_ip=system_ip))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        ret_dict = {}
+        # tunnel sla-class 1
+        p1 = re.compile(r'^tunnel\s+sla-class\s+(?P<sla_index>[0-9]+)$')
+        # tunnel system-ips 23.0.0.23
+        p1_1 = re.compile(r'^tunnel\s+system-ips\s+(?P<tunnel_system_ips>[0-9\.]+)$')
+        #  sla-name    aarSla
+        p2 = re.compile(r'^sla-name\s+(?P<sla_name>[\S]+)$')
+        # sla-loss    3
+        # sla-latency 150
+        # sla-jitter  50
+        # tunnel-count 4
+        p3 = re.compile(r'^(?P<sla_key>[\S]+)\s+(?P<sla_value>[\d]+)$')
+        # ipsec  150.0.4.1  29.129.29.1   12346  12366  29.0.0.29    blue   metro-ethernet   0     0        0       0,1    __all_tunnels__, aarSla  None
+        p4 = re.compile(r'(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dst_ip>[a-zA-Z0-9\.\:]+)\s+(?P<src_port>[\d]+)\s+'
+        '(?P<dst_port>[\d]+)\s+(?P<remote_system_ip>[\S]+)\s+(?P<t_local_color>[0-9a-zA-Z\-\_]+)\s+(?P<t_remote_color>[0-9a-zA-Z\-\_]+)'
+        '\s+(?P<mean_loss>[\d]+)\s+(?P<mean_latency>[\d]+)\s+(?P<mean_jitter>[\d]+)\s+(?P<sla_class_index>[\S]+)\s+(?P<sla_class_name>[\S\s]+)'
+        '\s+(?P<fallback_sla_class_index>[\S]+)$')
+        # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla  
+        p4_1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dst_ip>[a-zA-Z0-9\.\:]+)\s+'
+        '(?P<local_color>[0-9a-zA-Z\-\_]+)\s+(?P<remote_color>[0-9a-zA-Z\-\_]+)\s+(?P<sla_class_name>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # tunnel sla-class 1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                sla_index_dict = ret_dict.setdefault('tunnel_sla_class', {}).\
+                    setdefault(groups['sla_index'],{})
+                continue
+
+            # tunnel system-ips 23.0.0.23
+            m = p1_1.match(line)
+            if m:
+                groups = m.groupdict()
+                sla_index_dict = ret_dict.setdefault('tunnel_sla_class', {}).\
+                    setdefault(groups['tunnel_system_ips'],{})
+                continue
+
+            #  sla-name    aarSla
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                sla_index_dict.update({'sla_name':groups['sla_name']})
+                continue
+
+            # sla-loss    3
+            # sla-latency 150
+            # sla-jitter  50
+            # tunnel-count 4
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['sla_key'].lower().replace("-","_").replace(" ","_")
+                sla_index_dict.update({key:int(groups['sla_value'])})
+                continue
+
+            # ipsec  150.0.4.1  29.129.29.1   12346  12366  29.0.0.29    blue   metro-ethernet   0     0        0       0,1    __all_tunnels__, aarSla  None
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                sla_index_dst_dict = sla_index_dict.setdefault(groups['src_ip'],{}).\
+                    setdefault('remote',{}).\
+                    setdefault(groups['dst_ip'],{})
+                for key in groups.keys():
+                    value = groups[key]
+                    # Check is Mandatory as i am iterations through different key/values pairs
+                    # of different types.
+                    if groups[key].isnumeric():
+                        value = int(groups[key])
+                    sla_index_dst_dict.update({key:value})
+                continue
+
+            # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla  
+            m = p4_1.match(line)
+            if m:
+                groups = m.groupdict()
+                sla_index_dst_dict = sla_index_dict.setdefault(groups['src_ip'],{}).\
+                    setdefault('remote',{}).\
+                    setdefault(groups['dst_ip'],{})
+                for key in groups.keys():
+                    value = groups[key]
+                    # Check is Mandatory as i am iterations through different key/values pairs
+                    # of different types.
+                    if groups[key].isnumeric():
+                        value = int(groups[key])
+                    sla_index_dst_dict.update({key:value})
+                continue
+
+        return(ret_dict)
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-route statistics'                   #
+# I have made most of the keys as optional as it is common schema for   #
+# 3-4 CLI commands as  listed below.                                    #
+# =======================================================================
+class ShowSdwanAppRouteStatisticsSchema(MetaParser):
+    schema = {
+        'approute': {
+            Optional(str): { # Local System IP
+                str: { # Remote System IP
+                    "protocol": str,
+                    "src_port": int,
+                    "dst_port": int,
+                    "remote_system_ip": str,
+                    "local_color": str,
+                    "remote_color": str,
+                    "sla_class_index": str,
+                    "fall_back_sla_index": str,
+                    "app_probe_class_list" : {
+                        str: { # App Probe Class Name/Index
+                            "mean_loss": int,
+                            "mean_latency": int,
+                            "mean_jitter": int,
+                            "interval" : {
+                                str: { # Interval Value
+                                    "total_packets": int,
+                                    "loss": int,
+                                    "average_latency": int,
+                                    "average_jitter": int,
+                                    "tx_data_pkts": int,
+                                    "rx_data_pkts": int,
+                                    "ipv6_tx_data_pkts": int,
+                                    "ipv6_rx_data_pkts": int
+                                }
+                            }
+                        }
+                    }
+                }          
+            }
+        }
+    }
+
+# =======================================================================
+# Parser for                                                            #
+# 'show sdwan app-route stats local-color <color>',                     #
+# 'show sdwan app-route stats remote-color <color>',                    #
+# 'show sdwan app-route stats remote-system-ip <ip>',                   #
+# =======================================================================
+class ShowSdwanAppRouteStatistics(ShowSdwanAppRouteStatisticsSchema):
+    """Parser for 
+        'show sdwan app-route stats local-color <color>'
+        'show sdwan app-route stats remote-color <color>'
+        'show sdwan app-route stats remote-system-ip <ip>'
+    """
+    cli_command = ['show sdwan app-route stats {color_type} {color}', 
+            'show sdwan app-route stats remote-system-ip {system_ip}', 
+            'show sdwan app-route stats'] 
+    def cli(self, color_type = "", color= "", system_ip= "", output=None):
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if output is None:
+            if color_type and color:
+                cmd = self.cli_command[0].format(color_type=color_type,color=color)
+            elif system_ip:
+                cmd = self.cli_command[1].format(system_ip=system_ip)
+            else:
+                cmd = self.cli_command[2]
+            output = self.device.execute(cmd)
+
+        # app-route statistics 150.0.5.1 150.0.6.1 12346 12346
+        # app-route statistics 150.0.5.1 150.0.7.1 12346 12346
+        p1 = re.compile(r'^app-route\s+statistics\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)\s+(?P<protocol>[a-zA-Z]+)\s+'
+        '(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
+
+        # app-probe-class-list None
+        p1_1 = re.compile(r'^app-probe-class-list\s+(?P<app_probe_name>[\S]+)$')
+
+        # interval 0
+        # interval 1
+        p1_2 = re.compile(r'^interval\s+(?P<interval>[0-9]+)$')
+
+        #  remote-system-ip         20.0.0.20
+        p2 = re.compile(r'^remote-system-ip\s+(?P<remote_system_ip>[\S]+)')
+
+        #  local-color              blue
+        p3 = re.compile(r'^local-color\s+(?P<local_color>[\S]+)$')
+
+        #  remote-color             bronze
+        p4 = re.compile(r'^remote-color\s+(?P<remote_color>[\S]+)$')
+
+        #  sla-class-index          0,1
+        p5 = re.compile(r'^sla-class-index\s+(?P<sla_class_index>[\S]+)$')
+
+        #  fallback-sla-class-index None
+        p6 = re.compile(r'^fallback-sla-class-index\s+(?P<fall_back_sla_index>[\S]+)$')
+
+        #  total-packets     638
+        #  loss              0
+        #  average-latency   1
+        #  average-jitter    1
+        #  tx-data-pkts      0
+        #  rx-data-pkts      0
+        #  ipv6-tx-data-pkts 0
+        #  ipv6-rx-data-pkts 0
+        p7 = re.compile(r'^(?P<key>[\S]+)\s+(?P<value>[0-9]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # app-route statistics 150.0.5.1 150.0.6.1 12346 12346
+            # app-route statistics 150.0.5.1 150.0.7.1 12346 12346
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                dest_dict = ret_dict.setdefault("approute",{}).\
+                    setdefault(groups['source'],{}).\
+                    setdefault(groups['destination'],{})                        
+                last_dict_ptr = dest_dict
+                last_dict_ptr.update({"protocol":groups['protocol'],
+                    "src_port":int(groups['src_port']),
+                    "dst_port":int(groups['dst_port'])})
+                continue
+            
+            # app-probe-class-list None
+            m = p1_1.match(line)
+            if m:
+                groups = m.groupdict()
+                app_probe_dict = dest_dict.setdefault("app_probe_class_list",{})
+                app_probe_name_dict = app_probe_dict.setdefault(groups['app_probe_name'],{})
+                last_dict_ptr  =  app_probe_name_dict
+                continue
+
+            # interval 0
+            # interval 1
+            m = p1_2.match(line)
+            if m:
+                groups = m.groupdict()
+                interval_dict = app_probe_name_dict.setdefault("interval",{})
+                interval_val_dict = interval_dict.setdefault(groups['interval'],{})
+                last_dict_ptr  =  interval_val_dict
+                continue
+
+            #  remote-system-ip         20.0.0.20
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                for key in groups.keys():
+                    key = key.replace(' ','_').replace('-','_').lower()
+                value = groups[key]
+                last_dict_ptr.update({key:value})
+                continue
+
+            #  local-color              blue
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                for key in groups.keys():
+                    key = key.replace(' ','_').replace('-','_').lower()
+                value = groups[key]
+                last_dict_ptr.update({key:value})
+                continue
+
+            #  remote-color             bronze
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                for key in groups.keys():
+                    key = key.replace(' ','_').replace('-','_').lower()
+                value = groups[key]
+                last_dict_ptr.update({key:value})
+                continue
+
+            #  sla-class-index          0,1
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                for key in groups.keys():
+                    key = key.replace(' ','_').replace('-','_').lower()
+                value = groups[key]
+                last_dict_ptr.update({key:value})
+
+            #  fallback-sla-class-index None
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                for key in groups.keys():
+                    key = key.replace(' ','_').replace('-','_').lower()
+                value = groups[key]
+                last_dict_ptr.update({key:value})
+                continue
+
+            #  total-packets     638
+            #  loss              0
+            #  average-latency   1
+            #  average-jitter    1
+            #  tx-data-pkts      0
+            #  rx-data-pkts      0
+            #  ipv6-tx-data-pkts 0
+            #  ipv6-rx-data-pkts 0
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                last_dict_ptr.update({groups['key'].replace(' ','_').replace('-','_').lower():int(groups['value'])})
+                continue
+
+        return ret_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-route sla-class'                    #
+# Parser Schema for 'show sdwan app-route sla-class name <name>'        #
+# I have made some of the keys as optional as it is common schema for   #
+# both CLI commands as listed above.                                    #
+# =======================================================================
+class ShowSdwanAppRouteSlaClassSchema(MetaParser):
+    schema = {
+        'sla_class': {
+            Any(): { # Sla Class Index/Name
+                "name": str,
+                "loss": int,
+                "latency": int,
+                "jitter": int,
+                Optional("class_id"): int,
+                Optional("app_probe_class"): str,
+                Optional("app_probe_class_id"): int,
+                Optional("app_probe_class"): str,
+                "fallback_best_tunnel": str         
+            }
+        }
+    }
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-route sla-class'                    #
+# Parser Schema for 'show sdwan app-route sla-class name <name>'        #
+# I have made some of the keys as optional as it is common schema for   #
+# both CLI commands as listed above.                                    #
+# =======================================================================
+class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
+    """Parser for 
+        'show sdwan app-route sla-class'
+        'show sdwan app-route sla-class name <name>'
+    """
+    cli_command = ['show sdwan app-route sla-class', 'show sdwan app-route sla-class name {name}']
+    def cli(self, name = "", output=None):
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if output is None:
+            if name:
+                output = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                output = self.device.execute(self.cli_command[0])
+    
+        # 0       __all_tunnels__       0     0        0        0          None                  None          
+        p1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<name>[\S]+)\s+(?P<loss>[\d]+)\s+(?P<latency>[\d]+)\s+(?P<jitter>[\d]+)'
+        '\s+(?P<class_id>[\d]+)\s+(?P<app_probe_class>[\S]+)\s+(?P<fallback_best_tunnel>[\S]+)$')
+
+        # app-route sla-class 1
+        p2 = re.compile(r'^app-route\s+sla-class\s+(?P<index>[\d]+)$')
+
+        #  name                 aarSla
+        #  loss                 3
+        #  latency              150
+        #  jitter               50
+        #  app-probe-class-id   0
+        #  app-probe-class      None
+        #  fallback-best-tunnel Latency
+        p3 = re.compile(r'^(?P<key>[a-z\-]+)\s+(?P<value>[\S]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0       __all_tunnels__       0     0        0        0          None                  None          
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                index = groups['index']
+                index_dict = ret_dict.setdefault("sla_class",{}).setdefault(index,{})
+                last_dict_ptr = index_dict
+                del groups['index']
+                for key in groups.keys():
+                    value = groups[key]
+                    key = key.lower().replace("-","_").replace(" ","_")
+                    # Check is mandatory as i am iterating it through different keys/key-value pairs.
+                    if value.isnumeric():
+                        value = int(value)
+                    last_dict_ptr.update({key:value})
+                continue
+
+            # app-route sla-class 1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                index = groups['index']
+                index_dict = ret_dict.setdefault("sla_class",{}).setdefault(index,{})
+                last_dict_ptr = index_dict
+                continue
+
+            #  name                 aarSla
+            #  loss                 3
+            #  latency              150
+            #  jitter               50
+            #  app-probe-class-id   0
+            #  app-probe-class      None
+            #  fallback-best-tunnel Latency
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                value = groups['value']
+                # Check is mandatory as i am iterating it through different keys/key-value pairs.
+                if value.isnumeric():
+                    value = int(value)
+                last_dict_ptr.update({groups['key'].replace(' ','_').replace('-','_').lower():value})
+                continue
+
+        return(ret_dict)

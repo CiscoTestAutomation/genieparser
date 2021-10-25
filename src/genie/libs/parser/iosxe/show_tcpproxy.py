@@ -115,6 +115,8 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'timer_expire_cleanup_enqueue_failed': int,
             'proxy_cleanup_enqueued': int,
             'proxy_cleanup_enqueue_failed': int,
+            Optional('proxy_cleanup_sent_to_ev_flow_q'): int,
+            Optional('proxy_cleanup_enq_done_by_ev_flow_q'): int,
             'cleanup_req_watcher_called': int,
             'pre_tcp_flow_list_enq_failed': int,
             'pre_tcp_flow_list_deq_failed_timer': int,
@@ -132,12 +134,13 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             Optional('syncache_flow_mismatch'): int,
             Optional('failed_conn_already_accepted_conn'): int,
             'ssl_init_failure': int,
-            'max_queue_length_work': int,
-            'current_queue_length_work': int,
-            'max_queue_length_ism': int,
-            'current_queue_length_ism': int,
-            'max_queue_length_sc': int,
-            'current_queue_length_sc': int,
+            Optional('max_queue_length_work'): int,
+            Optional('current_queue_length_work'): int,
+            Optional('max_queue_length_ism'): int,
+            Optional('current_queue_length_ism'): int,
+            Optional('current_queue_length_work'): int,
+            Optional('max_queue_length_sc'): int,
+            Optional('current_queue_length_sc'): int,
             'total_tx_enq_ign_due_to_conn_close': int,
             'current_rx_epoll': int,
             'current_tx_epoll': int,
@@ -248,7 +251,13 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'flow_stats_delete_failure_count': int,
             Optional('aoim_sync_started'): int,
             Optional('aoim_sync_completed'): int,
-            Optional('aoim_sync_errored'): int
+            Optional('aoim_sync_errored'): int,
+            Optional('current_queue_length_sc_0'): int,
+            Optional('current_queue_length_ism_0'): int,
+            Optional('max_queue_length_work_0'): int,
+            Optional('max_queue_length_sc_0'): int,
+            Optional('max_queue_length_ism_0'): int,
+            Optional('current_queue_length_work_0'): int
             }
         }
 

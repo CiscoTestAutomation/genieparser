@@ -1,0 +1,33 @@
+expected_output = {
+    "routes":9,
+    "bytes_of_memory":7272,
+    "groups":5,
+    "average":0.8,
+    "group_id":{
+        "239.10.1.85":{
+            "source_count":1,
+            "pkt_forwarded":7,
+            "pkt_received":5172
+        },
+        "239.10.1.84":{
+            "source_count":1,
+            "pkt_forwarded":7,
+            "pkt_received":5172
+        },
+        "239.10.1.83":{
+            "source_count":1,
+            "pkt_forwarded":7,
+            "pkt_received":5172
+        },
+        "239.10.1.82":{
+            "source_count":1,
+            "pkt_forwarded":7,
+            "pkt_received":5172
+        },
+        "224.0.1.40":{
+            "source_count":0,
+            "pkt_forwarded":0,
+            "pkt_received":0
+        }
+    }
+}

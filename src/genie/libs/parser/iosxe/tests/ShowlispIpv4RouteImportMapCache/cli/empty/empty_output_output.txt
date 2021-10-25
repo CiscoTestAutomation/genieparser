@@ -1,0 +1,2 @@
+Switch#sh lisp instance-id 102 ipv4 route-import map-cache 
+% There are no RIB imported routes.

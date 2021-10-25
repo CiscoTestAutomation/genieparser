@@ -1,0 +1,8 @@
+Interface       Client MAC      Authen Status
+------------------------------------------------------
+Gi1/0/5         0005.0000.0001  SUCCESS         
+Gi1/0/1         000c.2909.28a0  SUCCESS         
+Gi1/0/2         000c.2909.28aa  SUCCESS         
+Gi1/0/1         000c.29fa.331c  SUCCESS         
+Gi1/0/5         1111.2222.3333  SUCCESS         
+Gi1/0/3         9988.7766.5544  SUCCESS   

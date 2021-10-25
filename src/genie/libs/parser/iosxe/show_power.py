@@ -11,6 +11,8 @@ IOSXE parsers for the following show command:
     * 'show power inline upoe-plus'
     * 'show power inline upoe-plus {interface}'
     * 'show stack-power detail'
+    * 'show power inline consumption'
+    * 'show power inline consumption {interface}'
 """
 
 import re
@@ -232,7 +234,7 @@ class ShowPowerInline(ShowPowerInlineSchema):
         # initial regexp pattern
         p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
                         r'(?P<admin_state>\w+)\s+'
-                        r'(?P<oper_state>\w+)\s+'
+                        r'(?P<oper_state>[\w\-]+)\s+'
                         r'(?P<power>[\d\.]+)\s+'
                         r'(?P<device>(?=\S).*(?<=\S))\s+'
                         r'(?P<class>[\w\/]+)\s+'
@@ -585,3 +587,82 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 continue
         
         return ret_dict
+
+
+class ShowPowerInlineConsumptionSchema(MetaParser):
+    """
+    Schema for 
+        show power inline consumption 
+        show power inline consumption  {interface} 
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'consumption_configured': str, 
+                'admin_consumption': float  
+            },
+        },
+        Optional('consumption'): {
+            Any(): {
+                'consumption_configured': str, 
+                'admin_consumption': float 
+            }
+        }
+    
+    }
+
+
+class ShowPowerInlineConsumption(ShowPowerInlineConsumptionSchema):
+    """Parser for show power inline consumption 
+                  show power inline consumption <interface> """
+
+    cli_command = ['show power inline consumption','show power inline consumption {interface}']
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
+                         '(?P<consumption_configured>\w+)\s+'
+                         '(?P<admin_consumption>[\d\.]+)$')
+        
+        
+
+        for line in output.splitlines():
+            line = line.strip()
+        
+            # Interface  Consumption      Admin             
+            #            Configured    Consumption (Watts)  
+            # ---------- -----------  -------------------   
+            # Gi1/3          NO                 0.0
+    
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['consumption_configured'] = str(group.pop('consumption_configured'))
+                intf_dict['admin_consumption'] = float(group.pop('admin_consumption'))
+                intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
+            
+
+        # Remove statistics if we don't have any interfaces
+        if 'interface' not in ret_dict and 'consumption' in ret_dict:
+            ret_dict.pop('consumption', None)
+
+        return ret_dict
+
+
+
+
+

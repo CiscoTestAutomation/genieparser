@@ -1516,3 +1516,180 @@ class ShowSegmentRoutingMplsLbAssignedSids(ShowSegmentRoutingMplsLbAssignedSidsS
                     sid_dict.update({"interface": groups["interface"]})
 
         return ret_dict
+
+
+# ====================================================
+# Schema for:
+#   * 'show segment-routing traffic-eng first-hop-resolution'
+#   * 'show segment-routing traffic-eng first-hop-resolution label <label>'
+# ====================================================
+
+class ShowSegmentRoutingTrafficEngFirstHopResolutionSchema(MetaParser):
+    '''Schema for:
+        * 'show segment-routing traffic-eng first-hop-resolution'
+        * 'show segment-routing traffic-eng first-hop-resolution label <label>'
+    '''
+
+    schema = {
+        Any(): {
+            'status': str,
+            Optional('route_entry'): {
+                'primary': {
+                    'ip': str,
+                    'using': str,
+                    'labels': str,
+                },
+                Optional('repair'): {
+                    'ip': str,
+                    'using': str,
+                    'labels': str,
+                },
+                Optional('weight'): int,
+            },
+            Optional('old_route_entry'): {
+                'primary': {
+                    'ip': str,
+                    'using': str,
+                    'labels': str,
+                },
+                Optional('repair'): {
+                    'ip': str,
+                    'using': str,
+                    'labels': str,
+                },
+                Optional('weight'): int,
+            }
+        }
+    }
+
+# ====================================================
+# Parser for:
+#   * 'show segment-routing traffic-eng first-hop-resolution'
+#   * 'show segment-routing traffic-eng first-hop-resolution label <label>'
+# ====================================================
+
+class ShowSegmentRoutingTrafficEngFirstHopResolution(ShowSegmentRoutingTrafficEngFirstHopResolutionSchema):
+    '''Parser for:
+        * 'show segment-routing traffic-eng first-hop-resolution'
+        * 'show segment-routing traffic-eng first-hop-resolution label <label>'
+    '''
+
+    cli_command = [
+        'show segment-routing traffic-eng first-hop-resolution',
+        'show segment-routing traffic-eng first-hop-resolution label {label}'
+    ]
+
+    def cli(self, label=None, output=None):
+        if label:
+            cmd = self.cli_command[1].format(label=label)
+        else:
+            cmd = self.cli_command[0]
+
+        if not output:
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Entry: 16230, Resolved via igp
+        p1 = re.compile(r'^Entry: (?P<entry>\d+), (?P<status>.+)$')
+        
+        # Route Entry:
+        p2 = re.compile(r'^Route entry:$', re.IGNORECASE)
+
+        # Old Route Entry:
+        p3 = re.compile(r'^Old Route entry:$', re.IGNORECASE)
+
+        # Primary 110.1.1.4 via Eth0/1
+        p4 = re.compile(r'^Primary: (?P<ip>([\d.]+|[a-fA-F\d\:]+)) via (?P<using>.+)$')
+
+        # Repair: 1.2.3.4 via MP2
+        p5 = re.compile(r'^Repair: (?P<ip>([\d.]+|[a-fA-F\d\:]+)) via (?P<using>.+)$')
+        
+        # Labels: 16230
+        # Labels: pop (implicit-null)
+        p6 = re.compile(r'^Labels: (?P<labels>.+)$')
+        
+        # Weight: 1
+        p7 = re.compile(r'^Weight: (?P<weight>\d+)$')
+
+        current_entry = ''
+        current_entry_pos = ''
+        primary_labels = False
+        repair_labels = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Entry: 16230, Resolved via igp
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                current_entry = int(group_dict['entry']) \
+                    if group_dict['entry'].isdigit() else group_dict['entry']
+                index_dict = ret_dict.setdefault(current_entry, {})
+                index_dict['status'] = group_dict['status']
+                continue
+
+            if current_entry == '':
+                continue
+
+            # Route Entry:
+            m = p2.match(line)
+            if m:
+                current_entry_pos = 'route_entry'
+                index_dict.setdefault(current_entry_pos, {})
+                continue
+
+            # Old Route Entry:
+            m = p3.match(line)
+            if m:
+                current_entry_pos = 'old_route_entry'
+                index_dict.setdefault(current_entry_pos, {})
+                continue
+
+            if current_entry_pos == '':
+                continue
+
+            entry_dict = index_dict[current_entry_pos]
+
+            # Primary 110.1.1.4 via Eth0/1
+            m = p4.match(line)
+            if m:
+                group_dict = m.groupdict()
+                primary_dict = entry_dict.setdefault('primary', {})
+                primary_dict['ip'] = group_dict['ip']
+                primary_dict['using'] = group_dict['using']
+                primary_labels = True
+                continue
+
+            # Repair: 1.2.3.4 via MP2
+            m = p5.match(line)
+            if m:
+                group_dict = m.groupdict()
+                repair_dict = entry_dict.setdefault('repair', {})
+                repair_dict['ip'] = group_dict['ip']
+                repair_dict['using'] = group_dict['using']
+                repair_labels = True
+                continue
+
+            # Labels: 16230
+            # Labels: pop (implicit-null)
+            m = p6.match(line)
+            if m:
+                group_dict = m.groupdict()
+                if primary_labels:
+                    primary_dict['labels'] = group_dict['labels']
+                    primary_labels = False
+                elif repair_labels:
+                    repair_dict['labels'] = group_dict['labels']
+                    repair_labels = False
+                continue
+
+            # Weight: 1
+            m = p7.match(line)
+            if m:
+                group_dict = m.groupdict()
+                entry_dict['weight'] = int(group_dict['weight'])
+                continue
+
+        return ret_dict

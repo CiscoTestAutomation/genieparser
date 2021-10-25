@@ -1,0 +1,5 @@
+ idx   sess           user@line      Logged command
+   97     1           vty0@vty0     |logging enable
+   98     1           vty0@vty0     |logging size 1000
+   99     1           vty0@vty0     |memory free low-watermark processor 603789
+  100     1           vty0@vty0     |redundancy  

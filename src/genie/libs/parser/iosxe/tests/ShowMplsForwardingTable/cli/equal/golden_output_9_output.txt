@@ -1,0 +1,5 @@
+RouterRP#show mpls forwarding-table 23.23.23.23 255.255.255.255 algo 130
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface              
+25         16021      0-23.23.23.23/32-4 (10:30:130:1)   \
+                                       0             Et0/2      13.1.1.2 

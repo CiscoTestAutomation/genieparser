@@ -1,0 +1,5 @@
+Interface  Consumption      Admin
+           Configured    Consumption (Watts)
+---------- -----------  -------------------
+
+Gi1/4          NO                 0.0

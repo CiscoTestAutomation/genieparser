@@ -1,0 +1,13 @@
+Switch#sh lisp instance-id 4099 ipv4 publisher 203.203.203.203
+LISP ETR IPv4 Publisher Table for EID-table vrf red (IID 4099)
+Publisher state: Established, Publisher epoch 0, Entries total 2
+
+0.0.0.0/0, Epoch: 0, Last Published: 5d22h
+           TTL: never, State unknown-eid-forward
+  Locator          Pri/Wgt  State     Encap-IID 
+  203.203.203.203  255/10   up        -           
+121.121.121.0/30, Epoch: 0, Last Published: 5d22h
+                  TTL: 1d00h, State complete
+  Locator          Pri/Wgt  State     Encap-IID 
+  203.203.203.203   10/10   up        -           
+Switch#

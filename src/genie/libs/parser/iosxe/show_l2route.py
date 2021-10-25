@@ -1020,7 +1020,7 @@ class ShowL2routeEvpnDGW(ShowL2routeEvpnDGWSchema):
                    'show l2route evpn default-gateway next-hop {next_hop} esi {esi}',
                    'show l2route evpn default-gateway mac-address {macaddr}',
                    'show l2route evpn default-gateway mac-address {macaddr} esi {esi}',
-                   'show l2route evpn default-gateway esi {esi}' 
+                   'show l2route evpn default-gateway esi {esi}'
         ]
 
     def cli (self, output=None, host_ip=None, evi_etag=None, prod=None, next_hop=None, macaddr=None, esi=None):
@@ -1070,13 +1070,13 @@ class ShowL2routeEvpnDGW(ShowL2routeEvpnDGWSchema):
                 evi_list = ret_dict.setdefault('evi', {}).setdefault(int(group['evi']), {})
 
                 etag_list = evi_list.setdefault('eth_tag', {}).setdefault(int(group['eth_tag']), {})
-                
+
                 producers_list = etag_list.setdefault('producer', {}).setdefault( group['producer'], {})
 
                 mac_list = producers_list.setdefault('mac_addr', {}).setdefault( group['mac_addr'], {})
-                
+
                 host_ip_list = mac_list.setdefault('host_ip' , {}).setdefault(group['host_ip'], {})
-                                
+
                 next_hop_list = host_ip_list.setdefault('next_hops', [])
                 if group['next_hop'] != '\\':
                     next_hop_list.append(group['next_hop'])
@@ -1326,7 +1326,7 @@ class ShowL2routeEvpnDGWDetail(ShowL2routeEvpnDGWDetailSchema):
                    'show l2route evpn default-gateway next-hop {next_hop} esi {esi} detail',
                    'show l2route evpn default-gateway mac-address {macaddr} detail',
                    'show l2route evpn default-gateway mac-address {macaddr} esi {esi} detail',
-                   'show l2route evpn default-gateway esi {esi} detail' 
+                   'show l2route evpn default-gateway esi {esi} detail'
         ]
 
     def cli (self, output=None, host_ip=None, evi_etag=None, prod=None, next_hop=None, macaddr=None, esi=None):
@@ -1519,19 +1519,20 @@ class ShowL2routeEvpnPeers(ShowL2routeEvpnPeersSchema):
                 cli_command += ' topology {evi_etag}'.format(evi_etag=evi_etag)
             if peer_ip:
                 cli_command += ' peer-ip {peer_ip}'.format(peer_ip=peer_ip)
-                
+
             out = self.device.execute(cli_command)
         else:
             out = output
 
         # Topo Name   EVI       ETAG         Peer-IP Encap Num Routes    Up Time
         #     BD-12     2          0         3.3.3.1  MPLS          4      2d22h
+        #    BD-101     2          0         2.2.2.3 VxLAN          1   00:02:07
         p = re.compile(r'^(?P<top_name>[^\s]+)\s+(?P<evi>\d+)\s+(?P<eth_tag>\d+)\s+'
-                        r'(?P<peer_ip>[0-9a-fA-F.:]+)\s+(?P<encap>\w+)\s+(?P<num_rtes>\d+)\s+(?P<up_time>[\w]+)$')
+                        r'(?P<peer_ip>[0-9a-fA-F.:]+)\s+(?P<encap>\w+)\s+(?P<num_rtes>\d+)\s+(?P<up_time>[\w:]+)$')
 
         ret_dict = {}
         header_found = False
-        
+
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -1551,10 +1552,10 @@ class ShowL2routeEvpnPeers(ShowL2routeEvpnPeersSchema):
                                 'num_rtes': int(group['num_rtes']),
                                 'up_time': group['up_time'],
                                 'encap': group['encap']})
-                
+
                 continue
-                
-        return ret_dict            
+
+        return ret_dict
 
 
 # ====================================
@@ -1657,7 +1658,7 @@ class ShowL2routeEvpnPeersDetail(ShowL2routeEvpnPeersDetailSchema):
 
         # EAD-EVI:                1
         p11 = re.compile(r'^EAD-EVI:\s+(?P<ead_evi>\d+)$')
-        
+
         # EAD-ES:                 1
         p12 = re.compile(r'^EAD-ES:\s+(?P<ead_es>\d+)$')
 
@@ -1693,14 +1694,14 @@ class ShowL2routeEvpnPeersDetail(ShowL2routeEvpnPeersDetailSchema):
                 group = m.groupdict()
                 top_name = group['top_name']
                 continue
-            
+
             # Topology ID:              FFFFFFFE00000000
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 top_id = group['top_id']
                 continue
-            
+
             # Peer IP:                  3.3.3.1
             m = p5.match(line)
             if m:
@@ -1710,14 +1711,14 @@ class ShowL2routeEvpnPeersDetail(ShowL2routeEvpnPeersDetailSchema):
                 peer_ip.update({'top_name': top_name,
                                 'top_id': top_id})
                 continue
-            
+
             # Encapsulation:            MPLS
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 peer_ip.update({'encap': group['encap']})
                 continue
-            
+
             # Up Time:                  3d02h
             m = p7.match(line)
             if m:
@@ -1732,35 +1733,35 @@ class ShowL2routeEvpnPeersDetail(ShowL2routeEvpnPeersDetailSchema):
                 group = m.groupdict()
                 number_of_routes.update({'mac': int(group['mac'])})
                 continue
-            
+
             # MAC-IP:                 1
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 number_of_routes.update({'mac_ip': int(group['mac_ip'])})
                 continue
-            
+
             # IMET:                   1
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 number_of_routes.update({'imet': int(group['imet'])})
                 continue
-            
+
             # EAD-EVI:                1
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 number_of_routes.update({'ead_evi': int(group['ead_evi'])})
                 continue
-            
+
             # EAD-ES:                 1
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 number_of_routes.update({'ead_es': int(group['ead_es'])})
                 continue
-            
+
             # ES:                     1
             m = p13.match(line)
             if m:

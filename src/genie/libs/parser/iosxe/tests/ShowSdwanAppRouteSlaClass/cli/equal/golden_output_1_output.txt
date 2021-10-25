@@ -1,0 +1,9 @@
+show sdwan app-route sla-class name aarSla
+app-route sla-class 1
+ name                 aarSla
+ loss                 3
+ latency              150
+ jitter               50
+ app-probe-class-id   0
+ app-probe-class      None
+ fallback-best-tunnel Latency

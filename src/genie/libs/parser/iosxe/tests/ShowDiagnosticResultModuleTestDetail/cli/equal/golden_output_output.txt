@@ -1,0 +1,16 @@
+Test results: (. = Pass, F = Fail, U = Untested)
+
+  ___________________________________________________________________________
+
+    2) TestFantray ---------------------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 2174
+          Last test testing type ------> Health Monitoring
+          Last test execution time ----> Oct 18 2021 12:08:20
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Oct 18 2021 12:08:20
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________

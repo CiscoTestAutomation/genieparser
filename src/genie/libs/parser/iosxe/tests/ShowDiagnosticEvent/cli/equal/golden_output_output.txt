@@ -1,0 +1,8 @@
+Time Stamp         ET [Card] Event Message
+------------------ -- ------ --------------------------------------------------
+10/15 23:40:20.565 I  [1]    TestPhyLoopback Passed
+10/18 11:45:35.492 I  [1]    TestGoldPktLoopback Passed
+10/18 11:45:35.493 I  [1]    TestFantray Passed
+10/18 11:45:38.819 I  [1]    TestPhyLoopback Passed
+10/18 11:45:38.820 I  [1]    TestThermal Passed
+ 

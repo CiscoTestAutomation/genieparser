@@ -1046,15 +1046,14 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         'per-user static route': ['U'],
         'access/subscriber': ['A'],
         'traffic engineering': ['t'],
-        'application route' : ['a'],
+        'application route': ['a'],
     }
-
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
     def cli(self, vrf=None, route=None, protocol=None, output=None):
-        
+
         # Check if argument from device.parse is protocol or route
         if protocol and protocol not in self.protocol_set:
             route = protocol
@@ -1088,12 +1087,13 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # VRF: VRF501
         # VRF: L:123
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')
 
         # S    2001:1:1:1::1/128
+        # S    2001:1:1:a::1/128
         # L    2001:2:2:2::2/128 is directly connected,
         # i L2 2001:0:10:204:0:33::/126
         # i L1 2001:21:21:21::21/128
@@ -1106,8 +1106,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # [200/0] via 2001:13:13:13::13, 00:53:22
         # [0/0] via ::, 5w2d
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
-                r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
+                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
@@ -1115,20 +1115,21 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Routing entry for 2001:1:1:1::1/128, 1 known subnets
         # Routing entry for 2001:1:1:1::1/128, supernet
         # Routing entry for 2001:1:1:1::1/128
+        # Routing entry for 2001:1:1:a::1/128
         p6 = re.compile(r'^Routing +entry +for +(?P<network>(?P<ip>[\w\:\.]+)'
                         r'\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
-        
+
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +'
-                r'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
-                r'( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
-                r'default +path)?$')
+                        r'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                        r'( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
+                        r'default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p8 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
-        
+
         # Route metric is 10880, traffic share count is 1
         p9 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
                         r'traffic +share +count +is +(?P<share_count>\d+))?'
@@ -1136,19 +1137,19 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         # eigrp/100 (protoid=5, clientid=22)
         p10 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
-                        r', +clientid=(?P<clientid>\d+)\)$')
-        
+                         r', +clientid=(?P<clientid>\d+)\)$')
+
         # Installed Oct 23 22:09:38.380 for 5d21h
         p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
         p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))?, '
-                        r'+via +(?P<interface>\S+)$')
+                         r'+via +(?P<interface>\S+)$')
 
         # R2_xrv#show route ipv6
         p13 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
-                r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
-        
+                         r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
+
         # Gateway of last resort is fe80::10ff:fe04:209e to network ::
         # Gateway of last resort is not set
         # Gateway of last resort is 10.50.15.1 to network 0.0.0.0
@@ -1180,6 +1181,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
             # S    2001:1:1:1::1/128
+            # S    2001:1:1:a::1/128
             # L    2001:2:2:2::2/128 is directly connected,
             # i L2 2001:0:10:204:0:33::/126
             # i L1 2001:21:21:21::21/128
@@ -1193,7 +1195,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 for key,val in self.source_protocol_dict.items():
                     if source_protocol_code in val:
                         source_protocol = key
-                
+
                 code2 = group['code2']
                 if code2:
                     code1 = '{} {}'.format(code1, code2)
@@ -1212,7 +1214,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 route_dict.update({'active': True})
                 index = 0
                 continue
-            
+
+            # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
+            # [200/0] via 2001:13:13:13::13, 00:53:22
+            # [0/0] via ::, 5w2d
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1228,7 +1233,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
                     setdefault(int(index), {})
-                
+
                 next_hop_list_dict.update({'index': index})
                 if next_hop:
                     next_hop_list_dict.update({'next_hop': next_hop})
@@ -1244,17 +1249,18 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 group = m.groupdict()
                 updated = group['date']
                 interface = group['interface']
-                
+
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('outgoing_interface', {}). \
                     setdefault(interface, {})
                 outgoing_interface_dict.update({'outgoing_interface': interface})
                 outgoing_interface_dict.update({'updated': updated})
                 continue
-            
+
             # Routing entry for 2001:1:1:1::1/128, 1 known subnets
             # Routing entry for 2001:1:1:1::1/128, supernet
             # Routing entry for 2001:1:1:1::1/128
+            # Routing entry for 2001:1:1:a::1/128
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1312,26 +1318,27 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
                     route_dict.update({'route': network})
                     route_dict.update({'active': True})
-                
+
                 if code1:
                     source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                     for key,val in self.source_protocol_dict.items():
                         if source_protocol_code in val:
                             source_protocol = key
-                    
+
                     code2 = group.get('code2', None)
                     if code2:
                         code1 = '{} {}'.format(code1, code2)
                     route_dict.update({'source_protocol': source_protocol})
                     route_dict.update({'source_protocol_codes': code1})
-                
+
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('outgoing_interface', {}). \
                     setdefault(interface, {})
-                
+
                 if interface:
-                    outgoing_interface_dict.update({'outgoing_interface': interface})
-                
+                    outgoing_interface_dict.update(
+                        {'outgoing_interface': interface})
+
                 if updated:
                     outgoing_interface_dict.update({'updated': updated})
 
@@ -1343,10 +1350,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'metric': metric})
                 if group.get('share_count', None):
                     share_count = int(group['share_count'])
-                    outgoing_interface_dict.update({'share_count': share_count})
-                # outgoing_interface_dict.update({k:v for k,v in group.items() if v})
+                    outgoing_interface_dict.update(
+                        {'share_count': share_count})
                 continue
-            
+
             # eigrp/100 (protoid=5, clientid=22)
             m = p10.match(line)
             if m:
@@ -1359,7 +1366,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 redist_advertiser_dict.update({'protoid': protoid})
                 redist_advertiser_dict.update({'clientid': clientid})
                 continue
-            
+
             # Installed Oct 23 22:09:38.380 for 5d21h
             m = p11.match(line)
             if m:
@@ -1367,7 +1374,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 installed_dict = route_dict.setdefault('installed', {})
                 installed_dict.update({k:v for k,v in group.items() if v})
                 continue
-            
+
             # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
             m = p12.match(line)
             if m:
@@ -1397,10 +1404,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                         setdefault(vrf, {}).\
                         setdefault('last_resort', {})
                 gw_dict.update({'gateway': group['gateway']})
-                
+
                 if group['to_network']:
                     gw_dict.update({'to_network' : group['to_network']})
-                
+
                 continue
 
         return ret_dict

@@ -1,0 +1,41 @@
+show platform hardware qfp active feature appqoe stats sng 1 all
+ APPQOE Feature Statistics: 
+ Global: 
+         ip-non-tcp-pkts: 3465
+         not-enabled: 0
+         cft_handle_pkt: 0
+         sdvt_divert_req_fail: 4875
+         appqoe_sn_data_pkts_processed: 0
+         appqoe_alloc_empty_ht_entry: 167
+         appqoe_cvla_alloc_failure: 0
+         appqoe_bulk_upd_mem_bm_no_sng: 0
+         appqoe_srv_chain_transit_dre_bypass: 0
+         appqoe_srv_chain_sn_unhealthy_bypass: 0
+         appqoe_srv_chain_tcp_mid_flow_bypass: 0
+         appqoe_srv_chain_non_tcp_bypass: 0
+         appqoe_srv_chain_frag_bypass: 0
+         appqoe_lb_without_dre: 91443
+         appqoe_svc_on_appqoe_vpn_drop: 0
+   SDVT Global stats: 
+     within SDVT syn policer limit: 33564136
+ SNG: 1 SN Index [1 (Green)], IP: 8.3.2.2, oce_id: 3367025888
+         del 0, serv 3, id 2, ver 1, status 1, type 3, sng 1 
+         APPNAV STATS: toSN 1035776716/575864308026, fromSN 1255356096/933986254184
+   SDVT Count stats: 
+     decaps: 1248949630
+     encaps: 1035776716
+     Expired Connections: 6406466
+     decaps: Processed control messages from SN: 6406466
+     decaps: delete requests received total: 6406466
+       decaps: delete - protocol decision: 6406466
+   SDVT Packet stats: 
+     Divert packets/bytes: 1035776716/526147025658
+     Reinject packets/bytes: 1246851434/853651673043
+   SDVT Drop Cause stats: 
+   SDVT Errors stats: 
+ SN Index [Default] 
+   SDVT Count stats: 
+     Non-SYN divert requests: 4875
+   SDVT Packet stats: 
+   SDVT Drop Cause stats: 
+   SDVT Errors stats:

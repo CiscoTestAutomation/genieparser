@@ -431,7 +431,7 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
         access_map_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Vlan +access-map +\"(?P<access_map_id>[a-zA-Z0-9]+)\" +(?P<access_map_sequence>[0-9]+)$')
+            p1 = re.compile(r'^\s*Vlan\s+access-map\s+\"(?P<access_map_id>\S+)\"\s+(?P<access_map_sequence>[0-9]+)$')
             m = p1.match(line)
             if m:
                 access_map_id = m.groupdict()['access_map_id']
@@ -447,7 +447,7 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
                     access_map_dict['access_map_id'][map_id]['access_map_sequence'][access_map_sequence] = {}
                 continue
 
-            p2 = re.compile(r'^\s*(?P<access_map_match_protocol>[a-zA-Z0-9]+) +address: +(?P<access_map_match_protocol_value>[a-zA-Z0-9\s]+)$')
+            p2 = re.compile(r'^\s*(?P<access_map_match_protocol>\S+)\s+address:\s+(?P<access_map_match_protocol_value>\S+)$')
             m = p2.match(line)
             if m:
                 access_map_dict['access_map_id'][map_id]\
@@ -544,7 +544,7 @@ class ShowVlanFilter(ShowVlanFilterSchema):
         vlan_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*VLAN +Map +(?P<vlan_access_map_tag>[a-zA-Z0-9]+) +is +filtering +VLANs:$')
+            p1 = re.compile(r'^\s*VLAN\s+Map\s+(?P<vlan_access_map_tag>\S+)\s+is\s+filtering\s+VLANs:$')
             m = p1.match(line)
             if m:
                 if 'vlan_id' not in vlan_dict:
@@ -710,3 +710,96 @@ class ShowVlanVirtualport(ShowVlanVirtualportSchema):
                 ret_dict['total'] = ports
 
         return ret_dict
+
+
+class ShowVlansDot1qVlanIdSecondDot1qVlanIdSchema(MetaParser):
+     """Schema for show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}"""
+     schema = {             
+                'stat_for_vlan': {
+                    str: {
+                       'in_pkts': int,         # These counters are incremented for both
+                       'in_octets': int,       # first_vlan_id case and also first_vlan_id  
+                       'out_pkts': int,        # and second_vlan_id case.
+                       'out_octets': int
+                    }
+                }                
+            }
+
+class ShowVlansDot1qVlanIdSecondDot1qVlanId(ShowVlansDot1qVlanIdSecondDot1qVlanIdSchema): 
+     """Parser for 
+         * show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}
+         * show vlans dot1q {first_vlan_id}
+     """
+ 
+     #*************************
+     # schema - class variable
+     #
+     # Purpose is to make sure the parser always return the output
+     # (nested dict) that has the same data structure across all supported
+     # parsing mechanisms (cli(), yang(), xml()).
+     cli_command = [
+               'show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}',
+               'show vlans dot1q {first_vlan_id}'
+    ]
+     def cli(self, first_vlan_id=None, second_vlan_id=None, output=None):
+
+         if not output:
+            cmd = []
+            if second_vlan_id:
+                cmd.append('show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}'.format(first_vlan_id=first_vlan_id, second_vlan_id=second_vlan_id))
+            else:
+                cmd.append('show vlans dot1q {first_vlan_id}'.         format(first_vlan_id=first_vlan_id))
+            cmd = ' '.join(cmd)
+            out = self.device.execute(cmd)
+         else:
+            out = output
+
+         #initial return dictionary
+         ret_dict = {}
+         vlan = None
+         #Total statistics for Outer/Inner VLAN 2/3:        ---> Outer/Inner VLAN case  
+         p0 = re.compile(r'^Total statistics for (?P<vlan>[a-zA-Z]+\/[a-zA-Z]+\s+VLAN\s+[0-9]\/[0-9]):$')
+         #Total statistics for 802.1Q VLAN 1:               ---> Outer VLAN case
+         p0_1 = re.compile(r'^Total statistics for (?P<vlan>[0-9]+.[0-9][A-Z]\s+VLAN\s+[0-9]):$')
+         #105331037 packets, 147884775948 bytes input
+         p1 = re.compile(r'^(?P<in_pkts>\d+)\s+packets,\s+(?P<in_octets>\d+)\s+bytes\s+input$') 
+         #105334310 packets, 148310655960 bytes output
+         p2 = re.compile(r'^(?P<out_pkts>\d+)\s+packets,\s+(?P<out_octets>\d+)\s+bytes\s+output$') 
+
+         #Total statistics for Outer/Inner VLAN 2/3:
+         #   105331037 packets, 147884775948 bytes input
+         #   105334310 packets, 148310655960 bytes output
+ 
+         for line in out.splitlines():
+             line = line.strip()
+             #Total statistics for Outer/Inner VLAN 2/3:        ---> Outer/Inner VLAN case
+             m0 = p0.match(line)
+             #Total statistics for 802.1Q VLAN 2:               ---> Outer VLAN case
+             m0_1 = p0_1.match(line) 
+             if m0:
+                ret_dict.setdefault('stat_for_vlan', {})
+                vlan = str(m0.groupdict()['vlan'])
+                ret_dict['stat_for_vlan'].setdefault(vlan, {})
+                continue
+             if m0_1:
+                ret_dict.setdefault('stat_for_vlan', {})
+                vlan = str(m0_1.groupdict()['vlan'])
+                ret_dict['stat_for_vlan'].setdefault(vlan, {})
+                continue
+
+             #105331037 packets, 147884775948 bytes input
+             m1 = p1.match(line)
+             if m1:
+                 group = m1.groupdict()
+                 ret_dict['stat_for_vlan'][vlan]['in_pkts'] = int(group['in_pkts'])
+                 ret_dict['stat_for_vlan'][vlan]['in_octets'] = int(group['in_octets'])
+                 continue
+             #105334310 packets, 148310655960 bytes output
+             m2 = p2.match(line)
+             if m2:
+                 group = m2.groupdict()
+                 ret_dict['stat_for_vlan'][vlan]['out_pkts'] = int(group['out_pkts'])
+                 ret_dict['stat_for_vlan'][vlan]['out_octets'] = int(group['out_octets'])
+                 continue
+
+         return ret_dict

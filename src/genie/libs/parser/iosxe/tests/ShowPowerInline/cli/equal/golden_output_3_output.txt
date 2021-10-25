@@ -1,0 +1,11 @@
+Available:80.0(w)  Used:0.0(w)  Remaining:80.0(w)
+
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi0/1/0   auto   off        0.0     n/a                 n/a   30.0 
+Gi0/1/1   auto   power-deny 0.0     n/a                 n/a   4.0  
+Gi0/1/2   auto   off        0.0     n/a                 n/a   30.0 
+Gi0/1/3   auto   off        0.0     n/a                 n/a   30.0 
+--------- ------ ---------- ---------- ---------- ------ ----- 
+Totals:          0    on    0.0  

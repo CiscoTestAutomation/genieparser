@@ -18,11 +18,4 @@ expected_output = {
                                             'via': 'GigabitEthernet0/1/7',
                                             'macstr': '0050568DA282BC16652F3A178847',
                                             'lstack': '03EB400003EBE00003EBF000',
-                                            'output_feature_configured': False}}}}}}},
-                'No Label': {
-                    'outgoing_label_or_vc': {
-                        'No Label': {
-                            'prefix_or_tunnel_id': {
-                                'None': {
-                                    'outgoing_interface': {
-                                        'No Label': {}}}}}}}}}}}
+                                            'output_feature_configured': False}}}}}}}}}}}

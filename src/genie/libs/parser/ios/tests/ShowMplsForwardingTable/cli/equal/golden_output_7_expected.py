@@ -2,13 +2,6 @@ expected_output = {
     'vrf': {
         'default': {
             'local_label': {
-                'No Label': {
-                    'outgoing_label_or_vc': {
-                        'No Label': {
-                            'prefix_or_tunnel_id': {
-                                'None': {
-                                    'outgoing_interface': {
-                                        'No Label': {}}}}}}},
                 39: {
                     'outgoing_label_or_vc': {
                         '16052': {

@@ -1,0 +1,253 @@
+show sdwan tunnel statistics pkt-dup
+tunnel stats ipsec 150.0.5.1 150.0.0.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.1.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.2.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.3.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.4.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.8.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.10.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 150.0.40.4 12346 12366
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.0.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.1.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.2.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.3.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.4.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.6.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.7.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 150.0.5.1 151.0.40.4 12346 12366
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.0.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.1.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.2.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.3.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.4.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.6.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.7.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.8.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.10.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 150.0.40.4 12346 12366
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.0.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.1.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.2.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.3.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.4.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.6.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.7.1 12346 12346
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
+tunnel stats ipsec 151.0.5.1 151.0.40.4 12346 12366
+ pktdup-rx       0
+ pktdup-rx-other 0
+ pktdup-rx-this  0
+ pktdup-tx       0
+ pktdup-tx-other 0
+ pktdup-capable  true
