@@ -8,15 +8,7 @@ expected_output =  {
                          'attach_bit': 0,
                          'extended_is_neighbor': {
                              'r2.00': {
-                                 'metric': 10,
-                                 'neighbor_id': 'r2.00',
-                             },
-                             'r2.00_1': {
-                                 'metric': 20,
-                                 'neighbor_id': 'r2.00',
-                             },
-                             'r2.00_2': {
-                                 'metric': 30,
+                                 'metric': [10, 20, 30],
                                  'neighbor_id': 'r2.00',
                              },
                          },
@@ -100,15 +92,7 @@ expected_output =  {
                          'attach_bit': 0,
                          'extended_is_neighbor': {
                              'r1.00': {
-                                 'metric': 10,
-                                 'neighbor_id': 'r1.00',
-                             },
-                             'r1.00_1': {
-                                 'metric': 20,
-                                 'neighbor_id': 'r1.00',
-                             },
-                             'r1.00_2': {
-                                 'metric': 30,
+                                 'metric': [10, 20, 30],
                                  'neighbor_id': 'r1.00',
                              },
                          },
@@ -166,15 +150,7 @@ expected_output =  {
                          },
                          'mt_is_neighbor': {
                              'r1.00': {
-                                 'metric': 10,
-                                 'neighbor_id': 'r1.00',
-                             },
-                             'r1.00_1': {
-                                 'metric': 10,
-                                 'neighbor_id': 'r1.00',
-                             },
-                             'r1.00_2': {
-                                 'metric': 10,
+                                 'metric': [10, 10, 10],
                                  'neighbor_id': 'r1.00',
                              },
                          },
