@@ -1,0 +1,28 @@
+R1#sh isis rib 15.0.0.15
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Routes under majornet 15.0.0.0/8:
+
+15.0.0.15/32  prefix attr X:0 R:0 N:0  prefix SID index 105 - Bound (SR_POLICY)
+  strict-SPF SID index 505 - Bound(TE)
+  [115/L1/30] via 15.0.0.15(Tunnel65827), from 5.5.5.5, tag 0, LSP[4/4/338] 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: 105, R:0 N:0 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 505, R:0 N:0 P:0 E:0 V:0 L:0
+     label: implicit-null
+     strict-SPF label: implicit-null
+              (SR_POLICY)(installed)
+  [115/L2/50] via 10.10.10.2(GigabitEthernet0/0/3), from 6.6.6.6, tag 0, LSP[6/10/283] 
+     prefix attr: X:0 R:1 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: 105, R:1 N:0 P:1 E:0 V:0 L:0
+       strict-SPF SID index: 505, R:1 N:0 P:1 E:0 V:0 L:0
+             - - - - - -
+  [115/L1/30] via 20.20.20.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[1/4/338] 
+       SRGB: 16000, range: 8000 prefix-SID index: 105, R:0 N:0 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 505, R:0 N:0 P:0 E:0 V:0 L:0
+     label: 16105
+     strict-SPF label: 16505
+              (ALT)

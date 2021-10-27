@@ -624,7 +624,8 @@ class Common:
                     'tu': 'Tunnel',
                     'M-E': 'M-Ethernet',  # comware
                     'BAGG': 'Bridge-Aggregation',  # comware
-                    'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
+                    'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
+                    'Wl': 'Wlan-GigabitEthernet'
                 },
             'iosxr':
             # interface formats specific to iosxr

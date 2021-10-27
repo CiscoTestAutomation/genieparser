@@ -1,0 +1,42 @@
+show segment-routing traffic-eng first-hop-resolution
+Entry: 26, Resolved via fib
+ Route entry:
+  Primary: 1.2.3.4 via Et1/2
+   Labels: pop (implicit-null)
+  Repair: 110.1.1.4 via MP6
+   Labels: 20444
+  Weight: 1
+
+ Old Route entry:
+  Primary: 1.2.3.4 via Et1/2
+   Labels: pop (implicit-null)
+  Repair: 110.1.1.4 via MP6
+   Labels: 20444
+
+Entry: 16106, Unresolved via fib
+Entry: 16230, Resolved via igp
+ Route entry:
+  Primary: 110.1.1.4 via Et0/1
+   Labels: 16230
+  Repair: 1.2.3.4 via Et1/2
+   Labels: 16230
+
+ Old Route entry:
+  Primary: 110.1.1.4 via Et0/1
+   Labels: 16230
+  Repair: 1.2.3.4 via Et1/2
+   Labels: 16230
+
+Entry: 1640, Resolved via igp
+ Route entry:
+  Primary: 2001:0db8:85a3:0000:0000:8a2e:0370:7334 via Et0/1
+   Labels: 1640
+  Repair: ::2 via Et1/2
+   Labels: 1640
+
+ Old Route entry:
+  Primary: 2001:0db8:85a3:0000:0000:8a2e:0370:7334 via Et0/1
+   Labels: 1640
+  Repair: ::2 via Et1/2
+   Labels: 1640
+   

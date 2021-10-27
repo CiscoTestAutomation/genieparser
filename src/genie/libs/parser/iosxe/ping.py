@@ -86,7 +86,7 @@ class Ping(PingSchema):
                 cmd.append('repeat {count}'.format(count=count))
             if size:
                 cmd.append('size {size}'.format(size=size))
-            if timeout:
+            if timeout or timeout==0:
                 cmd.append('timeout {timeout}'.format(timeout=timeout))
             if tos:
                 cmd.append('tos {tos}'.format(tos=tos))

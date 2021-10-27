@@ -592,11 +592,12 @@ class ShowLogging(ShowLoggingSchema):
 
                 continue
 
-            if line:
-                if not line.lower().startswith(
-                    'no active'
-                ) and not line.lower().startswith('no inactive'):
-                    log_lines.append(line)
-                    ret_dict['logs'] = log_lines
-                continue
+            if (
+                line
+                and not line.lower().startswith('no active')
+                and not line.lower().startswith('no inactive')
+                and not line.lower().startswith('show logging')
+            ):
+                log_lines.append(line)
+                ret_dict['logs'] = log_lines
         return ret_dict

@@ -1,0 +1,39 @@
+show mpls l2transport vc 1 detail
+Local interface: Et0/2 up, line protocol up, Eth VLAN 1000 down
+  Destination address: 4.4.4.4, VC ID: 1, VC status: down
+    Last error: Local access circuit is not ready for label advertise
+    Output interface: none, imposed label stack {}
+    Preferred path: not configured  
+    Default path: no route
+    No adjacency
+  Create time: 00:00:16, last status change time: 00:00:16
+    Last label FSM state change time: 00:00:16
+  Signaling protocol: LDP, peer unknown 
+    Targeted Hello: 1.1.1.1(LDP Id) -> 4.4.4.4, LDP is DOWN, no binding
+    Graceful restart: not configured and not enabled
+    Non stop routing: not configured and not enabled
+    Status TLV support (local/remote)   : enabled/None (no remote binding
+      LDP route watch                   : enabled
+      Label/status state machine        : local standby, AC-ready, LnuRnd
+      Last local dataplane   status rcvd: No fault
+      Last BFD dataplane     status rcvd: Not sent
+      Last BFD peer monitor  status rcvd: No fault
+      Last local AC  circuit status rcvd: No fault
+      Last local AC  circuit status sent: Not sent
+      Last local PW i/f circ status rcvd: No fault
+      Last local LDP TLV     status sent: No status
+      Last remote LDP TLV    status rcvd: None (no remote binding)
+      Last remote LDP ADJ    status rcvd: None (no remote binding)
+    MPLS VC labels: local 21, remote unassigned 
+    Group ID: local 4, remote unknown
+    MTU: local 1500, remote unknown
+    Remote interface description: 
+  Sequencing: receive disabled, send disabled
+  Control Word: On (configured: autosense)
+  Dataplane:
+    SSM segment/switch IDs: 0/0 (used), PWID: 2
+  VC statistics:
+    transit packet totals: receive 0, send 0
+    transit byte totals:   receive 0, send 0
+    transit packet drops:  receive 0, seq error 0, send 0
+

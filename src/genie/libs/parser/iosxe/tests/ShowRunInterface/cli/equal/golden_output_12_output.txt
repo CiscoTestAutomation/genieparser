@@ -1,46 +1,17 @@
-interface Port-channel20
- description distacc Te1/1/1, Te2/1/1
- switchport trunk native vlan 9
- switchport trunk allowed vlan 9,51
- switchport mode trunk
- ip arp inspection trust
- ip dhcp snooping trust
-interface GigabitEthernet0/0
- vrf forwarding Mgmt-vrf
- no ip address
- shutdown
- speed 1000
- negotiation auto
-interface GigabitEthernet1/0/1
- description unknown DA
- switchport access vlan 51
+interface TenGigabitEthernet1/0/3
+ description SPAN-ERSPAN-v6_VACl-CISF-ixia-8.1
+ switchport access vlan 122
  switchport mode access
- switchport port-security maximum 10
- switchport port-security violation restrict
- switchport port-security aging time 6
- switchport port-security aging type inactivity
+ switchport port-security maximum 20
  switchport port-security
- storm-control broadcast level 1.00
+ device-tracking attach-policy IPDT_MAX_10
+ ip flow monitor monitor_ipv4_in sampler k12_sampler input
+ load-interval 30
+ datalink flow monitor monitor_l2_in sampler k12_sampler input
+ ipv6 flow monitor monitor_ipv6_in sampler k12_sampler input
+ storm-control broadcast level 5.00 1.00
+ storm-control multicast level 5.00 1.00
  storm-control action shutdown
- storm-control action trap
+ no keepalive
  spanning-tree portfast
- service-policy input IN-PM
- service-policy output OUT-PM
- ip dhcp snooping limit rate 10
-interface GigabitEthernet1/0/2
- description DA1202B_21_13 ap-100
- switchport access vlan 51
- switchport mode access
- switchport port-security maximum 10
- switchport port-security violation restrict
- switchport port-security aging time 6
- switchport port-security aging type inactivity
- switchport port-security
- storm-control broadcast level 1.00
- storm-control action shutdown
- storm-control action trap
- spanning-tree portfast
- service-policy input IN-PM
- service-policy output OUT-PM
- ip dhcp snooping limit rate 10
-
+end

@@ -1,0 +1,7 @@
+206-PxTR#show lisp eid-table vrf red ipv6 publication
+LISP Publication Information
+Entries total 2
+Publisher       Last        EID Prefix               Locators        Encap-IID
+                Published                                            
+100.100.100.100 3d20h       2001:192:168:1::71/128   11.11.11.11     -
+100.100.100.100 3d20h       2001:192:168:1::72/128   22.22.22.22     -

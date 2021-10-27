@@ -1,0 +1,13 @@
+9400-HA#show running-config aaa user-name 
+!
+user-name test1
+ creation-time 1632927676
+ password 0 password
+user-name test2
+ creation-time 1632927715
+ view LobbyAdminView
+ one-time
+ password 0 password
+ type lobby-admin
+user-name test3
+ creation-time 1632927770

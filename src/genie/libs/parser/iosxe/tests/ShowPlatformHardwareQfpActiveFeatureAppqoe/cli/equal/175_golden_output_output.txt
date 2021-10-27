@@ -1,0 +1,32 @@
+show platform hardware qfp active feature appqoe stats
+ APPQOE Feature Statistics:
+ Global:
+	 ip-non-tcp-pkts: 9485
+	 not-enabled: 0
+	 cft_handle_pkt:  0
+	 sdvt_divert_req_fail:  41
+	 sn_data_pkts_processed:  0
+   SDVT Global stats:
+     within SDVT syn policer limit: 1562354
+ SN Index [0 (Green)], IP: 192.168.2.2, oce_id: 3367962768
+	 del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+	 APPNAV STATS: toSN 260453790/164529550955, fromSN 324977684/290245930396
+   SDVT Count stats:
+     Active Connections: 3539
+     decaps: 323418847
+     encaps: 260453790
+     Expired Connections: 1558815
+     decaps: Processed control messages from SN: 1558837
+     decaps: delete requests received total: 1558837
+       decaps: delete - protocol decision: 1558837
+   SDVT Packet stats:
+     Divert packets/bytes: 260453790/152027769035
+     Reinject packets/bytes: 323418342/264476829284
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SN Index [Default]
+   SDVT Count stats:
+     packets unmarked in ingress: 41
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:

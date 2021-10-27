@@ -92,6 +92,5 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
             r=i.split()[1:] ###OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts
             l=j.split()[1:] ###39019226         539205              0              0
             for p,k in zip(r,l):
-                res_dict[main_key][port][p.lower()]=int(k.lower())       
-        print(res_dict)
+                res_dict[main_key][port][p.lower()]=int(k.lower())
         return res_dict                

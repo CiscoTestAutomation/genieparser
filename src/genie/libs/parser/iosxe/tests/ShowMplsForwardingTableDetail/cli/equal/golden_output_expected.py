@@ -2,13 +2,6 @@ expected_output = {
     'vrf': {
         'L3VPN-0051': {
             'local_label': {
-                'No Label': {
-                    'outgoing_label_or_vc': {
-                        'No Label': {
-                            'prefix_or_tunnel_id': {
-                                'None': {
-                                    'outgoing_interface': {
-                                        'No Label': {}}}}}}},
                 9301: {
                     'outgoing_label_or_vc': {
                         'No Label': {

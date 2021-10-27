@@ -1,0 +1,80 @@
+expected_output = {
+    "feature":{
+        "appqoe":{
+            "global":{
+                "ip_non_tcp_pkts":9485,
+                "not_enabled":0,
+                "cft_handle_pkt":0,
+                "sdvt_divert_req_fail":41,
+                "sn_data_pkts_processed":0,
+                "sdvt_global_stats":{
+                    "within_sdvt_syn_policer_limit":1562354
+                }
+            },
+            "sn_index":{
+                "0 (Green)":{
+                    "ip":"192.168.2.2",
+                    "oce_id":3367962768,
+                    "del":0,
+                    "key":"0x0301",
+                    "id":1,
+                    "ver":1,
+                    "status":1,
+                    "type":3,
+                    "sng":0,
+                    "appnav_stats":{
+                        "to_sn":{
+                            "packets":260453790,
+                            "bytes":164529550955
+                        },
+                        "from_sn":{
+                            "packets":324977684,
+                            "bytes":290245930396
+                        }
+                    },
+                    "sdvt_count_stats":{
+                        "active_connections":3539,
+                        "decaps":323418847,
+                        "encaps":260453790,
+                        "expired_connections":1558815,
+                        "decap_messages":{
+                            "processed_control_messages":1558837,
+                            "delete_requests_recieved":1558837,
+                            "deleted_protocol_decision":1558837
+                        }
+                    },
+                    "sdvt_packet_stats":{
+                        "divert":{
+                            "packets":260453790,
+                            "bytes":152027769035
+                        },
+                        "reinject":{
+                            "packets":323418342,
+                            "bytes":264476829284
+                        }
+                    },
+                    "sdvt_drop_cause_stats":{
+                        
+                    },
+                    "sdvt_errors_stats":{
+                        
+                    }
+                },
+                "Default":{
+                    "sdvt_count_stats":{
+                        "packets_unmarked_in_ingress":41
+                    },
+                    "sdvt_packet_stats":{
+                        
+                    },
+                    "sdvt_drop_cause_stats":{
+                        
+                    },
+                    "sdvt_errors_stats":{
+                        
+                    }
+                }
+            }
+        }
+    }
+}

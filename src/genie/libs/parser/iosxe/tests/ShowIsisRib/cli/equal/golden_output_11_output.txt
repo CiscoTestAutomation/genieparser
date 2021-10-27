@@ -1,0 +1,14 @@
+R1#sh isis rib 15.0.0.15
+
+
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Routes under majornet 15.0.0.0/8:
+
+15.0.0.15/32  prefix attr X:0 R:0 N:0 (SR_POLICY_STRICT)(TE)
+  [115/L1/30] via 20.20.20.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[1/4/294] 
+     prefix attr: X:0 R:0 N:0
+              (installed)
+  [115/L2/50] via 10.10.10.2(GigabitEthernet0/0/3), from 6.6.6.6, tag 0, LSP[6/10/239] 
+     prefix attr: X:0 R:1 N:0

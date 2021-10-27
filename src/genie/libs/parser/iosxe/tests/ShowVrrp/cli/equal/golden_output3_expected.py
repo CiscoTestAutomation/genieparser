@@ -11,7 +11,12 @@ expected_output = {
                     "advertise_interval_secs": 1.0,
                     "preemption": "enabled",
                     "priority": 150,
-                    "track_object": {1: {"decrement": 70, "state": "UP"}},
+                    "track_object": {
+                        1: {
+                            "decrement": 70,
+                            "state": "UP"
+                        }
+                    },
                     "master_router_ip": "17.0.0.1",
                     "master_router": "local",
                     "master_router_priority": 150,
@@ -30,7 +35,12 @@ expected_output = {
                             "advertise_interval_secs": 1.0,
                             "preemption": "enabled",
                             "priority": 150,
-                            "track_object": {1: {"decrement": 70, "state": "UP"}},
+                            "track_object": {
+                                1: {
+                                    "decrement": 70,
+                                    "state": "UP"
+                                }
+                            },
                             "master_router_ip": "FE80::2A3:D1FF:FE45:BEC5",
                             "master_router": "local",
                             "master_router_priority": 150,

@@ -1,0 +1,3 @@
+Tunnel interface    Bandwidth Tot/Avail/Resv         Peer ID         VC ID
+------------------- -------------------------------- --------------- ----------
+Tunnel65536                                          20.20.20.20     2

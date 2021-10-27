@@ -1,0 +1,23 @@
+TestGoldPktLoopback :
+        The GOLD packet Loopback test verifies the MAC level loopback
+        functionality. In this test, a GOLD packet, for which ASIC
+        provides the support in hardware, is sent. The packet loops back
+        at MAC level and is matched against the stored packet. It is a
+        non-disruptive test.
+
+TestFantray :
+        This test verifies all fan modules have been inserted and working
+        properly on the board. It is a non-disruptive test and can be
+        run as a health monitoring test.
+
+TestPhyLoopback :
+        The PHY Loopback test verifies the PHY level loopback
+        functionality. In this test, a packet is sent which loops back
+        at PHY level and is matched against the stored packet. It is a
+        disruptive test and cannot be run as a health monitoring test.
+
+TestThermal :
+        This test verifies the temperature reading from the sensor is
+        below the yellow temperature threshold. It is a non-disruptive
+        test and can be run as a health monitoring test.
+ 

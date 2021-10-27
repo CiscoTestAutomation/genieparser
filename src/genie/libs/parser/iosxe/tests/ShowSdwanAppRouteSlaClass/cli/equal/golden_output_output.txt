@@ -1,0 +1,5 @@
+show sdwan app-route sla-class
+INDEX   NAME                  LOSS  LATENCY  JITTER   CLASS ID   APP PROBE CLASS       FALLBACK BEST TUNNEL
+-------------------------------------------------------------------------------------------------------------------------------------------
+0       __all_tunnels__       0     0        0        0          None                  None
+1       aarSla                3     150      50       0          None                  Latency

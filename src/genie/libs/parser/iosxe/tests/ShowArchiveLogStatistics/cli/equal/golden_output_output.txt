@@ -1,0 +1,11 @@
+Config Log Session Info:
+        Number of sessions being tracked: 1
+        Memory being held: 3934 bytes
+        Total memory allocated for session tracking: 15724 bytes
+        Total memory freed from session tracking: 11790 bytes
+
+Config Log log-queue Info:
+        Number of entries in the log-queue: 472
+        Memory being held by the log-queue: 186617 bytes
+        Total memory allocated for log entries: 186617 bytes
+        Total memory freed from log entries: 0 bytes

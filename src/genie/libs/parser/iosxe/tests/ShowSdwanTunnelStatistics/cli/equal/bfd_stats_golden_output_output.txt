@@ -1,0 +1,325 @@
+show sdwan tunnel statistics bfd
+tunnel stats ipsec 150.0.5.1 150.0.0.1 12346 12346
+ bfd-echo-tx-pkts   299689
+ bfd-echo-rx-pkts   299687
+ bfd-echo-tx-octets 30717979
+ bfd-echo-rx-octets 34913686
+ bfd-pmtu-tx-pkts   2509
+ bfd-pmtu-rx-pkts   2509
+ bfd-pmtu-tx-octets 1823850
+ bfd-pmtu-rx-octets 1860352
+tunnel stats ipsec 150.0.5.1 150.0.1.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 150.0.5.1 150.0.2.1 12346 12346
+ bfd-echo-tx-pkts   299682
+ bfd-echo-rx-pkts   299637
+ bfd-echo-tx-octets 30717139
+ bfd-echo-rx-octets 34908134
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 150.0.5.1 150.0.3.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 150.0.5.1 150.0.4.1 12346 12346
+ bfd-echo-tx-pkts   294495
+ bfd-echo-rx-pkts   294454
+ bfd-echo-tx-octets 30203871
+ bfd-echo-rx-octets 34285901
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+ bfd-echo-tx-pkts   294125
+ bfd-echo-rx-pkts   293733
+ bfd-echo-tx-octets 30167101
+ bfd-echo-rx-octets 34201978
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+ bfd-echo-tx-pkts   294305
+ bfd-echo-rx-pkts   294005
+ bfd-echo-tx-octets 30184935
+ bfd-echo-rx-octets 34233960
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 150.0.5.1 150.0.8.1 12346 12346
+ bfd-echo-tx-pkts   299449
+ bfd-echo-rx-pkts   299114
+ bfd-echo-tx-octets 30694415
+ bfd-echo-rx-octets 34847061
+ bfd-pmtu-tx-pkts   2531
+ bfd-pmtu-rx-pkts   2531
+ bfd-pmtu-tx-octets 1839848
+ bfd-pmtu-rx-octets 1876636
+tunnel stats ipsec 150.0.5.1 150.0.10.1 12346 12346
+ bfd-echo-tx-pkts   299747
+ bfd-echo-rx-pkts   299744
+ bfd-echo-tx-octets 30723735
+ bfd-echo-rx-octets 34920519
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 150.0.5.1 150.0.40.4 12346 12366
+ bfd-echo-tx-pkts   294181
+ bfd-echo-rx-pkts   293700
+ bfd-echo-tx-octets 30172960
+ bfd-echo-rx-octets 34198326
+ bfd-pmtu-tx-pkts   2531
+ bfd-pmtu-rx-pkts   2531
+ bfd-pmtu-tx-octets 1839848
+ bfd-pmtu-rx-octets 1876658
+tunnel stats ipsec 150.0.5.1 151.0.0.1 12346 12346
+ bfd-echo-tx-pkts   299753
+ bfd-echo-rx-pkts   299740
+ bfd-echo-tx-octets 30724497
+ bfd-echo-rx-octets 34919941
+ bfd-pmtu-tx-pkts   2509
+ bfd-pmtu-rx-pkts   2509
+ bfd-pmtu-tx-octets 1823850
+ bfd-pmtu-rx-octets 1860301
+tunnel stats ipsec 150.0.5.1 151.0.1.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 150.0.5.1 151.0.2.1 12346 12346
+ bfd-echo-tx-pkts   299738
+ bfd-echo-rx-pkts   299732
+ bfd-echo-tx-octets 30722858
+ bfd-echo-rx-octets 34919086
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 150.0.5.1 151.0.3.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 150.0.5.1 151.0.4.1 12346 12346
+ bfd-echo-tx-pkts   294489
+ bfd-echo-rx-pkts   294446
+ bfd-echo-tx-octets 30203228
+ bfd-echo-rx-octets 34285004
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 150.0.5.1 151.0.6.1 12346 12346
+ bfd-echo-tx-pkts   294158
+ bfd-echo-rx-pkts   293764
+ bfd-echo-tx-octets 30170564
+ bfd-echo-rx-octets 34205516
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 150.0.5.1 151.0.7.1 12346 12346
+ bfd-echo-tx-pkts   294322
+ bfd-echo-rx-pkts   294012
+ bfd-echo-tx-octets 30186562
+ bfd-echo-rx-octets 34234926
+ bfd-pmtu-tx-pkts   2531
+ bfd-pmtu-rx-pkts   2531
+ bfd-pmtu-tx-octets 1839848
+ bfd-pmtu-rx-octets 1876662
+tunnel stats ipsec 150.0.5.1 151.0.40.4 12346 12366
+ bfd-echo-tx-pkts   294102
+ bfd-echo-rx-pkts   293625
+ bfd-echo-tx-octets 30164579
+ bfd-echo-rx-octets 34189858
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 150.0.0.1 12346 12346
+ bfd-echo-tx-pkts   299708
+ bfd-echo-rx-pkts   299707
+ bfd-echo-tx-octets 30719580
+ bfd-echo-rx-octets 34916359
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 150.0.1.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 151.0.5.1 150.0.2.1 12346 12346
+ bfd-echo-tx-pkts   299703
+ bfd-echo-rx-pkts   299698
+ bfd-echo-tx-octets 30719358
+ bfd-echo-rx-octets 34915034
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 150.0.3.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 151.0.5.1 150.0.4.1 12346 12346
+ bfd-echo-tx-pkts   294490
+ bfd-echo-rx-pkts   294438
+ bfd-echo-tx-octets 30203320
+ bfd-echo-rx-octets 34284114
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 150.0.6.1 12346 12346
+ bfd-echo-tx-pkts   294180
+ bfd-echo-rx-pkts   293787
+ bfd-echo-tx-octets 30172840
+ bfd-echo-rx-octets 34208171
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 150.0.7.1 12346 12346
+ bfd-echo-tx-pkts   294312
+ bfd-echo-rx-pkts   294016
+ bfd-echo-tx-octets 30185621
+ bfd-echo-rx-octets 34235259
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 150.0.8.1 12346 12346
+ bfd-echo-tx-pkts   299427
+ bfd-echo-rx-pkts   299084
+ bfd-echo-tx-octets 30692146
+ bfd-echo-rx-octets 34843608
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 150.0.10.1 12346 12346
+ bfd-echo-tx-pkts   299743
+ bfd-echo-rx-pkts   299742
+ bfd-echo-tx-octets 30723451
+ bfd-echo-rx-octets 34920153
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 150.0.40.4 12346 12366
+ bfd-echo-tx-pkts   294151
+ bfd-echo-rx-pkts   293675
+ bfd-echo-tx-octets 30169493
+ bfd-echo-rx-octets 34195788
+ bfd-pmtu-tx-pkts   2531
+ bfd-pmtu-rx-pkts   2531
+ bfd-pmtu-tx-octets 1839848
+ bfd-pmtu-rx-octets 1876658
+tunnel stats ipsec 151.0.5.1 151.0.0.1 12346 12346
+ bfd-echo-tx-pkts   299699
+ bfd-echo-rx-pkts   299699
+ bfd-echo-tx-octets 30718843
+ bfd-echo-rx-octets 34915238
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 151.0.1.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 151.0.5.1 151.0.2.1 12346 12346
+ bfd-echo-tx-pkts   299748
+ bfd-echo-rx-pkts   299727
+ bfd-echo-tx-octets 30723946
+ bfd-echo-rx-octets 34918493
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 151.0.3.1 12346 12346
+ bfd-echo-tx-pkts   0
+ bfd-echo-rx-pkts   0
+ bfd-echo-tx-octets 0
+ bfd-echo-rx-octets 0
+ bfd-pmtu-tx-pkts   0
+ bfd-pmtu-rx-pkts   0
+ bfd-pmtu-tx-octets 0
+ bfd-pmtu-rx-octets 0
+tunnel stats ipsec 151.0.5.1 151.0.4.1 12346 12346
+ bfd-echo-tx-pkts   294490
+ bfd-echo-rx-pkts   294444
+ bfd-echo-tx-octets 30203166
+ bfd-echo-rx-octets 34284946
+ bfd-pmtu-tx-pkts   2508
+ bfd-pmtu-rx-pkts   2508
+ bfd-pmtu-tx-octets 1823772
+ bfd-pmtu-rx-octets 1858884
+tunnel stats ipsec 151.0.5.1 151.0.6.1 12346 12346
+ bfd-echo-tx-pkts   294131
+ bfd-echo-rx-pkts   293740
+ bfd-echo-tx-octets 30167674
+ bfd-echo-rx-octets 34202832
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 151.0.7.1 12346 12346
+ bfd-echo-tx-pkts   294313
+ bfd-echo-rx-pkts   294009
+ bfd-echo-tx-octets 30185860
+ bfd-echo-rx-octets 34234335
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190
+tunnel stats ipsec 151.0.5.1 151.0.40.4 12346 12366
+ bfd-echo-tx-pkts   294178
+ bfd-echo-rx-pkts   293702
+ bfd-echo-tx-octets 30172530
+ bfd-echo-rx-octets 34198664
+ bfd-pmtu-tx-pkts   2530
+ bfd-pmtu-rx-pkts   2530
+ bfd-pmtu-tx-octets 1839770
+ bfd-pmtu-rx-octets 1875190

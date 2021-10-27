@@ -1,6 +1,26 @@
-interface GigabitEthernet1/0/5
- description arne-44
+interface FiveGigabitEthernet1/0/35
+ switchport access vlan 19
+ switchport mode access
+ switchport voice vlan 20
+ switchport port-security maximum 2
  switchport port-security mac-address sticky
- switchport port-security mac-address sticky 1020.4bb1.6f2f
- source template USER_NoAuth
+ switchport port-security mac-address sticky 0008.32a8.2f3a vlan voice
+ switchport port-security
+ device-tracking attach-policy IPDT_POLICY
+ load-interval 30
+ authentication host-mode multi-domain
+ authentication priority mab
+ authentication port-control auto
+ authentication periodic
+ mab
+ trust device cisco-phone
+ energywise level 10 recurrence importance 100 time-range PEAK
+ energywise level 0 recurrence importance 100 time-range OFF-PEAK
+ storm-control broadcast level pps 100k
+ storm-control multicast level pps 100k
+ storm-control unicast level pps 100k
+ auto qos voip cisco-phone
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-CiscoPhone-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
 end

@@ -1,0 +1,47 @@
+show sdwan tunnel sla index 0
+tunnel sla-class 0
+ sla-name    __all_tunnels__
+ sla-loss    0
+ sla-latency 0
+ sla-jitter  0
+                                                                                                                                                 FALLBACK
+                                                                                                                 SLA                             SLA
+                              SRC    DST    REMOTE                        T REMOTE        MEAN  MEAN     MEAN    CLASS                           CLASS
+PROTO  SRC IP     DST IP      PORT   PORT   SYSTEM IP    T LOCAL COLOR    COLOR           LOSS  LATENCY  JITTER  INDEX  SLA CLASS NAME           INDEX
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ipsec  150.0.5.1  150.0.0.1   12346  12346  20.0.0.20    public-internet  bronze          0     0        1       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.1.1   12346  12346  21.0.0.21    public-internet  3g              0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.2.1   12346  12346  22.0.0.22    public-internet  private1        0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.3.1   12346  12346  23.0.0.23    public-internet  biz-internet    0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.4.1   12346  12346  24.0.0.24    public-internet  blue            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.6.1   12346  12346  26.0.0.26    public-internet  green           0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.7.1   12346  12346  27.0.0.27    public-internet  silver          0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.8.1   12346  12346  28.0.0.28    public-internet  custom1         0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.10.1  12346  12346  30.0.0.30    public-internet  mpls            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  150.0.40.4  12346  12366  140.0.1.140  public-internet  gold            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.0.1   12346  12346  20.0.0.20    public-internet  silver          0     1        1       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.1.1   12346  12346  21.0.0.21    public-internet  lte             0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.2.1   12346  12346  22.0.0.22    public-internet  private2        0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.3.1   12346  12346  23.0.0.23    public-internet  bronze          0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.4.1   12346  12346  24.0.0.24    public-internet  metro-ethernet  0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.6.1   12346  12346  26.0.0.26    public-internet  custom1         0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.7.1   12346  12346  27.0.0.27    public-internet  blue            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  150.0.5.1  151.0.40.4  12346  12366  140.0.1.140  public-internet  mpls            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.0.1   12346  12346  20.0.0.20    silver           bronze          0     1        1       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.1.1   12346  12346  21.0.0.21    silver           3g              0     6        8       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.2.1   12346  12346  22.0.0.22    silver           private1        0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.3.1   12346  12346  23.0.0.23    silver           biz-internet    0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.4.1   12346  12346  24.0.0.24    silver           blue            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.6.1   12346  12346  26.0.0.26    silver           green           0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.7.1   12346  12346  27.0.0.27    silver           silver          0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.8.1   12346  12346  28.0.0.28    silver           custom1         0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.10.1  12346  12346  30.0.0.30    silver           mpls            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  150.0.40.4  12346  12366  140.0.1.140  silver           gold            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.0.1   12346  12346  20.0.0.20    silver           silver          0     1        1       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.1.1   12346  12346  21.0.0.21    silver           lte             0     6        8       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.2.1   12346  12346  22.0.0.22    silver           private2        0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.3.1   12346  12346  23.0.0.23    silver           bronze          0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.4.1   12346  12346  24.0.0.24    silver           metro-ethernet  0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.6.1   12346  12346  26.0.0.26    silver           custom1         0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.7.1   12346  12346  27.0.0.27    silver           blue            0     0        0       0,1    __all_tunnels__, aarSla  None
+ipsec  151.0.5.1  151.0.40.4  12346  12366  140.0.1.140  silver           mpls            0     0        0       0,1    __all_tunnels__, aarSla  None

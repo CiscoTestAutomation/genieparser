@@ -252,7 +252,17 @@ class ShowTrack(ShowTrackSchema):
 # Schema for 'show track brief'
 # =======================
 class ShowTrackBriefSchema(MetaParser):
-  """ Schema for 'show track brief' """
+  """ Schema for :
+      * 'show track brief' 
+      * 'show track interface brief'
+      * 'show track ip route brief'
+      * 'show track ipv6 route brief'
+      * 'show track ip sla brief'
+      * 'show track list boolean and brief'
+      * 'show track list boolean or brief'
+      * 'show track list threshold percentage brief'
+      * 'show track list threshold weight brief'
+  """
   schema = {
         'track':{
             Any():{ 
@@ -266,16 +276,36 @@ class ShowTrackBriefSchema(MetaParser):
     }
 
 
-# =======================
-# Parser for 'show track brief'
-# =======================
+# ===================================
+# Parser for:
+#   * 'show track brief'
+#   * 'show track interface brief'
+#   * 'show track ip route brief'
+#   * 'show track ipv6 route brief'
+#   * 'show track ip sla brief'
+# ===================================
 class ShowTrackBrief(ShowTrackBriefSchema):
-   """ Parser for 'show track brief' """
-   cli_command = 'show track brief'
+   """ Parser for:
+       * 'show track brief'
+       * 'show track interface brief'
+       * 'show track ip route brief'
+       * 'show track ipv6 route brief'
+       * 'show track ip sla brief'
+   """
+   cli_command = [
+      'show track brief',
+      'show track {track_type} brief'
+   ]
 
-   def cli(self, output=None):
-       if output is None:
-           output = self.device.execute(self.cli_command)
+   def cli(self, track_type = '', output=None):
+       if not output:
+          if track_type:
+             cmd = self.cli_command[1].format(track_type = track_type)
+          else:
+             cmd = self.cli_command[0]
+          output = self.device.execute(cmd)
+       else:
+          output = output 
 
        track_table_dict = {}
        result_dict = {}
@@ -315,3 +345,31 @@ class ShowTrackBrief(ShowTrackBriefSchema):
              continue
              
        return track_table_dict
+
+# ===================================================
+# Parser for:
+#    * 'show track list boolean and brief'
+#    * 'show track list boolean or brief'
+#    * 'show track list threshold percentage brief'
+#    * 'show track list threshold weight brief'
+# ===================================================
+class ShowTrackListBrief(ShowTrackBrief):
+    """ parser for :
+        * 'show track list boolean and brief'
+        * 'show track list boolean or brief'
+        * 'show track list threshold percentage brief'
+        * 'show track list threshold weight brief'
+    """
+    cli_command = [
+        'show track list {sub_type} brief'
+    ]
+
+    def cli(self, sub_type='', output=None):
+       if not output:
+          if sub_type:
+             cmd = self.cli_command[0].format(sub_type = sub_type)
+             output = self.device.execute(cmd)
+       else:
+          output = output
+
+       return super().cli(output = output)

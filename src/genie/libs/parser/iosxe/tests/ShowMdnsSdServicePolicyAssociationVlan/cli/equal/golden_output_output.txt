@@ -1,0 +1,5 @@
+========== VLAN policy association =============
+        VLAN            Service-policy
+        ------------------------------------------------
+        1301            policy2
+        1302            policy1

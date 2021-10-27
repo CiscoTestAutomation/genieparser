@@ -108,6 +108,18 @@ expected_output = {
                                         "Tunnel65758": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
+                                        },
+                                        "Tunnel20": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel65757": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel10": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
                                         }
                                     }
                                 }
@@ -124,6 +136,18 @@ expected_output = {
                                         "Tunnel65758": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
+                                        },
+                                        "Tunnel20": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel10": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel65757": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
                                         }
                                     }
                                 }
@@ -138,6 +162,10 @@ expected_output = {
                                 "6.6.6.6/32": {
                                     "outgoing_interface": {
                                         "Tunnel20": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel10": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
                                         }
@@ -204,6 +232,10 @@ expected_output = {
                                         "Tunnel20": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
+                                        },
+                                        "Tunnel10": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
                                         }
                                     }
                                 }
@@ -251,6 +283,11 @@ expected_output = {
                                     "outgoing_interface": {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
+                                            "bytes_label_switched": 0,
+                                            "merged": True
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
                                             "bytes_label_switched": 0,
                                             "merged": True
                                         }
@@ -302,6 +339,10 @@ expected_output = {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
                                             "bytes_label_switched": 0
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
+                                            "bytes_label_switched": 0
                                         }
                                     }
                                 }
@@ -336,6 +377,11 @@ expected_output = {
                                             "next_hop": "10.10.10.2",
                                             "bytes_label_switched": 0,
                                             "merged": True
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
+                                            "bytes_label_switched": 0,
+                                            "merged": True
                                         }
                                     }
                                 }
@@ -350,6 +396,10 @@ expected_output = {
                                 "0-5.5.5.5/32-1": {
                                     "outgoing_interface": {
                                         "Tunnel65758": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "Tunnel20": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
                                         }
@@ -367,6 +417,10 @@ expected_output = {
                                     "outgoing_interface": {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
+                                            "bytes_label_switched": 0
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
                                             "bytes_label_switched": 0
                                         }
                                     }
@@ -401,6 +455,17 @@ expected_output = {
                                         "Tunnel65758": {
                                             "next_hop": "point2point",
                                             "tsp_tunnel": True
+                                        },
+                                        "Tunnel20": {
+                                            "next_hop": "point2point",
+                                            "tsp_tunnel": True
+                                        },
+                                        "GigabitEthernet0/0/3": {
+                                            "next_hop": "10.10.10.2"
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
+                                            "bytes_label_switched": 0
                                         }
                                     }
                                 }
@@ -416,6 +481,10 @@ expected_output = {
                                     "outgoing_interface": {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
+                                            "bytes_label_switched": 0
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
                                             "bytes_label_switched": 0
                                         }
                                     }
@@ -440,211 +509,6 @@ expected_output = {
                         }
                     }
                 },
-                "No Label": {
-                    "outgoing_label_or_vc": {
-                        "16062": {
-                            "prefix_or_tunnel_id": {
-                                "0-6.6.6.6/32-2": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "16042": {
-                            "prefix_or_tunnel_id": {
-                                "0-4.4.4.4/32-2": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "16052": {
-                            "prefix_or_tunnel_id": {
-                                "0-5.5.5.5/32-2": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "16061": {
-                            "prefix_or_tunnel_id": {
-                                "6.6.6.6/32": {
-                                    "outgoing_interface": {
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel10": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "0-6.6.6.6/32-1": {
-                                    "outgoing_interface": {
-                                        "Tunnel65758": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "GigabitEthernet0/0/3": {
-                                            "next_hop": "10.10.10.2"
-                                        },
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "Pop Label": {
-                            "prefix_or_tunnel_id": {
-                                "5.5.5.5/32": {
-                                    "outgoing_interface": {
-                                        "Tunnel65758": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel65757": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel10": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "10/1[TE-Bind]": {
-                                    "outgoing_interface": {
-                                        "Tunnel10": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "65757/1[TE-Bind]": {
-                                    "outgoing_interface": {
-                                        "Tunnel65757": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "65758/1[TE-Bind]": {
-                                    "outgoing_interface": {
-                                        "Tunnel65758": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "20/1[TE-Bind]": {
-                                    "outgoing_interface": {
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "0-5.5.5.5/32-1": {
-                                    "outgoing_interface": {
-                                        "Tunnel65758": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "16041": {
-                            "prefix_or_tunnel_id": {
-                                "4.4.4.4/32": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0,
-                                            "merged": True
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "No Label": {
-                            "prefix_or_tunnel_id": {
-                                "40.40.40.0/24": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                },
-                                "70.70.70.0/24": {
-                                    "outgoing_interface": {
-                                        "Tunnel10": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "60.60.60.0/24": {
-                                    "outgoing_interface": {
-                                        "Tunnel20": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel10": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        },
-                                        "Tunnel65757": {
-                                            "next_hop": "point2point",
-                                            "tsp_tunnel": True
-                                        }
-                                    }
-                                },
-                                "None": {
-                                    "outgoing_interface": {
-                                        "No Label": {}
-                                    }
-                                },
-                                "45.45.45.0/24": {
-                                    "outgoing_interface": {
-                                        "TenGigabitEthernet0/0/5": {
-                                            "next_hop": "20.20.20.2",
-                                            "bytes_label_switched": 0
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 16042: {
                     "outgoing_label_or_vc": {
                         "16042": {
@@ -653,6 +517,10 @@ expected_output = {
                                     "outgoing_interface": {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
+                                            "bytes_label_switched": 0
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
                                             "bytes_label_switched": 0
                                         }
                                     }
@@ -669,6 +537,10 @@ expected_output = {
                                     "outgoing_interface": {
                                         "GigabitEthernet0/0/3": {
                                             "next_hop": "10.10.10.2",
+                                            "bytes_label_switched": 0
+                                        },
+                                        "TenGigabitEthernet0/0/5": {
+                                            "next_hop": "20.20.20.2",
                                             "bytes_label_switched": 0
                                         }
                                     }

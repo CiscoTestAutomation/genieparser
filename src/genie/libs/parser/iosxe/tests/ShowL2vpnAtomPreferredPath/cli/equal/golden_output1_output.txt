@@ -1,0 +1,4 @@
+Tunnel interface    Bandwidth Tot/Avail/Resv         Peer ID         VC ID
+------------------- -------------------------------- --------------- ----------
+Tunnel1             500/100/400                      1.1.1.1         1
+Tunnel65536                                          20.20.20.20     2

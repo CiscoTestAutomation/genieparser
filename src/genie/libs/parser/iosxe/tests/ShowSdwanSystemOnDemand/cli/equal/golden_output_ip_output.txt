@@ -1,0 +1,4 @@
+show sdwan system on-demand remote-system system-ip 23.0.0.23
+SITE-ID    SYSTEM-IP     ON-DEMAND       STATUS     IDLE-TIMEOUT-EXPIRY(sec)
+---------------------------------------------------------------------------
+23       23.0.0.23          yes          active              313         

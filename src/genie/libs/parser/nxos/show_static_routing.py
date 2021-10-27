@@ -308,9 +308,11 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
 
             # 2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
             # 2001:1:1:1::1/128 -> Null0, preference: 1
-            p2 = re.compile(r'^\s*(?P<route>[\d\/\:]+)( +\-\> +(?P<nexthop>[\d\:\/]+), )?'
-                            '( \-\> +(?P<interface>[\w\.\/]+), )?'
-                            '(preference: +(?P<preference>[\d]+))?$')
+            # 2001:1:1:a::1/128 -> Null0, preference: 1
+            p2 = re.compile(r'^\s*(?P<route>[a-fA-F\d\:\/]+)'
+                            r'( +\-\> +(?P<nexthop>[a-fA-F\d\:\/]+), )?'
+                            r'( \-\> +(?P<interface>[\w\.\/]+), )?'
+                            r'(preference: +(?P<preference>[\d]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -363,7 +365,6 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['preference'] = int(if_preference)
 
-
                 else:
                     if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
@@ -385,8 +386,6 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                     if m.groupdict()['interface']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']\
                             ['next_hop_list'][index]['outgoing_interface'] = interface
-
-
 
                 continue
 
@@ -459,11 +458,9 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                         ['next_hop']['next_hop_list'][index]['bfd_enabled'] = bfd_enabled
                 continue
 
-
         if result_dict:
             for i in list(result_dict['vrf']):
                 if not len(result_dict['vrf'][i]['address_family'][af]):
                     del result_dict['vrf'][i]
-
 
         return result_dict
