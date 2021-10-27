@@ -28,54 +28,54 @@ class ShowRunBridgeDomainSchema(MetaParser):
     """Schema for show run bridge-domain"""
 
     schema = {
-        'bridge-domains': {
+        'bridge_domains': {
             Any(): {
-                'bridge-domain-id': int,
-                'bridge-domain-type': str,
-                Optional('vc-id-num'): int,
+                'bridge_domain_id': int,
+                'bridge_domain_type': str,
+                Optional('vc_id_num'): int,
                 Optional('description'): str,
                 Optional('peers'): {
                     Any(): {
-                        'peer-ip': str,
-                        Optional('load-balance'): bool,
+                        'peer_ip': str,
+                        Optional('load_balance'): bool,
                         Optional('cos'): int,
                         Optional('lsps'): {
                             Any(): {
-                                'lsp-name': str
+                                'lsp_name': str
                             }
                         },
-                        Optional('flow-label'): bool,
-                        Optional('control-word'): bool
+                        Optional('flow_label'): bool,
+                        Optional('control_word'): bool
                     }
                 },
                 Optional('statistics'): bool,
-                Optional('router-interface'): {
-                    'router-ve': int,
-                    'disallow-oar-ac': bool
+                Optional('router_interface'): {
+                    'router_ve': int,
+                    Optional('disallow_oar_ac'): bool
                 },
-                Optional('logical-interfaces'): {
+                Optional('logical_interfaces'): {
                     'ethernet': {
                         Any(): {
-                            'lif-bind-id': str
+                            'lif_bind_id': str
                         }
                     },
-                    'port-channel': {
+                    'port_channel': {
                         Any(): {
-                            'pc-lif-bind-id': str
+                            'pc_lif_bind_id': str
                         }
                     }
                 },
-                Optional('pw-profile-name'): str,
-                Optional('bpdu-drop-enable'): bool,
-                Optional('local-switching'): bool,
-                Optional('mac-address'): {
+                Optional('pw_profile_name'): str,
+                Optional('bpdu_drop_enable'): bool,
+                Optional('local_switching'): bool,
+                Optional('mac_address'): {
                     Optional('withdrawal'): bool
                 },
-                Optional('suppress-arp'): {
-                    Optional('suppress-arp-enable'): bool
+                Optional('suppress_arp'): {
+                    Optional('suppress_arp_enable'): bool
                 },
-                Optional('suppress-nd'): {
-                    Optional('suppress-nd-enable'): bool
+                Optional('suppress_nd'): {
+                    Optional('suppress_nd_enable'): bool
                 }
             }
         }
@@ -143,17 +143,17 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                bridge_domains = res_dict.setdefault('bridge-domains', {})
+                bridge_domains = res_dict.setdefault('bridge_domains', {})
                 bridge_domain = bridge_domains.setdefault(
                     int(group["bd_id"]),
-                    {"bridge-domain-id": int(group["bd_id"]), "bridge-domain-type": group["bd_type"]},
+                    {"bridge_domain_id": int(group["bd_id"]), "bridge_domain_type": group["bd_type"]},
                 )
                 continue
 
             # vc-id 20
             m = p2.match(line)
             if m:
-                bridge_domain['vc-id-num'] = int(m.groupdict()['vc_id'])
+                bridge_domain['vc_id_num'] = int(m.groupdict()['vc_id'])
                 continue
 
             # peer 1.1.1.1 lsp abc def ed
@@ -164,19 +164,19 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
                 group = m.groupdict()
                 peers = bridge_domain.setdefault('peers', {})
                 peer = peers.setdefault(group['peer_ip'], {})
-                peer['peer-ip'] = group['peer_ip']
+                peer['peer_ip'] = group['peer_ip']
                 if group['load_balance'] is not None:
-                    peer['load-balance'] = True
+                    peer['load_balance'] = True
                 if group['cos'] is not None:
                     peer['cos'] = int(group['cos'])
                 if group['lsp'] is not None:
                     peer['lsps'] = {}
                     for lsp in group['lsp'].strip().split(' '):
-                        peer['lsps'][lsp] = {'lsp-name': lsp}
+                        peer['lsps'][lsp] = {'lsp_name': lsp}
                 if group['flow_label'] is not None:
-                    peer['flow-label'] = True
+                    peer['flow_label'] = True
                 if group['control_word'] is not None:
-                    peer['control-word'] = True
+                    peer['control_word'] = True
                 continue
 
             # description test
@@ -196,61 +196,61 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                logical_interfaces = bridge_domain.setdefault('logical-interfaces', {'ethernet': {}, 'port-channel': {}})
+                logical_interfaces = bridge_domain.setdefault('logical_interfaces', {'ethernet': {}, 'port_channel': {}})
                 if group['interface_type'] == 'ethernet':
                     ethernet = logical_interfaces.setdefault('ethernet', {})
-                    ethernet[group['interface']] = {'lif-bind-id': 'Ethernet ' + group['interface']}
+                    ethernet[group['interface']] = {'lif_bind_id': 'Ethernet ' + group['interface']}
                 elif group['interface_type'] == 'port-channel':
-                    port_channel = logical_interfaces.setdefault('port-channel', {})
-                    port_channel[group['interface']] = {'pc-lif-bind-id': 'Port-channel ' + group['interface']}
+                    port_channel = logical_interfaces.setdefault('port_channel', {})
+                    port_channel[group['interface']] = {'pc_lif_bind_id': 'Port-channel ' + group['interface']}
 
             # router-interface Ve 123
             m = p6.match(line)
             if m:
-                bridge_domain['router-interface'] = {'router-ve': int(m.groupdict()['ve_id'])}
+                bridge_domain['router_interface'] = {'router_ve': int(m.groupdict()['ve_id'])}
                 continue
 
             # disallow-oar-ac
             m = re.compile('^disallow-oar-ac$').match(line)
             if m:
-                bridge_domain['router-interface']['disallow-oar-ac'] = True
+                bridge_domain['router_interface']['disallow_oar_ac'] = True
                 continue
 
             # local-switching
             m = re.compile('^local-switching$').match(line)
             if m:
-                bridge_domain['local-switching'] = True
+                bridge_domain['local_switching'] = True
                 continue
 
             # pw-profile default
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                bridge_domain['pw-profile-name'] = group['pw_profile']
+                bridge_domain['pw_profile_name'] = group['pw_profile']
                 continue
 
             # bpdu-drop-enable
             m = re.compile('^bpdu-drop-enable$').match(line)
             if m:
-                bridge_domain['bpdu-drop-enable'] = True
+                bridge_domain['bpdu_drop_enable'] = True
                 continue
 
             # mac-address withdrawal
             m = re.compile('^mac-address withdrawal$').match(line)
             if m:
-                bridge_domain['mac-address'] = {'withdrawal': True}
+                bridge_domain['mac_address'] = {'withdrawal': True}
                 continue
 
             # suppress-nd
             m = re.compile('^suppress-nd$').match(line)
             if m:
-                bridge_domain['suppress-nd'] = {'suppress-nd-enable': True}
+                bridge_domain['suppress_nd'] = {'suppress_nd_enable': True}
                 continue
 
             # suppress-arp
             m = re.compile('^suppress-arp$').match(line)
             if m:
-                bridge_domain['suppress-arp'] = {'suppress-arp-enable': True}
+                bridge_domain['suppress_arp'] = {'suppress_arp_enable': True}
                 continue
         return res_dict
 
@@ -273,7 +273,7 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
             rpc_request = rpc_request_bd.format(bd_id_template='')
 
         res_dict = {}
-        bridge_domains = res_dict.setdefault('bridge-domains', {})
+        bridge_domains = res_dict.setdefault('bridge_domains', {})
 
         output = self.device.get(rpc_request)
 
@@ -282,13 +282,13 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
                 for iter in bd:
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}bridge-domain-id':
                         bridge_domain = bridge_domains.setdefault(int(iter.text), {})
-                        bridge_domain['bridge-domain-id'] = int(iter.text)
+                        bridge_domain['bridge_domain_id'] = int(iter.text)
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}bridge-domain-type':
-                        bridge_domain['bridge-domain-type'] = iter.text
+                        bridge_domain['bridge_domain_type'] = iter.text
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}vc-id-num':
-                        bridge_domain['vc-id-num'] = int(iter.text)
+                        bridge_domain['vc_id_num'] = int(iter.text)
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}description':
                         bridge_domain['description'] = iter.text
@@ -301,10 +301,10 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
                         for peer_element in iter:
                             if peer_element.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}peer-ip':
                                 peer = peers.setdefault(peer_element.text, {})
-                                peer['peer-ip'] = peer_element.text
+                                peer['peer_ip'] = peer_element.text
                                 continue
                             if peer_element.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}load-balance':
-                                peer['load-balance'] = True
+                                peer['load_balance'] = True
                                 continue
                             if peer_element.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}cos':
                                 peer['cos'] = int(peer_element.text)
@@ -315,64 +315,64 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
                                 else:
                                     lsps = peer.setdefault('lsps', {})
                                 lsps[peer_element.text] = {}
-                                lsps[peer_element.text]['lsp-name'] = peer_element.text
+                                lsps[peer_element.text]['lsp_name'] = peer_element.text
                                 continue
                             if peer_element.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}flow-label':
-                                peer['flow-label'] = True
+                                peer['flow_label'] = True
                                 continue
                             if peer_element.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}control-word':
-                                peer['control-word'] = True
+                                peer['control_word'] = True
                                 continue
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}statistics':
                         bridge_domain['statistics'] = True
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}router-interface':
-                        bridge_domain['router-interface'] = {}
+                        bridge_domain['router_interface'] = {}
                         for rt_interface_elem in iter:
                             if rt_interface_elem.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}router-ve':
-                                bridge_domain['router-interface']['router-ve'] = int(rt_interface_elem.text)
+                                bridge_domain['router_interface']['router_ve'] = int(rt_interface_elem.text)
                                 continue
                             if rt_interface_elem.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}disallow-oar-ac':
-                                bridge_domain['router-interface']['disallow-oar-ac'] = True
+                                bridge_domain['router_interface']['disallow_oar_ac'] = True
                                 continue
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}logical-interface':
-                        logical_interfaces = bridge_domain.setdefault('logical-interfaces', {})
+                        logical_interfaces = bridge_domain.setdefault('logical_interfaces', {})
                         ethernet = logical_interfaces.setdefault('ethernet', {})
-                        port_channel = logical_interfaces.setdefault('port-channel', {})
+                        port_channel = logical_interfaces.setdefault('port_channel', {})
                         for logical_type in iter:
                             for logical in logical_type:
                                 if logical_type.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}ethernet':
                                     ethernet[logical.text] = {}
-                                    ethernet[logical.text]['lif-bind-id'] = 'Ethernet ' + logical.text
+                                    ethernet[logical.text]['lif_bind_id'] = 'Ethernet ' + logical.text
                                 elif logical_type.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}port-channel':
                                     port_channel[logical.text] = {}
-                                    port_channel[logical.text]['pc-lif-bind-id'] = 'Port-channel ' + logical.text
+                                    port_channel[logical.text]['pc_lif_bind_id'] = 'Port-channel ' + logical.text
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}pw-profile-name':
-                        bridge_domain['pw-profile-name'] = iter.text
+                        bridge_domain['pw_profile_name'] = iter.text
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}bpdu-drop-enable':
-                        bridge_domain['bpdu-drop-enable'] = True
+                        bridge_domain['bpdu_drop_enable'] = True
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}local-switching':
-                        bridge_domain['local-switching'] = True
+                        bridge_domain['local_switching'] = True
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}mac-address':
                         for mac in iter:
                             if mac.tag == '{urn:brocade.com:mgmt:brocade-bridge-domain}withdrawal':
-                                bridge_domain.setdefault('mac-address', {'withdrawal': True})
+                                bridge_domain.setdefault('mac_address', {'withdrawal': True})
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-arp}suppress-arp':
                         for x in iter:
                             if x.tag == '{urn:brocade.com:mgmt:brocade-arp}suppress-arp-enable':
-                                bridge_domain.setdefault('suppress-arp', {'suppress-arp-enable': True})
+                                bridge_domain.setdefault('suppress_arp', {'suppress_arp_enable': True})
                         continue
                     if iter.tag == '{urn:brocade.com:mgmt:brocade-ipv6-nd-ra}suppress-nd':
                         for x in iter:
                             if x.tag == '{urn:brocade.com:mgmt:brocade-ipv6-nd-ra}suppress-nd-enable':
-                                bridge_domain.setdefault('suppress-nd', {'suppress-nd-enable': True})
+                                bridge_domain.setdefault('suppress_nd', {'suppress_nd_enable': True})
                         continue
         return res_dict
 

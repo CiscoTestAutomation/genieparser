@@ -1,87 +1,87 @@
 expected_output = {
-    "bridge-domains": {
+    "bridge_domains": {
         20: {
-            "bpdu-drop-enable": True,
-            "bridge-domain-id": 20,
-            "bridge-domain-type": "p2mp",
-            "local-switching": True,
-            "logical-interfaces": {
+            "bpdu_drop_enable": True,
+            "bridge_domain_id": 20,
+            "bridge_domain_type": "p2mp",
+            "local_switching": True,
+            "logical_interfaces": {
                 "ethernet": {
-                    "0/30.1": {"lif-bind-id": "Ethernet 0/30.1"},
-                    "0/30.2": {"lif-bind-id": "Ethernet 0/30.2"},
+                    "0/30.1": {"lif_bind_id": "Ethernet 0/30.1"},
+                    "0/30.2": {"lif_bind_id": "Ethernet 0/30.2"},
                 },
-                "port-channel": {
-                    "100.1": {"pc-lif-bind-id": "Port-channel 100.1"},
-                    "100.2": {"pc-lif-bind-id": "Port-channel 100.2"},
+                "port_channel": {
+                    "100.1": {"pc_lif_bind_id": "Port-channel 100.1"},
+                    "100.2": {"pc_lif_bind_id": "Port-channel 100.2"},
                 },
             },
-            "mac-address": {"withdrawal": True},
+            "mac_address": {"withdrawal": True},
             "peers": {
                 "1.1.1.1": {
                     "lsps": {
-                        "abc": {"lsp-name": "abc"},
-                        "def": {"lsp-name": "def"},
-                        "ed": {"lsp-name": "ed"},
+                        "abc": {"lsp_name": "abc"},
+                        "def": {"lsp_name": "def"},
+                        "ed": {"lsp_name": "ed"},
                     },
-                    "peer-ip": "1.1.1.1",
+                    "peer_ip": "1.1.1.1",
                 },
                 "3.3.3.3": {
                     "lsps": {
-                        "1": {"lsp-name": "1"},
-                        "abc": {"lsp-name": "abc"},
-                        "cos": {"lsp-name": "cos"},
+                        "1": {"lsp_name": "1"},
+                        "abc": {"lsp_name": "abc"},
+                        "cos": {"lsp_name": "cos"},
                     },
-                    "peer-ip": "3.3.3.3",
+                    "peer_ip": "3.3.3.3",
                 },
                 "4.4.4.4": {
-                    "control-word": True,
+                    "control_word": True,
                     "cos": 4,
-                    "flow-label": True,
-                    "load-balance": True,
+                    "flow_label": True,
+                    "load_balance": True,
                     "lsps": {
-                        "abc": {"lsp-name": "abc"},
-                        "ds": {"lsp-name": "ds"}
+                        "abc": {"lsp_name": "abc"},
+                        "ds": {"lsp_name": "ds"}
                     },
-                    "peer-ip": "4.4.4.4",
+                    "peer_ip": "4.4.4.4",
                 },
             },
-            "pw-profile-name": "default",
+            "pw_profile_name": "default",
             "statistics": True,
-            "suppress-arp": {"suppress-arp-enable": True},
-            "suppress-nd": {"suppress-nd-enable": True},
-            "vc-id-num": 20,
+            "suppress_arp": {"suppress_arp_enable": True},
+            "suppress_nd": {"suppress_nd_enable": True},
+            "vc_id_num": 20,
         },
         30: {
-            "bridge-domain-id": 30,
-            "bridge-domain-type": "p2p",
-            "logical-interfaces": {
+            "bridge_domain_id": 30,
+            "bridge_domain_type": "p2p",
+            "logical_interfaces": {
                 "ethernet": {},
-                "port-channel": {
+                "port_channel": {
                     "1.300": {
-                        "pc-lif-bind-id": "Port-channel 1.300"
+                        "pc_lif_bind_id": "Port-channel 1.300"
                     }
                 },
             },
             "peers": {
                 "100.1.234.6": {
-                    "control-word": True,
+                    "control_word": True,
                     "cos": 1,
-                    "flow-label": True,
-                    "load-balance": True,
-                    "peer-ip": "100.1.234.6",
+                    "flow_label": True,
+                    "load_balance": True,
+                    "peer_ip": "100.1.234.6",
                 }
             },
-            "pw-profile-name": "class-fat",
-            "vc-id-num": 20030,
+            "pw_profile_name": "class-fat",
+            "vc_id_num": 20030,
         },
         40: {
-            "bpdu-drop-enable": True,
-            "bridge-domain-id": 40,
-            "bridge-domain-type": "p2mp",
+            "bpdu_drop_enable": True,
+            "bridge_domain_id": 40,
+            "bridge_domain_type": "p2mp",
             "description": "test",
-            "local-switching": True,
-            "mac-address": {"withdrawal": True},
-            "pw-profile-name": "default",
+            "local_switching": True,
+            "mac_address": {"withdrawal": True},
+            "pw_profile_name": "default",
             "statistics": True,
         },
     }
