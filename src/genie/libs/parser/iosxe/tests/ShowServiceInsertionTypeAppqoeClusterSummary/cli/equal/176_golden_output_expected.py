@@ -1,0 +1,35 @@
+expected_output = {
+    "servicecontext":{
+        "1":{
+            "enabled":"true",
+            "cluster_type":"hybrid",
+            "service_controller_group":"acg_appqoe",
+            "service_controller_ip":"8.3.2.1",
+            "vrf":"65500",
+            "service_controller_system_ip":"25.0.0.25",
+            "service_controller_site_id":"25",
+            "sng":{
+                "32":{
+                    "sns":{
+                        "192.168.2.2":{
+                            "system_ip":"25.0.0.25",
+                            "status":"green",
+                            "site_id":"25",
+                            "error":""
+                        }
+                    }
+                },
+                "1":{
+                    "sns":{
+                        "8.3.2.2":{
+                            "system_ip":"25.1.0.1",
+                            "status":"green",
+                            "site_id":"25",
+                            "error":""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

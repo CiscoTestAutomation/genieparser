@@ -1,0 +1,47 @@
+204-MSMR#show lisp instance-id * ethernet server address-resolution 
+
+=================================================
+Output for router lisp 0 instance-id 0
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 1
+=================================================
+
+Address-resolution data for router lisp 0 instance-id 1
+
+L3 InstID    Host Address                                Hardware Address
+
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+
+Address-resolution data for router lisp 0 instance-id 101
+
+L3 InstID    Host Address                                Hardware Address
+     4100    192.168.1.71/32                             aabb.cc00.c901
+     4100    192.168.1.72/32                             aabb.cc00.d101
+     4100    2001:192:168:1::71/128                      aabb.cc00.c901
+     4100    2001:192:168:1::72/128                      aabb.cc00.d101
+     4100    FE80::A8BB:CCFF:FE00:C901/128               aabb.cc00.c901
+     4100    FE80::A8BB:CCFF:FE00:D101/128               aabb.cc00.d101
+
+=================================================
+Output for router lisp 0 instance-id 102
+=================================================
+
+Address-resolution data for router lisp 0 instance-id 102
+
+L3 InstID    Host Address                                Hardware Address
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+% EID table not enabled for MAC.
+204-MSMR#

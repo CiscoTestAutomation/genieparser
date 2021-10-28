@@ -1,0 +1,10 @@
+Crypto session current status
+
+Interface: Tunnel0
+Profile: polaris-test
+Session status: UP-ACTIVE
+Peer: 1.1.1.1 port 500
+  Session ID: 3 
+  IKEv2 SA: local 2.2.2.2/500 remote 1.1.1.1/500 Active
+  IPSEC FLOW: permit 47 host 2.2.2.2 host 1.1.1.1
+        Active SAs: 2, origin: crypto map

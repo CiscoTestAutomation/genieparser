@@ -79,4 +79,107 @@ class ShowBootflash(ShowBootflashSchema):
                 ret_dict['files'][index]['file_name']=group['file_name']
 
         return ret_dict
-# ----------------------
+
+
+class ShowBootSystemSchema(MetaParser):
+    """Schema for show boot system"""
+    schema = {
+        'boot_variable':str,
+        'manual_boot_variable':str,
+        'baud':int,
+        Optional('ipxe_timeout'):str,
+        Optional('bootmode'):str,
+        Optional('enable_break'): bool,
+        Optional('config_file'):str,
+    }
+
+# ================= 
+# Parser for:
+#  * 'show boot system'
+# =================
+
+class ShowBootSystem(ShowBootSystemSchema):
+    """Parser for show boot system"""
+
+    cli_command = 'show boot system'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict={}
+        #BOOT variable = flash:packages.conf;
+        p1=re.compile('^BOOT variable \=\s+(?P<boot>\S+)$')
+        
+        #MANUAL_BOOT variable = no
+        p2=re.compile('^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
+
+        #BAUD variable = 9600
+        p3=re.compile('^BAUD variable\s+\=\s+(?P<baud>\d+)$')
+
+        #IPXE_TIMEOUT variable = 0
+        p4=re.compile('^IPXE_TIMEOUT variable\s+\=\s+(?P<ipxe>\d+)$')
+
+        #BOOTMODE variable = yes
+        p5=re.compile('^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
+
+        #Enable Break = yes
+        p6=re.compile('^Enable Break\s+\=\s+(?P<enable>yes|no)$')
+
+        #Config file         = flash:/config.text
+        p7=re.compile('^Config file\s+\=\s+(?P<config>\S+)$')
+        
+        for line in output.splitlines():
+            line=line.strip()
+            
+            #BOOT variable = flash:packages.conf;
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('boot_variable',group['boot'])
+                continue
+                
+            #MANUAL_BOOT variable = no
+            m=p2.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('manual_boot_variable',group['manual'])
+                continue
+                
+            #BAUD variable = 9600
+            m=p3.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('baud',int(group['baud']))
+                continue
+                
+            #IPXE_TIMEOUT variable = 0
+            m=p4.match(line) 
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('ipxe_timeout',group['ipxe'])
+                continue
+                
+            #BOOTMODE variable = yes
+            m=p5.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('bootmode',group['boot_mode'])
+                continue
+            
+            #Enable Break = yes
+            m=p6.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('enable_break',group['enable'])
+                continue
+            
+            # Config file         = flash:/config.text
+            m =p7.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.setdefault('config_file',group['config'])
+                continue
+                
+        return ret_dict     
+ 

@@ -1,0 +1,32 @@
+Switch#sh lisp locator-table default instance-id * ipv4 publisher 203.203.203.203   
+
+=================================================
+Output for router lisp 0 instance-id 4099
+=================================================
+LISP ETR IPv4 Publisher Table for EID-table vrf red (IID 4099)
+Publisher state: Established, Publisher epoch 0, Entries total 2
+
+0.0.0.0/0, Epoch: 0, Last Published: 5d23h
+           TTL: never, State unknown-eid-forward
+  Locator          Pri/Wgt  State     Encap-IID 
+  203.203.203.203  255/10   up        -           
+121.121.121.0/30, Epoch: 0, Last Published: 5d23h
+                  TTL: 1d00h, State complete
+  Locator          Pri/Wgt  State     Encap-IID 
+  203.203.203.203   10/10   up        -           
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+% Publisher 203.203.203.203 not found.
+
+=================================================
+Output for router lisp 0 instance-id 8188
+=================================================
+% Publisher 203.203.203.203 not found.
+
+=================================================
+Output for router lisp 0 instance-id 8189
+=================================================
+% Publisher 203.203.203.203 not found.
+Switch#

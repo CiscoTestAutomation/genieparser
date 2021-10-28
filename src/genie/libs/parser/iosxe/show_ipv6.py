@@ -8,6 +8,7 @@
     * show ipv6 neighbors detail
     * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
+    * show ipv6 routers
 """
 
 # Python
@@ -411,3 +412,136 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
                 target_dict.update({'target_range': m7.groupdict()['target_range']})
 
         return parser_dict
+
+# ====================================================
+#  schema for show ipv6 routers
+# ====================================================
+class ShowIpv6RoutersSchema(MetaParser):
+    """Schema for show ipv6 routers"""
+    schema = {
+        'router': {
+            Any(): {
+                'interface': str,
+                'last_update': int,
+                'hops': int,
+                'lifetime': int,
+                'addr_flag': int,
+                'other_flag': int,
+                'mtu': int,
+                'home_agent_flag': int,
+                'preference': str,
+                'reachable_time': int,
+                'retransmit_time': int,
+                'prefix': {
+                    Any(): {
+                        'valid_lifetime': int,
+                        'preferred_lifetime': int
+                    }
+                }
+            }
+        }
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 routers'
+# ================================================================
+class ShowIpv6Routers(ShowIpv6RoutersSchema):
+    """ Parser for:
+                show ipv6 routers
+    """
+
+    cli_command = ['show ipv6 routers']
+
+    def cli(self, output=None):
+        """ cli for:
+         ' show ipv6 routers '
+        """
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        #Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
+        p1 = re.compile(r'^Router +(?P<router_link_local_ip>\S+)\s+\w+\s+(?P<interface>\S+), +last +update +(?P<last_update>\d+) +min, +CONFLICT$')
+
+        # Hops 64, Lifetime 200 sec, AddrFlag=0, OtherFlag=0, MTU=1500
+        p2 = re.compile(r'^Hops +(?P<hops>\d+), +Lifetime +(?P<lifetime>\d{1,4}) +sec, +AddrFlag+\=(?P<addr_flag>\d+), '
+                        r'+OtherFlag\=(?P<other_flag>\d+), +MTU\=(?P<mtu>\d{1,4})$')
+
+        # HomeAgentFlag=0, Preference=Low
+        p3 = re.compile(r'^HomeAgentFlag\=(?P<home_agent_flag>\d+), +Preference\=(?P<preference>\w+)$')
+
+        # Reachable time 0 (unspecified), Retransmit time 0 (unspecified)
+        p4 = re.compile(r'^Reachable +time +(?P<reachable_time>\d+) \S+, +Retransmit +time +(?P<retransmit_time>\d+)')
+
+        #Prefix 111::/64 onlink autoconfig
+        p5 = re.compile(r'^Prefix +(?P<prefix_id>\S+) +onlink +autoconfig$')
+
+        # Valid lifetime 12, preferred lifetime 8
+        p6 = re.compile(r'^Valid +lifetime +(?P<valid_lifetime>\d+), +preferred +lifetime +(?P<preferred_lifetime>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+
+            # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
+            m = p1.match(line)
+            if m:
+                router_link_local = m.groupdict()['router_link_local_ip']
+                router_dict = ret_dict.setdefault('router', {}).setdefault(router_link_local, {})
+                router_dict.update({
+                    'interface': m.groupdict()['interface'],
+                    'last_update':int(m.groupdict()['last_update'])
+                })
+                continue
+
+
+            # Hops 64, Lifetime 200 sec, AddrFlag=0, OtherFlag=0, MTU=1500
+            m = p2.match(line)
+            if m:
+                router_dict.update({
+                    'hops': int(m.groupdict()['hops']),
+                    'lifetime': int(m.groupdict()['lifetime']),
+                    'addr_flag': int(m.groupdict()['addr_flag']),
+                    'other_flag': int(m.groupdict()['other_flag']),
+                    'mtu': int(m.groupdict()['mtu'])
+                })
+                continue
+
+            # HomeAgentFlag=0, Preference=Low
+            m = p3.match(line)
+            if m:
+                router_dict.update({
+                    'home_agent_flag': int(m.groupdict()['home_agent_flag']),
+                    'preference': m.groupdict()['preference']
+                })
+                continue
+
+            # Reachable time 0 (unspecified), Retransmit time 0 (unspecified)
+            m = p4.match(line)
+            if m:
+                router_dict.update({
+                    'reachable_time': int(m.groupdict()['reachable_time']),
+                    'retransmit_time': int(m.groupdict()['retransmit_time'])
+                })
+                continue
+
+
+            # Prefix 111::/64 onlink autoconfig
+            m = p5.match(line)
+            if m:
+                prefix_num = m.groupdict()['prefix_id']
+                prefix_dict = router_dict.setdefault('prefix', {}).setdefault(prefix_num, {})
+                continue
+
+            # Valid lifetime 12, preferred lifetime 8
+            m = p6.match(line)
+            if m:
+                prefix_dict.update({
+                    'valid_lifetime': int(m.groupdict()['valid_lifetime']),
+                    'preferred_lifetime': int(m.groupdict()['preferred_lifetime'])
+                })
+                continue
+
+        return ret_dict

@@ -1,0 +1,3 @@
+show boot
+Primary Boot Image............................... 8.2.170.0 (default) (active)
+Backup Boot Image................................ 8.2.170.0

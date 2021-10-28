@@ -1,0 +1,4 @@
+Track Type       Instance                 Parameter         State    Last Change
+1     Interface    Ethernet1/4         IP Routing             DOWN    3w5d
+2     Interface    Ethernet1/2         IPv6 Routing           DOWN    3w5d
+3     Interface    Ethernet1/3         Line Protocol          DOWN    3w5d

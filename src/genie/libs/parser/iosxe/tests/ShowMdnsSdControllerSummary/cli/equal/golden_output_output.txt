@@ -1,0 +1,10 @@
+Controller Summary
+=====================================
+Controller Name : DNAC
+Controller IP : 11.12.13.14
+State : UP
+Port : 9991
+Interface : Loopback0
+Filter List : policy-con
+Dead Time : 00:00:00
+Service Buffer : Enabled

@@ -1,0 +1,24 @@
+show service-insertion type appqoe cluster-summary
+Service Context                             : appqoe/1
+ Enabled                                    : TRUE
+ Cluster type                               : Hybrid
+
+ Service Controller Group      : ACG-APPQOE
+   Service Controller IP       : 8.3.2.1   VRF : 65500
+   Service Controller System IP: 25.0.0.25
+   Service Controller Site ID  : 25
+
+ Service Node Group : SNG-APPQOE ID: 32
+
+ ---------------------------------------------------------------------------- ----
+| Service Node IP |    System IP    |  Site Id  |  Status |         Error          |
+ ----------------------------------------------------------------------------------
+| 192.168.2.2     | 25.0.0.25       | 25        | GREEN   |                        |
+ ----------------------------------------------------------------------------------
+ Service Node Group : SNG-APPQOE1 ID: 1
+
+ ---------------------------------------------------------------------------- ----
+| Service Node IP |    System IP    |  Site Id  |  Status |         Error          |
+ ----------------------------------------------------------------------------------
+| 8.3.2.2         | 25.1.0.1        | 25        | GREEN   |                        |
+ ----------------------------------------------------------------------------------

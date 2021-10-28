@@ -1,0 +1,5 @@
+LISP Away Table for router lisp 0 (default) IID 4100
+Entries: 1
+
+Prefix                                  Producer                       Created    
+195.168.0.0/16                          dyn-eid                        00:00:25   

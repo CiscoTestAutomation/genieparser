@@ -594,17 +594,13 @@ class ShowMacsecInterfaceSchema(MetaParser):
                                                   'egress-untag-pkts': str
                                                }
                                      },
-         Optional('receive-secure-channels'): {'current-an': str,
+         Optional('receive-secure-channels'):{
+                     Any():{
+                             'current-an': str,
                              'elapsed-time': str,
                              'next-pn': str,
                              'sc-state': str,
                              'start-time': str,
-                             'port-statistics': {'ingress-badtag-pkts': str,
-                                                 'ingress-nosci-pkts': str,
-                                                 'ingress-notag-pkts': str,
-                                                 'ingress-overrun-pkts': str,
-                                                 'ingress-unknownsci-pkts': str,
-                                                 'ingress-untag-pkts': str},
                              'previous-an': str,
                              'rx-sa-count': str,
                              'sak-unchanged': str,
@@ -618,7 +614,6 @@ class ShowMacsecInterfaceSchema(MetaParser):
                                                'unusedsa-pkts': str,
                                                'valid-pkts': str,
                                                'validated-bytes': str},
-                             'sci': str,
                              'sc-statistics': {'decrypted-bytes': str,
                                                'delay-pkts': str,
                                                'invalid-pkts': str,
@@ -629,7 +624,14 @@ class ShowMacsecInterfaceSchema(MetaParser):
                                                'unusedsa-pkts': str,
                                                'valid-pkts': str,
                                                'validated-bytes': str}
-                                        }
+                                        },
+                             'port-statistics': {'ingress-badtag-pkts': str,
+                                                 'ingress-nosci-pkts': str,
+                                                 'ingress-notag-pkts': str,
+                                                 'ingress-overrun-pkts': str,
+                                                 'ingress-unknownsci-pkts': str,
+                                                 'ingress-untag-pkts': str}
+                             }
                      }
 
 
@@ -644,174 +646,200 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
-        #Below output to be matched line by line
-        '''
-        MACsec is enabled
-        Replay protect : enabled
-        Replay window : 0
-        Include SCI : yes
-        Use ES Enable : no
-        Use SCB Enable : no
-        Admin Pt2Pt MAC : forceTrue(1)
-        Pt2Pt MAC Operational : no
-        Cipher : GCM-AES-256
-        Confidentiality Offset : 30
-        Capabilities
-        ICV length : 16
-        Data length change supported: yes
-        Max. Rx SA : 16
-        Max. Tx SA : 16
-        Max. Rx SC : 8
-        Max. Tx SC : 8
-        Validate Frames : strict
-        PN threshold notification support : Yes
-        Ciphers supported : GCM-AES-128
-                      GCM-AES-256
-                      GCM-AES-XPN-128
-                      GCM-AES-XPN-256
-        Access control : must secure
-
-        Cleartag Details
-        Type    : one dot1q in clear
-        VlanId1 : 5
-        Transmit Secure Channels
-        SCI : F87A41252702008C
-        SC state : inUse(1)
-        Elapsed time : 7w0d
-        Start time : 7w0d
-        Current AN: 3
-        Previous AN: 2
-        Next PN: 874
-        SA State: inUse(1)
-        Confidentiality : yes
-        SAK Unchanged : no
-        SA Create time : 07:51:09
-        SA Start time : 7w0d
-        SC Statistics
-        Auth-only Pkts : 0
-        Auth-only Bytes : 0
-        Encrypted Pkts : 1776012104
-        Encrypted Bytes : 15955677638612
-        SA Statistics
-        Auth-only Pkts : 0
-        Auth-only Bytes : 0
-        Encrypted Pkts : 873
-        Encrypted Bytes : 123706
-
-        Port Statistics
-        Egress untag pkts  0
-        Egress long pkts  0
-        Receive Secure Channels
-        SCI : ECCE1346F902008C
-        SC state : inUse(1)
-        Elapsed time : 7w0d
-        Start time : 7w0d
-        Current AN: 3
-        Previous AN: 2
-        Next PN: 876
-        RX SA Count: 0
-        SA State: inUse(1)
-        SAK Unchanged : no
-        SA Create time : 07:51:07
-        SA Start time : 7w0d
-        SC Statistics
-        Notvalid pkts 0
-        Invalid pkts 0
-        Valid pkts 1776339674
-        Late pkts 0
-        Uncheck pkts 0
-        Delay pkts 0
-        UnusedSA pkts 0
-        NousingSA pkts 0
-        Validated Bytes 0
-        Decrypted Bytes 15958621049438
-        SA Statistics
-        Notvalid pkts 0
-        Invalid pkts 0
-        Valid pkts 874
-        UnusedSA pkts 0
-        NousingSA pkts 0
-        Validated Bytes 0
-        Decrypted Bytes 123888
-
-        Port Statistics
-        Ingress untag pkts  0
-        Ingress notag pkts  16957
-        Ingress badtag pkts  0
-        Ingress unknownSCI pkts  0
-        Ingress noSCI pkts  0
-        Ingress overrun pkts  0
-        '''
 
         ret_dict = {}
+        #MACsec is enabled
         p1 = re.compile(r'^MACsec is (?P<status>\S+)$')
+
+        #Replay protect : enabled
         p2 = re.compile(r'^Replay protect \: (?P<replay_protect_status>\S+)$')
+
+        #Replay window : 4294967295
         p3 = re.compile(r'^Replay window \: (?P<replay_window>\S+)$')
+
+        #Include SCI : yes
         p4 = re.compile(r'^Include SCI \: (?P<include_sci>\S+)$')
+
+        #Use ES Enable : no
         p5 = re.compile(r'^Use ES Enable \: (?P<use_es_enable>\S+)$')
+
+        #Use SCB Enable : no
         p6 = re.compile(r'^Use SCB Enable \: (?P<use_scb_enable>\S+)$')
+
+        #Admin Pt2Pt MAC : forceTrue(1)
         p7 = re.compile(r'^Admin Pt2Pt MAC \: (?P<admin_pt2pt_mac>(.*))')
+
+        #Pt2Pt MAC Operational : no
         p8 = re.compile(r'^Pt2Pt MAC Operational \: (?P<pt2pt_mac_operational>\S+)$')
+
+        #Cipher : GCM-AES-XPN-256
         p9 = re.compile(r'^Cipher \: (?P<cipher>\S+)$')
+
+        #Confidentiality Offset : 0
         p10 = re.compile(r'^Confidentiality Offset \: (?P<confidentiality_offset>\S+)$')
 
+        #Capabilities
         p11 = re.compile(r'^Capabilities$')
+
+        #ICV length : 16
         p12 = re.compile(r'^ICV length \: (?P<icv_length>\S+)$')
+
+        #Data length change supported: yes
         p13 = re.compile(r'^Data length change supported\: (?P<data_length_change_supported>\S+)$')
+
+        #Max. Rx SA : 16
         p14 = re.compile(r'^Max\. Rx SA \: (?P<max_rx_sa>\S+)$')
+
+        #Max. Tx SA : 16
         p15 = re.compile(r'^Max\. Tx SA \: (?P<max_tx_sa>\S+)$')
+
+        #Max. Rx SC : 8
         p16 = re.compile(r'^Max\. Rx SC \: (?P<max_rx_sc>\S+)$')
+
+        #Max. Tx SC : 8
         p17 = re.compile(r'^Max\. Tx SC \: (?P<max_tx_sc>\S+)$')
+
+        #Validate Frames : strict
         p18 = re.compile(r'^Validate Frames \: (?P<validate_frames>\S+)$')
+
+        #PN threshold notification support : Yes
         p19 = re.compile(r'^PN threshold notification support \: (?P<pn_threshold_notification_support>\S+)$')
+
+        #Ciphers supported : GCM-AES-128
         p20 = re.compile(r'^Ciphers supported \: (?P<ciphers_supported>\S+)$')
+
+        #GCM-AES-256
         p21 = re.compile(r'^GCM.+(?P<ciphers>128|256)$')
+
+        #Access control : must secure
         p22 = re.compile(r'^Access control \: (?P<access_control>(.*))$')
+
+        #Type    : one dot1q in clear
         p23 = re.compile(r'^Type    \: (?P<type>(.*))$')
+
+        #VlanId1 : 111
         p24 = re.compile(r'^VlanId1 \: (?P<vlanid1>\S+)$')
 
+        #Transmit Secure Channels
         p25 = re.compile(r'^Transmit Secure Channels$')
+
+        #SCI : F87A412527020488
         p26 = re.compile(r'^SCI \: (?P<sci>\S+)$')
+
+        #SC state : inUse(1)
         p27 = re.compile(r'^SC state \: (?P<sc_state>\S+)$')
+
+        #Elapsed time : 7w0d
         p28 = re.compile(r'^Elapsed time \: (?P<elapsed_time>\S+)$')
+
+        #Start time : 7w0d
         p29 = re.compile(r'^Start time \: (?P<start_time>\S+)$')
+
+        #Current AN: 0
         p30 = re.compile(r'^Current AN\: (?P<current_an>\S+)$')
+
+        #Previous AN: -
         p31 = re.compile(r'^Previous AN\: (?P<previous_an>\S+)$')
+
+        #Next PN: 250
         p32 = re.compile(r'^Next PN\: (?P<next_pn>\S+)$')
+
+        #SA State: inUse(1)
         p33 = re.compile(r'^SA State\: (?P<sa_state>\S+)$')
+
+        #Confidentiality : yes
         p34 = re.compile(r'^Confidentiality \: (?P<confidentiality>\S+)$')
+
+        #SAK Unchanged : yes
         p35 = re.compile(r'^SAK Unchanged \: (?P<sak_unchanged>\S+)$')
+
+        #SA Create time : 01:32:52
         p36 = re.compile(r'^SA Create time \: (?P<sa_create_time>(.*))$')
+
+        #SA Start time : 7w0d
         p37 = re.compile(r'^SA Start time \: (?P<sa_start_time>\S+)$')
+
+        #SC Statistics
         p38 = re.compile(r'^SC Statistics$')
+
+        #Auth-only Pkts : 0
         p39 = re.compile(r'^Auth\-only Pkts \: (?P<auth_only_pkts>\d+)$')
+
+        #Auth-only Bytes : 0
         p40 = re.compile(r'^Auth\-only Bytes \: (?P<auth_only_bytes>\d+)$')
+
+        #Encrypted Pkts : 0
         p41 = re.compile(r'^Encrypted Pkts \: (?P<encrypted_pkts>\d+)$')
+
+        #Encrypted Bytes : 0
         p42 = re.compile(r'^Encrypted Bytes \: (?P<encrypted_bytes>\d+)$')
+
+        #SA Statistics
         p43 = re.compile(r'^SA Statistics$')
+
+        #Port Statistics
         p44 = re.compile(r'^Port Statistics$')
+
+        #Egress untag pkts  0
         p45 = re.compile(r'^Egress untag pkts  (?P<egress_untag_pkts>\d+)$')
+
+        #Egress long pkts  0
         p46 = re.compile(r'^Egress long pkts  (?P<egress_long_pkts>\d+)$')
+
+        #Receive Secure Channels
         p47 = re.compile(r'^Receive Secure Channels$')
+
+        #RX SA Count: 0
         p48 = re.compile(r'^RX SA Count\: (?P<rx_sa_count>\d+)$')
 
+        #Notvalid pkts 0
         p49 = re.compile(r'^Notvalid pkts (?P<notvalid_pkts>\d+)$')
+
+        #Invalid pkts 0
         p50 = re.compile(r'^Invalid pkts (?P<invalid_pkts>\d+)$')
+
+        #Valid pkts 0
         p51 = re.compile(r'^Valid pkts (?P<valid_pkts>\d+)$')
+
+        #UnusedSA pkts 0
         p52 = re.compile(r'^UnusedSA pkts (?P<unusedsa_pkts>\d+)$')
+
+        #NousingSA pkts 0
         p53 = re.compile(r'^NousingSA pkts (?P<nousingsa_pkts>\d+)$')
+
+        #Validated Bytes 0
         p54 = re.compile(r'^Validated Bytes (?P<validated_bytes>\d+)$')
+
+        #Decrypted Bytes 0
         p55 = re.compile(r'^Decrypted Bytes (?P<decrypted_bytes>\d+)$')
+
+        #Late pkts 0
         p56 = re.compile(r'^Late pkts (?P<late_pkts>\d+)$')
+
+        #Uncheck pkts 0
         p57 = re.compile(r'^Uncheck pkts (?P<uncheck_pkts>\d+)$')
+
+        #Delay pkts 0
         p58 = re.compile(r'^Delay pkts (?P<delay_pkts>\d+)$')
 
+        #Ingress untag pkts  0
         p59 = re.compile(r'^Ingress untag pkts  (?P<ingress_untag_pkts>\d+)$')
+
+        #Ingress notag pkts  54
         p60 = re.compile(r'^Ingress notag pkts  (?P<ingress_notag_pkts>\d+)$')
+
+        #Ingress badtag pkts  0
         p61 = re.compile(r'^Ingress badtag pkts  (?P<ingress_badtag_pkts>\d+)$')
+
+        #Ingress unknownSCI pkts  0
         p62 = re.compile(r'^Ingress unknownSCI pkts  (?P<ingress_unknownsci_pkts>\d+)$')
+
+        #Ingress noSCI pkts  0
         p63 = re.compile(r'^Ingress noSCI pkts  (?P<ingress_nosci_pkts>\d+)$')
+
+        #Ingress overrun pkts  0
         p64 = re.compile(r'^Ingress overrun pkts  (?P<ingress_overrun_pkts>\d+)$')
+
         for line in out.splitlines():
             macsec_dict = ret_dict.setdefault('macsec-data', {})
             line=line.strip()
@@ -924,35 +952,35 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
                 if secure_ch == 'transmit':
                     transmit_dict['sci'] = group['sci']
                 elif secure_ch == 'receive':
-                    receive_dict['sci'] = group['sci']
+                    recv_dict = receive_dict.setdefault(group['sci'], {})
             m27 = p27.match(line)
             if m27:
                 group = m27.groupdict()
                 if secure_ch == 'transmit':
                     transmit_dict['sc-state'] = group['sc_state']
                 elif secure_ch == 'receive':
-                    receive_dict['sc-state'] = group['sc_state']
+                    recv_dict['sc-state'] = group['sc_state']
             m28 = p28.match(line)
             if m28:
                 group = m28.groupdict()
                 if secure_ch == 'transmit':
                     transmit_dict['elapsed-time'] = group['elapsed_time']
                 elif secure_ch == 'receive':
-                    receive_dict['elapsed-time'] = group['elapsed_time']
+                    recv_dict['elapsed-time'] = group['elapsed_time']
             m29 = p29.match(line)
             if m29:
                 group = m29.groupdict()
                 if secure_ch == 'transmit':
                     transmit_dict['start-time'] = group['start_time']
                 elif secure_ch == 'receive':
-                    receive_dict['start-time'] = group['start_time']
+                    recv_dict['start-time'] = group['start_time']
             m30 = p30.match(line)
             if m30:
                 group = m30.groupdict()
                 if secure_ch == 'transmit':
                     transmit_dict['current-an'] = group['current_an']
                 elif secure_ch == 'receive':
-                    receive_dict['current-an'] = group['current_an']
+                    recv_dict['current-an'] = group['current_an']
 
             m31 = p31.match(line)
             if m31:
@@ -960,21 +988,21 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
                 if secure_ch == 'transmit':
                     transmit_dict['previous-an'] = group['previous_an']
                 elif secure_ch == 'receive':
-                    receive_dict['previous-an'] = group['previous_an']
+                    recv_dict['previous-an'] = group['previous_an']
             m32 = p32.match(line)
             if m32:
                 group = m32.groupdict()
                 if secure_ch == 'transmit':
                      transmit_dict['next-pn'] = group['next_pn']
                 elif secure_ch == 'receive':
-                     receive_dict['next-pn'] = group['next_pn']
+                     recv_dict['next-pn'] = group['next_pn']
             m33 = p33.match(line)
             if m33:
                 group = m33.groupdict()
                 if secure_ch == 'transmit':
                     transmit_dict['sa-state'] = group['sa_state']
                 elif secure_ch == 'receive':
-                    receive_dict['sa-state'] = group['sa_state']
+                    recv_dict['sa-state'] = group['sa_state']
             m34 = p34.match(line)
             if m34:
                 group = m34.groupdict()
@@ -986,21 +1014,21 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
                 if secure_ch == 'transmit':
                    transmit_dict['sak-unchanged'] = group['sak_unchanged']
                 elif secure_ch == 'receive':
-                   receive_dict['sak-unchanged'] = group['sak_unchanged']
+                   recv_dict['sak-unchanged'] = group['sak_unchanged']
             m36 = p36.match(line)
             if m36:
                 group = m36.groupdict()
                 if secure_ch == 'transmit':
                      transmit_dict['sa-create-time'] = group['sa_create_time']
                 elif secure_ch == 'receive':
-                     receive_dict['sa-create-time'] = group['sa_create_time']
+                     recv_dict['sa-create-time'] = group['sa_create_time']
             m37 = p37.match(line)
             if m37:
                  group = m37.groupdict()
                  if secure_ch == 'transmit':
                       transmit_dict['sa-start-time'] = group['sa_start_time']
                  elif secure_ch == 'receive':
-                      receive_dict['sa-start-time'] = group['sa_start_time']
+                      recv_dict['sa-start-time'] = group['sa_start_time']
 
             m38 = p38.match(line)
             if m38:
@@ -1008,7 +1036,7 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
                 if secure_ch == 'transmit':
                     transmit_sc_dict = transmit_dict.setdefault('sc-statistics', {})
                 elif secure_ch == 'receive':
-                    receive_sc_dict = receive_dict.setdefault('sc-statistics', {})
+                    receive_sc_dict = recv_dict.setdefault('sc-statistics', {})
             m39 = p39.match(line)
             if m39:
                 group = m39.groupdict()
@@ -1043,7 +1071,7 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
                 if secure_ch == 'transmit':
                     transmit_sa_dict = transmit_dict.setdefault('sa-statistics', {})
                 elif secure_ch == 'receive':
-                    receive_sa_dict = receive_dict.setdefault('sa-statistics', {})
+                    receive_sa_dict = recv_dict.setdefault('sa-statistics', {})
             m44 = p44.match(line)
             if m44:
                sub_dict = 'port'
@@ -1066,7 +1094,7 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
             m48 = p48.match(line)
             if m48:
                group = m48.groupdict()
-               receive_dict['rx-sa-count'] = group['rx_sa_count']
+               recv_dict['rx-sa-count'] = group['rx_sa_count']
 
             m49 = p49.match(line)
             if m49:

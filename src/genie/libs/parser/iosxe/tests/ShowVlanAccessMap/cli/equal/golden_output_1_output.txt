@@ -1,0 +1,60 @@
+Vlan access-map "edu_VACL"  10
+  Match clauses:
+    ipv6 address: edu_VACL_ICMP_ALLOW
+  Action:
+    forward
+Vlan access-map "edu_VACL"  20
+  Match clauses:
+    ipv6 address: vacl_traffic_block_1
+  Action:
+    drop
+Vlan access-map "edu_VACL"  30
+  Match clauses:
+    ipv6 address: vacl_traffic_block_2
+  Action:
+    drop
+Vlan access-map "edu_VACL"  40
+  Match clauses:
+    ipv6 address: vacl_traffic_block_3
+  Action:
+    drop
+Vlan access-map "edu_VACL"  50
+  Match clauses:
+    ipv6 address: vacl_traffic_block_4
+  Action:
+    drop
+Vlan access-map "edu_VACL"  60
+  Match clauses:
+    ipv6 address: vacl_traffic_block_5
+  Action:
+    drop
+Vlan access-map "edu_VACL"  70
+  Match clauses:
+    ipv6 address: vacl_traffic_allow_6
+  Action:
+    forward
+Vlan access-map "edu_VACL"  80
+  Match clauses:
+    ipv6 address: vacl_traffic_allow_7
+  Action:
+    forward
+Vlan access-map "edu_VACL"  90
+  Match clauses:
+    ipv6 address: vacl_traffic_allow_8
+  Action:
+    forward
+Vlan access-map "edu_VACL"  100
+  Match clauses:
+    ipv6 address: vacl_traffic_allow_9
+  Action:
+    forward
+Vlan access-map "edu_VACL"  110
+  Match clauses:
+    ipv6 address: vacl_traffic_allow_a
+  Action:
+    forward
+Vlan access-map "edu_VACL"  120
+  Match clauses:
+    ipv6 address: span_traffic_allow
+  Action:
+    forward

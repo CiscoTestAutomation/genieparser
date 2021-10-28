@@ -1,0 +1,5 @@
+Interface Gi1/0/7
+---
+Port enable administrative configuration setting: Enabled / in alert mode
+Port enable operational state: Enabled / in alert mode
+Current bidirectional state: Bidirectional

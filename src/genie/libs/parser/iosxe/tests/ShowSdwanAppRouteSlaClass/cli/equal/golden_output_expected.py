@@ -1,0 +1,22 @@
+expected_output =  {
+    "sla_class":{
+        "0":{
+            "name":"__all_tunnels__",
+            "loss":0,
+            "latency":0,
+            "jitter":0,
+            "class_id":0,
+            "app_probe_class":"None",
+            "fallback_best_tunnel":"None"
+        },
+        "1":{
+            "name":"aarSla",
+            "loss":3,
+            "latency":150,
+            "jitter":50,
+            "class_id":0,
+            "app_probe_class":"None",
+            "fallback_best_tunnel":"Latency"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+R2#show isis flex-algo 128
+Tag 2:
+IS-IS Flex-Algo Database
+ Flex-Algo count: 4
+ Use delay metric advertisement: Application, Legacy
+    IS-IS Level-1
+      Delay metric: Active
+
+Flex-Algo 128: 
+    IS-IS Level-1
+      Definition Priority: 128
+      Definition Source: R1-1.00
+      Definition Equal to Local: Yes
+      Definition Metric Type: IGP
+      Definition Flex-Algo Prefix Metric: No
+      Disabled: No
+      Microloop Avoidance Timer Running: No
+   Local Priority: 128
+   FRR Disabled: No
+   Microloop Avoidance Disabled: No
+
+Tag 1:
+IS-IS Flex-Algo Database
+ Flex-Algo count: 3
+ Use delay metric advertisement: Application, Legacy
+    IS-IS Level-1
+      Delay metric: Active
+
+Flex-Algo 128: 
+    IS-IS Level-1
+      Definition Priority: 128
+      Definition Source: R5.00
+      Definition Equal to Local: Yes
+      Definition Metric Type: IGP
+      Definition Flex-Algo Prefix Metric: No
+      Disabled: No
+      Microloop Avoidance Timer Running: No
+   Local Priority: 128
+   FRR Disabled: No
+   Microloop Avoidance Disabled: No

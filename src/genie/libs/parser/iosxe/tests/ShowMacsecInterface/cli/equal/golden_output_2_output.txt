@@ -1,0 +1,137 @@
+show macsec interface HundredGigE1/0/33.5
+ MACsec is enabled
+  Replay protect : enabled
+  Replay window : 4294967295
+  Include SCI : yes
+  Use ES Enable : no
+  Use SCB Enable : no
+  Admin Pt2Pt MAC : forceTrue(1)
+  Pt2Pt MAC Operational : no
+  Cipher : GCM-AES-XPN-256
+  Confidentiality Offset : 0
+
+ Capabilities
+  ICV length : 16
+  Data length change supported: yes
+  Max. Rx SA : 16
+  Max. Tx SA : 16
+  Max. Rx SC : 8
+  Max. Tx SC : 8
+  Validate Frames : strict
+  PN threshold notification support : Yes
+  Ciphers supported : GCM-AES-128
+                      GCM-AES-256
+                      GCM-AES-XPN-128
+                      GCM-AES-XPN-256
+
+ Access control : must secure
+
+ Cleartag Details
+  Type    : one dot1q in clear
+  VlanId1 : 111
+
+ Transmit Secure Channels
+  SCI : F87A412527020488
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 0
+   Previous AN: -
+   Next PN: 250
+   SA State: inUse(1)
+   Confidentiality : yes
+   SAK Unchanged : yes
+   SA Create time : 01:09:26
+   SA Start time : 7w0d
+   SC Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 0
+    Encrypted Bytes : 0
+   SA Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 244
+    Encrypted Bytes : 24876
+
+  Port Statistics
+   Egress untag pkts  0
+   Egress long pkts  0
+
+ Receive Secure Channels
+  SCI : 6CB2AE4A5F050451
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 0
+   Previous AN: -
+   Next PN: 30
+   RX SA Count: 0
+   SA State: inUse(1)
+   SAK Unchanged : yes
+   SA Create time : 01:09:24
+   SA Start time : 7w0d
+   SC Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 0
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 0
+   SA Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 19
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 1862
+  SCI : ECCE1346F9020488
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 0
+   Previous AN: -
+   Next PN: 250
+   RX SA Count: 0
+   SA State: inUse(1)
+   SAK Unchanged : yes
+   SA Create time : 01:09:24
+   SA Start time : 7w0d
+   SC Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 0
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 0
+   SA Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 231
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 23522
+
+  Port Statistics
+   Ingress untag pkts  0
+   Ingress notag pkts  28
+   Ingress badtag pkts  0
+   Ingress unknownSCI pkts  0
+   Ingress noSCI pkts  0
+   Ingress overrun pkts  0

@@ -1,0 +1,23 @@
+Interface:        nve1
+Local VNI:        20011
+Peer VNI:         20011
+Peer IP Address:  11.11.11.2
+UP time:          1w6d
+Number of routes
+  EAD per-EVI:    0
+  MAC:            1
+  MAC/IP:         1
+  IMET:           1
+  Total:          3
+
+Interface:        nve1
+Local VNI:        20012
+Peer VNI:         20012
+Peer IP Address:  11.11.11.2
+UP time:          1w6d
+Number of routes
+  EAD per-EVI:    0
+  MAC:            0
+  MAC/IP:         0
+  IMET:           1
+  Total:          1

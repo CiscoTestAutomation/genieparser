@@ -1,0 +1,3 @@
+EVI   VLAN  Ether Tag  Remote DG  Local DG   
+----- ----- ---------- ---------- ---------- 
+103   103   0          4          4

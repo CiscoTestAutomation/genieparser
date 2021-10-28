@@ -1215,27 +1215,29 @@ class ShowIsisFlexAlgoSchema(MetaParser):
     schema = {
         "tag": {
             Any(): {
-                Optional("count"): int,
+                Optional("flex_algo_count"): int,
+                Optional("use_delay_metric_advertisement"): list,
                 Optional("flex_algo"): {
                     Any(): {
                         "level": {
                             Any(): {
-                                'def_priority': int,
-                                'def_source': str,
-                                'def_equal_to_local': bool,
-                                'def_metric_type': str,
+                                Optional('delay_metric'): bool,
+                                Optional('def_priority'): int,
+                                Optional('def_source'): str,
+                                Optional('def_equal_to_local'): bool,
+                                Optional('def_metric_type'): str,
                                 Optional('def_prefix_metric'): bool,
-                                'disabled': bool,
-                                "microloop_avoidance_timer_running": bool,
-                                Optional("def_include_all_affinity"): type([]),
-                                Optional("def_include_any_affinity"): type([]),
-                                Optional("def_exclude_any_affinity"): type([]),
+                                Optional('disabled'): bool,
+                                Optional("microloop_avoidance_timer_running"): bool,
+                                Optional("def_include_all_affinity"): list,
+                                Optional("def_include_any_affinity"): list,
+                                Optional("def_exclude_any_affinity"): list,
 
                             }
                         },
-                        'local_priority': int,
-                        'frr_disabled': bool,
-                        'microloop_avoidance_disabled': bool
+                        Optional('local_priority'): int,
+                        Optional('frr_disabled'): bool,
+                        Optional('microloop_avoidance_disabled'): bool
                     }
                 }
             }
@@ -1265,7 +1267,7 @@ class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
         p1 = re.compile(r'^Tag\s+(?P<tag>\S+):$')
 
         #  Flex-Algo count: 3
-        p2 = re.compile(r'^count:\s+(?P<count>\d+)$')
+        p2 = re.compile(r'^Flex-Algo count:\s+(?P<count>\d+)$')
 
         # Flex-Algo 128:
         p3 = re.compile(r'^Flex-Algo\s+(?P<flex_algo>\d+):$')
@@ -1315,7 +1317,13 @@ class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
         # 0x00000000 0x00000000 0x00000000 0x00000000
         p18 = re.compile(r'^(?P<hex_val>0x\d{8})(\s+(?P<hex_val2>0x\d{8}))?(\s+(?P<hex_val3>0x\d{8}))?(\s+(?P<hex_val4>0x\d{8}))?$')
 
+        # Use delay metric advertisement: Application, Legacy
+        p19 = re.compile(r'^Use delay metric advertisement:\s+(?P<use_delay_metric_advertise>.+)$')
 
+        #Delay metric: Active
+        p20 = re.compile(r'^Delay metric:\s+(?P<delay_metric>Active|Inactive)$')
+
+        flex_algo = None
         for line in out.splitlines():
             line = line.strip()
 
@@ -1325,13 +1333,14 @@ class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
                 group = m.groupdict()
                 tag = group["tag"]
                 ret_dict.setdefault("tag", {}).setdefault(tag, {}).setdefault("flex_algo", {})
+                flex_algo = None
                 continue
 
             #  Flex-Algo count: 3
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict["tag"][tag]["count"] = int(group["count"])
+                ret_dict["tag"][tag]["flex_algo_count"] = int(group["count"])
                 continue
 
             # Flex-Algo 128:
@@ -1348,7 +1357,10 @@ class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
             if m:
                 group = m.groupdict()
                 level = group["level"]
-                ret_dict["tag"][tag]["flex_algo"][flex_algo].setdefault("level", {}).setdefault(level, {})
+                if flex_algo:
+                    ret_dict["tag"][tag]["flex_algo"][flex_algo].setdefault("level", {}).setdefault(level, {})
+                else:
+                    ret_dict["tag"][tag].setdefault("flex_algo", {}).setdefault("global", {}).setdefault("level", {}).setdefault(level, {})
                 continue
 
             # Definition Priority: 131
@@ -1471,6 +1483,21 @@ class ShowIsisFlexAlgo(ShowIsisFlexAlgoSchema):
                     ret_dict["tag"][tag]["flex_algo"][flex_algo]["level"][level]["def_include_any_affinity"].extend(hex_vals)
                 continue
 
+            # Use delay metric advertisement: Application, Legacy
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag]["use_delay_metric_advertisement"] = group["use_delay_metric_advertise"].split(", ")
+                continue
+
+            #Delay metric: Active
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                (ret_dict["tag"][tag]["flex_algo"]["global"]
+                         ["level"][level]['delay_metric']) = (group["delay_metric"] == "Active")
+                continue
+
         return ret_dict
 
 class ShowIsisRibSchema(MetaParser):
@@ -1491,6 +1518,7 @@ class ShowIsisRibSchema(MetaParser):
                         Optional("sid_bound_attribute"): str,
                         Optional("strict_spf_sid_index"): int,
                         Optional("strict_sid_bound_attribute"): str,
+                        Optional("strict_sid_bound_attribute_te"): bool,
                         "via_interface": {
                             Any(): {
                                 "distance": int,
@@ -1609,17 +1637,26 @@ class ShowIsisRib(ShowIsisRibSchema):
         # 1.1.1.0/24  prefix attr X:0 R:1 N:0
         # 3.3.3.3/32  prefix attr X:0 R:0 N:1  source router id: 3.3.3.3  SID index 3 - Bound
         # 6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
-        p2 = re.compile(r'^(?P<ip>\d+.\d+.\d+.\d+)/(?P<subnet>\d+)\s+prefix\s+attr\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)((\s+source router id: (?P<src_router_id>\d+.\d+.\d+.\d+))?\s+((prefix SID index|SID index)\s+(?P<prefix_sid_ind>\d+))?\s+(- Bound( \((?P<sid_bound_attribute>\S+)\))?)?)?$')
-
+        p2 = re.compile(r'^(?P<ip>\d+.\d+.\d+.\d+)/(?P<subnet>\d+)\s+prefix\s+attr\s+X:(?P<x_flag>0|1)'
+                        r'\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)((\s+source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)){0,1}'
+                        r'\s+(((prefix SID index|SID index)\s+(?P<prefix_sid_ind>\d+))\s+){0,1}((- Bound){0,1}\s*'
+                        r'(\((?P<sid_bound_attribute>\w+)\)(\((?P<strict_sid_bound_attribute_te>\w+)\)){0,1}){0,1}){0,1}){0,1}$')
+        
         # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
         # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
-        p3 = re.compile(r'^\[(?P<distance>\d+)/(?P<route_type>\w+\d+)/(?P<metric>\d+)\] via (?P<ip>\d+.\d+.\d+.\d+)\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)( (?P<host>\S+),)?,* from (?P<from_ip>\d+.\d+.\d+.\d+), tag (?P<tag>\d+)(, LSP\[(?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\])?$')
+        p3 = re.compile(r'^\[(?P<distance>\d+)/(?P<route_type>\w+\d+)/(?P<metric>\d+)\]\s+via\s+(?P<ip>\d+.\d+.\d+.\d+)'
+                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)( (?P<host>\S+),)?,* from (?P<from_ip>\d+.\d+.\d+.\d+),\s+tag'
+                        r'\s+(?P<tag>\d+)(, LSP\[(?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\])?$')
         
         # LSP 3/4/0(52), prefix attr: X:0 R:0 N:1
-        p4 = re.compile(r'^(LSP (?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\((?P<tpl_lsp_version>\d+)\))?(, )?prefix attr:\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)$')
+        p4 = re.compile(r'^(LSP (?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)'
+                        r'\((?P<tpl_lsp_version>\d+)\))?(, )?prefix attr:\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)'
+                        r'\s+N:(?P<n_flag>0|1)$')
 
         # SRGB: 16000, range: 8000 prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
-        p5 = re.compile(r'^SRGB:\s+(?P<srgb>\d+),\s+range:\s+(?P<range>\d+)\s+prefix-SID index:\s+(?P<pre_sid_ind>\w+|\d+)(,\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1))?$')
+        p5 = re.compile(r'^SRGB:\s+(?P<srgb>\d+),\s+range:\s+(?P<range>\d+)\s+prefix-SID index:\s+(?P<pre_sid_ind>\w+|\d+)'
+                        r'(,\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)'
+                        r'\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1))?$')
 
         #(ALT)(installed)
         #(installed)
@@ -1630,16 +1667,18 @@ class ShowIsisRib(ShowIsisRibSchema):
 
         # repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
         # repair path: 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
-        p8 = re.compile(r'^repair path: (?P<repair_path>\d+.\d+.\d+.\d+)\s*\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\) metric:\s*(?P<metric>\d+) \(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?((?P<np>NP),)?((?P<sr>SR))?\)(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$')
+        p8 = re.compile(r'^repair path:\s+(?P<repair_path>\d+.\d+.\d+.\d+)\s*\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
+                        r'\s+metric:\s*(?P<metric>\d+)\s+\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?((?P<np>NP),)?((?P<sr>SR))?\)'
+                        r'(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$')
 
         # next-hop: 10.10.20.2 (Ethernet1/1)
         p9 = re.compile(r'^next-hop:\s+(?P<next_hop>\d+.\d+.\d+.\d+)\s+\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)$')
 
         # P node: R5[5.5.5.5], label: 16005
-        p10 = re.compile(r'^(?P<node_type>(P|PQ|Q)) node:\s+(?P<host>\S+)\[(?P<ip>\d+.\d+.\d+.\d+)\], label: (?P<label>\S+)$')
+        p10 = re.compile(r'^(?P<node_type>(P|PQ|Q))\s+node:\s+(?P<host>\S+)\[(?P<ip>\d+.\d+.\d+.\d+)\],\s+label:\s+(?P<label>\S+)$')
 
         # repair source: R3, LSP 3
-        p11 = re.compile(r'^repair source:\s+(?P<repair_src>\S+), LSP (?P<rtp_lsp_index>\d+)$')
+        p11 = re.compile(r'^repair source:\s+(?P<repair_src>\S+),\s+LSP\s+(?P<rtp_lsp_index>\d+)$')
 
         # Source router id: 3.3.3.3
         p12 = re.compile(r'Source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)')
@@ -1648,14 +1687,17 @@ class ShowIsisRib(ShowIsisRibSchema):
         p13 = re.compile(r'^strict-SPF label:\s+(?P<strict_sid_label>\S+)$')
 
         # strict-SPF SID index: 6, R:0 N:1 P:0 E:0 V:0 L:0
-        p14 = re.compile(r'^strict-SPF SID index:\s+(?P<strict_spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1)$')
+        p14 = re.compile(r'^strict-SPF SID index:\s+(?P<strict_spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)'
+                         r'\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)'
+                         r'\s+L:(?P<l_flag>0|1)$')
 
         # type: Micro-Loop Avoidance Explicit-Path
         p15 = re.compile(r'^type:\s+(?P<u_loop_enabled>Micro-Loop Avoidance Explicit-Path)$')
 
         # strict-SPF SID index 6 - Bound (SR_POLICY_STRICT)
-        p16 =re.compile(r'^strict-SPF SID index\s+(?P<strict_sid_index>\d+)\s+-\s+(?P<bound>\S+)\s+\((?P<strict_attribute>\S+)\)$')
-
+        # strict-SPF SID index 505 - Bound(TE)
+        p16 = re.compile(r'^strict-SPF SID index\s+(?P<strict_sid_index>\d+)\s+-\s+Bound\s*\((?P<strict_attribute>\S+)\)$')
+        
         # TI-LFA link-protecting
         # local LFA
         # remote LFA
@@ -1693,6 +1735,7 @@ class ShowIsisRib(ShowIsisRibSchema):
                 src_router_id = group['src_router_id']
                 prefix_sid_ind = group['prefix_sid_ind']
                 sid_bound_attr = group['sid_bound_attribute']
+                strict_sid_bound_attribute_te = group['strict_sid_bound_attribute_te']
                 ret_dict["tag"][tag].setdefault("prefix", {}).setdefault(ip, {})
 
                 ret_dict["tag"][tag]["prefix"][ip]["subnet"] = group["subnet"]
@@ -1711,8 +1754,13 @@ class ShowIsisRib(ShowIsisRibSchema):
                 if prefix_sid_ind:
                   ret_dict["tag"][tag]["prefix"][ip]["prefix_sid_index"] = int(prefix_sid_ind)
 
-                if sid_bound_attr:
+                if sid_bound_attr and sid_bound_attr == "SR_POLICY_STRICT":
+                    ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute"] = sid_bound_attr
+                elif sid_bound_attr:
                   ret_dict["tag"][tag]["prefix"][ip]["sid_bound_attribute"] = sid_bound_attr
+                
+                if strict_sid_bound_attribute_te == "TE":
+                    ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute_te"] = True
                 continue
 
             # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
@@ -1982,14 +2030,20 @@ class ShowIsisRib(ShowIsisRibSchema):
                 continue
 
             # strict-SPF SID index 6 - Bound (SR_POLICY_STRICT)
+            # strict-SPF SID index 505 - Bound(TE)
             m = p16.match(line)
             if m:
                 group = m.groupdict()
+                strict_attribute = group["strict_attribute"]
                 (ret_dict["tag"][tag]["prefix"]
                          [ip]["strict_spf_sid_index"]) = int(group["strict_sid_index"])
-
-                (ret_dict["tag"][tag]["prefix"]
-                         [ip]["strict_sid_bound_attribute"]) = group["strict_attribute"]
+                        
+                if strict_attribute == "TE":
+                    (ret_dict["tag"][tag]["prefix"]
+                         [ip]["strict_sid_bound_attribute_te"]) = True
+                else:
+                    (ret_dict["tag"][tag]["prefix"]
+                            [ip]["strict_sid_bound_attribute"]) = group["strict_attribute"]
                 continue
 
             # TI-LFA link-protecting

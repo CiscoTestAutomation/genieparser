@@ -1,0 +1,6 @@
+LISP Publication Information
+Entries total 2
+Publisher       Last        EID Prefix               Locators        Encap-IID
+                Published                                            
+100.100.100.100 15:58:28    aabb.cc00.c901/48        11.11.11.11     -
+100.100.100.100 15:58:28    aabb.cc00.d101/48        22.22.22.22     -

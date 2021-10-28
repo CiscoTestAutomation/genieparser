@@ -1,0 +1,9 @@
+show post
+Stored system POST messages:
+
+Switch C9500X-28C8D
+--------------
+
+Wed Oct 23 15:13:11 2019 POST: Module: 1 Mac Loopback Begin
+Wed Oct 23 15:13:11 2019 POST: Module: 1 Mac Loopback: loopback Test: End, Status Passed
+ 

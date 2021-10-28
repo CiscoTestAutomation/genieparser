@@ -1,0 +1,5 @@
+Key: U - Unicast, B - Broadcast, M - Multicast, UU - Unknown Unicast
+Interface       Filter State   Upper        Lower        Current         Action     Type
+---------       -------------  -----------  -----------  -------------   ---------  ----
+Te1/0/3         Forwarding           5.00%        1.00%          0.00%    Shutdown     B
+Te1/0/3         Forwarding           5.00%        1.00%          0.00%    Shutdown     M

@@ -1,0 +1,22 @@
+One min, 5 mins, 1 hour
+          
+Average Input rate (pps) : 0, 0, 0
+Average Output rate (pps) : 0, 0, 0
+Messages sent:
+Query : 15050
+ANY query : 0
+Advertisements : 2684
+Advertisement Withdraw : 0
+Interface down : 0
+Vlan down : 0
+Service-peer cache clear : 0
+Resync response : 0
+Srvc Discovery response : 0
+Keep-Alive : 5421
+Messages received:
+Query response : 0
+ANY Query response : 0
+Cache-sync : 60
+Get service-instance : 0
+Srvc Discovery request : 0
+Keep-Alive Response : 5421

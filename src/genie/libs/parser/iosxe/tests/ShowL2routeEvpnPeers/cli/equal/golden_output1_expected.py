@@ -25,6 +25,12 @@ expected_output = {"evi": {
                                            "top_name": "BD-12",
                                            "up_time": "2d22h"
                                        },
+                                       "2.2.2.3": {
+                                           "encap": "VxLAN",
+                                           "num_rtes": 1,
+                                           "top_name": "BD-101",
+                                           "up_time": "00:02:07"
+                                       },
                                        "3.3.3.1": {
                                            "encap": "MPLS",
                                            "num_rtes": 4,

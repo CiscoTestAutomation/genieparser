@@ -43,17 +43,18 @@ class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
+            
         # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<name>\S+) +(?P<head>\w+) +(?P<total>\d+) +'
+        p1 = re.compile(r'^(?P<name>\S+( \w)?) +(?P<head>\w+) +(?P<total>\d+) +'
                          '(?P<used>\d+) +(?P<free>\d+) +'
                          '(?P<lowest>\d+) +(?P<largest>\d+)$')
 
         p2 = re.compile(r'^Tracekey *: +(?P<tracekey>\S+)$')
 
-        for line in out.splitlines():
+        for line in out.splitlines(): 
             line = line.strip()
 
             #                 Head    Total(b)     Used(b)     Free(b)   Lowest(b)  Largest(b)
@@ -95,7 +96,8 @@ class ShowMemoryDebugLeaksSchema(MetaParser):
         }
     }
 
-class ShowMemoryDebugLeaks(ShowMemoryDebugLeaksSchema):
+class ShowMemoryDebugLeaks(ShowMemoryDebugLeaksSchema):                                                            
+
     '''parser for
         * show memory debug leaks
     '''

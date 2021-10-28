@@ -1,0 +1,7 @@
+Redundancy for LISP sessions
+
+  Passive sessions
+    Synced/pending TCP action/pending checkpoint: 5/2/3
+
+  Listeners
+    Synced/pending TCP action/pending checkpoint: 7/0/3

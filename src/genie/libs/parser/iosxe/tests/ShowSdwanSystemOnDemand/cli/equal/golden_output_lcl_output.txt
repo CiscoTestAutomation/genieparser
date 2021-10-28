@@ -1,0 +1,4 @@
+show sdwan system on-demand
+SITE-ID    SYSTEM-IP     ON-DEMAND       STATUS     IDLE-TIMEOUT-CFG(min)
+-------------------------------------------------------------------------
+25       25.0.0.25          yes          active              6           

@@ -1,0 +1,289 @@
+show sdwan tunnel statistics fec
+tunnel stats ipsec 150.0.5.1 150.0.0.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.1.1 12346 12346
+ fec-rx-data-pkts     226716
+ fec-rx-parity-pkts   56679
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 303
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.2.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.3.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.4.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.8.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.10.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 150.0.40.4 12346 12366
+ fec-rx-data-pkts     735
+ fec-rx-parity-pkts   183
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 2
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.0.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.1.1 12346 12346
+ fec-rx-data-pkts     308675
+ fec-rx-parity-pkts   77168
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 396
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.2.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.3.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.4.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.6.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.7.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 150.0.5.1 151.0.40.4 12346 12366
+ fec-rx-data-pkts     134
+ fec-rx-parity-pkts   33
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.0.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.1.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.2.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.3.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.4.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.6.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.7.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.8.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.10.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 150.0.40.4 12346 12366
+ fec-rx-data-pkts     201
+ fec-rx-parity-pkts   50
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.0.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.1.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.2.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.3.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.4.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.6.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.7.1 12346 12346
+ fec-rx-data-pkts     0
+ fec-rx-parity-pkts   0
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false
+tunnel stats ipsec 151.0.5.1 151.0.40.4 12346 12366
+ fec-rx-data-pkts     86
+ fec-rx-parity-pkts   21
+ fec-tx-data-pkts     0
+ fec-tx-parity-pkts   0
+ fec-reconstruct-pkts 0
+ fec-capable          true
+ fec-dynamic          false

@@ -3,7 +3,9 @@
 IOSXE parsers for the following show commands:
     * 'show run policy-map {name}'
     * 'show running-config interface {interface}'
-    * 'show running-config mdns-sd' 
+        * 'show running-config all | sec {interface}'
+        * 'show running-config mdns-sd' 
+
 '''
 
 # Python
@@ -22,7 +24,7 @@ from genie.libs.parser.utils.common import Common
 #   * 'show run policy-map {name}'
 # ==================================================
 class ShowRunPolicyMapSchema(MetaParser):
-
+    
     schema = {
         'policy_map': {
             Any(): {
@@ -62,7 +64,7 @@ class ShowRunPolicyMapSchema(MetaParser):
 #   * 'show run policy-map {name}'
 # ===================================
 class ShowRunPolicyMap(ShowRunPolicyMapSchema):
-    
+
     ''' Parser for
         * "show run policy-map {name}"
     '''
@@ -344,7 +346,11 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('spanning_tree_bpduguard'): str,
                 Optional('spanning_tree_portfast'): bool,
                 Optional('switchport_access_vlan'): str,
+                Optional('switchport_trunk_vlans'): str,
+                Optional('keepalive'): bool,
                 Optional('switchport_mode'): str,
+                Optional('input_policy'): str,
+                Optional('output_policy'): str,
                 Optional('switchport_nonegotiate'): str,
                 Optional('vrf'): str,
                 Optional('src_ip'): str,
@@ -400,7 +406,7 @@ class ShowRunInterfaceSchema(MetaParser):
 #   * show running-config | section ^interface
 # ==================================================
 class ShowRunInterface(ShowRunInterfaceSchema):
-    
+
     ''' Parser for
          show running-config interface {interface},
          show running-config | section ^interface
@@ -584,33 +590,39 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ip arp inspection trust
         p51 = re.compile(r'^ip +arp +inspection +trust$')
-        
+
         #ip unnumbered Loopback0
         p52 = re.compile(r'^ip unnumbered (?P<src_address>\S+)$')
 
         # tunnel mode mpls traffic-eng
-        p53=re.compile(r"^tunnel mode (?P<tunnel_mode>[a-zA-Z\- ]+)$")
+        p53 = re.compile(r"^tunnel mode (?P<tunnel_mode>[a-zA-Z\- ]+)$")
 
         # tunnel destination 2.2.2.2
-        p54=re.compile(r"^tunnel destination (?P<tunnel_dst>\S+)$")
+        p54 = re.compile(r"^tunnel destination (?P<tunnel_dst>\S+)$")
 
         # tunnel mpls traffic-eng priority 7 7
-        p55=re.compile(r"^tunnel mpls traffic-eng priority (?P<value>[a-zA-Z0-9 ]+)$")
+        p55 = re.compile(r"^tunnel mpls traffic-eng priority (?P<value>[a-zA-Z0-9 ]+)$")
 
         # tunnel mpls traffic-eng bandwidth 500
-        p56=re.compile(r"^tunnel mpls traffic-eng bandwidth (?P<value>[0-9 ]+)$")
+        p56 = re.compile(r"^tunnel mpls traffic-eng bandwidth (?P<value>[0-9 ]+)$")
 
         # tunnel mpls traffic-eng path-option 1 dynamic
-        p57=re.compile(r"^tunnel mpls traffic-eng path-option (?P<value>[0-9]+)\s*(?:explicit name)? +(?P<path_type>\S+)$")
+        p57 = re.compile(r"^tunnel mpls traffic-eng path-option (?P<value>[0-9]+)\s*(?:explicit name)? +(?P<path_type>\S+)$")
 
         # mpls ip
-        p58=re.compile(r"^mpls ip$")
+        p58 = re.compile(r"^mpls ip$")
+
+        # service-policy input AutoQos-4.0-CiscoPhone-Input-Policy
+        p59 = re.compile(r'^service-policy\s+input\s+(?P<input_policy>\S+)$')
+
+        # service-policy output AutoQos-4.0-Output-Policy
+        p60 = re.compile(r'^service-policy\s+output\s+(?P<output_policy>\S+)$')
 
         # switchport port-security mac-address sticky 1020.4bb1.6f2f
-        p59=re.compile(r"^switchport port-security mac-address sticky (?P<value>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$")
+        p61 = re.compile(r"^switchport port-security mac-address sticky (?P<value>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$")
 
         # source template USER_NoAuth
-        p60=re.compile(r"^source template (?P<template>\w+)$")
+        p62 = re.compile(r"^source template (?P<template>\w+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1085,15 +1097,32 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'mpls_ip':'enabled'})
                 continue
 
-            # switchport port-security mac-address sticky 1020.4bb1.6f2f
+            # service-policy input AutoQos-4.0-CiscoPhone-Input-Policy
             m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                input_policy = group['input_policy']
+                intf_dict.update({'input_policy': group['input_policy']})
+                continue
+
+            # service-policy output AutoQos-4.0-Output-Policy
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                output_policy = group['output_policy']
+                intf_dict.update({'output_policy': group['output_policy']})
+                continue
+
+
+            # switchport port-security mac-address sticky 1020.4bb1.6f2f
+            m = p61.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'mac_address_sticky':group['value']})
                 continue
-            
+
             # source template USER_NoAuth
-            m = p60.match(line)
+            m = p62.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'source_template':group['template']})
@@ -1479,3 +1508,744 @@ class ShowRunMdnsSd(ShowRunMdnsSdSchema):
                 continue
       
         return out_dict
+
+# ==================================================
+# Schema for:
+#   * show running-config all | sec {interface}
+# ==================================================
+class ShowRunAllSectionInterfaceSchema(MetaParser):
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('mvrp_timer_leave_all'): int,
+                Optional('mvrp_timer_leave'): int,
+                Optional('mvrp_timer_join'): int,
+                Optional('mvrp_timer_periodic'): bool,
+                Optional('mvrp'):bool,
+                Optional('logging_event_link_status'): bool,
+                Optional('logging_event_trunk_status'):bool,
+                Optional('authentication_periodic'): bool,
+                Optional('authentication_port_control'): str,
+                Optional('authentication_timer_reauthenticate_server'): bool,
+                Optional('authentication_linksec_policy'):bool,
+                Optional('access_session_control_direction'):str,
+                Optional('access_session_host_mode'): str,
+                Optional('access_session_closed'): bool,
+                Optional('carrier_delay'): int,
+                Optional('shutdown'): bool,
+                Optional('medium_p2p'): bool,
+                Optional('ip_access_group'):str,
+                Optional('ip_arp_inspection_limit_rate'): str,
+                Optional('load_interval'): int,
+                Optional('negotiation_auto'): bool,
+                Optional('macsec_replay_protection'): bool,
+                Optional('cdp_log_mismatch_duplex'): bool,
+                Optional('cdp_tlv_location'): bool,
+                Optional('cdp_tlv_server_location'): bool,
+                Optional('cdp_tlv_app'): bool,
+                Optional('ipv6_mld_snooping_tcn_flood'): bool,
+                Optional('switchport'):bool,
+                Optional('switchport_access_vlan'): str,
+                Optional('switchport_trunk_allowed_all'):bool,
+                Optional('switchport_mode'): str,
+                Optional('switchport_nonegotiate'): bool,
+                Optional('switchport_autostate_exclude'):bool,
+                Optional('switchport_protected'): bool,
+                Optional('switchport_block_unicast'): bool,
+                Optional('switchport_block_multicast'): bool,
+                Optional('switchport_vepa_enabled'):bool,
+                Optional('ip_arp_inspection_trust'): bool,
+            }
+        }
+    }
+
+
+# ==================================================
+# Parser for:
+#   * show running-config all | sec {interface}
+# ==================================================
+class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
+
+    ''' Parser for
+        * show running-config all | sec {interface}
+    '''
+
+    cli_command = 'show running-config all | sec {interface}'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            # Execute command on device
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # Init vars
+        config_dict = {}
+
+        # interface GigabitEthernet0
+        p1 = re.compile(r'^interface +(?P<interface>[\S]+)$')
+
+        # mvrp timer leave-all 1000
+        p2 = re.compile(r'^mvrp +timer +leave-all +(?P<timeout>[\d]+)$')
+
+        #  mvrp timer leave 60
+        p3 = re.compile(r'^mvrp +timer +leave +(?P<timeout>[\d]+)$')
+
+        # mvrp timer join 20
+        p4 = re.compile(r'^mvrp +timer +join +(?P<timeout>[\d]+)$')
+
+        # no mvrp timer periodic
+        p5 = re.compile(r'^no +mvrp +timer +periodic$')
+
+        # no mvrp
+        p6 = re.compile(r'^no +mvrp$')
+
+        # switchport
+        p7 = re.compile(r'^switchport$')
+
+        # no shutdown
+        p8 = re.compile(r'^no +(?P<shutdown>shutdown)$')
+
+        # carrier-delay 2
+        p9 = re.compile(r'^carrier-delay +(?P<carrier_delay>[\S\s]+)$')
+
+        # switchport access vlan 70
+        p10 = re.compile(r'^switchport +access +vlan +(?P<vlan>[\d]+)$')
+
+        # switchport mode access
+        p11 = re.compile(r'^switchport +mode +(?P<switchport_mode>[\S\s]+)$')
+
+        # no switchport nonegotiate
+        p12 = re.compile(r'^no +switchport +(?P<nonegotiate>nonegotiate)$')
+
+        # ip arp inspection limit rate 1024
+        p13 = re.compile(r'^ip +arp +inspection +limit +rate +(?P<rate>[\d]+)$')
+
+        # load-interval 30
+        p14 = re.compile(r'^load-interval +(?P<load_interval>\d+)$')
+
+        # access-session control-direction in
+        p15 = re.compile(r'^access-session +control-direction +(?P<direction>\w+)$')
+
+        # access-session host-mode multi-auth
+        p16 = re.compile(r'^access-session +host-mode +(?P<host_mode>[\S\s]+)$')
+
+        # authentication port-control auto
+        p17 = re.compile(r'^authentication +port-control +(?P<port_control>[\S\s]+)$')
+
+        # authentication periodic
+        p18 = re.compile(r'^(?P<periodic>authentication periodic)$')
+
+        # authentication timer reauthenticate server
+        p19 = re.compile(r'^(?P<reauth>authentication +timer +reauthenticate +server)$')
+
+        # no switchport protected
+        p20 = re.compile(r'^no +switchport +protected$')
+
+        # no switchport block unicast
+        p21 = re.compile(r'^no +switchport +block +unicast$')
+
+        # no switchport block multicast
+        p22 = re.compile(r'^no +switchport +block +multicast$')
+
+        # switchport trunk allowed vlan all
+        p23 = re.compile(r'^switchport +trunk +allowed +vlan +all$')
+
+        # no switchport autostate exclude
+        p24 = re.compile(r'^no +switchport +autostate +exclude$')
+
+        # no ip arp inspection trust
+        p25 = re.compile(r'^no +ip +arp +inspection +trust$')
+
+        # no switchport vepa enabled
+        p26 = re.compile(r'^no +switchport +vepa +enabled$')
+
+        #  ip access-group DEFAULT-ACCESS in
+        p27 = re.compile(r'^ip +access-group +(?P<group_name>[\w]+) +in$')
+
+        # logging event link-status
+        p28 = re.compile(r'^logging +event +link-status$')
+
+        #  logging event trunk-status
+        p29 = re.compile(r'^logging +event +trunk-status$')
+
+        # no medium p2p
+        p30 = re.compile(r'^no +medium +p2p$')
+
+        # no macsec replay-protection
+        p31 = re.compile(r'^no +macsec +replay-protection$')
+
+        # cdp log mismatch duplex
+        p32 = re.compile(r'^cdp +log +mismatch +duplex$')
+
+        # cdp tlv location
+        p33 = re.compile(r'^cdp +tlv +location$')
+
+        # cdp tlv server-location
+        p34 = re.compile(r'^cdp +tlv +server-location$')
+
+        # cdp tlv app
+        p35 = re.compile(r'^cdp +tlv +app$')
+
+        # ipv6 mld snooping tcn flood
+        p36 = re.compile(r'^ipv6 +mld +snooping +tcn +flood$')
+
+        # authentication linksec policy
+        p37 = re.compile(r'^authentication +linksec +policy$')
+
+        # no access-session closed
+        p38 = re.compile(r'^no +access-session +closed$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface GigabitEthernet0
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                intf_dict = config_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                continue
+
+            # mvrp timer leave-all 1000
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mvrp_timer_leave_all': int(group['timeout'])})
+                continue
+
+            #  mvrp timer leave 60
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mvrp_timer_leave': int(group['timeout'])})
+                continue
+
+            # mvrp timer join 20
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mvrp_timer_join': int(group['timeout'])})
+                continue
+
+            # no mvrp timer periodic
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mvrp_timer_periodic': False})
+                continue
+
+            # no mvrp
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'mvrp': False})
+                continue
+
+            # switchport
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport': True})
+                continue
+
+            # no shutdown
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'shutdown': False})
+                continue
+
+            # carrier-delay 2
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'carrier_delay': int(group['carrier_delay'])})
+                continue
+
+            # switchport access vlan 70
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_access_vlan': group['vlan']})
+                continue
+
+            # switchport mode access
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_mode': group['switchport_mode']})
+                continue
+
+            # no switchport nonegotiate
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_nonegotiate': group['nonegotiate'] is None})
+                continue
+
+            # ip arp inspection limit rate 1024
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_arp_inspection_limit_rate': group['rate']})
+                continue
+
+            # load-interval 30
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'load_interval': int(group['load_interval'])})
+                continue
+
+            # access-session control-direction
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'access_session_control_direction': group['direction']})
+                continue
+
+            # access-session host-mode multi-auth
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'access_session_host_mode': group['host_mode']})
+                continue
+
+            # authentication port-control auto
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'authentication_port_control': group['port_control']})
+                continue
+
+            # authentication periodic
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'authentication_periodic': True})
+                continue
+
+            # authentication timer reauthenticate server
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'authentication_timer_reauthenticate_server': True})
+                continue
+
+            # switchport protected
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_protected': False})
+                continue
+
+            # switchport block unicast
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_block_unicast': False})
+                continue
+
+            # switchport block multicast
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_block_multicast': False})
+                continue
+
+            # switchport trunk allowed vlan all
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_trunk_allowed_all': True})
+                continue
+
+            # no switchport autostate exclude
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_autostate_exclude': False})
+                continue
+
+            # no ip arp inspection trust
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_arp_inspection_trust': False})
+                continue
+
+            # no switchport vepa enabled
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_vepa_enabled': False})
+                continue
+
+            #  ip access-group DEFAULT-ACCESS in
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_access_group': group['group_name']})
+                continue
+
+            # logging event link-status
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'logging_event_link_status': True})
+                continue
+
+            #  logging event trunk-status
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'logging_event_trunk_status': True})
+                continue
+
+            # no medium p2p
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'medium_p2p': False})
+                continue
+
+            # no macsec replay-protection
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'macsec_replay_protection': False})
+                continue
+
+            # cdp log mismatch duplex
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'cdp_log_mismatch_duplex': True})
+                continue
+
+            # cdp tlv location
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'cdp_tlv_location': True})
+                continue
+
+            # cdp tlv server-location
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'cdp_tlv_server_location': True})
+                continue
+
+            # cdp tlv app
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'cdp_tlv_app': True})
+                continue
+
+            # ipv6 mld snooping tcn flood
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ipv6_mld_snooping_tcn_flood': True})
+                continue
+
+            # authentication linksec policy
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'authentication_linksec_policy': True})
+                continue
+
+            # no access-session closed
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'access_session_closed': False})
+                continue
+
+        return config_dict
+
+
+# ==================================================
+# Schema for:
+# 	* show running-config aaa user-name
+#   * show running-config aaa username
+# ==================================================
+class ShowRunningConfigAAAUsernameSchema(MetaParser):
+    schema = {
+        'username': {
+            Any(): {
+                Optional('creation_time'): int,
+                Optional('password'): {
+                    Optional('type'): int,
+                    Optional('password'): str,
+                },
+                Optional('privilege'): int,
+                Optional('common_criteria_policy'): str,
+                Optional('view'): str,
+                Optional('type'): str,
+                Optional('onetime'): bool,
+                Optional('secret'): {
+                    Optional('type'): int,
+                    Optional('secret'): str,
+                },
+            },
+        },
+    }
+
+
+# ==================================================
+# Schema for:
+#   * show running-config aaa user-name
+# ==================================================
+class ShowRunningAAAUserName(ShowRunningConfigAAAUsernameSchema):
+    """Parser for:
+        * 'show running-config aaa user-name'
+    """
+    cli_command = 'show running-config aaa user-name'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # user-name testuser
+        p1 = re.compile(r'^user-name +(?P<username>.*)$')
+
+        # creation-time 1628765288
+        p2 = re.compile(r'^creation-time +(?P<creation_time>\d+)$')
+
+        # privilege 15
+        p3 = re.compile(r'^privilege +(?P<privilege>\d+)$')
+
+        # common-criteria-policy Test-CC
+        p4 = re.compile(r'^common-criteria-policy +(?P<common_criteria_policy>.*)$')
+
+        # view test
+        p5 = re.compile(r'^view +(?P<view>.*)$')
+
+        # password 0 P@ssw0rd
+        p6 = re.compile(r'^password +(?P<type>\d) +(?P<password>.*)$')
+
+        # type lobby-admin
+        p7 = re.compile(r'^type +(?P<type>lobby-admin|default|mgmt-user)$')
+
+        # secret 9 $9$giSG8jar6eJuV.$9Q83x2F4M8cs6UjRqCHSDo6/hrRlHzY5z0IFQOV3lZM
+        p8 = re.compile(r'^secret +(?P<type>\d) +(?P<secret>.*)$')
+
+        # one-time
+        p9 = re.compile(r'^one-time$')
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # user-name testuser
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                continue
+
+            # creation-time 1628765288
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                users_dict['creation_time'] = int(group['creation_time'])
+                continue
+
+            # privilege 15
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                users_dict['privilege'] = int(group['privilege'])
+                continue
+
+            # common-criteria-policy Test-CC
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                users_dict['common_criteria_policy'] = group['common_criteria_policy']
+                continue
+
+            # view test
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                users_dict['view'] = group['view']
+                continue
+
+            # password 0 P@ssw0rd
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pass_dict = users_dict.setdefault('password', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['password'] = group['password']
+                continue
+
+            # type lobby-admin
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                users_dict['type'] = group['type']
+                continue
+
+            # secret 9 $9$giSG8jar6eJuV.$9Q83x2F4M8cs6UjRqCHSDo6/hrRlHzY5z0IFQOV3lZM
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                pass_dict = users_dict.setdefault('secret', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['secret'] = group['secret']
+                continue
+
+            # one-time
+            m = p9.match(line)
+            if m:
+                users_dict['onetime'] = True
+                continue
+
+        return ret_dict
+
+
+# ==================================================
+# Schema for:
+#   * show running-config aaa username
+# ==================================================
+class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
+    """Parser for :
+        * 'show running-config aaa username'
+    """
+
+    cli_command = 'show running-config aaa username'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # username testuser password 0 lab
+        p1 = re.compile(r'^username +(?P<username>\S+) +password +(?P<type>\d) +(?P<password>.*)$')
+
+        # username testuser common-criteria-policy Test-CC password 0 password
+        p2 = re.compile(
+            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
+            r'+password +(?P<type>\d) +(?P<password>.*)$')
+
+        # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
+        p3 = re.compile(r'^username +(?P<username>\S+) +secret +(?P<type>\d) +(?P<secret>.*)$')
+
+        # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
+        p4 = re.compile(
+            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*secret +(?P<type>\d+) +(?P<secret>.*)$')
+
+        # username testuser privilege 15 password 0 lab
+        p5 = re.compile(
+            r'^username +(?P<username>\S+) +privilege +(?P<privilege>\d+) +password +(?P<type>\d) +(?P<password>.*)$')
+
+        # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
+        p6 = re.compile(
+            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
+            r'+secret +(?P<type>\d) +(?P<secret>.*)$')
+
+        # username testuser one-time password 0 password
+        p7 = re.compile(
+            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*password +(?P<type>\d) +(?P<password>.*)$')
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # username testuser password 0 lab
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                pass_dict = users_dict.setdefault('password', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['password'] = group['password']
+                continue
+
+            # username testuser common-criteria-policy Test-CC password 0 password
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                users_dict['common_criteria_policy'] = group['common_criteria_policy']
+                pass_dict = users_dict.setdefault('password', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['password'] = group['password']
+                continue
+
+            # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                secret_dict = users_dict.setdefault('secret', {})
+                secret_dict['type'] = int(group['type'])
+                secret_dict['secret'] = group['secret']
+                continue
+
+            # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                users_dict['onetime'] = True
+                secret_dict = users_dict.setdefault('secret', {})
+                secret_dict['type'] = int(group['type'])
+                secret_dict['secret'] = group['secret']
+                continue
+
+            # username testuser privilege 15 password 0 lab
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                users_dict['privilege'] = int(group['privilege'])
+                pass_dict = users_dict.setdefault('password', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['password'] = group['password']
+                continue
+
+            # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                users_dict['common_criteria_policy'] = group['common_criteria_policy']
+                secret_dict = users_dict.setdefault('secret', {})
+                secret_dict['type'] = int(group['type'])
+                secret_dict['secret'] = group['secret']
+                continue
+
+            # username testuser one-time password 0 password
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                username = group['username']
+                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
+                users_dict['onetime'] = True
+                pass_dict = users_dict.setdefault('password', {})
+                pass_dict['type'] = int(group['type'])
+                pass_dict['password'] = group['password']
+                continue
+
+        return ret_dict

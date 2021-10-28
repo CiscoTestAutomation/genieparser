@@ -1,0 +1,52 @@
+
+  EID-prefix: 192.168.1.71/32
+    First published:      15:21:24
+    Last published:       15:21:22
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 100.100.100.100:4342, last published 15:21:22, TTL never
+                                    publisher epoch 0, entry epoch 0
+                                    entry-state complete
+                                    xTR-ID 0x2B957D57-0x9B1062B7-0x4C4E3939-0xB4AFA888
+                                    site-ID unspecified
+                                    Domain-ID unset
+                                    Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      11.11.11.11   10/10   up        -         
+
+    Publisher 44.44.44.44:4342, last published 15:21:24, TTL never
+                                publisher epoch 0, entry epoch 0
+                                entry-state complete
+                                xTR-ID 0x2B957D57-0x9B1062B7-0x4C4E3939-0xB4AFA888
+                                site-ID unspecified
+                                Domain-ID unset
+                                Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      11.11.11.11   10/10   up        -         
+
+  EID-prefix: 192.168.1.72/32
+    First published:      15:21:24
+    Last published:       15:21:22
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 100.100.100.100:4342, last published 15:21:22, TTL never
+                                    publisher epoch 0, entry epoch 0
+                                    entry-state complete
+                                    xTR-ID 0x6BBBDAC7-0x9DE992B4-0x171CE146-0x55623372
+                                    site-ID unspecified
+                                    Domain-ID unset
+                                    Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      22.22.22.22   10/10   up        -         
+
+    Publisher 44.44.44.44:4342, last published 15:21:24, TTL never
+                                publisher epoch 0, entry epoch 0
+                                entry-state complete
+                                xTR-ID 0x6BBBDAC7-0x9DE992B4-0x171CE146-0x55623372
+                                site-ID unspecified
+                                Domain-ID unset
+                                Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      22.22.22.22   10/10   up        -         
