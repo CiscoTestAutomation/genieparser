@@ -1,3 +1,5 @@
+#### It is highly encouraged to do a ``git pull`` on the latest of Master branch to get the latest version, as some modifications were needed.
+
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/CiscoTestAutomation/genieparser)
 
 # Genie Parser
