@@ -1,0 +1,27 @@
+Ethernet1/1
+    transceiver is present
+    type is QSFP-DD-400G-COPPER
+    name is CISCO-LEONI
+    part number is L45593-K218-C20
+    revision is 00
+    serial number is LCC2411GG1W-A
+    nominal bitrate is 425000 MBit/sec per channel
+    cisco id is 0x18
+    cisco part number is 37-1843-01
+    cisco product id is QDD-400-CU2M
+    cisco version id is V01
+    vendor OUI is a8b0ae
+    date code is 20031400
+    clei code is CMPQAGSCAA
+    power class is 1 (1.5 W maximum)
+    max power is 1.50 W
+    cable attenuation is 0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 GHz
+    near-end lanes used none
+    far-end lane code for 8 lanes aaaaaaaa
+    media interface is copper cable unequalized
+    Advertising code is Passive Cu
+    Host electrical interface code is Undefined
+    Cable Length is   2.0 M
+    CMIS version is  4
+
+DOM is not supported

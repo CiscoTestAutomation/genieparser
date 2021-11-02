@@ -66,6 +66,7 @@ class ShowMacAddressTableBaseSchema(MetaParser):
             },
         }
 
+
 class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
     """Base parser for:
         'show mac address-table vni <WORD> | grep <WORD>'
@@ -83,9 +84,10 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         # G 2000     7e00.c0ff.0007    static       -       F    F  vPC Peer-Link(R)
         # 4000     5e00.c0ff.0007   static   ~~~         F      F    sup-eth1(R)
         # +  390     000f.53ff.1f1d   dynamic  0         F      F    Po125
+        # 100 0000.0000.1112 dynamic NA F F Po100
         p1 = re.compile(r'^(?P<entry>[\w\*\+] )?\s*(?P<vlan>All|[\d\-]+) '
             '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
-            '+(?P<age>[0-9\-\~]+) '
+            '+(?P<age>[0-9\-\~]+|NA) '
             '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
             '+(?P<drop>(drop|Drop))?'
             '(?P<ports>[a-zA-Z0-9\/\.\(\)\-\s]+)?$')

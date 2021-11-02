@@ -66,6 +66,8 @@ class ShowIpMrouteSchema(MetaParser):
                                                      'state_mode': str,
                                                      Optional('flags'): str,
                                                      Optional('vcd'): str,
+                                                     Optional('lisp_mcast_source'): str,
+                                                     Optional('lisp_mcast_group'): str,
                                                     },
                                                 },
                                             },
@@ -138,7 +140,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                              ' +(?P<uptime>[\w\:\.]+)\/'
                              '(?P<expires>[\w\:\.]+),'
                              '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                             ' +flags: *(?P<flags>[A-Z]+)$')
+                             ' +flags: *(?P<flags>[a-zA-Z]+)$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -258,9 +260,11 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # Vlan5, Forward/Dense, 00:04:35/00:02:30
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
             # POS4/0, Forward, 00:02:06/00:03:27
+            # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
             p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
                              '( +VCD +(?P<vcd>\d+),)?'
-                             ' +(?P<state_mode>[\w\/]+),'
+                             '( \(((?P<lisp_mcast_source>[0-9\.,]+), (?P<lisp_mcast_group>[0-9\.,]+)+)\),)?'
+                             ' +(?P<state_mode>[\w\/-]+),'
                              ' +(?P<uptime>[a-zA-Z0-9\:]+)\/'
                              '(?P<expire>[\w\:]+)'
                              '(, *(?P<flags>\w+))?$')
@@ -269,6 +273,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 outgoing_interface = m.groupdict()['outgoing_interface']
                 vcd = m.groupdict()['vcd']
                 uptime = m.groupdict()['uptime']
+                lisp_mcast_source = m.groupdict()['lisp_mcast_source']
+                lisp_mcast_group = m.groupdict()['lisp_mcast_group']
                 state_mode = m.groupdict()['state_mode'].lower()
                 expire = m.groupdict()['expire']
                 flags = m.groupdict()['flags']
@@ -285,6 +291,10 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['outgoing_interface_list'][outgoing_interface]['flags'] = flags
                 if vcd:
                     sub_dict['outgoing_interface_list'][outgoing_interface]['vcd'] = vcd
+                if lisp_mcast_source:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_source'] = lisp_mcast_source
+                if lisp_mcast_group:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_group'] = lisp_mcast_group
                 continue
 
         return mroute_dict

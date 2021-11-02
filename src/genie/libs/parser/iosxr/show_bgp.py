@@ -42,6 +42,8 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all sessions'
     * 'show bgp instance {instance} sessions'
     * 'show bgp egress-engineering'
+    * 'show bgp all all nexthops'
+    * 'show bgp {address_family} {ip_address} brief'
 """
 
 # Python
@@ -55,7 +57,7 @@ from sys import version
 from genie.libs.parser.base import *
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+                                         Default, Use, ListOf
 
 # Parser
 from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
@@ -2280,8 +2282,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('minimum_advertisement_interval'): int,
                                  Optional('route_reflector_client'): bool,
                                  Optional('route_reflector_cluster_id'): int,
-                                 Optional('remote_as'): int,
-                                 Optional('local_as_as_no'): int,
+                                 Optional('remote_as'): Or(int, str),
+                                 Optional('local_as_as_no'): Or(int, str),
                                  Optional('local_as_no_prepend'): bool,
                                  Optional('local_as_replace_as'): bool,
                                  Optional('local_as_dual_as'): bool,
@@ -2511,9 +2513,14 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                             '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
         p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
-        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS'
-                            ' +(?P<local_as_as_no>[0-9]+)'
-                            '(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
+
+        # Remote AS 65107.65107, local AS 65108.65108, external link
+        p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9\.]+), '
+                         r'+local +AS +(?P<local_as_as_no>[0-9\.]+)'
+                         r'(?:, +(?P<local_as_no_prepend>no-prepend))?'
+                         r'(?:, +(?P<local_as_replace_as>replace-as))?'
+                         r'(?:, +(?P<local_as_dual_as>dual-as))?'
+                         r'(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
         p4 = re.compile(r'^Remote *router *ID *(?P<router_id>[a-zA-Z0-9\.\:]+)$')
         p5 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)'
                             '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
@@ -2664,17 +2671,37 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
             
             # Remote AS 200, local AS 100, external link
+            # Remote AS 200, local AS 100, no-prepend, replace-as, dual-as, external link
             m = p3.match(line)
             if m:
-                sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
+
+                try:
+                    sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    sub_dict['remote_as'] = m.groupdict()['remote_as']
+
+
                 if m.groupdict()['link_state']:
                     sub_dict['link_state'] = m.groupdict()['link_state']
-                sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
 
-                # Default the values - overwritten if configured
-                sub_dict['local_as_no_prepend'] = False
-                sub_dict['local_as_replace_as'] = False
-                sub_dict['local_as_dual_as'] = False
+
+                try:
+                    sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
+                except:
+                    sub_dict['local_as_as_no'] = m.groupdict()['local_as_as_no']
+
+                if m.groupdict()['local_as_no_prepend']:
+                    sub_dict['local_as_no_prepend'] = True
+                else:
+                    sub_dict['local_as_no_prepend'] = False
+                if m.groupdict()['local_as_replace_as']:
+                    sub_dict['local_as_replace_as'] = True
+                else:
+                    sub_dict['local_as_replace_as'] = False
+                if m.groupdict()['local_as_dual_as']:
+                    sub_dict['local_as_dual_as'] = True
+                else:
+                    sub_dict['local_as_dual_as'] = False
                 continue
 
             # Remote router ID 10.1.5.5
@@ -4874,7 +4901,7 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                 {Optional('router_identifier'): str,
                                  Optional('vrf_id'): str,
                                  Optional('instance_number'): str,
-                                 Optional('local_as'): int,
+                                 Optional('local_as'): Or(int, str),
                                  Optional('vrf_state'): str,
                                  Optional('bgp_vrf'): str,
                                  Optional('generic_scan_interval'): str,
@@ -5003,8 +5030,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         p5 = re.compile(r'^\s*VRF +ID: +(?P<vrf_id>(\S+))$')
 
         # BGP router identifier 10.4.1.1, local AS number 100
+        # BGP router identifier 10.10.10.108, local AS number 65108.65108
         p6 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
-                        r' +local +AS +number +(?P<local_as>(\d+))$')
+                        r' +local +AS +number +(?P<local_as>([\d\.]+))$')
 
         # BGP generic scan interval 60 secs
         p7 =  re.compile(r'^\s*BGP +generic +scan +interval'
@@ -5052,8 +5080,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                            r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
+        # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
-                           r' +(?P<path>[0-9\{\}\s]+) '
+                           r' +(?P<path>[0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
 
         # Network            Next Hop   Metric LocPrf Weight Path
@@ -5069,12 +5098,14 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+        # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
+                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
-        p17 = re.compile(r'(?P<path>[\d\s]+)'
+        #                                                                 65107.65107 ?
+        p17 = re.compile(r'(?P<path>[\d\.\s]+)'
                          r' *(?P<origin_codes>(i|e|\?))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -5148,11 +5179,16 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # BGP router identifier 10.4.1.1, local AS number 100
+            # BGP router identifier 10.10.10.108, local AS number 65108.65108
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 af_dict['router_identifier'] = group['router_identifier']
-                af_dict['local_as'] = int(group['local_as'])
+              
+                try:
+                    af_dict['local_as']= int(group['local_as'])
+                except:
+                    af_dict['local_as']= group['local_as']
                 continue 
 
             # BGP generic scan interval 60 secs 
@@ -5245,6 +5281,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # 2219             0 200 33299 51178 47751 {27016} e
+            # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
             m = p16_2.match(line)
             if m:
                 group = m.groupdict()
@@ -5274,6 +5311,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
             # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+            # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -5294,9 +5332,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 
                 # Parse and set the numbers
                 group_num = group['number']
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
-                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
-                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>((\d+\s)|(\{\d+\}\s))+)$').match(group_num)
+                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
                 m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
                 if m1:
                     pfx_dict['metric'] = m1.groupdict()['metric']
@@ -5319,7 +5357,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     pfx_dict['weight'] = m4.groupdict()['weight']
                 continue
 
-            # 
+            #                                                                 65107.65107 ?
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -7040,3 +7078,423 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         return ret_dict
 
 
+# ===========================================
+# Schema for 'show bgp all all nexthops'
+# ===========================================
+class ShowBgpAllAllNexthopsSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp all all nexthops'
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('total_next_hop'):{
+                            'time_spent_secs': float
+                        },
+                        Optional('maximum_next_hop'): {
+                            'received': str,
+                            'best_paths_deleted': int,
+                            'best_paths_changed': int,
+                            'time_spent_secs': float
+                        },
+                        Optional('last_notification'): {
+                            'received': str,
+                            'time_spent_secs': float
+                        },
+                        Optional('gateway_address_family'): str,
+                        Optional('table_id'): str,
+                        Optional('next_hop_count'): int,
+                        Optional('critical_trigger_delay'): str,
+                        Optional('non_critical_trigger_delay'): str,
+                        Optional('next_hop_version'):int,
+                        Optional('rib_version'):int,
+                        Optional('epe_table_version'): int,
+                        Optional('epe_label_version'): int,
+                        Optional('epe_downloaded_version'): int,
+                        Optional('epe_standby_version'): int,
+                        Optional('next_hops'):{
+                            Any():{
+                                'status': ListOf(str),
+                                'metric': int,
+                                'tbl_id': str,
+                                'notf': str,
+                                'last_rib_event': str,
+                                'ref_count': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show bgp all all nexthops'
+# ===========================================
+class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
+    '''Parser for:
+        * 'show bgp all all nexthops'
+    '''
+
+    cli_command = ['show bgp all all nexthops']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # Initialize dictionaries
+        ret_dict = {}
+
+        # reference dict
+        ref_dict = {}
+
+        # Address Family: VPNv4 Unicast
+        p1 =  re.compile(r'^Address +Family: +(?P<address_family>[\S\s]+)$')
+
+        # Total Nexthop Processing
+        p2 = re.compile(r'^Total +Nexthop +Processing$')
+
+        # Maximum Nexthop Processing
+        p3 = re.compile(r'^Maximum +Nexthop +Processing$')
+
+        # Last Notification Processing
+        p4 = re.compile(r'^Last +Notification +Processing$')
+
+        # Time Spent: 0.000 secs
+        p5 = re.compile(r'^Time +Spent: +(?P<time_spent_secs>[\d\.]+) secs$')
+
+        # Received: 00:00:00
+        p6 = re.compile(r'^Received: +(?P<received>.+)$')
+
+        # Bestpaths Deleted: 0
+        p7 = re.compile(r'^Bestpaths +Deleted: +(?P<best_paths_deleted>[\S\s]+)$')
+
+        # Bestpaths Changed: 0
+        p8 = re.compile(r'^Bestpaths +Changed: +(?P<best_paths_changed>[\S\s]+)$')
+
+        # Gateway Address Family: IPv4 Unicast
+        p9 = re.compile(r'^Gateway +Address +Family: +(?P<gateway_address_family>[\S\s]+)$')
+
+        # Table ID: 0xe0000000
+        p10 = re.compile(r'^Table +ID: +(?P<table_id>[\S\s]+)$')
+
+        # Nexthop Count: 2
+        p11 = re.compile(r'^Nexthop +Count: +(?P<next_hop_count>[\S\s]+)$')
+
+        # Critical Trigger Delay: 0msec
+        p12 = re.compile(r'^Critical +Trigger +Delay: +(?P<critical_trigger_delay>[\S\s]+)$')
+
+        # Non-critical Trigger Delay: 10000msec
+        p13 = re.compile(r'^Non-critical +Trigger +Delay: +(?P<non_critical_trigger_delay>[\S\s]+)$')
+
+        # Nexthop Version: 1, RIB version: 1
+        p14 = re.compile(r'^Nexthop +Version: +(?P<next_hop_version>[\d]+), +RIB +version:'
+                         r' +(?P<rib_version>\d+)$')
+
+        # EPE Table Version: 1, EPE Label version: 1
+        p15 = re.compile(r'^EPE +Table +Version: +(?P<epe_table_version>[\d]+), +EPE +Label '
+                         r'+version: +(?P<epe_label_version>[\d]+)$')
+
+        # EPE Downloaded Version: 1, EPE Standby Version: 1
+        p16 = re.compile(r'^EPE +Downloaded +Version: +(?P<epe_downloaded_version>[\d]+), '
+                         r'+EPE +Standby +Version: +(?P<epe_standby_version>[\d]+)$')
+
+        # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
+        p17 = re.compile('^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+'
+                         '(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+'
+                         '\s\(\w+\))\s+(?P<ref_count>\S+)$')
+
+        # 2000:108:10:10::1
+        p18 = re.compile(r'^(?P<next_hop_ipv6>[a-fA-F\d\:]+)$')
+
+        # [R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3
+        p19 = re.compile(r'^(?P<status>[\S]+)\s+(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+'
+                         r'(?P<last_rib_event>\S+\s\(\w+\))\s+(?P<ref_count>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Address Family: VPNv4 Unicast
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                address_family = group['address_family']
+
+                # define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {})
+
+                # define def_dict dictionary and assigned to vrf_dict
+                def_dict = vrf_dict.setdefault('default', {})
+
+                # define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family', {})\
+                          .setdefault(address_family, {})
+                continue
+
+            # Total Nexthop Processing
+            m = p2.match(line)
+            if m:
+                ref_dict = af_dict.setdefault('total_next_hop', {})
+
+            # Maximum Nexthop Processing
+            m = p3.match(line)
+            if m:
+                ref_dict = af_dict.setdefault('maximum_next_hop', {})
+
+            # Last Notification Processing
+            m = p4.match(line)
+            if m:
+                ref_dict = af_dict.setdefault('last_notification', {})
+
+            # Time Spent: 0.000 secs
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                time_spent_secs = float(group['time_spent_secs'])
+                ref_dict.update({'time_spent_secs':time_spent_secs})
+                continue
+
+            # Received: 00:00:00
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                received = group['received']
+                ref_dict.update({'received' : received})
+                continue
+
+            # Bestpaths Deleted: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                best_path_deleted = int(group['best_paths_deleted'])
+                af_dict['maximum_next_hop']['best_paths_deleted'] = best_path_deleted
+                continue
+
+            # Bestpaths Changed: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                best_path_changed = int(group['best_paths_changed'])
+                af_dict['maximum_next_hop']['best_paths_changed'] =  best_path_changed
+                continue
+
+            # Gateway Address Family: IPv4 Unicast
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                gateway_address_family = group['gateway_address_family']
+                af_dict.setdefault('gateway_address_family', gateway_address_family)
+                continue
+
+            # Table ID: 0xe0000000
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                table_id = group['table_id']
+                af_dict.setdefault('table_id', table_id)
+                continue
+
+            # Nexthop Count: 2
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_count = int(group['next_hop_count'])
+                af_dict.setdefault('next_hop_count', next_hop_count)
+                continue
+
+            # Critical Trigger Delay: 0msec
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                critical_trigger_delay = group['critical_trigger_delay']
+                af_dict.setdefault('critical_trigger_delay', critical_trigger_delay)
+                continue
+
+            # Non-critical Trigger Delay: 10000msec
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                non_critical_trigger_delay = group['non_critical_trigger_delay']
+                af_dict.setdefault('non_critical_trigger_delay', non_critical_trigger_delay)
+                continue
+
+            # Nexthop Version: 1, RIB version: 1
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_version = int(group['next_hop_version'])
+                rib_version = int(group['rib_version'])
+                af_dict.update({
+                    'next_hop_version': next_hop_version,
+                    'rib_version': rib_version
+                })
+                continue
+
+            # EPE Table Version: 1, EPE Label version: 1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                epe_table_version = int(group['epe_table_version'])
+                epe_label_version = int(group['epe_label_version'])
+                af_dict.update({
+                    'epe_table_version': epe_table_version,
+                    'epe_label_version': epe_label_version
+                })
+                continue
+
+            # EPE Downloaded Version: 1, EPE Standby Version: 1
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                epe_downloaded_version = int(group['epe_downloaded_version'])
+                epe_standby_version = int(group['epe_standby_version'])
+                af_dict.update({
+                    'epe_downloaded_version': epe_downloaded_version,
+                    'epe_standby_version': epe_standby_version
+                })
+                continue
+
+            # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop = group['next_hop']
+                status_dict = af_dict.setdefault('next_hops', {}).setdefault(next_hop, {})
+                status_dict.update({
+                    'status' : group['status'].replace("[", "").split("]")[:-1],
+                    'metric' :  int(group['metric']),
+                    'tbl_id' : group['tbl_id'],
+                    'notf' : group['notf'],
+                    'last_rib_event' : group['last_rib_event'],
+                    'ref_count' : group['ref_count']
+                })
+                continue
+
+            # 2000:108:10:10::1
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_ipv6 = group['next_hop_ipv6']
+                status_dict = af_dict.setdefault('next_hops', {}).setdefault(next_hop_ipv6, {})
+                continue
+
+            # [R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict.update({
+                    'status': group['status'].replace("[", "").split("]")[:-1],
+                    'metric': int(group['metric']),
+                    'tbl_id': group['tbl_id'],
+                    'notf': group['notf'],
+                    'last_rib_event': group['last_rib_event'],
+                    'ref_count': group['ref_count']
+                })
+                continue
+
+        return ret_dict
+
+
+# ==========================================================
+# Schema for 'show bgp {address_family} {ip_address} brief'
+# ==========================================================
+class ShowBgpBriefSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp {address_family} {ip_address} brief'
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'network': {
+                            Any(): {
+                                'next_hops': {
+                                    Any(): {
+                                        'metric': int,
+                                        'locprf': int,
+                                        'weight': int,
+                                        'path': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ==========================================================
+# Parser for 'show bgp {address_family} {ip_address} brief'
+# ==========================================================
+class ShowBgpBrief(ShowBgpBriefSchema):
+    '''Parser for:
+        * 'show bgp {address_family} {ip_address} brief'
+    '''
+
+    cli_command = ['show bgp {address_family} {ip_address} brief']
+
+    def cli(self, address_family, ip_address, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0].\
+                                      format(address_family=address_family,\
+                                      ip_address=ip_address))
+        else:
+            out = output
+
+        # Initialize dictionaries
+        ret_dict = {}
+
+        # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
+        # *                     108.11.0.2               0             0 65401 i
+        p1 = re.compile('^.*\s(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        '(?P<metric>\d+)\s+(?P<locprf>\d+)\s+(?P<weight>\d+)\s+'
+                        '(?P<path>\D)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
+            # *                     108.11.0.2               0             0 65401 i
+            m = p1.match(line)
+            if m:
+                # define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {})
+
+                # define def_dict dictionary and assigned to vrf_dict
+                def_dict = vrf_dict.setdefault('default', {})
+
+                # define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family', {}) \
+                          .setdefault(address_family, {})
+
+                # define net_dict and assigned to af_dict dictionary
+                net_dict = af_dict.setdefault('network', {}) \
+                           .setdefault(ip_address, {})
+
+                group = m.groupdict()
+                next_hop = group['next_hop']
+
+                # define next_hops_dict and assigned to net_dict dictionary
+                next_hops_dict = net_dict.setdefault('next_hops', {}) \
+                                 .setdefault(next_hop, {})
+
+                next_hops_dict.update({
+                    'metric': int(group['metric']),
+                    'locprf': int(group['locprf']),
+                    'weight': int(group['weight']),
+                    'path': group['path']
+                })
+                continue
+
+        return ret_dict

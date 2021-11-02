@@ -1689,13 +1689,21 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I   
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+) '
                         r'+(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? '
-                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\S))$')
+
+        # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2 1000               65509 I
+        # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2 1000     100       65509 I
+        # * 2001:db8:3000::/48      2001:db8:7fc5:ca45::2          100       65509 I
+        p2_1 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\w\:]+\/[\d]+) '
+                          r'+(?P<to>\S+) (((?P<med>\d+)? +)(?P<local_preference>\d+)?)? '
+                          r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\S))$')
 
         # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
 
+        # *                         2001:db8:7fc5:ca45::4             100        I
         # *                         Self                 2       100        I
-        p4 = re.compile(r'^((?P<active_tag>\*) +)?(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? +(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
+        p4 = re.compile(r'^((?P<active_tag>\*) +)?(?P<to>[\d\:\w]+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? +(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
                         
 
         for line in out.splitlines():
@@ -1728,6 +1736,25 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
                 nh_dict.update({'to': group['to']})
                 rt_entry_dict.update({'protocol-name': protocol.upper()})
                 rt_list.append(rt_dict)
+                continue
+
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {'rt-destination': group['rt_destination']}
+                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                keys = ['active_tag', 'as_path', 'local_preference', 'med']
+                for key in keys:
+                    v = group[key]
+                    if v:
+                        rt_entry_dict.update({key.replace('_', '-'): v})
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'protocol-name': protocol.upper()})
+                rt_list.append(rt_dict)
+                continue
+
 
             # 2001:db8:7fc5:ca45::1
             m = p3.match(line)
@@ -3141,7 +3168,7 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
         p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
 
         # Nexthop: 10.64.4.4
-        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
+        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9a-f.:]+)$')
 
         # Localpref: 100
         p5 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')
@@ -3297,14 +3324,14 @@ class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerA
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # * 192.168.115.0/24 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\* )?(?P<rt_destination>[0-9.:]+)(\/(?P<rt_prefix_length>\d+))? +'
+        p2 = re.compile(r'^(?P<active_tag>\* )?(?P<rt_destination>[0-9a-f.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
         p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
 
         # Nexthop: 10.64.4.4
-        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
+        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9a-f.:]+)$')
 
         # Localpref: 100
         p5 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')

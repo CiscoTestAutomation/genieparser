@@ -1,0 +1,134 @@
+BGP instance 0: 'default'
+=========================
+
+BGP neighbor is 10.10.10.107
+ Remote AS 65107.65107, local AS 65108.65108, external link
+ Remote router ID 10.10.10.107
+  BGP state = Established, up for 02:23:58
+  NSR State: None
+  Last read 00:00:55, Last read before reset 00:00:00
+  Hold time is 180, keepalive interval is 60 seconds
+  Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+  Last write 00:00:56, attempted 19, written 19
+  Second last write 00:01:56, attempted 19, written 19
+  Last write before reset 00:00:00, attempted 0, written 0
+  Second last write before reset 00:00:00, attempted 0, written 0
+  Last write pulse rcvd  Aug 21 20:43:11.593 last full not set pulse count 292
+  Last write pulse rcvd before reset 00:00:00
+  Socket not armed for io, armed for read, armed for write
+  Last write thread event before reset 00:00:00, second last 00:00:00
+  Last KA expiry before reset 00:00:00, second last 00:00:00
+  Last KA error before reset 00:00:00, KA not sent 00:00:00
+  Last KA start before reset 00:00:00, second last 00:00:00
+  Precedence: internet
+  Non-stop routing is enabled
+  Entered Neighbor NSR TCP mode:
+    TCP Initial Sync :              ---                
+    TCP Initial Sync Phase Two :    ---                
+    TCP Initial Sync Done :         ---                
+  Enforcing first AS is enabled
+  Multi-protocol capability received
+  Neighbor capabilities:            Adv         Rcvd
+    Route refresh:                  Yes         Yes
+    4-byte AS:                      Yes         Yes
+    Address family IPv4 Unicast:    Yes         Yes
+  Message stats:
+    InQ depth: 0, OutQ depth: 0
+                    Last_Sent               Sent  Last_Rcvd               Rcvd
+    Open:           Aug 21 18:20:09.151        1  Aug 21 18:20:09.161        2
+    Notification:   ---                        0  ---                        0
+    Update:         Aug 21 18:21:09.237        2  Aug 21 18:21:09.397        2
+    Keepalive:      Aug 21 20:43:11.493      144  Aug 21 20:43:11.593      144
+    Route_Refresh:  ---                        0  ---                        0
+    Total:                                   147                           148
+  Minimum time between advertisement runs is 30 secs
+  Inbound message logging enabled, 3 messages buffered
+  Outbound message logging enabled, 3 messages buffered
+
+ For Address Family: IPv4 Unicast
+  BGP neighbor version 8
+  Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+  Inbound soft reconfiguration allowed
+  Route refresh request: received 0, sent 0
+  Policy for incoming advertisements is route-in
+  Policy for outgoing advertisements is route-out
+  3 accepted prefixes, 1 are bestpaths
+  Cumulative no. of prefixes denied: 0. 
+  Prefix advertised 3, suppressed 0, withdrawn 0
+  Maximum prefixes allowed 1048576
+  Threshold for warning message 75%, restart interval 0 min
+  An EoR was received during read-only mode
+  Last ack version 8, Last synced ack version 0
+  Outstanding version objects: current 0, max 1
+  Additional-paths operation: None
+
+  Connections established 1; dropped 0
+  Local host: 10.10.10.108, Local port: 36752, IF Handle: 0x00000060
+  Foreign host: 10.10.10.107, Foreign port: 179
+  Last reset 00:00:00
+
+BGP neighbor is 2001:2001:2001:2001:2001::7
+ Remote AS 65107.65107, local AS 65108.65108, external link
+ Remote router ID 10.10.10.107
+  BGP state = Established, up for 02:23:56
+  NSR State: None
+  Last read 00:00:15, Last read before reset 00:00:00
+  Hold time is 180, keepalive interval is 60 seconds
+  Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+  Last write 00:00:15, attempted 19, written 19
+  Second last write 00:01:15, attempted 19, written 19
+  Last write before reset 00:00:00, attempted 0, written 0
+  Second last write before reset 00:00:00, attempted 0, written 0
+  Last write pulse rcvd  Aug 21 20:43:51.721 last full not set pulse count 293
+  Last write pulse rcvd before reset 00:00:00
+  Socket not armed for io, armed for read, armed for write
+  Last write thread event before reset 00:00:00, second last 00:00:00
+  Last KA expiry before reset 00:00:00, second last 00:00:00
+  Last KA error before reset 00:00:00, KA not sent 00:00:00
+  Last KA start before reset 00:00:00, second last 00:00:00
+  Precedence: internet
+  Non-stop routing is enabled
+  Entered Neighbor NSR TCP mode:
+    TCP Initial Sync :              ---                
+    TCP Initial Sync Phase Two :    ---                
+    TCP Initial Sync Done :         ---                
+  Enforcing first AS is enabled
+  Multi-protocol capability received
+  Neighbor capabilities:            Adv         Rcvd
+    Route refresh:                  Yes         Yes
+    4-byte AS:                      Yes         Yes
+    Address family IPv6 Unicast:    Yes         Yes
+  Message stats:
+    InQ depth: 0, OutQ depth: 0
+                    Last_Sent               Sent  Last_Rcvd               Rcvd
+    Open:           Aug 21 18:20:11.041        1  Aug 21 18:20:11.041        1
+    Notification:   ---                        0  ---                        0
+    Update:         Aug 21 18:21:49.395        2  Aug 21 18:21:49.365        2
+    Keepalive:      Aug 21 20:43:51.651      144  Aug 21 20:43:51.721      144
+    Route_Refresh:  ---                        0  ---                        0
+    Total:                                   147                           147
+  Minimum time between advertisement runs is 30 secs
+  Inbound message logging enabled, 3 messages buffered
+  Outbound message logging enabled, 3 messages buffered
+
+ For Address Family: IPv6 Unicast
+  BGP neighbor version 10
+  Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+  Inbound soft reconfiguration allowed
+  Route refresh request: received 0, sent 0
+  Policy for incoming advertisements is route-in
+  Policy for outgoing advertisements is route-out
+  3 accepted prefixes, 2 are bestpaths
+  Cumulative no. of prefixes denied: 0. 
+  Prefix advertised 3, suppressed 0, withdrawn 0
+  Maximum prefixes allowed 524288
+  Threshold for warning message 75%, restart interval 0 min
+  An EoR was received during read-only mode
+  Last ack version 10, Last synced ack version 0
+  Outstanding version objects: current 0, max 1
+  Additional-paths operation: None
+
+  Connections established 1; dropped 0
+  Local host: 2001:2001:2001:2001:2001::8, Local port: 179, IF Handle: 0x00000060
+  Foreign host: 2001:2001:2001:2001:2001::7, Foreign port: 26921
+  Last reset 00:00:00

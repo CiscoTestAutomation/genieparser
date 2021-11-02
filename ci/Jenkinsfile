@@ -40,6 +40,7 @@ pipeline {
                     pip list
                     pip freeze
                     export PIP_DOWNLOAD_CACHE=/scratch/pip_download_cache
+                    export LC_ALL=C.UTF-8
                     rm -rf /scratch/genieparser-env
                     cd /scratch
                     /usr/bin/python3.6 -m venv genieparser-env

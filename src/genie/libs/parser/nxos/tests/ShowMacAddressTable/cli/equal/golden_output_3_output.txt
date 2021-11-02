@@ -1,0 +1,19 @@
+Legend:
+    * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+    age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+    (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+   VLAN     MAC Address      Type      age     Secure NTFY Ports
+VLAN MAC Address Type age Secure NTFY Ports
+---------+-----------------+--------+---------+------+----+------------------
++ 100 0000.0000.1111 dynamic NA F F Po100
+100 0000.0000.1112 dynamic NA F F Po100
+100 0000.0000.1113 dynamic NA F F Po100
+100 0000.0000.1114 dynamic NA F F Po100
+100 0000.0000.1115 dynamic NA F F Po100
+100 0000.0000.1116 dynamic NA F F Po100
+100 0000.0000.1117 dynamic NA F F Po100
+100 0000.0000.1118 dynamic NA F F Po100
+100 0000.0000.1119 dynamic NA F F Po100
++ 100 0000.0000.111a dynamic NA F F Po100
+* 100 0010.9400.0002 dynamic NA F F Po100
+G - 44ae.2502.a907 static - F F sup-eth1(R)

@@ -1,0 +1,9 @@
+show bgp ipv4 unicast 111.111.111.111/32 brief
+Tue Mar  9 02:24:16.179 JST
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+*> 111.111.111.111/32 108.10.0.2               0           100 65401 i
+*                     108.11.0.2               0             0 65401 i

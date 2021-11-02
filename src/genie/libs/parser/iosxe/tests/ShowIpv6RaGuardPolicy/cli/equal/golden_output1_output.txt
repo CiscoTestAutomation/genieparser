@@ -1,0 +1,4 @@
+RA guard policy asdf configuration:
+  device-role host
+Policy asdf is applied on the following targets:
+Target               Type  Policy               Feature        Target range

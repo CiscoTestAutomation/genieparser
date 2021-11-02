@@ -21,6 +21,9 @@ IOSXE parsers for the following show commands:
     * 'show platform software yang-management process'
     * 'show platform software yang-management process monitor'
     * 'show platform software yang-management process state'
+    * 'show platform software fed active fnf et-analytics-flows'
+    * 'show platform software fed switch active mpls forwarding label {label} detail'
+    * 'show platform software fed active mpls forwarding label {label} detail'
 '''
 
 # Python
@@ -5981,7 +5984,7 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                callsite = int(group['callsite'])
+                callsite = group['callsite']
                 one_callsite_dict = callsite_dict.setdefault(callsite, {})
                 one_callsite_dict['thread'] = int(group['thread'])
                 one_callsite_dict['diff_byte'] = int(group['diffbyte'])
@@ -5999,7 +6002,7 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
                 {'allocs': int,
                  'frees': int,
                  'call_diff': int,
-                 'callsite': int,
+                 'callsite': str,
                  'thread_id': int}
         }
 
@@ -6046,7 +6049,7 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                one_backtrace_dict['callsite'] = int(group['callsite'])
+                one_backtrace_dict['callsite'] = group['callsite']
                 one_backtrace_dict['thread_id'] = int(group['thread_id'])
                 continue
 
@@ -7033,7 +7036,7 @@ class ShowPlatformResourcesSchema(MetaParser):
             }
             }
         },
-        'esp': {
+        Optional('esp'): {
             Any(): {
                 'state': str,
                 'role': str,
@@ -7385,12 +7388,15 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
             out = output
 
         # Confd Status: Started
-        p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
+        # Confd Status: Not Running
+        p1 = re.compile(r'^Confd +Status: +(?P<status>.+)$')
 
         # pubd                 Running             Active
         # gnmib                Not Running         Not Applicable
+        # ndbmand              Not Running         Down
+        # pubd                 Running             Reset
         p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
-                        r'(?P<state>(Active|Not +Active|Not +Applicable))$')
+                        r'(?P<state>(Active|Not +Active|Not +Applicable|Down|Reset))$')
 
         ret_dict = dict()
 
@@ -7406,6 +7412,7 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
 
             # pubd                 Running             Active
             # gnmib                Not Running         Not Applicable
+            # ndbmand              Not Running         Down
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -7942,3 +7949,1242 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
             out = output
 
         return super().cli(process=process, alloc_type=alloc_type, output=out)
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+    schema = {
+        Optional('tx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        },
+        Optional('rx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBrief(ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} brief'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+        #Tx SC
+        p1 = re.compile(r'(.*)Tx SC')
+
+        #Rx SC
+        p2 = re.compile(r'(.*)Rx SC')
+
+        #3/11  |   0    |     3/0    | f87a41252702008b | 50331759/ 2/ 1  |     GCM_AES_128 |
+        p3 = re.compile(r'(?P<if>\d+\/\d+) +\|'
+                        ' +(?P<sc_idx>\d+) +\|'
+                        ' +(?P<pre_cur_an>\d+\/\d+) +\|'
+                        ' +(?P<sci>\S+) +\|'
+                        ' +(?P<idx>\d+\/ \d+\/ \d+) +\|'
+                        ' +(?P<cipher>\S+) +\|'
+                        )
+
+        sess_tx=0
+        sess_rx=0
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                tx_sc = ret_dict.setdefault('tx-sc', {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                rx_sc = ret_dict.setdefault('rx-sc', {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    sess_tx+=1
+                    sc_tx_dict = tx_sc.setdefault(sess_tx, {})
+                    sc_tx_dict['sub-interface'] = group['if']
+                    sc_tx_dict['sc-idx'] = group['sc_idx']
+                    sc_tx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_tx_dict['sci'] = group['sci']
+                    sc_tx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    sess_rx+=1
+                    sc_rx_dict = rx_sc.setdefault(sess_rx, {})
+                    sc_rx_dict['sub-interface'] = group['if']
+                    sc_rx_dict['sc-idx'] = group['sc_idx']
+                    sc_rx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_rx_dict['sci'] = group['sci']
+                    sc_rx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_rx_dict['cipher'] = group['cipher']
+        return ret_dict
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+    schema = {
+        Optional('subport-11-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-12-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-11-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       },
+        Optional('subport-12-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       }}
+
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetail(ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} detail'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Port:3, Subport:11, Tx SC index:0
+        p1 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Tx SC index')
+
+        #Port:3, Subport:11, Rx SC index:0
+        p2 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Rx SC index')
+
+        #Prev AN: 3, Cur AN: 0
+        p3 = re.compile(r'Prev AN\: (?P<prev_an>\d+)\, +'
+                        'Cur AN\: (?P<cur_an>\d+)')
+
+        #SA index: 50331759, vport index: 2, rule index: 1
+        p4 = re.compile(r'SA index\: (?P<sa_index>\d+)\, +'
+                        'vport index\: (?P<vport_index>\d+)\, +'
+                        'rule index\: (?P<rule_index>\d+)')
+
+        #key_len: 16
+        p5 = re.compile(r'^key_len\: (?P<key_len>\d+)$')
+
+        #hashkey_len: 16
+        p6 = re.compile(r'^hashkey_len\: (?P<hashkey_len>\d+)$')
+
+        #bypass: 0
+        p7 = re.compile(r'^bypass\: (?P<bypass>\d+)$')
+
+        #nextPn: 1
+        p8 = re.compile(r'^nextPn\: (?P<nextPn>\d+)$')
+
+        #conf_offset: 0
+        p9 = re.compile(r'^conf_offset\: (?P<conf_offset>\d+)$')
+
+        #encrypt: 1
+        p10 = re.compile(r'^encrypt\: (?P<encrypt>\d+)$')
+
+        #vlan: 1
+        p11 = re.compile(r'^vlan\: (?P<vlan>\d+)$')
+
+        #end_station: 0
+        p12 = re.compile(r'^end_station\: (?P<end_station>\d+)$')
+
+        #scb: 0
+        p13 = re.compile(r'^scb\: (?P<scb>\d+)$')
+
+        #cipher: GCM_AES_128
+        p14 = re.compile(r'^cipher\: (?P<cipher>\S+)$')
+
+        #Delay protection: 0
+        p15 = re.compile(r'^Delay protection\: (?P<delay_protection>\d+)$')
+
+        #replay_protect: 1
+        p16 = re.compile(r'^replay_protect\: (?P<replay_protect>\d+)$')
+
+        #replay_window_size: 0
+        p17 = re.compile(r'^replay_window_size\: (?P<replay_window_size>\d+)$')
+
+        #decrypt_frames: 1
+        p18 = re.compile(r'^decrypt_frames\: (?P<decrypt_frames>\d+)$')
+
+        #validate_frames: 1
+        p19 = re.compile(r'^validate_frames\: (?P<validate_frames>\d+)$')
+
+        #sci:ecce1346f902008c
+        p20 = re.compile(r'^sci\:(?P<sci>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                subport_tx = m1.group(1)
+                subport_tx_dict = ret_dict.setdefault('subport-{}-tx'.format(subport_tx), {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                subport_rx = m2.group(1)
+                subport_rx_dict = ret_dict.setdefault('subport-{}-rx'.format(subport_rx), {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['prev-an'] = group['prev_an']
+                    subport_tx_dict['cur-an'] = group['cur_an']
+                elif sc == 'rx':
+                    subport_rx_dict['prev-an'] = group['prev_an']
+                    subport_rx_dict['cur-an'] = group['cur_an']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sa-index'] = group['sa_index']
+                    subport_tx_dict['vport-index'] = group['vport_index']
+                    subport_tx_dict['rule-index'] = group['rule_index']
+                elif sc == 'rx':
+                    subport_rx_dict['sa-index'] = group['sa_index']
+                    subport_rx_dict['vport-index'] = group['vport_index']
+                    subport_rx_dict['rule-index'] = group['rule_index']
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['key-len'] = group['key_len']
+                elif sc == 'rx':
+                    subport_rx_dict['key-len'] = group['key_len']
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['hashkey-len'] = group['hashkey_len']
+                elif sc == 'rx':
+                    subport_rx_dict['hashkey-len'] = group['hashkey_len']
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['bypass'] = group['bypass']
+                elif sc == 'rx':
+                    subport_rx_dict['bypass'] = group['bypass']
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['next-pn'] = group['nextPn']
+                elif sc == 'rx':
+                    subport_rx_dict['next-pn'] = group['nextPn']
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if sc == 'tx':
+                   subport_tx_dict['conf-offset'] = group['conf_offset']
+                elif sc == 'rx':
+                   subport_rx_dict['conf-offset'] = group['conf_offset']
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['encrypt'] = group['encrypt']
+                elif sc == 'rx':
+                    subport_rx_dict['encrypt'] = group['encrypt']
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['vlan'] = group['vlan']
+                elif sc == 'rx':
+                    subport_rx_dict['vlan'] = group['vlan']
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['end-station'] = group['end_station']
+                elif sc == 'rx':
+                    subport_rx_dict['end-station'] = group['end_station']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['scb'] = group['scb']
+                elif sc == 'rx':
+                    subport_rx_dict['scb'] = group['scb']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    subport_rx_dict['cipher'] = group['cipher']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['delay-protection'] = group['delay_protection']
+                elif sc == 'rx':
+                    subport_rx_dict['delay-protection'] = group['delay_protection']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-protect'] = group['replay_protect']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-protect'] = group['replay_protect']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-window-size'] = group['replay_window_size']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-window-size'] = group['replay_window_size']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                if sc == 'tx':
+                     subport_tx_dict['decrypt-frames'] = group['decrypt_frames']
+                elif sc == 'rx':
+                     subport_rx_dict['decrypt-frames'] = group['decrypt_frames']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['validate-frames'] = group['validate_frames']
+                elif sc == 'rx':
+                    subport_rx_dict['validate-frames'] = group['validate_frames']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sci'] = group['sci']
+                elif sc == 'rx':
+                    subport_rx_dict['sci'] = group['sci']
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema(MetaParser):
+    """ Schema for
+        * show platform software fed active fnf et-analytics-flows
+    """
+    schema = {
+            'current-eta-records': int,
+            'excess-packets-received': int,
+            'excess-syn-received': int,
+            'total-eta-fnf': int,
+            'total-eta-idp': int,
+            'total-eta-records': int,
+            'total-eta-splt': int,
+            'total-packets-out-of-order': int,
+            'total-packets-received': int,
+            'total-packets-retransmitted': int
+            }
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlows(ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema):
+    """ Parser for
+        * show platform software fed active fnf et-analytics-flows
+    """
+
+    cli_command = 'show platform software fed active fnf et-analytics-flows'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Total packets received     : 80
+        p1 = re.compile(r'Total +packets +received +: +(?P<total_pkts>\d+)')
+
+        #Excess packets received    : 60
+        p2 = re.compile(r'Excess +packets +received +: +(?P<excess_pkts>\d+)')
+
+        #Excess syn received        : 0
+        p3 = re.compile(r'Excess +syn +received +: +(?P<excess_syn>\d+)')
+
+        #Total eta records added    : 4
+        p4 = re.compile(r'Total +eta +records +added +: +(?P<tot_eta>\d+)')
+
+        #Current eta records        : 0
+        p5 = re.compile(r'Current +eta +records +: +(?P<cur_eta>\d+)')
+
+        #Total eta splt exported    : 2
+        p6 = re.compile(r'Total +eta +splt +exported +: +(?P<eta_splt>\d+)')
+
+        #Total eta IDP exported     : 2
+        p7 = re.compile(r'Total +eta +IDP +exported +: +(?P<eta_idp>\d+)')
+
+        #Total eta-fnf records      : 2
+        p8 = re.compile(r'Total +eta\-fnf +records +: +(?P<eta_fnf>\d+)')
+
+        #Total retransmitted pkts   : 0
+        p9 = re.compile(r'Total +retransmitted +pkts +: +(?P<retr_pkts>\d+)')
+
+        #Total out of order pkts    : 0
+        p10 = re.compile(r'Total +out +of +order +pkts +: +(?P<order_pkts>\d+)')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Total packets received     : 80
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["total-packets-received"] = int(group["total_pkts"])
+
+            #Excess packets received    : 60
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict["excess-packets-received"] = int(group["excess_pkts"])
+
+            #Excess syn received        : 0
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict["excess-syn-received"] = int(group["excess_syn"])
+
+            #Total eta records added    : 4
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict["total-eta-records"] = int(group["tot_eta"])
+
+            #Current eta records        : 0
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict["current-eta-records"] = int(group["cur_eta"])
+
+            #Total eta splt exported    : 2
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                ret_dict["total-eta-splt"] = int(group["eta_splt"])
+
+            #Total eta IDP exported     : 2
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                ret_dict["total-eta-idp"] = int(group["eta_idp"])
+
+            #Total eta-fnf records      : 2
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                ret_dict["total-eta-fnf"] = int(group["eta_fnf"])
+
+            #Total retransmitted pkts   : 0
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                ret_dict["total-packets-retransmitted"] = int(group["retr_pkts"])
+
+            #Total out of order pkts    : 0
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                ret_dict["total-packets-out-of-order"] = int(group["order_pkts"])
+        return ret_dict
+
+
+# =============================================
+# Schema for 'show platform software fed switch active mpls forwarding label <label> detail'
+# Schema for 'show platform software fed active mpls forwarding label <label> detail'
+# =============================================
+class ShowPlatformSoftwareFedSchema(MetaParser):
+    """ Schema for:
+        *show platform software fed {switch} active mpls forwarding label {label} detail
+        *show platform software fed active mpls forwarding label {label} detail
+    """
+    schema = {
+        'lentry_label':{
+            Any():{
+                'nobj': list,
+                'lentry_hdl': str,
+                'modify_cnt': int,
+                'backwalk_cnt': int,
+                'lspa_handle': str,
+                'aal':{
+                    'id': int,
+                    'lbl': int,
+                    'eos0':{
+                        'adj_hdl': str,
+                        'hw_hdl': str,
+                        },
+                    'eos1':{
+                        'adj_hdl': str,
+                        'hw_hdl': str,
+                    },
+                    'deagg_vrf_id': int,
+                    'lspa_handle': str,
+                    },
+                Optional('eos'):{
+                    'objid': int,
+                    'local_label': int,
+                    'flags': str,
+                    'pdflags': str,
+                    'nobj0': list,
+                    'nobj1': list,
+                    'modify': int,
+                    'bwalk': int,
+                },
+                Optional('label'):{
+                    Any():{
+                        'link_type': str,
+                        'local_label': int,
+                        'outlabel': str,
+                        'flags': {
+                            Any(): list,
+                        },
+                        'pdflags': {
+                            Any(): list,
+                        },
+                        'adj_handle': str,
+                        'unsupported_recursion': int,
+                        'olbl_changed': int,
+                        'local_adj': int,
+                        'modify_cnt': int,
+                        'bwalk_cnt': int,
+                        'subwalk_cnt': int,
+                        'collapsed_oce': int,
+                        Optional('label_aal'):{
+                            Any():{
+                                'lbl': int,
+                                'smac': str,
+                                'dmac': str,
+                                'sub_type': int,
+                                'link_type': int,
+                                'adj_flags': str,
+                                'label_type': int,
+                                'rewrite_type': str,
+                                'vlan_id': int,
+                                'vrf_id': int,
+                                'ri': str,
+                                'ri_id': str,
+                                'phdl': str,
+                                'ref_cnt':int,
+                                'si': str,
+                                'si_id': str,
+                                'di_id': str,
+                                },
+                            },
+                        },
+                    },
+                Optional('adj'):{
+                    Any():{
+                        'link_type': str,
+                        'ifnum': str,
+                        'adj': str,
+                        'si': str,
+                        Optional('IPv4'): str,
+                        },
+                    },
+                Optional('objid'):{
+                    Any():{
+                        'SPECIAL': str,
+                    },
+                },
+
+                Optional('lb'):{
+                    Any():{
+                        'ecr_map_objid': int,
+                        'link_type': str,
+                        'num_choices': int,
+                        'flags': str,
+                        'mpls_ecr': int,
+                        'local_label': int,
+                        'path_inhw': int,
+                        'ecrh': str,
+                        'old_ecrh': str,
+                        'modify_cnt': int,
+                        'bwalk_cnt': int,
+                        'subwalk_cnt': int,
+                        'finish_cnt': int,
+                        Optional('bwalk'):{
+                            'req': int,
+                            'in_prog': int,
+                            'nested': int,
+                            },
+                        Optional('aal'):{
+                            'ecr_id': int,
+                            'af': int,
+                            'ecr_type': str,
+                            'ref': int,
+                            'ecrh': str,
+                            'hwhdl': str,
+                        }
+                    },
+                },
+                Optional('sw_enh_ecr_scale'):{
+                    Any():{
+                        'llabel': int,
+                        'eos': int,
+                        'adjs': int,
+                        'mixed_adj': str,
+                        'reprogram_hw': str,
+                        'ecrhdl': str,
+                        'ecr_hwhdl': str,
+                        'mod_cnt': int,
+                        'prev_npath': int,
+                        'pmismatch': int,
+                        'pordermatch': int,
+                        Optional('ecr_adj'):{
+                            Any():{
+                                Optional('is_mpls_adj'): int,
+                                Optional('l3adj_flags'): str,
+                                Optional('recirc_adj_id'): int,
+                                'sih': str,
+                                'di_id': int,
+                                'rih': str,
+                                Optional('adj_lentry'): str,
+                            },
+                        },
+                    },
+                },
+
+            }
+        }
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show platform software fed '
+# ================================================================
+class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
+    ''' Parser for:
+        ' show platform software fed {switch} active mpls forwarding label {label} detail'
+        ' show platform software fed active mpls forwarding label {label} detail '
+    '''
+
+    cli_command = ['show platform software fed active mpls forwarding label {label} detail',
+                   'show platform software fed {switch} active mpls forwarding label {label} detail']
+    def cli(self, label='',switch='',output=None):
+        ''' cli for:
+         ' show platform software fed {switch} active mpls forwarding label {label} detail '
+         ' show platform software fed active mpls forwarding label {label} detail '
+        '''
+        if output is None:
+            # Build command
+            if not switch:
+                cmd = self.cli_command[0].format(label=label)
+            else:
+                cmd = self.cli_command[1].format(switch=switch, label=label)
+            # Execute command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+
+        #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
+        p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:\(+'
+                        r'(?P<nobj>[\S\s]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
+
+        #modify_cnt:1 backwalk_cnt:2
+        p2 = re.compile(r'^modify_cnt:+(?P<modify_cnt>\d+)\s+'
+                        r'backwalk_cnt:+(?P<backwalk_cnt>\d+)$')
+
+        #lspa_handle:0
+        p3 = re.compile(r'^lspa_handle:+(?P<lspa_handle>\w+)$')
+
+        #AAL: id:3724541962 lbl:22
+        p4 = re.compile(r'^AAL:\s+id:+(?P<id>\d+)\s+lbl:+(?P<lbl>\d+)$')
+
+        #eos0:[adj_hdl:0x83000039, hw_hdl:0x7f02737c6628]
+        p5 = re.compile(r'^eos0:\[+adj_hdl:+(?P<adj_hdl>\w+)+,\s+hw_hdl:+(?P<hw_hdl>\w+)+\]+$')
+
+        #eos1:[adj_hdl:0x3d000038, hw_hdl:0x7f02737c6478]
+        p6 = re.compile(r'^eos1:\[+adj_hdl:+(?P<adj_hdl>\w+)+,\s+hw_hdl:+'
+                        r'(?P<hw_hdl>\w+)+\]+$')
+
+        #deagg_vrf_id = 0 lspa_handle:0
+        p7 = re.compile(r'^deagg_vrf_id\s+=\s+(?P<deagg_vrf_id>\d+)+\s+lspa_handle:+'
+                        r'(?P<lspa_handle>\w+)+$')
+
+        #EOS:objid:142 local_label:0 flags:0:() pdflags:0
+        p8 = re.compile(r'^EOS:+objid:+(?P<objid>\d+)\s+local_label:+'
+                        r'(?P<local_label>\d+)\s+flags:+\S:+'
+                        r'(?P<flags>[\S\s]+)\s+pdflags:+'
+                        r'(?P<pdflags>\S+)$')
+
+        #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
+        p9 = re.compile(r'^nobj0:\(+(?P<nobj0>[\w\,\s]+)+\)+\,\s+nobj1:\(+'
+                        r'(?P<nobj1>[\w\,\s]+)+\)\s+modify:+(?P<modify>\d+)\s+bwalk:+(?P<bwalk>\d+)$')
+
+        #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
+        p10 = re.compile(r'LABEL:+objid:+(?P<objid>\d+)\s+link_type:+'
+                         r'(?P<link_type>\w+)\s+local_label:+'
+                         r'(?P<local_label>\d+)\s+outlabel:+(?P<outlabel>[\S\s]+)$')
+
+        #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x83000039
+        p11 = re.compile(r'flags:+(?P<flagid>\w+)+:\(+(?P<flagstr>\S+)+\,+\)+\s+pdflags:+'
+                         r'(?P<pdflagid>\w+)+:\(+(?P<pdflagstr>\S+)+\,+\)+\s+adj_handle:+(?P<adj_handle>\w+)$')
+
+        #unsupported recursion:0 olbl_changed 0 local_adj:0 modify_cnt:0
+        p12 = re.compile(r'^unsupported\s+recursion:+(?P<unsupported_recursion>\d+)\s+olbl_changed\s+'
+                         r'(?P<olbl_changed>\d+)\s+local_adj:+'
+                         r'(?P<local_adj>\d+)\s+modify_cnt:+(?P<modify_cnt>\d+)$')
+
+        #bwalk_cnt:0 subwalk_cnt:0 collapsed_oce:0
+        p13 = re.compile(r'^bwalk_cnt:+(?P<bwalk_cnt>\d+)\s+subwalk_cnt:+'
+                         r'(?P<subwalk_cnt>\d+)\s+collapsed_oce:+(?P<collapsed_oce>\d+)$')
+
+        #AAL: id:2197815353 lbl:0 smac:00a7.42d6.c41f dmac:0027.90bf.2ee7
+        p14 = re.compile(r'^AAL:\s+id:+(?P<id>\d+)\s+lbl:+(?P<lbl>\d+)\s+smac:+'
+                         r'(?P<smac>\S+)\s+dmac:+(?P<dmac>\S+)$')
+
+        #sub_type:0 link_type:2 adj_flags:0 label_type:1 rewrite_type:POP2MPLS(138)
+        p15 = re.compile(r'^sub_type:+(?P<sub_type>\d+)\s+link_type:+'
+                         r'(?P<link_type>\d+)\s+adj_flags:+(?P<adj_flags>\w+)\s+label_type:+'
+                         r'(?P<label_type>\d+)\s+rewrite_type:+(?P<rewrite_type>\S+)$')
+
+        #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
+        p16 = re.compile(r'^vlan_id:+(?P<vlan_id>\d+)\s+vrf_id:+(?P<vrf_id>\d+)\s+ri:+'
+                         r'(?P<ri>\w+)+,\s+ri_id:+(?P<ri_id>\w+)\s+phdl:+'
+                         r'(?P<phdl>\w+)+,\s+ref_cnt:+(?P<ref_cnt>\d+)$')
+
+        #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
+        p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)$')
+
+        #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
+        p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
+                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
+                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)+  }$')
+
+        #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
+        p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
+                         r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
+                         r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)\s+IPv4:+\s+'
+                         r'(?P<IPv4>[\d\.]+)\s+\}$')
+
+        #LENTRY:label:75 not found...
+        p20 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\snot +found\S+$')
+
+        #AAL: Handle not found:0
+        p21 = re.compile(r'^AAL:\s+Handle\ not\ found:\S$')
+
+        #LB:obj_id:38 ecr_map_objid:0 link_type:IP num_choices:2 Flags:0
+        p22 = re.compile(r'LB:+obj_id:+(?P<obj_id>\d+)\s+ecr_map_objid:+'
+                         r'(?P<ecr_map_objid>\d+)\s+link_type:+'
+                         r'(?P<link_type>\w+)\s+num_choices:+'
+                         r'(?P<num_choices>\d+)\s+Flags:+(?P<flags>\w+)$')
+
+        #mpls_ecr:1 local_label:24 path_inhw:2 ecrh:0xf9000002 old_ecrh:0
+        p23 = re.compile(r'mpls_ecr:+(?P<mpls_ecr>\d+)\s+local_label:+'
+                         r'(?P<local_label>\d+)\s+path_inhw:+'
+                         r'(?P<path_inhw>\d+)\s+ecrh:+'
+                         r'(?P<ecrh>\w+)\s+old_ecrh:+(?P<old_ecrh>\w+)$')
+
+        #modify_cnt:0 bwalk_cnt:0 subwalk_cnt:0 finish_cnt:0
+        p24 = re.compile(r'modify_cnt:+(?P<modify_cnt>\d+)\s+bwalk_cnt:+'
+                         r'(?P<bwalk_cnt>\d+)\s+subwalk_cnt:+'
+                         r'(?P<subwalk_cnt>\d+)\s+finish_cnt:+'+
+                         r'(?P<finish_cnt>\d+)$')
+
+        #bwalk:[req:0 in_prog:0 nested:0]
+        p25 = re.compile(r'bwalk:\[+req:+(?P<req>\d+)\s+in_prog:+'
+                         r'(?P<in_prog>\d+)\s+nested:+(?P<nested>\d+)+\]+$')
+
+        #AAL: ecr:id:4177526786 af:0 ecr_type:0 ref:3 ecrh:0x7f02737e49f8(28:2)
+        p26 = re.compile(r'AAL:\s+ecr:id:+(?P<ecr_id>\d+)\s+af:(?P<af>\d+)\s+ecr_type:+'
+                         r'(?P<ecr_type>\w+)\s+ref:+(?P<ref>\d+)\s+ecrh:+(?P<ecrh>\S+)+$')
+
+        #hwhdl:1937656312 ::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728
+        p27 = re.compile(r'hwhdl+(?P<hwhdl>[\S\s]+)$')
+
+        #Sw Enh ECR scale: objid:38 llabel:24 eos:1 #adjs:2 mixed_adj:0
+        p28 = re.compile(r'Sw +Enh +ECR +scale:\s+objid:+(?P<objid>\d+)\s+llabel:+'
+                         r'(?P<llabel>\d+)\s+eos:+(?P<eos>\d+)\s+\#adjs:+'
+                         r'(?P<adjs>\d+)\s+mixed_adj:+(?P<mixed_adj>\w+)$')
+
+        #reprogram_hw:0 ecrhdl:0xf9000002 ecr_hwhdl:0x7f02737e49f8
+        p29 = re.compile(r'reprogram_hw:+(?P<reprogram_hw>\w+)\s+ecrhdl:+'
+                         r'(?P<ecrhdl>\w+)\s+ecr_hwhdl:+(?P<ecr_hwhdl>\w+)$')
+
+        # mod_cnt:0 prev_npath:0 pmismatch:0 pordermatch:0
+        p30 = re.compile(r'mod_cnt:+(?P<mod_cnt>\d+)\s+prev_npath:+'
+                         r'(?P<prev_npath>\d+)\s+pmismatch:+(?P<pmismatch>\d+)\s+pordermatch:+'
+                         r'(?P<pordermatch>\d+)$')
+
+        #ecr_adj: id:1644167265 is_mpls_adj:1 l3adj_flags:0x100000
+        p31 = re.compile(r'(?P<ecr_adj>\S+):\s+id:+(?P<id>\d+)\s+is_mpls_adj:+'
+                         r'(?P<is_mpls_adj>\d+)\s+l3adj_flags:+(?P<l3adj_flags>\w+)$')
+
+        # recirc_adj_id:3120562239
+        p32 = re.compile(r'recirc_adj_id:+(?P<recirc_adj_id>\d+)$')
+
+        # sih:0x7f02737e11c8(182) di_id:20499 rih:0x7f02737e0bf8(74)
+        p33 = re.compile(r'sih:+(?P<sih>\S+)\s+di_id:(?P<di_id>\d+)\s+rih:+(?P<rih>\S+)$')
+
+        # adj_lentry [eos0:0x7f02734123b8 eos1:0x7f02737ec5e8]
+        p34 = re.compile(r'adj_lentry\s+(?P<adj_lentry>[\S\s]+)$')
+
+        #ecr_prefix_adj: id:2483028067 (ref:1)
+        p35 = re.compile(r'(?P<ecr_prefix_adj>\S+):\s+id:+(?P<id>\d+)\s+\S+$')
+
+        #objid:ADJ SPECIAL:0
+        p36 = re.compile(r'objid:+(?P<objid>\S+)\s+SPECIAL:+(?P<SPECIAL>\w+)$')
+
+        # Init vars
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            eos_dict = {}
+
+            #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                label_id = int(group['label'])
+                lentry_dict = ret_dict.setdefault('lentry_label', {}).setdefault(label_id, {})
+                lentry_dict['nobj'] = list(str(group['nobj']).split(','))
+                lentry_dict['lentry_hdl'] = group['lentry_hdl']
+                continue
+
+            #modify_cnt:1 backwalk_cnt:2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lentry_dict['modify_cnt'] = int(group['modify_cnt'])
+                lentry_dict['backwalk_cnt'] = int(group['backwalk_cnt'])
+                continue
+
+            #lspa_handle:0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lentry_dict['lspa_handle'] = str(group['lspa_handle'])
+                continue
+
+            #AAL: id:3724541962 lbl:22
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                aal_dict = ret_dict['lentry_label'][label_id].setdefault('aal', {})
+                aal_dict['id'] = int(group['id'])
+                aal_dict['lbl'] = int(group['lbl'])
+                continue
+
+            #eos0:[adj_hdl:0x83000039, hw_hdl:0x7f02737c6628]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                eos0_dict = ret_dict['lentry_label'][label_id]['aal'].setdefault('eos0', {})
+                eos0_dict['adj_hdl'] = str(group['adj_hdl'])
+                eos0_dict['hw_hdl'] = str(group['hw_hdl'])
+                continue
+
+            #eos1:[adj_hdl:0x3d000038, hw_hdl:0x7f02737c6478]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                eos1_dict = ret_dict['lentry_label'][label_id]['aal'].setdefault('eos1', {})
+                eos1_dict['adj_hdl'] = str(group['adj_hdl'])
+                eos1_dict['hw_hdl'] = str(group['hw_hdl'])
+                continue
+
+            #deagg_vrf_id = 0 lspa_handle:0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                aal_dict['deagg_vrf_id'] = int(group['deagg_vrf_id'])
+                aal_dict['lspa_handle'] = str(group['lspa_handle'])
+                continue
+
+            #EOS:objid:142 local_label:0 flags:0:() pdflags:0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                eos_dict = ret_dict['lentry_label'][label_id].setdefault('eos', {})
+                eos_dict['objid'] = int(group['objid'])
+                eos_dict['local_label'] = int(group['local_label'])
+                eos_dict['flags'] = str(group['flags'])
+                eos_dict['pdflags'] = str(group['pdflags'])
+                continue
+
+            #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['lentry_label'][label_id]['eos']['nobj0'] = list(str(group['nobj0']).split(', '))
+                ret_dict['lentry_label'][label_id]['eos']['nobj1'] = list(str(group['nobj1']).split(', '))
+                ret_dict['lentry_label'][label_id]['eos']['modify']=int(group['modify'])
+                ret_dict['lentry_label'][label_id]['eos']['bwalk'] = int(group['bwalk'])
+                continue
+
+            #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                objid = int(group['objid'])
+                label_dict = ret_dict['lentry_label'][label_id].setdefault('label', {}).setdefault(objid, {})
+                label_dict['link_type'] = str(group['link_type'])
+                label_dict['local_label'] = int(group['local_label'])
+                label_dict['outlabel'] = str(group['outlabel'])
+                continue
+
+            #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x83000039
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                label_dict['flags'] = {}
+                flagid = str(group['flagid'])
+                flagstr = str(group['flagstr'])
+                flaglist = list(flagstr.split(','))
+                label_dict['flags'][flagid] = flaglist
+                label_dict['pdflags'] = {}
+                flagid = str(group['pdflagid'])
+                flagstr = str(group['pdflagstr'])
+                flaglist = list(flagstr.split(','))
+                label_dict['pdflags'][flagid] = flaglist
+                label_dict['adj_handle'] = str(group['adj_handle'])
+                continue
+
+            #unsupported recursion:0 olbl_changed 0 local_adj:0 modify_cnt:0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                label_dict['unsupported_recursion'] = int(group['unsupported_recursion'])
+                label_dict['olbl_changed'] = int(group['olbl_changed'])
+                label_dict['local_adj'] = int(group['local_adj'])
+                label_dict['modify_cnt'] = int(group['modify_cnt'])
+                continue
+
+            #bwalk_cnt:0 subwalk_cnt:0 collapsed_oce:0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                label_dict['bwalk_cnt'] = int(group['bwalk_cnt'])
+                label_dict['subwalk_cnt'] = int(group['subwalk_cnt'])
+                label_dict['collapsed_oce'] = int(group['collapsed_oce'])
+                continue
+
+            #AAL: id:2197815353 lbl:0 smac:00a7.42d6.c41f dmac:0027.90bf.2ee7
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                id = int(group['id'])
+                labelaal_dict = ret_dict['lentry_label'][label_id]['label'][objid].setdefault('label_aal', {}).setdefault(id, {})
+                labelaal_dict['lbl'] = int(group['lbl'])
+                labelaal_dict['smac'] = str(group['smac'])
+                labelaal_dict['dmac'] = str(group['dmac'])
+                continue
+
+            #sub_type:0 link_type:2 adj_flags:0 label_type:1 rewrite_type:POP2MPLS(138)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                labelaal_dict['sub_type'] = int(group['sub_type'])
+                labelaal_dict['link_type'] = int(group['link_type'])
+                labelaal_dict['adj_flags'] = str(group['adj_flags'])
+                labelaal_dict['label_type'] = int(group['label_type'])
+                labelaal_dict['rewrite_type'] = str(group['rewrite_type'])
+                continue
+
+            #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                labelaal_dict['vlan_id'] = int(group['vlan_id'])
+                labelaal_dict['vrf_id'] = int(group['vrf_id'])
+                labelaal_dict['ri'] = str(group['ri'])
+                labelaal_dict['ri_id'] = str(group['ri_id'])
+                labelaal_dict['phdl'] = str(group['phdl'])
+                labelaal_dict['ref_cnt'] = int(group['ref_cnt'])
+                continue
+
+            #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                labelaal_dict['si'] = str(group['si'])
+                labelaal_dict['si_id'] = str(group['si_id'])
+                labelaal_dict['di_id'] = str(group['di_id'])
+                continue
+
+            #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                objid = int(group['objid'])
+                adj_dict = ret_dict['lentry_label'][label_id].setdefault('adj', {}).setdefault(objid, {})
+                adj_dict['link_type'] = str(group['link_type'])
+                adj_dict['ifnum'] = str(group['ifnum'])
+                adj_dict['adj'] = str(group['adj'])
+                adj_dict['si'] = str(group['si'])
+                continue
+
+            #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                objid = int(group['objid'])
+                adj_dict = ret_dict['lentry_label'][label_id].setdefault('adj', {}).setdefault(objid, {})
+                adj_dict['link_type'] = str(group['link_type'])
+                adj_dict['ifnum'] = str(group['ifnum'])
+                adj_dict['adj'] = str(group['adj'])
+                adj_dict['si'] = str(group['si'])
+                adj_dict['IPv4'] = str(group['IPv4'])
+                continue
+
+            #LENTRY:label:75 not found...
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                label_id = int(group['label'])
+                lentry_dict = ret_dict.setdefault('lentry_label', {}).setdefault(label_id,{})
+                lentry_dict['label'] = int(group['label'])
+                continue
+
+            #AAL: Handle not found:0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                labelaal_dict = ret_dict['lentry_label'][label_id].setdefault('aal', {})
+                continue
+
+            #LB:obj_id:38 ecr_map_objid:0 link_type:IP num_choices:2 Flags:0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                objid1 = int(group['obj_id'])
+                lb_dict = ret_dict['lentry_label'][label_id].setdefault('lb', {}).setdefault(objid1, {})
+                lb_dict['ecr_map_objid'] = int(group['ecr_map_objid'])
+                lb_dict['link_type'] = str(group['link_type'])
+                lb_dict['num_choices'] = int(group['num_choices'])
+                lb_dict['flags'] = str(group['flags'])
+                continue
+
+            #mpls_ecr:1 local_label:24 path_inhw:2 ecrh:0xf9000002 old_ecrh:0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict['mpls_ecr'] = int(group['mpls_ecr'])
+                lb_dict['local_label'] = int(group['local_label'])
+                lb_dict['path_inhw'] = int(group['path_inhw'])
+                lb_dict['ecrh'] = str(group['ecrh'])
+                lb_dict['old_ecrh'] = str(group['old_ecrh'])
+                continue
+
+            #modify_cnt:0 bwalk_cnt:0 subwalk_cnt:0 finish_cnt:0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict['modify_cnt'] = int(group['modify_cnt'])
+                lb_dict['bwalk_cnt'] = int(group['bwalk_cnt'])
+                lb_dict['subwalk_cnt'] = int(group['subwalk_cnt'])
+                lb_dict['finish_cnt'] = int(group['finish_cnt'])
+                lb_dict['aal'] = {}
+                lb_dict['bwalk'] = {}
+                continue
+
+            #bwalk:[req:0 in_prog:0 nested:0]
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict['bwalk']['req'] = int(group['req'])
+                lb_dict['bwalk']['in_prog'] = int(group['in_prog'])
+                lb_dict['bwalk']['nested'] = int(group['nested'])
+                continue
+
+            #AAL: ecr:id:4177526786 af:0 ecr_type:0 ref:3 ecrh:0x7f02737e49f8(28:2)
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict['aal']['ecr_id'] = int(group['ecr_id'])
+                lb_dict['aal']['af'] = int(group['af'])
+                lb_dict['aal']['ecr_type'] = str(group['ecr_type'])
+                lb_dict['aal']['ref'] = int(group['ref'])
+                lb_dict['aal']['ecrh'] = str(group['ecrh'])
+                continue
+
+            #hwhdl:1937656312 ::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict['aal']['hwhdl'] = str(group['hwhdl'])
+                continue
+
+            #Sw Enh ECR scale: objid:38 llabel:24 eos:1 #adjs:2 mixed_adj:0
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                objid = int(group['objid'])
+                ecr_dict = ret_dict['lentry_label'][label_id].setdefault('sw_enh_ecr_scale', {}).setdefault(objid, {})
+                ecr_dict['llabel'] = int(group['llabel'])
+                ecr_dict['eos'] = int(group['eos'])
+                ecr_dict['adjs'] = int(group['adjs'])
+                ecr_dict['mixed_adj'] = str(group['mixed_adj'])
+                continue
+
+            #reprogram_hw:0 ecrhdl:0xf9000002 ecr_hwhdl:0x7f02737e49f8
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                ecr_dict['reprogram_hw'] = str(group['reprogram_hw'])
+                ecr_dict['ecrhdl'] = str(group['ecrhdl'])
+                ecr_dict['ecr_hwhdl'] = str(group['ecr_hwhdl'])
+                continue
+
+            # mod_cnt:0 prev_npath:0 pmismatch:0 pordermatch:0
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                ecr_dict['mod_cnt'] = int(group['mod_cnt'])
+                ecr_dict['prev_npath'] = int(group['prev_npath'])
+                ecr_dict['pmismatch'] = int(group['pmismatch'])
+                ecr_dict['pordermatch'] = int(group['pordermatch'])
+                ecr_dict['ecr_adj'] = {}
+                continue
+
+            #ecr_adj: id:1644167265 is_mpls_adj:1 l3adj_flags:0x100000
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                id1 = int(group['id'])
+                ecr_dict['ecr_adj'][id1] = {}
+                ecr_dict['ecr_adj'][id1]['is_mpls_adj'] = int(group['is_mpls_adj'])
+                ecr_dict['ecr_adj'][id1]['l3adj_flags'] = str(group['l3adj_flags'])
+                continue
+
+            # recirc_adj_id:3120562239
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                ecr_dict['ecr_adj'][id1]['recirc_adj_id'] = int(group['recirc_adj_id'])
+                continue
+
+            # sih:0x7f02737e11c8(182) di_id:20499 rih:0x7f02737e0bf8(74)
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                ecr_dict['ecr_adj'][id1]['sih'] = str(group['sih'])
+                ecr_dict['ecr_adj'][id1]['di_id'] = int(group['di_id'])
+                ecr_dict['ecr_adj'][id1]['rih'] = str(group['rih'])
+                continue
+
+            # adj_lentry [eos0:0x7f02734123b8 eos1:0x7f02737ec5e8]
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                ecr_dict['ecr_adj'][id1]['adj_lentry'] = str(group['adj_lentry'])
+                continue
+
+            #ecr_prefix_adj: id:2483028067 (ref:1)
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                id1 = int(group['id'])
+                ecr_dict['ecr_adj'][id1] = {}
+                continue
+
+            #objid:ADJ SPECIAL:0
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                lentry_dict['objid'] = {}
+                id2 = str(group['objid'])
+                lentry_dict['objid'][id2] = {}
+                lentry_dict['objid'][id2]['SPECIAL'] = str(group['SPECIAL'])
+                continue
+
+        return ret_dict
+

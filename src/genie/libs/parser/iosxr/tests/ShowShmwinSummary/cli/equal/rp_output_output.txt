@@ -1,0 +1,44 @@
+RP/0/RSP0/CPU0:adr-ar90#show shmwin summary
+
+
+
+Mon Mar 22 12:33:52.414 EET
+
+----------------------------------------
+
+Shared memory window summary information
+
+----------------------------------------
+
+Data for Window "subdb_sco_tbl":
+
+-----------------------------
+
+Virtual Memory size  : 1536 MBytes
+
+Virtual Memory Range : 0x50000000 - 0xb0000000
+
+
+Window Name      ID  GRP #Usrs #Wrtrs Ownr Usage(KB) Peak(KB) Peak Timestamp
+
+---------------- --- --- ----- ------ ---- --------- -------- -------------------
+
+subdb_sco_tbl    70  1   1     1      159  3         0        --/--/---- --:--:--
+
+Data for Window "subsession_db":
+
+-----------------------------
+
+subsession_db    81  1   2     2      0    9859      9859     03/21/2021 21:13:51
+
+Data for Window "ifo_ea_shm":
+
+-----------------------------
+
+ifo_ea_shm       130 P   1     1      0    1234      2795     03/18/2021 02:09:01
+
+---------------------------------------------
+
+Total SHMWIN memory usage : 984 MBytes
+
+
