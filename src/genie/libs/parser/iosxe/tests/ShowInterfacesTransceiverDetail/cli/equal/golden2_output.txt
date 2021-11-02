@@ -1,0 +1,127 @@
+IDPROM for transceiver Te0/0/5:
+  Description                               = SFP+ optics (type 130)
+  Transceiver Type:                         = SFP+ 10GBASE-SR (273)
+  Product Identifier (PID)                  = SFP-10G-SR
+  Vendor Revision                           = G4.1
+  Serial Number (SN)                        = AAAAAAAAAAA
+  Vendor Name                               = CISCO-AVAGO
+  Vendor OUI (IEEE company ID)              = 00.17.6A (5994)
+  CLEI code                                 = AAAAAAAAAA
+  Cisco part number                         = 00-0000-00
+  Device State                              = Enabled.
+  Date code (yy/mm/dd)                      = 18/09/26
+  Connector type                            = LC.
+  Encoding                                  = 64B66B
+  Nominal bitrate                           = 10GE (10300 Mbits/s)
+  Minimum bit rate as % of nominal bit rate = not specified
+  Maximum bit rate as % of nominal bit rate = not specified
+
+Socket Verification
+
+
+  SFP-Plus IDPROM Page 0xA0:
+        000:        00 00 00 00 00 00 00 00 00 00
+        010:        00 00 00 00 00 00 00 00 00 00
+        020:        00 00 00 00 00 00 00 00 00 00
+        030:        00 00 00 00 00 00 00 00 00 00
+        040:        00 00 00 00 00 00 00 00 00 00
+        050:        00 00 00 00 00 00 00 00 00 00
+        060:        00 00 00 00 00 00 00 00 00 00
+        070:        00 00 00 00 00 00 00 00 00 00
+        080:        00 00 00 00 00 00 00 00 00 00
+        090:        00 00 00 00 00 00 00 00 00 00
+        100:        00 00 00 00 00 00 00 00 00 00
+        110:        00 00 00 00 00 00 00 00 00 00
+        120:        00 00 00 00 00 00 00 00 00 00
+        130:        00 00 00 00 00 00 00 00 00 00
+        140:        00 00 00 00 00 00 00 00 00 00
+        150:        00 00 00 00 00 00 00 00 00 00
+        160:        00 00 00 00 00 00 00 00 00 00
+        170:        00 00 00 00 00 00 00 00 00 00
+        180:        00 00 00 00 00 00 00 00 00 00
+        190:        00 00 00 00 00 00 00 00 00 00
+        200:        00 00 00 00 00 00 00 00 00 00
+        210:        00 00 00 00 00 00 00 00 00 00
+        220:        00 00 00 00
+
+  SFP-Plus IDPROM Page 0xA2:
+        000:        00 00 00 00 00 00 00 00 00 00
+        010:        00 00 00 00 00 00 00 00 00 00
+        020:        00 00 00 00 00 00 00 00 00 00
+        030:        00 00 00 00 00 00 00 00 00 00
+        040:        00 00 00 00 00 00 00 00 00 00
+        050:        00 00 00 00 00 00 00 00 00 00
+        060:        00 00 00 00 00 00 00 00 00 00
+        070:        00 00 00 00 00 00 00 00 00 00
+        080:        00 00 00 00 00 00 00 00 00 00
+        090:        00 00 00 00 00 00 00 00 00 00
+        100:        00 00 00 00 00 00 00 00 00 00
+        110:        00 00 00 00 00 00 00 00 00 00
+        120:        00 00 00 00 00 00 00 00 00 00
+        130:        00 00 00 00 00 00 00 00 00 00
+        140:        00 00 00 00 00 00 00 00 00 00
+        150:        00 00 00 00 00 00 00 00 00 00
+        160:        00 00 00 00 00 00 00 00 00 00
+        170:        00 00 00 00 00 00 00 00 00 00
+        180:        00 00 00 00 00 00 00 00 00 00
+        190:        00 00 00 00 00 00 00 00 00 00
+        200:        00 00 00 00 00 00 00 00 00 00
+        210:        00 00 00 00 00 00 00 00 00 00
+        220:        00 00 00 00 00 00 00 00 00 00
+        230:        00 00 00 00 00 00 00 00 00 00
+        240:        00 00 00 00 00 00 00 00 00 00
+        250:        00 00 00 00 00 00
+  Link reach for 9u fiber (km)                       = LRM-SM(300m) (0)
+  Link reach for 50u OM2 fiber (m)                   = SR(82m) (8)
+                                                       10GFC-SW(82m) (8)
+  Link reach for 62.5u fiber (m)                     = SR(26m) (2)
+                                                       8GFC-SW(21m) (2)
+  Link reach for 50u OM3 fiber (m)                   = SR(300m) (30)
+                                                       10GFC-SW(300m) (30)
+  Nominal laser wavelength                      = 850 nm.
+  DWDM wavelength fraction                      = 850.0  nm.
+  Supported options                                  = Tx disable
+                                                       Tx fault signal
+                                                       Loss of signal (standard implementation)
+  Supported enhanced options                         = Alarms for monitored parameters
+                                                       Software Tx disable
+                                                       Software Tx fault monitoring
+                                                       Software Rx LOS monitoring
+  Diagnostic monitoring                              = Digital diagnostics supported
+                                                       Diagnostics are internally calibrated
+                                                       Rx power measured is "Average power"
+
+ mA: milliamperes, dBm: decibels (milliwatts), NA or N/A: not applicable.
+++ : high alarm, +  : high warning, -  : low warning, -- : low alarm.
+A2D readouts (if they differ), are reported in parentheses.
+The threshold values are calibrated.
+
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Temperature        Threshold   Threshold  Threshold  Threshold
+Port         (Celsius)          (Celsius)   (Celsius)  (Celsius)  (Celsius)
+---------    -----------------  ----------  ---------  ---------  ---------
+Te0/0/5      26.9                   75.0       70.0        0.0       -5.0
+
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Voltage            Threshold   Threshold  Threshold  Threshold
+Port         (Volts)            (Volts)     (Volts)    (Volts)    (Volts)
+---------    -----------------  ----------  ---------  ---------  ---------
+Te0/0/5      3.30                   3.63       3.46       3.13       2.97
+
+                                  High Alarm  High Warn  Low Warn   Low Alarm
+                 Current          Threshold   Threshold  Threshold  Threshold
+Port       Lane  (milliamperes)   (mA)        (mA)       (mA)       (mA)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te0/0/5    N/A    7.4                 10.5       10.5        2.5        2.5
+
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Transmit Power   Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te0/0/5    N/A   -2.3                  1.7       -1.3       -7.3      -11.3
+
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Receive Power    Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te0/0/5    N/A  -40.0                  2.0       -1.0       -9.9      -13.9

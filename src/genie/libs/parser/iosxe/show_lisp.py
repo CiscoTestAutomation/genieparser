@@ -110,6 +110,10 @@ IOSXE parsers for the following show commands:
     * show lisp eid-table {vrf} {address-family} {prefix}
     * show lisp eid-table vrf {vrf} {address-family} database {prefix}
     * show lisp eid-table vlan {vlan_id} ethernet database {prefix}
+    * show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}
+    * show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}
+    * show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}
+    * show lisp locator-table {locator_table} ethernet map-cache {eid_prefix}
 '''
 
 # Python
@@ -4964,7 +4968,7 @@ class ShowLispRouteImportMapCacheSchema(MetaParser):
                         'entries': int,
                         'limit': int,
                         'eids':  {
-                            'str':  {
+                            str:  {
                                 'uptime': str,
                                 'source': str,
                                 Optional('rloc_set'): str,
@@ -5004,13 +5008,13 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
 
         # LISP IPv4 imported routes for EID-table vrf blue (IID 102)
         # LISP IPv4 imported routes for LISP 1 EID-table vrf red (IID 105)
-        p1 = re.compile(r'LISP +IPv(?P<v4_v6>[4-6]) +imported +routes +for(\sLISP\s)?(\s?P<lisp_id>\d)? +EID-table(\svrf)? +(?P<vrf>.+) +\(+IID +(?P<instance_id>\d+)+\)$')
-
+        p1 = re.compile(r'LISP +IPv(?P<v4_v6>[4-6]) +imported +routes +for(\sLISP\s)?(?P<lisp_id>\d)? +EID-table(\svrf)? +(?P<vrf>.+) +\(+IID +(?P<instance_id>\d+)+\)$')
+        
         # Config: 2, Entries: 1 (limit 5000)
         p2 = re.compile(r'Config: +(?P<config>\d+), +Entries: +(?P<entries>\d+) +\(+limit+ (?P<limit>\d+)+\)$')
 
-        # 50.1.1.0/24               00:00:13  static                          installed
-        p3 = re.compile(r'(?P<eid>[\da-fA-F.:]+\/\d+\S+) +(?P<uptime>\d{1,2}:\d{2}:\d{2}) +(?P<source>.+\S+) +(?P<rloc>.+\S+)? +(?P<cached>none|installed|replaced|full\S+)+(?P<state>.+)?$')
+        # 50.1.1.0/24               00:00:13  static                          installed 
+        p3 = re.compile(r'(?P<eid>[\da-fA-F.:]+\/\d+\S+) +(?P<uptime>\S+) +(?P<source>.+\S+) +(?P<rloc>.+\S+)? +(?P<cached>none|installed|replaced|full\S+)+(?P<state>.+)?$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -5020,17 +5024,19 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                if 'lisp_id' not in group:
+                if group['lisp_id'] == None:
                     lisp_id = 0
+                else:
+                    lisp_id = int(group['lisp_id'])
                 instance_id = int(group['instance_id'])
                 lisp_id_dict = \
                     parsed_dict.setdefault('lisp_id', {}) \
-                               .setdefault(int(group['lisp_id']), {})
+                               .setdefault(lisp_id, {})
                 instance_id_dict = \
                     lisp_id_dict.setdefault('instance_id', {})\
                                 .setdefault(instance_id, {})
-
-                lisp_id_dict.update({'eid_table': group['eid_table']})
+    
+                instance_id_dict.update({'eid_table': group['vrf']})
                 continue
 
 
@@ -5038,9 +5044,9 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
             m = p2.match(line)
             if m:
                group = m.groupdict()
-               instance_id_dict.update({'config': group['config']})
-               instance_id_dict.update({'entries': group['entries']})
-               instance_id_dict.update({'limit': group['limit']})
+               instance_id_dict.update({'config': int(group['config'])})
+               instance_id_dict.update({'entries': int(group['entries'])})
+               instance_id_dict.update({'limit': int(group['limit'])})
                continue
 
             # 50.1.1.0/24               00:00:13  static                          installed
@@ -5048,21 +5054,22 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
             if m:
                group = m.groupdict()
                eid_dict = \
-                   instance_id_dict.setdefault('eid',{})\
+                   instance_id_dict.setdefault('eids',{})\
                                    .setdefault(group['eid'],{})
-               eid_dict.update({'uptime': group['uptime']})
+             
+               eid_dict.update({'uptime': group['uptime']})  
                eid_dict.update({'source': group['source']})
-               eid_dict.update({'cached': group['cached']})
+               eid_dict.update({'cache_db': group['cached']})
 
-               if 'rloc' in group:
-                   eid_dict.update({'rloc': group['rloc']})
-
-               if 'state' in group:
+               if group['rloc'] != None:
+                   eid_dict.update({'rloc_set': group['rloc']})         
+               
+               if group['state'] != None:
                    eid_dict.update({'state': group['state']})
 
         return parsed_dict
 
-class ShowLispIpv4RouteImport(ShowLispRouteImportMapCacheSuperParser,ShowLispRouteImportMapCacheSchema):
+class ShowLispIpv4RouteImportMapCache(ShowLispRouteImportMapCacheSuperParser,ShowLispRouteImportMapCacheSchema):
       '''route Import map-cache cli variations'''
       cli_command = [
         'show lisp instance-id {instance_id} ipv4 route-import map-cache',
@@ -5116,7 +5123,7 @@ class ShowLispIpv4RouteImport(ShowLispRouteImportMapCacheSuperParser,ShowLispRou
              elif eid_table and eid:
                  output = self.device.execute(self.cli_command[10].\
                                              format(eid_table=eid_table, eid=eid))
-             elif eid_table and eid:
+             elif eid_table and eid_prefix:
                  output = self.device.execute(self.cli_command[11].\
                                              format(eid_table=eid_table, eid_prefix=eid_prefix))
              elif eid_table:
@@ -5124,13 +5131,86 @@ class ShowLispIpv4RouteImport(ShowLispRouteImportMapCacheSuperParser,ShowLispRou
                                              format(eid_table=eid_table))
              elif locator_table and instance_id and eid_prefix:
                  output = self.device.execute(self.cli_command[14].\
-                                             format(locator_table=locator_table, eid_prefix=eid_prefix))
+                                             format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix))
              elif locator_table and instance_id and eid:
                  output = self.device.execute(self.cli_command[13].\
-                                             format(locator_table=locator_table, eid=eid))
+                                             format(locator_table=locator_table, instance_id=instance_id, eid=eid))
              else:
                  output = self.device.execute(self.cli_command[12].\
-                                             format(locator_table=locator_table))
+                                             format(locator_table=locator_table, instance_id=instance_id))
+          else:
+              output = output
+          return super().cli(output=output)
+
+class ShowLispIpv6RouteImportMapCache(ShowLispRouteImportMapCacheSuperParser,ShowLispRouteImportMapCacheSchema):
+      '''route Import map-cache cli variations'''
+      cli_command = [
+        'show lisp instance-id {instance_id} ipv6 route-import map-cache',
+        'show lisp instance-id {instance_id} ipv6 route-import map-cache {eid}',
+        'show lisp instance-id {instance_id} ipv6 route-import map-cache {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 route-import map-cache',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 route-import map-cache {eid}',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 route-import map-cache {eid_prefix}',
+        'show lisp eid-table vrf {vrf} ipv6 route-import map-cache',
+        'show lisp eid-table vrf {vrf} ipv6 route-import map-cache {eid}',
+        'show lisp eid-table vrf {vrf} ipv6 route-import map-cache {eid_prefix}',
+        'show lisp eid-table {eid_table} ipv6 route-import map-cache',
+        'show lisp eid-table {eid_table} ipv6 route-import map-cache {eid}',
+        'show lisp eid-table {eid_table} ipv6 route-import map-cache {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 route-import map-cache',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 route-import map-cache {eid}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 route-import map-cache {eid_prefix}'
+      ]
+
+      def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None,
+            eid_table=None, eid=None, vrf=None, eid_prefix=None):
+          
+          if output is None:
+             if lisp_id and instance_id and eid:
+                 output = self.device.execute(self.cli_command[4].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id, eid=eid))
+             elif lisp_id and instance_id and eid_prefix :
+                 output = self.device.execute(self.cli_command[5].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix))
+             elif lisp_id and instance_id:
+                 output = self.device.execute(self.cli_command[3].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+             elif instance_id and eid:
+                 output = self.device.execute(self.cli_command[1].\
+                                             format(instance_id=instance_id, eid=eid))
+             elif instance_id and eid_prefix:
+                 output = self.device.execute(self.cli_command[2].\
+                                             format(instance_id=instance_id, eid_prefix=eid_prefix))
+             elif instance_id:
+                 output = self.device.execute(self.cli_command[0].\
+                                             format(instance_id=instance_id))
+             elif vrf and eid:
+                 output = self.device.execute(self.cli_command[7].\
+                                             format(vrf=vrf, eid=eid))
+             elif vrf and eid_prefix:
+                 output = self.device.execute(self.cli_command[8].\
+                                             format(vrf=vrf, eid_prefix=eid_prefix))
+             elif vrf:
+                 output = self.device.execute(self.cli_command[6].\
+                                             format(vrf=vrf))
+             elif eid_table and eid:
+                 output = self.device.execute(self.cli_command[10].\
+                                             format(eid_table=eid_table, eid=eid))
+             elif eid_table and eid_prefix:
+                 output = self.device.execute(self.cli_command[11].\
+                                             format(eid_table=eid_table, eid_prefix=eid_prefix))
+             elif eid_table:
+                 output = self.device.execute(self.cli_command[9].\
+                                             format(eid_table=eid_table))
+             elif locator_table and instance_id and eid_prefix:
+                 output = self.device.execute(self.cli_command[14].\
+                                             format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix))
+             elif locator_table and instance_id and eid:
+                 output = self.device.execute(self.cli_command[13].\
+                                             format(locator_table=locator_table, instance_id=instance_id, eid=eid))
+             else:
+                 output = self.device.execute(self.cli_command[12].\
+                                             format(locator_table=locator_table, instance_id=instance_id))
           else:
               output = output
           return super().cli(output=output)
@@ -5148,7 +5228,7 @@ class ShowLispEidAwaySchema(MetaParser):
                         'eid_prefix': {
                             str: {
                             'producer': str,
-                            'created' : str
+                            'created': str
                             }
                         }
                     }
@@ -5176,6 +5256,21 @@ class ShowLispEidAwaySuperParser(ShowLispEidAwaySchema):
         show lisp eid-table vrf {eid_table} ipv4 away
         show lisp eid-table vrf {eid_table} ipv4 away {eid}
         show lisp eid-table vrf {eid_table} ipv4 away {eid_prefix}
+        show lisp instance-id {instance_id} ipv6 away
+        show lisp instance-id {instance_id} ipv6 away {eid}
+        show lisp instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid}
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid}
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp eid-table {eid_table} ipv6 away
+        show lisp eid-table {eid_table} ipv6 away {eid}
+        show lisp eid-table {eid_table} ipv6 away {eid_prefix}
+        show lisp eid-table vrf {eid_table} ipv6 away
+        show lisp eid-table vrf {eid_table} ipv6 away {eid}
+        show lisp eid-table vrf {eid_table} ipv6 away {eid_prefix}
     '''
     def cli(self, output=None):
         parsed_dict = {}
@@ -5213,7 +5308,7 @@ class ShowLispEidAwaySuperParser(ShowLispEidAwaySchema):
                 eid_prefix_dict = instance_id_dict.setdefault('eid_prefix',{})\
                                                     .setdefault(str(group['eid_prefix']), {})
                 eid_prefix_dict.update({'producer': group['producer'].strip()})
-                eid_prefix_dict.update({'created': group['created'].strip()})
+                eid_prefix_dict.update({'created': group['created'].strip()})  
                 continue
 
         return parsed_dict
@@ -5307,6 +5402,108 @@ class ShowLispIpv4Away(ShowLispEidAwaySuperParser, ShowLispEidAwaySchema):
             output = output
 
         return super().cli(output=output)
+
+class ShowLispIpv6Away(ShowLispEidAwaySuperParser, ShowLispEidAwaySchema):
+    ''' Show Command Ipv6 Away
+        show lisp instance-id {instance_id} ipv6 away
+        show lisp instance-id {instance_id} ipv6 away {eid}
+        show lisp instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid}
+        show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid}
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid_prefix}
+        show lisp eid-table {eid_table} ipv6 away
+        show lisp eid-table {eid_table} ipv6 away {eid}
+        show lisp eid-table {eid_table} ipv6 away {eid_prefix}
+        show lisp eid-table vrf {eid_table} ipv6 away
+        show lisp eid-table vrf {eid_table} ipv6 away {eid}
+        show lisp eid-table vrf {eid_table} ipv6 away {eid_prefix}
+    '''
+    
+    cli_command = [
+        'show lisp instance-id {instance_id} ipv6 away',
+        'show lisp instance-id {instance_id} ipv6 away {eid}',
+        'show lisp instance-id {instance_id} ipv6 away {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 away',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid}',
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 away {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 away {eid_prefix}',
+        'show lisp eid-table {eid_table} ipv6 away',
+        'show lisp eid-table {eid_table} ipv6 away {eid}',
+        'show lisp eid-table {eid_table} ipv6 away {eid_prefix}',
+        'show lisp eid-table vrf {vrf} ipv6 away', 
+        'show lisp eid-table vrf {vrf} ipv6 away {eid}',
+        'show lisp eid-table vrf {vrf} ipv6 away {eid_prefix}'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id and eid:
+                output = self.device.execute(self.cli_command[4].\
+                                                format(lisp_id=lisp_id, \
+                                                   instance_id=instance_id, eid=eid))
+            elif lisp_id and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[5].\
+                                                format(lisp_id=lisp_id, \
+                                                   instance_id=instance_id, \
+                                                   eid_prefix=eid_prefix))
+            elif lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(lisp_id=lisp_id, \
+                                                   instance_id=instance_id))
+            elif instance_id and eid:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(instance_id=instance_id, \
+                                                   eid= eid))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(instance_id=instance_id,\
+                                                   eid_prefix=eid_prefix))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id))
+            elif locator_table and instance_id and eid:
+                output = self.device.execute(self.cli_command[7].\
+                                                format(locator_table=locator_table, \
+                                                   instance_id=instance_id, \
+                                                   eid=eid)) 
+            elif locator_table and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[8].\
+                                                format(locator_table=locator_table, \
+                                                   instance_id=instance_id, \
+                                                   eid_prefix=eid_prefix))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[6].\
+                                                format(locator_table=locator_table, \
+                                                   instance_id=instance_id))
+            elif eid_table and eid:
+                output = self.device.execute(self.cli_command[10].\
+                                                format(eid_table=eid_table, eid=eid))
+            elif eid_table and eid_prefix:
+                output = self.device.execute(self.cli_command[11].\
+                                                format(eid_table=eid_table, \
+                                                   eid_prefix=eid_prefix))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[9].\
+                                                format(eid_table=eid_table))
+            elif vrf and eid:
+                output = self.device.execute(self.cli_command[13].\
+                                                format(vrf=vrf, eid=eid))
+            elif vrf and eid_prefix:
+                output = self.device.execute(self.cli_command[14].\
+                                                format(vrf=vrf, \
+                                                   eid_prefix=eid_prefix))
+            else:
+                output = self.device.execute(self.cli_command[12].\
+                                                format(vrf=vrf))
+
+        return super().cli(output=output)
+
 
 # ==========================================
 # Parser for: show lisp session redundancy
@@ -7707,3 +7904,298 @@ class ShowLispV6SMRParser(ShowLispV4SMRParser):
             else:
                 output = self.device.execute(self.cli_command[2].format(eid_table=eid_table))"""
         return super().cli(lisp_id=lisp_id, instance_id=instance_id, eid_table=eid_table, vrf=vrf, locator_table=locator_table, output=output)
+
+
+
+class ShowLispEthernetMapCachePrefixSchema(MetaParser):
+
+    ''' Schema for 
+      * show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}
+      * show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}
+      * show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}
+      * show lisp locator-table {locator_table} ethernet map-cache {eid_prefix}
+    '''
+
+    Schema = {
+        "lisp_id": {
+            int: {
+                "instance_id": {
+                    int: {
+                        "eid_table": str,
+                        "entries": int,
+                        "eid_prefix": {
+                            "str": {
+                                "uptime": str,
+                                "expiry_time": str,
+                                "via": str,
+                                "map_reply_state": str,
+                                "prefix_location": str,
+                                "source_type": str,
+                                "last_modified": str,
+                                "source_ip": str,
+                                "prefix_state": str,
+                                "encap": str,
+                                "rloc_set": {
+                                    "str": {
+                                        "uptime": str,
+                                        "rloc_state": str,
+                                        "priority": int,
+                                        "weight": int,
+                                        "encap_iid": str,
+                                        "last_state_change": {
+                                            "time": str, 
+                                            "count": int
+                                        },
+                                        "last_route_reach_change": {
+                                            "time": str,
+                                            "count": int,
+                                        },
+                                        "last_pri_weight_change": {
+                                            "priority": str,
+                                            "weight": str,
+                                        },
+                                        "rloc_probe_sent": {
+                                            "time": str, 
+                                            "rtt": int,
+                                            "rtt_unit": str,
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
+    ''' Parser for 
+        * show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}
+        * show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}
+        * show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}
+        * show lisp locator-table {locator_table} ethernet map-cache {eid_prefix}
+    '''
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}',
+        'show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}',
+        'show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}',
+        'show lisp locator-table {locator_table} ethernet map-cache {eid_prefix}'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, eid_prefix=None, vlan_id=None, 
+            locator_table=None):
+
+        if output is None:
+            if lisp_id and instance_id and eid_prefix:
+                cmd = self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id,\
+                                                 eid_prefix=eid_prefix)
+            elif instance_id and eid_prefix:
+                cmd = self.cli_command[1].format(instance_id=instance_id, eid_prefix=eid_prefix)
+            elif vlan_id and eid_prefix:
+                cmd = self.cli_command[2].format(vlan_id=vlan_id, eid_prefix=eid_prefix)
+            else:
+                cmd = self.cli_command[3].format(locator_table=locator_table, eid_prefix=eid_prefix)
+        
+            output = self.device.execute(cmd)
+
+
+        # Initialize dictionary
+        ret_dict = {}
+        
+        # To handle lisp_id
+        if not lisp_id or isinstance(lisp_id, str):
+            lisp_id = 0
+        elif lisp_id.isdigit():
+            lisp_id = int(lisp_id)
+
+        # To get instance_id from device
+        if not instance_id:
+            self.device.sendline('sh lisp eid-table vrf red ipv4 | i Instance')
+            out = self.device.expect(
+                [r'Instance ID:\s+\S+'],
+                timeout=2).match_output
+            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            group = p0.match(out)
+            instance_id = int(group['instance_id'])
+        else:
+            if instance_id.isdigit():
+                instance_id = int(instance_id)
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'^Output\s+for\s+router\s+lisp\s+(?P<lisp_id>(\d+))'
+                        r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP MAC Mapping Cache for EID-table Vlan 210 (IID 8188), 1 entries
+        p2 = re.compile(r'^LISP\sMAC\sMapping\sCache\sfor\sEID-table\s(?P<eid_table>.*)\s\(IID\s(?P<instance_id>\d+)\),\s(?P<entries>\d+)\sentries$')
+    
+        # 0017.0100.0001/48, uptime: 01:09:06, expires: 22:50:53, via map-reply, complete, local-to-site
+        p3 = re.compile(r'^(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3})|(([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2})),\suptime:\s(?P<uptime>\S+),\sexpires:\s(?P<expiry_time>\S+),\s+via\s(?P<via>\S+),\s(?P<map_reply_state>\S+),\s(?P<prefix_location>\S+)$')
+
+        # Sources: map-reply
+        p4 = re.compile(r'^Sources:\s(?P<source_type>\S+)$')
+
+        # State: complete, last modified: 01:09:06, map-source: 1.1.1.10
+        p5 = re.compile(r'^State:\s(?P<state>\S+),\slast\smodified:\s(?P<last_modified>\S+)\smap-source:\s(?P<source_ip>.+)$')
+
+        # Active, Packets out: 139(0 bytes), counters are not accurate (~ 00:00:01 ago)
+        p6 = re.compile(r'^(?P<prefix_state>\S+),\sPackets out:\s(?P<packets_out>\d+).+$')
+
+        # Encapsulating dynamic-EID traffic
+        p7 = re.compile(r'^Encapsulating\s(?P<encap>.+)$')
+
+        # 1.1.1.10  01:09:06  up      10/10        -
+        p8 = re.compile(r'^(?P<rloc_set>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<uptime>\S+)\s+(?P<rloc_state>\S+)\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<encap_iid>\S+)$')
+
+        # Last up-down state change:         01:09:06, state change count: 1
+        p9 = re.compile(r'^Last\sup-down\sstate\schange:\s+(?P<time>\S+),\s+state change count:\s+(?P<count>\d+)$')
+
+        # Last route reachability change:    01:09:06, state change count: 1
+        p10 = re.compile(r'^Last\sroute\sreachability\schange:\s+(?P<time>\S+),\s+state change count:\s+(?P<count>\d+)$')
+
+        # Last priority / weight change:     never/never
+        p11 = re.compile(r'^Last\spriority\s\/\sweight\schange:\s+(?P<priority>\S+)\/(?P<weight>\S+)$')
+
+        # Last RLOC-probe sent:            01:09:06 (rtt 1ms)
+        p12 = re.compile(r'^Last\sRLOC-probe\ssent:\s+(?P<time>\S+)\s\(rtt (?P<rtt>\d+)(?P<rtt_unit>\S+)\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            # Output for router lisp 0 instance-id 193
+            # Output for router lisp 2 instance-id 101
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_id = int(group['lisp_id'])
+                if group['instance_id']:
+                    instance_id = int(group['instance_id'])
+                continue
+
+            # LISP MAC Mapping Cache for EID-table Vlan 210 (IID 8188), 1 entries
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if group['instance_id']:
+                    instance_id = int(group['instance_id'])
+                lisp_id_dict = \
+                    ret_dict.setdefault('lisp_id', {})\
+                        .setdefault(lisp_id, {})\
+                        .setdefault('instance_id', {})\
+                        .setdefault(instance_id, {})
+                lisp_id_dict.update({
+                    'eid_table': group['eid_table'],
+                    'entries': int(group['entries'])
+                })
+                continue
+            
+            # 0017.0100.0001/48, uptime: 01:09:06, expires: 22:50:53, via map-reply, complete, local-to-site
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix = group.pop('eid_prefix')
+                eid_prefix_dict = lisp_id_dict.setdefault('eid_prefix', {})\
+                                              .setdefault(eid_prefix, {})
+                eid_prefix_dict.update(
+                    {k:v for k, v in group.items() if v is not None}
+                )
+                continue
+
+            # Sources: map-reply
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'source_type': group['source_type']})
+                continue
+            
+            # State: complete, last modified: 01:09:06, map-source: 1.1.1.10
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({
+                    'last_modified': group['last_modified'],
+                    'source_ip': group['source_ip']
+                })
+                continue
+            
+            # Active, Packets out: 139(0 bytes), counters are not accurate (~ 00:00:01 ago)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'prefix_state': group['prefix_state']})
+                continue
+
+            # Encapsulating dynamic-EID traffic
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'encap': group['encap']})
+                continue
+            
+            # 1.1.1.10  01:09:06  up      10/10        -
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                rloc_set = group.pop('rloc_set')
+                rloc_set_dict = eid_prefix_dict.setdefault('rloc_set', {})\
+                                               .setdefault(rloc_set, {})
+                rloc_set_dict.update({
+                    'uptime': group['uptime'],
+                    'rloc_state': group['rloc_state'],
+                    'priority': int(group['priority']),
+                    'weight': int(group['weight']),
+                    'encap_iid': group['encap_iid']
+                })
+                continue
+            
+            # Last up-down state change:         01:09:06, state change count: 1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                last_state_change_dict = rloc_set_dict.setdefault('last_state_change', {})
+                last_state_change_dict.update({
+                    'time': group['time'],
+                    'count': int(group['count'])
+                })
+                continue
+
+            # Last route reachability change:    01:09:06, state change count: 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                last_route_reach_change_dict = rloc_set_dict.setdefault('last_route_reach_change', {})
+                last_route_reach_change_dict.update({
+                    'time': group['time'],
+                    'count': int(group['count'])
+                })
+                continue
+            
+            # Last priority / weight change:     never/never
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                last_pri_weight_change_dict = rloc_set_dict.setdefault('last_pri_weight_change', {})
+                last_pri_weight_change_dict.update({
+                    'priority': group['priority'],
+                    'weight': group['weight']
+                })
+                continue
+            
+            # Last RLOC-probe sent:            01:09:06 (rtt 1ms)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                rloc_probe_sent_dict = rloc_set_dict.setdefault('rloc_probe_sent', {})
+                rloc_probe_sent_dict.update({
+                    'time': group['time'],
+                    'rtt': int(group['rtt']),
+                    'rtt_unit': group['rtt_unit']
+                })
+                continue
+
+        return ret_dict

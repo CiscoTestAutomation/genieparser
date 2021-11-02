@@ -8,6 +8,8 @@
     * show ipv6 neighbors detail
     * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
+    * show ipv6 dhcp-ldra
+    * show ipv6 dhcp-ldra statistics
     * show ipv6 routers
 """
 
@@ -212,9 +214,9 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
             out = output
 
         destination_guard_policy_dict = {}
-        # Destination guard policy poll configuration: 
+        # Destination guard policy poll configuration:
         #   enforcement stressed
-        # Policy poll is applied on the following targets: 
+        # Policy poll is applied on the following targets:
         # Target               Type  Policy               Feature        Target range
         # Twe1/0/1             PORT  poll                 Destination Guard vlan all
         # vlan 5               VLAN  poll                 Destination Guard vlan all
@@ -222,7 +224,7 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
         # vlan 39              VLAN  poll                 Destination Guard vlan all
 
 
-        #   enforcement always 
+        #   enforcement always
         enforcement_capture = re.compile(
             r"enforcement\s+(?P<enforcement>\S+)$"
         )
@@ -250,7 +252,7 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
                 destination_guard_policy_dict['enforcement'] = enforcement
                 continue
 
-            # vlan 5               VLAN  poll                 Destination Guard vlan all 
+            # vlan 5               VLAN  poll                 Destination Guard vlan all
             match = entry_capture.match(line)
             if match:
                 entry_counter += 1
@@ -282,7 +284,7 @@ class ShowIpv6DhcpGuardPolicySchema(MetaParser):
     """ Schema for show ipv6 dhcp guard policy <policy name> """
 
     schema = {
-        'dhcp_guard_policy_config': {            
+        'dhcp_guard_policy_config': {
             'policy_name': str,
             'trusted_port': bool,
             'device_role': str,
@@ -318,11 +320,11 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
 
         #Dhcp guard policy pol1 configuration:
         p = re.compile(r'^Dhcp\s+guard\s+policy\s+(?P<policy_name>.+)\s+configuration:$')
-        
+
         #Device Role: dhcp server
         p1 = re.compile(r'^Device\sRole:\s(?P<device_role>dhcp (client|server))$')
 
-        #Trusted Port 
+        #Trusted Port
         p2 = re.compile(r'^(?P<trusted_port>Trusted Port)$')
 
         #Max Preference: 255
@@ -361,14 +363,14 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
                 policy_config_dict = parser_dict.setdefault('dhcp_guard_policy_config', {})
                 policy_config_dict.update({'device_role': m1.groupdict()['device_role']})
                 continue
-            
-            #Trusted Port 
-            m2 = p2.match(line)     
+
+            #Trusted Port
+            m2 = p2.match(line)
             if m2:
                 policy_config_dict = parser_dict.setdefault('dhcp_guard_policy_config', {})
                 policy_config_dict.update({'trusted_port': True})
                 continue
-            
+
             #Max Preference: 255
             m3 = p3.match(line)
             if m3:
@@ -389,10 +391,10 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
                 policy_config_dict = parser_dict.setdefault('dhcp_guard_policy_config', {})
                 policy_config_dict.update({'access_list':  m5.groupdict()['access_list']})
                 continue
-            
+
             #Prefix List Match Prefix List: abc
             m6 = p6.match(line)
-            if m6: 
+            if m6:
                 policy_config_dict.update({'prefix_list': m6.groupdict()['prefix_list']})
                 continue
 
@@ -412,6 +414,222 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
                 target_dict.update({'target_range': m7.groupdict()['target_range']})
 
         return parser_dict
+
+class ShowIpv6DhcpLdraSchema(MetaParser):
+    """
+        Schema for show ipv6 dhcp-ldra
+    """
+    schema = {
+        'ldra': {
+            'status': str,
+            Any(): {
+                'targets': list
+            }
+        }
+    }
+
+class ShowIpv6DhcpLdra(ShowIpv6DhcpLdraSchema):
+    """
+        Parser for show ipv6 dhcp-ldra
+    """
+
+    cli_command = 'show ipv6 dhcp-ldra'
+
+    def cli(self, output=None):
+        """
+            Parse the output from the cli and return parsed data
+        """
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # DHCPv6 LDRA is Enabled.
+        p0 = re.compile(r'^DHCPv6 +LDRA +is +(?P<status>(Enabled|Disabled))')
+        # DHCPv6 LDRA policy: client-facing-disable
+        # DHCPv6 LDRA policy: client-facing-trusted
+        # DHCPv6 LDRA policy: client-facing-untrusted
+        # DHCPv6 LDRA policy: server-facing
+        p1 = re.compile(r'^DHCPv6 +LDRA +policy: +(?P<policy>[a-zA-z\-]+)')
+        #         Target: Gi1/0/20
+        #         Target: Gi1/0/12 vlan 2     vlan 3     vlan 10
+        #         Target: Gi1/0/11 vlan 4     vlan 5     vlan 11
+        #         Target: Gi1/0/6 Gi1/0/7 Gi1/0/8 Gi1/0/9 Gi1/0/10 Gi1/0/13 Gi1/0/14 Gi1/0/15
+        p2 = re.compile(r'^Target:\s+(?P<targets>[\w\/\s]+)')
+        #                 Gi1/0/16 Gi1/0/17 Gi1/0/18 Gi1/0/19
+        p3 = re.compile(r'^(?P<targets_ext>[\w\/\s]+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            # DHCPv6 LDRA is Enabled.
+            m0 = p0.match(line)
+            if m0:
+                group = m0.groupdict()
+                ldra_dict = result_dict.setdefault('ldra', group)
+                continue
+
+            # DHCPv6 LDRA policy: client-facing-disable
+            # DHCPv6 LDRA policy: client-facing-trusted
+            # DHCPv6 LDRA policy: client-facing-untrusted
+            # DHCPv6 LDRA policy: server-facing
+            m1 = p1.match(line)
+            if m1:
+                pol_group = {}
+                m1_group = m1.groupdict()
+                pol_group['policy'] = m1_group['policy'].replace('-', '_')
+                ldra_dict[pol_group['policy']] = {}
+                continue
+
+            #         Target: Gi1/0/20
+            #         Target: Gi1/0/12 vlan 2     vlan 3     vlan 10
+            #         Target: Gi1/0/11 vlan 4     vlan 5     vlan 11
+            #         Target: Gi1/0/6 Gi1/0/7 Gi1/0/8 Gi1/0/9 Gi1/0/10 Gi1/0/13 Gi1/0/14 Gi1/0/15
+            m2 = p2.match(line)
+            if m2:
+                intf_group = m2.groupdict()
+                intf_list = re.split(r'\s+(?!\d+)', intf_group['targets'])
+                ldra_dict[pol_group['policy']]['targets'] = \
+                    [Common.convert_intf_name(intf) for intf in intf_list]
+                continue
+
+            #                 Gi1/0/16 Gi1/0/17 Gi1/0/18 Gi1/0/19
+            m3 = p3.match(line)
+            if m3:
+                intf_group_ext = m3.groupdict()
+                intf_list = re.split(r'\s+(?!\d+)', intf_group_ext['targets_ext'])
+                ldra_dict[pol_group['policy']]['targets'].extend(
+                    [Common.convert_intf_name(intf) for intf in intf_list])
+                continue
+
+        return result_dict
+
+class ShowIpv6DhcpLdraStatisticsSchema(MetaParser):
+    """
+        Schema for show ipv6 dhcp-ldra statistics
+    """
+
+    schema = {
+        'statistics': {
+            Any(): {
+                'total_recvd': int,
+                'total_sent': int,
+                'total_discard': int,
+                Optional('msg_sent'): {
+                    Any(): int
+                },
+                Optional('msg_received'): {
+                    Any(): int
+                }
+            }
+        }
+    }
+
+class ShowIpv6DhcpLdraStatistics(ShowIpv6DhcpLdraStatisticsSchema):
+    """
+        Parser for show ipv6 dhcp-ldra statistics
+    """
+
+    cli_command = 'show ipv6 dhcp-ldra statistics'
+
+    def cli(self, output=None):
+        """
+            Parse the output from the cli and return parsed data
+        """
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+
+        #                 DHCPv6 LDRA client facing statistics.
+        #                 DHCPv6 LDRA server facing statistics.
+        p0 = re.compile(r'DHCPv6\s+LDRA\s+(?P<mode>[\w\s]+)\s+statistics')
+        # Messages received                20
+        p1 = re.compile(r'Messages\s+received\s+(?P<total_recvd>\d+)')
+        # Messages sent                    20
+        p2 = re.compile(r'Messages\s+sent\s+(?P<total_sent>\d+)')
+        # Messages discarded               0
+        p3 = re.compile(r'Messages\s+discarded\s+(?P<total_discard>\d+)')
+        # Messages                         Received
+        # Messages                         Sent
+        p4 = re.compile(r'Messages\s+(?P<msg_mode>Received|Sent)')
+        # SOLICIT                          1
+        # REQUEST                          1
+        # RENEW                            18
+        # RELAY-FORWARD                    20
+        p5 = re.compile(r'^(?P<msg_type>[a-zA-Z\-]+)\s+(?P<count>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            #                 DHCPv6 LDRA client facing statistics.
+            #                 DHCPv6 LDRA server facing statistics.
+            m0 = p0.match(line)
+            if m0:
+                group = {}
+                m0_group = m0.groupdict()
+                group['mode'] = m0_group['mode'].replace(' ', '_')
+                stats_dict = result_dict.setdefault('statistics', {})
+                stats_dict[group['mode']] = {}
+                continue
+
+            # Messages received                20
+            m1 = p1.match(line)
+            if m1:
+                recvd_group = m1.groupdict()
+                recvd_group['total_recvd'] = int(recvd_group['total_recvd'])
+                stats_dict[group['mode']].update(recvd_group)
+                continue
+
+            # Messages sent                    20
+            m2 = p2.match(line)
+            if m2:
+                sent_group = m2.groupdict()
+                sent_group['total_sent'] = int(sent_group['total_sent'])
+                stats_dict[group['mode']].update(sent_group)
+                continue
+
+            # Messages discarded               0
+            m3 = p3.match(line)
+            if m3:
+                discard_group = m3.groupdict()
+                discard_group['total_discard'] = int(discard_group['total_discard'])
+                stats_dict[group['mode']].update(discard_group)
+                continue
+
+            # Messages                         Received
+            # Messages                         Sent
+            m4 = p4.match(line)
+            if m4:
+                msg_mode_group = m4.groupdict()
+                msg_dict = stats_dict[group['mode']].setdefault(f"msg_{msg_mode_group['msg_mode'].lower()}", {})
+                continue
+
+            # SOLICIT                          1
+            # REQUEST                          1
+            # RENEW                            18
+            # RELAY-FORWARD                    20
+            m5 = p5.match(line)
+            if m5:
+                msg_type_group = m5.groupdict()
+                msg_dict[msg_type_group['msg_type'].lower().replace('-', '_')] = int(msg_type_group['count'])
+                continue
+
+        return result_dict
 
 # ====================================================
 #  schema for show ipv6 routers

@@ -1,9 +1,0 @@
-Switch#sh lisp 0 instance-id * ipv4 route-import map-cache 50.1.1.0/24
-
-=================================================
-Output for router lisp 0 instance-id 102
-=================================================
-LISP IPv4 imported routes for EID-table vrf blue (IID 102)
-Config: 2, Entries: 1 (limit 5000)
-Prefix                    Uptime    Source               RLOC-set   Cache/DB   State
-50.1.1.0/24               00:55:36  static                          installed 

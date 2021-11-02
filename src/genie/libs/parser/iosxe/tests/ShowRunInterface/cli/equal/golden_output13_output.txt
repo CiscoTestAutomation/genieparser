@@ -1,0 +1,10 @@
+interface nve1
+ no ip address
+ source-interface Loopback1
+ host-reachability protocol bgp
+ member vni 20011 ingress-replication
+ member vni 20012 ingress-replication local-routing
+ member vni 20013 mcast-group 239.1.1.3 local-routing
+ member vni 20014 mcast-group 239.1.1.4
+ member vni 30000 vrf red
+end

@@ -1,0 +1,8 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
+OID: 1.3.6.1.4.1.9.12.3.1.3.2421
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
+OID: 1.3.6.1.4.1.9.12.3.1.9.2.740
+ 

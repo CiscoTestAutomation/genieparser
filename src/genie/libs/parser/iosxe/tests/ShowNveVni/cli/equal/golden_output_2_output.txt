@@ -1,0 +1,6 @@
+Interface  VNI        Multicast-group VNI state  Mode  BD    cfg vrf                      
+nve1       30000      N/A             BD Down/Re L3CP  N/A   CLI red                      
+nve1       20014      229.1.1.4       BD Down/Re L2CP  N/A   CLI N/A                      
+nve1       20013      229.1.1.3       BD Down/Re L2CP  N/A   CLI N/A                      
+nve1       20012      N/A             Up         L2CP  12    CLI N/A                      
+nve1       20011      N/A             Up         L2CP  11    CLI N/A 

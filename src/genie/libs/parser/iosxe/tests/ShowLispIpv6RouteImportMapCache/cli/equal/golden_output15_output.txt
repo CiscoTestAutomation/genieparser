@@ -1,0 +1,27 @@
+Switch#sh lisp all instance-id * ipv6 route-import map-cache 
+
+=================================================
+Output for router lisp 0 instance-id 4099
+=================================================
+LISP IPv6 imported routes for EID-table vrf red (IID 4099)
+Config: 1, Entries: 1 (limit 5000)
+Prefix                    Uptime    Source               RLOC-set   Cache/DB   State
+2001::/64                 03:38:40  static                          installed 
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP IPv6 imported routes for EID-table default (IID 4100)
+Config: 1, Entries: 1 (limit 5000)
+Prefix                    Uptime    Source               RLOC-set   Cache/DB   State
+2002::/64                 00:03:51  static                          installed 
+
+=================================================
+Output for router lisp 0 instance-id 8188
+=================================================
+% EID table not enabled for IPv6.
+
+=================================================
+Output for router lisp 0 instance-id 8189
+=================================================
+% EID table not enabled for IPv6.

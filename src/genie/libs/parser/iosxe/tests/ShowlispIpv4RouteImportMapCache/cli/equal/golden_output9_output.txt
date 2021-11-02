@@ -1,5 +1,0 @@
-Switch#sh lisp eid-table default ipv4 route-import map-cache
-LISP IPv4 imported routes for EID-table default (IID 104)
-Config: 1, Entries: 1 (limit 5000)
-Prefix                    Uptime    Source               RLOC-set   Cache/DB   State
-50.1.1.0/24               00:00:04  static                          installed 

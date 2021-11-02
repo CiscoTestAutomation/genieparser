@@ -1,0 +1,9 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
+
+NAME: "slot R0", DESCR: "Cisco Catalyst C9500X-28C8D Routing Processor Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
+ 

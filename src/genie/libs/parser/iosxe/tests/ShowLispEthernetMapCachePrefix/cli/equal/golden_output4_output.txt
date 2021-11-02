@@ -1,0 +1,15 @@
+s1-xtr4-c95-11#sh lisp 0 instance-id 8188 ethernet map-cache 0017.0100.0001
+LISP MAC Mapping Cache for EID-table Vlan 210 (IID 8188), 1 entries
+
+0017.0100.0001/48, uptime: 01:11:39, expires: 22:48:20, via map-reply, complete, local-to-site
+  Sources: map-reply
+  State: complete, last modified: 01:11:39, map-source: 1.1.1.10
+  Active, Packets out: 143(0 bytes), counters are not accurate (~ 00:00:33 ago)
+  Encapsulating dynamic-EID traffic
+  Locator   Uptime    State  Pri/Wgt     Encap-IID
+  1.1.1.10  01:11:39  up      10/10        -
+    Last up-down state change:         01:11:39, state change count: 1
+    Last route reachability change:    01:11:39, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            01:11:39 (rtt 1ms)

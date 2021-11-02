@@ -6,6 +6,8 @@ IOSXE parsers for the following show commands:
     * 'show nve peers interface nve {nve}'
     * 'show nve peers peer-ip {peer_ip}'
     * 'show nve peers vni {vni}'
+    * 'show nve interface nve {nve_num} detail'
+    * 'show nve vni'
 
 '''
 
@@ -15,7 +17,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-
+from genie.parsergen import oper_fill_tabular
 
 # ====================================================
 #  schema for show nve peers
@@ -133,4 +135,217 @@ class ShowNvePeers(ShowNvePeersSchema):
 
         return res_dict
 
-#-------------------------------------------------------------------------------
+# ====================================================
+#  schema for show nve interface nve {nve_num} detail
+# ====================================================
+class ShowNveInterfaceDetailSchema(MetaParser):
+    '''Schema for:
+
+    * 'show nve interface nve {nve_num} detail'
+    '''
+
+    schema = {
+        'interface': str,
+        'admin_state': str,
+        'oper_state': str,
+        'encap': str,
+        'bgp_host_reachability': str,
+        'vxlan_dport': int,
+        'num_l3vni_cp': int,
+        'num_l2vni_cp': int,
+        'num_l2vni_dp': int,
+        Optional('src_intf'): {
+            Any(): {
+                'primary_ip': str,
+                'vrf': str,
+            }
+        },
+        Optional('tunnel_intf'): {
+            Any(): {
+             'counters': {
+                 'pkts_in': int,
+                 'bytes_in': int,
+                 'pkts_out': int,
+                 'bytes_out': int
+                }
+            }
+        }
+    }
+
+# ============================================
+# Parser for:
+# * show nve interface nve {nve_num} detail
+# ============================================
+class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
+    ''' Parser for the following show commands:
+
+    * 'show nve interface nve {nve_num} detail'
+    '''
+
+    cli_command = ['show nve interface nve {nve_num} detail']
+
+    def cli(self, nve_num=None, output=None):
+
+        if output is None:
+            if nve_num:
+                output = self.device.execute(self.cli_command[0].format(nve_num=nve_num))
+            else:
+                return
+
+        parsed_dict = {}
+
+        # Interface: nve1, State: Admin Up, Oper Down, Encapsulation: Vxlan,
+        p1 = re.compile(r'^Interface:\s+(?P<interface>[a-zA-Z0-9 ]+),'
+                        r'\s+State:\s+Admin\s+(?P<admin_state>[\w]+),'
+                        r'\s+Oper\s+(?P<oper_state>[\w\s]+),'
+                        r'\s+Encapsulation:\s+(?P<encap>[\w]+),$')
+
+        # BGP host reachability: Enabled, VxLAN dport: 4789
+        p2 = re.compile(r'^BGP host reachability:\s+(?P<bgp_host_reachability>[\w]+),'
+                        r'\s+VxLAN dport:\s+(?P<vxlan_dport>[\d]+)$')
+
+        # VNI number: L3CP 30 L2CP 3 L2DP 0
+        p3 = re.compile(r'^VNI number:\s+L3CP\s+(?P<num_l3vni_cp>[\d]+)'
+                        r'\s+L2CP\s+(?P<num_l2vni_cp>[\d]+)'
+                        r'\s+L2DP\s+(?P<num_l2vni_dp>[\d]+)$')
+
+        # source-interface: Loopback1 (primary:1.1.1.2 vrf:0)
+        p4 = re.compile(r'^source-interface:\s+(?P<src_intf>[a-zA-Z0-9 ]+)'
+                        r'\(primary:(?P<primary_ip>[0-9a-fA-F\.:]+)\s'
+                        r'+vrf:(?P<vrf>[a-zA-Z0-9 ]+)\)$')
+
+        # tunnel interface: Tunnel0
+        p5 = re.compile(r'^tunnel interface:\s+(?P<tunnel_intf>[a-zA-Z0-9 ]+)$')
+
+        # 1          11          0          0
+        p6 = re.compile(r'^(?P<pkts_in>[\d]+)\s+(?P<bytes_in>[\d]+)\s'
+                        r'+(?P<pkts_out>[\d]+)\s+(?P<bytes_out>[\d]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Interface: nve1, State: Admin Up, Oper Down, Encapsulation: Vxlan,
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'interface': group['interface'],
+                                    'admin_state': group['admin_state'],
+                                    'oper_state': group['oper_state'],
+                                    'encap': group['encap']})
+                continue
+
+            # BGP host reachability: Enabled, VxLAN dport: 4789
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'bgp_host_reachability': group['bgp_host_reachability'],
+                                    'vxlan_dport': int(group['vxlan_dport'])})
+                continue
+
+            # VNI number: L3CP 0 L2CP 3 L2DP 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'num_l3vni_cp': int(group['num_l3vni_cp']),
+                                    'num_l2vni_cp': int(group['num_l2vni_cp']),
+                                    'num_l2vni_dp': int(group['num_l2vni_dp'])})
+                continue
+
+            # source-interface: Loopback1 (primary:1.1.1.2 vrf:0)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                src_intf = parsed_dict.setdefault('src_intf', {})
+                src_intf.update({group['src_intf'] : {
+                                        'primary_ip': group['primary_ip'],
+                                        'vrf': group['vrf']
+                                    }
+                                 })
+                continue
+
+            # tunnel interface: Tunnel0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_intf_dict = parsed_dict.setdefault('tunnel_intf', {})
+                tunnel_intf = group['tunnel_intf']
+                tunnel_intf_dict.update({tunnel_intf : {}})
+                continue
+
+            #          1          11          0          0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_intf_dict.update({tunnel_intf: {
+                                            'counters': {
+                                                'pkts_in': int(group['pkts_in']),
+                                                'bytes_in': int(group['bytes_in']),
+                                                'pkts_out': int(group['pkts_out']),
+                                                'bytes_out': int(group['bytes_out'])
+                                                }
+                                            }
+                                        })
+                continue
+
+        return parsed_dict
+
+# ====================================================
+#  schema for show nve vni
+# ====================================================
+class ShowNveVniSchema(MetaParser):
+    """Schema for:
+        show nve vni"""
+
+    schema ={
+        Any(): {
+            Any(): {
+                'interface': str,
+                'vni': str,
+                'mcast': str,
+                'vni_state': str,
+                'mode': str,
+                Optional('vlan'): str,
+                Optional('bd'): str,
+                'cfg': str,
+                'vrf': str,
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for show nve vni
+# ====================================================
+class ShowNveVni(ShowNveVniSchema):
+    """parser for:
+        show nve vni"""
+
+    cli_command = 'show nve vni'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+
+        parsed_dict_vlan = oper_fill_tabular(
+            header_fields=["Interface", "VNI", "Multicast-group",
+                           "VNI state", "Mode", "VLAN", "cfg", "vrf"],
+            label_fields=['interface', 'vni', 'mcast', 'vni_state',
+                          'mode', 'vlan', 'cfg', 'vrf'],
+            index=[0, 1], device_output=output, device_os='iosxe'
+        ).entries
+
+        if parsed_dict_vlan :
+            return parsed_dict_vlan
+
+        parsed_dict_bd = oper_fill_tabular(
+            header_fields=["Interface", "VNI", "Multicast-group",
+                           "VNI state", "Mode", "BD", "cfg", "vrf"],
+            label_fields=['interface', 'vni', 'mcast', 'vni_state',
+                          'mode', 'bd', 'cfg', 'vrf'],
+            index=[0, 1], device_output=output, device_os='iosxe'
+        ).entries
+
+        return parsed_dict_bd

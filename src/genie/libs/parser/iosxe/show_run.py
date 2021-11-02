@@ -337,6 +337,16 @@ class ShowRunInterfaceSchema(MetaParser):
                         'area': str,
                     },
                 },
+                Optional('acl'): {
+                    Optional('inbound'): {
+                        'acl_name': str,
+                        'direction': str,
+                    },
+                    Optional('outbound'): {
+                        'acl_name': str,
+                        'direction': str,
+                    }
+                },
                 Optional('load_interval'): str,
                 Optional('mab'): bool,
                 Optional('negotiation_auto'): bool,
@@ -395,6 +405,19 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_arp_inspection_trust'): bool,
                 Optional('mac_address_sticky'):str,
                 Optional('source_template'):str,
+                Optional('host_reachability_protocol'): str,
+                Optional('source_interface'): str,
+                Optional('member_vni'): {
+                    Any():
+                         {Optional('vrf'): str,
+                          Optional('ingress_replication'): {
+                              'enabled': bool,
+                              Optional('remote_peer_ip'): str,
+                          },
+                          Optional('mcast_group'): str,
+                          Optional('local_routing'): bool
+                          }
+                     },
             }
         }
     }
@@ -624,6 +647,38 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # source template USER_NoAuth
         p62 = re.compile(r"^source template (?P<template>\w+)$")
 
+        # host-reachability protocol bgp
+        p63 = re.compile(r'^host-reachability protocol (?P<protocol>[a-zA-Z]+)$')
+
+        # source-interface loopback1
+        p64 = re.compile(r'^source-interface (?P<src_intf>[a-zA-Z0-9\-]+)$')
+
+        # member vni 20011 ingress-replication
+        p65 = re.compile(r'^member vni (?P<vni>[0-9]+) ingress-replication$')
+
+        # member vni 20012 mcast-group 224.1.1.1
+        p66 = re.compile(r'^member vni (?P<vni>[0-9]+) mcast-group (?P<ip>[0-9\.]+)$')
+
+        # member vni 20011 ingress-replication local-routing
+        p67 = re.compile(r'^member vni (?P<vni>[0-9]+) ingress-replication '
+                         r'local-routing$')
+
+        # member vni 20011
+        p68 = re.compile(r'^member vni (?P<vni>[0-9]+)$')
+
+        # ingress-replication 1.1.1.1
+        p69 = re.compile(r'^ingress-replication (?P<ip>[0-9\.]+)$')
+
+        # member vni 20012 mcast-group 224.1.1.1 local-routing
+        p70 = re.compile(r'^member vni (?P<vni>[0-9]+) mcast-group (?P<ip>[0-9\.]+) '
+                         r'local-routing$')
+
+        # member vni 30000 vrf red
+        p71 = re.compile(r'^member vni (?P<vni>[0-9]+) vrf (?P<vrf>[a-zA-Z\-]+)$')
+
+        # ip access-group DELETE_ME in ; ip access-group TEST-OUT out
+        p72 = re.compile(r'^ip access-group (?P<acl_name>[\w\-.#<>]+) (?P<direction>\w+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -658,7 +713,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                                     'netmask': group['netmask']},
                                 })
                 continue
-            
+
             # ipv6 address 2001:db8:4:1::1/64
             m = p5.match(line)
             if m:
@@ -1111,8 +1166,6 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 output_policy = group['output_policy']
                 intf_dict.update({'output_policy': group['output_policy']})
-                continue
-
 
             # switchport port-security mac-address sticky 1020.4bb1.6f2f
             m = p61.match(line)
@@ -1128,7 +1181,104 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'source_template':group['template']})
                 continue
 
+            # host-reachability protocol bgp
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'host_reachability_protocol': group['protocol']})
+                continue
 
+            # source-interface loopback1
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'source_interface': group['src_intf']})
+                continue
+
+            # member vni 20011 ingress-replication
+            m = p65.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'ingress_replication': {
+                                                    'enabled': True}}})
+                continue
+
+            # member vni 20012 mcast-group 224.1.1.1
+            m = p66.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group': group['ip']}})
+                continue
+
+            # member vni 20011 ingress-replication local-routing
+            m = p67.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'ingress_replication': {
+                                                    'enabled': True
+                                                  },
+                                                  'local_routing': True}})
+                continue
+
+            # member vni 20011
+            m = p68.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                vni = group['vni']
+                continue
+
+            # ingress-replication 1.1.1.1
+            m = p69.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({vni: {'ingress_replication': {
+                                            'enabled': True,
+                                            'remote_peer_ip': group['ip']}}})
+                continue
+
+            # member vni 20012 mcast-group 224.1.1.1 local-routing
+            m = p70.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group': group['ip'],
+                                                  'local_routing': True}})
+                continue
+
+            # member vni 30000 vrf red
+            m = p71.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'vrf': group['vrf']}})
+                continue
+
+            # ip access-group DELETE_ME in ; ip access-group TEST-OUT out
+            m = p72.match(line)
+            if m:
+                intf_dict['acl'] = {}
+                group = m.groupdict()
+                if group['direction'] == 'in':
+                    inbound_dict = {'inbound': {
+                        'acl_name': group['acl_name'],
+                        'direction': group['direction']},
+                    }
+                    continue
+
+                elif group['direction'] == 'out':
+                    outbound_dict = {'outbound': {
+                        'acl_name': group['acl_name'],
+                        'direction': group['direction']},
+                    }
+
+                intf_dict['acl'].update(inbound_dict)
+                intf_dict['acl'].update(outbound_dict)
+                continue
 
         return config_dict
 
