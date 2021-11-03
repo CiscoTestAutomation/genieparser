@@ -1,0 +1,21 @@
+db name                   db mode       batches waiting    batches in process      batches done    tunnels active    tunnels closed  
+-----------------------------------------------------------------------------------------------------------------------------------
+SMD_CONF                  Local                       0                     0                30                 0                 0  
+IOSD_OPER                 Local                       0                     0                 0                 0                 0  
+DMI_CONF                  Local                       0                     0                16                 4                 4  
+DMI_OPER                  Local                       0                     0                 1                 0                 0  
+MDT_CONF                  Local                       0                     0                 3                 0                 0  
+MDT_OPER                  Local                       0                     0                 0                 0                 0  
+MDT_CAPABILITIES_OPER     Local                       0                     0                 0                 0                 0  
+DMI_STATE_CONF            Local                       0                     0                 0                 0                 0  
+GNMI_CONF                 Local                       0                     0                 2                 0                 0  
+GNMI_OPER                 Local                       0                     0                 0                 0                 0  
+BT_EVENTQ                 Local                       0                     0                 0                 0                 0  
+PASSWD_KEY                Local                       0                     0                 0                 0                 0  
+IOXMAN_CONF               Local                       0                     0                 2                 0                 0  
+VS_OPER                   Local                       0                     0                 0                 0                 0  
+LOCAL_DUMMY               Local                       0                     0                 0                 0                 0  
+IOS_EVENTQ                Local                       0                     0                 0                 0                 0  
+SERVICE_DIRECTORY         Local                       0                     0                 0                 1                 1  
+BP_CONFIG                 Local                       0                     0                 0                 0                 0  
+BP_OPER                   Local                       0                     0                 0                 0                 0  

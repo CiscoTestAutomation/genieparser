@@ -1,0 +1,5 @@
+LISP Away Table for router lisp 0 (red) IID 4099
+Entries: 1
+
+Prefix                                  Producer                       Created    
+2001::/64                               dyn-eid                        00:17:35 

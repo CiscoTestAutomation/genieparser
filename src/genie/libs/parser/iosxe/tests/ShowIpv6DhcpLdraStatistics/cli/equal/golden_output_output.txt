@@ -1,0 +1,9 @@
+                DHCPv6 LDRA client facing statistics.
+Messages received                1
+Messages sent                    2
+Messages discarded               3
+
+                DHCPv6 LDRA server facing statistics.
+Messages received                4
+Messages sent                    5
+Messages discarded               6

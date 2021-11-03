@@ -1,0 +1,10 @@
+interface nve1
+ no ip address
+ source-interface Loopback1
+ member vni 20011
+  ingress-replication 1.1.1.1
+ member vni 20012
+  ingress-replication 1.1.1.2
+ member vni 20013 mcast-group 239.1.1.3
+ member vni 20014 mcast-group 239.1.1.4
+end

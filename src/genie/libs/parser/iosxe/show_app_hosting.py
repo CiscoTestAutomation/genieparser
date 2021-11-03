@@ -3,7 +3,6 @@
 IOSXE parsers for the following show commands:
     * show app-hosting list
     * show app-hosting infra
-    * show app-hosting detail appid meraki
 '''
 
 # Metaparser
@@ -150,3 +149,4 @@ class ShowApphostingList(ShowApphostingListSchema):
                 app_id[keys] = app_dict
             parsed_dict['app_id'] = app_id
         return parsed_dict
+
