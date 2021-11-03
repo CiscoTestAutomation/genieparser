@@ -4,13 +4,16 @@ IOSXE parsers for the following show commands:
     * show logging
     * show logging | include {include}
     * show logging | exclude {exclude}
+    * show logging onboard rp active uptime
+    * show logging onboard rp active status
+    * show logging onboard rp active {include}
 '''
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional, Or, ListOf
 
 
 class ShowLoggingSchema(MetaParser):
@@ -600,4 +603,356 @@ class ShowLogging(ShowLoggingSchema):
             ):
                 log_lines.append(line)
                 ret_dict['logs'] = log_lines
+        return ret_dict
+
+
+class ShowLoggingOnboardRpActiveUptimeSchema(MetaParser):
+
+    '''Schema for:
+        show logging onboard Rp active uptime
+    '''
+    
+    schema={
+        'uptime_summary':{
+            'first_customer_power_on':str,
+            'number_of_reset':int,
+            'number_of_slot_changes':int,
+            'current_reset_reason':str,
+            'current_reset_timestamp':str,
+            'current_slot':int,
+            'chassis_type':int,
+            Any():{
+                'years':int,
+                'weeks':int,
+                'days':int,
+                'hours':int,
+                'minutes':int,
+            },
+        },       
+    }
+    
+class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
+    """
+    Parser for :
+        'show logging onboard Rp active uptime'
+    """
+    cli_command = 'show logging onboard rp active uptime'
+    def cli(self, output=None): 
+
+        if output is None: 
+            # Build the command
+            
+            output = self.device.execute(self.cli_command)
+       
+        ret_dict ={}
+        
+        #First customer power on : 06/22/2021 12:35:40
+        p1= re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+        
+        #Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
+        p2=re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        
+        #Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
+        p3=re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        
+        #Number of resets        : 630
+        p4=re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+        
+        #Number of slot changes  : 1
+        p5=re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+        
+        #Current reset reason    : Reload Command
+        p6=re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+        
+        #Current reset timestamp : 10/06/2019 01:28:26
+        p7=re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+        
+        #Current slot            : 1
+        p8=re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+        
+        #Chassis type            : 80
+        p9=re.compile('^Chassis type\s+: (?P<chassis_type>\d+)$')
+        
+        #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
+        p10=re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+       
+        for line in output.splitlines():
+            line = line.strip()
+            
+            root_dict=ret_dict.setdefault('uptime_summary',{})
+            
+            #First customer power on : 06/22/2021 12:35:40
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['first_customer_power_on']= group['first_customer_poweron']
+                continue
+                
+            #Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
+            m=p2.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict1=root_dict.setdefault('total_uptime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+                
+            #Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
+            m=p3.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict1=root_dict.setdefault('total_downtime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+                
+            #Number of resets        : 630
+            m=p4.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['number_of_reset']=int(group['numberof_reset'])
+                continue
+                
+            #Number of slot changes  : 1
+            m=p5.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['number_of_slot_changes']=int(group['numberof_slot_changes'])
+                continue
+                
+            #Current reset reason    : Reload Command
+            m=p6.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['current_reset_reason'] =group['current_reset_reason']
+                continue
+                
+            #Current reset timestamp : 10/06/2019 01:28:26
+            m=p7.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['current_reset_timestamp'] =group['current_reset_timestamp']
+                continue
+                
+            #Current slot            : 1
+            m=p8.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['current_slot'] =int(group['current_slot'])
+                continue
+                
+            ##Chassis type            : 80
+            m=p9.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['chassis_type'] = int(group['chassis_type'])
+                continue
+                
+            #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
+            m=p10.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict1=root_dict.setdefault('current_uptime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+                
+        return ret_dict
+        
+        
+        
+class ShowLoggingOnboardRpActiveStatusSchema(MetaParser):
+    '''Schema for:
+        show logging onboard rp active status
+    '''
+    schema={
+        'application':{
+            Any():{
+                'path': str,
+                'status': bool,            
+            },
+        }, 
+    }
+        
+        
+class ShowLoggingOnboardRpActiveStatus(ShowLoggingOnboardRpActiveStatusSchema):
+    """
+    Parser for :
+        'show logging onboard rp active status'
+    """
+    
+    cli_command = 'show logging onboard rp active status'
+    
+    def cli(self, output=None): 
+
+        if output is None:
+            # Build the command
+            output = self.device.execute(self.cli_command)
+            
+        ret_dict ={}
+        #Application Clilog:
+        p1=re.compile('^Application (?P<application>\S+):$')
+        
+        #Cli enable status: enabled
+        p2=re.compile('^Cli (?P<enable_status>enable status): (?P<status>\S+)$')
+        
+        # Path: /obfl0/
+        p3=re.compile('^Path\: (?P<path>\S+)$')
+        
+        for line in output.splitlines():
+            line=line.strip()
+
+            #Application Clilog:
+            m=p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict=ret_dict.setdefault('application', {}).setdefault(group['application'].lower(),{})
+                continue
+                
+            #Cli enable status: enabled
+            m=p2.match(line)
+            if m:
+                group = m.groupdict()
+                status = True if \
+                    group['status'].lower() == 'enabled' else\
+                    False
+                root_dict.setdefault('status',status)
+                
+            ## Path: /obfl0/ 
+            m=p3.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict.setdefault('path',group['path'])
+                continue
+                
+        return ret_dict
+        
+        
+class ShowLoggingOnboardRpActiveTemperatureContinuousSchema(MetaParser):
+    '''Schema for:
+        show logging onboard rp active temperature continuous 
+        show logging onboard rp active voltage continuous
+        show logging onboard rp active message continuous
+    '''
+
+    schema={
+        'application':str,
+        Optional('temperature_sensors'):{
+            Any():{
+                'id': int,
+                'history':{
+                    Any():int,
+                },
+            },
+        },
+        Optional('voltage_sensors'):{
+            Any():{
+                'id': int,
+                'history':{
+                    Any():int,
+                },
+            },
+        },  
+        Optional('error_message'):{
+            Any():ListOf(str),
+        },        
+    }       
+        
+        
+class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActiveTemperatureContinuousSchema):
+    """
+    Parser for :
+        'show logging onboard rp active temperature continuous'
+        'show logging onboard rp active voltage continuous'
+        'show logging onboard rp active message continuous'
+    """
+    
+    cli_command = 'show logging onboard rp active {include} continuous' 
+    
+    def cli(self, include, output=None): 
+
+        if output is None:
+           
+            output = self.device.execute(self.cli_command.format(include=include))
+            
+        #TEMPERATURE CONTINUOUS INFORMATION
+        p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
+
+        #No continuous data
+        p2 = re.compile('^(?P<no_date>No continuous data)$')
+
+        #Temp: CPU board           23
+        p3 = re.compile('^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
+
+        #10/13/2019 21:58:42  40  38  33  
+        p4 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+(?P<sensor_value>[\d\s]+).*$')
+
+        #10/29/2019 07:38:01 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+        p5 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\: [\w\s\/?]+)$')
+
+        sensor_list=[]
+        ret_dict = {}
+        sensor_name_list=[]
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #No continuous data
+            m= p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('application',group['no_date'])
+                continue
+                
+            #TEMPERATURE CONTINUOUS INFORMATION
+            m=p1.match(line)
+            if m:
+                group1 = m.groupdict()
+                ret_dict.setdefault('application',group1['continuous_info'])
+                continue
+            
+            #10/13/2019 21:58:42  40  38  33  
+            m=p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict=ret_dict.setdefault((group1['continuous_info'].lower()).replace(' ','_')+"_sensors",{})
+                if group['sensor_value']:
+                    sensor_list=[]
+                    for value in group['sensor_value'].split(" "):
+                        if value.isdigit():
+                            sensor_list.append(int(value))
+                if len(sensor_list)==len(sensor_name_list):
+                    for i in range(0,len(sensor_name_list)):
+                        root_dict1=root_dict.setdefault(sensor_name_list[i],{})
+                        root_dict1['id']=i
+                        root_dict1.setdefault('history',{}).setdefault(group['time'],sensor_list[i]) 
+                continue
+            
+            #Temp: CPU board           23
+            m=p3.match(line)
+            if m:
+                group = m.groupdict()
+                sensor_name_list.append(group['sensor_name'])
+                continue
+                
+            #10/29/2019 07:38:01 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+            m=p5.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict=ret_dict.setdefault((group1['continuous_info'].lower()).replace(' ','_'),{})
+                if group['time'] not in root_dict.keys():
+                    root_dict[group['time']]=[group['info']]
+                else:
+                    root_dict[group['time']].append(group['info'])
+                continue
+                
         return ret_dict

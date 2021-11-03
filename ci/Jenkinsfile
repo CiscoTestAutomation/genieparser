@@ -79,7 +79,7 @@ pipeline {
             }
         }
 
-        stage("Run compileAll for Genieparser") {
+        stage("Run compileAll") {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate

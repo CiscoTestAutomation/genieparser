@@ -1,0 +1,10 @@
+interface TenGigabitEthernet0/0/0.10
+ description MPLS1
+ encapsulation dot1Q 10
+ ip address 10.114.11.1 255.255.255.252
+ ip mtu 1500
+ ip access-group DELETE_ME in
+ ip access-group TEST-OUT out
+ ip tcp adjust-mss 1360
+ arp timeout 1200
+end

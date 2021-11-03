@@ -2780,4 +2780,49 @@ class ShowApTagSummary(ShowApTagSummarySchema):
                 continue
 
         return ap_info_obj    
-        
+
+
+class ShowApStatusSchema(MetaParser):
+    """Schema for show ap status."""
+
+    schema = {
+        "ap_name": {
+            str: {
+                "status": str,
+                "mode": str,
+                "country": str
+            }
+        }
+    }
+
+class ShowApStatus(ShowApStatusSchema):
+    """Parser for show ap status"""
+
+    cli_command = 'show ap status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # AP002C.C862.E708                    Enabled    Local             US
+        p1 = re.compile(r"^(?P<ap_name>\S+)\s+(?P<status>\S+)\s+(?P<mode>\S+)\s+(?P<country>\S+)$")
+
+        ap_dict = {}
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            # AP002C.C862.E708                    Enabled    Local             US
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ap_dict = ret_dict.setdefault('ap_name', {}).\
+                    setdefault(groups['ap_name'], {})
+                ap_dict.update({
+                    'status': groups['status'],
+                    'mode': groups['mode'],
+                    'country': groups['country']
+                })
+        return ret_dict
+
+

@@ -3309,7 +3309,7 @@ class ShowInterfacesLinkSchema(MetaParser):
 #  parser for show interfaces link
 # ====================================================
 class ShowInterfacesLink(ShowInterfacesLinkSchema):
-    """parser for 
+    """parser for
             * show interfaces link
             * show interfaces {interface} link
         """
@@ -3331,7 +3331,7 @@ class ShowInterfacesLink(ShowInterfacesLinkSchema):
         # Port           Name               Down Time      Up Time
         # Gi1/0/1        Foo                 00:00:00       4w5d
         # Gi1/0/2        foo bar             00:07:00
-                
+
         p1 = re.compile(r'^(?P<interface>\S+)'
                         r'(?:(?P<name>.+?(?=(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))))?'
                         r'(?P<down_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))'
@@ -3344,10 +3344,10 @@ class ShowInterfacesLink(ShowInterfacesLinkSchema):
 
             if m:
                 group = m.groupdict()
-        
+
                 intf_dict = result_dict.setdefault('interfaces', {}).\
                                         setdefault(Common.convert_intf_name(group['interface']), {})
-                
+
                 name_val = group['name'].strip()
                 if len(name_val):
                     intf_dict['name'] = name_val
@@ -3528,7 +3528,7 @@ class ShowInterfacesStatusSchema(MetaParser):
 #  parser for show interfaces status
 # ====================================================
 class ShowInterfacesStatus(ShowInterfacesStatusSchema):
-    """parser for 
+    """parser for
             * show interfaces status
             * show interfaces {interface} status
         """
@@ -3539,11 +3539,11 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
     def cli(self, interface="", output=None):
         if output is None:
             if interface:
-                cmd = self.cli_command[1].format(interface=interface) 
+                cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
-        
+
         result_dict = {}
 
         # Port      Name               Status       Vlan       Duplex  Speed Type
@@ -3566,7 +3566,7 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
 
             m = p1.match(line)
             if m:
-                
+
                 group = m.groupdict()
 
                 intf_dict = result_dict.setdefault('interfaces', {}).\
@@ -3653,10 +3653,12 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {  # interface name
-                'transceiver': str,
+                Optional('transceiver'): str,
                 Optional('type'): str,
+                Optional('name'): str,
+                Optional('part_number'): str,
                 'Temperature': {
-                    'Value': float,
+                    'Value': Or(float, str),
                     Optional('Lane'): str,
                     'HighAlarmThreshold': float,
                     'HighWarnThreshold': float,
@@ -3664,7 +3666,7 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
                     'LowAlarmThreshold': float
                 },
                 'Voltage': {
-                    'Value': float,
+                    'Value': Or(float, str),
                     Optional('Lane'): str,
                     'HighAlarmThreshold': float,
                     'HighWarnThreshold': float,
@@ -3672,7 +3674,7 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
                     'LowAlarmThreshold': float
                 },
                 'Current': {
-                    'Value': float,
+                    'Value': Or(float, str),
                     Optional('Lane'): str,
                     'HighAlarmThreshold': float,
                     'HighWarnThreshold': float,
@@ -3680,7 +3682,7 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
                     'LowAlarmThreshold': float
                 },
                 'OpticalTX': {
-                    'Value': float,
+                    'Value': Or(float, str),
                     Optional('Lane'): str,
                     'HighAlarmThreshold': float,
                     'HighWarnThreshold': float,
@@ -3688,7 +3690,7 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
                     'LowAlarmThreshold': float
                 },
                 'OpticalRX': {
-                    'Value': float,
+                    'Value': Or(float, str),
                     Optional('Lane'): str,
                     'HighAlarmThreshold': float,
                     'HighWarnThreshold': float,
@@ -3722,7 +3724,7 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
         # type is 10Gbase-LR
         # name is CISCO-FINISAR
         # part number is FTLX1474D3BCL-CS
-        p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
+        p1 = re.compile(r'^(?P<key>[Tt]ransceiver|[Tt]ype|[Nn]ame|[Pp]art +[Nn]umber) +is +(?P<value>[\S\s]+)$')
 
         # Voltage            Threshold   Threshold  Threshold  Threshold
         p3_0 = re.compile(r'(?P<statistic>(Temperature|Voltage|Current|Transmit Power|Receive Power))')
@@ -3734,6 +3736,8 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
                           r'+(?P<HAT>(-?[\d\.]+)) +(?P<HWT>(-?[\d\.]+)) +(?P<LWT>(-?[\d\.]+)) +(?P<LAT>(-?[\d\.]+))$')
 
         result_dict = {}
+        is_dict = {}
+        stat = None
         for line in out.splitlines():
             line = line.strip()
 
@@ -3742,9 +3746,10 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                key = group['key'].strip().replace(" ", '_').lower()
+                key = group['key'].lower().replace('the', '').strip()
+                key = key.replace(' ', '_')
                 value = group['value'].strip()
-                lanes = None
+                is_dict[key] = value
                 continue
 
             m = p3_0.match(line)
@@ -3756,24 +3761,30 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
                     stat = 'OpticalRX'
                 continue
 
-            m = p3_1.match(line)
-            if m:
-                interface = m.groupdict()['port']
-                interface = Common.convert_intf_name(interface)
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+            if stat:
+                m = p3_1.match(line)
+                if m:
+                    interface = m.groupdict()['port']
+                    interface = Common.convert_intf_name(interface)
+                    intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
 
-                if key and value:
-                    intf_dict.update({key: value})
+                    intf_dict.update(is_dict)
+                    is_dict = {}
 
-                intf_dict[stat] = {}
-                intf_dict[stat]['Value'] = float(m.groupdict()['value'])
-                if m.groupdict()['lane'] is not None:
-                    intf_dict[stat]['Lane'] = m.groupdict()['lane']
-                intf_dict[stat]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
-                intf_dict[stat]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
-                intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
-                intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
-                continue
+                    intf_dict[stat] = {}
+                    try:
+                        intf_dict[stat]['Value'] = float(m.groupdict()['value'])
+                    except ValueError:
+                        intf_dict[stat]['Value'] = m.groupdict()['value']
+
+                    if m.groupdict()['lane'] is not None:
+                        intf_dict[stat]['Lane'] = m.groupdict()['lane']
+                    intf_dict[stat]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
+                    intf_dict[stat]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
+                    intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
+                    intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
+                    stat = None
+                    continue
 
         return result_dict
 

@@ -1,0 +1,4 @@
+AP Name                             Status     Mode              Country   
+-------------------------------------------------------------------------
+AP002C.C862.E708                    Enabled    Local             US        
+AP188B.4500.5EE8                    Enabled    FlexConnect       IN

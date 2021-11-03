@@ -1,0 +1,7 @@
+Interface: nve1, State: Admin Up, Oper Down, Encapsulation: Vxlan,
+BGP host reachability: Enabled, VxLAN dport: 4789
+VNI number: L3CP 30 L2CP 2 L2DP 0
+source-interface: Loopback1 (primary:1.1.1.2 vrf:0)
+tunnel interface: Tunnel0
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         1         11          0          0

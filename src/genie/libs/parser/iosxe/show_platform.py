@@ -12425,3 +12425,60 @@ class ShowEnvironmentStatus(ShowEnvironmentStatusSchema):
                 continue
                 
         return ret_dict
+
+
+class ShowPlatformSoftwareDbalR0DataAllSchema(MetaParser):
+  schema = {
+  'db_name': {
+         Any():{
+           'db_mode':str,
+            'batches_waiting':int,
+            'batches_in_progress':int,
+             'batches_done': int,
+             'tunnels_active': int,
+             'tunnels_closed': int
+           }
+       }
+   }
+
+class ShowPlatformSoftwareDbalR0DataAll(ShowPlatformSoftwareDbalR0DataAllSchema):
+    cli_command = 'show platform software dbal smd R0 database all'
+    def cli(self, output=None):
+        out = self.device.execute(self.cli_command) if output is None else output
+
+        ret_dict = {}
+
+
+#SMD_CONF                  Local                       0                     0                30                 0                 0 
+       
+        pr = re.compile(r'^(?P<db_name>\S+) +'
+                       r'(?P<db_mode>\S+) +'
+                       r'(?P<batches_waiting>\d+) +'
+                       r'(?P<batches_in_progress>\d+) +'
+                       r'(?P<batches_done>\d+) +'
+                       r'(?P<tunnels_active>\d+) +'
+                       r'(?P<tunnels_closed>\d+)$')
+
+        for line in out.splitlines():
+          line = line.strip()
+        
+          m =  pr.match(line)
+          if m:
+             group = m.groupdict()
+             
+             dbnames_dict = ret_dict.setdefault('db_name', {})
+             dbname_dict = dbnames_dict.setdefault(group['db_name'],{})
+
+             dbname_dict.update({
+              'db_mode': group['db_mode'],
+              'batches_waiting' : int(group['batches_waiting']),
+              'batches_in_progress' : int(group['batches_in_progress']),
+              'batches_done' : int(group['batches_done']),
+              'tunnels_active' : int(group['tunnels_active']),
+              'tunnels_closed' : int(group['tunnels_closed'])
+             }) 
+          
+             continue
+   
+        return ret_dict
+

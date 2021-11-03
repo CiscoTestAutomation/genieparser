@@ -1,0 +1,67 @@
+Load for five secs: 2%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, .05:30:30.132 UTC Fri Oct 22 2021
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+
+Account Information:
+  Smart Account: SA-Switching-Polaris As of Oct 14 12:10:01 2021 UTC
+  Virtual Account: SLE_Test
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: cslu
+  Cslu address: <empty>
+  Proxy:
+    Not Configured
+  VRF:
+    Not Configured
+
+Policy:
+  Policy in use: Installed On Oct 14 11:37:52 2021 UTC
+  Policy name: Custom Policy
+  Reporting ACK required: yes (Customer Policy)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 365 (Customer Policy)
+    Reporting frequency (days): 0 (Customer Policy)
+    Report on change (days): 90 (Customer Policy)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 90 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 90 (Customer Policy)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 365 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 90 (Customer Policy)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 365 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 90 (Customer Policy)
+
+Miscellaneous:
+  Custom Id: <empty>
+
+Usage Reporting:
+  Last ACK received: Oct 14 12:10:32 2021 UTC
+  Next ACK deadline: Jan 12 12:10:32 2022 UTC
+  Reporting push interval: 30  days
+  Next ACK push check: <none>
+  Next report push: Oct 22 04:33:08 2021 UTC
+  Last report push: Oct 14 12:09:30 2021 UTC
+  Last report file write: <none>
+
+Trust Code Installed:
+  Active: PID:C9300-24UX,SN:FCW2303D16Y
+    INSTALLED on Oct 14 11:37:52 2021 UTC
+  Standby: PID:C9300-24U,SN:FHH2043P09E
+    INSTALLED on Oct 14 11:37:52 2021 UTC
+  Member: PID:C9300-48T,SN:FCW2139L056
+    INSTALLED on Oct 14 11:37:53 2021 UTC

@@ -1,0 +1,5 @@
+Switch#sh lisp instance-id 4099 ipv6 route-import map-cache 
+LISP IPv6 imported routes for EID-table vrf red (IID 4099)
+Config: 1, Entries: 1 (limit 5000)
+Prefix                    Uptime    Source               RLOC-set   Cache/DB   State
+2001::/64                 00:00:04  static                          installed 
