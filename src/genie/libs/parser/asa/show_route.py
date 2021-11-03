@@ -26,26 +26,29 @@ class ShowRouteSchema(MetaParser):
                     'ipv4': {
                         Optional('routes'): {
                             Any(): {
-                                'candidate_default': bool,
-                                Optional('subnet'): str,
-                                'route': str,
-                                Optional('active'): bool,
-                                Optional('date'): str,
-                                Optional('route_preference'): int,
-                                Optional('metric'): int,
-                                Optional('source_protocol'): str,
-                                Optional('source_protocol_codes'): str,
-                                Optional('next_hop'): {
-                                    Optional('outgoing_interface_name'): {
-                                        Any(): {  # context_name for interface if there is no next_hop
-                                            Optional('outgoing_interface_name'): str
+                                Any(): {  # index
+                                    'index': int,
+                                    'candidate_default': bool,
+                                    Optional('subnet'): str,
+                                    'route': str,
+                                    Optional('active'): bool,
+                                    Optional('date'): str,
+                                    Optional('route_preference'): int,
+                                    Optional('metric'): int,
+                                    Optional('source_protocol'): str,
+                                    Optional('source_protocol_codes'): str,
+                                    Optional('next_hop'): {
+                                        Optional('outgoing_interface_name'): {
+                                            Any(): {  # context_name for interface if there is no next_hop
+                                                Optional('outgoing_interface_name'): str
+                                            },
                                         },
-                                    },
-                                    Optional('next_hop_list'): {
-                                        Any(): {  # index
-                                            Optional('index'): int,
-                                            Optional('next_hop'): str,
-                                            Optional('outgoing_interface_name'): str
+                                        Optional('next_hop_list'): {
+                                            Any(): {  # index
+                                                Optional('index'): int,
+                                                Optional('next_hop'): str,
+                                                Optional('outgoing_interface_name'): str
+                                            },
                                         },
                                     },
                                 },
@@ -271,26 +274,28 @@ class ShowRoute(ShowRouteSchema):
             prefix_length = str(IPAddress(groups['subnet']).netmask_bits())
             combined_ip = groups['network'] + '/' + prefix_length
             dict_routes = dict_ipv4.setdefault(combined_ip, {})
+            route_index = len(dict_routes.keys()) + 1
+            dict_route = {"index": route_index}
 
             if '*' in groups['code']:
-                dict_routes.update({'candidate_default': True})
+                dict_route.update({'candidate_default': True})
                 groups['code'] = groups['code'].strip('*')
             else:
-                dict_routes.update({'candidate_default': False})
+                dict_route.update({'candidate_default': False})
 
-            dict_routes.update({'active': True})
+            dict_route.update({'active': True})
 
             if 'date' not in groups.keys() and next_hops:
                 date = next_hops[0].get('date')
             else:
                 date = groups.get('date')
             if date:
-                dict_routes.update({'date': date})
+                dict_route.update({'date': date})
 
-            dict_routes.update({'route': combined_ip})
+            dict_route.update({'route': combined_ip})
 
-            dict_routes.update({'source_protocol_codes': groups['code']})
-            dict_routes.update({'source_protocol': self.source_protocol_dict[groups['code']].lower()})
+            dict_route.update({'source_protocol_codes': groups['code']})
+            dict_route.update({'source_protocol': self.source_protocol_dict[groups['code']].lower()})
 
             if 'route_preference' not in groups.keys() and next_hops:
                 route_preference = next_hops[0]['route_preference']
@@ -301,24 +306,26 @@ class ShowRoute(ShowRouteSchema):
             if route_preference:
                 if '/' in route_preference:
                     route_preference, metric = map(int, route_preference.split('/'))
-                    dict_routes.update({'metric': metric})
+                    dict_route.update({'metric': metric})
                 else:
                     route_preference = int(route_preference)
-                dict_routes.update({'route_preference': route_preference})
+                dict_route.update({'route_preference': route_preference})
 
             if not next_hops and groups.get('context_name'):
-                dict_next_hop = dict_routes.setdefault('next_hop', {})
+                dict_next_hop = dict_route.setdefault('next_hop', {})
                 dict_next_hop.update({'outgoing_interface_name': {
                     groups['context_name']: {'outgoing_interface_name': groups['context_name']}
                 }})
 
             for nh in next_hops:
-                dict_next_hop = dict_routes.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
+                dict_next_hop = dict_route.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
                                                                                                                   {})
                 dict_next_hop.update({'index': index})
                 dict_next_hop.update({'next_hop': nh.get('next_hop')})
                 if nh.get('context_name'):
                     dict_next_hop.update({'outgoing_interface_name': nh.get('context_name')})
                 index += 1
+
+            dict_routes.update({route_index: dict_route})
 
         return ret_dict
