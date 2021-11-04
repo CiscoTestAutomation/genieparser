@@ -270,7 +270,12 @@ class ShowRoute(ShowRouteSchema):
 
             prefix_length = str(IPAddress(groups['subnet']).netmask_bits())
             combined_ip = groups['network'] + '/' + prefix_length
-            dict_routes = dict_ipv4.setdefault(combined_ip, {})
+            proposed_key = combined_ip
+            proposed_index = 0
+            while proposed_key in dict_ipv4:
+                proposed_index += 1
+                proposed_key = combined_ip + '-' + str(proposed_index)
+            dict_routes = dict_ipv4.setdefault(proposed_key, {})
 
             if '*' in groups['code']:
                 dict_routes.update({'candidate_default': True})
