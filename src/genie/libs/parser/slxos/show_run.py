@@ -111,18 +111,22 @@ class ShowRunBridgeDomain(ShowRunBridgeDomainSchema):
         # bridge-domain 20 p2mp
         p1 = re.compile(
             r'^bridge-domain (?P<bd_id>\d+)\s(?P<bd_type>p2mp|p2p)$')
+        
         # vc-id 20
         p2 = re.compile(
             r'^vc-id (?P<vc_id>\d+)$')
+        
         # peer 1.1.1.1 lsp abc def ed
         # peer 3.3.3.3 lsp 1 abc cos
         # peer 4.4.4.4 load-balance cos 4 flow-label control-word lsp abc ds
         p3 = re.compile(
             r'^peer\s(?P<peer_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
             r'(\s((?P<load_balance>load-balance)|cos (?P<cos>\d)|(?P<flow_label>flow-label)|(?P<control_word>control-word)|lsp\s(?P<lsp>(\w+\s?)+)))+$')
+        
         # description client1
         p4 = re.compile(
             r'^description\s(?P<description>\w+)$')
+        
         # logical-interface ethernet 0/30.2
         # logical-interface port-channel 100.1
         p5 = re.compile(
