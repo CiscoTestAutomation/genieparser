@@ -1,0 +1,53 @@
+access-list cached ACL log flows: total 0, denied 0 (deny-flow-max 4096)
+            alert-interval 300
+access-list acl1_default; 5 elements; name hash: 0xf6e3360c
+access-list acl1_default line 1 remark -------------------------------------------------------------------------
+access-list acl1_default line 2 extended permit tcp object-group BGP-Peers-In object-group BGP-Peers-Out eq bgp log disable (hitcnt=0) 0xee513685 
+  access-list acl1_default line 2 extended permit tcp host 172.16.132.3 host 172.16.141.107 eq bgp log disable (hitcnt=0) 0x666ea2e1 
+  access-list acl1_default line 2 extended permit tcp host 172.16.132.3 host 172.16.141.108 eq bgp log disable (hitcnt=0) 0x26750fac 
+  access-list acl1_default line 2 extended permit tcp host 172.16.132.4 host 172.16.141.107 eq bgp log disable (hitcnt=0) 0x173720dc 
+  access-list acl1_default line 2 extended permit tcp host 172.16.132.4 host 172.16.141.108 eq bgp log disable (hitcnt=0) 0x47628544 
+access-list acl1_default line 3 extended deny ip any any log informational interval 300 (hitcnt=60) 0x2296c901 
+access-list acl1_default line 4 remark -------------------------------------------------------------------------
+access-list acl2_default; 5 elements; name hash: 0x7dcb06e2
+access-list acl2_default line 1 remark -------------------------------------------------------------------------
+access-list acl2_default line 2 extended permit tcp object-group BGP-Peers-Out object-group BGP-Peers-In eq bgp log disable (hitcnt=0) 0x98b0c6a5 
+  access-list acl2_default line 2 extended permit tcp host 172.16.141.107 host 172.16.132.3 eq bgp log disable (hitcnt=0) 0x69f5e48c 
+  access-list acl2_default line 2 extended permit tcp host 172.16.141.107 host 172.16.132.4 eq bgp log disable (hitcnt=0) 0x08e9769f 
+  access-list acl2_default line 2 extended permit tcp host 172.16.141.108 host 172.16.132.3 eq bgp log disable (hitcnt=0) 0x01404b2b 
+  access-list acl2_default line 2 extended permit tcp host 172.16.141.108 host 172.16.132.4 eq bgp log disable (hitcnt=0) 0x00e2f9ae 
+access-list acl2_default line 3 extended deny ip any any log informational interval 300 (hitcnt=0) 0x6d1cc2e1 
+access-list acl2_default line 4 remark -------------------------------------------------------------------------
+access-list TEST line 1 remark test
+access-list TEST line 2 remark test1
+access-list TEST line 3 remark test3
+access-list TEST line 4 remark test4
+access-list TEST line 5 remark test5
+access-list acl3; 8 elements; name hash: 0x1b62e350
+access-list acl3 line 1 extended permit tcp object-group BGP-Peers-Out object-group BGP-Peers-In log disable (hitcnt=0) 0x128539ce 
+  access-list acl3 line 1 extended permit tcp host 172.16.141.107 host 172.16.132.3 log disable (hitcnt=0) 0xb9af5448 
+  access-list acl3 line 1 extended permit tcp host 172.16.141.107 host 172.16.132.4 log disable (hitcnt=0) 0xb70d09a2 
+  access-list acl3 line 1 extended permit tcp host 172.16.141.108 host 172.16.132.3 log disable (hitcnt=0) 0xe95a626b 
+  access-list acl3 line 1 extended permit tcp host 172.16.141.108 host 172.16.132.4 log disable (hitcnt=0) 0x59b21cbd 
+access-list acl3 line 2 extended permit tcp object-group BGP-Peers-In object-group BGP-Peers-Out log disable (hitcnt=2) 0x99171bd1 
+  access-list acl3 line 2 extended permit tcp host 172.16.132.3 host 172.16.141.107 log disable (hitcnt=1) 0xf3c06b2b 
+  access-list acl3 line 2 extended permit tcp host 172.16.132.3 host 172.16.141.108 log disable (hitcnt=0) 0xf4eeda64 
+  access-list acl3 line 2 extended permit tcp host 172.16.132.4 host 172.16.141.107 log disable (hitcnt=0) 0x76ca927c 
+  access-list acl3 line 2 extended permit tcp host 172.16.132.4 host 172.16.141.108 log disable (hitcnt=1) 0x0e95724d 
+access-list acl2; 14 elements; name hash: 0x8caa425b
+access-list acl2 line 1 extended permit tcp object-group BGP-Peers-Out object-group BGP-Peers-In eq bgp log disable (hitcnt=0) 0x65c3b335 
+  access-list acl2 line 1 extended permit tcp host 172.16.141.107 host 172.16.132.3 eq bgp log disable (hitcnt=0) 0x9f489d59 
+  access-list acl2 line 1 extended permit tcp host 172.16.141.107 host 172.16.132.4 eq bgp log disable (hitcnt=0) 0x16c843c4 
+  access-list acl2 line 1 extended permit tcp host 172.16.141.108 host 172.16.132.3 eq bgp log disable (hitcnt=0) 0x20b3cece 
+  access-list acl2 line 1 extended permit tcp host 172.16.141.108 host 172.16.132.4 eq bgp log disable (hitcnt=0) 0x6ec8a21c 
+access-list acl2 line 2 extended permit tcp host 10.38.193.45 host 9.17.186.253 eq ldap log informational interval 300 (hitcnt=0) 0x07859be7 
+access-list acl2 line 3 extended permit tcp host 10.38.193.51 host 9.17.186.253 eq https log informational interval 300 (hitcnt=0) 0x991e76ce 
+access-list acl2 line 4 extended permit tcp host 10.38.193.45 host 9.57.182.78 eq https log informational interval 300 (hitcnt=0) 0x60d91668 
+access-list acl2 line 5 extended permit tcp host 10.38.193.50 host 9.17.186.253 eq https log informational interval 300 (hitcnt=0) 0xb61112e7 
+access-list acl2 line 6 extended permit tcp host 10.38.193.51 host 9.17.186.253 eq ldap log informational interval 300 (hitcnt=0) 0x064fabd6 
+access-list acl2 line 7 extended permit tcp host 10.38.193.50 host 9.57.182.78 eq https log informational interval 300 (hitcnt=0) 0x7fe2a4d1 
+access-list acl2 line 8 extended permit tcp host 10.38.193.51 host 9.17.186.253 eq ldaps log informational interval 300 (hitcnt=0) 0xdfc19219 
+access-list acl2 line 9 extended permit tcp host 10.38.193.51 host 9.57.182.78 eq ldap log informational interval 300 (hitcnt=0) 0xa68455fb 
+access-list acl2 line 10 extended deny ip any4 any4 log informational interval 300 (hitcnt=0) 0x07bca870 
+access-list acl2 line 11 extended deny ip any6 any6 log informational interval 300 (hitcnt=0) 0x40c8b102 
+
