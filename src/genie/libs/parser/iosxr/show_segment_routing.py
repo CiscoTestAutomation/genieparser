@@ -15,6 +15,7 @@ Parser for the following show commands:
     * show pce ipv4 prefix
     * show pce ipv4 peer detail
     * show pce ipv4 peer
+    * show segment-routing srv6 locator {locator}
 '''
 
 # !/bin/env python
@@ -72,8 +73,8 @@ class ShowIsisSegmentRoutingPrefixSidMap(ShowIsisSegmentRoutingPrefixSidMapSchem
         p1 = re.compile(r'^IS-IS (?P<isis_id>\d+) (?P<status>\w+) policy$')
 
         # Prefix               SID Index    Range        Flags
-        # 10.4.1.100/32         100          20          
-        # 10.4.1.150/32         150          10          
+        # 10.4.1.100/32         100          20
+        # 10.4.1.150/32         150          10
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
@@ -157,8 +158,8 @@ class ShowOspfSegmentRoutingPrefixSidMap(ShowOspfSegmentRoutingPrefixSidMapSchem
                         'ID (?P<process_id>\d+)$')
 
         # Prefix               SID Index    Range        Flags
-        # 10.4.1.100/32         100          20          
-        # 10.4.1.150/32         150          10          
+        # 10.4.1.100/32         100          20
+        # 10.4.1.150/32         150          10
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
@@ -1032,7 +1033,7 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                         'S:(?P<s_flag>\d+) R:(?P<r_flag>\d+) A:'
                         '(?P<a_flag>\d+) O:(?P<o_flag>\d+)$')
 
-        #   Reported path: 
+        #   Reported path:
         p9 = re.compile(r'^(?P<specified_path>\w+) path:$')
 
         p10 = re.compile(r'^Metric type: (?P<metric_type>\w+), '
@@ -1192,7 +1193,7 @@ class ShowSegmentRoutingLocalBlockInconsistenciesSchema(MetaParser):
 
 
 class ShowSegmentRoutingLocalBlockInconsistencies(ShowSegmentRoutingLocalBlockInconsistenciesSchema):
-    ''' Parser for: 
+    ''' Parser for:
         * show segment-routing local-block inconsistencies
     '''
 
@@ -1257,7 +1258,7 @@ class ShowSegmentRoutingMappingServerPrefixSidMapIPV4(ShowSegmentRoutingMappingS
 
         ret_dict = {}
 
-        # 10.186.1.0/24          400          300          
+        # 10.186.1.0/24          400          300
         p1 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         # Number of mapping entries: 2
@@ -1375,3 +1376,76 @@ class ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail(
                 prefix_dict['flags'] = m.groupdict()['flags']
 
         return ret_dict
+
+################################################################################
+
+"""Schema for 'show segment-routing srv6 locator'"""
+class ShowSegmentRoutingSrv6LocatorSchema(MetaParser):
+    schema = {
+        'locator': {
+            Any(): {
+                'id': int,
+                'algo': int,
+                'prefix': str,
+                'status': str,
+                'flags': str
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show segment-routing srv6 locator'
+# ==============================================
+
+class ShowSegmentRoutingSrv6Locator(ShowSegmentRoutingSrv6LocatorSchema):
+    """Parser for:
+    * show segment-routing srv6 locator
+    * show segment-routing srv6 locator {locator}"""
+
+    cli_command = ['show segment-routing srv6 locator',
+                   'show segment-routing srv6 locator {locator}']
+
+    """
+    Name                  ID       Algo  Prefix                    Status   Flags
+    --------------------  -------  ----  ------------------------  -------  --------
+    ALGO_0                1        0     cafe:0:200::/48           Up       U
+    ALGO_128              2        128   cafe:0:228::/48           Up       U
+    ALGO_129              3        129   cafe:0:229::/48           Up       U
+    """
+    def cli(self, locator=None, output=None):
+
+        if output is None:
+            if locator:
+                out = self.device.execute(self.cli_command[1].format(locator=locator))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        locator_dict = {}
+        ret_dict = {}
+        p1 = re.compile(r'^(?P<name>\w+)\s+(?P<id>\d+)\s+(?P<algo>\d+) +'
+                        r'\s+(?P<prefix>[a-fA-F\d\:]+\/\d{1,3}) +'
+                        r'\s+(?P<status>(Up|Down))\s+(?P<flags>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                if 'locator' not in locator_dict:
+                    ret_dict = locator_dict.setdefault('locator',{})
+                name = m.groupdict()['name']
+                id = int(m.groupdict()['id'])
+                algo = int(m.groupdict()['algo'])
+                prefix = m.groupdict()['prefix']
+                status = m.groupdict()['status']
+                flags = m.groupdict()['flags']
+                ret_dict[name] = {}
+                ret_dict[name]['id'] = id
+                ret_dict[name]['algo'] = algo
+                ret_dict[name]['prefix'] = prefix
+                ret_dict[name]['status'] = status
+                ret_dict[name]['flags'] = flags
+                continue
+
+        return locator_dict

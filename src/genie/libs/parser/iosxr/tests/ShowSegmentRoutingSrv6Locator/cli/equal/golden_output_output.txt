@@ -1,0 +1,5 @@
+Name                  ID       Algo  Prefix                    Status   Flags
+--------------------  -------  ----  ------------------------  -------  --------
+ALGO_0                0        0     cafe:0:200::/48           Down     U
+ALGO_128              2        128   cafe:0:228::/48           Up       U
+ALGO_129              3        129   cafe:0:229::/48           Up       U
