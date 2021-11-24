@@ -16,6 +16,8 @@ IOSXR parsers for the following show commands:
     * show isis database detail
     * show isis fast-reroute summary
     * show isis instance {instance} hostname
+    * show isis segment-routing srv6 locators
+    * show isis instance {instance} segment-routing srv6 locators
 """
 
 # Python
@@ -5134,3 +5136,99 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
                 continue
 
         return result_dict
+
+################################################################################
+
+"""Schema for 'show isis segment-routing srv6 locators'"""
+class ShowIsisSegmentRoutingSrv6LocatorsSchema(MetaParser):
+    schema = {
+        'instance': {
+            Any(): {
+                'locators': {
+                    Any(): {
+                        'id': int,
+                        'algo': int,
+                        'prefix': str,
+                        'status': str
+                    },
+                }
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show isis segment-routing srv6 locators'
+# ==============================================
+
+class ShowIsisSegmentRoutingSrv6Locators(ShowIsisSegmentRoutingSrv6LocatorsSchema):
+    """Parser for:
+    * show isis segment-routing srv6 locators
+    * show isis instance {instance} segment-routing srv6 locators
+    """
+    cli_command = ['show isis segment-routing srv6 locators',
+                   'show isis instance {instance} segment-routing srv6 locators']
+
+    """
+    IS-IS 1 SRv6 Locators
+    Name                  ID       Algo  Prefix                    Status
+    ------                ----     ----  ------                    ------
+    ALGO_0                1        0     cafe:0:100::/48           Active
+    ALGO_128              2        128   cafe:0:128::/48           Active
+    ALGO_129              3        129   cafe:0:129::/48           Active
+    """
+    def cli(self, instance=None, output=None):
+
+        if output is None:
+            if instance:
+                out = self.device.execute(self.cli_command[1].format(instance=instance))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        isis_dict = {}
+        # IS-IS 1 SRv6 Locators
+        p0 =  re.compile(r'^IS-IS\s+(?P<instance>\S+)\s+SRv6\s+Locators$')
+
+        # Name                  ID       Algo  Prefix                    Status
+        # ------                ----     ----  ------                    ------
+        # ALGO_0                1        0     cafe:0:100::/48           Active
+        # ALGO_128              2        128   cafe:0:128::/48           Active
+        # ALGO_129              3        129   cafe:0:129::/48           Active
+
+        p1 = re.compile(r'^(?P<name>\w+)\s+(?P<id>\d+)\s+(?P<algo>\d+) +'
+                        r'\s+(?P<prefix>[a-fA-F\d\:]+\/\d{1,3}) +'
+                        r'\s+(?P<status>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IS-IS 1 SRv6 Locators
+            m = p0.match(line)
+            if m:
+                instance = m.groupdict()['instance']
+                final_dict = isis_dict.setdefault('instance', {}).\
+                    setdefault(instance, {})
+                continue
+
+            # Name                  ID       Algo  Prefix                    Status
+            # ------                ----     ----  ------                    ------
+            # ALGO_0                1        0     cafe:0:100::/48           Active
+            # ALGO_128              2        128   cafe:0:128::/48           Active
+            # ALGO_129              3        129   cafe:0:129::/48           Active
+            m = p1.match(line)
+            if m:
+                locators = m.groupdict()['name']
+                id = int(m.groupdict()['id'])
+                algo = int(m.groupdict()['algo'])
+                prefix = m.groupdict()['prefix']
+                status = m.groupdict()['status']
+                final_dict.setdefault('locators', {}).setdefault(
+                    locators, {}).update(
+                    {'id': id,
+                     'algo': algo,
+                     'prefix': prefix,
+                     'status': status})
+                continue
+
+        return isis_dict
