@@ -109,8 +109,8 @@ class ShowAccessList(ShowAccessListSchema):
                 groups = m.groupdict()
                 acl_name = groups['name']
                 acl_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {})
-                acl_dict.update({'elements': int(groups['elements']})
-                acl_dict.update({'name_hash': int(groups['namehash']})
+                acl_dict.update({'elements': int(groups['elements']) })
+                acl_dict.update({'name_hash': int(groups['namehash']) })
                 continue
             
             m = p2.match(line)
