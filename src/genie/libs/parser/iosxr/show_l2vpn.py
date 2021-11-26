@@ -47,7 +47,7 @@ class ShowL2vpnMacLearningSchema(MetaParser):
 class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
     """Parser class for show l2vpn mac-learning <mac_type> all location <location>"""
 
-    cli_command = 'show l2vpn mac-learning {mac_type} all location {location}'
+    cli_command = ['show l2vpn mac-learning {mac_type} all location {location}']
 
     def cli(self, mac_type='', location='', output=None):
         if output is None:
