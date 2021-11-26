@@ -24,7 +24,7 @@ class ShowAccessListSchema(MetaParser):
     	'access-list': {
             Any(): {
                 Optional('elements'): int,
-#               'name_hash': str,
+                'name_hash': str,
                 'entry': {
                     Any(): {
                       Optional('action'): str, 
@@ -71,12 +71,9 @@ class ShowAccessList(ShowAccessListSchema):
     def cli(self, output=None):
         if output is None:
             # excute command to get output
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         ret_dict = {}
-        ret_dict['access-list'] = {}
 
         # access-list acl1; 8 elements; name hash: 0xffffffff
         # access-list acl2; 50 elements; name hash: 0xffffffff
@@ -101,7 +98,7 @@ class ShowAccessList(ShowAccessListSchema):
         # alert-interval 300
         p5 = re.compile(r' *alert-interval +(?P<alert_interval>\d+)')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             if line == '':
@@ -111,9 +108,9 @@ class ShowAccessList(ShowAccessListSchema):
             if m:
                 groups = m.groupdict()
                 acl_name = groups['name']
-                ret_dict['access-list'][acl_name] = {}
-                ret_dict['access-list'][acl_name]['elements'] = int(groups['elements'])
-#                ret_dict['access-list'][acl_name]['name_hash'] = groups['namehash']
+                acl_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {})
+                acl_dict.update({'elements': int(groups['elements']})
+                acl_dict.update({'name_hash': int(groups['namehash']})
                 continue
             
             m = p2.match(line)
@@ -121,67 +118,48 @@ class ShowAccessList(ShowAccessListSchema):
                 groups = m.groupdict()
                 acl_name = groups['name']
                 line_num = groups['entry']
-                if not acl_name in ret_dict['access-list'].keys() :
-                    ret_dict['access-list'][acl_name] = {}
-                if not 'entry' in ret_dict['access-list'][acl_name].keys():
-                    ret_dict['access-list'][acl_name]['entry'] = {}
-                line_entry = {}
-                self.add_if_in_groups(line_entry, groups, ['action', 'protocol', 'hitcnt', 'acl_hash'])
-                line_entry['source'] = {}
-                line_entry['destination'] = {}
+                line_entry = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry').setdefault(line_num, {})
+                for name in ['action', 'protocol', 'hitcnt', 'acl_hash']:
+                    if name in groups and not groups[name] is None:
+                        line_entry[name] = groups[name]
 
-                self.add_host(line_entry['source'], groups, 'src_')
-                self.add_host(line_entry['destination'], groups, 'dst_')
+                src_line_entry = line_entry.setdefault('source', {})
+                dst_line_entry = line_entry.setdefault('destination', {})
+
+                for name in ['host', 'any', 'object_group']:
+                    src_prefixed_name = 'src_' + name
+                    if src_prefixed_name in groups and not groups[src_prefixed_name] is None:
+                        src_line_entry.update({name: groups[src_prefixed_name]})
+                    dst_prefixed_name = 'dst_' + name
+                    if dst_prefixed_name in groups and not groups[dst_prefixed_name] is None:
+                        dst_line_entry.update({name: groups[dst_prefixed_name]})
 
                 if 'hitcnt' in line_entry:
-                    line_entry['hitcnt'] = int(line_entry['hitcnt'])
-                ret_dict['access-list'][acl_name]['entry'][line_num] = line_entry
+                    line_entry.update({'hitcnt': int(line_entry['hitcnt']) })
                 continue
 
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 line_num = groups['entry']
-                if not acl_name in ret_dict['access-list'].keys() :
-                    ret_dict['access-list'][acl_name] = {}
-                if not 'entry' in ret_dict['access-list'][acl_name].keys():
-                    ret_dict['access-list'][acl_name]['entry'] = {}
-                ret_dict['access-list'][acl_name]['entry'][line_num] = {}
-                ret_dict['access-list'][acl_name]['entry'][line_num]['remark'] = groups['remark']
+                acl_line_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry').setdefault(line_num, {})
+                acl_line_dict.update({'remark': groups['remark']})
                 continue
 
 
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
-                flows = {}
-                flows['total'] = int(groups['total'])
-                flows['denied'] = int(groups['denied'])
-                flows['deny_flow_max'] = int(groups['deny_flow_max'])
-                ret_dict['cached_acl_log_flows'] = flows
+                flows = ret_dict.setdefault('cached_acl_log_flows', {})
+                flows.update({'total': int(groups['total']) })
+                flows.update({'denied': int(groups['denied']) })
+                flows.update({'deny_flow_max': int(groups['deny_flow_max']) })
                 continue
 
 
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict['alert_interval'] = int(groups['alert_interval'])
-#            else:
-#                print('Not matching line: {}'.format(line))
+                ret_dict.update({'alert_interval': int(groups['alert_interval']) })
 
-
-        if not(bool(ret_dict['access-list'])):
-            ret_dict = {}
         return ret_dict
-
-    def add_if_in_groups(self, line_dict, groups, names):
-        for name in names:
-            if name in groups and not groups[name] is None:
-                line_dict[name] = groups[name]
-
-    def add_host(self, line_dict, groups, prefix):
-        names = ['host', 'any', 'object_group']
-        for name in names:
-            prefixed_name = prefix + name
-            if prefixed_name in groups and not groups[prefixed_name] is None:
-                line_dict[name] = groups[prefixed_name]
