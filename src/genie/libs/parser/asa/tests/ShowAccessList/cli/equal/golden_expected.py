@@ -14,7 +14,9 @@ expected_output = {'access-list': {'acl1_default': {'elements': 5,
                                                   'protocol': 'ip',
                                                   'source': {'any': 'any'}},
                                             '4': {'remark': ' '
-                                                            '-------------------------------------------------------------------------'}}},
+                                                            '-------------------------------------------------------------------------'}},
+                                  'name_hash': '0xf6e3360c'
+                                  },
                  'acl2': {'elements': 14,
                           'entry': {'1': {'acl_hash': '0x6ec8a21c',
                                           'action': 'permit',
@@ -81,13 +83,17 @@ expected_output = {'access-list': {'acl1_default': {'elements': 5,
                                           'destination': {'host': '9.57.182.78'},
                                           'hitcnt': 0,
                                           'protocol': 'tcp',
-                                          'source': {'host': '10.38.193.51'}}}},
+                                          'source': {'host': '10.38.193.51'}}},
+                            'name_hash': '0x8caa425b'
+                            },
                  'acl2_default': {'elements': 5,
                                   'entry': {'1': {'remark': ' test'},
                                             '2': {'remark': ' test1'},
                                             '3': {'remark': ' test3'},
                                             '4': {'remark': ' test4'},
-                                            '5': {'remark': ' test5'}}},
+                                            '5': {'remark': ' test5'}},
+                                  'name_hash': '0x7dcb06e2'
+                                  },
                  'acl3': {'elements': 8,
                           'entry': {'1': {'acl_hash': '0x59b21cbd',
                                           'action': 'permit',
@@ -100,7 +106,10 @@ expected_output = {'access-list': {'acl1_default': {'elements': 5,
                                           'destination': {'host': '172.16.141.108'},
                                           'hitcnt': 1,
                                           'protocol': 'tcp',
-                                          'source': {'host': '172.16.132.4'}}}}},
+                                          'source': {'host': '172.16.132.4'}}},
+                          'name_hash': '0x1b62e350'
+                          }
+                        },
  'alert_interval': 300,
  'cached_acl_log_flows': {'denied': 0, 'deny_flow_max': 4096, 'total': 0}}
 
