@@ -118,7 +118,7 @@ class ShowAccessList(ShowAccessListSchema):
                 groups = m.groupdict()
                 acl_name = groups['name']
                 line_num = groups['entry']
-                line_entry = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry').setdefault(line_num, {})
+                line_entry = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry', {}).setdefault(line_num, {})
                 for name in ['action', 'protocol', 'hitcnt', 'acl_hash']:
                     if name in groups and not groups[name] is None:
                         line_entry[name] = groups[name]
@@ -142,7 +142,7 @@ class ShowAccessList(ShowAccessListSchema):
             if m:
                 groups = m.groupdict()
                 line_num = groups['entry']
-                acl_line_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry').setdefault(line_num, {})
+                acl_line_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry', {}).setdefault(line_num, {})
                 acl_line_dict.update({'remark': groups['remark']})
                 continue
 
