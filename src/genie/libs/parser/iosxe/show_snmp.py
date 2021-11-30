@@ -849,13 +849,15 @@ class ShowSnmpMibIfmibIfindex(ShowSnmpMibIfmibIfindexSchema):
 
         #GigabitEthernet3/0/28: Ifindex = 36
         #unrouted VLAN 1003: Ifindex = 7
-        p1 =  re.compile(r'^(unrouted\s+)?(?P<interface_index>(VLAN\s)?\S+) +Ifindex = +(?P<ifIndex>\d+)$')
+        p1 =  re.compile(r'^(?P<interface_index>(unrouted\sVLAN\s)?\S+) +Ifindex = +(?P<ifIndex>\d+)$')
 
         for line in out.splitlines():
+            #GigabitEthernet3/0/28: Ifindex = 36
+            #unrouted VLAN 1003: Ifindex = 7
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group.pop('interface_index').replace(' ', ''))
+                intf = Common.convert_intf_name(group.pop('interface_index'))
                 intf = (intf.split(':'))[0]
                 interface_dict.setdefault('interface',{}).setdefault(intf, group)
 
