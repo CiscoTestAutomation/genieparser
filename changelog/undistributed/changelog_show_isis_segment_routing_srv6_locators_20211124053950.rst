@@ -2,4 +2,6 @@
                             New
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added new parser ShowIsisSegmentRoutingSrv6Locators in show_isis.py
+    * Added ShowIsisSegmentRoutingSrv6Locators:
+        * show isis segment-routing srv6 locators
+        * show isis instance {instance} segment-routing srv6 locators

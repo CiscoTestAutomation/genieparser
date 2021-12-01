@@ -5137,10 +5137,11 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
 
         return result_dict
 
-################################################################################
-
-"""Schema for 'show isis segment-routing srv6 locators'"""
 class ShowIsisSegmentRoutingSrv6LocatorsSchema(MetaParser):
+    """Schema for:
+        * show isis segment-routing srv6 locators
+        * show isis instance {instance} segment-routing srv6 locators
+    """
     schema = {
         'instance': {
             Any(): {
@@ -5168,14 +5169,6 @@ class ShowIsisSegmentRoutingSrv6Locators(ShowIsisSegmentRoutingSrv6LocatorsSchem
     cli_command = ['show isis segment-routing srv6 locators',
                    'show isis instance {instance} segment-routing srv6 locators']
 
-    """
-    IS-IS 1 SRv6 Locators
-    Name                  ID       Algo  Prefix                    Status
-    ------                ----     ----  ------                    ------
-    ALGO_0                1        0     cafe:0:100::/48           Active
-    ALGO_128              2        128   cafe:0:128::/48           Active
-    ALGO_129              3        129   cafe:0:129::/48           Active
-    """
     def cli(self, instance=None, output=None):
 
         if output is None:
@@ -5218,17 +5211,14 @@ class ShowIsisSegmentRoutingSrv6Locators(ShowIsisSegmentRoutingSrv6LocatorsSchem
             # ALGO_129              3        129   cafe:0:129::/48           Active
             m = p1.match(line)
             if m:
-                locators = m.groupdict()['name']
-                id = int(m.groupdict()['id'])
-                algo = int(m.groupdict()['algo'])
-                prefix = m.groupdict()['prefix']
-                status = m.groupdict()['status']
-                final_dict.setdefault('locators', {}).setdefault(
-                    locators, {}).update(
-                    {'id': id,
-                     'algo': algo,
-                     'prefix': prefix,
-                     'status': status})
+                group = m.groupdict()
+                final_dict.setdefault('locators', {}).setdefault(group['name'], {})\
+                    .update({
+                        'id': int(group['id']),
+                        'algo': int(group['algo']),
+                        'prefix': group['prefix'],
+                        'status': group['status']
+                    })
                 continue
 
         return isis_dict
