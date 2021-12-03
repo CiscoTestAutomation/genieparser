@@ -7,6 +7,7 @@ Parser for the following show commands:
 # Python
 import re
 import logging
+from collections import OrderedDict
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -21,146 +22,152 @@ class ShowAccessListSchema(MetaParser):
     """
 
     schema = {
-    	'access-list': {
+    	Optional('access-list'): {
             Any(): {
-                'elements': int,
-                'name_hash': str,
+                Optional('elements'): int,
+                Optional('name_hash'): str,
                 'entry': {
                     Any(): {
-                        Optional('controls_flows'): bool,
-                        Optional('has_children'): bool,
-                        Optional('is_child'): bool,
-                        'source': {
-                            'host': {
-                                Any(): {
-                                    'destination': {
-                                        'host': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'object_group': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'any': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            'object_group': {
-                                Any(): {
-                                    'destination': {
-                                        'host': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'object_group': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'any': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
+                        Optional('expansion-index'): {
+                            Any(): {
+                                Optional('controls_flows'): bool,
+                                Optional('has_children'): bool,
+                                Optional('is_child'): bool,
+                                Optional('source'): {
+                                    Optional('host'): {
+                                        Any(): {
+                                            Optional('port'): str,
+                                            'destination': {
+                                                Optional('host'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('object_group'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('any'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
-                                }
-                            },
-                            'any': {
-                                Any(): {
-                                    'destination': {
-                                        'host': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'object_group': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
-                                            }
-                                        },
-                                        'any': {
-                                            Any(): {
-                                                Optional('action'): str, 
-                                                Optional('protocol'): str,
-                                                Optional('port'): str,
-                                                Optional('log'): bool,
-                                                Optional('informational_interval'): int,
-                                                Optional('hitcnt'): int,
-                                                Optional('acl_hash'): str,
+                                    },
+                                    Optional('object_group'): {
+                                        Any(): {
+                                            Optional('port'): str,
+                                            'destination': {
+                                                Optional('host'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('object_group'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('any'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
+                                    },
+                                    Optional('any'): {
+                                        Any(): {
+                                            Optional('port'): str,
+                                            'destination': {
+                                                Optional('host'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('object_group'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                },
+                                                Optional('any'): {
+                                                    Any(): {
+                                                        'action': str, 
+                                                        'protocol': str,
+                                                        Optional('port'): str,
+                                                        'log': bool,
+                                                        Optional('informational_interval'): int,
+                                                        'hitcnt': int,
+                                                        'acl_hash': str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
                                 }
-                            },
-                            Optional('port'): str,
+                            }
                         },
-                      Optional('remark'): str,
+                        Optional('remark'): str,
                     }
-                },
-            },
+                }
+            }
         },
-        'cached_acl_log_flows': {
+        Optional('cached_acl_log_flows'): {
             Optional('total'): int,
             Optional('denied'): int,
             Optional('deny_flow_max'): int,
         },
-        Optional('alert_interval'): int,
+        Optional('alert_interval'): int
     }
 
 # =============================================
@@ -193,18 +200,19 @@ class ShowAccessList(ShowAccessListSchema):
         # access-list acl1 line 3 extended deny ip any any log informational interval 300 (hitcnt=60) 0xffffffff
         # access-list acl1 line 4 extended deny ip any4 any4 log informational interval 300 (hitcnt=0) 0xffffffff
         # access-list acl1 line 5 extended deny ip any6 any6 log informational interval 300 (hitcnt=0) 0xffffffff
-        p2 = re.compile(r'(?P<tabbed> *)access-list +(?P<name>\S+) +line +(?P<entry>\d+) +extended +(?P<action>(permit|deny)) +(?P<protocol>\S+) +(host (?P<src_host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|object-group +(?P<src_object_group>\S+)|(?P<dst_any>any|any4|any6))( +eq +(?P<src_port>\S+))? +(host (?P<dst_host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|object-group +(?P<dst_object_group>\S+)|(?P<src_any>any|any4|any6))( +eq +(?P<dst_port>\S+))?( +(?P<log_disable>log +disable))?( +informational +interval +(?P<informational_interval>\d+))? +\(hitcnt=(?P<hitcnt>\d+)\) +(?P<acl_hash>0x[0-9a-fA-F]+)')
+        p2 = re.compile(r'(?P<tabbed> +)?access-list +(?P<name>\S+) +line +(?P<entry>\d+) +extended +(?P<action>(permit|deny)) +(?P<protocol>\S+) +(host (?P<src_host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|object-group +(?P<src_object_group>\S+)|(?P<dst_any>any|any4|any6))( +eq +(?P<src_port>\S+))? +(host (?P<dst_host>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|object-group +(?P<dst_object_group>\S+)|(?P<src_any>any|any4|any6))( +eq +(?P<dst_port>\S+))?( +log(?P<log_disable> +disable)?)?( +informational +interval +(?P<informational_interval>\d+))? +\(hitcnt=(?P<hitcnt>\d+)\) +(?P<acl_hash>0x[0-9a-fA-F]+)')
 
         # access-list acl1 line 6 remark this is a remark
-        p3 = re.compile(r' *access-list +(?P<name>\S+) +line +(?P<entry>\d+) +remark+(?P<remark>.*)')
+        p3 = re.compile(r' *access-list +(?P<name>\S+) +line +(?P<entry>\d+) +remark (?P<remark>.*)')
 
         # access-list cached ACL log flows: total 0, denied 0 (deny-flow-max 4096)
         p4 = re.compile(r' *access-list +cached +ACL +log +flows: +total +(?P<total>\d+), +denied +(?P<denied>\d+) +\(deny-flow-max +(?P<deny_flow_max>\d+)\)')
         # alert-interval 300
         p5 = re.compile(r' *alert-interval +(?P<alert_interval>\d+)')
 
-        previous_line_num = ''
-        line_sub = 0
+        previous_line_num = -1
+        previous_acl_name = ''
+        line_sub = -1
         for line in output.splitlines():
             line = line.strip()
 
@@ -215,7 +223,7 @@ class ShowAccessList(ShowAccessListSchema):
             if m:
                 groups = m.groupdict()
                 acl_name = groups['name']
-                acl_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {})
+                acl_dict = ret_dict.setdefault('access-list', OrderedDict()).setdefault(acl_name, OrderedDict())
                 acl_dict.update({'elements': int(groups['elements']) })
                 acl_dict.update({'name_hash': groups['namehash'] })
                 continue
@@ -225,62 +233,68 @@ class ShowAccessList(ShowAccessListSchema):
                 groups = m.groupdict()
                 acl_name = groups['name']
                 line_num = groups['entry']
-                if line_num == previous_line_num:
+                if line_num == previous_line_num and acl_name == previous_acl_name:
                     line_sub = line_sub + 1
-                    parent_entry = ret_dict['access-list'][acl_name]['entry']['{}.0'.format(line_num)]
-                    parent_entry.update({'has_children': 'true'})
-                    parent_entry.update({'controls_flows': 'false'})
+                    parent_entry = ret_dict.setdefault('access-list', OrderedDict()).setdefault(acl_name, OrderedDict()).setdefault('entry', OrderedDict()).setdefault(int(line_num), OrderedDict()).setdefault('expansion-index', OrderedDict()).setdefault(0, OrderedDict())
+                    parent_entry.update({'has_children': True})
+                    parent_entry.update({'controls_flows': False})
+                    is_child = True
                 else:
                     line_sub = 0
                     previous_line_num = line_num
+                    previous_acl_name = acl_name
+                    is_child = False
 
-                line_num = '{}.{}'.format(line_num,line_sub)
-                line_entry = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry', {}).setdefault(line_num, {})
-                line_entry.update({'has_children': 'false'})
-                line_entry.update({'controls_flows': 'true'})
-                line_entry.update({'is_child': bool('tabbed' in groups)})
+                line_entry = ret_dict.setdefault('access-list', OrderedDict()).setdefault(acl_name, OrderedDict()).setdefault('entry', OrderedDict()).setdefault(int(line_num), OrderedDict()).setdefault('expansion-index', OrderedDict()).setdefault(line_sub, OrderedDict())
+                line_entry.update({'has_children': False})
+                line_entry.update({'is_child': is_child})
+                line_entry.update({'controls_flows': True})
 
                 for name in ['host', 'any', 'object_group']:
                     src_prefixed_name = 'src_' + name
                     if src_prefixed_name in groups and not groups[src_prefixed_name] is None:
-                        src_line_entry = line_entry.setdefault('source', {}).setdefault(name, {})
-                        if name != 'any':
-                            src_line_entry = src_line_entry.setdefault(groups[src_prefixed_name], {})
-                        src_line_entry.update('port', groups['src_port'])
+                        src_line_entry = line_entry.setdefault('source', OrderedDict()).setdefault(name, OrderedDict()).setdefault(groups[src_prefixed_name], OrderedDict())
+                        if 'src_port' in groups and not groups['src_port'] is None:
+                            src_line_entry.update({'port': groups['src_port']})
                         for name in ['host', 'any', 'object_group']:
                             dst_prefixed_name = 'dst_' + name
                             if dst_prefixed_name in groups and not groups[dst_prefixed_name] is None:
-                                dst_line_entry = src_line_entry.setdefault('destination', {}).setdefault(name, {}).setdefault(groups[dst_prefixed_name], {})
+                                dst_line_entry = src_line_entry.setdefault('destination', OrderedDict()).setdefault(name, OrderedDict()).setdefault(groups[dst_prefixed_name], OrderedDict())
 
                                 if 'action' in groups and not groups['action'] is None:
-                                    line_entry['action'] = groups['action']
+                                    dst_line_entry.update({'action' : groups['action'] })
                                 if 'protocol' in groups and not groups['protocol'] is None:
-                                    line_entry['protocol'] = groups['protocol']
-                                if 'port' in groups and not groups['port'] is None:
-                                    dst_line_entry.update({'port': line_entry['port'] })
+                                    dst_line_entry.update({'protocol': groups['protocol'] })
+                                if 'dst_port' in groups and not groups['dst_port'] is None:
+                                    dst_line_entry.update({'port': groups['dst_port'] })
                                 if 'log_disable' in groups and not groups['log_disable'] is None:
-                                    dst_line_entry.update({'log': not(bool(line_entry['log_disable'])) })
+                                    dst_line_entry.update({'log': False})
+                                else:
+                                    dst_line_entry.update({'log': True})
                                 if 'informational_interval' in groups and not groups['informational_interval'] is None:
-                                    dst_line_entry.update({'informational_interval': bool(line_entry['informational_interval']) })
+                                    dst_line_entry.update({'informational_interval': int(groups['informational_interval']) })
                                 if 'hitcnt' in groups and not groups['hitcnt'] is None:
-                                    dst_line_entry.update({'hitcnt': int(line_entry['hitcnt']) })
-                                if 'acl_hash' in groups and not groups[name] is None:
-                                    dst_line_entry.update({'acl_hash': line_entry['acl_hash'] })
+                                    dst_line_entry.update({'hitcnt': int(groups['hitcnt']) })
+                                if 'acl_hash' in groups and not groups['acl_hash'] is None:
+                                    dst_line_entry.update({'acl_hash': groups['acl_hash'] })
                 continue
 
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
+                acl_name = groups['name']
                 line_num = groups['entry']
-                acl_line_dict = ret_dict.setdefault('access-list', {}).setdefault(acl_name, {}).setdefault('entry', {}).setdefault(line_num, {})
-                acl_line_dict.update({'remark': groups['remark']})
+                previous_line_num = line_num
+                previous_acl_name = acl_name
+                acl_remark_dict = ret_dict.setdefault('access-list', OrderedDict()).setdefault(acl_name, OrderedDict()).setdefault('entry', OrderedDict()).setdefault(int(line_num), OrderedDict())
+                acl_remark_dict.update({'remark': groups['remark']})
                 continue
 
 
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
-                flows = ret_dict.setdefault('cached_acl_log_flows', {})
+                flows = ret_dict.setdefault('cached_acl_log_flows', OrderedDict())
                 flows.update({'total': int(groups['total']) })
                 flows.update({'denied': int(groups['denied']) })
                 flows.update({'deny_flow_max': int(groups['deny_flow_max']) })
