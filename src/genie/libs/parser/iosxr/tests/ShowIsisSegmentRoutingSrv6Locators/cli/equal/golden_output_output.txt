@@ -1,0 +1,6 @@
+IS-IS 1 SRv6 Locators
+Name                  ID       Algo  Prefix                    Status
+------                ----     ----  ------                    ------
+ALGO_0                5        0     cafe:0:200::/48           Active
+ALGO_128              2        128   cafe:0:228::/48           Active
+ALGO_129              3        129   cafe:0:229::/48           Active
