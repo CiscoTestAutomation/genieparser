@@ -606,10 +606,10 @@ class ShowVlanId(ShowVlanIdSchema):
 
         vlan_dict = {}
         p1 = re.compile(r'(?P<vlan_id>\d+) +'
-                    '(?P<vlan_name>\w+) +'
-                    '(?P<status>\w+) +'
-                    '(?P<ports>([a-zA-Z0-9]+\/\d+\/\d+)(.*))')
-        p2 = re.compile(r'(?P<ports>([a-zA-Z0-9]+\/\d+\/\d+)(.*))')
+                    '(?P<vlan_name>\S+|\S+.*\S+) +'
+                    '(?P<status>active|suspended|act/lshut|sus/lshut) +'
+                    '(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
+        p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
         p3 = re.compile(r'\d+ +'
                     '(?P<type>\w+) +'
                     '(?P<said>\d+) +'
