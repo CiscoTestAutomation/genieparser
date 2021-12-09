@@ -355,6 +355,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('snmp_trap_mac_notification_change_removed'): bool,
                 Optional('spanning_tree_bpduguard'): str,
                 Optional('spanning_tree_portfast'): bool,
+                Optional('spanning_tree_portfast_trunk'): bool,
+                Optional('spanning_tree_bpdufilter'): str,
                 Optional('switchport_access_vlan'): str,
                 Optional('switchport_trunk_vlans'): str,
                 Optional('keepalive'): bool,
@@ -377,17 +379,6 @@ class ShowRunInterfaceSchema(MetaParser):
                     },
                 },
                 Optional('mpls_ip'):str,
-                Optional('snmp_trap_link_status'): bool,
-                Optional('snmp_trap_mac_notification_change_added'): bool,
-                Optional('snmp_trap_mac_notification_change_removed'): bool,
-                Optional('spanning_tree_bpduguard'): str,
-                Optional('spanning_tree_portfast'): bool,
-                Optional('spanning_tree_bpdufilter'): str,
-                Optional('switchport_access_vlan'): str,
-                Optional('switchport_trunk_vlans'): str,
-                Optional('switchport_mode'): str,
-                Optional('switchport_nonegotiate'): str,
-                Optional('vrf'): str,
                 Optional('channel_group'): {
                         'chg': int,
                         'mode': str,
@@ -678,6 +669,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ip access-group DELETE_ME in ; ip access-group TEST-OUT out
         p72 = re.compile(r'^ip access-group (?P<acl_name>[\w\-.#<>]+) (?P<direction>\w+)$')
+
+        # spanning-tree portfast trunk
+        p73 = re.compile(r"^spanning-tree +portfast +trunk$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1278,6 +1272,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
                 intf_dict['acl'].update(inbound_dict)
                 intf_dict['acl'].update(outbound_dict)
+                continue
+
+            # spanning-tree portfast trunk
+            m = p73.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'spanning_tree_portfast_trunk': True})
                 continue
 
         return config_dict
