@@ -153,12 +153,12 @@ class ShowRoute(ShowRouteSchema):
         # SI - Static InterVRF
         p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\s*SI\s-\sStatic\sInterVRF)?', '', out)
 
-        res = "\n".join([x.lstrip() for x in p1.splitlines()])
+        lines = [x.strip() for x in p1.splitlines()]
         entries = dict()
         last_entry = str()
         clean_lines = list()
 
-        for i, line in enumerate(res.splitlines()):
+        for line in lines:
             if re.match(r'(^[A-Z]{1,2})', line):
                 entries[line] = list()
                 last_entry = line
@@ -240,7 +240,7 @@ class ShowRoute(ShowRouteSchema):
             next_hops = list()
 
             target_dict = dict_routes
-            if line.endswith("tunneled"):
+            if line.strip().endswith("tunneled"):
                 target_dict = dict_ipv4.setdefault('tunneled_routes', {})
 
             if line.startswith('O'):
