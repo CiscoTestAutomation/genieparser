@@ -7,7 +7,7 @@ Parser for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 from netaddr import IPAddress
 
 
@@ -24,7 +24,7 @@ class ShowRouteSchema(MetaParser):
             'default': {
                 'address_family': {
                     'ipv4': {
-                        Optional('routes'): {
+                        Optional(Or('routes', 'tunneled_routes')): {
                             Any(): {
                                 'candidate_default': bool,
                                 Optional('subnet'): str,
@@ -126,12 +126,12 @@ class ShowRoute(ShowRouteSchema):
         # SI - Static InterVRF
         p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\s*SI\s-\sStatic\sInterVRF)?', '', out)
 
-        res = "\n".join([x.lstrip() for x in p1.splitlines()])
+        lines = [x.strip() for x in p1.splitlines()]
         entries = dict()
         last_entry = str()
         clean_lines = list()
 
-        for i, line in enumerate(res.splitlines()):
+        for line in lines:
             if re.match(r'(^[A-Z]{1,2})', line):
                 entries[line] = list()
                 last_entry = line
@@ -204,13 +204,17 @@ class ShowRoute(ShowRouteSchema):
             return
 
         dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
-            setdefault('address_family', {}).setdefault('ipv4', {}). \
-            setdefault('routes', {})
+            setdefault('address_family', {}).setdefault('ipv4', {})
+        dict_routes = dict_ipv4.setdefault('routes', {})
 
         for line in clean_lines:
             index = 1
             groups = dict()
             next_hops = list()
+
+            target_dict = dict_routes
+            if line.strip().endswith("tunneled"):
+                target_dict = dict_ipv4.setdefault('tunneled_routes', {})
 
             if line.startswith('O'):
                 """ OSPF """
@@ -270,27 +274,27 @@ class ShowRoute(ShowRouteSchema):
 
             prefix_length = str(IPAddress(groups['subnet']).netmask_bits())
             combined_ip = groups['network'] + '/' + prefix_length
-            dict_routes = dict_ipv4.setdefault(combined_ip, {})
+            dict_route = target_dict.setdefault(combined_ip, {})
 
             if '*' in groups['code']:
-                dict_routes.update({'candidate_default': True})
+                dict_route.update({'candidate_default': True})
                 groups['code'] = groups['code'].strip('*')
             else:
-                dict_routes.update({'candidate_default': False})
+                dict_route.update({'candidate_default': False})
 
-            dict_routes.update({'active': True})
+            dict_route.update({'active': True})
 
             if 'date' not in groups.keys() and next_hops:
                 date = next_hops[0].get('date')
             else:
                 date = groups.get('date')
             if date:
-                dict_routes.update({'date': date})
+                dict_route.update({'date': date})
 
-            dict_routes.update({'route': combined_ip})
+            dict_route.update({'route': combined_ip})
 
-            dict_routes.update({'source_protocol_codes': groups['code']})
-            dict_routes.update({'source_protocol': self.source_protocol_dict[groups['code']].lower()})
+            dict_route.update({'source_protocol_codes': groups['code']})
+            dict_route.update({'source_protocol': self.source_protocol_dict[groups['code']].lower()})
 
             if 'route_preference' not in groups.keys() and next_hops:
                 route_preference = next_hops[0]['route_preference']
@@ -301,19 +305,19 @@ class ShowRoute(ShowRouteSchema):
             if route_preference:
                 if '/' in route_preference:
                     route_preference, metric = map(int, route_preference.split('/'))
-                    dict_routes.update({'metric': metric})
+                    dict_route.update({'metric': metric})
                 else:
                     route_preference = int(route_preference)
-                dict_routes.update({'route_preference': route_preference})
+                dict_route.update({'route_preference': route_preference})
 
             if not next_hops and groups.get('context_name'):
-                dict_next_hop = dict_routes.setdefault('next_hop', {})
+                dict_next_hop = dict_route.setdefault('next_hop', {})
                 dict_next_hop.update({'outgoing_interface_name': {
                     groups['context_name']: {'outgoing_interface_name': groups['context_name']}
                 }})
 
             for nh in next_hops:
-                dict_next_hop = dict_routes.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
+                dict_next_hop = dict_route.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
                                                                                                                   {})
                 dict_next_hop.update({'index': index})
                 dict_next_hop.update({'next_hop': nh.get('next_hop')})
