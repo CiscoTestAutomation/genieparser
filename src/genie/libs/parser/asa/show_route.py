@@ -7,7 +7,7 @@ Parser for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 from netaddr import IPAddress
 
 
@@ -24,34 +24,7 @@ class ShowRouteSchema(MetaParser):
             'default': {
                 'address_family': {
                     'ipv4': {
-                        Optional('routes'): {
-                            Any(): {
-                                'candidate_default': bool,
-                                Optional('subnet'): str,
-                                'route': str,
-                                Optional('active'): bool,
-                                Optional('date'): str,
-                                Optional('route_preference'): int,
-                                Optional('metric'): int,
-                                Optional('source_protocol'): str,
-                                Optional('source_protocol_codes'): str,
-                                Optional('next_hop'): {
-                                    Optional('outgoing_interface_name'): {
-                                        Any(): {  # context_name for interface if there is no next_hop
-                                            Optional('outgoing_interface_name'): str
-                                        },
-                                    },
-                                    Optional('next_hop_list'): {
-                                        Any(): {  # index
-                                            Optional('index'): int,
-                                            Optional('next_hop'): str,
-                                            Optional('outgoing_interface_name'): str
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        Optional('tunneled_routes'): {
+                        Optional(Or('routes', 'tunneled_routes')): {
                             Any(): {
                                 'candidate_default': bool,
                                 Optional('subnet'): str,
