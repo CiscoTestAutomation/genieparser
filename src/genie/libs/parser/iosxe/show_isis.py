@@ -504,9 +504,9 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                         is_dict = lsp_dict.setdefault('is_neighbor', {}).setdefault(ip, {})
 
                     if 'metric' in is_dict.keys():
-                        if type(is_dict['metric']) is list:
+                        if isinstance(is_dict['metric'], list):
                             is_dict['metric'].append(int(group['metric']))
-                        elif type(is_dict['metric']) is int:
+                        elif isinstance(is_dict['metric'], int):
                             metric = is_dict['metric']
                             is_dict['metric'] = [metric, int(group['metric'])]
                     else:
