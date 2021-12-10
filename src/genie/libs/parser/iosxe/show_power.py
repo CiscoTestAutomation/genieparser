@@ -232,14 +232,24 @@ class ShowPowerInline(ShowPowerInlineSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
+        # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+        p1a = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
                         r'(?P<admin_state>\w+)\s+'
                         r'(?P<oper_state>[\w\-]+)\s+'
-                        r'(?P<power>[\d\.]+)\s+'
+                        r'(?P<power>\d+\.\d+)\s+'
                         r'(?P<device>(?=\S).*(?<=\S))\s+'
                         r'(?P<class>[\w\/]+)\s+'
-                        r'(?P<max>[\d\.]+)$')
+                        r'(?P<max>\d+\.\d+)$')
 
+        # alternate regexp pattern
+        # Gi1/46    auto   on         27.5       26.1       AIR-AP2802I-B-K9    4
+        p1b = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
+                        r'(?P<admin_state>\w+)\s+'
+                        r'(?P<oper_state>[\w\-]+)\s+'
+                        r'(?P<max>\d+\.\d+)\s+'
+                        r'(?P<power>\d+\.\d+)\s+'
+                        r'(?P<device>(?=\S).*(?<=\S))\s+'
+                        r'(?P<class>[\w\/]+)$')
 
         # 1          1550.0      147.0      1403.0
         p2 = re.compile(r'^(?P<module>\d+)\s+'
@@ -256,7 +266,18 @@ class ShowPowerInline(ShowPowerInlineSchema):
             line = line.strip()
             
             # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
-            m = p1.match(line)
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['power'] = float(group.pop('power'))
+                intf_dict['max'] = float(group.pop('max'))
+                intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
+                continue
+
+            # Gi1/46    auto   on         27.5       26.1       AIR-AP2802I-B-K9    4
+            m = p1b.match(line)
             if m:
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group.pop('intf'))
