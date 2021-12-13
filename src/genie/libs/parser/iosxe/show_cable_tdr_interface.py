@@ -68,10 +68,6 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
                 output = self.device.execute(self.cli_command.format(interface=interface))
         else:
             output = output
-            # cmd = self.cli_command[1]
-
-            # Execute command on device
-            # output = self.device.execute(cmd)
 
         # initial return dictionary
         tdr_dict = {}
