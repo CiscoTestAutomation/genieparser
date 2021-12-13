@@ -1,0 +1,1 @@
+Linux EXAMPLE-PDE2R 4.4.0-22000-Microsoft #1-Microsoft Fri Jun 04 16:28:00 PST 2021 x86_64 x86_64 x86_64 GNU/Linux

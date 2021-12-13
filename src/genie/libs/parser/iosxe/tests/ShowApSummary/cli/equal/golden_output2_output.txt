@@ -1,0 +1,6 @@
+Number of APs: 2
+
+AP Name                            Slots    AP Model              Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State         
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AP002C.C862.E708                     2      AIR-AP1815I-A-K9      002c.c862.e708  002c.c88a.fd20  default location                  US          9.4.57.241                                 Registered    
+AP188B.4500.5EE8                     2      AIR-AP1852I-D-K9      188b.4500.5ee8  188b.4501.e4e0  default location                  IN          9.4.57.239                                 Registered

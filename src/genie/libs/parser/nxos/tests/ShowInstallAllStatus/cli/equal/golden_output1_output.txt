@@ -1,0 +1,31 @@
+<Tue Sep 28 02:55:56>
+ Verifying image bootflash:/nxos.9.3.7.bin for boot variable "nxos".
+ -- SUCCESS <Tue Sep 28 02:57:04>
+
+Images will be upgraded according to following table:
+Module       Image                  Running-Version(pri:alt)           New-Version  Upg-Required
+------  ----------  ----------------------------------------  --------------------  ------------
+     1        nxos                                    9.3(7)                9.3(7)            no
+     1        bios     v07.68(05/26/2020):v07.59(08/26/2016)    v07.68(05/26/2020)            no
+
+
+Switch will be reloaded for disruptive upgrade.
+
+Install is in progress, please wait.
+
+<Tue Sep 28 02:59:17>
+ Performing runtime checks.
+ -- SUCCESS <Tue Sep 28 02:59:21>
+
+<Tue Sep 28 02:59:21>
+ Setting boot variables.
+ -- SUCCESS <Tue Sep 28 03:00:14>
+
+<Tue Sep 28 03:00:14>
+ Performing configuration copy.
+ -- SUCCESS <Tue Sep 28 03:00:18>
+
+Module 1: <Tue Sep 28 03:00:18>
+ Refreshing compact flash and upgrading bios/loader/bootrom.
+Warning: please do not remove or power off the module at this time.
+ -- SUCCESS <Tue Sep 28 03:00:19>

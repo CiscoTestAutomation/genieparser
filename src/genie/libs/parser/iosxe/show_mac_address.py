@@ -80,3 +80,66 @@ class ShowMacAddressTableDynamic(ShowMacAddressTableDynamicSchema):
                 port_dict['port'] = group['port']
                 port_count+=1
         return(vlan_dict)
+# =============================================
+# Schema for 'show mac address-table count summary'
+# =============================================
+class ShowMacAddressTableCountSummarySchema(MetaParser):
+    """ Schema for
+        * show mac address-table count summary
+    """
+    schema = {
+        'Total_dynamic_address_count': int,
+        'Total_static_address_count': int,
+        'Total_mac_address' : int,
+        'Total_mac_address_space' : int
+    }
+# ==========================================================
+#  Parser for 'show mac address-table count summary'
+# ==========================================================
+
+class ShowMacAddressTableCountSummary(ShowMacAddressTableCountSummarySchema):
+    """ Parser for
+        * show mac address-table count summary
+    """
+    cli_command = 'show mac address-table count summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #Total Dynamic Address Count  : 15
+        p1 = re.compile(r'Total\s+Dynamic\s+Address\s+Count\s+:\s+(?P<dynamic_count>\d+)')
+        #Total Static  Address Count  : 0
+        p2 = re.compile(r'Total\s+Static\s+Address\s+Count\s+:\s+(?P<static_count>\d+)')
+        #Total Mac Address In Use     : 15
+        p3 = re.compile(r'Total\s+Mac\s+Address\s+In\s+Use\s+:\s+(?P<total_mac>\d+)')
+        #Total Mac Address Space Available: 65521
+        p4 = re.compile(r'Total\s+Mac\s+Address\s+Space\s+Available:\s+(?P<total_mac_space>\d+)')
+        for line in output.splitlines():
+            line = line.strip()
+            #Total Dynamic Address Count  : 15
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["Total_dynamic_address_count"] = int(group["dynamic_count"])
+            #Total Static  Address Count  : 0
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict["Total_static_address_count"] = int(group["static_count"])
+            #Total Mac Address In Use     : 15
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict["Total_mac_address"] = int(group["total_mac"])
+
+            #Total Mac Address Space Available: 65521
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict["Total_mac_address_space"] = int(group["total_mac_space"])
+
+        return ret_dict
+

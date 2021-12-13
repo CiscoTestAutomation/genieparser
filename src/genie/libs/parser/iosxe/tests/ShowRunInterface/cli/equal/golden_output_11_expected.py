@@ -11,7 +11,8 @@ expected_output = {
             "mab": True,
             "spanning_tree_portfast": True,
             "input_policy": "AutoQos-4.0-CiscoPhone-Input-Policy",
-            "output_policy": "AutoQos-4.0-Output-Policy"
+            "output_policy": "AutoQos-4.0-Output-Policy",
+            'trust_device': 'cisco-phone',
         }
     }
 }

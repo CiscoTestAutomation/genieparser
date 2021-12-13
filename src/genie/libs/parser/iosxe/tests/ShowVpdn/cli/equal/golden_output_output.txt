@@ -1,0 +1,20 @@
+L2TP Tunnel and Session Information Total tunnels 2 sessions 2
+
+LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
+                                                           Count VPDN Group 
+7658       8656       LAC           est    18.18.18.1      1     1              
+
+LocID      RemID      TunID      Username, Intf/      State  Last Chg Uniq ID   
+                                 Vcid, Circuit                                  
+3542       56774      7658       lns@cisco.com, -     est    00:10:09 645       
+
+LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
+                                                           Count VPDN Group 
+11479      56539      LNS2          est    14.14.14.2      1     TowardsLNS2    
+
+LocID      RemID      TunID      Username, Intf/      State  Last Chg Uniq ID   
+                                 Vcid, Circuit                                  
+24593      3791       11479      lns@cisco.com, -     est    00:10:08 645   
+
+
+

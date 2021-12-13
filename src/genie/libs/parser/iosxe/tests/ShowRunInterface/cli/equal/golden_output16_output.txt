@@ -1,0 +1,27 @@
+Current configuration : 701 bytes
+!
+interface TenGigabitEthernet1/0/13
+ description EEDGE-MD
+ switchport access vlan 881
+ switchport mode access
+ switchport voice vlan 4001
+ switchport port-security maximum 2
+ switchport port-security
+ authentication periodic
+ access-session host-mode multi-domain
+ access-session closed
+ access-session port-control auto
+ mab
+ trust device cisco-phone
+ dot1x pae authenticator
+ ipv6 destination-guard attach-policy Univ-v6-IPDG-Policy1
+ ipv6 source-guard attach-policy Univ-v6-IPSG-Policy2
+ storm-control broadcast level 1.50 1.00
+ storm-control multicast level 1.50 1.00
+ auto qos voip cisco-phone 
+ no keepalive
+ spanning-tree portfast
+ service-policy type control subscriber ACCESS-IDENTITY-POLICY
+ service-policy input AutoQos-4.0-CiscoPhone-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+end

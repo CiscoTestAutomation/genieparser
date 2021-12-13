@@ -14,6 +14,7 @@ expected_output = {
                     "sid_bound_attribute": "SR_POLICY",
                     "strict_spf_sid_index": 6,
                     "strict_sid_bound_attribute": "SR_POLICY_STRICT",
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "Tunnel65537": {
                             "distance": 115,
@@ -164,6 +165,7 @@ expected_output = {
                                 "v_flag": False,
                                 "l_flag": False
                             },
+                            'path_attribute': 'ALT',
                             "strict_spf_sid_index": 6,
                             "strict_spf_sid_flags": {
                                 "r_flag": False,

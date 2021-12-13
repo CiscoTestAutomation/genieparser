@@ -1,0 +1,11 @@
+show ipv6 ospfv3 neighbors detail
+ Neighbor 1.1.1.1, interface address fe80::2de:fbff:fed4:89c7
+    Process ID ospfv3_l3uls VRF default, in area 0.0.0.0 via interface Ethernet1/33
+    State is FULL, 5 state changes, last change 04:06:04
+    Neighbor priority is 1, Neighbor interface ID 37
+    DR is 2.2.2.2 BDR is 1.1.1.1
+    Hello options 0x13, dbd options 0x13
+    Last non-hello packet received 00:03:17
+      Dead timer due in 00:00:33
+
+	

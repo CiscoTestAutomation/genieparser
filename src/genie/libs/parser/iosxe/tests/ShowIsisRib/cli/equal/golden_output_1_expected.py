@@ -9,6 +9,7 @@ expected_output = {
                         "r_flag": True,
                         "n_flag": False
                     },
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "Tunnel65537": {
                             "distance": 115,
@@ -99,6 +100,7 @@ expected_output = {
                         "r_flag": False,
                         "n_flag": False
                     },
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "GigabitEthernet0/0/2": {
                             "distance": 115,
@@ -171,6 +173,7 @@ expected_output = {
                         "r_flag": False,
                         "n_flag": False
                     },
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "GigabitEthernet0/0/2": {
                             "distance": 115,

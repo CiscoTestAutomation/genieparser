@@ -913,3 +913,89 @@ class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
                 ret_dict[group_ip]['port'] = port
 
         return igmp_dict
+
+# ========================================================
+# Parser for 'show ip igmp vrf vrf3001 groups'
+# ========================================================
+
+class ShowIpIgmpVrfGroupsSchema(MetaParser):
+    """
+    Schema for 'show ip igmp vrf {vrf} groups'
+    """
+
+    schema = {
+        'igmp_group_address': {
+            Any(): {
+                'interface': str,
+                'uptime': str,
+                'expires': str,
+                'last_reporter': str,
+            },
+        }
+    }
+
+
+class ShowIpIgmpVrfGroups(ShowIpIgmpVrfGroupsSchema):
+    """
+    Parser for 'show ip igmp vrf {vrf} groups'
+    """
+    cli_command = 'show ip igmp vrf {vrf} groups'
+
+    def cli(self, vrf, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+
+        # initial variables
+        igmp_dict = {}
+        
+        # 228.1.1.1        Vlan111                  00:03:07  00:02:59  151.1.1.2
+        p1=re.compile("^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m=p1.match(line)
+            if m:
+                r=m.groupdict()
+                igmp_group_dict=igmp_dict.setdefault('igmp_group_address',{}).setdefault(r['groupip'],{})
+                r.pop('groupip')
+                for key,value in r.items():
+                    igmp_group_dict[key]=value
+                continue
+        return igmp_dict
+     
+#==================================================
+# Parser for show ip igmp snooping groups count
+#==================================================
+
+class ShowIpIgmpSnoopingGroupsCountSchema(MetaParser):
+    schema = {
+        'total_number_of_groups': {
+            'igmp_groups_count': int
+        }
+    }
+
+class ShowIpIgmpSnoopingGroupsCount(ShowIpIgmpSnoopingGroupsCountSchema):
+
+    cli_command = 'show ip igmp snooping groups count'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # Total number of groups:   831
+        p1 = re.compile(r'^Total\s+number\s+of\s+groups\:\s+(?P<igmp_groups_count>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of groups:   831
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_groups_count_dict = ret_dict.setdefault('total_number_of_groups', {})
+                igmp_groups_count_dict['igmp_groups_count'] = int(group['igmp_groups_count'])
+
+        return ret_dict

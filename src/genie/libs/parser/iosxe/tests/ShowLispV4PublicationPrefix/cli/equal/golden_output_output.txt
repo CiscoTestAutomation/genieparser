@@ -1,6 +1,7 @@
 =================================================
 Output for router lisp 0 instance-id 4100
 =================================================
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
 
   EID-prefix: 192.168.1.71/32
     First published:      00:02:00

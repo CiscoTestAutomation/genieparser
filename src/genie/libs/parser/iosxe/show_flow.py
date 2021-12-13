@@ -12,7 +12,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Or, ListOf, Optional, And, Default, Use
 
 # Common
 from genie.libs.parser.utils.common import Common
@@ -695,3 +695,585 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
                 cur_dict['inactive_time']= int(groups['inactive_time'])
 
         return parsed_dict
+
+# =================================================
+# Schema for:
+#   * 'show flow monitor all'
+# ==================================================
+
+class ShowFlowMonitorAllSchema(MetaParser):
+    schema = {
+        'flow_monitor_name': {
+            Any(): {
+                'description': str,
+                'record_name': str,
+                Optional('exporter_name'): str,
+                'cache': {
+                    'type': str,
+                    'status': str,
+                    'size': int,
+                    'inactive_timeout': int,
+                    'active_timeout': int,
+                }
+            },
+        }
+    }
+
+# ===================================
+# Parser for:
+#   * 'show flow monitor all'
+# ===================================
+
+class ShowFlowMonitorAll(ShowFlowMonitorAllSchema):
+    cli_command = 'show flow monitor all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Flow Monitor v4_mon_sgt-output:
+        p1 = re.compile(r'^Flow\sMonitor\s(?P<flow_monitor_name>[\w\-]+)\:$')
+
+        # Description:       User defined
+        p2 = re.compile(r'^Description:\s+(?P<description>[\w\s]+)$')
+
+        # Flow Record:       v4-rec_sgt-output
+        p3 = re.compile(r'^Flow\sRecord:\s+(?P<record_name>\S+)$')
+
+        # Flow Exporter:     StealthWatch_Exporter
+        p4 = re.compile(r'^Flow\sExporter:\s+(?P<exporter_name>\S+)$')
+
+        # Cache
+        p5 = re.compile(r'^(?P<cache>Cache)\:$')
+
+        # Type:                 normal (Platform cache)
+        p6 = re.compile(r'^Type:\s+(?P<type>.*)$')
+
+        # Status:               not allocated
+        p7 = re.compile(r'^Status:\s+(?P<status>[\w\s]+)$')
+
+        # Size:                 10000 entries
+        p8 = re.compile(r'^Size:\s+(?P<size>\d+)\sentries$')
+
+        # Inactive Timeout:     15 secs
+        p9 = re.compile(r'^Inactive\sTimeout:\s+(?P<inactive_timeout>\d+)\ssecs$')
+
+        # Active Timeout:       60 secs
+        p10 = re.compile(r'^Active\sTimeout:\s+(?P<active_timeout>\d+)\ssecs$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Flow Monitor v4_mon_sgt-output:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                flow_monitor_name = group['flow_monitor_name']
+                flow_dict = ret_dict.setdefault('flow_monitor_name', {}).setdefault(flow_monitor_name, {})
+                continue
+
+            # Description:       User defined
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['description'] = group['description']
+                continue
+
+            # Flow Record:       v4-rec_sgt-output
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['record_name'] = group['record_name']
+                continue
+
+            # Flow Exporter:     StealthWatch_Exporter
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['exporter_name'] = group['exporter_name']
+                continue
+
+            # Cache
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict = flow_dict.setdefault('cache', {})
+                continue
+
+            # Type:                 normal (Platform cache)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict['type'] = group['type']
+                continue
+
+            # Status:               not allocated
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict['status'] = group['status']
+                continue
+
+            # Size:                 10000 entries
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict['size'] = int(group['size'])
+                continue
+
+            # Inactive Timeout:     15 secs
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict['inactive_timeout'] = int(group['inactive_timeout'])
+                continue
+
+            # Active Timeout:       60 secs
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                cache_dict['active_timeout'] = int(group['active_timeout'])
+                continue
+
+        return ret_dict
+
+
+class ShowFlowExporterSchema(MetaParser):
+    schema = {
+        'flow_exporter_name': {
+            Any(): {
+                'description': str,
+                'export_protocol': str,
+                'transport_config': {
+                    'destination_type': str,
+                    'destination_ip_address': str,
+                    'source_ip_address': str,
+                    'transport_protocol': str,
+                    'destination_port': int,
+                    'source_port': int,
+                    'dscp': str,
+                    'ttl': int,
+                    'output_features': str,
+                }
+            }
+        }
+    }
+
+
+class ShowFlowExporter(ShowFlowExporterSchema):
+    cli_command = 'show flow exporter'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Flow Exporter StealthWatch_Exporter:
+        p1 = re.compile(r'^Flow\sExporter\s(?P<flow_exporter_name>\S+)\:$')
+
+        # Description:              Export NetFlow to StealthWatch
+        p2 = re.compile(r'^Description:\s+(?P<description>[\S\s]+)$')
+
+        # Export protocol:          NetFlow Version 9
+        p3 = re.compile(r'^Export\sprotocol:\s+(?P<export_protocol>[\S\s]+)$')
+
+        # Transport Configuration:
+        p4 = re.compile(r'^(?P<transport_config>(Transport Configuration:))$')
+
+        # Destination type:       IP
+        p5 = re.compile(r'^Destination\stype:\s+(?P<destination_type>\S+)$')
+
+        # Destination IP address: 19.1.1.19
+        p6 = re.compile(r'^Destination\sIP\saddress:\s+(?P<destination_ip_address>\S+)$')
+
+        # Source IP address:      29.29.1.1
+        p7 = re.compile(r'^Source\sIP\saddress:\s+(?P<source_ip_address>\S+)$')
+
+        # Transport Protocol:     UDP
+        p8 = re.compile(r'^Transport\sProtocol:\s+(?P<transport_protocol>\S+)$')
+
+        # Destination Port:       2055
+        p9 = re.compile(r'^Destination\sPort:\s+(?P<destination_port>\d+)$')
+
+        # Source Port:            49165
+        p10 = re.compile(r'^Source\sPort:\s+(?P<source_port>\d+)$')
+
+        # DSCP:                   0x0
+        p11 = re.compile(r'^DSCP:\s+(?P<dscp>\S+)$')
+
+        # TTL:                    255
+        p12 = re.compile(r'^TTL:\s+(?P<ttl>\d+)$')
+
+        # Output Features:        Used
+        p13 = re.compile(r'^Output\sFeatures:\s+(?P<output_features>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Flow Exporter StealthWatch_Exporter:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'flow_exporter_name' not in ret_dict:
+                    flow_exp_name = ret_dict.setdefault('flow_exporter_name', {})
+                flow_exporter_name = group['flow_exporter_name']
+                flow_dict = flow_exp_name.setdefault(flow_exporter_name, {})
+                continue
+
+            # Description:              Export NetFlow to StealthWatch
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['description'] = group['description']
+                continue
+
+            # Export protocol:          NetFlow Version 9
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['export_protocol'] = group['export_protocol']
+                continue
+
+            # Transport Configuration:
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config = flow_dict.setdefault('transport_config', {})
+                continue
+
+            # Destination type:       IP
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['destination_type'] = group['destination_type']
+                continue
+
+            # Destination IP address: 19.1.1.19
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['destination_ip_address'] = group['destination_ip_address']
+                continue
+
+            # Source IP address:      29.29.1.1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['source_ip_address'] = group['source_ip_address']
+                continue
+
+            # Transport Protocol:     UDP
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['transport_protocol'] = group['transport_protocol']
+                continue
+
+            # Destination Port:       2055
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['destination_port'] = int(group['destination_port'])
+                continue
+
+            # Source Port:            49165
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['source_port'] = int(group['source_port'])
+                continue
+
+            # DSCP:                   0x0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['dscp'] = group['dscp']
+                continue
+
+            # TTL:                    255
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['ttl'] = int(group['ttl'])
+                continue
+
+            # Output Features:        Used
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                transport_config['output_features'] = group['output_features']
+                continue
+        return ret_dict
+
+
+class ShowFlowRecordSchema(MetaParser):
+    schema = {
+        'flow_record_name': {
+            Any(): {
+                'description': str,
+                'no_of_users': int,
+                'total_field_space': int,
+                'fields': {
+                    'match_list': ListOf(str),
+                    'collect_list': ListOf(str),
+
+                }
+            }
+        }
+    }
+    
+
+class ShowFlowRecord(ShowFlowRecordSchema):
+    
+    cli_command= 'show flow record'
+    
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        #flow record wireless avc basic:
+        p1 = re.compile(r'^flow\srecord\s(?P<flow_record_name>.*):$')
+        
+        #Description:        Basic IPv4 Wireless AVC template
+        p2 = re.compile(r'^Description:\s+(?P<description>.*)$')
+        
+        #No. of users:       0
+        p3 = re.compile(r'^No\.\sof\susers\:\s+(?P<no_of_users>\d)$')
+
+        #Total field space:  78 bytes
+        p4 = re.compile(r'^Total\sfield\sspace\:\s+(?P<total_field_space>\d+)\sbytes$')
+        
+        #Fields:
+        p5 = re.compile(r'^(?P<fields>Fields\:)$')
+        
+        #match ipv4 protocol
+        #match ipv4 source address
+        #match ipv4 destination address
+        #match transport source-port
+        #match transport destination-port
+        p6 = re.compile(r'^match\s(?P<match_list>.*)$')
+        
+        #collect counter bytes long
+        #collect counter packets long
+        #collect wireless ap mac address
+        #collect wireless client mac address
+        p7 = re.compile(r'^collect\s(?P<collect_list>.*)$')
+        
+        ret_dict = {}
+        match_filed_list = []
+        collect_field_list = []
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #flow record wireless avc basic:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                flow_record_name = group['flow_record_name']
+                flow_dict = ret_dict.setdefault('flow_record_name', {}).setdefault(flow_record_name, {})
+                continue
+                
+            ##Description:        Basic IPv4 Wireless AVC template
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['description'] = group['description'] 
+                continue
+                
+            ##No. of users:       0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['no_of_users'] = int(group['no_of_users'])
+                continue
+
+            #Total field space:  49 bytes
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['total_field_space'] = int(group['total_field_space'])
+                continue
+            
+            ##Fields:
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                fields_dict = flow_dict.setdefault('fields', {})
+                continue
+               
+            #match ipv4 protocol
+            #match ipv4 source address
+            #match ipv4 destination address
+            #match transport source-port
+            #match transport destination-port
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                match_filed = group['match_list']
+                match_filed_list = fields_dict.setdefault('match_list', [])
+                match_filed_list.append(match_filed)
+                continue
+            
+            #collect counter bytes long
+            #collect counter packets long
+            #collect wireless ap mac address
+            #collect wireless client mac address
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                collect_field = group['collect_list']
+                collect_field_list = fields_dict.setdefault('collect_list', [])
+                collect_field_list.append(collect_field)
+                continue
+                
+        return ret_dict
+
+
+class ShowRunningConfigFlowExporterSchema(MetaParser):
+    schema = {
+        'flow_exporter_name': {
+            Any(): {
+                Optional('description'): str,
+                Optional('destination'): str,
+                Optional('source'): str,
+                Optional('dscp'): int,
+                Optional('ttl'): int,
+                Optional('transport_protocol'): str,
+                Optional('transport_protocol_port'): int,
+                Optional('export_protocol'): str,
+                Optional('options'): ListOf(str),
+                Optional('match_counter_packets_long_gt'): int
+            }
+        }
+    }
+    
+
+class ShowRunningConfigFlowExporter(ShowRunningConfigFlowExporterSchema):
+    
+    cli_command = 'show running-config flow exporter'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        #flow exporter export_prime1_nf10
+        p1 = re.compile(r'flow\s+exporter\s+(?P<flow_exporter_name>.*)$')
+
+        #description test_expoter
+        p2 = re.compile(r'description\s+(?P<description>.*)$')
+
+        #destination 10.5.28.112
+        p3 = re.compile(r'destination\s+(?P<destination>\S+)$')
+
+        #source Loopback0
+        p4 = re.compile(r'source\s+(?P<source>.*)$')
+
+        #dscp 5
+        p5 = re.compile(r'dscp\s+(?P<dscp>\d+)$')
+
+        #ttl 64
+        p6 = re.compile(r'ttl\s+(?P<ttl>\d+)$')
+
+        #transport udp 555
+        p7 = re.compile(r'transport\s+(?P<transport_protocol>\S+)\s+(?P<transport_protocol_port>\d+)$')
+
+        #export-protocol ipfix
+        p8 = re.compile(r'export-protocol\s+(?P<export_protocol>\S+)$')
+
+        #option interface-table timeout 10
+        #option vrf-table timeout 10
+        #option sampler-table
+        #option application-table timeout 10
+        #option application-attributes timeout 10
+        p9 = re.compile(r'option\s+(?P<options>.*)$')
+
+        #match counter packets long gt 128
+        p10 = re.compile(r'match\s+counter\s+packets\s+long\s+gt\s+(?P<match_counter_packets_long_gt>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #flow exporter export_prime1_nf10
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                flow_exporter_name = group['flow_exporter_name']
+                flow_dict = ret_dict.setdefault('flow_exporter_name', {}).setdefault(flow_exporter_name, {})
+                continue
+    
+            #description test_expoter
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['description'] = group['description']
+                continue
+
+            #destination 10.5.28.112
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['destination'] = group['destination']
+                continue
+
+            #source Loopback0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['source'] = group['source']
+                continue
+
+            #dscp 5
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['dscp'] = int(group['dscp'])
+                continue
+
+            #ttl 64
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ttl'] = int(group['ttl'])
+                continue
+
+            #transport udp 555
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['transport_protocol'] = group['transport_protocol']
+                flow_dict['transport_protocol_port'] = int(group['transport_protocol_port'])
+                continue
+
+            #export-protocol ipfix
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['export_protocol'] = group['export_protocol']
+                continue
+
+            #option interface-table timeout 10
+            #option vrf-table timeout 10
+            #option sampler-table
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                option = group['options']
+                flow_dict.setdefault('options', []).append(option)
+                continue
+
+            #match counter packets long gt 128
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['match_counter_packets_long_gt'] = int(group['match_counter_packets_long_gt'])
+                continue
+
+        return ret_dict

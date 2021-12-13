@@ -649,8 +649,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p37 = re.compile(r'^queue +limit +(?P<queue_limit_us>(\d+)) +us/ +(?P<queue_limit_bytes>(\d+)) bytes$')
 
         # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
-        p38 = re.compile(r'^Priority: +(?P<percent>(\d+))% +\((?P<kbps>(\d+)) kbps\), +burst bytes +(?P<burst_bytes>(\d)+), +'
-                          'b/w exceed drops: +(?P<exceed_drops>(\d+))$')
+        p38 = re.compile(r'^Priority:\s+(?P<percent>(\d+))%\s+\((?P<kbps>(\d+))\s+kbps\),\s+burst\sbytes\s+(?P<burst_bytes>(\d)+),(\s+'
+                          'b/w\sexceed\sdrops:\s+(?P<exceed_drops>(\d+)))?$')
 
         # Priority Level: 1
         p39 = re.compile(r'^Priority +Level: +(?P<priority_level>(\d+))$')
@@ -1302,7 +1302,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 pri_dict['percent'] = int(m.groupdict()['percent'])
                 pri_dict['kbps'] = int(m.groupdict()['kbps'])
                 pri_dict['burst_bytes'] = int(m.groupdict()['burst_bytes'])
-                pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
+                if m.group('exceed_drops'):
+                    pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
                 continue
 
             # Priority Level: 1
@@ -2245,3 +2246,78 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeContr
                 ret_dict.setdefault('interfaces_list', []).append(group['int'])
 
         return ret_dict
+
+
+#=====================================================
+# Schema for 
+#         show policy-map {} class {}
+#====================================================
+
+class ShowPolicyMapClassSchema(MetaParser):
+    '''
+    Schema for
+        show policy-map {} class {}
+    '''
+
+    schema = {
+        'class_names': {
+            Any(): {
+                Optional('priority_level'): int,
+                Optional('priority_percent'): int,
+                Optional('bandwidth_remaining_percent'): int,
+            }
+        }
+    }
+
+class ShowPolicyMapClass(ShowPolicyMapClassSchema):
+    '''
+    Parser for
+        show policy-map {} class {}
+    '''
+
+    cli_command = ['show policy-map {policy_name} class {class_name}']
+
+    def cli(self, policy_name='', class_name='', output=None):
+        if not output:
+            cmd = self.cli_command[0].format(policy_name=policy_name, class_name=class_name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Class AutoQos-4.0-Output-Priority-Queue
+            p1 = re.compile(r'^Class\s+(?P<class_name>\S+)$')
+
+            # priority level 1 10 (%)
+            p2 = re.compile(r'^priority\slevel\s(?P<priority_level>\d+)\s+(?P<priority_percent>\d+)\s+\(\%\)$')
+
+            # bandwidth remaining 10 (%)
+            p3 = re.compile(r'^bandwidth\sremaining\s+(?P<bandwidth_remaining_percent>\d+)\s+\(\%\)$')
+
+            # Class AutoQos-4.0-Output-Priority-Queue
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                class_name = group['class_name']
+                class_dict = ret_dict.setdefault('class_names', {}).setdefault(class_name, {})
+                continue
+
+            # priority level 1 10 (%)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                class_dict.update({'priority_level': int(group['priority_level'])})
+                class_dict.update({'priority_percent': int(group['priority_percent'])})
+                continue
+
+            # bandwidth remaining 10 (%)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                class_dict.update({'bandwidth_remaining_percent': int(group['bandwidth_remaining_percent'])})
+                continue
+
+        return ret_dict
+

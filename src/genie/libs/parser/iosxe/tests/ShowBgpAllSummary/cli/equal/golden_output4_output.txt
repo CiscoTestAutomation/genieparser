@@ -1,0 +1,96 @@
+show bgp all summary
+For address family: IPv4 Unicast
+BGP router identifier 30.1.107.78, local AS number 304.304
+BGP table version is 60, main routing table version 60
+17 network entries using 4216 bytes of memory
+62 path entries using 8432 bytes of memory
+15 multipath network entries and 56 multipath paths
+4/4 BGP path/bestpath attribute entries using 1184 bytes of memory
+4 BGP AS-PATH entries using 128 bytes of memory
+103 BGP extended community entries using 4540 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 18500 total bytes of memory
+BGP activity 13646/1790 prefixes, 34178/7652 paths, scan interval 60 secs
+17 networks peaked at 09:18:03 Dec 8 2021 PDT (03:09:01.606 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.5.17.1       4          150     220     217       60    0    0 03:08:19       15
+10.5.18.1       4          150     220     217       60    0    0 03:09:00       15
+10.5.27.1       4          150     219     223       60    0    0 03:08:20       15
+10.5.28.1       4          150     219     224       60    0    0 03:08:56       15
+
+For address family: IPv6 Unicast
+BGP router identifier 30.1.107.78, local AS number 304.304
+BGP table version is 56, main routing table version 56
+16 network entries using 4352 bytes of memory
+58 path entries using 9280 bytes of memory
+14 multipath network entries and 52 multipath paths
+4/4 BGP path/bestpath attribute entries using 1184 bytes of memory
+4 BGP AS-PATH entries using 128 bytes of memory
+103 BGP extended community entries using 4540 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 19484 total bytes of memory
+BGP activity 13646/1790 prefixes, 34178/7652 paths, scan interval 60 secs
+16 networks peaked at 09:18:05 Dec 8 2021 PDT (03:08:59.606 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10:5:17::1      4          150     220     221       56    0    0 03:08:16       14
+10:5:18::1      4          150     220     216       56    0    0 03:08:59       14
+10:5:27::1      4          150     219     217       56    0    0 03:08:15       14
+10:5:28::1      4          150     220     223       56    0    0 03:08:55       14
+
+For address family: VPNv4 Unicast
+BGP router identifier 30.1.107.78, local AS number 304.304
+BGP table version is 25, main routing table version 25
+24 network entries using 6144 bytes of memory
+24 path entries using 3264 bytes of memory
+2/2 BGP path/bestpath attribute entries using 624 bytes of memory
+4 BGP AS-PATH entries using 128 bytes of memory
+103 BGP extended community entries using 4540 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 14700 total bytes of memory
+BGP activity 13646/1790 prefixes, 34178/7652 paths, scan interval 60 secs
+24 networks peaked at 09:18:39 Dec 8 2021 PDT (03:08:25.606 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.1        4         1000     213     211       25    0    0 03:08:52       10
+
+For address family: VPNv6 Unicast
+BGP router identifier 30.1.107.78, local AS number 304.304
+BGP table version is 23, main routing table version 23
+22 network entries using 6160 bytes of memory
+22 path entries using 3696 bytes of memory
+2/2 BGP path/bestpath attribute entries using 624 bytes of memory
+4 BGP AS-PATH entries using 128 bytes of memory
+103 BGP extended community entries using 4540 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 15148 total bytes of memory
+BGP activity 13646/1790 prefixes, 34178/7652 paths, scan interval 60 secs
+22 networks peaked at 09:18:16 Dec 8 2021 PDT (03:08:48.606 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10:6::1:1       4         1000     213     213       23    0    0 03:08:48       10
+
+For address family: L2VPN E-VPN
+BGP router identifier 30.1.107.78, local AS number 304.304
+BGP table version is 20050, main routing table version 20050
+11777 network entries using 4522368 bytes of memory
+26360 path entries using 5904640 bytes of memory
+254/159 BGP path/bestpath attribute entries using 75184 bytes of memory
+4 BGP AS-PATH entries using 128 bytes of memory
+103 BGP extended community entries using 4540 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 10506860 total bytes of memory
+10025 received paths for inbound soft reconfiguration
+BGP activity 13646/1790 prefixes, 34178/7652 paths, scan interval 60 secs
+12342 networks peaked at 11:59:42 Dec 8 2021 PDT (00:27:22.612 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+20.1.150.3      4          150    2849     775    20050    0    0 03:08:57     5467
+20.1.150.4      4          150    2858     774    20050    0    0 03:08:58     4558
+CGW11-cat9500H-2#

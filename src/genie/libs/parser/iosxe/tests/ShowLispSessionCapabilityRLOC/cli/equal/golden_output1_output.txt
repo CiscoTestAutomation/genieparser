@@ -1,0 +1,27 @@
+Session Capability Exchange
+
+Peer address:                 66.66.66.66:4342
+Local address:                66.66.66.66:50383
+Capability Exchange Complete: Yes
+Capability Sent:              0x000001FF
+                              Publish-Subscribe Instance-ID
+                              Domain-Info
+                              Route-Tag
+                              SGT
+                              Default-originate
+                              Service-registration
+                              Extranet-policy-propagation
+                              Default-ETR Route-metric
+                              Unknown vendor type skip
+Capability Received:          0x000001FF
+                              Publish-Subscribe Instance-ID
+                              Domain-Info
+                              Route-Tag
+                              SGT
+                              Default-originate
+                              Service-registration
+                              Extranet-policy-propagation
+                              Default-ETR Route-metric
+                              Unknown vendor type skip
+Receive count:                1
+Error count:                  0

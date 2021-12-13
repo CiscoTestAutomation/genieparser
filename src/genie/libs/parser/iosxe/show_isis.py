@@ -1630,10 +1630,10 @@ class ShowIsisRib(ShowIsisRibSchema):
         # 1.1.1.0/24  prefix attr X:0 R:1 N:0
         # 3.3.3.3/32  prefix attr X:0 R:0 N:1  source router id: 3.3.3.3  SID index 3 - Bound
         # 6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
-        p2 = re.compile(r'^(?P<ip>\d+.\d+.\d+.\d+)/(?P<subnet>\d+)\s+prefix\s+attr\s+X:(?P<x_flag>0|1)'
-                        r'\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)((\s+source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)){0,1}'
-                        r'\s+(((prefix SID index|SID index)\s+(?P<prefix_sid_ind>\d+))\s+){0,1}((- Bound){0,1}\s*'
-                        r'(\((?P<sid_bound_attribute>\w+)\)(\((?P<strict_sid_bound_attribute_te>\w+)\)){0,1}){0,1}){0,1}){0,1}$')
+        p2 = re.compile(r'^(?P<ip>\d+.\d+.\d+.\d+)/(?P<subnet>\d+)\s+prefix\s+attr\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)'
+        r'(\((?P<strict_sid_bound_attribute_te1>TE)\)){0,1}((\s+source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)){0,1}\s+'
+        r'(((prefix SID index|SID index)\s+(?P<prefix_sid_ind>\d+))\s+){0,1}((- Bound){0,1}\s*(\((?P<sid_bound_attribute>\w+)\)'
+        r'(\((?P<strict_sid_bound_attribute_te2>\w+)\)){0,1}){0,1}){0,1}){0,1}$')
         
         # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
         # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
@@ -1653,7 +1653,7 @@ class ShowIsisRib(ShowIsisRibSchema):
 
         #(ALT)(installed)
         #(installed)
-        p6 = re.compile(r'^(\((?P<path_attr>TE|ALT|SRTE|SRTE_STRICT|SR_POLICY|SR_POLICY_STRICT)\))?(\((?P<installed>installed)\))$')
+        p6 = re.compile(r'^(\((?P<path_attr>TE|ALT|SRTE|SRTE_STRICT|SR_POLICY|SR_POLICY_STRICT)\)){0,1}(\((?P<installed>installed)\)){0,1}$')
 
         # label: implicit-null
         p7 = re.compile(r'^label:\s+(?P<label>\S+)$')
@@ -1728,9 +1728,8 @@ class ShowIsisRib(ShowIsisRibSchema):
                 src_router_id = group['src_router_id']
                 prefix_sid_ind = group['prefix_sid_ind']
                 sid_bound_attr = group['sid_bound_attribute']
-                strict_sid_bound_attribute_te = group['strict_sid_bound_attribute_te']
+                
                 ret_dict["tag"][tag].setdefault("prefix", {}).setdefault(ip, {})
-
                 ret_dict["tag"][tag]["prefix"][ip]["subnet"] = group["subnet"]
 
                 prefix_attr = {
@@ -1752,8 +1751,8 @@ class ShowIsisRib(ShowIsisRibSchema):
                 elif sid_bound_attr:
                   ret_dict["tag"][tag]["prefix"][ip]["sid_bound_attribute"] = sid_bound_attr
                 
-                if strict_sid_bound_attribute_te == "TE":
-                    ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute_te"] = True
+                strict_sid_bound_attribute_te = (group["strict_sid_bound_attribute_te1"] == "TE" or group["strict_sid_bound_attribute_te2"] == "TE")
+                ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute_te"] = strict_sid_bound_attribute_te
                 continue
 
             # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0

@@ -1,0 +1,31 @@
+Umbrella Configuration
+========================
+   Token: FC4C18E820D29D6CFC9B5224D5EAE8020026E638
+   API-KEY: NONE
+   OrganizationID: 2549304
+   Local Domain Regex parameter-map name: NONE
+   DNSCrypt: Not enabled
+   Public-key: NONE
+   UDP Timeout: 5 seconds
+   Resolver address:
+       1. 208.67.220.220
+       2. 208.67.222.222
+       3. 2620:119:53::53
+       4. 2620:119:35::35
+
+   Umbrella Interface Config:
+       Number of interfaces with "umbrella out" config: 1
+         1. GigabitEthernet2/0/1
+             Mode     :  OUT
+             VRF      : global(Id: 0)
+       Number of interfaces with "umbrella in" config: 1
+         1. GigabitEthernet2/0/7
+             Mode       : IN
+             DCA        : Disabled
+             Tag        : 9200_9300_tag
+             Device-id  : 010abd2ec0dcffe3
+             VRF        : global(Id: 0)
+
+   Configured Umbrella Parameter-maps:
+        1. global
+

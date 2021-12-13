@@ -803,3 +803,58 @@ class ShowVlansDot1qVlanIdSecondDot1qVlanId(ShowVlansDot1qVlanIdSecondDot1qVlanI
                  continue
 
          return ret_dict
+
+
+class ShowVlanSummarySchema(MetaParser):
+    schema = {
+        'vlan_summary': {
+            'existing_vlans': int,
+            'existing_vtp_vlans': int,
+            'existing_extend_vlans': int
+        }
+    }
+
+class ShowVlanSummary(ShowVlanSummarySchema):
+    cli_command = 'show vlan summary'
+
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #Number of existing VLANs               : 1009
+        p1 = re.compile(r'Number\sof\sexisting\sVLANs\s+\:\s+(?P<existing_vlans>\d+)')
+
+        #Number of existing VTP VLANs          : 1005
+        p2 = re.compile(r'Number\sof\sexisting\sVTP\sVLANs\s+\:\s+(?P<existing_vtp_vlans>\d+)')
+
+        #Number of existing extended VLANS     : 4
+        p3 = re.compile(r'Number\sof\sexisting\sextended\sVLANS\s+\:\s+(?P<existing_extend_vlans>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'vlan_summary' not in ret_dict:
+                    vlan_summary = ret_dict.setdefault('vlan_summary', {})
+
+                vlan_summary['existing_vlans'] = int(group['existing_vlans'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_summary['existing_vtp_vlans'] = int(group['existing_vtp_vlans'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_summary['existing_extend_vlans'] = int(group['existing_extend_vlans'])
+                continue
+
+        return ret_dict
+

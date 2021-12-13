@@ -117,6 +117,7 @@ expected_output = {
                                 "v_flag": False,
                                 "l_flag": False
                             },
+                            'path_attribute': 'ALT',
                             "strict_spf_sid_index": 505,
                             "strict_spf_sid_flags": {
                                 "r_flag": False,

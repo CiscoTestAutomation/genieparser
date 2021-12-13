@@ -1,0 +1,314 @@
+   Switch Number: 1 
+
+        Module 1 Idprom:
+
+            Controller Type          : 4371
+            Hardware Revision        : 0.2
+            Top Assy. Part Number    : 68-103001-01
+            Top Assy. Revision       : 10  
+            PCB Part Number          : 73-19902-02
+            Board Revision           : 14
+            Deviation Number         : 0
+            PCB Serial Number        : FDO25130VES
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9500X-28C8D
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Base MAC Address         : 28 AF FD BE 94 00 
+            Environment Monitor Data : 06 00 00 00 0C 30 C3 00 
+                                    FB 
+            Max Power Requirement    : 195 Watts
+            Typical Power Requirement: 195 Watts
+            Environment Monitor Data : 00 06 00 FA 
+        Power Supply 0 Idprom:
+
+            Controller Type          : 4376
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 341-101195-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            PCB Serial Number        : QCS25146109
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-PWR-1500WAC-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+            Environment Monitor Data : 02 00 5D C5 DC 00 00 
+            Max Power Output         : 1500 Watts
+        Power Supply 1 Idprom:
+
+            Controller Type          : 4376
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 341-101195-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            PCB Serial Number        : QCS25146111
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-PWR-1500WAC-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+            Environment Monitor Data : 02 00 5D C5 DC 00 00 
+            Max Power Output         : 1500 Watts
+        Fantray 0 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NNF
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 1 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NNZ
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 2 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NUD
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 3 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NP1
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 4 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NSL
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 5 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NND
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    Switch Number: 2 
+
+        Module 1 Idprom:
+
+            Controller Type          : 4371
+            Hardware Revision        : 0.2
+            Top Assy. Part Number    : 68-103001-01
+            Top Assy. Revision       : 10  
+            PCB Part Number          : 73-19902-02
+            Board Revision           : 14
+            Deviation Number         : 0
+            PCB Serial Number        : FDO25130VEP
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9500X-28C8D
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Base MAC Address         : F8 7A 41 37 C8 00 
+            Environment Monitor Data : 06 00 00 00 0C 30 C3 00 
+                                        FB 
+            Max Power Requirement    : 195 Watts
+            Typical Power Requirement: 195 Watts
+            Environment Monitor Data : 00 06 00 FA 
+        Power Supply 0 Idprom:
+
+            Controller Type          : 4376
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 341-101195-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            PCB Serial Number        : QCS2514611W
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-PWR-1500WAC-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+            Environment Monitor Data : 02 00 5D C5 DC 00 00 
+            Max Power Output         : 1500 Watts
+        Power Supply 1 Idprom:
+
+            Controller Type          : 4376
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 341-101195-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            PCB Serial Number        : QCS25146173
+            RMA Test History         : 00
+            RMA Number               : 0-0-0-0
+            RMA History              : 00
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-PWR-1500WAC-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+            Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+            Environment Monitor Data : 02 00 5D C5 DC 00 00 
+            Max Power Output         : 1500 Watts
+        Fantray 0 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NSW
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 1 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NU1
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 2 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NVM
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 3 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NTB
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 4 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NSP
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Fantray 5 Idprom:
+
+            Controller Type          : 4421
+            Hardware Revision        : 0.1
+            Top Assy. Part Number    : 800-107500-01
+            Top Assy. Revision       : 01
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            Deviation Number         : 0
+            PCB Serial Number        : ACI25140NRM
+            CLEI Code                : TBD
+            Product Identifier (PID) : C9K-FAN-1U-R
+            Version Identifier (VID) : V00
+            Manufacturing Test Data  : 00 00 00 00 00 00 00 00 

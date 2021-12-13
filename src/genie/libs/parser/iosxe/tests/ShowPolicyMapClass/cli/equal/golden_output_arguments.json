@@ -1,0 +1,4 @@
+{
+    "policy_name": "WIRED-EGRESS-POLICY",
+    "class_name": "AutoQos-4.0-Output-Priority-Queue"
+}

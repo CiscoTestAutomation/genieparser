@@ -34,7 +34,7 @@ class ShowRomvarSchema(MetaParser):
             Optional("thrput"): str,
             Optional("config_file"): str,
             Optional("bootldr"): str,
-            Optional("crash"): str,
+            Optional("crashinfo"): str,
             Optional("no_console"): int,
             Optional("boot_device_mode"): str,
             Optional("boardid"): int,

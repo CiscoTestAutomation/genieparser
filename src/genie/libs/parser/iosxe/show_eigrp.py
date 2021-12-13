@@ -692,7 +692,10 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
 
 class ShowEigrpInterfacesSchema(MetaParser):
 
-    ''' Schema for "show ip eigrp interfaces" '''
+    ''' Schema for
+        * "show ip eigrp interfaces"
+        * "show ip eigrp vrf <vrf> interfaces"
+    '''
 
 # These are the key-value pairs to add to the parsed dictionary
     schema = {
@@ -757,7 +760,7 @@ class ShowEigrpInterfacesSchema(MetaParser):
 class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         out = output
 
         # Initializes the Python dictionary variable
@@ -770,6 +773,9 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
             r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
             r'Interfaces\s+for\s+AS\(\s*(?P<auto_sys>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
         )
+
+        # VRF(1)
+        p1_2 = re.compile(r"VRF\((?P<vrf>\S+)\)")
 
         # Defines the regex for the second line of device output. Example is:
         # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
@@ -846,6 +852,14 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                     instance_dict.update({'named_mode': False})
                     
 
+                continue
+
+            # VRF(1)
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict_copy = parsed_dict['vrf']['default'].copy()
+                parsed_dict['vrf'] = {group['vrf']: parsed_dict_copy}
                 continue
 
             # Processes the matched patterns for the second line of output
@@ -1016,9 +1030,13 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
 
         # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
         # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
-        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
-        'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
-        '(?:VRF\((?P<vrf>\S+)\))?$')
+        # EIGRP-IPv4 VR(test) Topology Table for AS(100)/ID(10.114.254.5)
+        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*(VR\((?P<process_name>\w+)\))?\s*'
+                        r'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)'
+                        r'\s*(?:VRF\((?P<vrf>\S+)\))?$')
+
+        # Topology(base) TID(0) VRF(1)
+        r1_2 = re.compile(r'(Topology\((?P<topology_base>\w+)\)\s+TID\((?P<topology_id>\d+)\)\s+)\s*(?:VRF\((?P<vrf>\S+)\))$')
 
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64) VRF(red)
@@ -1051,12 +1069,22 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
             
             # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
             # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
+            # EIGRP-IPv4 VR(test) Topology Table for AS(100)/ID(10.114.254.5)
             result = r1.match(line)
             if result:
                 address_family = result.groupdict()['address_family']
                 as_num = result.groupdict()['as_num']
                 eigrp_id = result.groupdict()['eigrp_id']
 
+                if result.groupdict()['vrf']:
+                    vrf = result.groupdict()['vrf']
+                else:
+                    vrf = 'default'
+                continue
+
+            # Topology(base) TID(0) VRF(1)
+            result = r1_2.match(line)
+            if result:
                 if result.groupdict()['vrf']:
                     vrf = result.groupdict()['vrf']
                 else:
@@ -1125,23 +1153,33 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 route_dict['known_via'] = known_via
                 continue
 
+
         return parsed_dict
 
 
 class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
-    ''' Parser for "show ip eigrp interfaces"'''
+    '''
+    Parser for:
+        "show ip eigrp interfaces"
+        "show ip eigrp vrf <vrf> interfaces"
+    '''
 
-    cli_command = 'show ip eigrp interfaces'
+    cli_command = ['show ip eigrp vrf {vrf} interfaces',
+                    'show ip eigrp interfaces']
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(output=out, vrf=vrf)
 
 
 class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):

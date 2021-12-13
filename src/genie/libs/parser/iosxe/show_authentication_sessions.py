@@ -598,3 +598,38 @@ class ShowAuthenticationSessionsMACDetails(ShowAuthenticationSessionsDetailsSupe
 
         # Call super
         return super().cli(output=show_output, mac_address=mac_address, switch=switch)
+
+#========================================================================================
+# Parser for:
+#           * 'authentication display config-mode'
+#========================================================================================
+
+class AuthenticationDisplayConfigModeSchema(MetaParser):
+    schema = {
+        'current_config_mode': str,
+    }
+
+
+class AuthenticationDisplayConfigMode(AuthenticationDisplayConfigModeSchema):
+
+    cli_command = 'authentication display config-mode'
+
+    def cli(self,output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        p1 = re.compile(r'^Current\sconfiguration\smode\sis\s(?P<current_config_mode>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('current_config_mode', group['current_config_mode'])
+                continue
+        
+        return ret_dict

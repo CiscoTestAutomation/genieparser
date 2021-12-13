@@ -934,6 +934,7 @@ class ShowStandbyBriefSchema(MetaParser):
             Any(): {
                 'grp': int,
                 'priority': int,
+                Optional('is_preempt_enabled'): bool,
                 'state': str,
                 'active': str,
                 'standby': str,
@@ -963,12 +964,14 @@ class ShowStandbyBrief(ShowStandbyBriefSchema):
         ret_dict = {}
 
         #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
-        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+(?P<state>\w+)\s+(?P<active>\w+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
+        #Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
+        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>\w+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
         
         for line in out.splitlines():
             line = line.strip()
             
             #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
+            #Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
             m = p0.match(line)
             if m:
                 group = m.groupdict()
@@ -976,6 +979,9 @@ class ShowStandbyBrief(ShowStandbyBriefSchema):
                 stby_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
                 stby_dict['grp']  = int(group['grp'])
                 stby_dict['priority']  = int(group['priority'])
+                if m.group('is_preempt_enabled'):
+                    enable = group['is_preempt_enabled'] == 'P'
+                    stby_dict['is_preempt_enabled']  = enable
                 stby_dict['state']  = group['state']
                 stby_dict['active']  = group['active']
                 stby_dict['standby']  = group['standby']
