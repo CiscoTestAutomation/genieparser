@@ -5,7 +5,7 @@ IOSXE parser for the following show command
 
 # Python
 import re
-import unittest
+# import unittest
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -60,17 +60,18 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
             show cable tdr interface {interface}
     """
 
-    cli_command = ['show cable tdr interface {interface}']
+    cli_command = 'show cable tdr interface {interface}'
 
     def cli(self, interface=None, output=None):
         if output is None:
             if interface:
-                cmd = self.cli_command[0].format(interface=interface)
-            else:
-                cmd = self.cli_command[1]
+                output = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            output = output
+            # cmd = self.cli_command[1]
 
             # Execute command on device
-            output = self.device.execute(cmd)
+            # output = self.device.execute(cmd)
 
         # initial return dictionary
         tdr_dict = {}
