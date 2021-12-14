@@ -27,30 +27,14 @@ class ShowCableTdrIntSchema(MetaParser):
             Optional('speed'): str,
             Optional('date'): str,
             Optional('time'): str,
-            Optional('pair_a'): {
-                Optional('length'): int,
-                Optional('tolerance'): int,
-                Optional('remote_pair'): str,
-                Optional('status'): str,
-            },
-            Optional('pair_b'): {
-                Optional('length'): int,
-                Optional('tolerance'): int,
-                Optional('remote_pair'): str,
-                Optional('status'): str,
-            },
-            Optional('pair_c'): {
-                Optional('length'): int,
-                Optional('tolerance'): int,
-                Optional('remote_pair'): str,
-                Optional('status'): str,
-            },
-            Optional('pair_d'): {
-                Optional('length'): int,
-                Optional('tolerance'): int,
-                Optional('remote_pair'): str,
-                Optional('status'): str,
-            },
+            'pairs': {
+                Any() : {
+                    Optional('length'): int,
+                    Optional('tolerance'): int,
+                    Optional('remote_pair'): str,
+                    Optional('status'): str,
+               }
+           }            
         }
     }
 
