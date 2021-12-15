@@ -3,7 +3,7 @@
      * show aaa servers 
      * show aaa user all
      * show aaa fqdn all
-      
+     * show aaa common-criteria policy name {policy_name}  
 """
 
 #python
@@ -1098,3 +1098,210 @@ class ShowAaaFqdnAll(ShowAaaFqdnAllSchema):
             res = p2.match(line)
             if res:
                 fqdn_dict.update({res.group(1).lower(): res.group(2)})
+
+# ====================================================
+#  Schema for show aaa cache group
+# ====================================================
+class ShowAAACacheGroupSchema(MetaParser):
+    """Schema for 'show aaa cache group {server_grp} all'
+                  'show aaa cache group {server_grp} profile {profile}'
+    """
+    schema = {
+        'client': {
+            Any(): {
+                'mac_address': str,
+                'profile_name': str,
+                'user_name': str,
+                'timeout': int
+            }
+        },
+        Optional('total_entries'): int,
+    }
+
+
+
+# ====================================================
+#  Parser for show aaa cache group
+# ====================================================
+class ShowAAACacheGroup(ShowAAACacheGroupSchema):
+    """Parser for 'show aaa cache group {server_grp} all'
+                  'show aaa cache group {server_grp} profile {profile}'
+    """
+
+    cli_command = [
+        'show aaa cache group {server_grp} all',
+        'show aaa cache group {server_grp} profile {profile}'
+    ]
+
+    def cli(self, server_grp=None, profile=None, output=None):
+
+        # Get output by executing cmd on device
+        if output is None:
+            if profile:
+                cmd = self.cli_command[1].format(server_grp=server_grp,profile=profile)
+            else:
+                cmd = self.cli_command[0].format(server_grp=server_grp)
+
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+        client_dict = {}
+
+        # MAC ADDR:      000A.0A00.0500
+        mac_compile = re.compile(r'MAC ADDR:[\s\t]+(?P<macAddr>\w+\.\w+\.\w+)')
+        # Profile Name: regProfile
+        profile_compile = re.compile(r'Profile Name:[\s\t]+(?P<profile>[0-9A-Za-z\-\.]+)')
+        # User Name:    	test
+        user_compile = re.compile(r'User Name:[\s\t]+(?P<user>[0-9A-Za-z\-\.]+)')
+        # Timeout:      	86400
+        timeout_compile = re.compile(r'Timeout:[\s\t]+(?P<timeout>\w+)')
+        # Total number of Cache entries is 2
+        total_entries = re.compile(r'Total number of Cache entries is[\s\t]+(?P<count>[0-9]+)')
+        for line in output.splitlines():
+            line = line.strip()
+
+            # MAC ADDR:      000A.0A00.0500
+            m1 = mac_compile.match(line)
+            if m1:
+                group = m1.groupdict()
+                mac = group['macAddr']
+                client_dict = ret_dict.setdefault('client', {}).setdefault(mac, {})
+                client_dict['mac_address'] = mac
+                continue
+
+            # Profile Name: regProfile
+            m2 = profile_compile.match(line)
+            if m2:
+                group = m2.groupdict()
+                profile_name = group['profile']
+                client_dict['profile_name'] = profile_name
+                continue
+
+            # User Name:    	test
+            m3 = user_compile.match(line)
+            if m3:
+                group = m3.groupdict()
+                profile_name = group['user']
+                client_dict['user_name'] = profile_name
+
+            # Timeout:      	86400
+            m3 = timeout_compile.match(line)
+            if m3:
+                group = m3.groupdict()
+                timeout = group['timeout']
+                client_dict['timeout'] = int(timeout)
+                continue
+
+            # Total number of Cache entries is 2
+            m5 = total_entries.match(line)
+            if m5:
+                count = int(m5.groupdict()['count'])
+                ret_dict.update({'total_entries': count})
+                continue
+        return ret_dict
+        
+
+# ================================================================
+# Schema for 'show aaa common-criteria policy name {policy_name}'
+# ================================================================
+class ShowAAACommonCriteraPolicySchema(MetaParser):
+    """Schema for show aaa common-criteria policy name {policy_name}"""
+
+    schema = {
+                'policy_name': str,
+                Optional('minimum_length'): int,
+                Optional('maximum_length'): int,
+                Optional('upper_count'): int,
+                Optional('lower_count'): int,
+                Optional('numeric_count'): int,
+                Optional('special_count'): int,
+                Optional('character_changes'): int,
+                Optional('lifetime'): {
+                    Optional('years'): int,
+                    Optional('months'): int,
+                    Optional('days'): int,
+                    Optional('hours'): int,
+                    Optional('minutes'): int,
+                    Optional('seconds'): int
+                    }
+             }
+
+# ==============================================================
+#  Parser for show aaa common-criteria policy name {policy_name}
+# ==============================================================
+class ShowAAACommonCriteraPolicy(ShowAAACommonCriteraPolicySchema):
+    """
+    Parser for show aaa common-criteria policy name {policy_name}
+    """
+
+    cli_command = 'show aaa common-criteria policy name {policy_name}'
+    def cli(self, policy_name, output=None):
+        cmd = self.cli_command.format(policy_name=policy_name)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Policy name: enable_1
+        p1 = re.compile(r'^Policy name\: +(?P<policy_name>\S+\d+)$')
+
+        # Minimum length: 10
+        # Maximum length: 128
+        p2 = re.compile(r'^(?P<length_key>\S+) length\: +(?P<len>\d+)$')
+
+        # Upper Count: 0
+        # Lower Count: 0
+        # Numeric Count: 0
+        # Special Count: 0
+        p3 = re.compile(r'^(?P<count_key>\S+) Count\: +(?P<count>\d+)$')
+
+        # Number of character changes 4
+        p4 = re.compile(r'^Number of character changes +(?P<char_changes>\d+)$')
+
+        # Valid forever. User tied to this policy will not expire
+        p5 = re.compile(r'^Valid for +(?P<time>(.*))$')
+
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Policy name: enable_1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["policy_name"] = group["policy_name"]
+            
+            # Minimum length: 10
+            # Maximum length: 128
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict[group["length_key"].lower()+"_"+"length"] = int(group["len"])
+            
+            # Upper Count: 0
+            # Lower Count: 0
+            # Numeric Count: 0
+            # Special Count: 0
+            m = p3.match(line) 
+            if m:
+                group = m.groupdict()
+                ret_dict[group["count_key"].lower()+"_"+"count"] = int(group["count"])
+            
+            # Number of character changes 4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["character_changes"] = int(group["char_changes"])
+            
+            # Valid forever. User tied to this policy will not expire
+            m = p5.match(line)
+            if m:
+                lifetime_dict = ret_dict.setdefault('lifetime', {})
+                group = m.groupdict()
+                words = group["time"].split()
+                grouped_words = [' '.join(words[i: i + 2]) for i in range(0, len(words), 2)]
+                for val in grouped_words:
+                    lifetime_dict[val.split()[1]] = int(val.split()[0])
+        return ret_dict
+

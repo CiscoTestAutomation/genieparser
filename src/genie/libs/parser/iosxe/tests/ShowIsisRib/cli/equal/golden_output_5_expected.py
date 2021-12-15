@@ -12,6 +12,7 @@ expected_output = {
                     "source_router_id": "6.6.6.6",
                     "prefix_sid_index": 61,
                     "sid_bound_attribute": "SR_POLICY",
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "Tunnel65536": {
                             "distance": 115,

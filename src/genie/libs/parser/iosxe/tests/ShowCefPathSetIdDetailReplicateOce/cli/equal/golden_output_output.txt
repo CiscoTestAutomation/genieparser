@@ -1,0 +1,19 @@
+PE1#sh cef path set id 1 detail
+Path Set Id 0x00000001 Num Paths 1 Owner MLDP Flags 0xD RefCount 3
+path receive Lspvif0 RPF-ID: * label none MOI flags 0x101
+Replicate oce: 0x7F9E40C59340 UID:6888
+EOS output chain elements: replicate
+0: label none
+interface 80007F9E347A7F80 Lspvif0 7
+Lookup in table IPv4:vrf3001
+Replicate oce: 0x7F9E40C590C8 UID:6889
+NonEOS output chain elements: replicate
+0: label none
+interface 80007F9E347A8000 Lspvif0 90
+Lookup in mpls table 6
+PRABS_Prom_PE1#
+Need to check the highlighted Replicate one and UID
+This also should be checked on both active and standby
+Prabhu Shanmugavelu Yesterday, 12:26
+Replicate oce: 0x7F9E40C59340 UID:6888
+RLIST id: 0xf0001ae9 State: 1 {OK} Flags: 0x0 remote_ifs: 0 packets: 0 (0 pps approx.)

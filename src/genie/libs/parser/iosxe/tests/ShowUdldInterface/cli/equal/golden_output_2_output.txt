@@ -1,0 +1,27 @@
+Interface Gi1/0/7
+---
+Port enable administrative configuration setting: Enabled / in alert mode
+Port enable operational state: Enabled / in alert mode
+Current bidirectional state: Bidirectional
+Current operational state: Advertisement - Single neighbor detected
+Message interval: 15000 ms
+Time out interval: 5000 ms
+
+Port fast-hello configuration setting: Disabled
+Port fast-hello interval: 0 ms
+Port fast-hello operational state: Disabled
+Neighbor fast-hello configuration setting: Disabled
+Neighbor fast-hello interval: Unknown
+
+
+    Entry 1
+    ---
+    Expiration time: 42600 ms
+    Cache Device index: 1
+    Current neighbor state: Bidirectional
+    Device ID: A4B43937780
+    Port ID: A4:B4:39:37:78:00/7
+    Neighbor echo 1 device: 70D37984690
+    Neighbor echo 1 port: 70:D3:79:84:69:00/7
+
+    TLV Message interval: 15 sec

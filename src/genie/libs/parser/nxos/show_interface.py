@@ -2932,8 +2932,9 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p9 = re.compile(r'^Interface +Secondary +VLAN\(Type\) +Status +Reason$')
 
         # Vlan1     --                                      down   Administratively down
+        # Vlan2     --                                      down   VLAN/BD is down
         p10 = re.compile(r'^(?P<interface>[\S]+) +(?P<type>[\w\-]+) +(?P<status>[\w]+)'
-                         r' +(?P<reason>[\w\s\-]+)$')
+                         r' +(?P<reason>[\w\s\-\/]+)$')
 
         # Port           Status Reason          MTU
         p11 = re.compile(r'^Port +Status +Reason + MTU$')

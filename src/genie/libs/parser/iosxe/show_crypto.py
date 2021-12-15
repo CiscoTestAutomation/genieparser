@@ -230,6 +230,520 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
         except Exception:
             return {}
 
+# =========================================================
+#  Schema for 'show crypto pki certificates verbose <WORD>'
+# =========================================================
+class ShowCryptoPkiCertificateVerboseSchema(MetaParser):
+    """Schema for show 
+        * show crypto pki certificates verbose {trustpoint}
+    """
+    schema = {
+        'certificates': {
+            Any(): { 
+                'status': str, 
+                'serial': str, 
+                'usage': str, 
+                'issuer': {
+                    Optional('common_name'): str, 
+                    Optional('organization'): str, 
+                    Optional('name'): str, 
+                    Optional('organizational_unit'): str, 
+                    Optional('country'): str, 
+                    Optional('locale'): str, 
+                    Optional('street'): str, 
+                    Optional('hostname'): str,
+                    Optional('email'): str,
+                    Optional('ip_address'): str,
+                    Optional('serial_number'): str
+                }, 
+                'subject': {
+                    Optional('common_name'): str, 
+                    Optional('organization'): str, 
+                    Optional('name'): str, 
+                    Optional('organizational_unit'): str, 
+                    Optional('country'): str, 
+                    Optional('locale'): str, 
+                    Optional('street'): str, 
+                    Optional('hostname'): str,
+                    Optional('email'): str,
+                    Optional('ip_address'): str,
+                    Optional('serial_number'): str
+                }, 
+                'validity_date': {
+                    'start_date': str, 
+                    'end_date': str, 
+                    Optional('renew_date'): str
+                }, 
+                'subject_key_info': {
+                    'key_algorithm': str, 
+                    'key_length': str
+                }, 
+                'signature_algorithm': str, 
+                'fingerprint_md5': str, 
+                'fingerprint_sha1': str, 
+                Optional('cdp'): {
+                    Any(): str
+                }, 
+                Optional('key_usage_hex'): str,
+                'key_usage': {
+                    Any(): str
+                }, 
+                Optional('subject_key_id'): str,
+                Optional('subj_alt_name'): {
+                    Optional('subj_alt_fqdn'): str,
+                    Optional('subj_alt_ip_addr'): str,
+                    Optional('subj_alt_other_names'): str
+                },
+                Optional('authority_key_id'): str, 
+                Optional('ocsp_url'): str,
+                Optional('ca_flag'):str,
+                Optional('extended_key_unit'): {
+                    Any(): str
+                },
+                Optional('cert_install_time'): str, 
+                'trustpoints': str, 
+                Optional('key_label'): str,
+                Optional('storage'): str,
+                Optional('key_store'): str
+            }
+        }
+    }
+# =========================================================
+#  Parser for 'show crypto pki certificates verbose <WORD>'
+# =========================================================   
+class ShowCryptoPkiCertificateVerbose(ShowCryptoPkiCertificateVerboseSchema):
+    """Parser for 
+        * show crypto pki certificates verbose {trustpoint}
+    """
+
+    cli_command = ['show crypto pki certificates verbose {trustpoint}']
+
+    def cli(self, trustpoint='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(trustpoint=trustpoint))
+
+        # initial return dictionary
+        ret_dict = {}
+        # initial regexp pattern
+
+        # CA Certificate
+        # Certificate
+        # Certificate (Rollover)
+        # CA Certificate (Rollover)
+        # Certificate (subordinate CA certificate)
+        # Certificate (subordinate CA certificate, Rollover)
+        # Certificate (RA mode CS certificate)
+        # Certificate (RA mode CS certificate, Rollover)
+
+        p1 = re.compile(r'^((?P<cer>Certificate)|(?P<cer_name>(CA|Router Self-Signed) +Certificate)|(?P<cer_rollover>(CA)? *Certificate +\(Rollover\))|(?P<cer_sub_ra>Certificate +\((subordinate|RA mode) +(CA|CS) +certificate\))|(?P<cer_sub_ra_rollover>Certificate +\((subordinate|RA mode) +(CA|CS) +certificate, +Rollover\)))$')
+    
+        # Status: Available
+        p2 = re.compile(r'^Status:\s+(?P<status>\w+)$')
+
+        # Certificate Serial Number (hex): 01
+        p3 = re.compile(r'^Certificate +Serial +Number( +\(hex\))?: +(?P<serial>\w+)$')
+        
+        # Certificate Usage: Signature
+        p4 = re.compile(r'^Certificate Usage: +(?P<usage>[\w\s]+)$')
+
+        # Issuer:
+        # Subject:
+        # Validity Date:
+        p5 = re.compile(r'^((?P<issuer>Issuer)|(?P<subject>Subject)|(?P<validity_date>Validity +Date)):$')
+
+        # cn=ROOT
+        p6 = re.compile(r'(?i)^cn *= *(?P<common_name>[\S\s]*)$')
+
+        # ou=PKI
+        p7 = re.compile(r'(?i)^o *= *(?P<organization>[\S\s]*)$')
+
+        # Name: pki-reg7
+        p8 = re.compile(r'(?i)^Name *: *(?P<name>[\S\s]*)$')
+
+        # ou=EN
+        p9 = re.compile(r'(?i)^ou *= *(?P<organizational_unit>[\S\s]*)$')
+
+        # c=IN
+        p10 = re.compile(r'(?i)^c *= *(?P<country>[\S\s]*)$')
+
+        # l=Bangalore 
+        p11 = re.compile(r'(?i)^l *= *(?P<locale>[\S\s]*)$')
+
+        # st=Marthahalli
+        p12 = re.compile(r'(?i)^st *= *(?P<street>[\S\s]*)$')
+    
+        # hostname=pnp-agent
+        p13 = re.compile(r'(?i)^hostname *= *(?P<hostname>[\S\s]*)$')
+
+        # e=ashpa@cisco.com
+        p14 = re.compile(r'(?i)^e *= *(?P<email>[\S\s]*)$')
+
+        # IP Address: 10.10.10.1
+        p15 = re.compile(r'(?i)^IP Address: *(?P<ip_address>[\S\s]*)$')
+
+        # Serial Number: 9AH31HA
+        p16 = re.compile(r'(?i)^Serial Number: *(?P<serial_number>[\S\s]*)$')
+
+        # start date: 21:58:50 IST Nov 10 2021
+        # end   date: 21:58:50 IST Nov 10 2024
+        # renew date: 21:58:50 IST Nov 10 2023
+        p17 = re.compile(r'^((?P<start_date>start +date)|(?P<end_date>end +date)|(?P<renew_date>renew +date)): +(?P<value>.*)$')
+    
+        # Public Key Algorithm: rsaEncryption
+        p18 = re.compile(r'^Public Key Algorithm: +(?P<key_type>\w+)$')
+
+        # RSA Public Key: (2048 bit)
+        p19 = re.compile(r'^(RSA|EC) Public Key: +\((?P<key_len>\d+) +bit\)$')
+
+        # Signature Algorithm: SHA1 with RSA Encryption
+        p20 = re.compile(r'^Signature Algorithm: +(?P<sign_algo>.*)$')
+
+        # Fingerprint MD5: D9E4599D C573463B 07F2FBD6 620DB523 
+        p21 = re.compile(r'^Fingerprint MD5: +(?P<fp_md5>.*)$')
+
+        # Fingerprint SHA1: E8E0731C D31EA142 A23066D7 4178D696 2D9815E0
+        p22 = re.compile(r'^Fingerprint SHA1: +(?P<fp_sha1>.*)$')
+    
+        # http://10.10.10.2/test.crl
+        p23 = re.compile(r'^(?P<cdp_value>(http|ldap).*\.crl)$')
+
+        # X509v3 Key Usage: A0000000
+        p24 = re.compile(r'^(?P<key_usage>X509v3 Key Usage): *(?P<key_usage_hex>.*)$')
+
+        # Digital Signature
+        # Key Encipherment
+        p25 = re.compile(r'^(?P<key_purpose>(Digital Signature|Non Repudiation|Key Encipherment|Data Encipherment|Key Agreement|Key Cert Sign|CRL Signature|Encipher Only|Decipher Only))$')
+
+        # X509v3 Subject Key ID: 2F6A8670 6934D26E C27965E8 67C70441 BEF2EAFC 
+        p26 = re.compile(r'^X509v3 Subject Key ID: +(?P<subject_key>[\S\s]*)$')
+
+        # www.cisco.com
+        p27 = re.compile(r'^(?P<subj_fqdn>(www|mail|ftp|store|support).*)$')
+
+        # IP Address : 10.10.10.1
+        p28 = re.compile(r'^IP Address : +(?P<subj_addr>.*)$')
+
+        # OtherNames : ashpa@cisco.com
+        p29 = re.compile(r'^OtherNames : +(?P<subj_other>.*)$')
+
+        # X509v3 Authority Key ID: 31DEF8AC 8ED9E5F0 CDBC4749 61BED767 0CF75DB2
+        p30 = re.compile(r'^X509v3 Authority Key ID: +(?P<authority_key>[\S\s]*)$')
+
+        # OCSP URL: http://9.41.19.4/ocsp
+        p31 = re.compile(r'^OCSP URL: +(?P<ocsp_url>.*)$')
+
+        # CA: TRUE
+        p32 = re.compile(r'^CA: +(?P<ca_flag>\w+)$')
+        
+        # Client Auth
+        # Server Auth
+        p33 = re.compile(r'^(?P<eku>((Server|Client) Auth|IPSEC (End System|Tunnel|User)|SSH (Server|Client)|Code Signing|Email Protection|OCSP Signing|Time Stamping|[\d\.]+))$')
+        
+        # Cert install time: 21:57:41 IST Nov 10 2021
+        p34 = re.compile(r'^Cert install time: +(?P<install_time>.*)$')
+
+        # Associated Trustpoints: client ROOT 
+        p35 = re.compile(r'^Associated Trustpoints: +(?P<tp>.*)$')
+
+        # Storage: nvram
+        p36 = re.compile(r'^Storage: +(?P<storage>.*)$')
+
+        # Key Label: client
+        p37 = re.compile(r'^Key Label: +(?P<label>.*)$')
+
+        # Key storage device: nvram:client.cer#
+        p38 = re.compile(r'^Key storage device: +(?P<key_device>.*)$')
+        
+        ###Variables###
+        cdp_incr_count = 0
+        key_usage_count = 0
+        eku_count = 0
+        ###############
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CA Certificate
+            # Certificate
+            # Certificate (Rollover)
+            # CA Certificate (Rollover)
+            # Certificate (subordinate CA certificate)
+            # Certificate (subordinate CA certificate, Rollover)
+            # Certificate (RA mode CS certificate)
+            # Certificate (RA mode CS certificate, Rollover)
+            m = p1.match(line)
+            if m:
+                if m.groupdict()['cer']:
+                    cer_type = 'certificate'
+                elif m.groupdict()['cer_rollover']:
+                    cer_type = m.groupdict()['cer_rollover'].lower().replace(" ", "_").replace("(", "").replace(")","")
+                elif m.groupdict()['cer_sub_ra']:
+                    cer_type = m.groupdict()['cer_sub_ra'].lower().replace("certificate ","").replace(" ", "_").replace("(", "").replace(")","")
+                elif m.groupdict()['cer_sub_ra_rollover']:
+                    cer_type = m.groupdict()['cer_sub_ra_rollover'].lower().replace("certificate ","").replace(" ", "_").replace("(", "").replace(")","").replace(",", "")
+                else:
+                    cer_type = m.groupdict()['cer_name'].lower().replace(" ", "_").replace("-", "_")
+                cer_dict = ret_dict.setdefault('certificates', {}).setdefault(cer_type, {}) 
+                continue
+
+            # Status: Available
+            m = p2.match(line)
+            if m:
+                cer_dict['status'] = m.groupdict()['status']
+                continue
+             
+            # Certificate Serial Number (hex): 01
+            m = p3.match(line)
+            if m:
+                cer_dict['serial'] = m.groupdict()['serial']
+                continue
+
+            # Certificate Usage: Signature
+            m = p4.match(line)
+            if m:
+                cer_dict['usage'] = m.groupdict()['usage']
+                continue
+     
+            # Issuer:
+            # Subject:
+            # Validity Date:
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if group.get('issuer', {}):
+                    sub_dict = cer_dict.setdefault('issuer', {})
+                if group.get('subject', {}):
+                    sub_dict = cer_dict.setdefault('subject', {})
+                if group.get('validity_date', {}):
+                    sub_dict = cer_dict.setdefault('validity_date', {})
+                continue
+
+            # cn=ROOT
+            m = p6.match(line)
+            if m:
+                sub_dict['common_name'] = m.groupdict()['common_name']
+                continue
+ 
+            # ou=PKI 
+            m = p7.match(line)
+            if m:
+                sub_dict['organization'] = m.groupdict()['organization']
+                continue
+            
+            # Name: pki-reg7
+            m = p8.match(line)
+            if m:
+                sub_dict['name'] = m.groupdict()['name']
+                continue
+
+            # ou=EN
+            m = p9.match(line)
+            if m:
+                sub_dict['organizational_unit'] = m.groupdict()['organizational_unit']
+                continue
+            
+            # c=IN
+            m = p10.match(line)
+            if m:
+                sub_dict['country'] = m.groupdict()['country']
+                continue
+
+            # l=Bangalore 
+            m = p11.match(line)
+            if m:
+                sub_dict['locale'] = m.groupdict()['locale']
+                continue
+
+
+            # st=Marthahalli
+            m = p12.match(line)
+            if m:
+                sub_dict['street'] = m.groupdict()['street']
+                continue
+
+            # hostname=pnp-agent   
+            m = p13.match(line)
+            if m:
+                sub_dict['hostname'] = m.groupdict()['hostname']
+                continue
+
+            # e=ashpa@cisco.com   
+            m = p14.match(line)
+            if m:
+                sub_dict['email'] = m.groupdict()['email']
+                continue
+
+            # IP address: 10.10.10.1
+            m = p15.match(line)
+            if m:
+                sub_dict['ip_address'] = m.groupdict()['ip_address']
+                continue
+
+            # Serial Number: 9AH31HA
+            m = p16.match(line)
+            if m:
+                sub_dict['serial_number'] = m.groupdict()['serial_number']
+                continue
+
+            # start date: 21:58:50 IST Nov 10 2021
+            # end   date: 21:58:50 IST Nov 10 2024
+            # renew date: 21:58:50 IST Nov 10 2023
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                if group['start_date']:
+                    sub_dict['start_date'] = group['value']
+                if group['end_date']:
+                    sub_dict['end_date'] = group['value']
+                if group['renew_date']:
+                    sub_dict['renew_date'] = group['value'] 
+
+
+            # Public Key Algorithm: rsaEncryption
+            m = p18.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('subject_key_info', {})
+                sub_dict['key_algorithm'] = m.groupdict()['key_type']
+                continue
+
+            # RSA Public Key: (2048 bit)
+            m = p19.match(line)
+            if m:
+                sub_dict['key_length'] = m.groupdict()['key_len']
+                continue
+
+            # Signature Algorithm: SHA1 with RSA Encryption
+            m = p20.match(line)
+            if m:
+                cer_dict['signature_algorithm'] = m.groupdict()['sign_algo']
+                continue
+
+            # Fingerprint MD5: D9E4599D C573463B 07F2FBD6 620DB523
+            m = p21.match(line)
+            if m:
+                cer_dict['fingerprint_md5'] = m.groupdict()['fp_md5']
+                continue
+
+            # Fingerprint SHA1: E8E0731C D31EA142 A23066D7 4178D696 2D9815E0
+            m = p22.match(line)
+            if m:
+                cer_dict['fingerprint_sha1'] = m.groupdict()['fp_sha1']
+                continue
+            
+            # http://10.10.10.2/test.crl
+            m = p23.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('cdp', {})
+                cdp_incr_count += 1
+                sub_dict["cdp_url_{}".format(cdp_incr_count)] = m.groupdict()['cdp_value']
+                continue
+
+            # X509v3 Key Usage: A0000000
+            m = p24.match(line)
+            if m:
+                cer_dict['key_usage_hex'] = m.groupdict()['key_usage_hex']
+                sub_dict = cer_dict.setdefault('key_usage', {})
+                continue
+
+            # Digital Signature
+            # Key Encipherment
+            m = p25.match(line)
+            if m:
+                key_usage_count += 1
+                sub_dict["key_usage_{}".format(key_usage_count)] = m.groupdict()['key_purpose']
+                continue
+
+            # X509v3 Subject Key ID: 2F6A8670 6934D26E C27965E8 67C70441 BEF2EAFC 
+            m = p26.match(line)
+            if m:
+                cer_dict['subject_key_id'] = m.groupdict()['subject_key']
+                continue
+    
+        
+            # www.cisco.com
+            m = p27.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('subj_alt_name', {})
+                sub_dict["subj_alt_fqdn"] = m.groupdict()['subj_fqdn']
+                continue
+
+            # IP Address : 10.10.10.1
+            m = p28.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('subj_alt_name', {})
+                sub_dict["subj_alt_ip_addr"] = m.groupdict()['subj_addr']
+                continue
+            
+            # OtherNames : ashpa@cisco.com
+            m = p29.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('subj_alt_name', {})
+                sub_dict["subj_alt_other_names"] = m.groupdict()['subj_other']
+                continue
+
+            # X509v3 Authority Key ID: 31DEF8AC 8ED9E5F0 CDBC4749 61BED767 0CF75DB2
+            m = p30.match(line)
+            if m:
+                cer_dict['authority_key_id'] = m.groupdict()['authority_key']
+                continue
+            
+            # OCSP URL: http://9.41.19.4/ocsp
+            m = p31.match(line)
+            if m:
+                cer_dict['ocsp_url'] = m.groupdict()['ocsp_url']
+                continue
+
+            # CA: TRUE
+            m = p32.match(line)
+            if m:
+                cer_dict['ca_flag'] = m.groupdict()['ca_flag']
+                continue
+
+            # Client Auth
+            # Server Auth
+            m = p33.match(line)
+            if m:
+                sub_dict = cer_dict.setdefault('extended_key_unit', {})
+                eku_count += 1
+                sub_dict["eku_{}".format(eku_count)] = m.groupdict()['eku']
+                continue
+            
+            # Cert install time: 21:57:41 IST Nov 10 2021
+            m = p34.match(line)
+            if m:
+                cer_dict['cert_install_time'] = m.groupdict()['install_time']
+                continue
+
+            # Associated Trustpoints: client ROOT 
+            m = p35.match(line)
+            if m:
+                cdp_incr_count = 0
+                key_usage_count = 0
+                eku_count = 0
+                cer_dict['trustpoints'] = m.groupdict()['tp']
+                continue
+
+            # Storage: nvram
+            m = p36.match(line)
+            if m:
+                cer_dict['storage'] = m.groupdict()['storage']
+                continue
+   
+            # Key Label: client
+            m = p37.match(line)
+            if m:
+                cer_dict['key_label'] = m.groupdict()['label']
+                continue
+
+            # Key storage device: nvram:client.cer#
+            m = p38.match(line)
+            if m:
+                cer_dict['key_store'] = m.groupdict()['key_device']
+                continue
+        
+        return ret_dict 
+
 # =================================================
 #  Schema for 'show crypto pki trustpoints'
 # =================================================
@@ -261,7 +775,6 @@ class ShowCryptoPkiTrustpointsStatusSchema(MetaParser):
             },
         }
     }
-
 # =================================================
 #  Parser for 'show crypto pki trustpoints <WORD> status'
 # =================================================

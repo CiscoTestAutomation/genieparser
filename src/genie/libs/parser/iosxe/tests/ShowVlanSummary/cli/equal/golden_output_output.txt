@@ -1,0 +1,3 @@
+Number of existing VLANs               : 4093
+ Number of existing VTP VLANs          : 1005
+ Number of existing extended VLANS     : 3088

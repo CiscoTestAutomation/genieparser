@@ -28,6 +28,7 @@ expected_output = {
                                     "192.168.9.0/24": {
                                         "id": "192.168.9.0/24",
                                         "creation_time": "00:04:02",
+                                        'sgt': '4003',
                                         "time_to_live": "23:55:57",
                                         "via": "map-reply, complete",
                                         "eid": {

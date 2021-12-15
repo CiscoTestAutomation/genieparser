@@ -1,0 +1,1 @@
+expected_output = {'interfaces': {}}

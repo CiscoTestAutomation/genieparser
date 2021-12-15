@@ -1,0 +1,22 @@
+Checking incompatible configuration(s):
+---------------------------------------
+The following configurations on active are incompatible with the system image
+1) Service : otm , Capability : CAP_FEATURE_OTM_TRACK_DELAY_MS_CONFIGURED
+Description : Objects with track delay in millliseconds detected
+
+Capability requirement : STRICT
+Enable/Disable command : Please remove track delay in milliseconds from all objects
+2) Service : rpm , Capability : CAP_FEATURE_RPM_EXTCOMM_LIST_WITH_SEQ
+Description : "ip extcommunity-list standard/expanded <com> seq <seq> <action> [<community list>]" is configured with sequence
+Capability requirement : STRICT
+Enable/Disable command : Please remove all extended community list commands using "no ip extcommunity-list standard <com>"
+
+3) Service : otm , Capability : CAP_FEATURE_OTM_TRACK_DELAY_CONFIGURED_WITH_LIST
+Description : Track list boolean/weight with delay config found
+
+Capability requirement : STRICT
+Enable/Disable command : Please remove track list boolean/weight or remove the delay configs from them
+
+Checking dynamic incompatibilities:
+-----------------------------------
+No incompatible configurations

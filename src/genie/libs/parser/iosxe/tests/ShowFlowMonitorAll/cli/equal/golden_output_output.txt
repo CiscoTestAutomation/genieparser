@@ -1,0 +1,101 @@
+Flow Monitor monitor_l2_in:
+  Description:       User defined
+  Flow Record:       record_l2_in
+  Flow Exporter:     StealthWatch_Exporter
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       60 secs
+
+
+Flow Monitor monitor_l2_out:
+  Description:       User defined
+  Flow Record:       record_l2_out
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       180 secs
+
+
+Flow Monitor monitor_ipv4_in:
+  Description:       User defined
+  Flow Record:       record_ipv4_in
+  Flow Exporter:     StealthWatch_Exporter
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       60 secs
+
+
+Flow Monitor monitor_ipv4_out:
+  Description:       User defined
+  Flow Record:       record_ipv4_out
+  Flow Exporter:     StealthWatch_Exporter
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       60 secs
+
+
+Flow Monitor monitor_ipv6_in:
+  Description:       User defined
+  Flow Record:       record_ipv6_in
+  Flow Exporter:     StealthWatch_Exporter
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       60 secs
+
+
+Flow Monitor monitor_ipv6_out:
+  Description:       User defined
+  Flow Record:       record_ipv6_out
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       180 secs
+
+
+Flow Monitor v4_mon_sgt:
+  Description:       User defined
+  Flow Record:       v4-rec_sgt
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       1800 secs
+
+
+Flow Monitor v4_mon_sgt-input:
+  Description:       User defined
+  Flow Record:       v4-rec_sgt-input
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       1800 secs
+
+
+Flow Monitor v4_mon_sgt-output:
+  Description:       User defined
+  Flow Record:       v4-rec_sgt-output
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     15 secs
+    Active Timeout:       1800 secs

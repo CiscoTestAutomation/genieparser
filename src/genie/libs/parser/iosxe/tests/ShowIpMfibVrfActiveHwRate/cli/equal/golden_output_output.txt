@@ -1,0 +1,2 @@
+sh ip mfib vrf vrf3001 active | c HW Rate
+Number of lines which match regexp = 60

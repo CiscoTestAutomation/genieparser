@@ -1,0 +1,10 @@
+show mpls forwarding-table vrf vrf3001
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+21         No Label   121.1.1.0/24[V]  10980         aggregate/vrf3001
+23    [T]  No Label   [mdt 3001:1 0][V]   \
+                                       200497062836  aggregate/vrf3001
+33         Pop Label  30.0.1.1/32[V]   45252090      aggregate/vrf3001
+
+[T]	Forwarding through a LSP tunnel.
+	View additional labelling info with the 'detail' option

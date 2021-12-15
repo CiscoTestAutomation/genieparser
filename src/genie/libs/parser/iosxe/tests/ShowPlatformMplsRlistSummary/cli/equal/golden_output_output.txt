@@ -1,0 +1,9 @@
+show platform software fed switch active mpls rlist summary
+ Current Count (RLIST/RENTRY)            : 4 / 2
+ Maximum Reached (RLIST/RENTRY)          : 64 / 128
+ Total Retry Count (RLIST/RENTRY)        : 0 / 0
+ Current Lspvif Adjacency's Count        : 5
+ Max reached Lspvif Adjacency's          : 36
+ Current Lspvif Adj label info Count     : 1
+ Max reached Lspvif Adj label info       : 11
+ Total Retry Lspvif Adj label info Count : 0

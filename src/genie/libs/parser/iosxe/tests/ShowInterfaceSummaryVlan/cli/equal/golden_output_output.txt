@@ -1,0 +1,6 @@
+mac_gen1#show int summary vlan
+
+Total number of Vlan interfaces: 8
+
+Vlan interfaces configured:
+1,23-24,26-28,50,75

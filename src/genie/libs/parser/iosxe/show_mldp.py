@@ -119,7 +119,10 @@ class ShowMplsMldpRoot(ShowMplsMldpRootSchema):
         p1 = re.compile(r"^Path\(s\)\s+\:\s+(?P<path>\S+)\s+[a-zA-z ]+:\s+(?P<ldp_neigh>\S+)\s+(?P<interface>[a-zA-Z0-9\- ]+)$")
         
         ##Interface   : Port-channel30 (via unicast RT)
-        p2 = re.compile(r"^Interface\s+\:\s+(?P<interface>\S+)\s+\(via(?P<learnet_via>[a-zA-Z ]+)\)$")
+        p2 = re.compile(r"^Interface\s+\:\s+(?P<interface>\S+)\s+\(via\s+(?P<learnet_via>[a-zA-Z ]+)\)$")
+        
+        ## Root node    : 5.5.5.5  (we are the root)
+        p3 = re.compile(r"^Root\s+node\s+:\s+(?P<root_node>\S+).*$")
         
         for line in out.splitlines():
             line=line.strip()
@@ -127,24 +130,23 @@ class ShowMplsMldpRoot(ShowMplsMldpRootSchema):
                 res=line.split(":")
                 
                 ##Root node    : 5.5.5.5
-                if "Root node" in line:
-                    root_dict=ret_dict.setdefault("root_node",{}).setdefault(res[1].strip(),{})
+                m=p3.match(line)
+                if m:
+                    root_dict=ret_dict.setdefault("root_node",{}).setdefault(m.groupdict()['root_node'],{})
                     continue
                 
                 ##Path(s)     : 26.1.1.2         LDP nbr: 3.3.3.3:0         Port-channel30
                 m=p1.match(line)
                 if m:
-                    r1=m.groupdict()
-                    for key,value in r1.items():
-                        root_dict.update({key.strip().lower().replace(" ","_"):value.strip()})
+                    group=m.groupdict()
+                    root_dict.update(group)
                     continue
                 
                 ##Interface   : Port-channel30 (via unicast RT)
                 m=p2.match(line)
                 if m:
-                    r2=m.groupdict()
-                    for key,value in r2.items():
-                        root_dict.update({key.strip().lower().replace(" ","_"):value.strip()})
+                    group=m.groupdict()
+                    root_dict.update(group)
                     continue
                     
                 ##Metric      : 4

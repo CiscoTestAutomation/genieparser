@@ -1,0 +1,13 @@
+Index             : 0
+Peer Address      : 5.40.26.169
+Port              : 49066
+VRF               : 0
+Source Address    : 0.0.0.0
+Type              : PROTOCOL
+State             : Active
+State Description : Connection created for protocol netconf
+Peer ID           : admin
+Receiver Name     :
+Transport         : netconf
+Use Count         : 1
+State Change Time : 10/26/21 17:27:31

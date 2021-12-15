@@ -19,15 +19,26 @@ IOSXE parsers for the following show commands:
     * show ip dhcp snooping database
     * show ip dhcp snooping database detail
     * show ip dhcp snooping binding
-'''
+    * show ip mfib
+    * show ip mfib {group}
+    * show ip mfib {group} {source}
+    * show ip mfib verbose
+    * show ip mfib {group} verbose
+    * show ip mfib {group} {source} verbose
+    * show ip mfib vrf {vrf}
+    * show ip mfib vrf {vrf} {group}
+    * show ip mfib vrf {vrf} {group} {source}
+    * show ip mfib vrf {vrf} verbose
+    * show ip mfib vrf {vrf} {group} verbose
+    * show ip mfib vrf {vrf} {group} {source} verbose'''
 
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, ListOf, And,\
+                                         Default, Use
 # parser utils
 from genie.libs.parser.utils.common import Common
 from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetailSuperParser
@@ -1730,3 +1741,353 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
                 continue
 
         return ret_dict
+
+# =====================================
+# Schema for  show ip mfib
+# Schema for  show ip mfib {group}
+# Schema for  show ip mfib {group} {source}
+# Schema for  show ip mfib verbose
+# Schema for  show ip mfib {group} verbose
+# Schema for  show ip mfib {group} {source} verbose
+# Schema for  show ip mfib vrf {vrf}
+# Schema for  show ip mfib vrf {vrf} {group}
+# Schema for  show ip mfib vrf {vrf} {group} {source}
+# Schema for  show ip mfib vrf {vrf} verbose
+# Schema for  show ip mfib vrf {vrf} {group} verbose
+# Schema for  show ip mfib vrf {vrf} {group} {source} verbose
+
+# =====================================
+class ShowIpMfibSchema(MetaParser):
+    """Schema for:
+      show ip mfib
+      show ip mfib {group}
+      show ip mfib {group} {source}
+      show ip mfib verbose
+      show ip mfib {group} verbose
+      show ip mfib {group} {source} verbose
+      show ip mfib vrf {vrf}
+      show ip mfib vrf {vrf} {group}
+      show ip mfib vrf {vrf} {group} {source}
+      show ip mfib vrf {vrf} verbose
+      show ip mfib vrf {vrf} {group} verbose
+      show ip mfib vrf {vrf} {group} {source} verbose"""
+
+    schema = {'vrf':         
+                {Any():
+                    {'address_family':
+                        {Any(): 
+                            {'multicast_group': 
+                                {Any(): 
+                                    {'source_address': 
+                                        {Any():
+                                            {                            
+                                             Optional('oif_ic_count'): str,
+                                             Optional('oif_a_count'): str,
+                                             Optional('flags'): str,
+                                             Optional('sw_packet_count'): str,                                             
+                                             Optional('sw_packets_per_second'): str,                                             
+                                             Optional('sw_average_packet_size'): str,                                             
+                                             Optional('sw_kbits_per_second'): str,  
+                                             Optional('sw_total'): str,                                             
+                                             Optional('sw_rpf_failed'): str,                                             
+                                             Optional('sw_other_drops'): str,                                             
+                                             Optional('hw_packet_count'): str,                                             
+                                             Optional('hw_packets_per_second'): str,                                             
+                                             Optional('hw_average_packet_size'): str,                                             
+                                             Optional('hw_kbits_per_second'): str,                                             
+                                             Optional('hw_total'): str,                                             
+                                             Optional('hw_rpf_failed'): str,                                             
+                                             Optional('hw_other_drops'): str,                                             
+                                             
+                                             Optional('incoming_interface_list'): 
+                                                {Any(): 
+                                                    {
+                                                     'ingress_flags': str,
+                                                    } 
+                                                },
+                                             Optional('outgoing_interface_list'): 
+                                                {Any(): 
+                                                    {
+                                                    Optional('egress_flags'): str,
+                                                    Optional('egress_rloc'): str,
+                                                    Optional('egress_underlaymcast'): str,
+                                                    Optional('egress_adj_mac'): str,
+                                                    Optional('egress_HW_pkt_count'): str,
+                                                    Optional('egress_FS_pkt_count'): str,
+                                                    Optional('egress_PS_pkt_count'): str,
+                                                    Optional('egress_pkt_rate'): str,
+                                                    },
+                                                },
+                                            },    
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    }
+                },
+            }
+            
+# =====================================
+# Parser for  show ip mfib
+# Parser for  show ip mfib {group}
+# Parser for  show ip mfib {group} {source}
+# Parser for  show ip mfib verbose
+# Parser for  show ip mfib {group} verbose
+# Parser for  show ip mfib {group} {source} verbose
+# Parser for  show ip mfib vrf {vrf}
+# Parser for  show ip mfib vrf {vrf} {group}
+# Parser for  show ip mfib vrf {vrf} {group} {source}
+# Parser for  show ip mfib vrf {vrf} verbose
+# Parser for  show ip mfib vrf {vrf} {group} verbose
+# Parser for  show ip mfib vrf {vrf} {group} {source} verbose
+
+# =====================================
+class ShowIpMfib(ShowIpMfibSchema):
+    """Parser for:
+      show ip mfib
+      show ip mfib {group}
+      show ip mfib {group} {source}
+      show ip mfib verbose
+      show ip mfib {group} verbose
+      show ip mfib {group} {source} verbose
+      show ip mfib vrf {vrf}
+      show ip mfib vrf {vrf} {group}
+      show ip mfib vrf {vrf} {group} {source}
+      show ip mfib vrf {vrf} verbose
+      show ip mfib vrf {vrf} {group} verbose
+      show ip mfib vrf {vrf} {group} {source} verbose"""
+    cli_command = ['show ip mfib',  
+                   'show ip mfib {group}',
+                   'show ip mfib {group} {source}',
+                   'show ip mfib {verbose}',
+                   'show ip mfib {group} {verbose}',
+                   'show ip mfib {group} {source} {verbose}', 
+                   'show ip mfib vrf {vrf}', 
+                   'show ip mfib vrf {vrf} {group}', 
+                   'show ip mfib vrf {vrf} {group} {source}',
+                   'show ip mfib vrf {vrf} {verbose}', 
+                   'show ip mfib vrf {vrf} {group} {verbose}',
+                   'show ip mfib vrf {vrf} {group} {source} {verbose}' ]
+    exclude = ['expire', 'uptime', 'outgoing_interface_list', 'flags']
+
+
+    def cli(self, vrf='Default',verbose='',group='',source='', address_family='ipv4',output=None):
+        cmd="show ip mfib"
+        if output is None:
+            
+            if vrf != 'Default':
+                cmd += " vrf {vrf}".format(vrf=vrf)
+                
+            if group:
+                cmd += " {group}".format(group=group)
+            if source:
+                cmd += " {source}".format(source=source)
+            if verbose:
+                cmd += " {verbose}".format(verbose=verbose)                         
+                   
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial variables
+        
+        mfib_dict = {}
+        sub_dict = {}
+        outgoing = False
+        #Default      
+        p1 = re.compile(r'^(?P<vrf>[\w]+)$')  
+        #VRF vrf1    
+        p2 = re.compile(r'^VRF +(?P<vrf>[\w]+)$') 
+        #  (*,225.1.1.1) Flags: C HW
+        # (70.1.1.10,225.1.1.1) Flags: HW
+        #  (*,FF05:1:1::1) Flags: C HW
+        # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
+        p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
+                     '(?P<multicast_group>[\w\:\.\/]+)\)'
+                     ' +Flags\: +(?P<mfib_flags>[\w \s]+)$')  
+        #0x1AF0  OIF-IC count: 0, OIF-A count: 1
+        p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
+                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)')
+        # SW Forwarding: 0/0/0/0, Other: 0/0/0
+        p5 = re.compile(r'SW Forwarding\: +(?P<sw_packet_count>[\w]+)\/'
+                     '(?P<sw_packets_per_second>[\w]+)\/'  
+                     '(?P<sw_average_packet_size>[\w]+)\/'                     
+                     '(?P<sw_kbits_per_second>[\w]+)\,'
+                     ' +Other\: +(?P<sw_total>[\w]+)\/' 
+                     '(?P<sw_rpf_failed>[\w]+)\/'
+                     '(?P<sw_other_drops>[\w]+)')  
+        #HW Forwarding:   222/0/204/0, Other: 0/0/0
+        p6 = re.compile(r'HW Forwarding\: +(?P<hw_packet_count>[\w]+)\/'
+                     '(?P<hw_packets_per_second>[\w]+)\/'  
+                     '(?P<hw_average_packet_size>[\w]+)\/'                     
+                     '(?P<hw_kbits_per_second>[\w]+)\,'
+                     ' +Other\: +(?P<hw_total>[\w]+)\/' 
+                     '(?P<hw_rpf_failed>[\w]+)\/'
+                     '(?P<hw_other_drops>[\w]+)')   
+        # LISP0.1 Flags: A NS
+        #  Null0 Flags: A
+        #  GigabitEthernet1/0/1 Flags: A NS
+                
+        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
+                         ' +Flags\: +(?P<ingress_flags>[\w\s]+)')  
+        #Vlan2001 Flags: F NS
+        #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+        p8 = re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
+                               '(\, +\((?P<egress_rloc>[\w\.]+), +(?P<egress_underlaymcast>[\w\.]+)\))?'
+                               ' +Flags\: +(?P<egress_flags>[\w\s]+)')  
+        #CEF: Adjacency with MAC: 01005E010101000A000120010800
+        p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)')
+        #CEF: Special OCE (discard)      
+        p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)')
+        #Pkts: 0/0/2    Rate: 0 pps
+        p10 = re.compile(r'^Pkts\: +(?P<egress_HW_pkt_count>[\w]+)\/'
+                         '(?P<egress_FS_pkt_count>[\w]+)\/'  
+                         '(?P<egress_PS_pkt_count>[\w]+)'
+                         ' +Rate\: +(?P<egress_pkt_rate>[\w]+)')         
+        for line in out.splitlines():
+            line = line.strip()
+            try:
+                mfib_dict['vrf']
+            except KeyError:
+                mfib_dict.setdefault('vrf',{})
+                
+            m = p1.match(line)
+            if m:
+                vrf=m.groupdict()['vrf']
+                continue
+
+            m = p2.match(line)
+            if m:
+                vrf=m.groupdict()['vrf']
+                continue
+            
+            try:
+               mfib_dict['vrf'][vrf]['address_family']
+            except KeyError:
+                mfib_data = mfib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
+                
+
+            #  (*,225.1.1.1) Flags: C HW
+            # (70.1.1.10,225.1.1.1) Flags: HW
+            #  (*,FF05:1:1::1) Flags: C HW
+            # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                source_address = group['source_address']
+                multicast_group = group['multicast_group']
+
+                mfib_data.setdefault('multicast_group',{})
+                sub_dict = mfib_data['multicast_group'].setdefault(multicast_group,{}).setdefault('source_address',{}).setdefault(source_address,{})
+
+                sub_dict['flags'] = group['mfib_flags']
+                continue
+                
+            sw_data=sub_dict
+            #0x1AF0  OIF-IC count: 0, OIF-A count: 1
+            m=p4.match(line) 
+            if m:
+                group = m.groupdict()                
+                sw_data['oif_ic_count'] = group['oif_ic_count']
+                sw_data['oif_a_count'] = group['oif_a_count']
+                continue
+            
+            # SW Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()            
+                sw_data['sw_packet_count'] = group['sw_packet_count']
+                sw_data['sw_packets_per_second'] = group['sw_packets_per_second']
+                sw_data['sw_average_packet_size'] = group['sw_average_packet_size']
+                sw_data['sw_kbits_per_second'] = group['sw_kbits_per_second']
+                sw_data['sw_total'] = group['sw_total']
+                sw_data['sw_rpf_failed'] = group['sw_total']
+                sw_data['sw_other_drops'] = group['sw_other_drops']
+                
+                continue
+            #HW Forwarding:   222/0/204/0, Other: 0/0/0
+            m=p6.match(line)
+            if m:
+                group = m.groupdict()
+            
+                sw_data['hw_packet_count'] = group['hw_packet_count']
+                sw_data['hw_packets_per_second'] = group['hw_packets_per_second']
+                sw_data['hw_average_packet_size'] = group['hw_average_packet_size']
+                sw_data['hw_kbits_per_second'] = group['hw_kbits_per_second']
+                sw_data['hw_total'] = group['hw_total']
+                sw_data['hw_rpf_failed'] = group['hw_total']
+                sw_data['hw_other_drops'] = group['hw_other_drops']
+                
+                continue
+           #### adding this code check for ingress and Egress interface differentiation
+            if re.search(' +A',line):
+                # LISP0.1 Flags: A NS
+                #  Null0 Flags: A
+                #  GigabitEthernet1/0/1 Flags: A NS
+                m=p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    ingress_interface = group['ingress_if']
+                    sw_data.setdefault('incoming_interface_list',{}).setdefault(ingress_interface,{})   
+                    sw_data['incoming_interface_list'][ingress_interface]['ingress_flags'] = group['ingress_flags']
+                    continue
+                    
+
+            #Vlan2001 Flags: F NS
+            #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+            m=p8.match(line)
+            if m:
+                group = m.groupdict()
+
+                if re.search('F',group['egress_flags']):
+                    outgoing_interface =group['egress_if']
+
+                    if re.search('\,',group['egress_if']):
+                        egress_rloc=group['egress_if'].split(',')[1] 
+                    else:                              
+                        egress_rloc = group['egress_rloc']
+
+                    egress_flags = group['egress_flags'] 
+                    egress_underlaymcast = group['egress_underlaymcast']
+
+                    
+                    egress_data=sw_data.setdefault('outgoing_interface_list',{}).setdefault(outgoing_interface,{}) 
+                                        
+                    egress_data['egress_flags'] = egress_flags  
+                    if egress_rloc:
+                        egress_data['egress_rloc'] = egress_rloc
+                    if egress_underlaymcast:
+                        egress_data['egress_underlaymcast'] = egress_underlaymcast
+                    
+                continue             
+            #CEF: Adjacency with MAC: 01005E010101000A000120010800
+            m=p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                egress_adj_mac = group['egress_adj_mac']                  
+                egress_data['egress_adj_mac'] = egress_adj_mac   
+                continue        
+            #CEF: Special OCE (discard)
+            m=p9_2.match(line)
+            if m:
+                group = m.groupdict()
+                egress_adj_mac = group['egress_adj_mac']                  
+                egress_data['egress_adj_mac'] = egress_adj_mac   
+                continue                 
+            #Pkts: 0/0/2    Rate: 0 pps
+            m=p10.match(line)
+            if m:
+                group = m.groupdict()
+                egress_HW_pkt_count = group['egress_HW_pkt_count']
+                egress_FS_pkt_count = group['egress_FS_pkt_count']
+                egress_PS_pkt_count = group['egress_PS_pkt_count']
+                egress_pkt_rate = group['egress_pkt_rate']
+                    
+                egress_data['egress_HW_pkt_count'] = egress_HW_pkt_count  
+                egress_data['egress_FS_pkt_count'] = egress_FS_pkt_count  
+                egress_data['egress_PS_pkt_count'] = egress_PS_pkt_count  
+                egress_data['egress_pkt_rate'] = egress_pkt_rate  
+
+                continue                         
+        return mfib_dict

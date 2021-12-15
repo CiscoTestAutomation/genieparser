@@ -9,6 +9,7 @@ expected_output = {
                         "r_flag": False,
                         "n_flag": False
                     },
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "TenGigabitEthernet0/0/5": {
                             "distance": 115,

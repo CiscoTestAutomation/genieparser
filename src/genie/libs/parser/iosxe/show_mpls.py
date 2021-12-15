@@ -1627,6 +1627,8 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             Any():{
                                 'prefix_or_tunnel_id':{
                                     Any(): {
+                                        Optional('prefix_type'): str,
+                                        Optional('prefix_no'): Any(),
                                         Optional('outgoing_interface'):{
                                             Any():{
                                                 Optional('bytes_label_switched'): int,
@@ -1673,15 +1675,17 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         show mpls forwarding-table vrf {vrf}
         show mpls forwarding-table interface tunnel <tunnelid>
         show mpls forwarding-table <prefix> <mask> algo <algo>
+        show mpls forwarding-table | sect <filter>
     """
 
     cli_command = ['show mpls forwarding-table vrf {vrf}',
                    'show mpls forwarding-table {prefix}',
                    'show mpls forwarding-table',
                    'show mpls forwarding-table interface tunnel {tunnelid}',
-                   'show mpls forwarding-table {prefix} {mask} algo {algo}',]
+                   'show mpls forwarding-table {prefix} {mask} algo {algo}',
+                   'show mpls forwarding-table | sect {filter}']
 
-    def cli(self, vrf="", prefix="",tunnelid="", mask="", algo="", output=None):
+    def cli(self, vrf="", prefix="",tunnelid="", filter="", mask="", algo="", output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -1691,6 +1695,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 cmd = self.cli_command[3].format(tunnelid=tunnelid)
             elif prefix and mask and algo:
                 cmd = self.cli_command[4].format(prefix=prefix, mask=mask, algo=algo)
+            elif filter:
+                cmd = self.cli_command[5].format(filter=filter)            
             else:
                 cmd = self.cli_command[2]
 
@@ -1740,6 +1746,13 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                           r'(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+) '
                           r'+\(?(?P<flexalgo_info>\d+:\d+:\d+:\d+)?\)?'
                           r' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+        
+        #23    [T]  No Label   [mdt 3001:1 0][V]   \
+        #                               200497062836  aggregate/vrf3001        
+        p2_3 = re.compile(r'^((?P<local_label>\d+|[Nn]one)\s+)?(?:\[(?P<info_tag>(?:T|M)+)\]\s+)?'
+                          r'(?P<outgoing_label>(\w+|(No|Pop) +Label))\s+\[(?P<prefix_type>\w+)\s+'
+                          r'(?P<prefix_or_tunnel_id>\S+)\s+\(*(?P<prefix_no>[a-zA-Z0-9]+)\)*\]\[V\]\s+'
+                          r'(?P<bytes_label_switched>\d*)(\s+(?P<interface>\S+))?(\s+(?P<next_hop>[\w\.]+))?$')
 
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1879,7 +1892,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
-
                 base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('local_label', {}). \
                                            setdefault(local_label, {}). \
@@ -1915,6 +1927,43 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                     })
                 continue
 
+            #23    [T]  No Label   [mdt 3001:1 0][V]   \
+            #                               200497062836  aggregate/vrf3001            
+            m = p2_3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['local_label']:
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
+
+                outgoing_label = group['outgoing_label']
+                prefix_or_tunnel_id = group['prefix_or_tunnel_id']
+
+                base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                                           setdefault('local_label', {}). \
+                                           setdefault(local_label, {}). \
+                                           setdefault('outgoing_label_or_vc', {}). \
+                                           setdefault(outgoing_label, {}). \
+                                           setdefault('prefix_or_tunnel_id', {}). \
+                                           setdefault(prefix_or_tunnel_id, {})
+
+                if group['interface']:
+                    interface = Common.convert_intf_name(group['interface'])
+                else:
+                    interface = outgoing_label
+                prefix_no = int(group['prefix_no']) if group['prefix_no'].isdigit() else group['prefix_no']
+                base_feature_dict.update({
+                    'prefix_type': group['prefix_type'],
+                    'prefix_no': prefix_no
+                })
+                feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
+                if group['bytes_label_switched']:
+                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                continue
+                
             #     MAC/Encaps=18/18, MRU=1530, Label Stack{}
             m = p3.match(line)
             if m:
@@ -1966,7 +2015,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 continue
 
         return result_dict
-
 
 class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
     """Parser for

@@ -1,0 +1,15 @@
+COL-B-ASR1001-X-1#show romvar
+ROMMON variables:
+ PS1 = rommon ! >
+ LICENSE_BOOT_LEVEL =
+ CRYPTO_BI_THPUT = 10000000
+ MCP_STARTUP_TRACEFLAGS = 00000000:00000000
+ RET_2_RTS =
+ DEVICE_MANAGED_MODE = controller
+ EULA_ACCEPTED = TRUE
+ BOOT = bootflash:packages.conf,1;bootflash:prev_packages.conf,1;
+ ? = 1
+ CRASHINFO = bootflash:GD_crashinfo_RP_00_00_20211029-173344-UTC
+ BSI = 0
+ RET_2_RCALTS =
+ RANDOM_NUM = 2137168332

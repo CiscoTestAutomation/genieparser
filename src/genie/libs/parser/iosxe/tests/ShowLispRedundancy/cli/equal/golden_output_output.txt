@@ -1,0 +1,32 @@
+MSMR#show lisp all redundancy
+Redundancy for LISP 0
+
+  Active RP
+  SSO enabled
+  Checkpoint connection open
+  Peer redundancy state: synchronized
+
+Statistic:
+
+  Number of Bulk Syncs started: 1
+  Last Bulk Sync started: Jan 23 15:55:26.712 PST
+  Last Bulk Sync finished: Jan 23 15:55:26.713 PST
+  Last time synchronization was lost: never
+  Queued/max checkpoint requests: 0/17
+  Unacknowledged/max checkpoint requests: 16/17
+
+Redundancy for LISP 1
+
+  Standby RP
+  SSO disabled
+  Checkpoint connection closed
+  Peer redundancy state: unsynchronized
+
+Statistic:
+
+  Number of Bulk Syncs started: 2
+  Last Bulk Sync started: never
+  Last Bulk Sync finished: never
+  Last time synchronization was lost: Jan 23 15:55:26.713 PST
+  Queued/max checkpoint requests: 2/14
+  Unacknowledged/max checkpoint requests: 14/14
