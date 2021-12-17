@@ -1,0 +1,18 @@
+show aaa cache group radiusGroup profile cacheUser1
+
+ SMD AAA Auth Cache entries:
+
+MAC ADDR:     	C025.5C14.F097
+Profile Name: 	CACHE-PROFILE
+User Name:    	cacheUser1
+Timeout:      	120
+
+MAC ADDR:     	C025.5C14.F0CA
+Profile Name: 	CACHE-PROFILE
+User Name:    	cacheUser1
+Timeout:      	120
+
+
+ Total number of Cache entries is 4
+----------------------------------------------------------
+m10#

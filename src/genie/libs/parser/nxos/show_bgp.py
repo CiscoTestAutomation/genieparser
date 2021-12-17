@@ -9276,16 +9276,34 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                       'E': 'established',
                       'C': 'closing',
                       'S': 'shutdown'}
+        # Total peers 4, established peers 3
         p1 = re.compile(r'^Total +peers +(?P<total>\d+), +'
                             'established +peers +(?P<established>\d+)$')
+        # ASN 100
         p2 = re.compile(r'^ASN +(?P<asn>\d+)$')
+        # VRF default, local ASN 100
         p3 = re.compile(r'^VRF +(?P<vrf>\S+), +'
                             'local +ASN +(?P<asn>\d+)$')
+        # peers 4, established peers 3, local router-id 10.1.1.1
         p4 = re.compile(r'^peers +(?P<peer>\d+), +'
                             'established +peers +(?P<established>\d+), +'
                             'local +router\-id +(?P<id>[\w\.\:]+)$')
+        # 10.51.1.101        300 2     00:30:01|never   |never    I   0/0          2/0
         p5 = re.compile(r'^(?P<nei>[\w\.\:]+) +'
                             '(?P<asn>\d+) +'
+                            '(?P<dropped>\d+) +'
+                            '(?P<last_flap>[\w\.\:]+) *\|'
+                            '(?P<last_read>[\w\.\:]+) *\|'
+                            '(?P<last_write>[\w\.\:]+) +'
+                            '(?P<state>[a-zA-Z]) +'
+                            '(?P<local_port>\d+)\/'
+                            '(?P<remote_port>\d+) +'
+                            '(?P<notifications_sent>\d+)\/'
+                            '(?P<notifications_received>\d+)$')
+        # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
+        p6_1 = re.compile(r'^(?P<nei>[a-zA-Z0-9\.\:\/\[\]\,\%]+)$')
+        #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
+        p6_2 = re.compile(r'^(?P<asn>\d+) +'
                             '(?P<dropped>\d+) +'
                             '(?P<last_flap>[\w\.\:]+) *\|'
                             '(?P<last_read>[\w\.\:]+) *\|'
@@ -9342,41 +9360,89 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
             # 10.51.1.101        300 2     00:30:01|never   |never    I   0/0          2/0
             m = p5.match(line)
             if m:
-                nei = m.groupdict()['nei']
+                group = m.groupdict()
+
+                nei = group['nei']
                 if 'neighbor' not in ret_dict['vrf'][vrf]:
                     ret_dict['vrf'][vrf]['neighbor'] = {}
                 if nei not in ret_dict['vrf'][vrf]['neighbor']:
                     ret_dict['vrf'][vrf]['neighbor'][nei] = {}
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
-                    int(m.groupdict()['asn'])
+                    int(group['asn'])
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
-                    int(m.groupdict()['dropped'])
+                    int(group['dropped'])
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['last_flap'] = \
-                    m.groupdict()['last_flap']
+                    group['last_flap']
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['last_read'] = \
-                    m.groupdict()['last_read']
+                    group['last_read']
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['last_write'] = \
-                    m.groupdict()['last_write']
+                    group['last_write']
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['state'] = \
-                    status_map[m.groupdict()['state']]
+                    status_map[group['state']]
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['local_port'] = \
-                    int(m.groupdict()['local_port'])
+                    int(group['local_port'])
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['remote_port'] = \
-                    int(m.groupdict()['remote_port'])
+                    int(group['remote_port'])
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_sent'] = \
-                    int(m.groupdict()['notifications_sent'])
+                    int(group['notifications_sent'])
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_received'] = \
-                    int(m.groupdict()['notifications_received'])
+                    int(group['notifications_received'])
+                continue
+
+            # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
+            m = p6_1.match(line)
+            if m:
+                nei = m.groupdict()['nei']
+                if 'neighbor' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['neighbor'] = {}
+                if nei not in ret_dict['vrf'][vrf]['neighbor']:
+                    ret_dict['vrf'][vrf]['neighbor'][nei] = {}
+                continue
+
+            #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
+                    int(group['asn'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
+                    int(group['dropped'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_flap'] = \
+                    group['last_flap']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_read'] = \
+                    group['last_read']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_write'] = \
+                    group['last_write']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['state'] = \
+                    status_map[group['state']]
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['local_port'] = \
+                    int(group['local_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_port'] = \
+                    int(group['remote_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_sent'] = \
+                    int(group['notifications_sent'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_received'] = \
+                    int(group['notifications_received'])
                 continue
 
         return ret_dict

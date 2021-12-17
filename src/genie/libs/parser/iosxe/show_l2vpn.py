@@ -2033,11 +2033,11 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         # Next Hop(s):                L:17 Ethernet1/0 service instance 12
         #                             L:17 3.3.3.1
         #                             L:17 5.5.5.1
-        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>.+)$')
-        p7 = re.compile(r'^(?P<next_hop>.+)$')
+        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
+        p7 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
 
         # Local Address:              4.4.4.1
-        p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
+        p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')
 
         # Sequence Number:            0
         p9 = re.compile(r'^Sequence Number:\s+(?P<seq_number>\d+)$')
@@ -2853,11 +2853,11 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
         #                            L:17 5.5.5.1
-        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>.+)$')
-        p8 = re.compile(r'^(?P<next_hop>.+)$')
+        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
+        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
 
         # Local Address:             4.4.4.1
-        p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
+        p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')
 
         # Sequence Number:           0
         p10 = re.compile(r'^Sequence Number:\s+(?P<seq_number>\d+)$')
@@ -3328,8 +3328,9 @@ class ShowStormControl(ShowStormControlSchema):
 
         #Te1/0/3         Forwarding           5.00%        1.00%          2.00%    Shutdown     B
         #Te1/0/3         Forwarding           5.00%        1.00%          3.00%    Shutdown     M
+        #Gi0/2/0         Link Down            0.70%        0.70%          0.00%    Shutdown     B
         p1 = re.compile(
-            r'^(?P<interface>(\S+))\s+(?P<state>([A-Za-z]+))\s+(?P<upper>\d+.\d+)%\s+(?P<lower>\d+.\d+)%\s+(?P<current>\d+.\d+)%\s+(?P<action>\S+)\s+(?P<type>\S)')
+            r'^(?P<interface>(\S+))\s+(?P<state>([A-Za-z]+\s?[A-Za-z]+))\s+(?P<upper>\d+.\d+)%\s+(?P<lower>\d+.\d+)%\s+(?P<current>\d+.\d+)%\s+(?P<action>\S+)\s+(?P<type>\S)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -3460,7 +3461,8 @@ class ShowL2vpnEvpnPeersVxlanDetail(ShowL2vpnEvpnPeersVxlanDetailSchema):
         p4 = re.compile(r'^Peer IP Address:\s+(?P<address>[0-9a-fA-F\.:]+)$')
 
         # UP time:          1w6d
-        p5 = re.compile(r'^UP time:\s+(?P<time>\w*)$')
+        # UP time:          00:15:49
+        p5 = re.compile(r'^UP time:\s+(?P<time>[\w:]*)$')
 
         # Number of routes
         p6 = re.compile(r'^Number of routes$')

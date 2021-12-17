@@ -1,0 +1,6 @@
+Tunnel0* 
+  Type       : PIM Encap
+  RP         : 4.4.4.4
+  Source     : 87.1.1.1
+  State      : UP
+  Last event : Created (2d13h)

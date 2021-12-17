@@ -1,0 +1,2 @@
+ID         Type       State      State Description
+1          Configured Valid      multi-word description

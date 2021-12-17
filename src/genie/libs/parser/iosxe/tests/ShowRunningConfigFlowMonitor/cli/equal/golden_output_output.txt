@@ -1,0 +1,46 @@
+Current configuration:
+!
+flow monitor monitor_l2_in
+ exporter StealthWatch_Exporter
+ cache timeout active 60
+ record record_l2_in
+!
+!
+flow monitor monitor_l2_out
+ cache timeout active 180
+ record record_l2_out
+!
+!
+flow monitor monitor_ipv4_in
+ exporter StealthWatch_Exporter
+ cache timeout active 60
+ record record_ipv4_in
+!
+!
+flow monitor monitor_ipv4_out
+ exporter StealthWatch_Exporter
+ cache timeout active 60
+ record record_ipv4_out
+!
+!
+flow monitor monitor_ipv6_in
+ exporter StealthWatch_Exporter
+ cache timeout active 60
+ record record_ipv6_in
+!
+!
+flow monitor monitor_ipv6_out
+ cache timeout active 180
+ record record_ipv6_out
+!
+!
+flow monitor v4_mon_sgt
+ record v4-rec_sgt
+!
+!
+flow monitor v4_mon_sgt-input
+ record v4-rec_sgt-input
+!
+!
+flow monitor v4_mon_sgt-output
+ record v4-rec_sgt-output

@@ -1,0 +1,17 @@
+NAME: "0/0", DESCR: "Cisco XRv9K Centralized Line Card"
+PID: R-IOSXRV9000-LC-C , VID: V01, SN: AB7FB950B88
+
+NAME: "0/0/0", DESCR: "N/A"
+PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
+
+NAME: "0/0/1", DESCR: "N/A"
+PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
+
+NAME: "0/0/2", DESCR: "N/A"
+PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
+
+NAME: "0/RP0", DESCR: "Cisco XRv9K Centralized Route Processor"
+PID: R-IOSXRV9000-RP-C , VID: V01, SN: DEB3B4DE58E
+
+NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
+PID: R-IOSXRV9000-CC   , VID: V01, SN: E289E87566C

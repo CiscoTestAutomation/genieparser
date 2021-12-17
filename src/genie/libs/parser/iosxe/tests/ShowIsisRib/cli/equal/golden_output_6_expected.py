@@ -11,6 +11,7 @@ expected_output = {
                     },
                     "source_router_id": "4.4.4.4",
                     "prefix_sid_index": 4,
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "MPLS-SR-Tunnel6": {
                             "distance": 115,

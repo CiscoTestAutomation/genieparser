@@ -1,7 +1,14 @@
+Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 11:43:15.743 UTC Wed Nov 17 2021
+
+Account Information:
+  Smart Account: <none>
+  Virtual Account: <none>
+
 License Usage:
-License                  Entitlement Tag                Count Status
------------------------------------------------------------------------------
-C9300 48P DNA Advantage  (C9300-48 DNA Advantage)          2 AUTHORIZED
-C9300 48P Network Adv... (C9300-48 Network Advan...)       2 AUTHORIZED
-C9300 24P Network Adv... (C9300-24 Network Advan...)       1 AUTHORIZED
-C9300 24P DNA Advantage  (C9300-24 DNA Advantage)          1 AUTHORIZED
+  License                 Entitlement Tag               Count Status
+  -----------------------------------------------------------------------------
+  network-advantage       (C9300-24 Network Advan...)       2 IN USE
+  dna-advantage           (C9300-24 DNA Advantage)          2 IN USE
+  network-advantage       (C9300-48 Network Advan...)       1 IN USE
+  dna-advantage           (C9300-48 DNA Advantage)          1 IN USE

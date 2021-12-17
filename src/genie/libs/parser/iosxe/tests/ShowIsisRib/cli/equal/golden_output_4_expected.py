@@ -11,6 +11,7 @@ expected_output = {
                     },
                     "source_router_id": "3.3.3.3",
                     "prefix_sid_index": 3,
+                    'strict_sid_bound_attribute_te': False,
                     "via_interface": {
                         "Ethernet1/2": {
                             "distance": 115,

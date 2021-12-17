@@ -2,6 +2,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Optional, Any
+from genie.parsergen import oper_fill_tabular
 
 # ===================================
 # Schema for:
@@ -2466,4 +2467,35 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
 
         return ret_dict
 
+class ShowCtsRolebasedSgtMapIpSchema(MetaParser):
+
+    ''' Schema for "show cts role-based sgt-map {ip}" '''
+
+    schema = {
+        Any(): {
+            'ip': str,
+            'sgt': str,
+            'source': str,
+        }
+    }
+
+class ShowCtsRolebasedSgtMapIp(ShowCtsRolebasedSgtMapIpSchema):
+    """Schema for show cts role-based sgt-map {ip}"""
+
+    cli_command = ['show cts role-based sgt-map {ip}',
+                   'show cts role-based sgt-map vrf {vrf} {ip}']
+    def cli(self, ip, vrf = None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf, ip=ip)
+            else:
+                cmd = self.cli_command[0].format(ip=ip)
+            output = self.device.execute(cmd)
+        return oper_fill_tabular(
+            header_fields=['IP Address', 'SGT', 'Source'],
+            label_fields= ['ip', 'sgt', 'source'],
+            device_output=output,
+            device_os='iosxe',
+            index=[0]
+        ).entries
 

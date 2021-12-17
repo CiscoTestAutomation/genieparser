@@ -96,12 +96,12 @@ class ShowDmvpn(ShowDmvpnSchema):
         #                           172.30.90.25   UP    6d12h     S
         #     2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
         #                          172.30.72.72    UP 00:29:40   DT1
-        p3 = re.compile(r'((?P<ent>(\d+))'
-                        r' +(?P<peers>[a-z0-9\.\:]+)'
+        p3 = re.compile(r'^((?P<ent>(\d+))'
+                        r' +(?P<peers>([a-z0-9\.\:]+|UNKNOWN))'
                         r' +)?(?P<tunnel_addr>[a-z0-9\.\:]+)'
                         r' +(?P<state>[a-zA-Z]+)'
                         r' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
-                        r' +(?P<attrb>(\w)+)')
+                        r' +(?P<attrb>(\w)+)$')
 
         # Defines the "for" loop, to pattern match each line of output
 

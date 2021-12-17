@@ -21,3 +21,15 @@ Number of routes
   MAC/IP:         0
   IMET:           1
   Total:          1
+
+Interface:        nve1
+Local VNI:        20013
+Peer VNI:         20013
+Peer IP Address:  11.11.11.2
+UP time:          00:15:49
+Number of routes
+  EAD per-EVI:    0
+  MAC:            1
+  MAC/IP:         1
+  IMET:           1
+  Total:          3

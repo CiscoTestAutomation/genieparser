@@ -1,0 +1,15 @@
+P1# show ipv6 neighbor 
+
+Flags: # - Adjacencies Throttled for Glean
+       G - Adjacencies of vPC peer with G/W bit
+       R - Adjacencies learnt remotely
+       CP - Added via L2RIB, Control plane Adjacencies
+       PS - Added via L2RIB, Peer Sync
+       RO - Re-Originated Peer Sync Entry
+
+IPv6 Adjacency Table for VRF default
+Total number of entries: 2
+Address         Age       MAC Address     Pref Source     Interface
+2001:db8:2::3   00:00:10  0000.0000.0203  50   icmpv6     Ethernet1/46        
+2001:db8:2::4   00:00:05  0000.0000.0204  50   icmpv6     Ethernet1/46 
+	

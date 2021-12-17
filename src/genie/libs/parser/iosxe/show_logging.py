@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * show logging onboard rp active status
     * show logging onboard rp active {include}
 '''
+
 # Python
 import re
 

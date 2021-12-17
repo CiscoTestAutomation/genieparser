@@ -1,0 +1,114 @@
+Detailed LSPA info for all LSPA: (# of entries:22)
+LSPA:NPD:lspa_rec:0x118805ecce0 lspa:0x118805ece30 rm_hdl:0x7f9b15b39e08 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,21][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:12 l3nh_oid:1510 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:12 oid:1510 vpn_prop[bgp_nh,vpn_lbl]:[1495,21] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805ed040 lspa:0x118805ed190 rm_hdl:0x7f9b16680368 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,23][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:14 l3nh_oid:1511 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:14 oid:1511 vpn_prop[bgp_nh,vpn_lbl]:[1495,23] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x1188056cf18 lspa:0x118805feb00 rm_hdl:0x7f9b169d5638 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,24][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:15 l3nh_oid:1513 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:15 oid:1513 vpn_prop[bgp_nh,vpn_lbl]:[1495,24] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805fd8d0 lspa:0x118805fda20 rm_hdl:0x7f9b169e4928 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,25][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:16 l3nh_oid:1514 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:16 oid:1514 vpn_prop[bgp_nh,vpn_lbl]:[1495,25] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805fdfe8 lspa:0x118805fe138 rm_hdl:0x7f9b169d68c8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,26][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:17 l3nh_oid:1515 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:17 oid:1515 vpn_prop[bgp_nh,vpn_lbl]:[1495,26] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805f2818 lspa:0x118805f2968 rm_hdl:0x7f9b169e5418 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,27][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:18 l3nh_oid:1516 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:18 oid:1516 vpn_prop[bgp_nh,vpn_lbl]:[1495,27] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805646b0 lspa:0x11880564800 rm_hdl:0x7f9b169ed478 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,28][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:19 l3nh_oid:1517 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:19 oid:1517 vpn_prop[bgp_nh,vpn_lbl]:[1495,28] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x11880564a10 lspa:0x11880564b60 rm_hdl:0x7f9b169edcb8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,29][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:20 l3nh_oid:1521 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:20 oid:1521 vpn_prop[bgp_nh,vpn_lbl]:[1495,29] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x11880564d70 lspa:0x118804eb1b0 rm_hdl:0x7f9b169ee4f8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,30][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:21 l3nh_oid:1522 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:21 oid:1522 vpn_prop[bgp_nh,vpn_lbl]:[1495,30] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118804eb3c0 lspa:0x118804eb510 rm_hdl:0x7f9b15b3bec8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,31][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:22 l3nh_oid:1523 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:22 oid:1523 vpn_prop[bgp_nh,vpn_lbl]:[1495,31] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805f1690 lspa:0x118805f17e0 rm_hdl:0x7f9b169e5c58 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1010,32][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:24 l3nh_oid:1525 paths:1 dst_oid:1495]
+    SDK: vpn_enap:gid:24 oid:1525 vpn_prop[bgp_nh,vpn_lbl]:[1495,32] 
+       encap_dst_oid:1495 la_prefix_object_base(oid=1495)
+LSPA:NPD:lspa_rec:0x118805f3958 lspa:0x118805f3aa8 rm_hdl:0x7f9b1618cce8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,22][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:2 l3nh_oid:1500 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:2 oid:1500 vpn_prop[bgp_nh,vpn_lbl]:[1497,22] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x11880547b30 lspa:0x11880547c80 rm_hdl:0x7f9b15b87248 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,23][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:3 l3nh_oid:1501 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:3 oid:1501 vpn_prop[bgp_nh,vpn_lbl]:[1497,23] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x11880567858 lspa:0x118805679a8 rm_hdl:0x7f9b15b3aaa8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,24][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:4 l3nh_oid:1502 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:4 oid:1502 vpn_prop[bgp_nh,vpn_lbl]:[1497,24] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118804f0650 lspa:0x11880488100 rm_hdl:0x7f9b15dd4a48 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,25][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:5 l3nh_oid:1503 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:5 oid:1503 vpn_prop[bgp_nh,vpn_lbl]:[1497,25] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118804882d8 lspa:0x11880488428 rm_hdl:0x7f9bac149ff8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,26][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:6 l3nh_oid:1504 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:6 oid:1504 vpn_prop[bgp_nh,vpn_lbl]:[1497,26] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x11880488638 lspa:0x118805f1908 rm_hdl:0x7f9bac126088 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,27][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:7 l3nh_oid:1505 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:7 oid:1505 vpn_prop[bgp_nh,vpn_lbl]:[1497,27] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118805f1ab0 lspa:0x118805f1c00 rm_hdl:0x7f9b160ee5b8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,28][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:8 l3nh_oid:1506 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:8 oid:1506 vpn_prop[bgp_nh,vpn_lbl]:[1497,28] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118805f1e10 lspa:0x118802a5350 rm_hdl:0x7f9b145f1278 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,29][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:9 l3nh_oid:1507 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:9 oid:1507 vpn_prop[bgp_nh,vpn_lbl]:[1497,29] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118802a5560 lspa:0x118802a56b0 rm_hdl:0x7f9b169e5ab8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,30][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:10 l3nh_oid:1508 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:10 oid:1508 vpn_prop[bgp_nh,vpn_lbl]:[1497,30] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118802a58c0 lspa:0x118804cdf18 rm_hdl:0x7f9b15b3a7d8 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,31][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:11 l3nh_oid:1509 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:11 oid:1509 vpn_prop[bgp_nh,vpn_lbl]:[1497,31] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+LSPA:NPD:lspa_rec:0x118805d6548 lspa:0x118805d6698 rm_hdl:0x7f9b15b3aa38 mode:PER_PREFIX ref_cnt:1
+       lspakey[pfx1_gid,vpnlbl]:[1012,32][0,0] mode:2
+       lspa:[vrf_id:6 vpn_encap_gid:13 l3nh_oid:1512 paths:1 dst_oid:1497]
+    SDK: vpn_enap:gid:13 oid:1512 vpn_prop[bgp_nh,vpn_lbl]:[1497,32] 
+       encap_dst_oid:1497 la_prefix_object_base(oid=1497)
+
+
+

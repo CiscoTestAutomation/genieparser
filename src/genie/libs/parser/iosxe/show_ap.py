@@ -3,7 +3,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-
 # ====================
 # Schema for:
 #  * 'show ap summary'
@@ -20,6 +19,7 @@ class ShowApSummarySchema(MetaParser):
                 "ethernet_mac": str,
                 "radio_mac": str,
                 "location": str,
+                "country": str,
                 "ap_ip_address": str,
                 "state": str
             }
@@ -59,9 +59,13 @@ class ShowApSummary(ShowApSummarySchema):
 
         # Number of APs: 149
         ap_neighbor_count_capture = re.compile(r"^Number\s+of\s+APs:\s+(?P<ap_neighbor_count>\d+)")
-        # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
+
+        # AP002C.C862.E708  2      AIR-AP1815I-A-K9      002c.c862.e708  002c.c88a.fd20  default location    US    9.4.57.241    Registered
         ap_neighbor_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)(?P<location>.*)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>(Registered))")
+               r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+" 
+               "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<location>.*)\s+" 
+               "(?P<country>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+" 
+               "(?P<state>(Registered))")
 
         remove_lines = ('AP Name', '----')
 
@@ -1264,11 +1268,15 @@ class ShowApConfigGeneralSchema(MetaParser):
 class ShowApConfigGeneral(ShowApConfigGeneralSchema):
     """Parser for show ap config general"""
 
-    cli_command = 'show ap config general'
+    cli_command = ['show ap name {ap_name} config general','show ap config general']
 
-    def cli(self, output=None):
+    def cli(self, ap_name='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if ap_name:
+                cmd = self.cli_command[0].format(ap_name=ap_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)	
         else:
             out = output
             
@@ -2780,7 +2788,7 @@ class ShowApTagSummary(ShowApTagSummarySchema):
                 continue
 
         return ap_info_obj    
-
+        
 
 class ShowApStatusSchema(MetaParser):
     """Schema for show ap status."""
@@ -2824,5 +2832,4 @@ class ShowApStatus(ShowApStatusSchema):
                     'country': groups['country']
                 })
         return ret_dict
-
 

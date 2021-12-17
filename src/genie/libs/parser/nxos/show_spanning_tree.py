@@ -4,6 +4,7 @@ NXOS parsers for the following show commands:
     * show spanning-tree detail
     * show spanning-tree mst detail
     * show spanning-tree summary
+    * show spanning-tree issu-impact
 '''
 
 
@@ -915,3 +916,131 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
                 continue
 
         return ret_dict
+
+class ShowSpanningTreeIssuImpactSchema(MetaParser):
+    """Schema for show spanning-tree issu-impact"""
+    schema = {
+        'criteria1': {
+            'value': str,
+            'status': str,
+        },
+        'criteria2': {
+            'value': str,
+            'status': str,
+        },
+        'criteria3': {
+            'value': str,
+            'status': str,
+            Optional('non_edge_port'): {
+                Any(): {
+                    'vlan': int,
+                    'role': str,
+                    'sts': str,
+                    'tree_type': str,
+                    'instance': str,
+                },
+            },
+        },
+        'issu_proceed_status': str
+    }
+
+class ShowSpanningTreeIssuImpact(ShowSpanningTreeIssuImpactSchema):
+    """Schema for show spanning-tree issu-impact."""
+
+    cli_command = [
+        'show spanning-tree issu-impact'
+    ]
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+
+        parsed_dict = {}
+
+        # 1. No Topology change must be active in any STP instance
+        p1_a = re.compile(r'^1. (?P<value1>No Topology change must be active in any STP instance)$')
+
+        # Criteria 1 PASSED !!
+        p1_b = re.compile(r'^Criteria 1 (?P<status1>[\w]+)')
+
+        # 2. Bridge assurance(BA) should not be active on any port (except MCT)
+        p2_a = re.compile(r'^2. (?P<value2>Bridge assurance\(BA\) should not be active on any port).*$')
+
+        # Criteria 2 PASSED !!
+        p2_b = re.compile(r'^Criteria 2 (?P<status2>[\w]+)')
+
+        # 3. There should not be any Non Edge Designated Forwarding port (except MCT)
+        p3_a = re.compile(r'^3. (?P<value3>There should not be any Non Edge Designated Forwarding port).*$')
+
+        # Criteria 3 FAILED
+        p3_b = re.compile(r'^Criteria 3 (?P<status3>[\w]+)')
+
+        # Ethernet1/21        1 Desg FWD  MST           0
+        # Ethernet1/20        1 Desg FWD  MST           0
+        p4 = re.compile(
+            r'^(?P<port>[\w]+\/\d+)\s+(?P<vlan>[\d]+)\s+(?P<role>[\w]+)\s+(?P<sts>[\w]+)\s+(?P<tree_type>[\w]+)\s+(?P<instance>[\d]+)$')
+
+        # ISSU Cannot Proceed! Change the above Config
+        p5 = re.compile(r'^(?P<proceed>ISSU [\w\s]+).*$')
+
+        for line in out.splitlines():
+            line_strip = line.strip()
+            m = p1_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria1 = parsed_dict.setdefault('criteria1', {})
+                criteria1['value'] = group['value1']
+                continue
+
+            m = p1_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria1['status'] = group['status1']
+                continue
+
+            m = p2_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria2 = parsed_dict.setdefault('criteria2', {})
+                criteria2['value'] = group['value2']
+                continue
+
+            m = p2_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria2['status'] = group['status2']
+                continue
+
+            m = p3_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria3 = parsed_dict.setdefault('criteria3', {})
+                criteria3['value'] = group['value3']
+                continue
+
+            m = p3_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria3['status'] = group['status3']
+                continue
+
+            m = p4.match(line_strip)
+            if m:
+                group = m.groupdict()
+                portedge = group['port']
+                result_dict = criteria3.setdefault('non_edge_port', {}).setdefault(portedge, {})
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['role'] = group['role']
+                result_dict['sts'] = group['sts']
+                result_dict['tree_type'] = group['tree_type']
+                result_dict['instance'] = group['instance']
+                continue
+
+            m = p5.match(line_strip)
+            if m:
+                group = m.groupdict()
+                parsed_dict['issu_proceed_status'] = group['proceed']
+                continue
+
+        return parsed_dict
+
