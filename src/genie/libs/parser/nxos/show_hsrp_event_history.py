@@ -43,13 +43,13 @@ class ShowHsrpEventHistoryErrors(ShowHsrpEventHistoryErrorsSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command)
 
         event_history_errors_dict={}
         #[2] 2021 Apr 21 12:28:21.913775 [hsrp_engine] E_DEBUG    [24399]:(Acast) Get Bundle For IOD Failed: Reason='No bundle found for VLAN', AddrType=IPv4, VLAN=1001
         p1 = re.compile(r'^\[(?P<log_num>\d+)\]\s+(?P<date>\d{4} [a-zA-Z]+ [0-9]{1,2}) (?P<time>[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\.[0-9]{6}) \[(?P<proc_name>.+)\] E_DEBUG\s+\[(?P<pid>\d+)\]:(?P<msg>.+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             #[2] 2021 Apr 21 12:28:21.913775 [hsrp_engine] E_DEBUG    [24399]:(Acast) Get Bundle For IOD Failed: Reason='No bundle found for VLAN', AddrType=IPv4, VLAN=1001  
             m = p1.match(line)
@@ -102,14 +102,14 @@ class ShowHsrpEventHistoryDebugs(ShowHsrpEventHistoryDebugsSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command)
 
         event_history_debugs_dict={}
 
         #[1] 2021 Apr 30 05:43:16.822827 [hsrp_engine] E_DEBUG    [24399]:[0]:  Time Taken For Show Run: Time=0.015553
         p1 = re.compile(r'^\[(?P<log_num>\d+)\]\s+(?P<date>\d{4} [a-zA-Z]+ [0-9]{1,2}) (?P<time>[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\.[0-9]{6}) \[(?P<proc_name>.+)\] E_DEBUG\s+\[(?P<pid>\d+)\]:\[\d+\]:\s*(?P<msg>.+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             #[1] 2021 Apr 30 05:43:16.822827 [hsrp_engine] E_DEBUG    [24399]:[0]:  Time Taken For Show Run: Time=0.015553
             m = p1.match(line)
@@ -170,7 +170,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command)
 
         event_history_msgs_dict={}
 
@@ -186,7 +186,7 @@ class ShowHsrpEventHistoryMsgs(ShowHsrpEventHistoryMsgsSchema):
         #HA_SEQNO:0X00000000, RRtoken:0x0A8359C5, Sync:UNKNOWN, Payloadsize:308
         p3 = re.compile(r'^\s*HA_SEQNO:(?P<ha_seqno>[^,]+), RRtoken:(?P<rr_token>[^,]+), Sync:(?P<sync>[^,]+), Payloadsize:(\d+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             #[37] 2021 Aug 13 13:26:35.415873 [hsrp_engine] E_DEBUG_DSF    [/Class.cc:331]initRnPrefixTable
