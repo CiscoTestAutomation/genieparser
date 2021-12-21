@@ -6,7 +6,6 @@ Parser for the following show commands:
 
 # Python
 import re
-import logging
 from collections import OrderedDict
 
 # Metaparser
@@ -219,6 +218,12 @@ class ShowAccessList(ShowAccessListSchema):
             if line == '':
                 continue
 
+            # access-list acl1; 8 elements; name hash: 0xffffffff
+            # access-list acl2; 50 elements; name hash: 0xffffffff
+            # access-list acl3; 236 elements; name hash: 0xffffffff
+            # access-list acl4; 5 elements; name hash: 0xffffffff
+            # access-list acl5; 5 elements; name hash: 0xffffffff
+
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -228,6 +233,12 @@ class ShowAccessList(ShowAccessListSchema):
                 acl_dict.update({'name_hash': groups['namehash'] })
                 continue
             
+            # access-list acl1 line 1 extended permit udp host 10.38.193.26 host 9.0.128.50 eq domain log informational interval 300 (hitcnt=0) 0xffffffff
+            # access-list acl1 line 2 extended permit tcp object-group group-In object-group group-Out eq bgp log disable (hitcnt=0) 0xffffffff 
+            # access-list acl1 line 3 extended deny ip any any log informational interval 300 (hitcnt=60) 0xffffffff
+            # access-list acl1 line 4 extended deny ip any4 any4 log informational interval 300 (hitcnt=0) 0xffffffff
+            # access-list acl1 line 5 extended deny ip any6 any6 log informational interval 300 (hitcnt=0) 0xffffffff
+
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -279,6 +290,7 @@ class ShowAccessList(ShowAccessListSchema):
                                     dst_line_entry.update({'acl_hash': groups['acl_hash'] })
                 continue
 
+            # access-list acl1 line 6 remark this is a remark
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -291,6 +303,7 @@ class ShowAccessList(ShowAccessListSchema):
                 continue
 
 
+            # access-list cached ACL log flows: total 0, denied 0 (deny-flow-max 4096)
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
@@ -301,6 +314,7 @@ class ShowAccessList(ShowAccessListSchema):
                 continue
 
 
+            # alert-interval 300
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
