@@ -549,3 +549,41 @@ class ShowIpv6MldSsmMap(ShowIpv6MldSsmMapSchema):
                 continue
 
         return ret_dict
+
+
+#====================================================
+# Parser for show ipv6 mld snooping address count
+#====================================================
+
+class ShowIpv6MldSnoopingAddressCountSchema(MetaParser):
+    schema = {
+        'total_number_of_groups': {
+            'mld_groups_count': int
+        }
+    }
+
+
+class ShowIpv6MldSnoopingAddressCount(ShowIpv6MldSnoopingAddressCountSchema):
+
+    cli_command = 'show ipv6 mld snooping address count'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # Total number of groups:   551
+        p1 = re.compile(r'^Total\s+number\s+of\s+groups\:\s+(?P<mld_groups_count>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of groups:   551
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_groups_count_dict = ret_dict.setdefault('total_number_of_groups', {})
+                igmp_groups_count_dict['mld_groups_count'] = int(group['mld_groups_count'])
+
+        return ret_dict

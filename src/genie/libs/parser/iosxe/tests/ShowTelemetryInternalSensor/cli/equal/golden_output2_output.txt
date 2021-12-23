@@ -1,0 +1,28 @@
+  Subscription ID: 2147483651
+  Sensor Type: yang-push periodic
+    Filter type: xpath
+    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status|/mdt-oper-v2-data/mdt-subscriptions
+  Data Collectors
+    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+    DC: ei_do periodic, SubFilter: /mdt-oper-v2-data/mdt-subscriptions
+
+  Subscription ID: 2147483650
+  Sensor Type: yang-push periodic
+    Filter type: xpath
+    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+  Data Collectors
+    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+
+  Subscription ID: 2147483649
+  Sensor Type: yang-push periodic
+    Filter type: xpath
+    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+  Data Collectors
+    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+
+  Subscription ID: 2147483648
+  Sensor Type: yang-push periodic
+    Filter type: xpath
+    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+  Data Collectors
+    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status

@@ -112,8 +112,17 @@ class ShowUsersSchema(MetaParser):
                         'mode': str,
                         'idle': str,
                         Optional('peer_address'): str,
-                    }
-                }
+                    },
+                },
+            },
+        },
+        Optional('connection_details'): {
+            Any(): {
+                'intf': str,
+                'u_name': str,
+                'mode': str,
+                'idle_time': str,
+                'peer_address': str
             }
         }
     }
@@ -150,8 +159,13 @@ class ShowUsers(ShowUsersSchema):
         p2 = re.compile(r'^(?P<interface>\S+) +(?P<user>\S+) +(?P<mode>\S+) '
                         r'+(?P<idle>[\d\:]+)( +(?P<peer_address>\S+)?)?$')
 
+        # Vi2.1        lns@cisco.com      PPPoVPDN     -        21.21.21.7
+        p3 = re.compile(r'^(?P<intf>[A-Za-z\d\.]+) +(?P<u_name>\S+) +(?P<mode>\S+)'
+                        r' +(?P<idle_time>\S+) +(?P<peer_address>[\d\.]+)$')
+
         # initial return dictionary
         ret_dict = {}
+        var = 1
         inter_flag = False
         for line in out.splitlines():
             line = line.strip()
@@ -207,5 +221,18 @@ class ShowUsers(ShowUsersSchema):
                     intf_dict.update({'peer_address': group['peer_address']})
 
                 inter_flag = True
+
+            # Vi2.1        lns@cisco.com      PPPoVPDN     -        21.21.21.7
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('connection_details', {})
+                ret_dict["connection_details"].setdefault(var, {})
+                groups = m.groupdict()
+                ret_dict["connection_details"][var]['intf'] = groups['intf']
+                ret_dict["connection_details"][var]['u_name'] = groups['u_name']
+                ret_dict["connection_details"][var]['mode'] = groups['mode']
+                ret_dict["connection_details"][var]['idle_time'] = groups['idle_time']
+                ret_dict["connection_details"][var]['peer_address'] = groups['peer_address']
+                var += 1
 
         return ret_dict

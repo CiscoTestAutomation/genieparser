@@ -62,16 +62,16 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
         # excute command to get output
         out = output if output else self.device.execute(self.cli_command)
 
-        # Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap  
+        # Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap
         # -----------  ----------- ----- --------------------------------------- ------- ---------- ------- ---- ----------- --------------------------------------- ----------
-        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:1234:3                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:1234:3                  32          
-        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:5678:1                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:1                  32          
+        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:1234:3                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:1234:3                  32
+        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:5678:1                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:1                  32
 
 
-        p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)' 
-                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)' 
-                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)' 
-                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)' 
+        p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)'
+                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
+                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
+                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
                          ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
 
         result_dict = {}
@@ -88,7 +88,7 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
                             setdefault(vni, {}).\
                             setdefault('ip', {}).\
                             setdefault(ip, {})
-                
+
                 vni_dict['topo_id'] = int(group['topo_id'])
                 vni_dict['vni'] = vni
                 vni_dict['prod_type'] = group['prod_type']
@@ -150,8 +150,8 @@ class ShowNvePeers(ShowNvePeersSchema):
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
         # nve1      192.168.16.1      Up    CP        01:15:09 n/a
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162   
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82   
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82
         # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
@@ -420,12 +420,16 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 
         if interface:
             nve_list.append(interface)
-        if not interface:
+        elif output:
+            # Output is given, do not attempt discovery of interfaces from a
+            # different command.
+            # Add a placeholder to the nve_list just to perform one iteration of
+            # the parsing loop.
+            nve_list.append('placeholder')
+        elif not interface and not output:
+            # No interface given, and no output given, find nve interfaces
             cmd1 = 'show interface | i nve'
-            if not output:
-                out1 = self.device.execute(cmd1)
-            else:
-                out1 = output
+            out1 = self.device.execute(cmd1)
             # Init vars
 
             # nve1 is down (other)
@@ -486,7 +490,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p25 = re.compile(r'Multisite +delay-restore +time +left: +(?P<multisite_convergence_time_left>\d+) +seconds$')
         # Multisite dci-advertise-pip configured: True
         p26 = re.compile(r'Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
-        
+
         for nve in nve_list:
             if not output:
                 out = self.device.execute(self.cli_command.format(interface=nve))
@@ -1521,7 +1525,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         #            SOO: 774975538
         #            L3-Info: 10001
         # 101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local
-        # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66 
+        # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66
         # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
                         '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
@@ -1534,7 +1538,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cff.2293 10.111.1.3     BGP    --            0         10.76.23.23
-        # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1   
+        # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
@@ -1895,7 +1899,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   multisite mcast-group 226.1.1.1
         p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
 
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2001,7 +2005,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             if m:
                 interface = m.groupdict().pop('interface')
                 continue
-            
+
             # interface port-channel11
             # interface Ethernet1/1
             m = p13.match(line)

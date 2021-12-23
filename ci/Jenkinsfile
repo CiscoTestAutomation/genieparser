@@ -64,16 +64,26 @@ pipeline {
                     make develop
                     cd $WORKSPACE/genielibs
                     make develop
-                    make json
                     git status
                     cd $WORKSPACE/unicon
                     make develop
                     cd $WORKSPACE
                     make develop
+                    
+                    
+                    git diff --exit-code ./sdk_generator/outputs/github_parser.json || \
+                    (echo "Parser JSON may be corrupted. Ensure your branch is up to date, run 'make json', and re-push to branch" && false)
+                    
+                    cd $WORKSPACE/genielibs
+                    make json
+                    cd $WORKSPACE/genie
+                    make json
+                    cd $WORKSPACE
+                    make json
+                    
                     env
                     pip list
                     pip freeze
-                    make json
                     git status
                 """
             }
@@ -113,6 +123,7 @@ pipeline {
                 . /scratch/genieparser-env/bin/activate
                 cd tests
                 coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py -f --no-mail --no-archive
+                coverage report
                 coverage html
                 """
                 publishHTML (target: [

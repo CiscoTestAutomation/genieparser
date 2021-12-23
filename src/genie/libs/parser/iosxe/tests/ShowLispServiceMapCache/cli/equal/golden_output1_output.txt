@@ -8,6 +8,6 @@ LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
   Negative cache entry, action: send-map-request
 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
+  SGT: 4003, software only
   Locator  Uptime    State      Pri/Wgt     Encap-IID
   10.1.8.8 00:04:02  up          50/50        -
-        

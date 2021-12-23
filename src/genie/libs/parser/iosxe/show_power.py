@@ -13,6 +13,8 @@ IOSXE parsers for the following show command:
     * 'show stack-power detail'
     * 'show power inline consumption'
     * 'show power inline consumption {interface}'
+    * 'show power'
+    * 'show power {detail}'
 """
 
 import re
@@ -232,14 +234,24 @@ class ShowPowerInline(ShowPowerInlineSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
+        # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+        p1a = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
                         r'(?P<admin_state>\w+)\s+'
                         r'(?P<oper_state>[\w\-]+)\s+'
-                        r'(?P<power>[\d\.]+)\s+'
+                        r'(?P<power>\d+\.\d+)\s+'
                         r'(?P<device>(?=\S).*(?<=\S))\s+'
                         r'(?P<class>[\w\/]+)\s+'
-                        r'(?P<max>[\d\.]+)$')
+                        r'(?P<max>\d+\.\d+)$')
 
+        # alternate regexp pattern
+        # Gi1/46    auto   on         27.5       26.1       AIR-AP2802I-B-K9    4
+        p1b = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
+                        r'(?P<admin_state>\w+)\s+'
+                        r'(?P<oper_state>[\w\-]+)\s+'
+                        r'(?P<max>\d+\.\d+)\s+'
+                        r'(?P<power>\d+\.\d+)\s+'
+                        r'(?P<device>(?=\S).*(?<=\S))\s+'
+                        r'(?P<class>[\w\/]+)$')
 
         # 1          1550.0      147.0      1403.0
         p2 = re.compile(r'^(?P<module>\d+)\s+'
@@ -256,7 +268,18 @@ class ShowPowerInline(ShowPowerInlineSchema):
             line = line.strip()
             
             # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
-            m = p1.match(line)
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['power'] = float(group.pop('power'))
+                intf_dict['max'] = float(group.pop('max'))
+                intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
+                continue
+
+            # Gi1/46    auto   on         27.5       26.1       AIR-AP2802I-B-K9    4
+            m = p1b.match(line)
             if m:
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group.pop('intf'))
@@ -588,7 +611,6 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
         
         return ret_dict
 
-
 class ShowPowerInlineConsumptionSchema(MetaParser):
     """
     Schema for 
@@ -662,7 +684,230 @@ class ShowPowerInlineConsumption(ShowPowerInlineConsumptionSchema):
 
         return ret_dict
 
+# ===============================================================================
+# Schema for :
+#      * 'show power'
+#      * 'show power {detail}'
+# ===============================================================================
+class ShowPowerSchema(MetaParser):
+    """Schema for :
+        * show power
+        * show power {detail}
+    """
+    
+    schema = {
+        'switch': {
+            Any(): {
+                'power_supply': {
+                    Any(): {
+                        'model_no' : str,
+                        'type' : str,
+                        'capacity' : str,
+                        'status' : str,
+                        'fan_state_0' : str,
+                        'fan_state_1' : str,
+                    },
+                },
+                'fan_tray': {
+                    Any(): {
+                        'status' : str,
+                        'fan_state_0' : str,
+                        'fan_state_1' : str,
+                    },
+                }
+            },
+        }
+    }
+
+# ===============================================================================
+# Parser for :
+#    * 'show power'
+#    * 'show power {detail}'
+# ===============================================================================
+class ShowPower(ShowPowerSchema):
+    """parser for :
+         * show power
+         * show power {detail}
+    """
+    
+    cli_command = ['show power', 'show power {detail}']
+
+    def cli(self, detail="", output=None):
+        
+        if output == None:
+            if detail:
+                output = self.device.execute(self.cli_command[1].format(detail=detail))
+            else :
+                output = self.device.execute(self.cli_command[0])
+
+        result_dict = {}
+
+        #Switch:1
+        p1 = re.compile(r'^Switch:(?P<switch>\S+)$')
+
+        #PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
+        #PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
+        p2 = re.compile(r'^(?P<power_supply>\S+) +'
+                        r'(?P<model_no>\S+) +'
+                        r'(?P<type>\S+) +'
+                        r'(?P<capacity>\S+) +W?\s*'
+                        r'(?P<status>\S+) +'
+                        r'(?P<fan_state_0>\S+) +'
+                        r'(?P<fan_state_1>\S+)$')
+
+        #FT1     active      good  good
+        p3 = re.compile(r'^(?P<fan_tray>\S+) +'
+                        r'(?P<status>\S+) +'
+                        r'(?P<fan_state_0>\S+) +'
+                        r'(?P<fan_state_1>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Switch:1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                switch_dict = result_dict.setdefault('switch',{})
+                switch_id_dict = switch_dict.setdefault(switch,{})
+                continue
+
+            #PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
+            #PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                power_supply = group['power_supply']
+                power_supply_dict = switch_id_dict.setdefault('power_supply',{})
+                power_supply_unit_dict = power_supply_dict.setdefault(power_supply,{})
+                power_supply_unit_dict.update({
+                    'model_no' : group['model_no'],
+                    'type' : group['type'],
+                    'capacity' : group['capacity'],
+                    'status' : group['status'],
+                    'fan_state_0' : group['fan_state_0'],
+                    'fan_state_1' : group['fan_state_1'],
+                })
+                continue
+
+            #FT1     active      good  good
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fan_tray = group['fan_tray']
+                if fan_tray == "Tray":
+                    # don't store in the key 'Tray' as it is just the header of the table
+                    continue
+                fan_tray_dict = switch_id_dict.setdefault('fan_tray',{})
+                fan_tray_unit_dict = fan_tray_dict.setdefault(fan_tray,{})
+                fan_tray_unit_dict.update({
+                    'status' : group['status'],
+                    'fan_state_0' : group['fan_state_0'],
+                    'fan_state_1' : group['fan_state_1'],
+                })
+                continue
+        return result_dict
 
 
+class ShowPowerInlineUpoePlusModuleSchema(MetaParser):
+    """Schema for show power inline upoe-plus module {mod_num}"""
+    schema = {
+        'module':{
+            int:{
+                'available': float, 
+                'used': float, 
+                'remaining': float, 
+                'ieee_mode': str,
+            }
+        },
+        'interface': {
+            Any(): {
+                'admin_state': str,
+                'type': str,
+                'operating_state': str,
+                'allocated_power': float,
+                'utilized_power': float,
+                'class': str,
+                'device': str,
+            }
+        },
+        'total':{
+            'type':int,
+            'operating_state':str,
+            'allocated_power':float,
+            'utilized_power':float,
+        }
+    }
 
 
+class ShowPowerInlineUpoePlusModule(ShowPowerInlineUpoePlusModuleSchema):
+    """Parser for show power inline upoe-plus module {mod_num}"""
+
+    cli_command = 'show power inline upoe-plus module {mod_num}'
+
+    def cli(self, mod_num, output=None):
+        if output is None and mod_num:
+                output = self.device.execute(self.cli_command.format(mod_num=mod_num))
+                
+        # initial return dictionary
+        ret_dict = {}
+
+        # 1           675.0        0.0       675.0
+        p1 = re.compile(r'^(?P<module>\d+)\s+(?P<available>[\d\.]+)\s+(?P<used>[\d\.]+)\s+(?P<remaining>[\d\.]+)$')
+        
+        #Device IEEE Mode - BT
+        p2 = re.compile(r'^Device IEEE Mode\s+\-\s+(?P<ieee_mode>\w+)$')
+        
+        #Gi1/0/1     auto   n/a  off           0.0       0.0       n/a
+        p3 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>\w+)\s+(?P<type>[\w\/?]+)\s+(?P<operating_state>[\w,?]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w(\/,)?]+)(\s+(?P<device>.*))?')
+        
+        #Totals:            0    on          0.0      0.0
+        p4 = re.compile(r'^Totals: +(?P<type>\d+) +(?P<operating_state>\w+) +(?P<allocated_power>[\d\.]+) +(?P<utilized_power>[\d\.]+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # 1           675.0        0.0       675.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = int(group.pop('module'))
+                root_dict = ret_dict.setdefault('module', {}).setdefault(module, {})
+                root_dict['available'] = float(group['available'])
+                root_dict['used'] = float(group['used'])
+                root_dict['remaining'] = float(group['remaining'])
+                continue
+                
+            #Device IEEE Mode - BT
+            m = p2.match(line)
+            if m:
+                group = m.groupdict() 
+                root_dict['ieee_mode'] = group['ieee_mode']
+                continue
+            
+            #Gi1/0/1     auto   n/a  off           0.0       0.0       n/a
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group.pop('intf')
+                if group['device']== None:
+                    group['device']=""
+                group['allocated_power'] = float(group['allocated_power'])
+                group['utilized_power'] = float(group['utilized_power'])
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict.update({k: v for k, v in group.items()})
+                continue
+                
+            #Totals:            0    on          0.0      0.0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                totals_dict=ret_dict.setdefault('total', {})
+                totals_dict['type'] = int(group['type'])
+                totals_dict['operating_state']=group['operating_state']
+                totals_dict['allocated_power'] = float(group['allocated_power'])
+                totals_dict['utilized_power'] = float(group['utilized_power'])
+                continue
+                
+        return ret_dict

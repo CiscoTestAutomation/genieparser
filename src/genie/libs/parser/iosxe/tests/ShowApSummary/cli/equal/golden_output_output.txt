@@ -2,28 +2,24 @@ Number of APs: 149
 
 AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
-a132-cap15                       2      9130AXI   a4b2.32ff.b3d5  2c57.41ff.f2c0  Fab A  UK          10.6.32.146                               Registered
-a111-cap27                       2      9130AXI   a4b2.32ff.b3ed  2c57.41ff.f380  Fab A  UK          10.6.32.118.                              Registered
-a112-cap11                       2      9130AXI   a4b2.32ff.b362  2c57.41ff.f720  Fab A  UK          10.6.33.160                               Registered
-a112-cap10                       2      9130AXI   a4b2.32ff.b5b1  2c57.41ff.d1a0  Fab A  UK          10.6.33.102                               Registered
-a112-cap17                       2      9130AXI   a4b2.32ff.b5c5  2c57.41ff.d240  Fab A  UK          10.6.32.203                               Registered
-a112-cap14                       2      9130AXI   a4b2.32ff.b5c9  2c57.41ff.d260  Fab A  UK          10.6.32.202                               Registered
-a122-cap09                       2      9130AXI   a4b2.32ff.b5e1  2c57.41ff.d320  Fab A  UK          10.6.33.133                               Registered
-a131-cap43                       2      9130AXI   a4b2.32ff.b5e5  2c57.41ff.d340  Fab A  UK          10.6.33.93                                Registered
-a122-cap08                       2      9130AXI   a4b2.32ff.b5e9  2c57.41ff.d360  Fab A  UK          10.6.32.166                               Registered
+a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979      Fab A                             UK          10.6.33.106                               Registered
+a132-cap15                       2      9130AXI   a4b2.32ff.b3d5  2c57.41ff.f2c0      Fab A                             UK          10.6.32.146                               Registered
+a111-cap27                       2      9130AXI   a4b2.32ff.b3ed  2c57.41ff.f380      Fab A                             UK          10.6.32.118                               Registered
+a112-cap11                       2      9130AXI   a4b2.32ff.b362  2c57.41ff.f720      Fab A                             UK          10.6.33.160                               Registered
+a112-cap10                       2      9130AXI   a4b2.32ff.b5b1  2c57.41ff.d1a0      Fab A                             UK          10.6.33.102                               Registered
+a112-cap17                       2      9130AXI   a4b2.32ff.b5c5  2c57.41ff.d240      Fab A                             UK          10.6.32.203                               Registered
+a112-cap14                       2      9130AXI   a4b2.32ff.b5c9  2c57.41ff.d260      Fab A                             UK          10.6.32.202                               Registered
+a122-cap09                       2      9130AXI   a4b2.32ff.b5e1  2c57.41ff.d320      Fab A                             UK          10.6.33.133                               Registered
+a131-cap43                       2      9130AXI   a4b2.32ff.b5e5  2c57.41ff.d340      Fab A                             UK          10.6.33.93                                Registered
+a122-cap08                       2      9130AXI   a4b2.32ff.b5e9  2c57.41ff.d360      Fab A                             UK          10.6.32.166                               Registered
+
 
 AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-a122-cap05                       2      9130AXI   a4b2.32ff.b5f5  2c57.41ff.d3c0  Fab A  UK          10.6.33.117                               Registered
-a112-cap02                       2      9130AXI   a4b2.32ff.b50a  2c57.41ff.d460  Fab A  UK          10.6.33.152                               Registered
-a112-cap08                       2      9130AXI   a4b2.32ff.b50e  2c57.41ff.d480  Fab A  UK          10.6.32.200                               Registered
-a112-cap21                       2      9130AXI   a4b2.32ff.b51a  2c57.41ff.d4e0  Fab A  UK          10.6.32.199                               Registered
-a121-cap40                       2      9130AXI   a4b2.32ff.b522  2c57.41ff.d520  Fab A  UK          10.6.33.123                               Registered
-a121-cap28                       2      9130AXI   a4b2.32ff.b532  2c57.41ff.d5a0  Fab A  UK          10.6.32.152                               Registered
-a112-cap22                       2      9130AXI   a4b2.32ff.b546  2c57.41ff.d640  Fab A  UK          10.6.32.191                               Registered
-a122-cap13                       2      9130AXI   a4b2.32ff.b54a  2c57.41ff.d660  Fab A  UK          10.6.32.169                               Registered
-a121-cap30                       2      9130AXI   a4b2.32ff.b54e  2c57.41ff.d680  Fab A  UK          10.6.33.107                               Registered
-a111-cap29                       2      9130AXI   a4b2.32ff.b556  2c57.41ff.d6c0  Fab A  UK          10.6.33.139                               Registered
-
-    
+a122-cap05                       2      9130AXI   a4b2.32ff.b5f5  2c57.41ff.d3c0      Fab A                             UK          10.6.33.117                               Registered
+a112-cap02                       2      9130AXI   a4b2.32ff.b50a  2c57.41ff.d460      Fab A                             UK          10.6.33.152                               Registered
+a112-cap08                       2      9130AXI   a4b2.32ff.b50e  2c57.41ff.d480      Fab A                             UK          10.6.32.200                               Registered
+a112-cap21                       2      9130AXI   a4b2.32ff.b51a  2c57.41ff.d4e0      Fab A                             UK          10.6.32.199                               Registered
+a121-cap40                       2      9130AXI   a4b2.32ff.b522  2c57.41ff.d520      Fab A                             UK          10.6.33.123                               Registered
+a121-cap28                       2      9130AXI   a4b2.32ff.b532  2c57.41ff.d5a0      Fab A                             UK          10.6.32.152                               Registered
+a112-cap22                       2      9130AXI   a4b2.32ff.b546  2c57.41ff.d640      Fab A                             UK          10.6.32.191                               Registered

@@ -1,0 +1,20 @@
+show aaa cache group radiusGroup all
+----------------------------------------------------------
+ IOSD AAA Auth Cache entries:
+
+ Entries in Profile dB radiusGroup for exact match:
+No entries found in Profile dB
+----------------------------------------------------------
+
+ SMD AAA Auth Cache entries:
+
+MAC ADDR:     	5C85.7E31.756C
+Profile Name: 	CACHE-PROFILE
+User Name:    	test3
+Timeout:      	120
+
+
+ Total number of Cache entries is 1
+----------------------------------------------------------
+m10#
+

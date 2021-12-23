@@ -1,0 +1,6 @@
+VRF vrf3001
+ 29 prefixes (29/0/0 fwd/non-fwd/deleted)
+ 58 ioitems (58/0/0 fwd/non-fwd/deleted)
+ Forwarding prefixes: [0 (S,G), 27 (*,G), 2 (*,G/m)]
+ Table id 0x3, instance 0x7FE3D96157D8
+ Database: epoch 0

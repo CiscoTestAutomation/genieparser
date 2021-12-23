@@ -1,0 +1,16 @@
+PRABS_Prom_PE1#sh cef uid
+CEF Unique IDs Stats: global space
+IDs Maximum : 16777216
+IDs Free : 16777212
+IDs Active : 4
+IDs Pending re-use TO : 0
+IDs Total Generated : 4
+IDs Total Reserved : 0
+IDs Total Deleted : 0
+Groups Maximum : 2048
+Groups Free : 2047
+Groups Active : 1
+CEF UID Client Key Stats
+Client Key nodes : 4
+UID Table Entries : 4
+UID Table config size: 16777216

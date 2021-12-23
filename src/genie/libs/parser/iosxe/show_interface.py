@@ -3928,3 +3928,52 @@ class ShowMacroAutoInterface(ShowMacroAutoInterfaceSchema):
                 intf_dict['macro'] = group['macro']
 
         return ret_dict
+# =============================================
+# Schema for 'show interface summary vlan'
+# =============================================
+class ShowInterfaceSummaryVlanSchema(MetaParser):
+    """ Schema for
+        * show interface summary vlan
+    """
+    schema = {
+        'Total_vlan_interface': int,
+        'Configured_vlan_interfaces' : str
+    }
+# ==========================================================
+#  Parser for 'show interface summary vlan'
+# ==========================================================
+
+class ShowInterfaceSummaryVlan(ShowInterfaceSummaryVlanSchema):
+    """ Parser for
+        * show interface summary vlan
+    """
+
+    cli_command = 'show interface summary vlan'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #Total number of Vlan interfaces: 256
+        p1 = re.compile(r'Total\s+number\s+of\s+Vlan\s+interfaces:\s+(?P<total_number>\d+)')
+
+        #Vlan interfaces configured:
+        #1,10-264
+        p2 = r'Vlan\s+interfaces\s+configured:\s*(?P<vlan_int>\S+)'
+        #p2 = re.compile(r'Vlan\s+interfaces\s+configured:\s+(?P<vlan_int>\S+)')
+        #p2 = re.compile(r'Vlan\s+interfaces\s+configured:\n(?P<vlan_int>\S+)')
+        for line in output.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["Total_vlan_interface"] = int(group["total_number"])
+        #m2 = p2.match(output)
+        m2 = re.search(p2,output,re.M|re.I)
+        if m2:
+           group = m2.groupdict()
+           ret_dict["Configured_vlan_interfaces"] = group["vlan_int"]
+        return ret_dict
+

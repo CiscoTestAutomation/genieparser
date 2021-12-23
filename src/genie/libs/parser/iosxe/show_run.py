@@ -306,6 +306,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_timer_inactivity'): str,
                 Optional('authentication_timer_reauthenticate_server'): bool,
                 Optional('authentication_violation'): str,
+                Optional('trust_device'): str,
                 Optional('carrier_delay'): list,
                 Optional('shutdown'): bool,
                 Optional('encapsulation_dot1q'): str,
@@ -332,6 +333,8 @@ class ShowRunInterfaceSchema(MetaParser):
                     },
                 },
                 Optional('ipv6_enable'): bool,
+                Optional('ipv6_destination_guard_attach_policy'): str,
+                Optional('ipv6_source_guard_attach_policy'): str,
                 Optional('ipv6_ospfv3'): {
                     Any(): {
                         'area': str,
@@ -355,6 +358,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('snmp_trap_mac_notification_change_removed'): bool,
                 Optional('spanning_tree_bpduguard'): str,
                 Optional('spanning_tree_portfast'): bool,
+                Optional('spanning_tree_portfast_trunk'): bool,
+                Optional('spanning_tree_bpdufilter'): str,
                 Optional('switchport_access_vlan'): str,
                 Optional('switchport_trunk_vlans'): str,
                 Optional('keepalive'): bool,
@@ -377,17 +382,6 @@ class ShowRunInterfaceSchema(MetaParser):
                     },
                 },
                 Optional('mpls_ip'):str,
-                Optional('snmp_trap_link_status'): bool,
-                Optional('snmp_trap_mac_notification_change_added'): bool,
-                Optional('snmp_trap_mac_notification_change_removed'): bool,
-                Optional('spanning_tree_bpduguard'): str,
-                Optional('spanning_tree_portfast'): bool,
-                Optional('spanning_tree_bpdufilter'): str,
-                Optional('switchport_access_vlan'): str,
-                Optional('switchport_trunk_vlans'): str,
-                Optional('switchport_mode'): str,
-                Optional('switchport_nonegotiate'): str,
-                Optional('vrf'): str,
                 Optional('channel_group'): {
                         'chg': int,
                         'mode': str,
@@ -403,6 +397,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_block_multicast'): bool,
                 Optional('ip_dhcp_snooping_trust'): bool,
                 Optional('ip_arp_inspection_trust'): bool,
+                Optional('lisp_mobility'): str,
                 Optional('mac_address_sticky'):str,
                 Optional('source_template'):str,
                 Optional('host_reachability_protocol'): str,
@@ -678,6 +673,21 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ip access-group DELETE_ME in ; ip access-group TEST-OUT out
         p72 = re.compile(r'^ip access-group (?P<acl_name>[\w\-.#<>]+) (?P<direction>\w+)$')
+
+        # lisp mobility 20_1_1_0-global-IPV4
+        p73 = re.compile(r'^\s*lisp mobility +(?P<lisp_mobility>[\w-]+)$')
+
+        #trust device cisco-phone / trust device ip-camera
+        p74 = re.compile(r'^trust\sdevice\s(?P<trust_device>\S+)$')
+
+        #ipv6 destination-guard attach-policy Univ-v6-IPDG-Policy1
+        p75 = re.compile(r'^ipv6\sdestination-guard\sattach-policy\s(?P<ipv6_destination_guard_attach_policy>\S+)$')
+
+        #ipv6 source-guard attach-policy Univ-v6-IPSG-Policy2
+        p76 = re.compile(r'^ipv6\ssource-guard\sattach-policy\s(?P<ipv6_source_guard_attach_policy>\S+)$')
+
+        # spanning-tree portfast trunk
+        p77 = re.compile(r"^spanning-tree +portfast +trunk$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1278,6 +1288,40 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
                 intf_dict['acl'].update(inbound_dict)
                 intf_dict['acl'].update(outbound_dict)
+
+            # lisp mobility 20_1_1_0-global-IPV4
+            m = p73.match(line)
+            if m:
+                lisp_mobility = m.groupdict()['lisp_mobility']
+                intf_dict.update({'lisp_mobility': lisp_mobility})
+                continue
+
+            #trust device cisco-phone / trust device ip-camera
+            m = p74.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'trust_device': group['trust_device']})
+                continue
+
+            #ipv6 destination-guard attach-policy Univ-v6-IPDG-Policy1
+            m = p75.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ipv6_destination_guard_attach_policy': group['ipv6_destination_guard_attach_policy']})
+                continue
+
+            #ipv6 source-guard attach-policy Univ-v6-IPSG-Policy2
+            m = p76.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ipv6_source_guard_attach_policy': group['ipv6_source_guard_attach_policy']})
+                continue
+
+            # spanning-tree portfast trunk
+            m = p77.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'spanning_tree_portfast_trunk': True})
                 continue
 
         return config_dict
@@ -2399,3 +2443,88 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
                 continue
 
         return ret_dict
+
+
+# =================================================
+# Schema for:
+#   * 'show running-config flow monitor'
+# ==================================================
+
+class ShowRunningConfigFlowMonitorSchema(MetaParser):
+    schema = {
+        'flow_monitor_name': {
+            Any(): {
+                Optional('exporter_name'): str,
+                Optional('cache_timeout_type'): str,
+                Optional('cache_timeout_time'): int,
+                Optional('record_name'): str
+            },
+        },
+    }
+
+# ===================================
+# Parser for:
+#   * 'show running-config flow monitor'
+# ===================================
+
+class ShowRunningConfigFlowMonitor(ShowRunningConfigFlowMonitorSchema):
+
+    cli_command = 'show running-config flow monitor'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # flow monitor monitor_l2_in
+        p1 = re.compile(r'^flow\smonitor\s(?P<flow_monitor_name>\S+)$')
+
+        # exporter StealthWatch_Exporter
+        p2 = re.compile(r'^exporter\s(?P<exporter_name>\S+)$')
+
+        # cache timeout active 60
+        p3 = re.compile(r'^cache\stimeout\s(?P<cache_timeout_type>\S+)\s(?P<cache_timeout_time>\d+)$')
+
+        # record record_l2_in
+        p4 = re.compile(r'^record\s(?P<record_name>\S+)$')
+
+        for line in out.splitlines():
+
+            line = line.strip()
+
+            # flow monitor monitor_l2_in
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                flow_monitor_name = group['flow_monitor_name']
+                flow_dict = ret_dict.setdefault('flow_monitor_name', {}).setdefault(flow_monitor_name, {})
+                continue
+
+            # exporter StealthWatch_Exporter
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['exporter_name'] = group['exporter_name']
+                continue
+
+            # cache timeout active 60
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['cache_timeout_type'] = group['cache_timeout_type']
+                flow_dict['cache_timeout_time'] = int(group['cache_timeout_time'])
+                continue
+
+            # record record_l2_in
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['record_name'] = group['record_name']
+                continue
+
+        return ret_dict
+
+

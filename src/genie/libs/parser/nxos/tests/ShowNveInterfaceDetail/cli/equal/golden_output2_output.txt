@@ -1,0 +1,20 @@
+Interface: nve1, State: Up, encapsulation: VXLAN
+VPC Capability: VPC-Only [not-notified]
+Local Router MAC: abcd.ef12.3456
+Host Learning Mode: Control-Plane
+Source-Interface: loopback1 (primary: 192.168.1.1, secondary: 0.0.0.0)
+Source Interface State: Up
+IR Capability Mode: No
+Virtual RMAC Advertisement: No
+NVE Flags:
+Interface Handle: 0x49000001
+Source Interface hold-down-time: 180
+Source Interface hold-up-time: 30
+Remaining hold-down time: 0 seconds
+Virtual Router MAC: N/A
+Interface state: nve-intf-add-complete
+unknown-peer-forwarding: disable
+down-stream vni config mode: n/a
+Nve Src node last notif sent: None
+Nve Mcast Src node last notif sent: None
+Nve MultiSite Src node last notif sent: None

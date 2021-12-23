@@ -88,7 +88,7 @@ class Traceroute(TracerouteSchema):
         index = 1
         # Type escape sequence to abort.
         # traceroute 10.151.22.22
-        # traceroute vrf MG501 192.168.1.1 numeric 
+        # traceroute vrf MG501 192.168.1.1 numeric
         p1 = re.compile(r'^traceroute( +vrf +(?P<vrf>\S+))? +[\S ]+$')
 
         # Tracing the route to 172.16.166.253
@@ -102,7 +102,7 @@ class Traceroute(TracerouteSchema):
         # Tracing the route to www.cisco.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
                           r' \(+(?P<traceroute>\S+)\)$')
-                          
+
         # Tracing MPLS TE Label Switched Path on Tunnel100 Active LSP, timeout is 2 seconds
         p1_4 = re.compile(r'^Tracing +MPLS +TE +Label +Switched +Path +on'
                           r' +(?P<traceroute>\S+) +Active +LSP, +timeout +is'
@@ -129,17 +129,10 @@ class Traceroute(TracerouteSchema):
                           r' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
                           r' +Exp: +(?P<exp>(\d+))\]$')
 
-        # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
-        # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
-        # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
-        # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
-        # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec
-        # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
-        # 7 172.31.166.10 92 msec 51 msec 148 msec
-        # 8 10.169.197.101 1 msec 1 msec *
-        # 1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
-        p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))(?: +\[(?P<label_name>(MPLS))'
-                        r': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
+        # 192.168.100.18 [AS 2516] 2 msec
+        # 3  192.168.100.18 [AS 2516] 2 msec
+        # 3 fakeaddress.cisco.com (192.168.0.20) [AS 2516] 2 msec 2 msec 2 msec
+        p4 = re.compile(r'^((?P<hop>(\d+)) +)?((?P<name>\S+) +)?\(?(?P<address>[\d.]+)\)? +\[AS +(?P<asn>\d+)\] +(?P<probe_msec>(\d+.*))$')
 
         # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
@@ -149,14 +142,22 @@ class Traceroute(TracerouteSchema):
         # 3  *  *  *
         p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*( +\*)*)$')
 
-        # 192.168.100.18 [AS 2516] 2 msec
-        # 3  192.168.100.18 [AS 2516] 2 msec
-        p7 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\S+) '
-                        r'+\[AS +(?P<asn>\d+)\] +(?P<probe_msec>(\d+.*))$')
+        # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
+        # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
+        # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
+        # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
+        # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec
+        # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
+        # 7 172.31.166.10 92 msec 51 msec 148 msec
+        # 8 10.169.197.101 1 msec 1 msec *
+        # 1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+        p7 = re.compile(r'^((?P<hop>(\d+)) +)?((?P<name>\S+) +\()?(?P<address>[\d.]+)\)?'
+                        r'(?: +\[(?P<label_name>(MPLS)): +Labels? (?P<label>(\S+)) +'
+                        r'Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # traceroute 10.151.22.22
             # traceroute vrf MG501 192.168.1.1 numeric
             m = p1.match(line)
@@ -205,7 +206,7 @@ class Traceroute(TracerouteSchema):
                 tr_dict['name_of_address'] = name_of_address
                 tr_dict['address'] = traceroute
                 continue
-                
+
             # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
             m = p1_4.match(line)
             if m:
@@ -283,14 +284,8 @@ class Traceroute(TracerouteSchema):
                 index += 1
                 continue
 
-            # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
-            # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
-            # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
-            # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
-            # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
-            # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
-            # 7 172.31.166.10 92 msec 51 msec 148 msec
-            # 8 10.169.197.101 1 msec 1 msec *
+            # 192.168.100.18 [AS 2516] 2 msec
+            # 3  192.168.100.18 [AS 2516] 2 msec
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -306,14 +301,10 @@ class Traceroute(TracerouteSchema):
 
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
+                index_dict['asn'] = int(group['asn'])
                 index_dict.setdefault('probe_msec', []).extend(group['probe_msec'].strip().\
-                                        replace(" msec", "").replace(" ms", "").split())
+                            replace(" msec", "").replace(" ms", "").split())
 
-                if group['label_name']:
-                    label_dict = index_dict.setdefault('label_info', {}).\
-                                        setdefault(group['label_name'], {})
-                    label_dict['label'] = group['label']
-                    label_dict['exp'] = int(group['exp'])
                 index += 1
                 continue
 
@@ -366,8 +357,14 @@ class Traceroute(TracerouteSchema):
 
                 continue
 
-            # 192.168.100.18 [AS 2516] 2 msec
-            # 3  192.168.100.18 [AS 2516] 2 msec
+            # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
+            # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
+            # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
+            # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
+            # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec
+            # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
+            # 7 172.31.166.10 92 msec 51 msec 148 msec
+            # 8 10.169.197.101 1 msec 1 msec *
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -383,17 +380,21 @@ class Traceroute(TracerouteSchema):
 
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
-                index_dict['asn'] = int(group['asn'])
                 index_dict.setdefault('probe_msec', []).extend(group['probe_msec'].strip().\
-                            replace(" msec", "").replace(" ms", "").split())
+                                        replace(" msec", "").replace(" ms", "").split())
 
+                if group['label_name']:
+                    label_dict = index_dict.setdefault('label_info', {}).\
+                                        setdefault(group['label_name'], {})
+                    label_dict['label'] = group['label']
+                    label_dict['exp'] = int(group['exp'])
                 index += 1
                 continue
-        
+
         # Update vrf if found from the command
         if tr_dict and vrf:
             tr_dict.update({'vrf': vrf})
-        
+
         return ret_dict
 
 class TracerouteMPLSTETunnel(Traceroute):

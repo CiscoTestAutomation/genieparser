@@ -2017,3 +2017,108 @@ class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
                 sub_dict['winner_metric'] = int(m.groupdict()['metric'])
                 continue
         return ret_dict
+
+# ========================================================
+# Parser for 'show ip pim tunnel'
+# ========================================================
+
+class ShowIpPimTunnelSchema(MetaParser):
+    """
+    Schema for 'show ip pim tunnel'
+    """
+
+    schema = {
+        'tunnels': {
+            Any(): {
+                'type': str,
+                'rp': str,
+                'source': str,
+                'state' : str,
+                'last_event': str,
+                'uptime': str
+            },
+        }
+    }
+
+
+class ShowIpPimTunnel(ShowIpPimTunnelSchema):
+    """
+    Parser for 'show ip pim tunnel'
+    """
+    cli_command = 'show ip pim tunnel'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        #Tunnel0
+        p1 = re.compile(r'Tunnel(?P<tunnel>\d+)')
+
+        #Type       : PIM Encap
+        p2 = re.compile(r'Type\s+\S+\s+(?P<type>\S+\s+\S+)')
+
+        #RP         : 4.4.4.4
+        p3 = re.compile(r'RP\s+\S+\s+(?P<rp>\S+)')
+
+        #Source     : 87.1.1.1
+        p4 = re.compile(r'Source\s+\S+\s+(?P<source>\S+)')
+
+        #State      : UP
+        p5 = re.compile(r'State\s+\S+\s+(?P<state>\S+)')
+
+        #Last event : RP address reachable (1d10h)
+        p6 = re.compile(r'Last event\s+:\s+(?P<last_event>(.*?))\s+\((?P<uptime>\S+)\)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Tunnel0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel = group['tunnel']
+                intf_dict = ret_dict.setdefault('tunnels', {})
+                intf_dict[tunnel] = {}
+
+            #Type       : PIM Encap
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict[tunnel]['type'] = group['type']
+                continue
+
+            #RP         : 4.4.4.4
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict[tunnel]['rp'] = group['rp']
+                continue
+
+            #Source     : 87.1.1.1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict[tunnel]['source'] = group['source']
+                continue
+
+            #State      : UP
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict[tunnel]['state'] = group['state']
+                continue
+
+            #Last event : RP address reachable (1d10h)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict[tunnel]['last_event'] = group['last_event']
+                intf_dict[tunnel]['uptime'] = group['uptime']
+                continue
+
+        return ret_dict

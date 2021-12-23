@@ -253,6 +253,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # initial variables
         ret_dict = {}
         index = 0
+        active = False
 
         # Routing Table: VRF1
         # Routing Table: VRF-infra
@@ -276,14 +277,15 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   &    10.69.0.0 [1/0] via 10.34.0.1
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
         if self.IP_VER == 'ipv4':
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         else:
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
                 r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         

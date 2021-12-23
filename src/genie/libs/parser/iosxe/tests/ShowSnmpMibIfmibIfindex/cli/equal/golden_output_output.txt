@@ -63,3 +63,4 @@ GigabitEthernet3/0/43: Ifindex = 51
 GigabitEthernet3/0/14: Ifindex = 22
 TenGigabitEthernet3/1/7: Ifindex = 67
 GigabitEthernet3/0/41: Ifindex = 49
+unrouted VLAN 1003: Ifindex = 7

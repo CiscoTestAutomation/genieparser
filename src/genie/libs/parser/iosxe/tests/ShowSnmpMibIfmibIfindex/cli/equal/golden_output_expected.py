@@ -194,6 +194,9 @@ expected_output = {
          },
          "TenGigabitEthernet3/1/8": {
              "ifIndex": "68"
+         },
+         "UnroutedVLAN1003": {
+             "ifIndex": "7"
          }
      }
  }
