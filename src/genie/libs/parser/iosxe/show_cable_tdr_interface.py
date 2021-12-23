@@ -22,18 +22,18 @@ from genie.libs.parser.utils.common import Common
 class ShowCableTdrIntSchema(MetaParser):
     schema = {
         Any(): {
-            Optional('interface'): str,
-            Optional('speed'): str,
-            Optional('date'): str,
-            Optional('time'): str,
-            Optional('pairs'): {
+            ('interface'): str,
+            ('speed'): str,
+            ('date'): str,
+            ('time'): str,
+            'pairs': {
                 Any() : {
-                    Optional('length'): int,
-                    Optional('tolerance'): int,
-                    Optional('remote_pair'): str,
-                    Optional('status'): str,
-               },
-           },
+                    ('length'): int,
+                    ('tolerance'): int,
+                    ('remote_pair'): str,
+                    ('status'): str,
+               }
+           }
         }
     }
 
@@ -69,21 +69,14 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
 
         # Gi1/0/1   auto  Pair A     0    +/- 1  meters N/A         Open
         p2 = re.compile(r'^(?P<interface>\w\w\d\/\d\/\d+)\s+(?P<speed>auto|100M|1000M)'
-                '\s+Pair A     (?P<pair_a_length>\d+)\s+\+\/\- (?P<pair_a_tolerance>\d+)\s+meters '
-                '(?P<pair_a_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_a_status>.*$)')
+                '\s+Pair (?P<local_pair>A)     (?P<pair_length>\d+)\s+\+\/\- (?P<pair_tolerance>\d+)\s+meters '
+                '(?P<pair_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_status>.*$)')
 
         #                 Pair B     1    +/- 1  meters N/A         Open
-        p3 = re.compile(r'Pair +B\s+(?P<pair_b_length>\d+)\s+\+\/\- (?P<pair_b_tolerance>\d+)\s+meters'
-                ' +(?P<pair_b_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_b_status>.*$)')
-
-
         #                 Pair C     0    +/- 1  meters N/A         Open
-        p4 = re.compile(r'Pair +C\s+(?P<pair_c_length>\d+)\s+\+\/\- (?P<pair_c_tolerance>\d+)\s+meters'
-                ' +(?P<pair_c_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_c_status>.*$)')
-
         #                 Pair D     1    +/- 1  meters N/A         Open
-        p5 = re.compile(r'Pair +D\s+(?P<pair_d_length>\d+)\s+\+\/\- (?P<pair_d_tolerance>\d+)\s+meters'
-                ' +(?P<pair_d_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_d_status>.*$)')
+        p3 = re.compile(r'Pair +(?P<local_pair>B|C|D)\s+(?P<pair_length>\d+)\s+\+\/\- (?P<pair_tolerance>\d+)\s+meters'
+                ' +(?P<pair_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_status>.*$)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -110,45 +103,25 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
 
                 tdr_dict[interface].setdefault('pairs', {})
 
-                pair = 'pair_a'
+                pair = m.groupdict()['local_pair']
                 tdr_dict[interface]['pairs'][pair] = {}
-                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_a_length'])
-                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_a_tolerance'])
-                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_a_remote']
-                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_a_status']
+                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_length'])
+                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_tolerance'])
+                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_remote']
+                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_status']
                 continue
 
             #                 Pair B     1    +/- 1  meters N/A         Open
+            #                 Pair C     0    +/- 1  meters N/A         Open
+            #                 Pair D     1    +/- 1  meters N/A         Open
             m = p3.match(line)
             if m:
-                pair = 'pair_b'
+                pair = m.groupdict()['local_pair']
                 tdr_dict[interface]['pairs'][pair] = {}
-                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_b_length'])
-                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_b_tolerance'])
-                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_b_remote']
-                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_b_status']
-                continue
-
-            #                 Pair C     0    +/- 1  meters N/A         Open
-            m = p4.match(line)
-            if m:
-                pair = 'pair_c'
-                tdr_dict[interface]['pairs'][pair] = {}
-                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_c_length'])
-                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_c_tolerance'])
-                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_c_remote']
-                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_c_status']
-                continue
-
-            #                 Pair D     1    +/- 1  meters N/A         Open
-            m = p5.match(line)
-            if m:
-                pair = 'pair_d'
-                tdr_dict[interface]['pairs'][pair] = {}
-                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_d_length'])
-                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_d_tolerance'])
-                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_d_remote']
-                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_d_status']
+                tdr_dict[interface]['pairs'][pair]['length'] = int(m.groupdict()['pair_length'])
+                tdr_dict[interface]['pairs'][pair]['tolerance'] = int(m.groupdict()['pair_tolerance'])
+                tdr_dict[interface]['pairs'][pair]['remote_pair'] = m.groupdict()['pair_remote']
+                tdr_dict[interface]['pairs'][pair]['status'] = m.groupdict()['pair_status']
                 continue
 
         return(tdr_dict)
