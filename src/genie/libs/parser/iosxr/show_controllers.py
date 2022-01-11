@@ -1052,7 +1052,7 @@ class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiag
     cli_command = 'show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}'
 
     def cli(self, diagshell, location, output=None):
-        if not output:
+        if output is None:
             cmd = self.cli_command.format(diagshell=diagshell,
                     location=location)
             out = self.device.execute(cmd)
