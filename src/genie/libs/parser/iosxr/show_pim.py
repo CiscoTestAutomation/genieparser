@@ -300,7 +300,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # Propagation delay : 500
             p9 = re.compile(r'^Propagation +delay *:'
-                             ' +(?P<propagation_delay>[0-9]+)$')
+                             ' +(?P<propagation_delay>[0-9]+)')
             m = p9.match(line)
             if m:
                 sub_dict['propagation_delay'] = \
@@ -309,7 +309,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # Override Interval : 2500
             p10 = re.compile(r'^Override +Interval *:'
-                              ' +(?P<override_interval>[0-9]+)$')
+                              ' +(?P<override_interval>[0-9]+)')
             m = p10.match(line)
             if m:
                 sub_dict['override_interval'] = \
