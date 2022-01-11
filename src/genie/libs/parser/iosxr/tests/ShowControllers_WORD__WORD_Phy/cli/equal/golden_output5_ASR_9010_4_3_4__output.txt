@@ -1,0 +1,2224 @@
+test = dev.parse("show controllers phy", output="")
+
+2022-01-10 12:33:57,239: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet ?' +++
+show controllers gigabitethernet ?
+  0/4/0/0   GigabitEthernet Interface Instance
+  0/4/0/1   GigabitEthernet Interface Instance
+  0/4/0/10  GigabitEthernet Interface Instance
+  0/4/0/11  GigabitEthernet Interface Instance
+  0/4/0/12  GigabitEthernet Interface Instance
+  0/4/0/13  GigabitEthernet Interface Instance
+  0/4/0/19  GigabitEthernet Interface Instance
+  0/4/0/7   GigabitEthernet Interface Instance
+  0/4/0/8   GigabitEthernet Interface Instance
+  0/5/0/1   GigabitEthernet Interface Instance
+  0/5/0/10  GigabitEthernet Interface Instance
+  0/5/0/12  GigabitEthernet Interface Instance
+  0/5/0/19  GigabitEthernet Interface Instance
+  0/5/0/2   GigabitEthernet Interface Instance
+  0/5/0/8   GigabitEthernet Interface Instance
+  0/6/0/10  GigabitEthernet Interface Instance
+  0/6/0/19  GigabitEthernet Interface Instance
+  0/6/0/9   GigabitEthernet Interface Instance
+  0/7/0/19  GigabitEthernet Interface Instance
+  0/7/0/9   GigabitEthernet Interface Instance
+RP/0/RSP0/CPU0:noll03rt34#show controllers gigabitethernet
+% Incomplete command.
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:33:57,569: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers hundredgige ?' +++
+show controllers hundredgige ?
+                                           ^
+% Invalid input detected at '^' marker.
+RP/0/RSP0/CPU0:noll03rt34#show controllers hundredgige
+                                           ^
+% Invalid input detected at '^' marker.
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:33:57,848: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige ?' +++
+show controllers tengige ?
+  0/0/0/0  TenGigE Interface Instance
+  0/0/0/4  TenGigE Interface Instance
+  0/0/0/5  TenGigE Interface Instance
+  0/1/0/0  TenGigE Interface Instance
+  0/1/0/5  TenGigE Interface Instance
+  0/5/0/0  TenGigE Interface Instance
+  0/5/0/1  TenGigE Interface Instance
+  0/6/1/0  TenGigE Interface Instance
+  0/6/1/1  TenGigE Interface Instance
+  0/6/1/2  TenGigE Interface Instance
+  0/6/1/3  TenGigE Interface Instance
+  0/7/1/2  TenGigE Interface Instance
+RP/0/RSP0/CPU0:noll03rt34#show controllers tengige
+                                            ^
+% Invalid input detected at '^' marker.
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:33:58,130: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/0 phy' +++
+show controllers gigabitethernet 0/4/0/0 phy
+Mon Jan 10 12:34:15.500 ARG
+
+SFP EEPROM  port:0
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-FINISAR
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTRJ1319P1BTL-C6 (rev.: C   )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS15411WEH
+        Date Code (yy/mm/dd): 11/10/07  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 46 49 4e 49 53 41
+0x0020: 52 20 20 20 00 00 90 65 : 46 54 52 4a 31 33 31 39
+0x0030: 50 31 42 54 4c 2d 43 36 : 43 20 20 20 05 1e 00 cc
+0x0040: 00 1a 00 00 46 4e 53 31 : 35 34 31 31 57 45 48 20
+0x0050: 20 20 20 20 31 31 31 30 : 30 37 20 20 58 90 01 d4
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:   0.000000  R1:   1.000000  R0:   0.000000
+          B1:      1.000  B0:          0
+          P1:      1.000  P0:          0
+          T1:      1.000  T0:          0
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:           +110.000 C             +93.000 C             -30.000 C             -40.000 C
+                  Voltage:           3.900 Volt            3.700 Volt            2.900 Volt            2.700 Volt
+                     Bias:         80.000 mAmps          70.000 mAmps           4.000 mAmps           2.000 mAmps
+           Transmit Power:  1.25890 mW (0.99991 dBm)   0.79430 mW (-1.00015 dBm)   0.07080 mW (-11.49967 dBm)   0.04470 mW (-1
+            Receive Power:  1.17490 mW (0.70001 dBm)   0.79430 mW (-1.00015 dBm)   0.01000 mW (-20.00000 dBm)   0.00400 mW (-2
+        Temperature: 30.145
+        Voltage: 3.314 Volt
+        Tx Bias: 21.370 mAmps
+        Tx Power:  0.20960 mW (-6.78609 dBm)
+        Rx Power:  0.000 mW (<-40.00 dBm)
+        Oper. Status/Control: LOS,
+EEPROM Memory (A2 lower)
+0x0100: 6e 00 d8 00 5d 00 e2 00 : 98 58 69 78 90 88 71 48
+0x0110: 9c 40 03 e8 88 b8 07 d0 : 31 2d 01 bf 1f 07 02 c4
+0x0120: 2d e5 00 28 1f 07 00 64 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 96
+0x0160: 1e 25 81 72 29 bd 08 30 : 00 00 00 00 00 00 02 00
+0x0170: 00 40 00 00 00 40 00 00 : ff ff ff ff ff ff ff 01
+
+        CLEI Code: IPUIALKRAA
+        Part Number: 10-2144-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, not RCLR, Max power: 1100 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants:
+        Product Id: SFP-GE-L
+EEPROM Memory (A2 upper)
+0x0180: 49 50 55 49 41 4c 4b 52 : 41 41 31 30 2d 32 31 34
+0x0190: 34 2d 30 31 56 30 31 20 : 8b fb 55 00 00 00 00 7c
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 aa aa
+0x01c0: 53 46 50 2d 47 45 2d 4c : 20 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 9b
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 40 00 40 00 00 00 00
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:33:59,485: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/1 phy' +++
+show controllers gigabitethernet 0/4/0/1 phy
+Mon Jan 10 12:34:16.861 ARG
+
+SFP #1 is not present.
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:00,238: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/10 phy' +++
+show controllers gigabitethernet 0/4/0/10 phy
+Mon Jan 10 12:34:17.575 ARG
+
+SFP EEPROM  port:10
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-ZX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 80000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: CISCO-SUMITOMO
+        Vendor OUI: 00.00.5f
+        Vendor Part Number: SCP6894-C8-BNE   (rev.: A   )
+        Laser wavelength: 1550 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: SPC16470H4A
+        Date Code (yy/mm/dd): 12/11/17  lot code: 0Y
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 50 ff
+0x0010: 00 00 00 00 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x0020: 4d 4f 20 20 00 00 00 5f : 53 43 50 36 38 39 34 2d
+0x0030: 43 38 2d 42 4e 45 20 20 : 41 20 20 20 06 0e 00 87
+0x0040: 00 1a 00 00 53 50 43 31 : 36 34 37 30 48 34 41 20
+0x0050: 20 20 20 20 31 32 31 31 : 31 37 30 59 58 b0 01 1e
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:   0.000000  R1:   0.153846  R0:   0.000000
+          B1:      1.000  B0:          0
+          P1:      1.000  P0:          0
+          T1:      1.000  T0:      -1132
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +95.578 C             +90.578 C             -10.578 C             -45.578 C
+                  Voltage:           4.000 Volt            3.600 Volt            3.000 Volt            0.000 Volt
+                     Bias:         70.000 mAmps          60.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  6.30950 mW (7.99995 dBm)   3.98100 mW (5.99992 dBm)   0.79430 mW (-1.00015 dBm)   0.50110 mW (-3.0
+            Receive Power:  1.00820 mW (0.03547 dBm)   1.00820 mW (0.03547 dBm)   0.000 mW (<-40.00 dBm)   0.000 mW (<-40.00 d
+        Temperature: 26.477
+        Voltage: 3.269 Volt
+        Tx Bias: 11.268 mAmps
+        Tx Power:  1.85840 mW (2.69139 dBm)
+        Rx Power:  0.28550 mW (-5.44394 dBm)
+        Oper. Status/Control: Rx Rate Select,
+EEPROM Memory (A2 lower)
+0x0100: 5f 94 d3 94 5a 94 f6 94 : 9c 40 00 00 8c a0 75 30
+0x0110: 88 b8 00 00 75 30 00 00 : f6 77 13 93 9b 82 1f 07
+0x0120: 27 62 00 00 27 62 00 00 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3e 1d 89 d8 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 fb 94 : 01 00 00 00 00 00 00 c9
+0x0160: 1a 7a 7f b6 16 02 48 98 : 0b 27 00 00 00 00 10 f8
+0x0170: 00 00 0a 80 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code: CNTRU5UFAA
+        Part Number: 10-1837-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C, not temp compensated, not RCLR, Max power: 1000 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 70
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power, 
+        Product Id: GLC-ZX-SM
+EEPROM Memory (A2 upper)
+0x0180: 43 4e 54 52 55 35 55 46 : 41 41 31 30 2d 31 38 33
+0x0190: 37 2d 30 31 56 30 31 20 : 4a fb 46 00 00 00 00 2f
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 21 28 3a 00 65 72
+0x01b0: b1 6a 00 00 1e bc 18 a6 : 49 c4 0f 29 00 00 aa aa
+0x01c0: 47 4c 43 2d 5a 58 2d 53 : 4d 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 e2 
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:01,651: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/11 phy' +++
+show controllers gigabitethernet 0/4/0/11 phy
+Mon Jan 10 12:34:19.004 ARG
+
+SFP EEPROM  port:11
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-T
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach Copper: 100 meter
+        Vendor Name: CISCO-METHODE
+        Vendor OUI: 00.00.00
+        Vendor Part Number: SP7041-E-R       (rev.:     )
+        Optional SFP Signal: Tx_Disable,
+        Vendor Serial Number: MTC203600GL
+        Date Code (yy/mm/dd): 16/09/02  lot code: 01
+
+MSA Data
+0x0000: 03 04 00 00 00 00 08 00 : 00 00 00 01 0d 00 00 00
+0x0010: 00 00 64 00 43 49 53 43 : 4f 2d 4d 45 54 48 4f 44
+0x0020: 45 20 20 20 01 00 00 00 : 53 50 37 30 34 31 2d 45
+0x0030: 2d 52 20 20 20 20 20 20 : 20 20 20 20 41 0c c1 34
+0x0040: 00 10 00 00 4d 54 43 32 : 30 33 36 30 30 47 4c 20
+0x0050: 20 20 20 20 31 36 30 39 : 30 32 30 31 00 00 00 e5
+
+
+Digital Monitoring not supported
+        CLEI Code: IPUIAPARAB
+        Part Number: 30-1421-02 (ver.: V02)
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id: SFP-GE-T
+EEPROM Memory (A0)
+0x0080: 49 50 55 49 41 50 41 52 : 41 42 33 30 2d 31 34 32
+0x0090: 31 2d 30 32 56 30 32 00 : 00 00 00 00 00 00 00 7d
+0x00a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00c0: 53 46 50 2d 47 45 2d 54 : 20 20 20 20 20 20 20 20
+0x00d0: 20 20 20 20 ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00e0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00f0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:02,522: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/12 phy' +++
+show controllers gigabitethernet 0/4/0/12 phy
+Mon Jan 10 12:34:19.864 ARG
+
+SFP EEPROM  port:12
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-SUMITOMO
+        Vendor OUI: 00.00.5f
+        Vendor Part Number: SCP6G44-C1-BMH   (rev.: A   )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: SPC16160AS4
+        Date Code (yy/mm/dd): 12/04/14  lot code: GS
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x0020: 4d 4f 20 20 00 00 00 5f : 53 43 50 36 47 34 34 2d
+0x0030: 43 31 2d 42 4d 48 20 20 : 41 20 20 20 05 1e 00 28
+0x0040: 00 1a 00 00 53 50 43 31 : 36 31 36 30 41 53 34 20
+0x0050: 20 20 20 20 31 32 30 34 : 31 34 47 53 68 f0 01 85
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +95.000 C             +85.000 C              -5.000 C             -15.000 C
+                  Voltage:           3.630 Volt            3.470 Volt            3.140 Volt            2.970 Volt
+                     Bias:         60.000 mAmps          50.000 mAmps           0.100 mAmps           0.100 mAmps
+           Transmit Power:  1.00000 mW (0.00000 dBm)   0.50110 mW (-3.00076 dBm)   0.11220 mW (-9.50007 dBm)   0.04460 mW (-13
+            Receive Power:  1.00000 mW (0.00000 dBm)   0.50120 mW (-2.99989 dBm)   0.02000 mW (-16.98970 dBm)   0.00510 mW (-2
+        Temperature: 27.219
+        Voltage: 3.321 Volt
+        Tx Bias: 4.630 mAmps
+        Tx Power:  0.18640 mW (-7.29554 dBm)
+        Rx Power:  0.05650 mW (-12.47952 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 5f 00 f1 00 55 00 fb 00 : 8d cc 74 04 87 8c 7a a8
+0x0110: 75 30 00 32 61 a8 00 32 : 27 10 01 be 13 93 04 62
+0x0120: 27 10 00 33 13 94 00 c8 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 56
+0x0160: 1b 38 81 ba 09 0b 07 48 : 02 35 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code: IPUIALKRAA
+        Part Number: 10-2144-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, not RCLR, Max power: 800 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power,
+        Product Id: SFP-GE-L
+EEPROM Memory (A2 upper)
+0x0180: 49 50 55 49 41 4c 4b 52 : 41 41 31 30 2d 32 31 34
+0x0190: 34 2d 30 31 56 30 31 20 : 88 fb 55 00 00 00 00 79
+0x01a0: 00 00 00 00 00 00 00 00 : 13 eb 1e c6 28 00 3a 9e
+0x01b0: 5a e5 89 13 19 c7 0a 05 : 07 48 0f 0a 00 00 aa aa
+0x01c0: 53 46 50 2d 47 45 2d 4c : 20 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 9b
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : f7 c0 ff c0 00 00 00 6e
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:03,895: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/13 phy' +++
+show controllers gigabitethernet 0/4/0/13 phy
+Mon Jan 10 12:34:21.271 ARG
+
+SFP EEPROM  port:13
+        Xcvr Type: SFP
+        Xcvr Code: DWDM-SFP-3819
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Vendor Name: SOURCEPHOTONICS
+        Vendor OUI: 00.1f.22
+        Vendor Part Number: FTM9912CSL10G    (rev.: 10  )
+        Laser wavelength: 1490 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: CBH2016609
+        Date Code (yy/mm/dd): 12/10/22  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 00 00 00 00 53 4f 55 52 : 43 45 50 48 4f 54 4f 4e
+0x0020: 49 43 53 20 00 00 1f 22 : 46 54 4d 39 39 31 32 43
+0x0030: 53 4c 31 30 47 20 20 20 : 31 30 20 20 05 d2 00 d1
+0x0040: 00 1a 00 00 43 42 48 32 : 30 31 36 36 30 39 20 20
+0x0050: 20 20 20 20 31 32 31 30 : 32 32 20 20 58 b0 02 81
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:  -0.000000  R1:   0.169938  R0:  -0.290739
+          B1:      1.000  B0:          0
+          P1:      1.000  P0:          0
+          T1:      1.000  T0:          0
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +90.000 C             +80.000 C              +0.000 C              -5.000 C
+                  Voltage:           3.800 Volt            3.630 Volt            2.970 Volt            2.700 Volt
+                     Bias:         50.000 mAmps          40.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  0.63090 mW (-2.00039 dBm)   0.50110 mW (-3.00076 dBm)   0.12580 mW (-9.00319 dBm)   0.10000 mW (-1
+            Receive Power:  0.63090 mW (-2.00039 dBm)   0.50110 mW (-3.00076 dBm)   0.00990 mW (-20.04365 dBm)   0.00620 mW (-
+        Temperature: 32.438
+        Voltage: 3.323 Volt
+        Tx Bias: 0.000 mAmps
+        Tx Power:  0.000 mW (<-40.00 dBm)
+        Rx Power:  0.000 mW (<-40.00 dBm)
+        Oper. Status/Control: LOS,
+EEPROM Memory (A2 lower)
+0x0100: 5a 00 fb 00 50 00 00 00 : 94 70 69 78 8d cc 74 04
+0x0110: 61 a8 00 00 4e 20 00 00 : 18 a5 03 e8 13 93 04 ea
+0x0120: 18 a5 00 3e 13 93 00 63 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: b3 97 02 41 3e 2e 04 3c : be 94 db b8 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 f2
+0x0160: 20 70 81 d0 00 00 00 00 : 00 01 00 00 00 00 02 f8
+0x0170: 01 40 00 00 01 40 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code:
+        Part Number:  (ver.: 0475)
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id:
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 33 34 30 36 30 34 37 35 : 00 00 00 00 00 00 fe 62
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:12,533: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/19 phy' +++
+show controllers gigabitethernet 0/4/0/19 phy
+Mon Jan 10 12:34:29.872 ARG
+
+SFP EEPROM  port:19
+        Xcvr Type: SFP
+        Xcvr Code: 1000BX-10-D
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-ACCELINK
+        Vendor OUI: 00.1c.ad
+        Vendor Part Number: RTXM182-426-C08  (rev.: 1.0 )
+        Laser wavelength: 1490 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: ACW231309B0
+        Date Code (yy/mm/dd): 19/04/02  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 00 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 41 43 43 45 4c 49
+0x0020: 4e 4b 20 20 00 00 1c ad : 52 54 58 4d 31 38 32 2d
+0x0030: 34 32 36 2d 43 30 38 20 : 31 2e 30 20 05 d2 00 06
+0x0040: 00 1a 00 00 41 43 57 32 : 33 31 33 30 39 42 30 20
+0x0050: 20 20 20 20 31 39 30 34 : 30 32 20 20 68 f0 04 05
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +74.000 C             +70.000 C              -5.000 C              -9.000 C
+                  Voltage:           3.600 Volt            3.500 Volt            3.100 Volt            3.000 Volt
+                     Bias:         70.000 mAmps          60.000 mAmps           1.000 mAmps           0.500 mAmps
+           Transmit Power:  1.00000 mW (0.00000 dBm)   0.50120 mW (-2.99989 dBm)   0.12560 mW (-9.01010 dBm)   0.05010 mW (-13
+            Receive Power:  1.00000 mW (0.00000 dBm)   0.50120 mW (-2.99989 dBm)   0.01120 mW (-19.50782 dBm)   0.00450 mW (-2
+        Temperature: 25.055
+        Voltage: 3.326 Volt
+        Tx Bias: 14.500 mAmps
+        Tx Power:  0.26870 mW (-5.70732 dBm)
+        Rx Power:  0.10660 mW (-9.72243 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 4a 00 f7 00 46 00 fb 00 : 8c a0 75 30 88 b8 79 18
+0x0110: 88 b8 00 fa 75 30 01 f4 : 27 10 01 f5 13 94 04 e8
+0x0120: 27 10 00 2d 13 94 00 70 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 f6
+0x0160: 19 0e 81 f1 1c 52 0a 7f : 04 2a 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code: IPUIAG6RAC
+        Part Number: 10-2093-03 (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C, not temp compensated, not RCLR, Max power: 1000 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 70
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power,
+        Product Id: GLC-BX-D
+EEPROM Memory (A2 upper)
+0x0180: 49 50 55 49 41 47 36 52 : 41 43 31 30 2d 32 30 39 
+0x0190: 33 2d 30 33 56 30 33 20 : 4a fb 46 00 00 00 00 1b
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 18 4c 1c 84 : 0a 7f 0f 9c 00 00 aa aa
+0x01c0: 47 4c 43 2d 42 58 2d 44 : 20 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 8e
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : ff ff ff ff 00 00 00 00
+
+
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:20,433: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/7 phy' +++
+show controllers gigabitethernet 0/4/0/7 phy
+Mon Jan 10 12:34:37.774 ARG
+
+SFP EEPROM  port:7
+        Xcvr Type: SFP
+        Xcvr Code: DWDM-SFP-3819
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Vendor Name: SOURCEPHOTONICS
+        Vendor OUI: 00.1f.22
+        Vendor Part Number: FTM9612CSL10G    (rev.: 10  )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: CAJ2016489
+        Date Code (yy/mm/dd): 12/09/22  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 00 00 00 00 53 4f 55 52 : 43 45 50 48 4f 54 4f 4e
+0x0020: 49 43 53 20 00 00 1f 22 : 46 54 4d 39 36 31 32 43
+0x0030: 53 4c 31 30 47 20 20 20 : 31 30 20 20 05 1e 00 1a
+0x0040: 00 1a 00 00 43 41 4a 32 : 30 31 36 34 38 39 20 20
+0x0050: 20 20 20 20 31 32 30 39 : 32 32 20 20 58 b0 02 90
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:  -0.000000  R1:   0.168442  R0:   0.060878
+          B1:      1.000  B0:          0
+          P1:      1.000  P0:          0
+          T1:      1.000  T0:          0
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +90.000 C             +80.000 C              +0.000 C              -5.000 C
+                  Voltage:           3.800 Volt            3.630 Volt            2.970 Volt            2.700 Volt
+                     Bias:         50.000 mAmps          40.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  0.63090 mW (-2.00039 dBm)   0.50110 mW (-3.00076 dBm)   0.12580 mW (-9.00319 dBm)   0.10000 mW (-1
+            Receive Power:  0.63080 mW (-2.00108 dBm)   0.50110 mW (-3.00076 dBm)   0.00990 mW (-20.04365 dBm)   0.00630 mW (-
+        Temperature: 31.750
+        Voltage: 3.318 Volt
+        Tx Bias: 0.000 mAmps
+        Tx Power:  0.000 mW (<-40.00 dBm)
+        Rx Power:  0.000 mW (<-40.00 dBm)
+        Oper. Status/Control: LOS,
+EEPROM Memory (A2 lower)
+0x0100: 5a 00 fb 00 50 00 00 00 : 94 70 69 78 8d cc 74 04
+0x0110: 61 a8 00 00 4e 20 00 00 : 18 a5 03 e8 13 93 04 ea
+0x0120: 18 a4 00 3f 13 93 00 63 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: b3 38 55 61 3e 2c 7b f8 : 3d 79 5b aa 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 f2
+0x0160: 1f c0 81 a0 00 00 00 00 : 00 00 00 00 00 00 02 f8
+0x0170: 01 40 00 00 01 40 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code:
+        Part Number:  (ver.: 0470)
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id: 
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 33 34 30 36 30 34 37 30 : 00 00 00 00 00 00 fe 67
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:21,758: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/8 phy' +++
+show controllers gigabitethernet 0/4/0/8 phy
+Mon Jan 10 12:34:39.093 ARG
+
+SFP EEPROM  port:8
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-ZX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 80000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: CISCO
+        Vendor OUI: 00.1c.ad
+        Vendor Part Number: RTXM191-507-C88  (rev.: 1.0 )
+        Laser wavelength: 1550 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: ACW20470D80
+        Date Code (yy/mm/dd): 16/11/18  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 50 ff
+0x0010: 00 00 00 00 43 49 53 43 : 4f 20 20 20 20 20 20 20
+0x0020: 20 20 20 20 00 00 1c ad : 52 54 58 4d 31 39 31 2d
+0x0030: 35 30 37 2d 43 38 38 20 : 31 2e 30 20 06 0e 00 79
+0x0040: 00 1a 00 00 41 43 57 32 : 30 34 37 30 44 38 30 20
+0x0050: 20 20 20 20 31 36 31 31 : 31 38 20 20 68 f0 04 0c
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +89.000 C             +85.000 C              -5.000 C              -9.000 C
+                  Voltage:           3.600 Volt            3.500 Volt            3.100 Volt            3.000 Volt
+                     Bias:         60.000 mAmps          50.000 mAmps           1.300 mAmps           0.800 mAmps
+           Transmit Power:  6.45650 mW (8.09997 dBm)   3.16220 mW (4.99989 dBm)   1.00000 mW (0.00000 dBm)   0.39810 mW (-4.00
+            Receive Power:  1.25890 mW (0.99991 dBm)   0.50110 mW (-3.00076 dBm)   0.00500 mW (-23.01030 dBm)   0.00190 mW (-2
+        Temperature: 28.996
+        Voltage: 3.306 Volt
+        Tx Bias: 10.550 mAmps
+        Tx Power:  1.54750 mW (1.89631 dBm)
+        Rx Power:  0.09720 mW (-10.12334 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 59 00 f7 00 55 00 fb 00 : 8c a0 75 30 88 b8 79 18
+0x0110: 75 30 01 90 61 a8 02 8a : fc 35 0f 8d 7b 86 27 10
+0x0120: 31 2d 00 13 13 93 00 32 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 1e
+0x0160: 1c ff 81 29 14 9b 3c 73 : 03 cc 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code: WOTRB9XBAA
+        Part Number: 10-2621-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, latch & RCLR, Max power: 900 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power,
+        Product Id: GLC-ZX-SMD
+EEPROM Memory (A2 upper)
+0x0180: 57 4f 54 52 42 39 58 42 : 41 41 31 30 2d 32 36 32
+0x0190: 31 2d 30 31 56 30 31 20 : a9 fb 55 00 00 00 00 9a 
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 1f 8f 32 00 47 df
+0x01b0: 84 b3 c6 43 1b 28 14 cd : 3c bc 0f 71 00 00 aa aa
+0x01c0: 47 4c 43 2d 5a 58 2d 53 : 4d 44 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 06
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : ff ff ff ff 00 00 00 00
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:25,271: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/1 phy' +++
+show controllers gigabitethernet 0/5/0/1 phy
+Mon Jan 10 12:34:42.649 ARG
+
+SFP EEPROM  port:1
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-FINISAR
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTLF1318P2BCL-C3 (rev.: A   )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, LOS
+        Vendor Serial Number: FNS153201ZT
+        Date Code (yy/mm/dd): 11/07/31  lot code:
+        Diagnostic Monitoring:
+        Enhanced Options: None
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 46 49 4e 49 53 41
+0x0020: 52 20 20 20 00 00 90 65 : 46 54 4c 46 31 33 31 38
+0x0030: 50 32 42 43 4c 2d 43 33 : 41 20 20 20 05 1e 00 ac
+0x0040: 00 12 00 00 46 4e 53 31 : 35 33 32 30 31 5a 54 20
+0x0050: 20 20 20 20 31 31 30 37 : 33 31 20 20 08 00 00 e8
+
+
+Digital Monitoring not supported
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id:
+EEPROM Memory (A0)
+0x0080: 09 91 63 85 0a 20 04 74 : 0b 57 dc fe 0c 3d 3b 0c
+0x0090: 0d 00 4c 63 0e 38 00 1b : 04 00 00 4a 00 00 00 e8
+0x00a0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00b0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00c0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00d0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff 
+0x00e0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00f0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id:
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:26,250: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/10 phy' +++
+show controllers gigabitethernet 0/5/0/10 phy
+Mon Jan 10 12:34:43.593 ARG
+
+SFP EEPROM  port:10
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-FINISAR
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FIRJ1319P1BAL-CS (rev.: 2.0 )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS27163272
+        Date Code (yy/mm/dd): 08/06/30  lot code:
+        Diagnostic Monitoring:
+        Enhanced Options: None
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 12 : 00 0d 01 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 46 49 4e 49 53 41
+0x0020: 52 20 20 20 00 00 90 65 : 46 49 52 4a 31 33 31 39
+0x0030: 50 31 42 41 4c 2d 43 53 : 32 2e 30 20 05 1e 00 f8
+0x0040: 00 1a 00 00 46 4e 53 32 : 37 31 36 33 32 37 32 20
+0x0050: 20 20 20 20 30 38 30 36 : 33 30 20 20 00 00 00 b0
+
+
+Digital Monitoring not supported
+        CLEI Code: CN8ID42AAA
+        Part Number: 30-1299-02 (ver.: V02)
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id: GLC-LH-SM
+EEPROM Memory (A0)
+0x0080: 43 4e 38 49 44 34 32 41 : 41 41 33 30 2d 31 32 39
+0x0090: 39 2d 30 32 56 30 32 00 : 00 00 00 00 00 00 00 72
+0x00a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00c0: 47 4c 43 2d 4c 48 2d 53 : 4d 00 00 00 00 00 00 00
+0x00d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x00e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id:
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:28,501: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/12 phy' +++
+show controllers gigabitethernet 0/5/0/12 phy
+Mon Jan 10 12:34:45.849 ARG
+
+SFP EEPROM  port:12
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 2500 Mbps
+        Link Reach 9u fiber (Km): 76000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: CISCO-FINISAR
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTRJ1519P1BCL-CS (rev.: A   )
+        Laser wavelength: 1550 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS11470XDC
+        Date Code (yy/mm/dd): 07/11/23  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 80 : 10 01 05 01 19 00 4c ff
+0x0010: 00 00 00 00 43 49 53 43 : 4f 2d 46 49 4e 49 53 41
+0x0020: 52 20 20 20 00 00 90 65 : 46 54 52 4a 31 35 31 39
+0x0030: 50 31 42 43 4c 2d 43 53 : 41 20 20 20 06 0e 00 da
+0x0040: 00 1a 00 00 46 4e 53 31 : 31 34 37 30 58 44 43 20
+0x0050: 20 20 20 20 30 37 31 31 : 32 33 20 20 58 90 01 d4
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:   0.000000  R1:   0.223908  R0:   6.218941
+          B1:      1.000  B0:          0
+          P1:      1.336  P0:          2
+          T1:      1.000  T0:          0
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:           +110.000 C             +93.000 C              -3.000 C              -9.000 C
+                  Voltage:           4.000 Volt            3.700 Volt            2.900 Volt            2.800 Volt
+                     Bias:         84.000 mAmps          70.000 mAmps           4.000 mAmps           2.000 mAmps
+           Transmit Power:  0.00410 mW (-23.87216 dBm)   5.01780 mW (7.00513 dBm)   0.63160 mW (-1.99558 dBm)   0.39850 mW (-3
+            Receive Power:  1.19400 mW (0.77004 dBm)   0.79430 mW (-1.00015 dBm)   0.01000 mW (-20.00000 dBm)   0.00400 mW (-2
+        Temperature: 41.641
+        Voltage: 3.333 Volt
+        Tx Bias: 27.356 mAmps
+        Tx Power:  2.00590 mW (3.02309 dBm)
+        Rx Power:  0.04240 mW (-13.72634 dBm)
+        Oper. Status/Control: Rx Rate Select, 
+EEPROM Memory (A2 lower)
+0x0100: 6e 00 f7 00 5d 00 fd 00 : 9c 40 6d 60 90 88 71 48
+0x0110: a4 10 03 e8 88 b8 07 d0 : 00 29 0f 91 c4 02 18 ac
+0x0120: 2e a4 00 28 1f 07 00 64 : 00 02 00 00 00 00 00 00
+0x0130: 00 00 00 00 04 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3e 65 48 28 : 40 c7 01 91 01 00 00 00
+0x0150: 01 56 00 02 01 00 00 00 : 01 00 00 00 df ff ff 1c
+0x0160: 29 a4 82 32 35 6e 4e 5b : 01 a8 00 00 00 00 10 f8
+0x0170: 00 00 02 80 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id: 
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:38,172: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/19 phy' +++
+show controllers gigabitethernet 0/5/0/19 phy
+Mon Jan 10 12:34:55.625 ARG
+
+SFP EEPROM  port:19
+        Xcvr Type: SFP
+        Xcvr Code: Unknown
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 40000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: Telco Systems
+        Vendor OUI: 00.00.00
+        Vendor Part Number: BTI-SFP-GBD40L-D (rev.: 1.0 )
+        Laser wavelength: 1490 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: S1611122111
+        Date Code (yy/mm/dd): 16/11/24  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 01 0d 00 28 ff
+0x0010: 00 00 00 00 54 65 6c 63 : 6f 20 53 79 73 74 65 6d
+0x0020: 73 20 20 20 00 00 00 00 : 42 54 49 2d 53 46 50 2d
+0x0030: 47 42 44 34 30 4c 2d 44 : 31 2e 30 20 05 d2 00 88
+0x0040: 00 1a 00 00 53 31 36 31 : 31 31 32 32 31 31 31 20
+0x0050: 20 20 20 20 31 36 31 31 : 32 34 20 20 68 f0 01 c6
+
+
+Digital Monitoring not supported
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: IND, industrial -40C to 85C, temp compensated, latch & RCLR, Max power: 1500 mW
+        Minimum Temp.: -1
+        Maximum Temp.: -1
+        Product Id:
+EEPROM Memory (A0)
+0x0080: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x0090: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00a0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00b0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00c0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00d0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00e0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x00f0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:39,055: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/2 phy' +++
+show controllers gigabitethernet 0/5/0/2 phy
+Mon Jan 10 12:34:56.407 ARG
+
+SFP EEPROM  port:2
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1200 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-AVAGO
+        Vendor OUI: 00.17.6a
+        Vendor Part Number: SFCT-5798PZ-CS3  (rev.: 0000)
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: AGC1701V2M8
+        Date Code (yy/mm/dd): 13/01/06  lot code: 00
+        Diagnostic Monitoring:
+        Enhanced Options: None
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0c 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 41 56 41 47 4f 20
+0x0020: 20 20 20 20 00 00 17 6a : 53 46 43 54 2d 35 37 39
+0x0030: 38 50 5a 2d 43 53 33 20 : 30 30 30 30 05 1e 00 03
+0x0040: 00 1a 00 00 41 47 43 31 : 37 30 31 56 32 4d 38 20
+0x0050: 20 20 20 20 31 33 30 31 : 30 36 30 30 00 00 00 e6
+
+
+Digital Monitoring not supported
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id:
+EEPROM Memory (A0)
+0x0080: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0090: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temperature: 0
+        Maximum Temperature: 0
+        Calibration Constants:
+        Product Id:
+EEPROM Memory (A2 upper)
+0x0180: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0190: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:45,539: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/5/0/8 phy' +++
+show controllers gigabitethernet 0/5/0/8 phy
+Mon Jan 10 12:35:02.893 ARG
+
+SFP EEPROM  port:8
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTLF1318P3BTL-CS (rev.: A   )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS18050HDB
+        Date Code (yy/mm/dd): 14/01/27  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 20 20 20 20 20 20 20
+0x0020: 20 20 20 20 00 00 90 65 : 46 54 4c 46 31 33 31 38
+0x0030: 50 33 42 54 4c 2d 43 53 : 41 20 20 20 05 1e 00 a5
+0x0040: 00 1a 00 00 46 4e 53 31 : 38 30 35 30 48 44 42 20
+0x0050: 20 20 20 20 31 34 30 31 : 32 37 20 20 68 f0 03 37
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +90.000 C             +85.000 C              -5.000 C             -10.000 C
+                  Voltage:           3.600 Volt            3.500 Volt            3.100 Volt            3.000 Volt
+                     Bias:         65.000 mAmps          55.000 mAmps           3.000 mAmps           1.000 mAmps
+           Transmit Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.11220 mW (-9.50007 dBm)   0.04470 mW (-13
+            Receive Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.01260 mW (-18.99629 dBm)   0.00500 mW (-2
+        Temperature: 27.098
+        Voltage: 3.343 Volt
+        Tx Bias: 20.940 mAmps
+        Tx Power:  0.28110 mW (-5.51139 dBm)
+        Rx Power:  0.13590 mW (-8.66781 dBm)
+        Oper. Status/Control: Rx Rate Select,
+EEPROM Memory (A2 lower)
+0x0100: 5a 00 f6 00 55 00 fb 00 : 8c a0 75 30 88 b8 79 18
+0x0110: 7e f4 01 f4 6b 6c 05 dc : 31 2d 01 bf 13 94 04 62
+0x0120: 31 2d 00 32 13 94 00 7e : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 04
+0x0160: 1b 19 82 96 28 e6 0a fb : 05 4f 00 00 00 00 10 00
+0x0170: 00 00 00 00 00 00 00 00 : ff ff ff ff ff ff ff 01
+
+        CLEI Code: WOTRB9YBAA
+        Part Number: 10-2625-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, not RCLR, Max power: 800 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants: Temperature, Laser bias current, Output power,
+        Product Id: GLC-LH-SMD
+EEPROM Memory (A2 upper)
+0x0180: 57 4f 54 52 42 39 59 42 : 41 41 31 30 2d 32 36 32 
+0x0190: 35 2d 30 31 56 30 31 20 : 88 fb 55 00 00 00 00 7e
+0x01a0: 00 00 00 00 00 00 00 00 : 17 50 ae 58 00 64 df 73
+0x01b0: ee 88 e5 9a 08 41 00 00 : 00 0d 0e 7c 00 00 aa aa
+0x01c0: 47 4c 43 2d 4c 48 2d 53 : 4d 44 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 e8
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : ff ff ff ff 00 00 00 00
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:34:50,946: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/6/0/10 phy' +++
+show controllers gigabitethernet 0/6/0/10 phy
+Mon Jan 10 12:35:08.294 ARG
+
+SFP EEPROM  port: 10
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-ZX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 80000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: CISCO
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTLF1519P1BNL-CS (rev.: A   )
+        Laser wavelength: 1550 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS18200A8Q
+        Date Code (yy/mm/dd): 14/05/12  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 50 ff
+0x0010: 00 00 00 00 43 49 53 43 : 4f 20 20 20 20 20 20 20
+0x0020: 20 20 20 20 00 00 90 65 : 46 54 4c 46 31 35 31 39
+0x0030: 50 31 42 4e 4c 2d 43 53 : 41 20 20 20 06 0e 00 04
+0x0040: 00 1a 00 00 46 4e 53 31 : 38 32 30 30 41 38 51 20
+0x0050: 20 20 20 20 31 34 30 35 : 31 32 20 20 68 80 03 be
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +90.000 C             +85.000 C              -5.000 C             -10.000 C
+                  Voltage:           3.630 Volt            3.470 Volt            3.140 Volt            2.970 Volt
+                     Bias:        105.000 mAmps          95.000 mAmps           4.000 mAmps           2.000 mAmps
+           Transmit Power:  6.30950 mW (7.99995 dBm)   3.16220 mW (4.99989 dBm)   1.00000 mW (0.00000 dBm)   0.39810 mW (-4.00008 dBm)
+            Receive Power:  1.00000 mW (0.00000 dBm)   0.50110 mW (-3.00076 dBm)   0.00500 mW (-23.01030 dBm)   0.00190 mW (-27.21246 dBm)
+        Temperature: 35.242
+        Voltage: 3.296 Volt
+        Tx Bias: 22.556 mAmps
+        Tx Power:  1.66840 mW (2.22300 dBm)
+        Rx Power:  0.06560 mW (-11.83096 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 5a 00 f6 00 55 00 fb 00 : 8d cc 74 04 87 8c 7a ab
+0x0110: cd 14 03 e8 b9 8c 07 d0 : f6 77 0f 8d 7b 86 27 10
+0x0120: 27 10 00 13 13 93 00 32 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 b7
+0x0160: 23 3e 80 c4 2c 0e 41 2c : 02 90 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : ff ff ff ff ff ff ff 01
+
+        CLEI Code: WOTRB9XBAA
+        Part Number: 10-2621-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, not RCLR, Max power: 900 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants: Temperature, Laser bias current, Output power,
+        Product Id: GLC-ZX-SMD
+EEPROM Memory (A2 upper)
+0x0180: 57 4f 54 52 42 39 58 42 : 41 41 31 30 2d 32 36 32
+0x0190: 31 2d 30 31 56 30 31 20 : 89 fb 55 00 00 00 00 7a
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 3d 00 48 00 65
+0x01b0: 00 94 00 b8 0e 6d 27 58 : 43 73 0e f4 00 00 aa aa
+0x01c0: 47 4c 43 2d 5a 58 2d 53 : 4d 44 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 06
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : ff ff ff ff 00 00 00 00
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:02,041: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/6/0/19 phy' +++
+show controllers gigabitethernet 0/6/0/19 phy
+Mon Jan 10 12:35:19.389 ARG
+
+SFP EEPROM  port: 19
+        Xcvr Type: SFP
+        Xcvr Code: DWDM-SFP-3819
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 40000 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Link Reach 9u fiber (100m): 25500 meter
+        Vendor Name: Telco Systems
+        Vendor OUI: 00.00.00
+        Vendor Part Number: BTISFPGBD40L3149 (rev.:     )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: 1816490303
+        Date Code (yy/mm/dd): 16/12/01  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 01 0d 00 28 ff
+0x0010: 00 00 00 00 54 65 6c 63 : 6f 20 53 79 73 74 65 6d
+0x0020: 73 20 20 20 00 00 00 00 : 42 54 49 53 46 50 47 42
+0x0030: 44 34 30 4c 33 31 34 39 : 20 20 20 20 05 1e 00 ab
+0x0040: 00 1a 00 00 31 38 31 36 : 34 39 30 33 30 33 20 20
+0x0050: 20 20 20 20 31 36 31 32 : 30 31 20 20 68 90 01 41
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +90.000 C             +85.000 C             -40.000 C             -45.000 C
+                  Voltage:           3.800 Volt            3.700 Volt            2.800 Volt            2.700 Volt
+                     Bias:        100.000 mAmps          95.000 mAmps           0.100 mAmps           0.000 mAmps
+           Transmit Power:  1.25890 mW (0.99991 dBm)   1.00000 mW (0.00000 dBm)   0.31620 mW (-5.00038 dBm)   0.25120 mW (-5.99980 dBm)
+            Receive Power:  1.25890 mW (0.99991 dBm)   1.00000 mW (0.00000 dBm)   0.00320 mW (-24.94850 dBm)   0.00250 mW (-26.02060 dBm)
+        Temperature: 38.996
+        Voltage: 3.205 Volt
+        Tx Bias: 25.376 mAmps
+        Tx Power:  0.64610 mW (-1.89700 dBm)
+        Rx Power:  0.21330 mW (-6.71009 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 5a 00 d3 00 55 00 d8 00 : 94 70 69 78 90 88 6d 60
+0x0110: c3 50 00 00 b9 8c 00 32 : 31 2d 09 d0 27 10 0c 5a
+0x0120: 31 2d 00 19 27 10 00 20 : ff ff ff ff ff ff ff ff
+0x0130: ff ff ff ff ff ff ff ff : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 ff ff ff 00
+0x0160: 26 ff 7d 35 31 90 19 3d : 08 55 ff ff ff ff 20 00
+0x0170: 00 00 ff ff 00 00 ff ff : ff ff 00 ff ff ff ff 01
+
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: IND, industrial -40C to 85C, temp compensated, latch & RCLR, Max power: 1500 mW
+        Minimum Temperature: -1
+        Maximum Temperature: -1
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power,
+        Product Id:
+EEPROM Memory (A2 upper)
+0x0180: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x0190: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff 
+0x01a0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x01b0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x01c0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x01d0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x01e0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+0x01f0: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:12,236: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/6/0/9 phy' +++
+show controllers gigabitethernet 0/6/0/9 phy
+Mon Jan 10 12:35:29.577 ARG
+
+SFP EEPROM  port: 9
+        Xcvr Type: SFP
+        Xcvr Code: Unknown
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Vendor Name: NEOPHOTONICS
+        Vendor OUI: 00.00.00
+        Vendor Part Number: PTB3830-553CWLC+ (rev.: 000 )
+        Laser wavelength: 1490 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: A0117006601
+        Date Code (yy/mm/dd): 17/01/18  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 00 00 00 00 4e 45 4f 50 : 48 4f 54 4f 4e 49 43 53
+0x0020: 20 20 20 20 00 00 00 00 : 50 54 42 33 38 33 30 2d
+0x0030: 35 35 33 43 57 4c 43 2b : 30 30 30 20 05 d2 00 3c
+0x0040: 00 1a 00 00 41 30 31 31 : 37 30 30 36 36 30 31 20
+0x0050: 20 20 20 20 31 37 30 31 : 31 38 20 20 58 b0 02 6d
+
+
+Digital Monitoring not supported
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id:
+EEPROM Memory (A0)
+0x0080: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0090: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x00a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 ff
+
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:25,661: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/7/0/19 phy' +++
+show controllers gigabitethernet 0/7/0/19 phy
+Mon Jan 10 12:35:43.026 ARG
+
+SFP EEPROM  port: 19
+        Xcvr Type: SFP
+        Xcvr Code: 1000BX-10-U
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-NEO
+        Vendor OUI: 00.15.06
+        Vendor Part Number: PTB3370553CN0CS1 (rev.: 1.0 )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: NDG21272021
+        Date Code (yy/mm/dd): 17/07/07  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 00 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 4e 45 4f 20 20 20
+0x0020: 20 20 20 20 00 00 15 06 : 50 54 42 33 33 37 30 35
+0x0030: 35 33 43 4e 30 43 53 31 : 31 2e 30 20 05 1e 00 1d
+0x0040: 00 1a 00 00 4e 44 47 32 : 31 32 37 32 30 32 31 20
+0x0050: 20 20 20 20 31 37 30 37 : 30 37 20 20 68 80 03 85
+
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:            +75.000 C             +70.000 C              -5.000 C             -10.000 C
+                  Voltage:           3.630 Volt            3.470 Volt            3.140 Volt            2.970 Volt
+                     Bias:         35.000 mAmps          32.500 mAmps           2.500 mAmps           2.000 mAmps
+           Transmit Power:  1.00000 mW (0.00000 dBm)   0.50120 mW (-2.99989 dBm)   0.12590 mW (-8.99974 dBm)   0.05010 mW (-13.00162 dBm)
+            Receive Power:  1.00000 mW (0.00000 dBm)   0.50120 mW (-2.99989 dBm)   0.01120 mW (-19.50782 dBm)   0.00440 mW (-23.56547 dBm)
+        Temperature: 33.680
+        Voltage: 3.281 Volt
+        Tx Bias: 8.820 mAmps
+        Tx Power:  0.28460 mW (-5.45765 dBm)
+        Rx Power:  0.08820 mW (-10.54531 dBm)
+        Oper. Status/Control:
+EEPROM Memory (A2 lower)
+0x0100: 4b 00 f6 00 46 00 fb 00 : 8d cc 74 04 87 8c 7a ab
+0x0110: 44 5c 03 e8 3f 7a 04 e2 : 27 10 01 f5 13 94 04 eb
+0x0120: 27 10 00 2c 13 94 00 70 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 b5
+0x0160: 21 ae 80 27 11 3a 0b 1e : 03 72 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 01
+
+        CLEI Code: IPUIAG5RAC
+        Part Number: 10-2094-03 (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C, not temp compensated, not RCLR, Max power: 1000 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 70
+        Calibration Constants: LBC Scale, Temperature, Laser bias current, Output power,
+        Product Id: GLC-BX-U
+EEPROM Memory (A2 upper)
+0x0180: 49 50 55 49 41 47 35 52 : 41 43 31 30 2d 32 30 39 
+0x0190: 34 2d 30 33 56 30 33 20 : 4a fb 46 00 00 00 00 1b
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 44 ff 64 00 73 b9
+0x01b0: ea a8 00 00 1d 73 10 14 : 0b 1e 0f 51 00 00 aa aa
+0x01c0: 47 4c 43 2d 42 58 2d 55 : 20 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 9f
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : ff ff ff ff 00 00 00 00
+
+
+
+
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:35,768: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/7/0/9 phy' +++
+show controllers gigabitethernet 0/7/0/9 phy
+Mon Jan 10 12:35:53.115 ARG
+
+SFP EEPROM  port: 9
+        Xcvr Type: SFP
+        Xcvr Code: Unknown
+        Encoding: NRZ
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Vendor Name: Hisense
+        Vendor OUI: 00.00.00
+        Vendor Part Number: LTE3405-BC+1     (rev.: 1.0 )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: Q6586001623
+        Date Code (yy/mm/dd): 18/06/19  lot code:
+        Diagnostic Monitoring: DOM, Int. Cal.,
+        Enhanced Options: SW RX LOS Mon., SW TX Fault Mon, SW TX Disable, Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 40 00 : 00 00 00 03 0d 00 0a 64
+0x0010: 00 00 00 00 48 69 73 65 : 6e 73 65 20 20 20 20 20
+0x0020: 20 20 20 20 00 00 00 00 : 4c 54 45 33 34 30 35 2d
+0x0030: 42 43 2b 31 20 20 20 20 : 31 2e 30 20 05 1e 00 cc
+0x0040: 00 1a 14 14 51 36 35 38 : 36 30 30 31 36 32 33 20
+0x0050: 20 20 20 20 31 38 30 36 : 31 39 20 20 68 f0 02 0b
+
+
+Digital Monitoring not supported
+        CLEI Code:
+        Part Number:  (ver.: )
+        Temp/Alarm/Power Flags: Unknown temp range,
+        Minimum Temp.: 0
+        Maximum Temp.: 0
+        Product Id:
+EEPROM Memory (A0)
+0x0080: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0090: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00c0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00d0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x00f0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 ff
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:36,564: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/0/0/0 phy' +++
+show controllers tengige 0/0/0/0 phy
+Mon Jan 10 12:35:53.990 ARG
+
+XFP EEPROM  port: 0
+        Xcvr Type: XFP
+        Ext Type: 2.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR, 10GE-FC-1200-SM-LL-L,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 10000 Mbit/s
+        Bit Rate Max.: 11300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-OPNEXT
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 10.7 Gb/s, 11.1 Gb/s, XFI Loopback Mode,
+        Vendor OUI: 00.0b.40
+        Vendor Part Number TRF5013FN-CB030   (rev.: 00)
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ONT152811DQ
+        Date Code  (yy/mm/dd): 11/07/16  lot code:
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 58 07 40 40 00 00 40 : 00 00 00 b0 64 71 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 4f 50 4e 45 58 54
+0x00a0: 20 20 20 20 f9 00 0b 40 : 54 52 46 35 30 31 33 46
+0x00b0: 4e 2d 43 42 30 33 30 20 : 30 30 66 58 0f a0 4b fa
+0x00c0: 64 96 06 00 4f 4e 54 31 : 35 32 38 31 31 44 51 20
+0x00d0: 20 20 20 20 31 31 30 37 : 31 36 20 20 08 60 70 a0
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 58 af 60 61 70 8f 
+0x0130: 92 d5 00 00 18 b7 63 0f : 15 eb 00 6f 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 37 30 : 00 a3 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               90.000                85.000                -5.000               -10.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        130.000 mAmps         120.000 mAmps          12.000 mAmps          10.000 mAmps
+           Transmit Power:  0.89120 mW (-0.50025 dBm)   0.79430 mW (-1.00015 dBm)   0.25110 mW (-6.00153 dBm)   0.22380 mW (-6.50140 dBm)
+            Receive Power:  1.25890 mW (0.99991 dBm)   1.12200 mW (0.49993 dBm)   0.03630 mW (-14.40093 dBm)   0.03230 mW (-14.90797 dBm)
+        Temperature: 33.074
+        Voltage: 0.000 Volt
+        Tx Bias: 53.036 mAmps
+        Tx Power:  0.56140 mW (-2.50728 dBm)
+        Rx Power:  0.43100 mW (-3.65523 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 5a 00 f6 00 55 00 : fb 00 00 00 00 00 00 00
+0x0010: 00 00 fd e8 13 88 ea 60 : 17 70 22 d0 08 be 1f 07
+0x0020: 09 cf 31 2d 01 43 2b d4 : 01 6b 89 ee 77 e2 87 5a 
+0x0030: 7a 76 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 21 13 00 00 67 96 15 ee : 10 d6 7f 55 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:42,103: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/0/0/4 phy' +++
+show controllers tengige 0/0/0/4 phy
+Mon Jan 10 12:35:59.440 ARG
+
+XFP EEPROM  port: 4
+        Xcvr Type: XFP
+        Ext Type: 3.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-ZR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 80 Km
+        Device Tech.: 1550 nm EML, No wavelength ctrl, Cooled Xmtr, APD detector, Xmtr not tunable,
+        Vendor Name CISCO-FUJITSU
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 10.7 Gb/s, 11.1 Gb/s, Lineside Loopback Mode, XFI Loopback Mode,
+        Vendor OUI: 00.00.0e
+        Vendor Part Number FIM31052/253      (rev.: 01)
+        Wavelength: 1547.500 nm
+        Wavelength Tolerance: 17 nm
+        Vendor Serial Number: FLJ1538F07H
+        Date Code  (yy/mm/dd): 11/09/17  lot code: 01
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 98 07 01 00 00 00 00 : 00 04 00 b0 63 67 50 00
+0x0090: 00 00 00 76 43 49 53 43 : 4f 2d 46 55 4a 49 54 53
+0x00a0: 55 20 20 20 fb 00 00 0e : 46 49 4d 33 31 30 35 32
+0x00b0: 2f 32 35 33 20 20 20 20 : 30 31 78 e6 0d ac 46 f9
+0x00c0: af 96 a8 a0 46 4c 4a 31 : 35 33 38 46 30 37 48 20
+0x00d0: 20 20 20 20 31 31 30 39 : 31 37 30 31 08 60 00 cb
+
+        CLEI Code: COUIA68CAA
+        Part Number 10-2265-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GZR-OC192LR
+ Cisco Specific Data (Table 02)
+0x0100: 43 4f 55 49 41 36 38 43 : 41 41 31 30 2d 32 32 36
+0x0110: 35 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 6b 00 00 00 00 00 00 : 00 00 61 00 63 00 65 00
+0x0130: 67 00 00 00 23 00 75 e2 : 37 10 00 51 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 5a : 52 2d 4f 43 31 39 32 4c
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c8
+0x0160: 32 35 35 34 36 36 39 30 : 00 a5 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               75.000                73.000                -8.000               -10.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        131.000 mAmps          78.000 mAmps          18.000 mAmps           1.000 mAmps
+           Transmit Power:  5.01180 mW (6.99994 dBm)   2.51180 mW (3.99985 dBm)   1.00000 mW (0.00000 dBm)   0.50110 mW (-3.00076 dBm)
+            Receive Power:  0.39810 mW (-4.00008 dBm)   0.19950 mW (-7.00057 dBm)   0.00390 mW (-24.08935 dBm)   0.00190 mW (-27.21246 dBm)
+        Temperature: 29.371
+        Voltage: 0.000 Volt
+        Tx Bias: 60.730 mAmps
+        Tx Power:  1.40900 mW (1.48911 dBm)
+        Rx Power:  0.00330 mW (-24.81486 dBm)
+        Control Status: Interrupt,  Rx not ready,
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 4b 00 f6 00 49 00 : f8 00 00 00 00 00 00 00
+0x0010: 00 00 ff dc 01 f4 98 58 : 23 28 c3 c6 13 93 62 1e
+0x0020: 27 10 0f 8d 00 13 07 cb : 00 27 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 40 10 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1d 5f 00 00 76 9d 37 0a : 00 21 00 00 00 00 00 10
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:43,430: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/0/0/5 phy' +++
+show controllers tengige 0/0/0/5 phy
+Mon Jan 10 12:36:00.784 ARG
+
+XFP EEPROM  port: 5
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3103NV-C83     (rev.: A )
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: SPC161905H0
+        Date Code  (yy/mm/dd): 12/05/06  lot code: 7Z
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 00 00 00 40 : 00 00 00 b0 63 67 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 c0 00 00 5f : 53 58 50 33 31 30 33 4e
+0x00b0: 56 2d 43 38 33 20 20 20 : 41 20 66 58 0f a0 46 98
+0x00c0: 4b 96 05 00 53 50 43 31 : 36 31 39 30 35 48 30 20
+0x00d0: 20 20 20 20 31 32 30 35 : 30 36 37 5a 08 60 70 b1
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00 
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 76 d9 88 00 a3 4a
+0x0130: d4 c2 00 00 23 bf 34 2f : 15 2d 00 e1 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 34 30 : 00 a0 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          80.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  1.58480 mW (1.99974 dBm)   1.00000 mW (0.00000 dBm)   0.19950 mW (-7.00057 dBm)   0.12580 mW (-9.00319 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.41250 mW (1.49988 dBm)   0.02880 mW (-15.40608 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 26.598
+        Voltage: 0.000 Volt
+        Tx Bias: 25.106 mAmps
+        Tx Power:  0.54280 mW (-2.65360 dBm)
+        Rx Power:  0.64890 mW (-1.87822 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 00 00 9c 40 : 00 00 3d e8 04 ea 27 10
+0x0020: 07 cb 57 73 00 b5 37 2d : 01 20 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1a 99 00 00 31 09 15 34 : 19 59 7e f1 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:47,688: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/1/0/0 phy' +++
+show controllers tengige 0/1/0/0 phy
+Mon Jan 10 12:36:05.032 ARG
+
+XFP EEPROM  port: 0
+        Xcvr Type: XFP
+        Ext Type: 3.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-ER,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10500 Mbit/s
+        Link Reach 9u SM fiber: 40 Km
+        Device Tech.: 1550 nm EML, No wavelength ctrl, Cooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3100SV-C43     (rev.: A )
+        Wavelength: 1547.500 nm
+        Wavelength Tolerance: 17 nm
+        Vendor Serial Number: ECL15280311
+        Date Code  (yy/mm/dd): 11/07/16  lot code: 4T
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 98 07 20 00 00 00 00 : 20 00 00 b0 63 69 28 00
+0x0090: 00 00 00 74 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 e0 00 00 5f : 53 58 50 33 31 30 30 53
+0x00b0: 56 2d 43 34 33 20 20 20 : 41 20 78 e6 0d ac 46 f4
+0x00c0: af 96 a8 00 45 43 4c 31 : 35 32 38 30 33 31 31 20
+0x00d0: 20 20 20 20 31 31 30 37 : 31 36 34 54 08 60 70 86
+
+        CLEI Code: IPU3AE9CAA
+        Part Number 10-2470-01  (ver.: V01 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GER-192IR+
+ Cisco Specific Data (Table 02)
+0x0100: 49 50 55 33 41 45 39 43 : 41 41 31 30 2d 32 34 37
+0x0110: 30 2d 30 31 56 30 31 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 66 00 00 00 00 00 00 : 00 00 e8 c6 ea 00 ed 67
+0x0130: f5 1f 00 00 24 6c 88 d2 : 2f 61 00 7a 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 45 : 52 2d 31 39 32 49 52 2b
+0x0150: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 69
+0x0160: 32 35 35 34 36 36 37 30 : 00 a3 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        130.000 mAmps         120.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  5.01180 mW (6.99994 dBm)   2.51180 mW (3.99985 dBm)   0.39810 mW (-4.00008 dBm)   0.16980 mW (-7.70062 dBm)
+            Receive Power:  1.58480 mW (1.99974 dBm)   0.79430 mW (-1.00015 dBm)   0.02630 mW (-15.80044 dBm)   0.01310 mW (-18.82729 dBm)
+        Temperature: 36.699
+        Voltage: 0.000 Volt
+        Tx Bias: 70.326 mAmps
+        Tx Power:  1.20840 mW (0.82211 dBm)
+        Rx Power:  0.35130 mW (-4.54322 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 fd e8 00 00 ea 60 : 00 00 c3 c6 06 a2 62 1e
+0x0020: 0f 8d 3d e8 00 83 1f 07 : 01 07 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 24 b3 00 00 89 5b 2f 34 : 0d b9 80 fb 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:35:54,607: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/1/0/5 phy' +++
+show controllers tengige 0/1/0/5 phy
+Mon Jan 10 12:36:11.985 ARG
+
+XFP EEPROM  port: 5
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3103NV-C83     (rev.: A )
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: SPC153000AF
+        Date Code  (yy/mm/dd): 11/07/18  lot code: 43
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 00 00 00 40 : 00 00 00 b0 63 67 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 c0 00 00 5f : 53 58 50 33 31 30 33 4e
+0x00b0: 56 2d 43 38 33 20 20 20 : 41 20 66 58 0f a0 46 98
+0x00c0: 4b 96 05 00 53 50 43 31 : 35 33 30 30 30 41 46 20
+0x00d0: 20 20 20 20 31 31 30 37 : 31 38 34 33 08 60 70 8d
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 7d 3b 8b 00 a4 3b
+0x0130: d4 da 00 00 22 ec 34 a4 : 12 d5 00 9d 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 34 30 : 00 a0 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          80.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  1.58480 mW (1.99974 dBm)   1.00000 mW (0.00000 dBm)   0.19950 mW (-7.00057 dBm)   0.12580 mW (-9.00319 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.41250 mW (1.49988 dBm)   0.02880 mW (-15.40608 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 29.500
+        Voltage: 0.000 Volt
+        Tx Bias: 26.652 mAmps
+        Tx Power:  0.48220 mW (-3.16773 dBm)
+        Rx Power:  0.28600 mW (-5.43634 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 00 00 9c 40 : 00 00 3d e8 04 ea 27 10
+0x0020: 07 cb 57 73 00 b5 37 2d : 01 20 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1d 80 00 00 34 0e 12 d6 : 0b 2c 7f 42 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+
+
+
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:00,897: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/5/0/0 phy' +++
+show controllers tengige 0/5/0/0 phy
+Mon Jan 10 12:36:18.238 ARG
+
+XFP #0 is not present
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:01,578: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/5/0/1 phy' +++
+show controllers tengige 0/5/0/1 phy
+Mon Jan 10 12:36:18.946 ARG
+
+XFP EEPROM  port: 1
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR, 10GE-FC-1200-SM-LL-L,
+        SONET Xcvr Codes:
+        Encoding: NRZ,
+        Bit Rate Min.: 10000 Mbit/s
+        Bit Rate Max.: 11100 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-OCLARO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 10.7 Gb/s, 11.1 Gb/s, Lineside Loopback Mode, XFI Loopback Mode,
+        Vendor OUI: 00.0b.40
+        Vendor Part Number TRF5017FN-CA030   (rev.: 00)
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ONT2140008J
+        Date Code  (yy/mm/dd): 17/10/06  lot code:
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 40 00 00 40 : 00 00 00 10 64 6f 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 4f 43 4c 41 52 4f
+0x00a0: 20 20 20 20 fb 00 0b 40 : 54 52 46 35 30 31 37 46
+0x00b0: 4e 2d 43 41 30 33 30 20 : 30 30 66 58 0f a0 4b ff
+0x00c0: 4b 64 08 00 4f 4e 54 32 : 31 34 30 30 30 38 4a 20
+0x00d0: 20 20 20 20 31 37 31 30 : 30 36 20 20 08 60 70 38
+
+        CLEI Code: IP9IAGFCAA
+        Part Number 10-2542-01  (ver.: V01 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP10GLR-192SR-L
+ Cisco Specific Data (Table 02)
+0x0100: 49 50 39 49 41 47 46 43 : 41 41 31 30 2d 32 35 34
+0x0110: 32 2d 30 31 56 30 31 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 6f 00 00 00 00 00 00 : 00 00 58 af 60 61 70 8f
+0x0130: 92 d5 00 00 18 e7 52 8a : 13 8d 00 a9 00 00 aa aa
+0x0140: 58 46 50 31 30 47 4c 52 : 2d 31 39 32 53 52 2d 4c
+0x0150: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 9b
+0x0160: 32 35 35 34 36 36 32 32 : 00 a0 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               90.000                85.000                -5.000               -10.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          90.000 mAmps          12.000 mAmps          10.000 mAmps
+           Transmit Power:  2.23870 mW (3.49996 dBm)   1.12200 mW (0.49993 dBm)   0.15130 mW (-8.20161 dBm)   0.07580 mW (-11.20331 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.12200 mW (0.49993 dBm)   0.03630 mW (-14.40093 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 33.426
+        Voltage: 0.000 Volt
+        Tx Bias: 45.654 mAmps
+        Tx Power:  0.50090 mW (-3.00249 dBm)
+        Rx Power:  0.04330 mW (-13.63512 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 5a 00 f6 00 55 00 : fb 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 13 88 af c8 : 17 70 57 73 02 f6 2b d4
+0x0020: 05 e9 57 73 00 b5 2b d4 : 01 6b 89 ee 77 e2 87 5a
+0x0030: 7a 76 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 21 6d 00 00 59 2b 13 91 : 01 b1 80 72 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:02,871: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/6/1/0 phy' +++
+show controllers tengige 0/6/1/0 phy
+Mon Jan 10 12:36:20.214 ARG
+
+XFP EEPROM  port: 0
+        Xcvr Type: XFP
+        Ext Type: 3.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-ER, 10GBASE-EW,
+        SONET Xcvr Codes:
+        Encoding: NRZ,
+        Bit Rate Min.: 10000 Mbit/s
+        Bit Rate Max.: 11300 Mbit/s
+        Link Reach 9u SM fiber: 40 Km
+        Device Tech.: 1550 nm EML, No wavelength ctrl, Cooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-OPNEXT
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 11.1 Gb/s, XFI Loopback Mode,
+        Vendor OUI: 00.0b.40
+        Vendor Part Number TRF7052BN-GB030   (rev.: 00)
+        Wavelength: 1550.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ONJ1609000S
+        Date Code  (yy/mm/dd): 12/02/27  lot code:
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 98 07 22 00 00 00 00 : 20 00 00 10 64 71 28 00
+0x0090: 00 00 00 74 43 49 53 43 : 4f 2d 4f 50 4e 45 58 54
+0x00a0: 20 20 20 20 e9 00 0b 40 : 54 52 46 37 30 35 32 42
+0x00b0: 4e 2d 47 42 30 33 30 20 : 30 30 79 18 0f a0 4b 36
+0x00c0: af 96 a8 00 4f 4e 4a 31 : 36 30 39 30 30 30 53 20
+0x00d0: 20 20 20 20 31 32 30 32 : 32 37 20 20 08 40 70 4d
+
+        CLEI Code: IPU3AE9CAA
+        Part Number 10-2470-01  (ver.: V01 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GER-192IR+
+ Cisco Specific Data (Table 02)
+0x0100: 49 50 55 33 41 45 39 43 : 41 41 31 30 2d 32 34 37
+0x0110: 30 2d 30 31 56 30 31 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 66 00 00 00 00 00 00 : 00 00 64 00 64 00 64 00
+0x0130: 64 00 00 00 30 00 5f c8 : 2f 3c 00 52 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 45 : 52 2d 31 39 32 49 52 2b
+0x0150: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 69
+0x0160: 32 35 35 34 36 36 37 30 : 00 a3 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               83.000                80.000               -10.000               -13.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        130.000 mAmps         120.000 mAmps          20.000 mAmps          10.000 mAmps
+           Transmit Power:  5.01180 mW (6.99994 dBm)   2.51180 mW (3.99985 dBm)   0.33880 mW (-4.70057 dBm)   0.16980 mW (-7.70062 dBm)
+            Receive Power:  1.58480 mW (1.99974 dBm)   0.79430 mW (-1.00015 dBm)   0.02630 mW (-15.80044 dBm)   0.01310 mW (-18.82729 dBm)
+        Temperature: 30.563
+        Voltage: 0.000 Volt
+        Tx Bias: 47.080 mAmps
+        Tx Power:  1.20120 mW (0.79615 dBm)
+        Rx Power:  0.36990 mW (-4.31916 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 53 00 f3 00 50 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 fd e8 13 88 ea 60 : 27 10 c3 c6 06 a2 62 1e
+0x0020: 0d 3c 3d e8 00 83 1f 07 : 01 07 89 ee 77 e2 87 5a
+0x0030: 7a 75 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1e 90 00 00 5b f4 2e ec : 0e 73 81 2d 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02 
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:03,694: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/6/1/1 phy' +++
+show controllers tengige 0/6/1/1 phy
+Mon Jan 10 12:36:21.042 ARG
+
+XFP EEPROM  port: 1
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3103NV-C83     (rev.: A )
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: SPC152904FQ
+        Date Code  (yy/mm/dd): 11/07/13  lot code: 2U
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 00 00 00 40 : 00 00 00 b0 63 67 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 c0 00 00 5f : 53 58 50 33 31 30 33 4e
+0x00b0: 56 2d 43 38 33 20 20 20 : 41 20 66 58 0f a0 46 98
+0x00c0: 4b 96 05 00 53 50 43 31 : 35 32 39 30 34 46 51 20
+0x00d0: 20 20 20 20 31 31 30 37 : 31 33 32 55 08 60 70 c4
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 73 db 85 00 a0 5a
+0x0130: d2 c5 00 00 23 f3 37 b7 : 14 70 00 ec 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 34 30 : 00 a0 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          80.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  1.58480 mW (1.99974 dBm)   1.00000 mW (0.00000 dBm)   0.19950 mW (-7.00057 dBm)   0.12580 mW (-9.00319 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.41250 mW (1.49988 dBm)   0.02880 mW (-15.40608 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 32.008
+        Voltage: 0.000 Volt
+        Tx Bias: 27.482 mAmps
+        Tx Power:  0.52320 mW (-2.81332 dBm)
+        Rx Power:  0.36140 mW (-4.42012 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 00 00 9c 40 : 00 00 3d e8 04 ea 27 10
+0x0020: 07 cb 57 73 00 b5 37 2d : 01 20 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 20 02 00 00 35 ad 14 70 : 0e 1e 7e 6b 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:04,593: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/6/1/2 phy' +++
+show controllers tengige 0/6/1/2 phy
+Mon Jan 10 12:36:22.047 ARG
+
+XFP EEPROM  port: 2
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present, 
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR, 10GE-FC-1200-SM-LL-L,
+        SONET Xcvr Codes: 
+        Encoding: 64B/66B, SONET Scrambled, NRZ, 
+        Bit Rate Min.: 10000 Mbit/s
+        Bit Rate Max.: 11100 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-OCLARO    
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 10.7 Gb/s, 11.1 Gb/s, Lineside Loopback Mode, XFI Loopback Mode, 
+        Vendor OUI: 00.0b.40
+        Vendor Part Number TRF5016FN-CB030   (rev.: 00)
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ONT181501DE     
+        Date Code  (yy/mm/dd): 14/04/09  lot code:   
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured, 
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 40 00 00 40 : 00 00 00 b0 64 6f 0a 00 
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 4f 43 4c 41 52 4f
+0x00a0: 20 20 20 20 fb 00 0b 40 : 54 52 46 35 30 31 36 46
+0x00b0: 4e 2d 43 42 30 33 30 20 : 30 30 66 58 0f a0 4b 9f
+0x00c0: 4b 64 08 00 4f 4e 54 31 : 38 31 35 30 31 44 45 20 
+0x00d0: 20 20 20 20 31 34 30 34 : 30 39 20 20 08 60 70 4b 
+
+        CLEI Code: WMOTCUXAAB
+        Part Number 10-1989-04  (ver.: V04 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 42 31 30 2d 31 39 38 
+0x0110: 39 2d 30 34 56 30 34 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 d0 00 00 00 00 00 00 : 00 00 58 af 60 61 70 8f
+0x0130: 92 d5 00 00 19 71 55 46 : 12 90 00 f5 00 00 aa aa 
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1 
+0x0160: 32 35 35 34 36 36 31 37 : 00 a4 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               90.000                85.000                -5.000               -10.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          90.000 mAmps          12.000 mAmps          10.000 mAmps
+           Transmit Power:  2.23870 mW (3.49996 dBm)   1.12200 mW (0.49993 dBm)   0.15130 mW (-8.20161 dBm)   0.07580 mW (-11.20331 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.12200 mW (0.49993 dBm)   0.03630 mW (-14.40093 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 29.199
+        Voltage: 0.000 Volt
+        Tx Bias: 44.400 mAmps
+        Tx Power:  0.47470 mW (-3.23581 dBm)
+        Rx Power:  0.63300 mW (-1.98596 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 5a 00 f6 00 55 00 : fb 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 13 88 af c8 : 17 70 57 73 02 f6 2b d4
+0x0020: 05 e9 57 73 00 b5 2b d4 : 01 6b 89 ee 77 e2 87 5a 
+0x0030: 7a 76 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00 
+0x0060: 1d 33 00 00 56 b8 12 8b : 18 ba 7e e4 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:06,825: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/6/1/3 phy' +++
+show controllers tengige 0/6/1/3 phy
+Mon Jan 10 12:36:24.182 ARG
+
+XFP EEPROM  port: 3
+        Xcvr Type: XFP
+        Ext Type: 2.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable, 
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3101NV-C83     (rev.: D )
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ECL144501M4
+        Date Code  (yy/mm/dd): 10/11/08  lot code: 16
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 58 07 40 00 00 00 40 : 00 00 00 b0 63 67 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 c0 00 00 5f : 53 58 50 33 31 30 31 4e
+0x00b0: 56 2d 43 38 33 20 20 20 : 44 20 66 58 0f a0 46 d9 
+0x00c0: 7d 96 08 00 45 43 4c 31 : 34 34 35 30 31 4d 34 20 
+0x00d0: 20 20 20 20 31 30 31 31 : 30 38 31 36 08 60 70 a9
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 89 7d 98 00 af 07
+0x0130: da 5d 00 00 24 94 47 c7 : 12 45 00 a8 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 34 30 : 00 a0 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          80.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  1.58480 mW (1.99974 dBm)   1.00000 mW (0.00000 dBm)   0.19950 mW (-7.00057 dBm)   0.12580 mW (-9.00319 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.41250 mW (1.49988 dBm)   0.02880 mW (-15.40608 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 28.848
+        Voltage: 0.000 Volt
+        Tx Bias: 34.932 mAmps
+        Tx Power:  0.46770 mW (-3.30033 dBm)
+        Rx Power:  0.52590 mW (-2.79097 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 00 00 9c 40 : 00 00 3d e8 04 ea 27 10
+0x0020: 07 cb 57 73 00 b5 37 2d : 01 20 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1c d9 00 00 44 3a 12 45 : 14 8b 80 2c 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02
+
+
+RP/0/RSP0/CPU0:noll03rt34#
+
+2022-01-10 12:36:09,540: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/7/1/2 phy' +++
+show controllers tengige 0/7/1/2 phy
+Mon Jan 10 12:36:26.887 ARG
+
+XFP EEPROM  port: 2
+        Xcvr Type: XFP
+        Ext Type: 1.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 9900 Mbit/s
+        Bit Rate Max.: 10300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-SUMITOMO
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s,
+        Vendor OUI: 00.00.5f
+        Vendor Part Number SXP3103NV-C83     (rev.: A )
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: SPC152809VL
+        Date Code  (yy/mm/dd): 11/07/08  lot code: 14
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 18 07 40 00 00 00 40 : 00 00 00 b0 63 67 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 53 55 4d 49 54 4f
+0x00a0: 4d 4f 20 20 c0 00 00 5f : 53 58 50 33 31 30 33 4e
+0x00b0: 56 2d 43 38 33 20 20 20 : 41 20 66 58 0f a0 46 98
+0x00c0: 4b 96 05 00 53 50 43 31 : 35 32 38 30 39 56 4c 20
+0x00d0: 20 20 20 20 31 31 30 37 : 30 38 31 34 08 60 70 b5
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 7b 62 8a 00 a2 b1
+0x0130: d4 18 00 00 24 69 37 04 : 12 64 00 e4 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 34 30 : 00 a0 ff ff ff ff ff ff
+0x0170: ff ff ff ff ff ff ff ff : ff ff ff ff ff ff ff ff
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               80.000                75.000               -10.000               -15.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        100.000 mAmps          80.000 mAmps           0.000 mAmps           0.000 mAmps
+           Transmit Power:  1.58480 mW (1.99974 dBm)   1.00000 mW (0.00000 dBm)   0.19950 mW (-7.00057 dBm)   0.12580 mW (-9.00319 dBm)
+            Receive Power:  2.23870 mW (3.49996 dBm)   1.41250 mW (1.49988 dBm)   0.02880 mW (-15.40608 dBm)   0.01810 mW (-17.42321 dBm)
+        Temperature: 27.910
+        Voltage: 0.000 Volt
+        Tx Bias: 26.578 mAmps
+        Tx Power:  0.47120 mW (-3.26795 dBm)
+        Rx Power:  0.28010 mW (-5.52687 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 50 00 f1 00 4b 00 : f6 00 00 00 00 00 00 00
+0x0010: 00 00 c3 50 00 00 9c 40 : 00 00 3d e8 04 ea 27 10
+0x0020: 07 cb 57 73 00 b5 37 2d : 01 20 00 00 00 00 00 00
+0x0030: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 1b e9 00 00 33 e9 12 68 : 0a f1 7e 74 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02

@@ -1,0 +1,8 @@
+test = dev.parse("show controllers tengige 0/5/0/0 phy", output="")
+
+2022-01-10 12:36:00,897: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/5/0/0 phy' +++
+show controllers tengige 0/5/0/0 phy
+Mon Jan 10 12:36:18.238 ARG
+
+XFP #0 is not present
+
