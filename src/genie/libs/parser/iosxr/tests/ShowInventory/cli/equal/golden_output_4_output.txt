@@ -1,0 +1,442 @@
+>>> test = dev.parse("admin show inventory")
+
+2022-01-11 22:30:10,269: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'admin show inventory' +++
+admin show inventory
+Tue Jan 11 22:30:29.141 ARG
+NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Fabric, Controller, 4G memory"
+PID: A9K-RSP-4G, VID: V03, SN: FOC154580E8
+
+NAME: "module compact-flash 0/RSP0/CPU0", DESCR: " CompactFlash "
+PID: cFLASH, VID: N/A, SN: 000000000301
+
+NAME: "module 0/RSP1/CPU0", DESCR: "ASR9K Fabric, Controller, 4G memory"
+PID: A9K-RSP-4G, VID: V03, SN: FOC154580GW
+
+NAME: "module compact-flash 0/RSP1/CPU0", DESCR: " CompactFlash"
+PID: cFLASH, VID: N/A, SN: 000000000301
+
+NAME: "fantray 0/FT0/SP", DESCR: "ASR-9010 Fan Tray"
+PID: ASR-9010-FAN, VID: V02, SN: FOX1546XECV
+
+NAME: "fan0 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan1 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan2 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan3 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan4 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan5 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan6 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan7 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan8 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan9 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan10 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan11 0/FT0/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fantray 0/FT1/SP", DESCR: "ASR-9010 Fan Tray"
+PID: ASR-9010-FAN, VID: V02, SN: FOX1544XEK8
+
+NAME: "fan0 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan1 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan2 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan3 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN: 
+
+NAME: "fan4 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan5 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan6 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan7 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan8 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan9 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan10 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "fan11 0/FT1/SP", DESCR: "ASR9K Generic Fan"
+PID:    , VID: N/A, SN:
+
+NAME: "module 0/0/CPU0", DESCR: "8-Port 10GE DX Line Card, Requires XFPs"
+PID: A9K-8T/4-B, VID: V05, SN: FOC154283MA
+
+NAME: "module mau TenGigE0/0/CPU0/0", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811DQ
+
+NAME: "module mau TenGigE0/0/CPU0/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811J3
+
+NAME: "module mau TenGigE0/0/CPU0/2", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811HE
+
+NAME: "module mau TenGigE0/0/CPU0/3", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811DF
+
+NAME: "module mau TenGigE0/0/CPU0/4", DESCR: "Multirate 10GBASE-ZR and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GZR-OC192LR  , VID: V03 , SN: FLJ1538F07H
+
+NAME: "module mau TenGigE0/0/CPU0/5", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: SPC161905H0
+
+NAME: "module mau TenGigE0/0/CPU0/6", DESCR: "Multirate 10GBASE-ER and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GER-192IR+   , VID: V01 , SN: ECL15280326
+
+NAME: "module mau TenGigE0/0/CPU0/7", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811HP
+
+NAME: "module 0/1/CPU0", DESCR: "8-Port 10GE DX Line Card, Requires XFPs"
+PID: A9K-8T/4-B, VID: V05, SN: FOC154283M5
+
+NAME: "module mau TenGigE0/1/CPU0/0", DESCR: "Multirate 10GBASE-ER and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GER-192IR+   , VID: V01 , SN: ECL15280311
+
+NAME: "module mau TenGigE0/1/CPU0/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811HR
+
+NAME: "module mau TenGigE0/1/CPU0/2", DESCR: "Multirate 10GBASE-ER and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GER-192IR+   , VID: V01 , SN: ECL15280328
+
+NAME: "module mau TenGigE0/1/CPU0/3", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811KY
+
+NAME: "module mau TenGigE0/1/CPU0/4", DESCR: "Multirate 10GBASE-ZR and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GZR-OC192LR  , VID: V03 , SN: FLJ1539F02V
+
+NAME: "module mau TenGigE0/1/CPU0/5", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: SPC153000AF
+
+NAME: "module mau TenGigE0/1/CPU0/6", DESCR: "Multirate 10GBASE-ER and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GER-192IR+   , VID: V01 , SN: ECL1528031K
+
+NAME: "module mau TenGigE0/1/CPU0/7", DESCR: "Low Power multirate XFP supporting 10GBASE-ER and OC-192 IR"
+PID: XFP10GER-192IR-L   , VID: V01 , SN: ECL142800F4
+
+NAME: "module 0/4/CPU0", DESCR: "2-Port 10GE, 20-Port GE Line Card, Requires XFPs and SFPs"
+PID: A9K-2T20GE-B, VID: V04, SN: FOC152987KP
+
+NAME: "module mau TenGigE0/4/CPU0/0", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR  , VID: V03 , SN: ONT152811E3
+
+NAME: "module mau GigabitEthernet0/4/CPU0/0", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: FNS15411WEH
+
+NAME: "module mau GigabitEthernet0/4/CPU0/2", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: FNS15411WBH
+
+NAME: "module mau GigabitEthernet0/4/CPU0/3", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: FNS15411WE2
+
+NAME: "module mau GigabitEthernet0/4/CPU0/5", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC161803M5
+
+NAME: "module mau GigabitEthernet0/4/CPU0/6", DESCR: "Unknown or Unsupported SFP Module"
+PID: GLC-ZX-SM          , VID: V01 , SN: ECL1506008Y
+
+NAME: "module mau GigabitEthernet0/4/CPU0/7", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: CAJ2016489
+
+NAME: "module mau GigabitEthernet0/4/CPU0/8", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD         , VID: V01 , SN: ACW20470D80
+
+NAME: "module mau GigabitEthernet0/4/CPU0/9", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC161803KT
+
+NAME: "module mau GigabitEthernet0/4/CPU0/10", DESCR: "Unknown or Unsupported SFP Module"
+PID: GLC-ZX-SM          , VID: V01 , SN: SPC16470H4A
+
+NAME: "module mau GigabitEthernet0/4/CPU0/11", DESCR: "1000BASE-T SFP (NEBS 3), UTP, 100m"
+PID: SFP-GE-T           , VID: V02, SN: MTC203600GL
+
+NAME: "module mau GigabitEthernet0/4/CPU0/12", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160AS4
+
+NAME: "module mau GigabitEthernet0/4/CPU0/13", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: CBH2016609
+
+NAME: "module mau GigabitEthernet0/4/CPU0/14", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160AVP
+
+NAME: "module mau GigabitEthernet0/4/CPU0/15", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16170233
+
+NAME: "module mau GigabitEthernet0/4/CPU0/16", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1617023G
+
+NAME: "module mau GigabitEthernet0/4/CPU0/17", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC161803SZ
+
+NAME: "module mau GigabitEthernet0/4/CPU0/18", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160B53
+
+NAME: "module mau GigabitEthernet0/4/CPU0/19", DESCR: "1000BASE-BX SFP, 1490NM"
+PID: GLC-BX-D           , VID: V03 , SN: ACW231309B0
+
+NAME: "module 0/5/CPU0", DESCR: "2-Port 10GE, 20-Port GE Line Card, Requires XFPs and SFPs"
+PID: A9K-2T20GE-B, VID: V04, SN: FOC1732N2U2
+
+NAME: "module mau TenGigE0/5/CPU0/1", DESCR: "Low Power multirate XFP supporting 10GBASE-LR and OC-192 SR"
+PID: XFP10GLR-192SR-L   , VID: V01 , SN: ONT2140008J
+
+NAME: "module mau GigabitEthernet0/5/CPU0/1", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: FNS153201ZT
+
+NAME: "module mau GigabitEthernet0/5/CPU0/2", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: AGC1701V2M8
+
+NAME: "module mau GigabitEthernet0/5/CPU0/4", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: FNS16320A29
+
+NAME: "module mau GigabitEthernet0/5/CPU0/5", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160853
+
+NAME: "module mau GigabitEthernet0/5/CPU0/6", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1616085S
+
+NAME: "module mau GigabitEthernet0/5/CPU0/7", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: CAJ2016482
+
+NAME: "module mau GigabitEthernet0/5/CPU0/8", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD         , VID: V01 , SN: FNS18050HDB
+
+NAME: "module mau GigabitEthernet0/5/CPU0/9", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160855
+
+NAME: "module mau GigabitEthernet0/5/CPU0/10", DESCR: "Unknown or Unsupported SFP Module"
+PID: GLC-LH-SM, VID: V02, SN: FNS27163272
+
+NAME: "module mau GigabitEthernet0/5/CPU0/11", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1616084V
+
+NAME: "module mau GigabitEthernet0/5/CPU0/12", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: FNS11470XDC
+
+NAME: "module mau GigabitEthernet0/5/CPU0/13", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: CBH2016810
+
+NAME: "module mau GigabitEthernet0/5/CPU0/14", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1616085W
+
+NAME: "module mau GigabitEthernet0/5/CPU0/15", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1616084X
+
+NAME: "module mau GigabitEthernet0/5/CPU0/16", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC161608KR
+
+NAME: "module mau GigabitEthernet0/5/CPU0/17", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC1616084Y
+
+NAME: "module mau GigabitEthernet0/5/CPU0/18", DESCR: "1000BASE-LX/LH SFP (DOM), SMF 10Km, MMF 550m"
+PID: SFP-GE-L           , VID: V01 , SN: SPC16160851
+
+NAME: "module mau GigabitEthernet0/5/CPU0/19", DESCR: "Unknown pluggable optics"
+PID:    , VID: N/A, SN: S1611122111
+
+NAME: "module 0/6/CPU0", DESCR: "80G Modular Linecard, Packet Transport Optimized"
+PID: A9K-MOD80-TR, VID: V06, SN: FOC1814NBYF
+
+NAME: "module 0/6/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N43J
+
+NAME: "module mau 0/6/0/0", DESCR: "Unknown or Unsupported XFP Module"
+PID: GLC-ZX-SM           , VID: V01 , SN: SPC16470HMP
+
+NAME: "module mau 0/6/0/1", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18060F13
+
+NAME: "module mau 0/6/0/2", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050R3A
+
+NAME: "module mau 0/6/0/3", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18060EVU
+
+NAME: "module mau 0/6/0/4", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050QM2
+
+NAME: "module mau 0/6/0/5", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050S97
+
+NAME: "module mau 0/6/0/6", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: FNS13220KMD
+
+NAME: "module mau 0/6/0/7", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18060NFX
+
+NAME: "module mau 0/6/0/8", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: S1611158397
+
+NAME: "module mau 0/6/0/9", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: A0117006601
+
+NAME: "module mau 0/6/0/10", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS18200A8Q
+
+NAME: "module mau 0/6/0/11", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS180612D1
+
+NAME: "module mau 0/6/0/12", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: AGC1701V48P
+
+NAME: "module mau 0/6/0/13", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18060F28
+
+NAME: "module mau 0/6/0/14", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS182003K6
+
+NAME: "module mau 0/6/0/15", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS194209AA
+
+NAME: "module mau 0/6/0/16", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: FNS16320A1D
+
+NAME: "module mau 0/6/0/17", DESCR: "Unknown or Unsupported XFP Module"
+PID: GLC-ZX-SM           , VID: V01 , SN: SPC16470HM7
+
+NAME: "module mau 0/6/0/18", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: AGC1701V2LL
+
+NAME: "module mau 0/6/0/19", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: 1816490303
+
+NAME: "module 0/6/1", DESCR: "ASR 9000 4-port 10GE Modular Port Adapter"
+PID: A9K-MPA-4X10GE, VID: V05, SN: FOC1813N0VD
+
+NAME: "module mau 0/6/1/0", DESCR: "Multirate 10GBASE-ER and OC-192/STM-64 IR-2 XFP, SMF"
+PID: XFP-10GER-192IR+    , VID: V01 , SN: ONJ1609000S
+
+NAME: "module mau 0/6/1/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V03 , SN: SPC152904FQ
+
+NAME: "module mau 0/6/1/2", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V04 , SN: ONT181501DE
+
+NAME: "module mau 0/6/1/3", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V03 , SN: ECL144501M4
+
+NAME: "module 0/7/CPU0", DESCR: "80G Modular Linecard, Packet Transport Optimized"
+PID: A9K-MOD80-TR, VID: V06, SN: FOC1814NBWL
+
+NAME: "module 0/7/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N4M4
+
+NAME: "module mau 0/7/0/1", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS180605VD
+
+NAME: "module mau 0/7/0/2", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18061CEG
+
+NAME: "module mau 0/7/0/3", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18061JZL
+
+NAME: "module mau 0/7/0/4", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18060S2A
+
+NAME: "module mau 0/7/0/5", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050YE9
+
+NAME: "module mau 0/7/0/6", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS194209CH
+
+NAME: "module mau 0/7/0/7", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050QFN
+
+NAME: "module mau 0/7/0/8", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: A0217B00545
+
+NAME: "module mau 0/7/0/9", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: Q6586001623
+
+NAME: "module mau 0/7/0/10", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18050HDE
+
+NAME: "module mau 0/7/0/11", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS18200MWS
+
+NAME: "module mau 0/7/0/12", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: FNS16330CQU
+
+NAME: "module mau 0/7/0/13", DESCR: "1000BASE-LX/LH SFP transceiver module, MMF/SMF, 1310nm, DOM"
+PID: GLC-LH-SMD          , VID: V01 , SN: FNS18061CA3
+
+NAME: "module mau 0/7/0/14", DESCR: "Unknown or Unsupported XFP Module"
+PID: GLC-ZX-SM           , VID: V01 , SN: SPC16470G6K
+
+NAME: "module mau 0/7/0/15", DESCR: "1000BASE-ZX SFP transceiver module, SMF, 1550nm, DOM"
+PID: GLC-ZX-SMD          , VID: V01 , SN: FNS194206MP
+
+NAME: "module mau 0/7/0/16", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: FNS16320CNC
+
+NAME: "module mau 0/7/0/17", DESCR: "Unknown or Unsupported XFP Module"
+PID: GLC-ZX-SM           , VID: V01 , SN: SPC16470H3R
+
+NAME: "module mau 0/7/0/18", DESCR: "Unknown or Unsupported XFP Module"
+PID:    , VID: N/A, SN: AGC1701V0W8
+
+NAME: "module mau 0/7/0/19", DESCR: "1000BASE-BX SFP, 1310NM"
+PID: GLC-BX-U            , VID: V03 , SN: NDG21272021
+
+NAME: "module 0/7/1", DESCR: "ASR 9000 4-port 10GE Modular Port Adapter"
+PID: A9K-MPA-4X10GE, VID: V05, SN: FOC1813N0X9
+
+NAME: "module mau 0/7/1/0", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V04 , SN: ONT18080115
+
+NAME: "module mau 0/7/1/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V04 , SN: ONT18080116
+
+NAME: "module mau 0/7/1/2", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+PID: XFP-10GLR-OC192SR   , VID: V03 , SN: SPC152809VL
+
+NAME: "module mau 0/7/1/3", DESCR: "Low Power multirate XFP supporting 10GBASE-LR and OC-192 SR"
+PID: XFP10GLR-192SR-L    , VID: V01 , SN: ONT214000GW
+
+NAME: "power-module 0/PM0/SP", DESCR: "3kW AC Power Module"
+PID: A9K-3KW-AC, VID: V01, SN: TLD1535S5FT
+
+NAME: "power-module 0/PM1/SP", DESCR: "3kW AC Power Module"
+PID: A9K-3KW-AC, VID: V01, SN: TLD1535S5ER
+
+NAME: "power-module 0/PM3/SP", DESCR: "3kW AC Power Module"
+PID: A9K-3KW-AC, VID: V01, SN: TLD1535S5IO
+
+NAME: "power-module 0/PM4/SP", DESCR: "3kW AC Power Module"
+PID: A9K-3KW-AC, VID: V01, SN: GES17031078
+
+NAME: "chassis ASR-9010-AC", DESCR: "ASR-9010 AC Chassis"
+PID: ASR-9010-AC, VID: V01, SN: FOX1546G30U

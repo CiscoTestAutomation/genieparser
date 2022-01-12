@@ -756,11 +756,14 @@ class ShowInventorySchema(MetaParser):
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
 
-    cli_command = 'show inventory'
+    cli_command = ['show inventory', '{admin} show inventory']
 
-    def cli(self, output=None):
+    def cli(self, output=None, admin=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if admin is None:
+                out = self.device.execute(self.cli_command[0])
+            elif admin in 'admin':
+                out = self.device.execute(self.cli_command[1].format(admin=admin))
         else:
             out = output
 
