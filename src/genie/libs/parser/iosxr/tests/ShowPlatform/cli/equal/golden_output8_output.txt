@@ -1,0 +1,25 @@
+>>> test = dev.parse("admin show platform")
+
+2022-01-11 22:00:23,406: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'admin show platform' +++
+admin show platform
+Tue Jan 11 22:00:42.259 ARG
+Node            Type                      State            Config State
+-----------------------------------------------------------------------------
+0/RSP0/CPU0     A9K-RSP-4G(Active)        IOS XR RUN       PWR,NSHUT,MON
+0/RSP1/CPU0     A9K-RSP-4G(Standby)       IOS XR RUN       PWR,NSHUT,MON
+0/FT0/SP        FAN TRAY                  READY
+0/FT1/SP        FAN TRAY                  READY
+0/0/CPU0        A9K-8T/4-B                IOS XR RUN       PWR,NSHUT,MON
+0/1/CPU0        A9K-8T/4-B                IOS XR RUN       PWR,NSHUT,MON
+0/4/CPU0        A9K-2T20GE-B              IOS XR RUN       PWR,NSHUT,MON
+0/5/CPU0        A9K-2T20GE-B              IOS XR RUN       PWR,NSHUT,MON
+0/6/CPU0        A9K-MOD80-TR              IOS XR RUN       PWR,NSHUT,MON
+0/6/0           A9K-MPA-20X1GE            OK               PWR,NSHUT,MON
+0/6/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/7/CPU0        A9K-MOD80-TR              IOS XR RUN       PWR,NSHUT,MON
+0/7/0           A9K-MPA-20X1GE            OK               PWR,NSHUT,MON
+0/7/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/PM0/SP        A9K-3KW-AC                READY            PWR,NSHUT,MON
+0/PM1/SP        A9K-3KW-AC                READY            PWR,NSHUT,MON
+0/PM3/SP        A9K-3KW-AC                READY            PWR,NSHUT,MON
+0/PM4/SP        A9K-3KW-AC                READY            PWR,NSHUT,MON
