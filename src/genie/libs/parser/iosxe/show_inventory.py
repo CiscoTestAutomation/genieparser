@@ -50,7 +50,7 @@ class ShowInventoryRaw(ShowInventoryRawSchema):
         p1 = re.compile(r'^NAME: "(?P<name>[\w\d\s(\/\-)?]+)", DESCR: "(?P<description>[\w\d\s(\-\.)?]+)"$')
         
         #PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
-        p2 = re.compile(r'^PID:(?P<pid>[\w\d\-\s]+), VID:(?P<vid>[\d\w\s(\.)?]+), SN: (?P<sn>[\w\d\-]+)$')
+        p2 = re.compile(r'^PID:(?P<pid>[\w\d\-\s]+), VID:(?P<vid>[\d\w\s(\.)?]+), SN:( (?P<sn>[\w\d\-]+))?$')
         
         #OID: 1.3.6.1.4.1.9.12.3.1.3.2421
         p3 = re.compile(r'^OID: +(?P<oid>[\d\.]+)$')
