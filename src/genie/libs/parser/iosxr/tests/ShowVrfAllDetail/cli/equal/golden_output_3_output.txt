@@ -1,0 +1,72 @@
+show vrf all detail
+Thu Jan 20 01:48:13.051 ARG
+
+VRF **nVSatellite; RD not set; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  nV-Loopback0
+Address family IPV4 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF INET_MASIVO_GPON; RD 11664:125000182; VPN ID not set
+VRF mode: Regular
+Description not set
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:11664:180
+    RT:11664:181
+    RT:11664:182
+  Export VPN route-target communities:
+    RT:11664:182
+  Import route policy: INET_GPON_IN_OLLEROS
+  Export route policy: INET_GPON_OUT_OLLEROS
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF INET_MASIVO_HFC; RD 11664:125000154; VPN ID not set
+VRF mode: Regular
+Description -- Conexion a ngry01rt33--
+Interfaces:
+  Bundle-Ether100.600
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:11664:154
+  Export VPN route-target communities:
+    RT:11664:154
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF UPLINK_MASIVO_GPON; RD 11664:125000180; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  Bundle-Ether100.500
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:11664:182
+  Export VPN route-target communities:
+    RT:11664:180
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
