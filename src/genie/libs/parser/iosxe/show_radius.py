@@ -154,10 +154,11 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
     """
     Parser for show radius statistics 
     """
+    # Cli command 
+    cli_command = 'show radius statistics'
 
     def cli(self, output=None):
-        # Cli command 
-        cmd = 'show radius statistics'
+        
 
         #----------------------------------------------------------------
         # Maximum inQ length:             NA         NA         0
@@ -403,10 +404,11 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
     """
     Parser for show radius server-group all
     """
-
+    # Cli command 
+    cli_command = 'show radius server-group all'
+      
     def cli(self, output=None):
-        # Cli command 
-        cmd = 'show radius server-group all'
+        
 
         # Server group radius
         p1 = re.compile(r'(^Server\s+group)\s+(.*)')
