@@ -25,7 +25,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 from genie.libs.parser.utils.common import Common
 
 class ShowIsisNeighborsSchema(MetaParser):
@@ -299,19 +299,19 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             Optional('is_neighbor'): {
                                 Any(): {
                                     'neighbor_id': str,
-                                    'metric': int,
+                                    'metric': Or(int, list),
                                 },
                             },
                             Optional('extended_is_neighbor'): {
                                 Any(): {
                                     'neighbor_id': str,
-                                    'metric': int,
+                                    'metric': Or(int, list),
                                 },
                             },
                             Optional('mt_is_neighbor'): {
                                 Any(): {
                                     'neighbor_id': str,
-                                    'metric': int,
+                                    'metric': Or(int, list),
                                 },
                             },
                             Optional('ipv4_internal_reachability'): {
@@ -503,7 +503,14 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     elif mtype == 'IS':
                         is_dict = lsp_dict.setdefault('is_neighbor', {}).setdefault(ip, {})
 
-                    is_dict.update({'neighbor_id': ip,
+                    if 'metric' in is_dict.keys():
+                        if isinstance(is_dict['metric'], list):
+                            is_dict['metric'].append(int(group['metric']))
+                        elif isinstance(is_dict['metric'], int):
+                            metric = is_dict['metric']
+                            is_dict['metric'] = [metric, int(group['metric'])]
+                    else:
+                        is_dict.update({'neighbor_id': ip,
                                     'metric': int(group['metric'])})
 
                 if mtype.startswith('IP'):
