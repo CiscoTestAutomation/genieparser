@@ -1,0 +1,8 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * modified show_radius>:
+        * renamed cmd to cli_command and moved it to inside the class definition 
+        instead of the cli function for show radius statistics and show radius server-group all
+
