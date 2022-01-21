@@ -249,7 +249,7 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
         ret_dict = {}
 
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(cli_command)
         else:
             out = output
 
@@ -437,7 +437,7 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
         server_trans = {}
         server_dict = {}
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(cli_command)
         else:
             out = output
 
