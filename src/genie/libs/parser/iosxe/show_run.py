@@ -335,6 +335,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ipv6_enable'): bool,
                 Optional('ipv6_destination_guard_attach_policy'): str,
                 Optional('ipv6_source_guard_attach_policy'): str,
+                Optional('ipv6_nd_raguard_attach_policy'): str,
                 Optional('ipv6_ospfv3'): {
                     Any(): {
                         'area': str,
@@ -366,6 +367,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_mode'): str,
                 Optional('input_policy'): str,
                 Optional('output_policy'): str,
+                Optional('device_tracking_attach_policy'): str,
                 Optional('switchport_nonegotiate'): str,
                 Optional('vrf'): str,
                 Optional('src_ip'): str,
@@ -688,6 +690,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # spanning-tree portfast trunk
         p77 = re.compile(r"^spanning-tree +portfast +trunk$")
+
+        #ipv6 nd raguard attach-policy Univ_IPv6_RA_Policy_Host
+        p78 = re.compile(r'^ipv6\snd\sraguard\sattach-policy\s+(?P<ipv6_nd_raguard_attach_policy>\S+)$')
+
+        #device-tracking attach-policy IPDT_POLICY
+        p79 = re.compile(r'^device-tracking\sattach-policy\s+(?P<device_tracking_attach_policy>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1322,6 +1330,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'spanning_tree_portfast_trunk': True})
+                continue
+                
+            #ipv6 nd raguard attach-policy Univ_IPv6_RA_Policy_Host
+            m = p78.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ipv6_nd_raguard_attach_policy': group['ipv6_nd_raguard_attach_policy']})
+                continue
+
+            #device-tracking attach-policy IPDT_POLICY
+            m = p79.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'device_tracking_attach_policy': group['device_tracking_attach_policy']})
                 continue
 
         return config_dict

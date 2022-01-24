@@ -273,9 +273,8 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
         # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
         # ND  FE80::E6C7:22FF:FEFF:8239               e4c7.22ff.8239  Gi1/0/24       1023  0005   34s  REACHABLE  268 s
         p2 = re.compile(
-            r"^(?P<code>\S+)\s+(?P<network_layer_address>"
-            r"\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)"
-            r"\s+(?P<link_layer_address>\S+\.\S+\.\S+)"
+            r"^(?P<code>\S+)\s+(?P<network_layer_address>\S+)"
+            r"\s+(?P<link_layer_address>\S+)"
             r"\s+(?P<interface>\S+)\s+(?P<vlan>\d+)"
             r"\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)"
             r"\s+(?P<state>\S+)(\s+(?P<time_left>\d+.*))?$"

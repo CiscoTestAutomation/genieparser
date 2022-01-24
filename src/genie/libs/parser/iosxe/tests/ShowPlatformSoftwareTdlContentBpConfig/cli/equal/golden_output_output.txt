@@ -1,0 +1,2 @@
+Node    Domain    Mode          Router-ID
+1       2         Aggregation

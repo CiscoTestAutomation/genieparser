@@ -1,0 +1,48 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+
+
+1.1.1.1/32 source router id: 1.1.1.1 prefix SID index 11 - Bound (SR_POLICY_STRICT)
+  strict-SPF SID index 101 - Bound
+  [115/L1/20] via 12.1.0.1(Ethernet0/0), from 1.1.1.1, tag 0, LSP[3/3/88] -
+     prefix attr: X:0 R:0 N:1
+     source router id: 1.1.1.1
+       SRGB: 16000, range: 8000 prefix-SID index: 11, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 101, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+     strict-SPF label: implicit-null
+              (installed)
+  [115/L1/20] via 13.1.1.2(Ethernet0/2), from 1.1.1.1, tag 0 -
+     prefix attr: X:0 R:0 N:1
+     source router id: 1.1.1.1
+       SRGB: 16000, range: 8000 prefix-SID index: 11, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 101, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+     strict-SPF label: implicit-null
+              (ALT)(bdw forced)(SR_POLICY)(installed)(had repair path)
+  [115/L2/50] via 12.12.12.2(GigabitEthernet0/3/1), from 6.6.6.6, tag 0, LSP[3/115/220]
+       SRGB: 100000, range: 30001 prefix-SID index: 61, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100061,
+              (ALT)
+     repair path(?): 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
+       next-hop: not found
+       remote LFA
+       label: 100061
+       repair source: asr1k-24
+  [115/L1/70] via 20.20.10.2(Ethernet1/2) R3.00-00, from 4.4.4.4, tag 0
+     LSP 3/4/52(52), prefix attr: X:0 R:0 N:1
+     Source router id: 4.4.4.4
+      Prefix-SID index: 4, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16004
+     repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
+       next-hop: 10.10.20.2 (Ethernet1/1)
+       TI-LFA node/SRLG-protecting
+       SRGB: 16000, range: 8000 prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
+       label: 16003
+       strict-SPF label: 16103, via Ethernet1/1
+       P node: R4[4.4.4.4], label: 16004
+       P node: R5[5.5.5.5], label: 16005

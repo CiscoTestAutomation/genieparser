@@ -1,0 +1,12 @@
+Tunnel3* 
+  Type  : PIM Encap
+  RP    : Embedded RP Tunnel
+  Source: 2001:1:1::2
+Tunnel11* 
+  Type  : PIM Encap
+  RP    : 2001:1:1::20
+  Source: 2001:192:168:2::2
+Tunnel12* 
+  Type  : PIM Encap
+  RP    : 2001:1:1::21
+  Source: 2001:192:168:2::2

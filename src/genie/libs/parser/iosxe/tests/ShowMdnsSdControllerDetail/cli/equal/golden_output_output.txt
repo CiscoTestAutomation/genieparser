@@ -1,0 +1,17 @@
+Controller : DNAC-CONTROLLER-POLICY
+IP : 98.98.98.10, Dest Port : 9991, Src Port : 44844, State : UP
+Source Interface : Loopback0, MD5 Disabled
+Hello Timer 30 sec, Dead Timer 120 sec, Next Hello 00:00:02
+Uptime 2d00h (15:32:56 IST Nov 3 2021)
+Service Buffer : Enabled
+Service Announcement :
+Filter : WIDE-AREA-POLICY
+Count 50, Delay Timer 30 sec, Pending Announcement 0, Pending Withdraw 0
+Total Export Count 0, Next Export in 00:00:01
+Service Query :
+Query Suppression Disabled
+Query Count 50, Query Delay Timer 15 sec, Pending 0
+Total Query Count 8647, Next Query in 00:00:01
+Service Enumeration :
+Request Count 0, Last Requested : 
+Response Count 0, Last Responded : 

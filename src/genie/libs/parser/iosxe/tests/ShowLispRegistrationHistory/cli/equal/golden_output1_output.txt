@@ -1,0 +1,16 @@
+=================================================
+Output for router lisp 0 instance-id 103
+=================================================
+Map-Server registration history
+Roam = Did host move to a new location?
+WLC = Did registration come from a Wireless Controller?
+Prefix qualifier: + = Register Event, - = Deregister Event, * = AR register event
+
+Timestamp (EDT)      Instance Proto Roam WLC Source           
+                                             EID prefix / Locator
+*Dec  1 09:34:17.164     4100 UDP   No   No  10.1.1.1         
+                                           + 192.168.1.71/32
+*Dec  1 09:34:17.168     4100 TCP   No   No  11.11.11.11      
+                                           + 192.168.1.71/32
+*Dec  1 09:42:03.973     4100 TCP   No   No  22.22.22.22      
+                                           + 194.168.1.72/32

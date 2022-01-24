@@ -1,0 +1,3 @@
+Role-based IP access list icmp_echo-01 (downloaded)
+    10 permit icmp echo
+   

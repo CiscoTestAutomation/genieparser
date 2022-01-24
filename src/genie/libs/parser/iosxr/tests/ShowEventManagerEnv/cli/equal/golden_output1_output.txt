@@ -1,0 +1,6 @@
+RP/0/RSP0/CPU0:ios#show event manager environment | include _wdtimer
+Fri Dec  3 10:23:01.104 UTC
+
+No. Name                          Value
+2   _wdtimer                      180
+

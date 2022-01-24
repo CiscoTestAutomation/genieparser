@@ -1,0 +1,3 @@
+Role-based IP access list permit_icmp
+    10 permit icmp echo-reply (19 matches)
+    

@@ -1,0 +1,41 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 vrf vrf1 interface
+Thu Nov 18 15:30:38.306 UTC
+
+GigabitEthernet0/0/0/1
+Rip enabled?:               Yes
+Out-of-memory state:        Normal
+Accept Metric 0:           No
+Interface state:            Up
+IP address:                 12:0:0:2::2/64
+Metric Cost:                0
+Split horizon:              Enabled
+Poison Reverse:             Disabled
+Socket set options:
+    Joined multicast group:    Yes
+    LPTS filter set:           Yes
+
+  Total packets received: 36562
+RIP peers attached to this interface:
+    fe80::20c:29ff:feec:f4
+        uptime (sec): 4    version: 0
+        packets discarded: 0    routes discarded: 0
+
+Loopback3
+Rip enabled?:               Yes
+Out-of-memory state:        Normal
+Accept Metric 0:           No
+Interface state:            Up
+IP address:                 2::3/128
+Metric Cost:                0
+Split horizon:              Enabled
+Poison Reverse:             Disabled
+Socket set options:
+    Joined multicast group:    Yes
+    LPTS filter set:           Yes
+
+  Total packets received: 32589
+RIP peers attached to this interface:
+    fe80::a42c:e4ff:fe95:24c0
+        uptime (sec): 288813    version: 0
+        packets discarded: 0    routes discarded: 0
+

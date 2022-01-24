@@ -410,3 +410,17 @@ class TracerouteMPLSTETunnel(Traceroute):
         else:
             output=output
         return super().cli(output=output)
+
+class TracerouteMPLSIPv4(Traceroute):
+
+    ''' Parser for:
+        * 'traceroute mpls ipv4 {addr} {mask}'
+    '''
+    cli_command = 'traceroute mpls ipv4 {address} {mask}'
+
+    def cli(self, address='', mask='', output=None):
+        if not output:
+            output=self.device.execute(self.cli_command.format(address=address, mask=mask))
+        else:
+            output=output
+        return super().cli(output=output)

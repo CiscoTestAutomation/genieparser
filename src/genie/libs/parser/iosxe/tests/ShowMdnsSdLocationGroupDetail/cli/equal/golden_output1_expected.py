@@ -1,35 +1,23 @@
 expected_output={
-   "trust_links":"GigabitEthernet1/0/14",
-   "vlans_added":"10-11",
-   "total_loc_grps":"4",
-   "vlans":{
-      "10":{
-         "no_of_lg":"3",
-         "lg_ids":{
-            "200":{
-               "ports":"GigabitEthernet1/0/15"
+    'total_loc_grps': '0',
+    'trust_links': 'TwentyFiveGigE1/0/13',
+    'vlans': {
+        '2801': {
+            'lg_ids': {
+                '0': { 
+                    'ports': 'TwentyFiveGigE1/0/1,TwentyFiveGigE1/0/24,'
+                     }
+                },
+            'no_of_lg': '1'
             },
-            "201":{
-               "ports":"No Active Ports"
-            },
-            "0":{
-               "ports":"No Active Ports"
+        '2802': {
+            'lg_ids': {
+                '0': {
+                    'ports': 'TwentyFiveGigE1/0/7,'
+                     }
+                },
+            'no_of_lg': '1'
             }
-         }
-      },
-      "11":{
-         "no_of_lg":"3",
-         "lg_ids":{
-            "200":{
-               "ports":"GigabitEthernet1/0/37"
-            },
-            "201":{
-               "ports":"No Active Ports"
-            },
-            "0":{
-               "ports":"No Active Ports"
-            }
-         }
-      }
-   }
-}
+        },
+    'vlans_added': '2801-2802'
+    }

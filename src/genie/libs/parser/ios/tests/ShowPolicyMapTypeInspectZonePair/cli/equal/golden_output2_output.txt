@@ -1,0 +1,92 @@
+Zone-pair: DEFAULT->RED 
+Service-policy inspect : TEST
+
+    Class-map: TEST (match-any)  
+      Match: access-group name HBN2
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: ICMP (match-all)  
+      Match: protocol icmp
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        0 packets, 0 bytes
+Zone-pair: DEFAULT2GREEN 
+Service-policy inspect : TEST
+
+    Class-map: TEST (match-any)  
+      Match: access-group name HBN2
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: ICMP (match-all)  
+      Match: protocol icmp
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        0 packets, 0 bytes
+Zone-pair: GREEN->DEFAULT 
+Service-policy inspect : TEST
+
+    Class-map: TEST (match-any)  
+      Match: access-group name HBN2
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: ICMP (match-all)  
+      Match: protocol icmp
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        0 packets, 0 bytes
+Zone-pair: GREEN->RED 
+Service-policy inspect : TEST
+
+    Class-map: TEST (match-any)  
+      Match: access-group name HBN2
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: ICMP (match-all)  
+      Match: protocol icmp
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        0 packets, 0 bytes

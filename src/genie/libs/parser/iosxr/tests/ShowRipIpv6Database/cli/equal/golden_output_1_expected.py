@@ -1,0 +1,32 @@
+expected_output = {
+ "routes":{
+      "1::3/128":{
+         "index":{
+            1:{
+               "metric":1,
+               "next_hop":"fe80::20c:29ff:feec:f4",
+               "up_time":"0s",
+               "interface":"GigabitEthernet0/0/0/1"
+            }
+         }
+      },
+      "2::3/128":{
+         "index":{
+            1:{
+               "metric":0,
+               "route_type":"connected",
+               "interface":"Loopback3"
+            }
+         }
+      },
+      "12:0:0:2::/64":{
+         "index":{
+            1:{
+               "metric":0,
+               "route_type":"connected",
+               "interface":"GigabitEthernet0/0/0/1"
+            }
+         }
+      }
+   }
+}        
