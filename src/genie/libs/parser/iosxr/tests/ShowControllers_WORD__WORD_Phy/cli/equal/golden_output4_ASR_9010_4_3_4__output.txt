@@ -1,7 +1,3 @@
-test = dev.parse("show controllers tengige 0/0/0/0 phy", output="")
-
-2022-01-10 12:35:36,564: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers tengige 0/0/0/0 phy' +++
-show controllers tengige 0/0/0/0 phy
 Mon Jan 10 12:35:53.990 ARG
 
 XFP EEPROM  port: 0
