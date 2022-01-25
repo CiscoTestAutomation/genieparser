@@ -4815,20 +4815,23 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
-        # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
-        out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
         vrf = 'default'
-        for line in out_vrf.splitlines():
-            line = line.strip()
-            # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
-            m = p.match(line)
-            if m:
-                if m.groupdict()['bgp_neighbor'] == neighbor:
-                    if m.groupdict()['vrf']:
-                        vrf = str(m.groupdict()['vrf'])
-                        break
-                else:
-                    continue
+        try:
+            # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
+            out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
+            for line in out_vrf.splitlines():
+                line = line.strip()
+                # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
+                m = p.match(line)
+                if m:
+                    if m.groupdict()['bgp_neighbor'] == neighbor:
+                        if m.groupdict()['vrf']:
+                            vrf = str(m.groupdict()['vrf'])
+                            break
+                    else:
+                        continue
+        except AttributeError:
+            pass
 
         # Init vars
         route_dict = {}
