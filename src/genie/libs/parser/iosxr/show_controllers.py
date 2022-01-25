@@ -1290,11 +1290,9 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
 
 # =====================================================================================
 # Schema for:
-#   'show controllers { ethernet_interface_type } \
-#   {interface_path_id} phy'
-# Where:
-#   ethernet-interface-type: GigabitEthernet | HundredGigE | TenGigE
-#   interfaces-path-id:  R/S/I/P  Forward interface in Rack/Slot/Instance/Port format
+#   'show controllers {ethernet_interface_type} {interface_path_id} phy'
+#   'show controllers {ethernet_interface_type} phy'
+#   'show controllers phy'
 # =====================================================================================
 class ShowControllers_WORD__WORD_Phy_Schema(MetaParser):
     schema = {
