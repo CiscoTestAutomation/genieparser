@@ -4772,13 +4772,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def cli(self, neighbor, address_family='', output=None):
 
-        # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
-        # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
-        p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                        '(, +vrf +(?P<vrf>\S+))?, +remote AS '
-                        '+(?P<remote_as_id>[0-9]+), '
-                        '+(?P<internal_external_link>[a-z\s]+)$')
-
         p1 = re.compile(r'^\s*For +address +family:'
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
 
@@ -4822,11 +4815,17 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             for line in out_vrf.splitlines():
                 line = line.strip()
                 # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
-                m = p.match(line)
+                # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+                # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
+                bgp_neighbor_re = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
+                                '(, +vrf +(?P<vrf>\S+))?, +remote AS '
+                                '+(?P<remote_as_id>[0-9]+), '
+                                '+(?P<internal_external_link>[a-z\s]+)$')
+                m = bgp_neighbor_re.match(line)
                 if m:
-                    if m.groupdict()['bgp_neighbor'] == neighbor:
-                        if m.groupdict()['vrf']:
-                            vrf = str(m.groupdict()['vrf'])
+                    if m['bgp_neighbor'] == neighbor:
+                        if m['vrf']:
+                            vrf = str(m['vrf'])
                             break
                     else:
                         continue
