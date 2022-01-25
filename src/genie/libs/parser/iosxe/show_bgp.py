@@ -4816,7 +4816,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
         vrf = 'default'
-        try:
+        if output is None:
             # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
             out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
             for line in out_vrf.splitlines():
@@ -4830,8 +4830,19 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             break
                     else:
                         continue
-        except AttributeError:
-            pass
+        else:
+            if self.check_number_of_prefixes(output) == 0:
+                return {
+                    "vrf": {
+                        "default": {
+                            "neighbor": {
+                                neighbor: {
+                                    "address_family": {}
+                                }
+                            }
+                        }
+                    }
+                }
 
         # Init vars
         route_dict = {}
@@ -5210,6 +5221,13 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                     continue
 
         return route_dict
+
+    def check_number_of_prefixes(self, output):
+        number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
+        m = re.search(number_of_prefixes, output)
+        if not m:
+            return 0
+        return int(m["number_of_prefixes"])
 
 
 # ===========================================================================
