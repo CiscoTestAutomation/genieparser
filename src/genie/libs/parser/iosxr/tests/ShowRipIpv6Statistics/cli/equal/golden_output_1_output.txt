@@ -1,0 +1,17 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 vrf vrf1 statistics
+Thu Nov 18 15:29:35.765 UTC
+
+RIPv6 statistics:
+Total messages sent:        105702
+Message send failures:      0
+Regular updates sent:       105698
+Queries responsed to:       0
+RIB updates:                2
+Total packets received:     69147
+Discarded packets:          16295
+Discarded routes:           0
+Packet received at standby: 0
+Number of routes allocated: 3
+Number of paths allocated:  3
+Route malloc failures:      0
+Path malloc failures:       0

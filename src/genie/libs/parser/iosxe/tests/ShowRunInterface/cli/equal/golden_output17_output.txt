@@ -1,0 +1,7 @@
+interface GigabitEthernet2/0/4
+ description phy-ixia-11.11-FHS-RA-hacker
+ switchport access vlan 169
+ switchport mode access
+ device-tracking attach-policy IPDT_POLICY
+ ipv6 nd raguard attach-policy Univ_IPv6_RA_Policy_Host
+end

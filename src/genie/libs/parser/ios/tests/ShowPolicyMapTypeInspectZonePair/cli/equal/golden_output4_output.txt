@@ -1,0 +1,31 @@
+Zone-pair: in-to-out 
+  Service-policy inspect : in-to-out
+
+    Class-map: in-to-out (match-any)  
+      Match: protocol http
+      Match: protocol https
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop (default action)
+        0 packets, 0 bytes
+  Zone-pair: out-to-in 
+  Service-policy inspect : p1
+
+    Class-map: c1 (match-all)  
+      Match: protocol http
+      Drop
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        0 packets, 0 bytes

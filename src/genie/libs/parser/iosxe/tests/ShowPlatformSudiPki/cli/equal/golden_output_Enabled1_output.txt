@@ -1,0 +1,7 @@
+'Cisco Manufacturing CA III' certificate : Enabled
+
+SUDI Issuer-CN                      Validation status
+-----------------------------------------------------
+Cisco Manufacturing CA              Valid
+Cisco Manufacturing CA III          Not Supported
+Cisco Manufacturing CA SHA2         Valid

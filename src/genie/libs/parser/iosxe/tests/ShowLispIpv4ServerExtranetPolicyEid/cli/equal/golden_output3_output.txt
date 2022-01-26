@@ -1,0 +1,31 @@
+LISP Site Registration Information
+
+Site name: Shire
+Allowed configured locators: any
+Requested EID-prefix:
+
+  EID-prefix: 192.168.1.0/24 instance-id 4100
+    First registered:     never
+    Last registered:      never
+    Routing table tag:    0
+    Origin:               Configuration, accepting more specifics
+    Merge active:         No
+    Proxy reply:          No
+    Skip Publication:     No
+    Force Withdraw:       No
+    TTL:                  00:00:00
+    State:                unknown
+    Extranet IID:         Unspecified
+    Registration errors:
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+ETR 11.11.11.11:33079, last registered 02:23:20, proxy-reply, map-notify
+                           TTL 1d00h, no merge, hash-function sha1, nonce 0x15828F77-0xFFC2A14D
+                           state complete, no security-capability
+                           xTR-ID 0x48050C4D-0xE45760D1-0x4BE4EE64-0xE463F81F
+                           site-ID unspecified
+                           Domain-ID local
+                           Multihoming-ID unspecified
+                           sourced by reliable transport
+      Locator      Local  State      Pri/Wgt  Scope
+      11.11.11.11  yes    up          10/10   IPv4 none

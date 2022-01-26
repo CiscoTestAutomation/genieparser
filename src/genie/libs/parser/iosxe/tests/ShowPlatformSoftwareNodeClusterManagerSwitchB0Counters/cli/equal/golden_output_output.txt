@@ -1,0 +1,8 @@
+Cluster Manager counters are as Follows:
+
+  Total node discovery msgs sent successfully: 9
+  Total node discovery msgs failed to send: 0
+  Total node discovery msgs received: 1
+  Total node_alloc msgs sent: 1
+  Total node_alloc msgs received: 0
+

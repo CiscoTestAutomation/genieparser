@@ -1,0 +1,3 @@
+IPv6 Role-based access list v6_sgacl
+    permit icmp (19 matches) sequence 10
+    

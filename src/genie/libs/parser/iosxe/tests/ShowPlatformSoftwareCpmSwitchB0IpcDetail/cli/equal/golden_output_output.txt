@@ -1,0 +1,16 @@
+--------Bipc Connection Status--------
+Service: cpm-cm
+
+Peer Location: -1
+Peer State: 2
+Connection Drops: 0
+Flow Control: 0
+Transition Count: 0
+Received Msgs: 1
+TDL hdl failure: 0
+Dispatch failures: 1
+Rx Other Drops: 0
+Sent msgs: 1
+Tx No Mem failures: 0
+Tx Other Drops: 0
+Tx No Space failures: 0 

@@ -1,0 +1,12 @@
+Crypto session current status
+
+Interface: GigabitEthernet3
+Profile: ASM-PROFILE
+Session status: UP-ACTIVE     
+Peer: 1.1.1.1 port 500 
+  Session ID: 1  
+  IKEv2 SA: local 1.1.1.2/500 remote 1.1.1.1/500 Active 
+  IPSEC FLOW: permit ip 20.20.20.0/255.255.255.0 10.10.10.0/255.255.255.0 
+        Active SAs: 2, origin: crypto map
+  IPSEC FLOW: permit ip 40.40.40.0/255.255.255.0 30.30.30.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map

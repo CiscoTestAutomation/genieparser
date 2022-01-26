@@ -1,0 +1,6 @@
+Tunnel4 
+  Type       : PIM Encap
+  RP         : 66.66.66.66
+  Source     : 77.77.77.77
+  State      : UP
+  Last event : Created (2d20h)

@@ -9241,6 +9241,7 @@ class ShowBgpSessionsSchema(MetaParser):
                         'remote_port': int,
                         'notifications_sent': int,
                         'notifications_received': int,
+                        Optional('linklocal_interfaceport'): str,
                     },
                 }
             },
@@ -9301,7 +9302,8 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                             '(?P<notifications_sent>\d+)\/'
                             '(?P<notifications_received>\d+)$')
         # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
-        p6_1 = re.compile(r'^(?P<nei>[a-zA-Z0-9\.\:\/\[\]\,\%]+)$')
+        p6_1 = re.compile(r'^(?P<nei>[a-zA-Z0-9\.\:\/\[\]\,]+)%'
+                           '(?P<linklocal_interfaceport>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
         #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
         p6_2 = re.compile(r'^(?P<asn>\d+) +'
                             '(?P<dropped>\d+) +'
@@ -9400,13 +9402,17 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 continue
 
             # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
+            #linklocal_interfaceport
             m = p6_1.match(line)
             if m:
-                nei = m.groupdict()['nei']
+                group = m.groupdict()
+                nei = group['nei']
                 if 'neighbor' not in ret_dict['vrf'][vrf]:
                     ret_dict['vrf'][vrf]['neighbor'] = {}
                 if nei not in ret_dict['vrf'][vrf]['neighbor']:
                     ret_dict['vrf'][vrf]['neighbor'][nei] = {}
+                ret_dict['vrf'][vrf]['neighbor'][nei]['linklocal_interfaceport'] = \
+                    group['linklocal_interfaceport']
                 continue
 
             #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0

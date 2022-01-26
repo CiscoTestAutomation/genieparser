@@ -1,0 +1,5 @@
+Device                  Status
+======                  ======
+oobnd1                      UP
+leaba0_3                    UP
+leaba0_5                    UP
