@@ -3,6 +3,6 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added parser ShowControllers_WORD__WORD_Phy:
-        * for show controllers GigabitEthernet|HundredGigE|TenGigE Rack/Slot/Instance/Port phy
-        * for show controllers GigabitEthernet|HundredGigE|TenGigE phy
-        * for show controllers phy
+        * show controllers {ethernet_interface_type} {interface_path_id} phy
+        * show controllers {ethernet_interface_type} phy
+        * show controllers phy

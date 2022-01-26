@@ -1290,18 +1290,17 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
 
 # =====================================================================================
 # Schema for:
-#   'show controllers { ethernet_interface_type } \
-#   {interface_path_id} phy'
-# Where:
-#   ethernet-interface-type: GigabitEthernet | HundredGigE | TenGigE
-#   interfaces-path-id:  R/S/I/P  Forward interface in Rack/Slot/Instance/Port format
+#   'show controllers {ethernet_interface_type} {interface_path_id} phy'
+#   'show controllers {ethernet_interface_type} phy'
+#   'show controllers phy'
 # =====================================================================================
-class ShowControllers_WORD__WORD_Phy_Schema(MetaParser):
+class ShowControllersPhySchema(MetaParser):
     schema = {
-        Optional(Any()): {                           # Interface name
-            'present': bool,
-            Optional('form_factor'): str,
-            Optional('ethernet_compliance_codes'): str,
+        'interface': {
+            Any(): {
+                'present': bool,
+                Optional('form_factor'): str,
+                Optional('ethernet_compliance_codes'): str,
             Optional('encoding'): str,
             Optional('nominal_bit_rate'): str,
             Optional('vendor_info'): {
@@ -1371,14 +1370,12 @@ class ShowControllers_WORD__WORD_Phy_Schema(MetaParser):
 
 
 # =====================================================================================
-# Schema for:
-#   'show controllers { ethernet_interface_type } \
-#   {interface_path_id} phy'
-# Where:
-#   ethernet-interface-type: GigabitEthernet | HundredGigE | TenGigE
-#   interfaces-path-id:  R/S/I/P  Forward interface in Rack/Slot/Instance/Port format
+# Parser for:
+#   'show controllers {ethernet_interface_type} {interface_path_id} phy'
+#   'show controllers {ethernet_interface_type} phy'
+#   'show controllers phy'
 # =====================================================================================
-class ShowControllers_WORD__WORD_Phy(ShowControllers_WORD__WORD_Phy_Schema):
+class ShowControllersPhy(ShowControllersPhySchema):
     valid_ethernet_interface_types = ("gigabitethernet", "hundredgige", "tengige")
     cli_command = ['show controllers {ethernet_interface_type} {interface_path_id} phy',
         'show controllers {ethernet_interface_type} phy',
@@ -1445,8 +1442,6 @@ class ShowControllers_WORD__WORD_Phy(ShowControllers_WORD__WORD_Phy_Schema):
             port_name = ethernet_interface_type + interface_path_id
         return_dict = {}
         lane = "0"
-        #Command not supported on this interface
-        p1_3 = re.compile(r'Command not supported on this interface')
         #show controllers gigabitethernet 0/4/0/1 phy
         p1_0 = re.compile(r'show\s+controllers\s+(?P<ethernet_interface_type>gigabitethernet|hundredgige|tengige)\s+(?P<interface_path_id>\d+\/\d+\/\d+\/\d+)\s+phy')
         #SFP #25 is not present.
@@ -1454,6 +1449,8 @@ class ShowControllers_WORD__WORD_Phy(ShowControllers_WORD__WORD_Phy_Schema):
         #PHY data for interface: GigabitEthernet0/4/0/0
         p1_2 = re.compile(r'^PHY data for interface: (?P<ethernet_interface_type>'
             'GigabitEthernet|HundredGigE|TenGigE)(?P<interface_path_id>\d+\/\d+\/\d+\/\d+)$')
+        #Command not supported on this interface
+        p1_3 = re.compile(r'Command not supported on this interface')
         #         Xcvr Type: SFP
         p2 = re.compile(r'^Xcvr Type: (?P<form_factor>.*?)$')
         #         Xcvr Code: 1000BASE-LX 
