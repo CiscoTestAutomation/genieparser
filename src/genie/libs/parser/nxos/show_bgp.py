@@ -9369,12 +9369,6 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     ret_dict['vrf'][vrf]['neighbor'] = {}
                 if nei not in ret_dict['vrf'][vrf]['neighbor']:
                     ret_dict['vrf'][vrf]['neighbor'][nei] = {}
-                continue
-
-            #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
-            m = p6_2.match(line)
-            if m:
-                group = m.groupdict()
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
                     int(group['asn'])
