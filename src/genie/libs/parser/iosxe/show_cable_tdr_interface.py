@@ -78,7 +78,6 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
         for line in output.splitlines():
             line = line.strip()
 
-                
             # TDR test last run on: January 09 16:19:29
             m = p1.match(line)
             if m:
