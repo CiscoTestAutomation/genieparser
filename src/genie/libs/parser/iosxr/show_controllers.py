@@ -1376,7 +1376,7 @@ class ShowControllers_WORD__WORD_Phy_Schema(MetaParser):
 #   ethernet-interface-type: GigabitEthernet | HundredGigE | TenGigE
 #   interfaces-path-id:  R/S/I/P  Forward interface in Rack/Slot/Instance/Port format
 # =====================================================================================
-class ShowControllers_WORD__WORD_Phy(ShowControllers_WORD__WORD_Phy_Schema):
+class ShowControllersPhy(ShowControllersPhySchema):
     valid_ethernet_interface_types = ("gigabitethernet", "hundredgige", "tengige")
     cli_command = ['show controllers {ethernet_interface_type} {interface_path_id} phy',
         'show controllers {ethernet_interface_type} phy',
