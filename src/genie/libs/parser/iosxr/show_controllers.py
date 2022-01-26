@@ -1296,10 +1296,12 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
 # =====================================================================================
 class ShowControllersPhySchema(MetaParser):
     schema = {
-        Optional(Any()): {                           # Interface name
-            'present': bool,
-            Optional('form_factor'): str,
-            Optional('ethernet_compliance_codes'): str,
+        'interface': {
+            Any(): {
+                'present': bool,
+                Optional('form_factor'): str,
+                Optional('ethernet_compliance_codes'): str,
+                ...
             Optional('encoding'): str,
             Optional('nominal_bit_rate'): str,
             Optional('vendor_info'): {
