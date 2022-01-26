@@ -1294,7 +1294,7 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
 #   'show controllers {ethernet_interface_type} phy'
 #   'show controllers phy'
 # =====================================================================================
-class ShowControllers_WORD__WORD_Phy_Schema(MetaParser):
+class ShowControllersPhySchema(MetaParser):
     schema = {
         Optional(Any()): {                           # Interface name
             'present': bool,
