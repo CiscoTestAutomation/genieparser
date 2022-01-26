@@ -45,10 +45,9 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
 
     cli_command = 'show cable tdr interface {interface}'
 
-    def cli(self, interface=None, output=None):
+    def cli(self, interface, output=None):
         if output is None:
-            if interface:
-                output = self.device.execute(self.cli_command.format(interface=interface))
+            output = self.device.execute(self.cli_command.format(interface=interface))
         else:
             output = output
 
