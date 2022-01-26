@@ -155,26 +155,30 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
         # Mac Address Type Learned from/Filtered on LC learned Resync Age/Last
         # Change Mapped to
         p1 = re.compile(
-            r'^Mac +Address +Type +Learned +from\/Filtered +on +LC +learned +Resync Age\/Last +Change +Mapped +to$')
+            r'^Mac +Address +Type +Learned +from\/Filtered +on +LC +learned +Resync Age(?:\/Last +Change)? +Mapped +to$')
 
         # 1.01.1 EVPN    BD id: 0                    N/A        N/A
         # N/A
         p2 = re.compile(
             r'^(?P<mac_address>\S+) +(?P<type>\S+) +BD +id: +(?P<bridge_domain>\d+)'
-            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S ]+) +(?P<mapped_to>\S+)$')
 
         # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
         # 0001.00ff.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h
         # 0m 14s           N/A
         p3 = re.compile(
             r'^(?P<mac_address>\S+) +(?P<type>\S+) +(?P<learned_from>[\w\/\.\d]+)'
-            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>(?:\S+ ?)*\S+) +(?P<mapped_to>\S+)$')
 
         # 2.2.2          dynamic (10.25.40.40, 10007)        N/A        14 Mar
         # 12:46:04        N/A
         p4 = re.compile(
-            r'^(?P<mac_address>\S+) +(?P<type>\w+) +(?P<learned_from>[\d\(\)\.\,\s]+)'
-            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
+            r'^(?P<mac_address>\S+) +(?P<type>\S+) +(?P<learned_from>\([\),\w\/\.\d]+ ?[,\d\)]+)'
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>(?:\S+ ?)*\S+) +(?P<mapped_to>\S+)$')
+        # 1412150175)
+        p5 = re.compile(
+            r'(?P<learned_from_continue>\d+\))$'
+        )
 
         # Init dict
         ret_dict = {}
@@ -202,7 +206,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
                 group = m.groupdict()
 
                 mac_address = group['mac_address']
-                learned_from = 'BD id:' + group['bridge_domain']
+                learned_from = 'BD id: ' + group['bridge_domain']
                 final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
                     learned_from, {}).setdefault('mac_address', {}).setdefault(
                     mac_address, {})
@@ -238,12 +242,35 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
 
             # 2.2.2          dynamic (10.25.40.40, 10007)        N/A        14
             # Mar 12:46:04        N/A
+            # 0000.5e00.01cf dynamic (200.80.173.141,            0/0/CPU0   0d 0h 0m 13s       N/A
             m = p4.match(line)
             if m and start_parsing:
                 group = m.groupdict()
 
                 mac_address = group['mac_address']
                 learned_from = group['learned_from'].strip()
+                if ")" in learned_from:
+                    final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                        learned_from, {}).setdefault('mac_address', {}).setdefault(
+                        mac_address, {})
+
+                    keys_list = [
+                        'type',
+                        'learned_from',
+                        'lc_learned',
+                        'resync_age',
+                        'mapped_to']
+                    for key in keys_list:
+                        final_dict.update({key: group[key].strip()})
+                continue
+
+            # 1412150175)
+            m = p5.match(line)
+            if m and start_parsing:
+                group1 = m.groupdict()
+
+                mac_address = group['mac_address']
+                learned_from += " " + group1['learned_from_continue'].strip()
                 final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
                     learned_from, {}).setdefault('mac_address', {}).setdefault(
                     mac_address, {})
@@ -257,7 +284,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
                 for key in keys_list:
                     final_dict.update({key: group[key].strip()})
                 continue
-
+                
         return ret_dict
 
 
