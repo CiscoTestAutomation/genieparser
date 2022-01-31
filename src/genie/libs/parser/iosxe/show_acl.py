@@ -62,7 +62,7 @@ class ShowAccessListsSchema(MetaParser):
                                         'destination_network': str,
                                     }
                                 },
-                                'source_network': {
+                                Optional('source_network'): {
                                     Any(): {
                                         'source_network': str,
                                     }
@@ -245,11 +245,11 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard) +IP +access +list[s]? '
+        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard|Role-based) +IP +access +list[s]? '
                           r'+(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-'
                             r'\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6) +access +list +(?P<name>[\w\-\.#]+)'
+        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6 ?(Role-based)?) +access +list +(?P<name>[\w\-\.#]+)'
                             r'( *\((?P<per_user>.*)\))?.*$')
         p_mac = re.compile(r'^(?P<acl_type>Extended) +MAC +access +list +(?P<name>[\w\-\.'
                            r']+)( *\((?P<per_user>.*)\))?$')
@@ -267,7 +267,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 deny   10.4.1.2 log (18 matches)
         p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? '
                                        r'?(?P<actions_forwarding>permit|deny) '
-                                       r'+(?P<src>\S+|any)( (?P<log>log))?(?:, +wildcard '
+                                       r'+(?P<src>[\d\.]+|any)( (?P<log>log))?(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
                                        r'?(?: +\((?P<matched_packets>\d+|\S+)+ matches\))?$')
 
@@ -294,14 +294,15 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 30 permit icmp any any ttl-exceeded
         # 10 permit icmp any 10.120.194.64 0.0.0.63
         # 20 permit tcp any eq 443 10.120.194.64 0.0.0.63
+        # 10 permit icmp echo-reply (19 matches)
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
-            r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)'
+            r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?'
             r'(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>.*?(?=(?: +any| +host +\d+.\d+.\d+.\d+| +\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)|$)))? '
-            r'+(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)'
+            r'?(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?'
             r'(?: +(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\S?)+\S))?(?: '
-            r'+(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
+            r'?(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
             r'router-advertisement|mld-query+))?(?P<left>.+)?$')
 
         # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
@@ -316,13 +317,16 @@ class ShowAccessLists(ShowAccessListsSchema):
         # permit esp host 2001: DB8: 5: : 1 any sequence 20
         # permit tcp host 2001: DB8: 1: : 1 eq www any eq bgp sequence 30
         # permit udp any host 2001: DB8: 1: : 1 sequence 40
+        # permit icmp (19 matches) sequence 10
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>permit|deny) +(?P<protocol>ahp|esp|hbh'
-            r'|icmp|ipv6|pcp|sctp|tcp|udp) +(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?)'
+            r'|icmp|ipv6|pcp|sctp|tcp|udp) ?(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?)'
             r'{2,7}(?:\/\d+)|(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) '
-            r'(?:\w+)?(?::(?:\w+)?){2,7}))(?: +(?P<src_operator>eq|gt|lt|neq|range)'
-            r' +(?P<src_port>[\S ]+\S))? +(?P<dst>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
-            r'(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))(?: '
+            r'(?:\w+)?(?::(?:\w+)?){2,7}))?(?: +(?P<src_operator>eq|gt|lt|neq|range)'
+            r' +(?P<src_port>[\S ]+\S(?=(?: +any| +(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)'
+            r'|(?: +host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))))? '
+            r'?(?P<dst>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
+            r'(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))?(?: '
             r'+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\w+ ?)'
             r'+\w+))?(?: +(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
             r'router-advertisement|mld-query+))?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
@@ -453,14 +457,16 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
             # 30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
             # 40 permit tcp any range ftp-data bgp any
+            # 10 permit icmp echo-reply (19 matches)
             m_v4 = p_ip_acl.match(line)
 
             # permit ipv6 host 2001::1 host 2001:1::2 sequence 20
             # permit udp any any eq domain sequence 10
             # permit esp any any dscp cs7 log sequence 60
+            # permit icmp (19 matches) sequence 10
             m_v6 = p_ipv6_acl.match(line)
             m_object_group = p_ip_object_group.match(line) 
-            m = m_v4 if m_v4 else m_v6 if m_v6 else m_object_group
+            m = m_object_group if m_object_group else m_v4 if m_v4 else m_v6
             if m:
                 group = m.groupdict()
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(group['seq'], {})
@@ -469,9 +475,11 @@ class ShowAccessLists(ShowAccessListsSchema):
                 protocol = group['protocol']
                 protocol = 'ipv4' if protocol == 'ip' else protocol
                 actions_forwarding = group['actions_forwarding']
-                src = group['src'] if group['src'] else group['src1']
+                src = group['src'] if group['src'] else group.get('src1', None)
                 dst = group.get('dst', None)
-                src = src.strip()
+
+                if src:
+                    src = src.strip()
 
                 if dst:
                     dst = dst.strip()
@@ -503,8 +511,9 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {})\
                     .setdefault(protocol_name, {})
                 l3_dict['protocol'] = protocol
-                l3_dict.setdefault('source_network', {})\
-                    .setdefault(src, {}).setdefault('source_network', src)
+                if src:
+                    l3_dict.setdefault('source_network', {})\
+                        .setdefault(src, {}).setdefault('source_network', src)
                 if dst:
                     l3_dict.setdefault('destination_network', {})\
                         .setdefault(dst, {}).setdefault('destination_network', dst)

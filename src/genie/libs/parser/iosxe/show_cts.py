@@ -2499,3 +2499,512 @@ class ShowCtsRolebasedSgtMapIp(ShowCtsRolebasedSgtMapIpSchema):
             index=[0]
         ).entries
 
+
+class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
+    """
+        Schema for :
+            show cts role-based sgt-map all
+            show cts role-based sgt-map all vrf <vrf> all
+    """
+    schema = {
+        Optional('ipv4_sgt_bindings'): {
+            Any(): {
+                'ip_address': str,
+                'sgt': int,
+                'source': str
+            },
+            Optional('total_active'): int,
+            Optional('total_cli'): int,
+            Optional('total_sxp'): int,
+            Optional('total_internal'): int,
+            Optional('total_local'): int
+        },
+        Optional('ipv6_sgt_bindings'): {
+            Any(): {
+                'ip_address': str,
+                'sgt': int,
+                'source': str
+            },
+            Optional('total_active'): int,
+            Optional('total_cli'): int,
+            Optional('total_sxp'): int,
+            Optional('total_internal'): int,
+            Optional('total_local'): int
+        }
+    }
+
+
+class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
+    """
+        Parser for :
+            show cts role-based sgt-map all
+            show cts role-based sgt-map all vrf <vrf> all
+    """
+
+    cli_command = ['show cts role-based sgt-map all', 'show cts role-based sgt-map vrf {vrf} all']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # Active IPv4-SGT Bindings Information
+        # Active IPv6-SGT Bindings Information
+        p0 = re.compile(r'^Active\s+(?P<sgt_type>([\w\-\s]+))\s+Information$')
+
+        # 1.1.1.2 2 SXP
+        # 1.1.1.3 3 SXP
+        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>(\w+))$')
+
+        # Total number of SXP bindings = 51
+        # Total number of active bindings = 51
+        # Total number of SXP bindings = 2
+        # Total number of active bindings = 2
+        p2 = re.compile(r'^Total\s+number\s+of\s+(?P<binding_type>(\S+))\s+bindings\s+=\s+(?P<binding_count>(\d+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            # Active IPv4-SGT Bindings Information
+            # Active IPv6-SGT Bindings Information
+            m0 = p0.match(line)
+            if m0:
+                group = m0.groupdict()
+                group = group['sgt_type'].lower().replace('-', '_').replace(' ', '_')
+                sgt_dict = result_dict.setdefault(group, {})
+                continue
+
+            # 1.1.1.2 2 SXP
+            # 1.1.1.3 3 SXP
+            m1 = p1.match(line)
+            if m1:
+                sgt_ip_group = m1.groupdict()
+                sgt_ip_group['ip_address'] = sgt_ip_group['ip_address'].lower()
+                sgt_ip_group['source'] = sgt_ip_group['source'].lower()
+                sgt_ip_group['sgt'] = int(sgt_ip_group['sgt'])
+                sgt_dict[sgt_ip_group['ip_address']] = sgt_ip_group
+                continue
+
+            # Total number of SXP bindings = 51
+            # Total number of active bindings = 51
+            # Total number of SXP bindings = 2
+            # Total number of active bindings = 2
+            m2 = p2.match(line)
+            if m2:
+                total_sgt_group = m2.groupdict()
+                sgt_dict[f"total_{total_sgt_group['binding_type'].lower()}"] = \
+                    int(total_sgt_group['binding_count'])
+
+        return result_dict
+
+
+class ShowCtsSxpConnectionsSchema(MetaParser):
+    """
+        Schema for:
+            show cts sxp connections
+            show cts sxp connections vrf <vrf>
+    """
+    schema = {
+        Optional('total_sxp_connections'): int,
+        'default_key_chain': str,
+        'default_key_chain_name': str,
+        'default_pwd': str,
+        'default_source_ip': str,
+        'export_traverse_limit': str,
+        'highest_version': int,
+        'import_traverse_limit': str,
+        'reconcile_period': int,
+        'retry_period': int,
+        'retry_timer': str,
+        'sxp_status': str,
+        Any(): {
+            Optional('conn_capability'): str,
+            Optional('conn_hold_time'): int,
+            Optional('speaker_conn_hold_time'): int,
+            Optional('listener_conn_hold_time'): int,
+            'conn_inst': int,
+            'conn_status': str,
+            'conn_version': int,
+            'duration': str,
+            'local_mode': str,
+            'peer_ip': str,
+            'source_ip': str,
+            'tcp_conn_fd': str,
+            'tcp_conn_pwd': str
+        }
+    }
+
+class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
+    """
+        Parser for:
+            show cts sxp connections
+            show cts sxp connections vrf <vrf>
+    """
+
+    cli_command = ['show cts sxp connections', 'show cts sxp connections vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        #  SXP              : Enabled
+        p1 = re.compile(r"^SXP\s+:\s+(?P<sxp_status>(Disabled|Enabled))$")
+        #  Highest Version Supported: 4
+        p2 = re.compile(r"^Highest\s+Version\s+Supported:\s+(?P<highest_version>\d+)$")
+        #  Default Password : Set
+        p3 = re.compile(r"^Default\s+Password\s+:\s+(?P<default_pwd>(Not\s+Set|Set))$")
+        #  Default Key-Chain: Not Set
+        p4 = re.compile(r"^Default\s+Key-Chain:\s+(?P<default_key_chain>(Not\s+Set|Set))$")
+        #  Default Key-Chain Name: Not Applicable
+        p5 = re.compile(r"^Default\s+Key-Chain\s+Name:\s+(?P<default_key_chain_name>(Not\s+Applicable|\S+))$")
+        #  Default Source IP: 192.168.2.24
+        p6 = re.compile(r"^Default\s+Source\s+IP:\s+(?P<default_source_ip>(Not\s+Set|[\d+\.]+))$")
+        # Connection retry open period: 120 secs
+        p7 = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<retry_period>\d+)\s+secs$")
+        # Reconcile period: 120 secs
+        p8 = re.compile(r"^Reconcile\s+period:\s+(?P<reconcile_period>\d+)\s+secs$")
+        # Retry open timer is not running
+        p9 = re.compile(r"^Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))$")
+        # Peer-Sequence traverse limit for export: Not Set
+        p10 = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+export:\s+(?P<export_traverse_limit>(Not\s+Set|\S+))$")
+        # Peer-Sequence traverse limit for import: Not Set
+        p11 = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+import:\s+(?P<import_traverse_limit>(Not\s+Set|\S+))$")
+        # Peer IP          : 10.1.1.2
+        p12 = re.compile(r"^Peer\s+IP\s+:\s+(?P<peer_ip>[\d\.]+)$")
+        # Source IP        : 10.1.1.1
+        p13 = re.compile(r"^Source\s+IP\s+:\s+(?P<source_ip>[\d\.]+)$")
+        # Conn status      : On
+        p14 = re.compile(r"^Conn\s+status\s+:\s+(?P<conn_status>.*$)$")
+        # Conn version     : 5
+        p15 = re.compile(r"^Conn\s+version\s+:\s+(?P<conn_version>\d+)$")
+        # Conn capability  : IPv4-IPv6-Subnet
+        p16 = re.compile(r"^Conn\s+capability\s+:\s+(?P<conn_capability>\S+)$")
+        # Conn hold time   : 120 seconds
+        p17 = re.compile(r"^Conn\s+hold\s+time\s+:\s+(?P<conn_hold_time>\d+)\s+seconds$")
+        # Local mode       : SXP Speaker
+        p18 = re.compile(r"^Local\s+mode\s+:\s+(?P<local_mode>.*$)$")
+        # Connection inst# : 1
+        p19 = re.compile(r"^Connection\s+inst#\s+:\s+(?P<conn_inst>\d+)$")
+        # TCP conn fd      : 1
+        p20 = re.compile(r"^TCP\s+conn\s+fd\s+:\s+(?P<tcp_conn_fd>.*$)$")
+        # TCP conn password: none
+        p21 = re.compile(r"^TCP\s+conn\s+password:\s+(?P<tcp_conn_pwd>.*$)$")
+        # Duration since last state change: 0:00:02:09 (dd:hr:mm:sec)
+        p22 = re.compile(r"^Duration\s+since\s+last\s+state\s+change:\s+(?P<duration>.*)$")
+        # Total num of SXP Connections = 2
+        p23 = re.compile(r"^Total\s+num\s+of\s+SXP\s+Connections\s+=\s+(?P<total_sxp_connections>\d+)$")
+        # Speaker Conn hold time   : 120 seconds
+        p24 = re.compile(r"^Speaker\s+Conn\s+hold\s+time\s+:\s+(?P<speaker_conn_hold_time>\d+)\s+seconds$")
+        # Listener Conn hold time   : 120 seconds
+        p25 = re.compile(r"^Listener\s+Conn\s+hold\s+time\s+:\s+(?P<listener_conn_hold_time>\d+)\s+seconds$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            #  SXP              : Enabled
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Highest Version Supported: 4
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                group['highest_version'] = int(group['highest_version'])
+                result_dict.update(group)
+                continue
+
+            #  Default Password : Set
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Key-Chain: Not Set
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Key-Chain Name: Not Applicable
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Source IP: 192.168.2.24
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Connection retry open period: 120 secs
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                group['retry_period'] = int(group['retry_period'])
+                result_dict.update(group)
+                continue
+
+            # Reconcile period: 120 secs
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                group['reconcile_period'] = int(group['reconcile_period'])
+                result_dict.update(group)
+                continue
+
+            # Retry open timer is not running
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer-Sequence traverse limit for export: Not Set
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer-Sequence traverse limit for import: Not Set
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer IP          : 10.1.1.2
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                peer_dict = result_dict.setdefault(group['peer_ip'], group)
+                continue
+
+            # Source IP        : 10.1.1.1
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn status      : On
+            # Conn status      : On (Speaker) :: On (Listener)
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn version     : 5
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                group['conn_version'] = int(group['conn_version'])
+                peer_dict.update(group)
+                continue
+
+            # Conn capability  : IPv4-IPv6-Subnet
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn hold time   : 120 seconds
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                group['conn_hold_time'] = int(group['conn_hold_time'])
+                peer_dict.update(group)
+                continue
+
+            # Local mode       : SXP Speaker
+            # Local mode       : Both
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Connection inst# : 1
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                group['conn_inst'] = int(group['conn_inst'])
+                peer_dict.update(group)
+                continue
+
+            # TCP conn fd      : 1
+            # TCP conn fd      : 1(Speaker) 2(Listener)
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                group['tcp_conn_fd'] = group['tcp_conn_fd']
+                peer_dict.update(group)
+                continue
+
+            # TCP conn password: none
+            # TCP conn password: default SXP password
+            m21 = p21.match(line)
+            if m21:
+                group = m21.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Duration since last state change: 0:00:02:09 (dd:hr:mm:sec)
+            m22 = p22.match(line)
+            if m22:
+                group = m22.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Total num of SXP Connections = 2
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                group["total_sxp_connections"] = int(group["total_sxp_connections"])
+                result_dict.update(group)
+                continue
+
+            # Speaker Conn hold time   : 120 seconds
+            m24 = p24.match(line)
+            if m24:
+                group = m24.groupdict()
+                group["speaker_conn_hold_time"] = int(group["speaker_conn_hold_time"])
+                peer_dict.update(group)
+                continue
+
+            # Listener Conn hold time   : 120 seconds
+            m25 = p25.match(line)
+            if m25:
+                group = m25.groupdict()
+                group["listener_conn_hold_time"] = int(group["listener_conn_hold_time"])
+                peer_dict.update(group)
+                continue
+
+        return result_dict
+
+
+class ShowCtsSxpSgtMapBriefSchema(MetaParser):
+    """
+        Schema for:
+            show cts sxp sgt-map brief
+            show cts sxp sgt-map vrf <vrf> brief
+    """
+    schema = {
+        'ip_sgt_mapping': {
+            Optional('ipv4'): {
+                Any(): int
+            },
+            Optional('ipv6'): {
+                Any(): int
+            },
+            Optional('total_ip_sgt_mappings'): int
+        }
+    }
+
+class ShowCtsSxpSgtMapBrief(ShowCtsSxpSgtMapBriefSchema):
+    """
+        Parser for:
+            show cts sxp sgt-map brief
+            show cts sxp sgt-map vrf <vrf> brief
+    """
+
+    cli_command = ['show cts sxp sgt-map brief', 'show cts sxp sgt-map vrf {vrf} brief']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # IPv4,SGT: <10.1.1.8 , 5>
+        # IPv4,SGT: <10.1.1.10 , 9>
+        # IPv4,SGT: <10.1.1.11 , 89>
+        # IPv4,SGT: <10.1.1.18 , 87>
+        p0 = re.compile(r'^IPv4,SGT:\s+\<(?P<ip_address>[\d\.]+)\s+,\s+(?P<sgt>\d+)[:\w]*\>$')
+
+        # IPv6,SGT: <2001::6 , 22>
+        # IPv6,SGT: <2001::60 , 208>
+        # IPv6,SGT: <2001::80 , 26>
+        # IPv6,SGT: <2001::89 , 26>
+        p1 = re.compile(r'^IPv6,SGT:\s+\<(?P<ip_address>[\w:]+)\s+,\s+(?P<sgt>\d+)[:\w]*\>$')
+
+        # Total number of IP-SGT Mappings: 8
+        p2 = re.compile(r'^Total\s+number\s+of\s+IP-SGT\s+Mappings:\s+(?P<total_ip_sgt_mappings>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            map_dict = result_dict.setdefault('ip_sgt_mapping', {})
+
+            # IPv4,SGT: <10.1.1.8 , 5>
+            # IPv4,SGT: <10.1.1.10 , 9:SGT_009>
+            # IPv4,SGT: <10.1.1.11 , 89:SGT_089>
+            # IPv4,SGT: <10.1.1.18 , 87>
+            m0 = p0.match(line)
+            if m0:
+                ipv4_group = m0.groupdict()
+                ipv4_group['sgt'] = int(ipv4_group['sgt'])
+                v4_dict = map_dict.setdefault('ipv4', {})
+                v4_dict[ipv4_group['ip_address']] = ipv4_group['sgt']
+                continue
+
+            # IPv6,SGT: <2001::6 , 22:SGT_022>
+            # IPv6,SGT: <2001::60 , 208>
+            # IPv6,SGT: <2001::80 , 26>
+            # IPv6,SGT: <2001::89 , 26>
+            m1 = p1.match(line)
+            if m1:
+                ipv6_group = m1.groupdict()
+                ipv6_group['sgt'] = int(ipv6_group['sgt'])
+                v6_dict = map_dict.setdefault('ipv6', {})
+                v6_dict[ipv6_group['ip_address'].lower()] = ipv6_group['sgt']
+                continue
+
+            # Total number of IP-SGT Mappings: 8
+            m2 = p2.match(line)
+            if m2:
+                total_group = m2.groupdict()
+                total_group['total_ip_sgt_mappings'] = int(total_group['total_ip_sgt_mappings'])
+                map_dict['total_ip_sgt_mappings'] = total_group['total_ip_sgt_mappings']
+
+        return result_dict

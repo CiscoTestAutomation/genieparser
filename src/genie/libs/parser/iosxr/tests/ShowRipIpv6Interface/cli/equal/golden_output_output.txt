@@ -1,0 +1,41 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 interface
+Thu Nov 18 15:29:50.065 UTC
+
+GigabitEthernet0/0/0/0
+Rip enabled?:               Yes
+Out-of-memory state:        Normal
+Accept Metric 0:           No
+Interface state:            Up
+IP address:                 12:0:0:1::2/64
+Metric Cost:                0
+Split horizon:              Enabled
+Poison Reverse:             Disabled
+Socket set options:
+    Joined multicast group:    Yes
+    LPTS filter set:           Yes
+
+  Total packets received: 36550
+RIP peers attached to this interface:
+    fe80::20c:29ff:feec:ea
+        uptime (sec): 16    version: 0
+        packets discarded: 0    routes discarded: 0
+
+Loopback0
+Rip enabled?:               Yes
+Out-of-memory state:        Normal
+Accept Metric 0:           No
+Interface state:            Up
+IP address:                 2::2/128
+Metric Cost:                0
+Split horizon:              Enabled
+Poison Reverse:             Disabled
+Socket set options:
+    Joined multicast group:    Yes
+    LPTS filter set:           Yes
+
+  Total packets received: 32585
+RIP peers attached to this interface:
+    fe80::a42c:e4ff:fe95:24c0
+        uptime (sec): 288797    version: 0
+        packets discarded: 0    routes discarded: 0
+

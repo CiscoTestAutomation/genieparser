@@ -1,0 +1,15 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 database
+Thu Nov 18 15:29:16.515 UTC
+
+Routes held in RIP's topology database:
+1::1/128
+    [1] via fe80::20c:29ff:feec:ea, next hop fe80::20c:29ff:feec:ea, Uptime: 5s, GigabitEthernet0/0/0/0
+2::2/128
+    [0]    directly connected, Loopback0
+12:0:0:1::/64
+    [0]    directly connected, GigabitEthernet0/0/0/0
+13:0:0:1::/64
+    [1] via fe80::20c:29ff:feec:ea, next hop fe80::20c:29ff:feec:ea, Uptime: 5s, GigabitEthernet0/0/0/0
+13:0:0:2::/64
+    [1] via fe80::20c:29ff:feec:ea, next hop fe80::20c:29ff:feec:ea, Uptime: 5s, GigabitEthernet0/0/0/0
+

@@ -1,15 +1,15 @@
 expected_output = {
     'average_input_rate_pps': {
         'one_min': 0,
-        '5_mins': 0,
-        '1_hour': 0
+        'five_mins': 0,
+        'one_hour': 0
     },
     'average_output_rate_pps': {
         'one_min': 0,
-        '5_mins': 0,
-        '1_hour': 0
+        'five_mins': 0,
+        'one_hour': 0
     },
-    'messages_sent': {
+    'messages_received': {
         'query': 15050, 
         'any_query': 0,      
         'advertisements': 2684,
@@ -21,7 +21,7 @@ expected_output = {
         'srvc_discovery_response': 0,
         'keep_alive': 5421,
         },
-    'messages_received': { 
+    'messages_sent': { 
         'query_response': 0,       
         'any_query_response': 0,        
         'cache_sync': 60,
