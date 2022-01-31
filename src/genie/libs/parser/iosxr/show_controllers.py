@@ -1366,6 +1366,7 @@ class ShowControllersPhySchema(MetaParser):
             Optional('part_number'): str,
             Optional('product_id'): str,
         },
+    },
     }
 
 
