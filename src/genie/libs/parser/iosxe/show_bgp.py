@@ -2941,6 +2941,10 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('bgp_version'): int,
                         Optional('router_id'): str,
                         Optional('session_state'): str,
+                        Optional('up_time'): str,
+                        Optional('down_time'): str,
+                        Optional('last_read'): str,
+                        Optional('last_write'): str,
                         Optional('no_prepend'): bool,
                         Optional('replace_as'): bool,
                         Optional('address_family'):
@@ -3730,6 +3734,11 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 group = m.groupdict()
                 nbr_dict['session_state'] = group['session_state']
+                if group['state']:
+                    if 'down' in group['state']:
+                        nbr_dict['down_time'] = group['time']
+                    elif 'up' in group['state']:
+                        nbr_dict['up_time'] = group['time']
                 if af_name:
                     af_dict['session_state'] = group['session_state']
                     if group['state']:
@@ -3747,6 +3756,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                                 setdefault('bgp_negotiated_keepalive_timers', {})
                 timers_dict['hold_time'] = int(group['hold_time'])
                 timers_dict['keepalive_interval'] = int(group['keepalive'])
+                nbr_dict['last_read'] = group['last_read']
+                nbr_dict['last_write'] = group['last_write']
                 if af_name:
                     af_dict['last_read'] = group['last_read']
                     af_dict['last_write'] = group['last_write']
@@ -6108,6 +6119,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         neighbor_id = neighbor
         if address_family:
             original_address_family = address_family
+        previous_line = ''
 
         # For address family: IPv4 Unicast
         p1 = re.compile(r'^\s*For +address +family:'
@@ -6146,7 +6158,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
         # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
         # *>i  10.145.0.0/24      192.168.51.1                1    100      0 ?
-        # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+        # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50.1 60 70 80 90 i
         # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
         # Condition placed to handle the situation of a long line that is
         # divided nto two lines while actually it is not another index.
@@ -6160,7 +6172,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
                          '([a-zA-Z0-9\.\:]+)))'
                          ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                         ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
+                         ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\.]+)'
                          ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
 
         # Route Distinguisher: 200:1
@@ -6170,9 +6182,36 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                          '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
+        # *>i 10.142.223.0/24
+        #                   10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
+        # *>l10.143.113.0/24
+        #                   0.0.0.0                           100      32768 i
+        # Matches the first line of split lines to join them. 
+        p8 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|r|h|\*|\>|\s)+)'
+                         '(?P<path_type>(i|e|c|l|a|r|I))? *'
+                         '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
+                         '[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                         '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                         '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
+                         '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                         '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
+                         '([a-zA-Z0-9\.\:]+)))\s*$')
+
         for line in output.splitlines():
             line = line.rstrip()
 
+            #  *>   10.123.180.192/26
+            # catches split lines to be joined 
+            m = p8.match(line)
+            if m:
+                previous_line = line
+                continue
+
+            # If the previous line was a split line join them
+            if previous_line:
+                line = previous_line + ' ' + line
+                previous_line = ''
+    
             # For address family: IPv4 Unicast
             m = p1.match(line)
             if m:
@@ -6187,37 +6226,16 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 local_router_id = str(m.groupdict()['local_router_id'])
 
                 # Init dict
-                if 'vrf' not in route_dict:
-                    route_dict['vrf'] = {}
-                if vrf not in route_dict['vrf']:
-                    route_dict['vrf'][vrf] = {}
-                if 'neighbor' not in route_dict['vrf'][vrf]:
-                    route_dict['vrf'][vrf]['neighbor'] = {}
-                if neighbor_id not in route_dict['vrf'][vrf]['neighbor']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id] = {}
-                if 'address_family' not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
+                route_dict.setdefault('vrf', {})\
+                        .setdefault(vrf, {})\
+                        .setdefault('neighbor', {})\
+                        .setdefault(neighbor_id, {})
 
-                # Set af_dict
-                af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]
-
-                # Init routes dict
-                if 'routes' not in af_dict:
-                    af_dict['routes'] = {}
-
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]['bgp_table_version'] = \
-                        bgp_table_version
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]['local_router_id'] = \
-                        local_router_id
+                # Init af dict
+                af_dict = {}
+                af_dict.setdefault('routes', {})
+                af_dict['bgp_table_version'] = bgp_table_version
+                af_dict['local_router_id'] = local_router_id
                 continue
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
@@ -6237,15 +6255,16 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 if m.groupdict()['prefix']:
                     prefix = str(m.groupdict()['prefix'])
 
+
+                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, af_dict)
+                        
                 # Init dict
-                if 'routes' not in af_dict:
-                    af_dict['routes'] = {}
-                if prefix not in af_dict['routes']:
-                    af_dict['routes'][prefix] = {}
-                if 'index' not in af_dict['routes'][prefix]:
-                    af_dict['routes'][prefix]['index'] = {}
-                if index not in af_dict['routes'][prefix]['index']:
-                    af_dict['routes'][prefix]['index'][index] = {}
+                af_dict.setdefault('routes', {})\
+                        .setdefault(prefix, {})\
+                        .setdefault('index', {})\
+                        .setdefault(index, {})
 
                 # Set keys
                 if m.groupdict()['status_codes']:
@@ -6260,6 +6279,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'].setdefault(address_family, af_dict)
                 af_dict['routes'][prefix]['index'][index]['metric'] = int(group['metric'])
                 af_dict['routes'][prefix]['index'][index]['locprf'] = int(group['locprf'])
                 af_dict['routes'][prefix]['index'][index]['weight'] = int(group['weight'])
@@ -6281,15 +6302,15 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 else:
                     index += 1
 
+                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, af_dict)
+
                 # Init dict
-                if 'routes' not in af_dict:
-                    af_dict['routes'] = {}
-                if prefix not in af_dict['routes']:
-                    af_dict['routes'][prefix] = {}
-                if 'index' not in af_dict['routes'][prefix]:
-                    af_dict['routes'][prefix]['index'] = {}
-                if index not in af_dict['routes'][prefix]['index']:
-                    af_dict['routes'][prefix]['index'][index] = {}
+                af_dict.setdefault('routes', {})\
+                        .setdefault(prefix, {})\
+                        .setdefault('index', {})\
+                        .setdefault(index, {})
 
                 # Set keys
                 af_dict['routes'][prefix]['index'][index]['next_hop'] = next_hop
@@ -6356,7 +6377,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
             # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
             # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
             # *>i  10.145.0.0/24      192.168.51.1                1    100      0 ?
-            # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+            # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50.3 60 70 80 90 i
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             m = p6.match(line)
             if m and not data_on_nextline:
@@ -6375,17 +6396,15 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 if m.groupdict()['origin_codes']:
                     origin_codes = str(m.groupdict()['origin_codes'])
 
+                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, af_dict)
+
                 # Init dict
-                if 'routes' not in af_dict:
-                    af_dict['routes'] = {}
-                if prefix not in af_dict['routes']:
-                    af_dict['routes'][prefix] = {}
-                if 'index' not in af_dict['routes'][prefix]:
-                    af_dict['routes'][prefix]['index'] = {}
-                if index not in af_dict['routes'][prefix]['index']:
-                    af_dict['routes'][prefix]['index'][index] = {}
-                if index not in af_dict['routes'][prefix]['index']:
-                    af_dict['routes'][prefix]['index'][index] = {}
+                af_dict.setdefault('routes', {})\
+                        .setdefault(prefix, {})\
+                        .setdefault('index', {})\
+                        .setdefault(index, {})
 
                 # Set keys
                 if m.groupdict()['status_codes']:
@@ -6401,26 +6420,26 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 numbers = m.groupdict()['numbers']
 
                 # Metric     LocPrf     Weight Path
-                #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
+                #    4444       100          0  10 3 10 20 30 40 50.1 60 70 80 90
                 m1 = re.compile(r'^(?P<metric>[0-9]+)'
                                  '(?P<space1>\s{4,10})'
                                  '(?P<localprf>[0-9]+)'
                                  '(?P<space2>\s{5,10})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s\.]+))?$').match(numbers)
 
-                #    100        ---          0 10 20 30 40 50 60 70 80 90
+                #    100        ---          0 10 20 30 40 50.1 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
                 #    ---        100      32788 ---
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,21})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s\.]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
+                                 ' +(?P<path>[0-9\{\}\s\.]+)$').match(numbers)
 
                 if m1:
                     af_dict['routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
@@ -6451,39 +6470,18 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
             m = p7.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
-                new_address_family = original_address_family + ' RD ' + route_distinguisher
-
-                # Init dict
-                if 'address_family' not in route_dict['vrf'][vrf]['neighbor']\
-                        [neighbor_id]:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if new_address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][new_address_family] = {}
+                # Reset address_family key and af_dict for use in other regex
+                address_family = original_address_family + ' RD ' + route_distinguisher
 
                 # Set keys
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['local_router_id'] = local_router_id
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
+                af_dict.setdefault('routes', {})
+                af_dict['bgp_table_version'] = bgp_table_version
+                af_dict['local_router_id'] = local_router_id
+                af_dict['route_distinguisher'] = route_distinguisher
                 if m.groupdict()['default_vrf']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][new_address_family]['default_vrf'] = \
-                            str(m.groupdict()['default_vrf'])
+                    af_dict['default_vrf'] = str(m.groupdict()['default_vrf'])
 
-                # Reset address_family key and af_dict for use in other regex
-                address_family = new_address_family
-                af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]
-
-                # Init routes dict
-                if 'routes' not in af_dict:
-                    af_dict['routes'] = {}
-                    continue
+                continue
 
         return route_dict
 
