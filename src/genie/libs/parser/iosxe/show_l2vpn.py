@@ -129,6 +129,7 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn mac ip remote detail
     * show l2vpn evpn mac ip remote summary
     * show l2vpn evpn mac ip summary
+    * show storm-control
     * show storm-control {interface}
     * show l2vpn evpn mac vlan {vlan_id}
     * show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
@@ -3294,61 +3295,109 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
 
         return parser_dict
 
-
+# ===========================================
+# Schema for 'show storm-control {interface}'
+# ===========================================
 class ShowStormControlSchema(MetaParser):
     ''' Schema for
+        show storm-control
         show storm-control {interface}
     '''
 
     schema = {
         'traffic_type': {
             Any(): {
-                'interface': str,
-                'state': str,
-                'upper': float,
-                'lower': float,
-                'current': float,
-                'action': str
+                Optional('interfaces'): {
+                    Any(): {
+                        'interface': str,
+                        'state': str,
+                        'upper': Or(str, float),
+                        'lower': Or(str, float),
+                        'current': Or(str, float),
+                        'action': str
+                    }
+                },
+                Optional('interface'): str,
+                Optional('state'): str,
+                Optional('upper'): Or(str, float),
+                Optional('lower'): Or(str, float),
+                Optional('current'): Or(str, float),
+                Optional('action'): str
             },
         }
     }
 
+
+# ===========================================
+# Parser for 'show storm-control {interface}'
+# ===========================================
 class ShowStormControl(ShowStormControlSchema):
     ''' Parser for
-    show storm-control {interface}
+        show storm-control
+        show storm-control {interface}
     '''
+    cli_command = ['show storm-control',
+                   'show storm-control {interface}']
 
-    cli_command = 'show storm-control {interface}'
-
-    def cli(self, interface="", output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(interface=interface))
+            if interface:
+                output = self.device.execute(
+                    self.cli_command[1].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
 
-        #Te1/0/3         Forwarding           5.00%        1.00%          2.00%    Shutdown     B
-        #Te1/0/3         Forwarding           5.00%        1.00%          3.00%    Shutdown     M
-        #Gi0/2/0         Link Down            0.70%        0.70%          0.00%    Shutdown     B
+        # Te1/0/3         Forwarding           5.00%        1.00%          2.00%    Shutdown     B
+        # Te1/0/3         Forwarding           5.00%        1.00%          3.00%    Shutdown     M
+        # Gi0/2/0         Link Down            0.70%        0.70%          0.00%    Shutdown     B
+        # Gi1/0/3         Forwarding           1k pps       1k pps         0 pps        None     U
+        # Gi1/0/3         Forwarding           950 pps      950 pps        0 pps        None    UU
         p1 = re.compile(
-            r'^(?P<interface>(\S+))\s+(?P<state>([A-Za-z]+\s?[A-Za-z]+))\s+(?P<upper>\d+.\d+)%\s+(?P<lower>\d+.\d+)%\s+(?P<current>\d+.\d+)%\s+(?P<action>\S+)\s+(?P<type>\S)')
+            r'^(?P<interface>(\S+))\s+(?P<state>([A-Za-z]+\s?[A-Za-z]+))\s+(?P<upper>[\d\w\.]+)\s?(%|pps|bps)\s+(?P<lower>[\d\w\.]+)\s?(%|pps|bps)\s+(?P<current>[\d\w\.]+)\s?(%|pps|bps)\s+(?P<action>\S+)\s+(?P<type>\S+)')
 
         for line in output.splitlines():
             line = line.strip()
 
             m = p1.match(line)
-
+            # Te1/0/3         Forwarding           5.00%        1.00%          2.00%    Shutdown     B
+            # Te1/0/3         Forwarding           5.00%        1.00%          3.00%    Shutdown     M
+            # Gi0/2/0         Link Down            0.70%        0.70%          0.00%    Shutdown     B
+            # Gi1/0/3         Forwarding           1k pps       1k pps         0 pps        None     U
+            # Gi1/0/3         Forwarding           950 pps      950 pps        0 pps        None    UU
             if m:
                 group = m.groupdict()
-                if 'traffic_type' not in ret_dict:
-                    control_dict = ret_dict.setdefault('traffic_type', {})
                 traffic_type = str(group['type'])
-                control_dict[traffic_type] = {}
-                control_dict[traffic_type]['interface'] = str(group['interface'])
-                control_dict[traffic_type]['state'] = str(group['state'])
-                control_dict[traffic_type]['upper'] = float(group['upper'])
-                control_dict[traffic_type]['lower'] = float(group['lower'])
-                control_dict[traffic_type]['current'] = float(group['current'])
-                control_dict[traffic_type]['action'] = str(group['action'])
+                if not interface:
+                    intf = group['interface']
+                    control_dict = ret_dict.setdefault(
+                        'traffic_type', {}).setdefault(
+                        traffic_type, {}).setdefault(
+                        'interfaces', {}).setdefault(intf, {})
+                else:
+                    control_dict = ret_dict.setdefault(
+                        'traffic_type', {}).setdefault(traffic_type, {})
+
+                control_dict['interface'] = str(group['interface'])
+                control_dict['state'] = str(group['state'])
+
+                try:
+                    control_dict['upper'] = float(group['upper'])
+                except ValueError:
+                    control_dict['upper'] = str(group['upper'])
+
+                try:
+                    control_dict['lower'] = float(group['lower'])
+                except ValueError:
+                    control_dict['lower'] = str(group['lower'])
+
+                try:
+                    control_dict['current'] = float(group['current'])
+                except ValueError:
+                    control_dict['current'] = str(group['current'])
+
+                control_dict['action'] = str(group['action'])
                 continue
 
         return ret_dict
@@ -3894,4 +3943,3 @@ class ShowL2vpnAtomPreferredPath(ShowL2vpnAtomPreferredPathSchema):
                     })
 
         return ret_dict
-

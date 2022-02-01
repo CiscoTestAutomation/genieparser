@@ -1,0 +1,5 @@
+Key: U - Unicast, B - Broadcast, M - Multicast, UU - Unknown Unicast
+Interface       Filter State   Upper        Lower        Current         Action     Type
+---------       -------------  -----------  -----------  -------------   ---------  ----
+Gi1/0/3         Forwarding         950 pps      950 pps             0 pps        None    UU
+

@@ -1,0 +1,14 @@
+Certificate Server root:
+    Status: enabled
+    State: enabled
+    Server's configuration is locked  (enter "shut" to unlock it)
+    Issuer name: CN=root
+    CA cert fingerprint: CF2C23D1 560F25DB 22E9D10F E595A6D6 
+    Granting mode is: auto
+    Last certificate issued serial number (hex): 1
+    CA certificate expiration timer: 12:58:34 UTC Jan 4 2025
+    CRL NextUpdate timer: 00:58:35 UTC Jan 6 2022
+    Current primary storage dir: nvram:
+    Database Level: Complete - all issued certs written as <serialnum>.cer
+    Auto-Rollover configured, overlap period 1 days
+    Autorollover timer: 12:58:34 UTC Jan 3 2025

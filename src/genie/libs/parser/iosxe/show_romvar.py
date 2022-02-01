@@ -48,7 +48,11 @@ class ShowRomvarSchema(MetaParser):
             Optional("rommon_autoboot_attempt"): int,
             Optional("system_serial_num"): str,
             Optional("version_id"): str,
-            Optional("device_managed_mode"): str
+            Optional("device_managed_mode"): str,
+            Optional("default_gateway"): str,
+            Optional("ip_address"): str,
+            Optional("crashinfo"): str,
+            Optional("subnet_mask"): str
         }
     }
 
@@ -146,159 +150,161 @@ class ShowRomvar(ShowRomvarSchema):
         p_variables = re.compile(r"^ROMMON\s+variables:$")
 
         # PS1 = rommon ! > 
-        p_ps1 = re.compile(r"^PS1\s+=\s+(?P<ps1>.*)$")
+        p_ps1 = re.compile(r"^PS1\s*=\s*(?P<ps1>.*)$")
 
         # THRPUT =
-        p_thrput = re.compile(r"^(THRPUT|CRYPTO_BI_THPUT)\s+=\s+(?P<thrput>.*)$")
+        p_thrput = re.compile(r".*(THRPUT|THPUT)\s*=\s*(?P<thrput>.*)$")
 
         # SR_MGMT_VRF = 0
-        p_mgmt_vrf = re.compile(r"^SR_MGMT_VRF\s+=\s+(?P<mgmt_vrf>.*)$")
+        p_mgmt_vrf = re.compile(r"^SR_MGMT_VRF\s*=\s*(?P<mgmt_vrf>.*)$")
 
         # REAL_MGMTE_DEV =
-        p_mgmte_dev = re.compile(r"^REAL_MGMTE_DEV\s+=\s+(?P<mgmte_dev>.*)$")
+        p_mgmte_dev = re.compile(r"^REAL_MGMTE_DEV\s*=\s*(?P<mgmte_dev>.*)$")
 
         # IP_ADDRESS = 10.19.92.165
-        p_ip = re.compile(r"^IP_ADDRESS\s+=\s+(?P<ip_address>\S+)$")
+        p_ip = re.compile(r"^IP_ADDRESS\s*=\s*(?P<ip_address>\S+)$")
 
         # DEFAULT_GATEWAY = 10.19.92.1
-        p_gateway = re.compile(r"^DEFAULT_GATEWAY\s+=\s+(?P<gateway>\S+)$")
+        p_gateway = re.compile(r"^DEFAULT_GATEWAY\s*=\s*(?P<gateway>\S+)$")
 
         # IP_SUBNET_MASK = 255.255.255.0
-        p_mask = re.compile(r"^IP_SUBNET_MASK\s+=\s+(?P<ip_mask>\S+)$")
+        p_mask = re.compile(r"^IP_SUBNET_MASK\s*=\s*(?P<ip_mask>\S+)$")
 
         # DEV_MODE0 = FM5R95WUO0WUATJTQX5I5ZQHLWIT6CWKD513RVT9Q5UQKJVKPDSNU7NR1EDU4QWO
-        p_dev_mode_0 = re.compile(r"^DEV_MODE0\s+=\s+(?P<mode_0>\S+)$")
+        p_dev_mode_0 = re.compile(r"^DEV_MODE0\s*=\s*(?P<mode_0>\S+)$")
 
         # DEV_MODE1 = ICQWTUNIEAVS6DH4X7GBV3917N3M1YNMQC5JDW4GM9OLFOZ0B4XCPXGXE596Z71C
-        p_dev_mode_1 = re.compile(r"^DEV_MODE1\s+=\s+(?P<mode_1>\S+)$")
+        p_dev_mode_1 = re.compile(r"^DEV_MODE1\s*=\s*(?P<mode_1>\S+)$")
 
         # DEV_MODE2 = 93URXAFOPS1F74TR7LAT9BCAQ5O0LX73WHFMWKRQKZDYFIUCHTPK0SBVEYFZXSAQ
-        p_dev_mode_2 = re.compile(r"^DEV_MODE2\s+=\s+(?P<mode_2>\S+)$")
+        p_dev_mode_2 = re.compile(r"^DEV_MODE2\s*=\s*(?P<mode_2>\S+)$")
 
         # DEV_MODE3 = 6LQB4NEFCJ1DYOV929FGLMX3XK710QERFA2SWWCE8C08D5WYLS2X6CXDVQY0CFIO
-        p_dev_mode_3 = re.compile(r"^DEV_MODE3\s+=\s+(?P<mode_3>\S+)$")
+        p_dev_mode_3 = re.compile(r"^DEV_MODE3\s*=\s*(?P<mode_3>\S+)$")
 
         # DEV_MODE4 = 1DY4J4L14FCUYC22JDK8YLQQVF0ZPC9BVT7HM75LF4Z319VKS2WE8XWAUV1PEF27
-        p_dev_mode_4 = re.compile(r"^DEV_MODE4\s+=\s+(?P<mode_4>\S+)$")
+        p_dev_mode_4 = re.compile(r"^DEV_MODE4\s*=\s*(?P<mode_4>\S+)$")
 
         # DEV_MODE5 = 7YMXKN3FA6X5OEGHUZISA16KC0VAZ51S12JGPMUD3NZCCSTTGZ7O9G58NRUZIKBG
-        p_dev_mode_5 = re.compile(r"^DEV_MODE5\s+=\s+(?P<mode_5>\S+)$")
+        p_dev_mode_5 = re.compile(r"^DEV_MODE5\s*=\s*(?P<mode_5>\S+)$")
 
         # DEV_MODE6 = AR1PHFLWRD9ZGDSC0BKKIGWQBUJXX0FGJT3EEU8A7MMUVPLS73FP4WBUIZUS3X76
-        p_dev_mode_6 = re.compile(r"^DEV_MODE6\s+=\s+(?P<mode_6>\S+)$")
+        p_dev_mode_6 = re.compile(r"^DEV_MODE6\s*=\s*(?P<mode_6>\S+)$")
 
         # DEV_MODE7 = H5LF3EG7Y2S45ZFEB3GTDSK5M9XLDH4FUU7BQFZ9JI7PRWAHA3HS27JCU4A7PBN1
-        p_dev_mode_7 = re.compile(r"^DEV_MODE7\s+=\s+(?P<mode_7>\S+)$")
+        p_dev_mode_7 = re.compile(r"^DEV_MODE7\s*=\s*(?P<mode_7>\S+)$")
 
         # ? = 1
         p_question = re.compile(r"^/?=1$")
 
         # MCP_STARTUP_TRACEFLAGS = 00000000:00000000
-        p_mcp = re.compile(r"^MCP_STARTUP_TRACEFLAGS\s+=\s+(?P<tflag>.*)$")
+        p_mcp = re.compile(r"^MCP_STARTUP_TRACEFLAGS\s*=\s*(?P<tflag>.*)$")
 
         # RET_2_RTS = 23:48:46 Pacific Fri Dec 13 2019
-        p_ret_rts = re.compile(r"^RET_2_RTS\s+=\s+(?P<ret_date>.*)$")
+        p_ret_rts = re.compile(r"^RET_2_RTS\s*=\s*(?P<ret_date>.*)$")
 
         # CHASSIS_HA_LOCAL_IP = 10.10.68.54
-        p_chassis_ha_ip = re.compile(r"^CHASSIS_HA_LOCAL_IP\s+=\s+(?P<ha_ip>\S+)$")
+        p_chassis_ha_ip = re.compile(r"^CHASSIS_HA_LOCAL_IP\s*=\s*(?P<ha_ip>\S+)$")
 
         # CHASSIS_HA_REMOTE_IP = 10.10.68.52
-        p_chassis_ha_remote_ip = re.compile(r"CHASSIS_HA_REMOTE_IP\s+=\s+(?P<remote_ha_ip>\S+)$")
+        p_chassis_ha_remote_ip = re.compile(r"CHASSIS_HA_REMOTE_IP\s*=\s*(?P<remote_ha_ip>\S+)$")
 
         # CHASSIS_HA_LOCAL_MASK = 255.255.255.240
-        p_chassis_ha_mask = re.compile(r"^CHASSIS_HA_LOCAL_MASK\s+=\s+(?P<ha_mask>\S+)$")
+        p_chassis_ha_mask = re.compile(r"^CHASSIS_HA_LOCAL_MASK\s*=\s*(?P<ha_mask>\S+)$")
 
         # SWITCH_PRIORITY = 1
-        p_switch_priority = re.compile(r"^SWITCH_PRIORITY\s+=\s+(?P<priority>\d+)$")
+        p_switch_priority = re.compile(r"^SWITCH_PRIORITY\s*=\s*(?P<priority>\d+)$")
 
         # SWITCH_NUMBER = 2
-        p_switch_number = re.compile(r"^SWITCH_NUMBER\s+=\s+(?P<number>\d+)$")
+        p_switch_number = re.compile(r"^SWITCH_NUMBER\s*=\s*(?P<number>\d+)$")
 
         # LICENSE_ACTIVE_LEVEL = adventerprise,all:c9800lk9;
-        p_lic_active = re.compile(r"^LICENSE_ACTIVE_LEVEL\s+=\s+(?P<lic_active>.*)$")
+        p_lic_active = re.compile(r"^LICENSE_ACTIVE_LEVEL\s*=\s*(?P<lic_active>.*)$")
 
         # LICENSE_BOOT_LEVEL = adventerprise,all:c980080k9;
-        p_lic_boot = re.compile(r"^LICENSE_BOOT_LEVEL\s+=\s+(?P<lic_boot>.*)$")
+        p_lic_boot = re.compile(r"^LICENSE_BOOT_LEVEL\s*=\s*(?P<lic_boot>.*)$")
 
         # CONFIG_FILE = 
-        p_config_file = re.compile(r"^CONFIG_FILE\s+=\s+(?P<config_file>.*)$")
+        p_config_file = re.compile(r"^CONFIG_FILE\s*=\s*(?P<config_file>.*)$")
 
         # BOOTLDR = 
-        p_bootldr = re.compile(r"^BOOTLDR\s+=\s+(?P<bootldr>.*)$")
+        p_bootldr = re.compile(r"^BOOTLDR\s*=\s*(?P<bootldr>.*)$")
 
         # BOOT = bootflash:packages.conf,12;bootflash:C9800-L-universalk9_wlc.BLD_V173_THROTTLE_LATEST_20200707_003212_2.SSA.bin,12; 
-        p_boot = re.compile(r"^BOOT\s+=\s+(?P<boot>.*)$")
+        p_boot = re.compile(r"^BOOT\s*=\s*(?P<boot>.*)$")
 
         # BSI = 0
-        p_bsi = re.compile(r"^BSI\s+=\s+(?P<bsi>\d+)$")
+        p_bsi = re.compile(r"^BSI\s*=\s*(?P<bsi>\d+)$")
 
         # RET_2_RCALTS = 
-        p_rcalts = re.compile(r"^RET_2_RCALTS\s+=\s+(?P<rcalts>.*)")
+        p_rcalts = re.compile(r"^RET_2_RCALTS\s*=\s*(?P<rcalts>.*)")
 
         # RANDOM_NUM = 25654861
-        p_random = re.compile(r"^RANDOM_NUM\s+=\s+(?P<random>\d+)$")
+        p_random = re.compile(r"^RANDOM_NUM\s*=\s*(?P<random>\d+)$")
 
         # STACK_1_1 = 0_0
-        p_stack = re.compile(r"^STACK_1_1\s+=\s+(?P<stack>.*)$")
+        p_stack = re.compile(r"^STACK_1_1\s*=\s*(?P<stack>.*)$")
 
         # RMI_INTERFACE_NAME = Vlan10
-        p_rmi_int = re.compile(r"^RMI_INTERFACE_NAME\s+=\s+(?P<rmi_int>\S+)$")
+        p_rmi_int = re.compile(r"^RMI_INTERFACE_NAME\s*=\s*(?P<rmi_int>\S+)$")
 
         # RMI_CHASSIS_LOCAL_IP = 10.10.30.6
-        p_rmi_ip = re.compile(r"^RMI_CHASSIS_LOCAL_IP\s+=\s+(?P<rmi_ip>\S+)$")
+        p_rmi_ip = re.compile(r"^RMI_CHASSIS_LOCAL_IP\s*=\s*(?P<rmi_ip>\S+)$")
 
         # RMI_CHASSIS_REMOTE_IP = 10.10.30.7
-        p_rmi_ip_remote = re.compile(r"^RMI_CHASSIS_REMOTE_IP\s+=\s+(?P<rmi_remote_ip>\S+)$")
+        p_rmi_ip_remote = re.compile(r"^RMI_CHASSIS_REMOTE_IP\s*=\s*(?P<rmi_remote_ip>\S+)$")
 
         # CRASHINFO = bootflash:crashinfo_RP_00_00_20200428-005338-IST
-        p_crash = re.compile(r"^CRASHINFO\s+=\s+(?P<crash>.*)$")
+        p_crash = re.compile(r"^CRASHINFO\s*=\s*(?P<crash>.*)$")
 
         # NO_CONSOLE = 1
-        p_no_console = re.compile(r"^NO_CONSOLE\s+=\s+(?P<number>\d*)$")
+        p_no_console = re.compile(r"^NO_CONSOLE\s*=\s*(?P<number>\d*)$")
 
         # BOOT_DEVICE_MODE = meraki 
-        p_boot_device_mode= re.compile(r"^BOOT_DEVICE_MODE\s+=\s+(?P<boot_device_mode>.*)$")  
+        p_boot_device_mode= re.compile(r"^BOOT_DEVICE_MODE\s*=\s*(?P<boot_device_mode>.*)$")  
 
         # BOARDID = 28755 
-        p_boardid = re.compile(r"^BOARDID\s+=\s+(?P<boardid>\d*)$")    
+        p_boardid = re.compile(r"^BOARDID\s*=\s*(?P<boardid>\d*)$")    
 
         # MAC_ADDR = 6C:13:D5:1B:5C:80 
-        p_mac_addr = re.compile(r"^MAC_ADDR\s+=\s+(?P<mac_addr>\S+)$")
+        p_mac_addr = re.compile(r"^MAC_ADDR\s*=\s*(?P<mac_addr>\S+)$")
 
         # MANUAL_BOOT = no 
-        p_manual_boot = re.compile(r"^MANUAL_BOOT\s+=\s+(?P<manual_boot>\S+)$")
+        p_manual_boot = re.compile(r"^MANUAL_BOOT\s*=\s*(?P<manual_boot>\S+)$")
 
         # MODEL_NUM = C9300-48U 
-        p_model_num = re.compile(r"^MODEL_NUM\s+=\s+(?P<model_num>\S+)$") 
+        p_model_num = re.compile(r"^MODEL_NUM\s*=\s*(?P<model_num>\S+)$") 
 
         # MODEL_REVISION_NUM = A0 
-        p_model_revision_num = re.compile(r"^MODEL_REVISION_NUM\s+=\s+(?P<model_revision_num>\S+)$")
+        p_model_revision_num = re.compile(r"^MODEL_REVISION_NUM\s*=\s*(?P<model_revision_num>\S+)$")
 
         # MOTHERBOARD_ASSEMBLY_NUM = 73-19919-04 
-        p_motherboard_assembly_num = re.compile(r"^MOTHERBOARD_ASSEMBLY_NUM\s+=\s+(?P<motherboard_assembly_num>\S+)$") 
+        p_motherboard_assembly_num = re.compile(r"^MOTHERBOARD_ASSEMBLY_NUM\s*=\s*(?P<motherboard_assembly_num>\S+)$") 
 
         # MOTHERBOARD_REVISION_NUM = A0 
-        p_motherboard_revision_num = re.compile(r"^MOTHERBOARD_REVISION_NUM\s+=\s+(?P<motherboard_revision_num>\S+)$")
+        p_motherboard_revision_num = re.compile(r"^MOTHERBOARD_REVISION_NUM\s*=\s*(?P<motherboard_revision_num>\S+)$")
 
         # MOTHERBOARD_SERIAL_NUM = FOC25124Q2U 
-        p_motherboard_serial_num = re.compile(r"^MOTHERBOARD_SERIAL_NUM\s+=\s+(?P<motherboard_serial_num>\S+)$")
+        p_motherboard_serial_num = re.compile(r"^MOTHERBOARD_SERIAL_NUM\s*=\s*(?P<motherboard_serial_num>\S+)$")
 
         # ROMMON_AUTOBOOT_ATTEMPT = 0 
-        p_rommon_autoboot_attempt = re.compile(r"^ROMMON_AUTOBOOT_ATTEMPT\s+=\s+(?P<rommon_autoboot_attempt>\S+)$")
+        p_rommon_autoboot_attempt = re.compile(r"^ROMMON_AUTOBOOT_ATTEMPT\s*=\s*(?P<rommon_autoboot_attempt>\S+)$")
 
         # SYSTEM_SERIAL_NUM = FOC2514L1HE 
-        p_system_serial_num = re.compile(r"^SYSTEM_SERIAL_NUM\s+=\s+(?P<system_serial_num>\S+)$")   
+        p_system_serial_num = re.compile(r"^SYSTEM_SERIAL_NUM\s*=\s*(?P<system_serial_num>\S+)$")   
 
         # VERSION_ID = V05 
-        p_version_id = re.compile(r"^VERSION_ID\s+=\s+(?P<version_id>\S+)$")
+        p_version_id = re.compile(r"^VERSION_ID\s*=\s*(?P<version_id>\S+)$")
 
         # DEVICE_MANAGED_MODE = controller
-        p_device_managed_mode = re.compile(r"^\s*DEVICE_MANAGED_MODE\s+=\s+(?P<mode>\S+)$")
+        p_device_managed_mode = re.compile(r"^\s*DEVICE_MANAGED_MODE\s*=\s+(?P<mode>\S+)$")
 
         romvar_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
+            line = line.replace('"', "")
+
             # ROMMON variables
             if p_variables.match(line):
                 if not romvar_dict.get("rommon_variables"):
@@ -311,7 +317,8 @@ class ShowRomvar(ShowRomvarSchema):
             # THRPUT = 
             if p_thrput.match(line):
                 match = p_thrput.match(line)
-                romvar_dict["rommon_variables"]["thrput"] = match.group("thrput")
+                if len(match.group("thrput")):
+                    romvar_dict["rommon_variables"]["thrput"] = match.group("thrput")
                 continue
             # SR_MGMT_VRF = 0
             if p_mgmt_vrf.match(line):
@@ -389,7 +396,8 @@ class ShowRomvar(ShowRomvarSchema):
             # RET_2_RTS = 23:48:46 Pacific Fri Dec 13 2019
             if p_ret_rts.match(line):
                 match = p_ret_rts.match(line)
-                romvar_dict["rommon_variables"]["ret_2_rts"] = match.group("ret_date")
+                if len(match.group("ret_date")):
+                    romvar_dict["rommon_variables"]["ret_2_rts"] = match.group("ret_date")
                 continue
             # CHASSIS_HA_LOCAL_IP = 10.10.68.54
             if p_chassis_ha_ip.match(line):
@@ -424,17 +432,20 @@ class ShowRomvar(ShowRomvarSchema):
             # CONFIG_FILE = 
             if p_config_file.match(line):
                 match = p_config_file.match(line)
-                romvar_dict["rommon_variables"]["config_file"] = match.group("config_file")
+                if len(match.group("config_file")):
+                    romvar_dict["rommon_variables"]["config_file"] = match.group("config_file")
                 continue
             # BOOTLDR = 
             if p_bootldr.match(line):
                 match = p_bootldr.match(line)
-                romvar_dict["rommon_variables"]["bootldr"] = match.group("bootldr")
+                if len(match.group("bootldr")):
+                    romvar_dict["rommon_variables"]["bootldr"] = match.group("bootldr")
                 continue
             # LICENSE_BOOT_LEVEL =
             if p_lic_boot.match(line):
                 match = p_lic_boot.match(line)
-                romvar_dict["rommon_variables"]["license_boot_level"] = match.group("lic_boot")
+                if len(match.group("lic_boot")):
+                    romvar_dict["rommon_variables"]["license_boot_level"] = match.group("lic_boot")
                 continue
             # BOOT = bootflash:packages.conf,12;bootflash:C9800-L-universalk9_wlc.BLD_V173_THROTTLE_LATEST_20200707_003212_2.SSA.bin,12;
             if p_boot.match(line):
@@ -452,7 +463,8 @@ class ShowRomvar(ShowRomvarSchema):
             # RET_2_RCALTS = 
             if p_rcalts.match(line):
                 match = p_rcalts.match(line)
-                romvar_dict["rommon_variables"]["ret_2_rcalts"] = match.group("rcalts")
+                if len(match.group("rcalts")):
+                    romvar_dict["rommon_variables"]["ret_2_rcalts"] = match.group("rcalts")
                 continue
             # RANDOM_NUM = 25654861
             if p_random.match(line):

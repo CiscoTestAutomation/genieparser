@@ -13,6 +13,11 @@ expected_output = {
                                     'paths': '1 available, best #1, table red',
                                     'index': {
                                         1: {
+                                            'binding_sid': {
+                                                'color': '7',
+                                                'sid': '18',
+                                                'state': 'UP'
+                                            },
                                             'next_hop': '4.4.4.4',
                                             'gateway': '7.7.7.9',
                                             'originator': '8.8.8.9',

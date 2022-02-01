@@ -896,6 +896,11 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                     Optional('router_mac'): str,
                                                     Optional('recursive_via_connected'): bool,
                                                     },
+                                                 Optional('binding_sid'): {
+                                                    Optional('sid'): str,
+                                                    Optional('color'): str,
+                                                    Optional('state'): str,
+                                                    },
                                                  Optional('local_vxlan_vtep'):
                                                     {Optional('encap'): str,
                                                     Optional('local_router_mac'): str,
@@ -1135,6 +1140,11 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
         # IGMP/MLD v1/v2/v3, exclude, max response time:
         p19 = re.compile(r'^IGMP/MLD\s+(?P<version>v\d|v\d,\s*v\d)(,\s+(?P<filter_mode>\w+))?$')
+
+        # binding SID: 28 (color - 7) (state - UP)
+        p20 = re.compile(r'^binding +SID\:' r' +(?P<sid>([a-zA-Z0-9]+))'
+                 r'( +\(color[ ]{0,1}[-][ ]{0,1}(?P<color>[0-9]+)\))'
+                 r'(( +\(state +\- +(?P<state>[A-Za-z]+)\)))?$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1771,6 +1781,18 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['igmpmld']['version'] = group['version']
                 if group['filter_mode']:
                     subdict['igmpmld']['filter_mode'] = group['filter_mode']
+                continue
+
+            # binding SID: 28 (color - 7) (state - UP)
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                if 'binding_sid' not in subdict:
+                    subdict['binding_sid'] = {}
+                for i in ['sid', 'color']:
+                    subdict['binding_sid'][i] = group[i]
+                if group['state']:
+                    subdict['binding_sid']['state'] = str(group['state'])
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000

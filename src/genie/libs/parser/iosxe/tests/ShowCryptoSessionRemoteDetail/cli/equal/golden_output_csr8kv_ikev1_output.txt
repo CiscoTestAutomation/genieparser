@@ -1,0 +1,47 @@
+Crypto session current status
+
+Code: C - IKE Configuration mode, D - Dead Peer Detection     
+K - Keepalives, N - NAT-traversal, T - cTCP encapsulation     
+X - IKE Extended Authentication, F - IKE Fragmentation
+R - IKE Auto Reconnect, U - IKE Dynamic Route Update
+S - SIP VPN
+
+Interface: Virtual-Access1325
+Profile: IKEV2_PROFILE
+Uptime: 13:17:14
+Session status: UP-ACTIVE     
+Peer: 17.27.1.11 port 38452 fvrf: (none) ivrf: 10
+      Phase1_id: scale
+      Desc: (none)
+  Session ID: 22000  
+  IKEv1 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active 
+          Capabilities:DN connid:276 lifetime:10:42:46
+  IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.40 
+        Active SAs: 2, origin: crypto map
+        Inbound:  #pkts dec'ed 47673 drop 0 life (KB/Sec) 4607772/1874
+        Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
+
+  IPSEC FLOW: permit ip 1.0.0.0/0.0.0.0 host 7.1.2.40 
+        Active SAs: 2, origin: crypto map
+        Inbound:  #pkts dec'ed 47673 drop 0 life (KB/Sec) 4607772/1874
+        Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
+
+Interface: Virtual-Access929
+Profile: IKEV2_PROFILE
+Uptime: 13:16:53
+Session status: UP-ACTIVE     
+Peer: 17.27.1.11 port 55411 fvrf: (none) ivrf: 10
+      Phase1_id: scale
+      Desc: (none)
+  Session ID: 22062  
+  IKEv1 SA: local 1.1.1.1/4500 remote 17.27.1.11/55411 Active 
+          Capabilities:DN connid:323 lifetime:10:43:07
+  IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88
+        Active SAs: 2, origin: crypto map
+        Inbound:  #pkts dec'ed 47668 drop 0 life (KB/Sec) 4607746/1687
+        Outbound: #pkts enc'ed 47694 drop 0 life (KB/Sec) 4607791/1687
+
+  IPSEC FLOW: permit ip 1.0.0.0/0.0.0.0 host 7.1.2.40 
+        Active SAs: 2, origin: crypto map
+        Inbound:  #pkts dec'ed 47673 drop 0 life (KB/Sec) 4607772/1874
+        Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874

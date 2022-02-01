@@ -1,0 +1,41 @@
+Viptela (tm) vEdge Operating System Software
+Copyright (c) 2013-2021 by Viptela, Inc.
+Controller Compatibility: 20.7
+Version: 17.07
+Build: Not applicable
+
+System logging to host  is disabled
+System logging to disk is enabled
+
+System state:            GREEN. All daemons up
+System FIPS state:       Disabled
+
+Last reboot:             Image Install .
+CPU-reported reboot:     Initiated by other
+Boot loader version:     Not applicable
+System uptime:           20 days 20 hrs 43 min 00 sec
+Current time:            Tue Dec 21 15:12:52 UTC 2021
+
+Hypervisor Type:         None
+Cloud Hosted Instance:   false
+
+Load average:            1 minute: 0.24, 5 minutes: 0.27, 15 minutes: 0.27
+Processes:               446 total
+CPU allocation:          8 total,   8 control,   0 data
+CPU states:              1.24% user,   1.31% system,   97.43% idle
+Memory usage:            16214564K total,    3774380K used,   12440184K free
+                         401084K buffers,  3363308K cache
+
+Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
+                         /dev/bootflash1       28748M  2031M  25257M   7%   /bootflash
+                                387M  146M  237M   38   /bootflash/.installer
+
+
+Personality:             vEdge
+Model name:              ASR1001-HX
+Device role:             cEdge-SDWAN
+Services:                None
+vManaged:                false
+Commit pending:          false
+Configuration template:  None
+Chassis serial number:   TTM25160B2Q

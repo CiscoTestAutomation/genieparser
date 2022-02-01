@@ -1,0 +1,3 @@
+       Fan Tray Authentication:  Not Available
+           SUP0 Authentication:  pass
+        SSD FRU Authentication:  Not Available
