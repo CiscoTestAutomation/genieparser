@@ -5223,7 +5223,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def check_number_of_prefixes(self, output):
         number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
-        m = re.search(number_of_prefixes, output)
+        m = number_of_prefixes.search(output)
         if not m:
             return 0
         return int(m["number_of_prefixes"])
