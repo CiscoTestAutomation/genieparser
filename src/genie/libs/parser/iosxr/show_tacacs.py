@@ -3,17 +3,14 @@
      *  show tacacs
 """
 # python
-import re
 
 # Metaparser
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
 # python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ==================================================
@@ -25,8 +22,8 @@ class ShowTacacsSchema(MetaParser):
     schema = {
         'server': {
             Any(): {
-                'vrf': str,
-                'server_type': str,
+                Optional('vrf'): str,
+                Optional('server_type'): str,
                 'opens': str,
                 'closes': str,
                 'aborts': str,
@@ -60,10 +57,15 @@ class ShowTacacs(ShowTacacsSchema):
         resultdict = dict()
         serverdict = dict()
 
-        # RegEX for first line
+        # RegEX for first line with vrf
         # Server: 127.0.0.1/24 vrf=default [private]
         p1 = re.compile(
             r'Server\:\s(?P<ip>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]+)\svrf=(?P<vrf>[A-Za-z0-9]+)\s?\[(?P<server_type>\w+)\]')
+
+        # RegEX for first line without vrf
+        # Server: opens=123309 closes=123309 aborts=592 errors=0
+        p1_1 = re.compile(
+            r'Server\:\s(?P<ip>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]+)\sopens=(?P<opens>\d+)\scloses=(?P<closes>\d+)\saborts=(?P<aborts>\d+)\serrors=(?P<errors>\d+)')
 
         # RegEX for second line
         # opens=123309 closes=123309 aborts=592 errors=0
@@ -75,7 +77,8 @@ class ShowTacacs(ShowTacacsSchema):
 
         # RegEX for forth line
         # status=up single-connect=false family=IPv4
-        p4 = re.compile(r'status=(?P<status>\w+)\ssingle-connect=(?P<single_connect>\w+)\sfamily=(?P<family>[A-Za-z0-9]+)')
+        p4 = re.compile(
+            r'status=(?P<status>\w+)\ssingle-connect=(?P<single_connect>\w+)\sfamily=(?P<family>[A-Za-z0-9]+)')
 
         # IP which is processed right now, will be used as dictionary index
         current_ip = ''
@@ -98,6 +101,22 @@ class ShowTacacs(ShowTacacsSchema):
                 resultdict[current_ip] = {}
                 resultdict[current_ip]['vrf'] = vrf
                 resultdict[current_ip]['server_type'] = server_type
+                continue
+
+            res = p1_1.match(line)
+            if res:
+                if 'server' not in serverdict:
+                    resultdict = serverdict.setdefault('server', {})
+
+                group = res.groupdict()
+                ip = group['ip']
+                current_ip = ip
+
+                resultdict[current_ip] = {}
+                resultdict[current_ip]['opens'] = group['opens']
+                resultdict[current_ip]['closes'] = group['closes']
+                resultdict[current_ip]['aborts'] = group['aborts']
+                resultdict[current_ip]['errors'] = group['errors']
                 continue
 
             res = p2.match(line)
