@@ -6358,7 +6358,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 10:
+                    if len(m2.groupdict()['space']) < 11:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
@@ -6452,7 +6452,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 10:
+                    if len(m2.groupdict()['space']) < 11:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
