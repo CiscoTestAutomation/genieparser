@@ -1,5 +1,4 @@
 {
-    "ethernet_interface_type": "tengige",
-    "interface_path_id": "0/5/0/0",
+    "ethernet_interface_name": "TenGigE0/5/0/0",
     "output": null
 }

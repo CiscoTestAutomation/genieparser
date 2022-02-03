@@ -1,5 +1,4 @@
 {
-    "ethernet_interface_type": "gigabitethernet",
-    "interface_path_id": "0/4/0/0",
+    "ethernet_interface_name": "GigabitEthernet0/4/0/0",
     "output": null
 }

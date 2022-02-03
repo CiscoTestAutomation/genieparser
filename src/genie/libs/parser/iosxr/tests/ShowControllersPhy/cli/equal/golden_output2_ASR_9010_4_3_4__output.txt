@@ -1,9 +1,3 @@
-test = dev.parse("show controllers gigabitethernet 0/4/0/0 phy", output="")
-
-2022-01-10 12:33:58,130: %UNICON-INFO: +++ noll03rt34 with via 'cli': executing command 'show controllers gigabitethernet 0/4/0/0 phy' +++
-show controllers gigabitethernet 0/4/0/0 phy
-Mon Jan 10 12:34:15.500 ARG
-
 SFP EEPROM  port:0
         Xcvr Type: SFP
         Xcvr Code: 1000BASE-LX
