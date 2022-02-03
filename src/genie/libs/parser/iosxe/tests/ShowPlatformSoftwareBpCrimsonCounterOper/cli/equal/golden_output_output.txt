@@ -1,0 +1,28 @@
+Node    Priority   Negotiation State
+1       1          Done 
+
+Node    Domain    Mode
+1       1         Aggregation
+
+Oper SVL Ports:
+Interface                Link   if_id   Status   Speed    Sync            SVLState   Slot:Bay:Port
+FourHundredGigE1/0/15    0      17      Up       400Gbps  BP-Owns         Created    1:0:15
+FourHundredGigE1/0/17    0      19      Up       400Gbps  BP-Owns         Created    1:0:17
+FourHundredGigE1/0/19    1      21      Up       400Gbps  BP-Owns         Created    1:0:19
+FourHundredGigE1/0/20    1      22      Up       400Gbps  BP-Owns         Created    1:0:20
+FourHundredGigE1/0/22    1      24      Up       400Gbps  BP-Owns         Created    1:0:22
+
+Node    Priority   Negotiation State
+2       1          Done
+
+Node    Domain    Mode
+2       1         Aggregation
+
+Oper SVL Ports:
+Interface                Link   if_id   Status   Speed    Sync            SVLState   Slot:Bay:Port
+FourHundredGigE2/0/16    0      18      Up       400Gbps  BP-Owns         Created    1:0:16
+FourHundredGigE2/0/18    0      20      Up       400Gbps  BP-Owns         Created    1:0:18
+FourHundredGigE2/0/19    1      21      Up       400Gbps  BP-Owns         Created    1:0:19
+FourHundredGigE2/0/20    1      22      Up       400Gbps  BP-Owns         Created    1:0:20
+FourHundredGigE2/0/22    1      24      Up       400Gbps  BP-Owns         Created    1:0:22
+

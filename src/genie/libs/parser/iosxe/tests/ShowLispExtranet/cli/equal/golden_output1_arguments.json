@@ -1,4 +1,5 @@
 {
-    "extranet": "ext1",
-    "instance_id": "103"
+    "lisp_id": "0",
+    "instance_id": "101",
+    "extranet_name": "ext1"
 }

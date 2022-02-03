@@ -1,0 +1,10 @@
+System port: 28
+SVL Control Interface: FourHundredGigE1/0/19
+if_id                ec_if_id             system_port                 if_type
+=====                ========             ===========                 =======
+ 0x85                    0x85                      31            etherchannel
+ 0x15                    0x85                      28                  member
+ 0x16                    0x85                      29                  member
+ 0x18                    0x85                      30                  member
+ 0x11                       0                      26                     dad
+ 0x13                       0                      27                     dad 

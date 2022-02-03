@@ -1,0 +1,8 @@
+Traffic Type                 PACKETS                            DROP
+                  INJECT       |    PUNT           INJECT        |     PUNT
+                  ------            ----           ------              ----
+SVL CTRL            4973            6049                0                11
+
+SVL IPC           195169          201699                0                 0
+
+SVL DAD                3               2                0                 0

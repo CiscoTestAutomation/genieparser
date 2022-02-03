@@ -1,5 +1,5 @@
 expected_output = {
-    'model': 'WS-C2940-8TT-S',
+    'pid': 'WS-C2940-8TT-S',
     'os': 'ios',
     'platform': 'c2940',
     'version': '12.1(22)EA12',

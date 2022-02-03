@@ -18,6 +18,7 @@ IOSXE parsers for the following show commands:
     * show isis rib {flex_algo}
     * show isis rib {source_ip}
     * show isis rib {source_ip} {subnet_mask}
+    * show isis rib redistribution
 """
 
 # Python
@@ -1497,113 +1498,152 @@ class ShowIsisRibSchema(MetaParser):
     schema = {
         "tag": {
             Any(): {
-                Optional("flex-algo"): int,
-                Optional("prefix") : {
-                    Any() : {
-                        "subnet": str,
-                        "prefix_attr": {
-                            "x_flag": bool,
-                            "r_flag": bool,
-                            "n_flag": bool
-                        },
-                        Optional("source_router_id"): str,
-                        Optional("prefix_sid_index"): int,
-                        Optional("sid_bound_attribute"): str,
-                        Optional("strict_spf_sid_index"): int,
-                        Optional("strict_sid_bound_attribute"): str,
-                        Optional("strict_sid_bound_attribute_te"): bool,
-                        "via_interface": {
-                            Any(): {
-                                "distance": int,
-                                "route_type": str,
-                                "metric": int,
-                                "via_ip": str,
-                                Optional("host"): str,
-                                "src_ip": str,
-                                "tag": str,
-                                "lsp": {
-                                    "next_hop_lsp_index": int,
-                                    "rtp_lsp_index": int,
-                                    "rtp_lsp_version": int,
-                                    Optional("tpl_lsp_version"): int
-                                },
+                "topo_type": str,
+                "topo_name": str,
+                "tid": int,
+                "topo_id": str,
+                Optional("flex_algo"): {
+                    Any(): {
+                        Optional("prefix") : {
+                            Any() : {
+                                "subnet": str,
                                 Optional("prefix_attr"): {
                                     "x_flag": bool,
                                     "r_flag": bool,
                                     "n_flag": bool
                                 },
-                                Optional("src_router_id"): str,
-                                Optional("srgb"): int,
-                                Optional("srgb_range"): int,
-                                Optional("prefix_sid_index"): int,
-                                Optional("non_strict_sid_flags"): {
-                                    "r_flag": bool,
-                                    "n_flag": bool,
-                                    "p_flag": bool,
-                                    "e_flag": bool,
-                                    "v_flag": bool,
-                                    "l_flag": bool
+                                Optional("source_router_id"): str,
+                                Optional("algo"): {
+                                    Any(): {
+                                        Optional("sid_index"): int,
+                                        Optional("bound"): bool,
+                                        Optional("attribute"): str,
+                                    }
                                 },
-                                Optional("strict_spf_sid_index"): int,
-                                Optional("strict_spf_sid_flags"): {
-                                    "r_flag": bool,
-                                    "n_flag": bool,
-                                    "p_flag": bool,
-                                    "e_flag": bool,
-                                    "v_flag": bool,
-                                    "l_flag": bool
-                                },
-                                Optional("u_loop_enabled"): bool,
-                                Optional("label"): str,
-                                Optional("strict_spf_label"): str,
-                                Optional("repair_path"): {
-                                    "ip": str,
-                                    "interface": str,
-                                    Optional("next_hop_ip"): str,
-                                    Optional("next_hop_interface"): str,
-                                    "metric": int,
-                                    Optional("rtp_lsp_index"): int,
-                                    Optional("lfa_type"): str,
-                                    "label": str,
-                                    "attributes": {
-                                        "DS": bool,
-                                        "LC": bool,
-                                        "NP": bool,
-                                        "PP": bool,
-                                        "SR": bool
-                                    },
-                                    Optional("nodes"): {
-                                        "host" : {
+                                "via_interface": {
+                                    Any(): {
+                                        "level": {
                                             Any(): {
-                                                "node_type": str,
-                                                "ip": str,
-                                                "label": str
+                                                "source_ip": {
+                                                    Any(): {
+                                                        "distance": int,
+                                                        "metric": int,
+                                                        "via_ip": str,
+                                                        Optional("host"): str,
+                                                        "tag": str,
+                                                        Optional("lsp"): { 
+                                                            Optional("next_hop_lsp_index"): int,
+                                                            Optional("rtp_lsp_index"): int,
+                                                            Optional("rtp_lsp_version"): int,
+                                                            Optional("tpl_lsp_version"): int
+                                                        },
+                                                        Optional("filtered_out"): bool, 
+                                                        Optional("prefix_attr"): {
+                                                            "x_flag": bool,
+                                                            "r_flag": bool,
+                                                            "n_flag": bool
+                                                        },
+                                                        Optional("source_router_id"): str,
+                                                        Optional("srgb_start"): int,
+                                                        Optional("srgb_range"): int,
+                                                        Optional("algo"): {
+                                                            Any() : {
+                                                                Optional("flags"): {
+                                                                    "r_flag": bool,
+                                                                    "n_flag": bool,
+                                                                    "p_flag": bool,
+                                                                    "e_flag": bool,
+                                                                    "v_flag": bool,
+                                                                    "l_flag": bool
+                                                                },
+                                                                Optional("sid_index"): int,
+                                                                Optional("label"): str,
+                                                            }
+                                                        },
+                                                        Optional("u_loop_enabled"): bool,
+                                                        Optional("repair_path"): {
+                                                            "ip": str,
+                                                            "interface": str,
+                                                            Optional("stale"): bool,
+                                                            Optional("next_hop_ip"): str,
+                                                            Optional("next_hop_interface"): str,
+                                                            "metric": int,
+                                                            Optional("rtp_lsp_index"): int,
+                                                            Optional("lfa_type"): str,
+                                                            "attributes": {
+                                                                "DS": bool,
+                                                                "LC": bool,
+                                                                "NP": bool,
+                                                                "PP": bool,
+                                                                "SR": bool
+                                                            },
+                                                            Optional("srgb_start"): str,
+                                                            Optional("srgb_range"): str,
+                                                            "algo": {
+                                                                Any():{
+                                                                    Optional("flags"): {
+                                                                    "r_flag": bool,
+                                                                    "n_flag": bool,
+                                                                    "p_flag": bool,
+                                                                    "e_flag": bool,
+                                                                    "v_flag": bool,
+                                                                    "l_flag": bool
+                                                                },
+                                                                Optional("sid_index"): int,
+                                                                Optional("label"): str,
+                                                                }
+                                                            },
+                                                            Optional("nodes"): {
+                                                                "host" : {
+                                                                    Any(): {
+                                                                        "node_type": str,
+                                                                        "ip": str,
+                                                                        "label": str
+                                                                    }
+                                                                }
+                                                            },
+                                                            Optional("repair_source"): {
+                                                                "host": str,
+                                                                Optional("rtp_lsp_index"): int
+                                                            }
+                                                        },
+                                                        Optional("path_attribute"): {
+                                                            Optional("ALT"): bool,
+                                                            Optional("SR_POLICY"): bool,
+                                                            Optional("SR_POLICY_STRICT"): bool,
+                                                            Optional("SRTE"): bool,
+                                                            Optional("SRTE_STRICT"): bool,
+                                                            Optional("ULOOP_EP"): bool,
+                                                            Optional("TE"): bool,
+                                                        },
+                                                        Optional("installed"): bool,
+                                                        Optional("forced"): str,
+                                                        Optional("had_repair_path"): bool
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                },
-                                Optional("repair_source"): {
-                                    "host": str,
-                                    Optional("rtp_lsp_index"): int
-                                },
-                                Optional("path_attribute"): str,
-                                Optional("installed"): bool
+                                }
                             }
                         }
                     }
-                }
+                },
             }
         }
     }
 
+
 class ShowIsisRib(ShowIsisRibSchema):
     '''parser for show isis rib
+                  show isis rib flex-algo
                   show isis rib flex-algo {flex-algo}
                   show isis rib {source_ip}
                   show isis rib {source_ip} {subnet_mask}
     '''
 
     cli_command = ['show isis rib',
+                   'show isis rib flex-algo',
                    'show isis rib flex-algo {flex_id}',
                    'show isis rib {source_ip}',
                    'show isis rib {source_ip} {subnet_mask}']
@@ -1611,18 +1651,17 @@ class ShowIsisRib(ShowIsisRibSchema):
     def cli(self, flex_id="", source_ip="", subnet_mask="", output=None):
         if output is None:
             if flex_id:
-                out = self.device.execute(self.cli_command[1].format(flex_id=flex_id))
+                out = self.device.execute(self.cli_command[2].format(flex_id=flex_id))
             elif source_ip and not subnet_mask:
-              out = self.device.execute(self.cli_command[2].format(source_ip=source_ip))
+              out = self.device.execute(self.cli_command[3].format(source_ip=source_ip))
             elif source_ip and subnet_mask:
-              out = self.device.execute(self.cli_command[3].format(source_ip=source_ip, subnet_mask=subnet_mask))
+              out = self.device.execute(self.cli_command[4].format(source_ip=source_ip, subnet_mask=subnet_mask))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
-        ret_dict = {}
-        in_repair_path = False
+        flex_algo_enabled, in_repair_path, ret_dict = False, False, {}
 
         # IPv4 local RIB for IS-IS process 1
         p1 = re.compile(r'^IPv4 local RIB for IS-IS process\s+(?P<tag>\S+)$')
@@ -1630,74 +1669,114 @@ class ShowIsisRib(ShowIsisRibSchema):
         # 1.1.1.0/24  prefix attr X:0 R:1 N:0
         # 3.3.3.3/32  prefix attr X:0 R:0 N:1  source router id: 3.3.3.3  SID index 3 - Bound
         # 6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
-        p2 = re.compile(r'^(?P<ip>\d+.\d+.\d+.\d+)/(?P<subnet>\d+)\s+prefix\s+attr\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)'
-        r'(\((?P<strict_sid_bound_attribute_te1>TE)\)){0,1}((\s+source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)){0,1}\s+'
-        r'(((prefix SID index|SID index)\s+(?P<prefix_sid_ind>\d+))\s+){0,1}((- Bound){0,1}\s*(\((?P<sid_bound_attribute>\w+)\)'
-        r'(\((?P<strict_sid_bound_attribute_te2>\w+)\)){0,1}){0,1}){0,1}){0,1}$')
-        
+        p2 = re.compile(r'^(?P<ip>[\d.]+)/(?P<subnet>\d+)\s+((prefix\s+attr\s+'
+                        r'X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:'
+                        r'(?P<n_flag>0|1)))?((\((?P<strict_sid_bound_attribute_te1>TE)'
+                        r'\)))?((\s*source router id:\s+(?P<src_router_id>[\d.]+))?'
+                        r'\s+((((prefix SID index|SID index))\s+(?P<prefix_sid_ind>'
+                        r'(\d+|Invalid by SRMS)))\s*)?(((- (?P<bound>Bound)){0,1}'
+                        r'\s*(\((?P<sid_bound_attribute>\w+)\)'
+                        r'(\((?P<strict_sid_bound_attribute_te2>\w+)\))?)?)?)?)?$')
+
         # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
         # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
-        p3 = re.compile(r'^\[(?P<distance>\d+)/(?P<route_type>\w+\d+)/(?P<metric>\d+)\]\s+via\s+(?P<ip>\d+.\d+.\d+.\d+)'
-                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)( (?P<host>\S+),)?,* from (?P<from_ip>\d+.\d+.\d+.\d+),\s+tag'
-                        r'\s+(?P<tag>\d+)(, LSP\[(?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\])?$')
+        p3 = re.compile(r'^\[(?P<distance>\d+)/(?P<route_type>\w+\d+)/'
+                        r'(?P<metric>\d+)\]\s+via\s+(?P<ip>[\d.]+)'
+                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
+                        r'( (?P<host>\S+),)?,* from (?P<from_ip>[\d.]+),\s+tag'
+                        r'\s+(?P<tag>\d+)(, LSP\[(?P<next_hop_lsp_index>\d+)/'
+                        r'(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\])?'
+                        r'(\s+(?P<filtered>-))?$')
         
         # LSP 3/4/0(52), prefix attr: X:0 R:0 N:1
-        p4 = re.compile(r'^(LSP (?P<next_hop_lsp_index>\d+)/(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)'
-                        r'\((?P<tpl_lsp_version>\d+)\))?(, )?prefix attr:\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)'
-                        r'\s+N:(?P<n_flag>0|1)$')
+        p4 = re.compile(r'^(LSP (?P<next_hop_lsp_index>\d+)/'
+                        r'(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)'
+                        r'\((?P<tpl_lsp_version>\d+)\))?(, )?prefix attr:'
+                        r'\s+X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)$')
 
         # SRGB: 16000, range: 8000 prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
-        p5 = re.compile(r'^SRGB:\s+(?P<srgb>\d+),\s+range:\s+(?P<range>\d+)\s+prefix-SID index:\s+(?P<pre_sid_ind>\w+|\d+)'
-                        r'(,\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)'
-                        r'\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1))?$')
+        p5 = re.compile(r'^SRGB:\s+(?P<srgb>\d+),\s+range:\s+(?P<range>\d+)\s+'
+                        r'prefix-SID index:\s+(?P<pre_sid_ind>\w+|\d+)(,\s+'
+                        r'R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+'
+                        r'P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+'
+                        r'V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1))?$')
 
         #(ALT)(installed)
         #(installed)
-        p6 = re.compile(r'^(\((?P<path_attr>TE|ALT|SRTE|SRTE_STRICT|SR_POLICY|SR_POLICY_STRICT)\)){0,1}(\((?P<installed>installed)\)){0,1}$')
+        p6 = re.compile(r'^(\((?P<alt_attr>ALT)\))?'
+                        r'(\((?P<forced>(bdw|def|all)\s+forced)\))?'
+                        r'(\((?P<path_attr>(SR_POLICY|SRTE|SR_POLICY_STRICT'
+                        r'|SRTE_STRICT|ULOOP_EP|TE))\))?'
+                        r'(\((?P<installed>installed)\))?'
+                        r'(\((?P<had_rp>had repair path)\))?$')
 
         # label: implicit-null
         p7 = re.compile(r'^label:\s+(?P<label>\S+)$')
 
         # repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
         # repair path: 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
-        p8 = re.compile(r'^repair path:\s+(?P<repair_path>\d+.\d+.\d+.\d+)\s*\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
-                        r'\s+metric:\s*(?P<metric>\d+)\s+\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?((?P<np>NP),)?((?P<sr>SR))?\)'
+        p8 = re.compile(r'^repair path(?P<stale>\(\?\))?:\s+'
+                        r'(?P<repair_path>\d+.\d+.\d+.\d+)\s*'
+                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
+                        r'\s+metric:\s*(?P<metric>\d+)\s+'
+                        r'\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?'
+                        r'((?P<np>NP),)?((?P<sr>SR))?\)'
                         r'(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$')
 
         # next-hop: 10.10.20.2 (Ethernet1/1)
-        p9 = re.compile(r'^next-hop:\s+(?P<next_hop>\d+.\d+.\d+.\d+)\s+\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)$')
+        p9 = re.compile(r'^next-hop:\s+(?P<next_hop>(([\d.]+)|(not found)))(\s+'
+                        r'(\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)))?$')
 
         # P node: R5[5.5.5.5], label: 16005
-        p10 = re.compile(r'^(?P<node_type>(P|PQ|Q))\s+node:\s+(?P<host>\S+)\[(?P<ip>\d+.\d+.\d+.\d+)\],\s+label:\s+(?P<label>\S+)$')
+        p10 = re.compile(r'^(?P<node_type>(P|PQ|Q))\s+node:\s+(?P<host>\S+)'
+                         r'\[(?P<ip>[\d.]+)\],\s+label:\s+(?P<label>\S+)$')
 
         # repair source: R3, LSP 3
-        p11 = re.compile(r'^repair source:\s+(?P<repair_src>\S+),\s+LSP\s+(?P<rtp_lsp_index>\d+)$')
+        p11 = re.compile(r'^repair source:\s+(?P<repair_src>\S+)(,\s+LSP\s+'
+                         r'(?P<rtp_lsp_index>\d+))?$')
 
         # Source router id: 3.3.3.3
-        p12 = re.compile(r'Source router id:\s+(?P<src_router_id>\d+.\d+.\d+.\d+)')
+        p12 = re.compile(r'source router id:\s+(?P<src_router_id>[\d.]+)')
 
         # strict-SPF label: implicit-null
         p13 = re.compile(r'^strict-SPF label:\s+(?P<strict_sid_label>\S+)$')
 
         # strict-SPF SID index: 6, R:0 N:1 P:0 E:0 V:0 L:0
-        p14 = re.compile(r'^strict-SPF SID index:\s+(?P<strict_spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)'
-                         r'\s+N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)'
-                         r'\s+L:(?P<l_flag>0|1)$')
+        # Prefix-SID index: 4, R:0 N:1 P:0 E:0 V:0 L:0
+        p14 = re.compile(r'^(Prefix-SID index:|strict-SPF SID index:)\s+'
+                         r'(?P<spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)\s+'
+                         r'N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+'
+                         r'E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+'
+                         r'L:(?P<l_flag>0|1)$')
 
         # type: Micro-Loop Avoidance Explicit-Path
-        p15 = re.compile(r'^type:\s+(?P<u_loop_enabled>Micro-Loop Avoidance Explicit-Path)$')
+        p15 = re.compile(r'^type:\s+'
+                         r'(?P<u_loop_enabled>Micro-Loop Avoidance Explicit-Path)$')
 
         # strict-SPF SID index 6 - Bound (SR_POLICY_STRICT)
         # strict-SPF SID index 505 - Bound(TE)
-        p16 = re.compile(r'^strict-SPF SID index\s+(?P<strict_sid_index>\d+)\s+-\s+Bound\s*\((?P<strict_attribute>\S+)\)$')
+        # p16 = re.compile(r'^strict-SPF SID index\s+(?P<strict_sid_index>\d+)'
+        #                  r'\s+-\s+(?P<bound>Bound)\s*'
+        #                  r'\((?P<strict_attribute>\S+)\)')
+        p16 = re.compile(r'strict-SPF SID index\s+(?P<strict_sid_index>\d+)'
+                         r'\s+(-\s+(?P<bound>Bound))?\s*'
+                         r'(\((?P<strict_attribute>\S+)\))?')
         
         # TI-LFA link-protecting
         # local LFA
         # remote LFA
-        p17 = re.compile(r'^(?P<lfa_type>local LFA|remote LFA|TI-LFA link-protecting)$')
+        p17 = re.compile(r'^(?P<lfa_type>local LFA|remote LFA|TI-LFA link-protecting'
+                         r'|TI-LFA node/SRLG-protecting|TI-LFA node-protecting'
+                         r'|TI-LFA SRLG-protecting)$')
 
         # Flex-algo 128
         p18 = re.compile(r'^Flex-algo\s+(?P<flex_algo>\d+)$')
+        
+        # IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+        # IPV4 multicast topology *** (TID 0, TOPOID 0x0) =================
+        p19 = re.compile(r'^IPV4\s+(?P<topo_type>unicast|multicast)\s+topology'
+                         r'\s+(?P<topo_name>\S+)\s+\(TID\s+(?P<tid>\d+),\s+'
+                         r'TOPOID\s+(?P<topo_id>\S+)\).+$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1707,14 +1786,27 @@ class ShowIsisRib(ShowIsisRibSchema):
             if m:
                 group = m.groupdict()
                 tag = group["tag"]
-                ret_dict.setdefault("tag", {}).setdefault(tag, {})
+                tag_dict = ret_dict.setdefault("tag", {}).setdefault(tag, {})
+                continue
+
+            # IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                tag_dict["topo_type"] = group["topo_type"]
+                tag_dict["topo_name"] = group["topo_name"]
+                tag_dict["tid"] = int(group["tid"])
+                tag_dict["topo_id"] = group["topo_id"]
                 continue
 
             # Flex-algo 128
             m = p18.match(line)
             if m:
+                flex_algo_enabled = True
                 group = m.groupdict()
-                ret_dict["tag"][tag]["flex-algo"] = int(group['flex_algo'])
+                flex_id = int(group['flex_algo'])
+                flex_algo_dict = tag_dict.setdefault("flex_algo", {}).\
+                    setdefault(flex_id, {})
                 continue
 
             # 1.1.1.0/24  prefix attr X:0 R:1 N:0
@@ -1722,37 +1814,58 @@ class ShowIsisRib(ShowIsisRibSchema):
             # 6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
             m = p2.match(line)
             if m:
+                if not flex_algo_enabled:
+                    flex_algo_dict = tag_dict.setdefault("flex_algo", {}).\
+                        setdefault("None", {})
                 in_repair_path = False
                 group = m.groupdict()
                 ip = group['ip']
+                bound = group['bound']
                 src_router_id = group['src_router_id']
                 prefix_sid_ind = group['prefix_sid_ind']
                 sid_bound_attr = group['sid_bound_attribute']
-                
-                ret_dict["tag"][tag].setdefault("prefix", {}).setdefault(ip, {})
-                ret_dict["tag"][tag]["prefix"][ip]["subnet"] = group["subnet"]
-
                 prefix_attr = {
                     "x_flag": (group['x_flag'] == "1"),
                     "r_flag": (group['r_flag'] == "1"),
                     "n_flag": (group['n_flag'] == "1")
                 }
 
-                ret_dict["tag"][tag]["prefix"][ip].setdefault("prefix_attr", prefix_attr)
+                prefix_dict = flex_algo_dict.setdefault("prefix", {}).\
+                                       setdefault(ip, {})
+                prefix_dict.setdefault("prefix_attr", prefix_attr)
+                
+                prefix_dict["subnet"] = group["subnet"]
 
                 if src_router_id:
-                  ret_dict["tag"][tag]["prefix"][ip]["source_router_id"] = src_router_id
+                    prefix_dict["source_router_id"] = src_router_id
 
-                if prefix_sid_ind:
-                  ret_dict["tag"][tag]["prefix"][ip]["prefix_sid_index"] = int(prefix_sid_ind)
+                prefix_dict.setdefault("algo", {}).setdefault(0, {})
+                prefix_dict.setdefault("algo", {}).setdefault(1, {})
 
-                if sid_bound_attr and sid_bound_attr == "SR_POLICY_STRICT":
-                    ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute"] = sid_bound_attr
-                elif sid_bound_attr:
-                  ret_dict["tag"][tag]["prefix"][ip]["sid_bound_attribute"] = sid_bound_attr
-                
-                strict_sid_bound_attribute_te = (group["strict_sid_bound_attribute_te1"] == "TE" or group["strict_sid_bound_attribute_te2"] == "TE")
-                ret_dict["tag"][tag]["prefix"][ip]["strict_sid_bound_attribute_te"] = strict_sid_bound_attribute_te
+
+                if prefix_sid_ind and prefix_sid_ind != "Invalid by SRMS":
+                    prefix_dict["algo"][0]["sid_index"] = int(prefix_sid_ind)
+                    prefix_dict["algo"][0]["bound"] = bound is not None
+
+                if sid_bound_attr:
+                    if "strict" in sid_bound_attr.lower():
+                        prefix_dict["algo"][1]["attribute"] = sid_bound_attr
+                    else:
+                        prefix_dict["algo"][0]["attribute"] = sid_bound_attr
+                continue
+
+            # strict-SPF SID index 6 - Bound (SR_POLICY_STRICT)
+            # strict-SPF SID index 505 - Bound(TE)
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                strict_attribute = group["strict_attribute"]
+                prefix_dict["algo"][1]["sid_index"] = int(group["strict_sid_index"])
+                prefix_dict["algo"][1]["bound"] = bound is not None
+
+                if strict_attribute:
+                    prefix_dict["algo"][1]["attribute"] = group["strict_attribute"]
+
                 continue
 
             # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
@@ -1760,54 +1873,42 @@ class ShowIsisRib(ShowIsisRibSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                distance = group["distance"]
                 route_type = group["route_type"]
-                metric = group["metric"]
-                via_ip = group["ip"]
                 interface = group["interface"]
                 host = group["host"]
-                src_ip = group["from_ip"]
-                tag_ = group["tag"]
+                source_ip = group["from_ip"]
                 next_hop_lsp_index = group["next_hop_lsp_index"]
                 rtp_lsp_index = group["rtp_lsp_index"]
                 rtp_lsp_version = group["rtp_lsp_version"]
 
-                ret_dict["tag"][tag]["prefix"][ip].setdefault("via_interface", {}).setdefault(interface, {})
+                via_interface_dict = prefix_dict.\
+                                        setdefault("via_interface", {}).\
+                                        setdefault(interface, {})
+                level_dict = via_interface_dict.setdefault("level", {}).\
+                                                setdefault(route_type, {})
+                
+                source_ip_dict = level_dict.setdefault("source_ip", {}).\
+                                            setdefault(source_ip, {})
+                lsp_dict = source_ip_dict.setdefault("lsp", {})
 
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["distance"]) =  int(distance)
+                source_ip_dict["distance"] = int(group["distance"])
+                source_ip_dict["metric"] = int(group["metric"])
+                source_ip_dict["via_ip"] = group["ip"]
+                source_ip_dict["tag"] = group["tag"]
+                source_ip_dict["filtered_out"] = group['filtered'] is not None
 
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["route_type"]) =  route_type
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["metric"]) =  int(metric)
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["via_ip"]) =  via_ip
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["src_ip"]) =  src_ip
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["tag"]) =  tag_
-                if host:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["host"]) =  host
-
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("lsp", {})
+                if host: source_ip_dict["host"] = host
 
                 if next_hop_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["next_hop_lsp_index"]) = int(next_hop_lsp_index)
+                    lsp_dict["next_hop_lsp_index"] = int(next_hop_lsp_index)
 
                 if rtp_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["rtp_lsp_index"]) = int(rtp_lsp_index)
+                    lsp_dict["rtp_lsp_index"] = int(rtp_lsp_index)
 
                 if rtp_lsp_version:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["rtp_lsp_version"]) = int(rtp_lsp_version)
+                    lsp_dict["rtp_lsp_version"] = int(rtp_lsp_version)
+                
+
                 continue
 
             # LSP 3/4/0(52), prefix attr: X:0 R:0 N:1
@@ -1818,50 +1919,42 @@ class ShowIsisRib(ShowIsisRibSchema):
                 rtp_lsp_index = group["rtp_lsp_index"]
                 rtp_lsp_version = group["rtp_lsp_version"]
                 tpl_lsp_version = group["tpl_lsp_version"]
-
-                if next_hop_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["next_hop_lsp_index"]) = int(next_hop_lsp_index)
-
-                if rtp_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["rtp_lsp_index"]) = int(rtp_lsp_index)
-
-                if rtp_lsp_version:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["lsp"]["rtp_lsp_version"]) = int(rtp_lsp_version)
-
-                if tpl_lsp_version:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                            [interface]["lsp"]["tpl_lsp_version"]) = int(tpl_lsp_version)
-
-                prefix_att = {
+                prefix_attr = {
                     "x_flag": (group['x_flag'] == "1"),
                     "r_flag": (group['r_flag'] == "1"),
                     "n_flag": (group['n_flag'] == "1")
                 }
 
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("prefix_attr", prefix_attr)
+                if next_hop_lsp_index:
+                    lsp_dict["next_hop_lsp_index"] = int(next_hop_lsp_index)
+
+                if rtp_lsp_index:
+                    lsp_dict["rtp_lsp_index"] = int(rtp_lsp_index)
+
+                if rtp_lsp_version:
+                    lsp_dict["rtp_lsp_version"] = int(rtp_lsp_version)
+
+                if tpl_lsp_version:
+                    lsp_dict["tpl_lsp_version"] = int(tpl_lsp_version)
+
+                source_ip_dict.setdefault("prefix_attr", prefix_attr)
+
                 continue
 
             # SRGB: 16000, range: 8000 prefix-SID index: 3, R:0 N:1 P:0 E:0 V:0 L:0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                srgb = int(group["srgb"])
-                srgb_range = int(group["range"])
+                source_ip_dict["srgb_start"] = int(group["srgb"])
+                source_ip_dict["srgb_range"] = int(group["range"])
 
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["srgb"]) = srgb
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["srgb_range"]) = srgb_range
+                source_ip_dict.setdefault("algo", {}).setdefault(0, {})
 
                 if group["pre_sid_ind"] != "None":
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["prefix_sid_index"]) = int(group["pre_sid_ind"])
+                    source_ip_dict["algo"][0]["sid_index"] = int(group["pre_sid_ind"])
 
-                if group["r_flag"] and group["n_flag"] and group["p_flag"] and group["e_flag"] and group["v_flag"] and group["l_flag"]:
+                if (group["r_flag"] and group["n_flag"] and group["p_flag"] and
+                    group["e_flag"] and group["v_flag"] and group["l_flag"]):
                     flags = {
                         "r_flag": (group["r_flag"] == "1"),
                         "n_flag": (group["n_flag"] == "1"),
@@ -1870,34 +1963,56 @@ class ShowIsisRib(ShowIsisRibSchema):
                         "v_flag": (group["v_flag"] == "1"),
                         "l_flag": (group["l_flag"] == "1")
                     }
-                    ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("non_strict_sid_flags", flags)
+                    if in_repair_path:
+                        repair_path_dict.setdefault("algo", {}).setdefault(0, {})
+                        repair_path_dict["algo"][0]["flags"] = flags
+                    else:
+                        source_ip_dict["algo"][0]["flags"] = flags
+
                 continue
 
             # (ALT)(installed)
             # (installed)
+            # (ALT)(all forced)(SR_POLICY)(installed)(had repair path)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                if not any(group.values()):
+                    continue
+
+                attr_dict = {
+                    "ALT": False,
+                    "SR_POLICY": False,
+                    "SR_POLICY_STRICT": False,
+                    "SRTE": False,
+                    "SRTE_STRICT": False,
+                    "ULOOP_EP": False,
+                    "TE": False,
+                }
+                source_ip_dict.setdefault("path_attribute", attr_dict)
                 if group["path_attr"]:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["path_attribute"]) = group["path_attr"]
+                    source_ip_dict["path_attribute"][group["path_attr"]] = True
+                if group["alt_attr"]:
+                    source_ip_dict["path_attribute"][group["alt_attr"]] = True
+                if group["forced"]:
+                    source_ip_dict["forced"] = group["forced"]
+                source_ip_dict["had_repair_path"] = group["had_rp"] is not None
+                source_ip_dict["installed"] = group["installed"] is not None
 
-                if group["installed"]:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["installed"]) = (group["installed"] == "installed")
                 continue
-
 
             # label: implicit-null
             m = p7.match(line)
             if m:
                 group = m.groupdict()
+                
                 if in_repair_path:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["repair_path"]["label"]) = group["label"]
+                    repair_path_dict.setdefault("algo", {}).setdefault(0, {})
+                    repair_path_dict["algo"][0]["label"] = group["label"]
                 else:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["label"]) = group["label"]
+                    source_ip_dict.setdefault("algo", {}).setdefault(0, {})
+                    source_ip_dict["algo"][0]["label"] = group["label"]
+
                 continue
 
             # repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
@@ -1906,24 +2021,7 @@ class ShowIsisRib(ShowIsisRibSchema):
             if m:
                 in_repair_path = True
                 group = m.groupdict()
-
                 rp_rtp_lsp_index = group["rtp_lsp_index"]
-
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("repair_path", {})
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["ip"]) = group["repair_path"]
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["interface"]) = group["interface"]
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["metric"]) = int(group["metric"])
-
-                if rp_rtp_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["repair_path"]["rtp_lsp_index"]) = int(rp_rtp_lsp_index)
-
                 attributes  = {
                         "DS": (group["ds"] == "DS"),
                         "LC": (group["lc"] == "LC"),
@@ -1931,22 +2029,28 @@ class ShowIsisRib(ShowIsisRibSchema):
                         "PP": (group["pp"] == "PP"),
                         "SR": (group["sr"] == "SR")
                 }
+                
+                repair_path_dict = source_ip_dict.setdefault("repair_path", {})
+                repair_path_dict.setdefault("attributes", attributes)
 
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface]["repair_path"].setdefault("attributes", attributes)
+                repair_path_dict["ip"] = group["repair_path"]
+                repair_path_dict["interface"] = group["interface"]
+                repair_path_dict["metric"] = int(group["metric"])
+                repair_path_dict["stale"] = group["stale"] is not None
+
+                if rp_rtp_lsp_index:
+                    repair_path_dict["rtp_lsp_index"] = int(rp_rtp_lsp_index)
+
                 continue
 
             # next-hop: 10.10.20.2 (Ethernet1/1)
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                next_hop_ip = group["next_hop"]
-                next_hop_interface = group["interface"]
+                if group["interface"]:
+                    repair_path_dict["next_hop_interface"] = group["interface"]
+                repair_path_dict["next_hop_ip"] = group["next_hop"]
 
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["next_hop_ip"]) = next_hop_ip
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["next_hop_interface"]) = next_hop_interface
                 continue
 
             # P node: R5[5.5.5.5], label: 16005
@@ -1959,7 +2063,10 @@ class ShowIsisRib(ShowIsisRibSchema):
                     "ip": group["ip"],
                     "label": group["label"]
                 }
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface]["repair_path"].setdefault("nodes", {}).setdefault("host", {}).setdefault(host, node_dict)
+
+                repair_path_dict.setdefault("nodes", {}).setdefault("host", {}).\
+                                 setdefault(host, node_dict)
+
                 continue
 
             # repair source: R3, LSP 3
@@ -1967,41 +2074,51 @@ class ShowIsisRib(ShowIsisRibSchema):
             if m:
                 group = m.groupdict()
                 rs_rtp_lsp_index = group["rtp_lsp_index"]
-                ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("repair_source", {})
-
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_source"]["host"]) = group["repair_src"]
+                repair_source_dict = repair_path_dict.setdefault("repair_source", {})
+                repair_source_dict["host"] = group["repair_src"]
 
                 if rs_rtp_lsp_index:
-                    (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                             [interface]["repair_source"]["rtp_lsp_index"]) = int(rs_rtp_lsp_index)
+                    repair_source_dict["rtp_lsp_index"] = int(rs_rtp_lsp_index)
+
                 continue
 
-            # Source router id: 3.3.3.3
+            # source router id: 3.3.3.3
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["src_router_id"]) = group["src_router_id"]
-                continue
+                source_ip_dict["source_router_id"] = group["src_router_id"]
 
+                continue
 
             # strict-SPF label: implicit-null
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["strict_spf_label"]) = group["strict_sid_label"]
+                
+                if in_repair_path:
+                    repair_path_dict.setdefault("algo", {}).setdefault(1, {})
+                    source_ip_dict["repair_path"]["algo"][1]["label"] = group["strict_sid_label"]
+                else:
+                    source_ip_dict.setdefault("algo", {}).setdefault(1, {})
+                    source_ip_dict["algo"][1]["label"] = group["strict_sid_label"]
+
                 continue
 
             # strict-SPF SID index: 6, R:0 N:1 P:0 E:0 V:0 L:0
+            # Prefix-SID index: 4, R:0 N:1 P:0 E:0 V:0 L:0
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["strict_spf_sid_index"]) = int(group["strict_spf_sid_ind"])
+                if in_repair_path:
+                    repair_path_dict.setdefault("algo", {}).setdefault(0, {})
+                    repair_path_dict.setdefault("algo", {}).setdefault(1, {})
+                else:
+                    source_ip_dict.setdefault("algo", {}).setdefault(0, {})
+                    source_ip_dict.setdefault("algo", {}).setdefault(1, {})
 
-                if group["r_flag"] and group["n_flag"] and group["p_flag"] and group["e_flag"] and group["v_flag"] and group["l_flag"]:
+
+                if (group["r_flag"] and group["n_flag"] and group["p_flag"] and
+                    group["e_flag"] and group["v_flag"] and group["l_flag"]):
                     flags = {
                         "r_flag": (group["r_flag"] == "1"),
                         "n_flag": (group["n_flag"] == "1"),
@@ -2010,32 +2127,30 @@ class ShowIsisRib(ShowIsisRibSchema):
                         "v_flag": (group["v_flag"] == "1"),
                         "l_flag": (group["l_flag"] == "1")
                     }
-                    ret_dict["tag"][tag]["prefix"][ip]["via_interface"][interface].setdefault("strict_spf_sid_flags", flags)
+
+                if line.startswith("Prefix"):
+                    if in_repair_path:
+                        repair_path_dict["algo"][0]["sid_index"] = int(group["spf_sid_ind"])
+                        repair_path_dict["algo"][0]["flags"] = flags
+                    else:
+                        source_ip_dict["algo"][0]["sid_index"] = int(group["spf_sid_ind"])
+                        source_ip_dict["algo"][0]["flags"] = flags
+                elif line.startswith("strict"):
+                    if in_repair_path:
+                        repair_path_dict["algo"][1]["sid_index"] = int(group["spf_sid_ind"])
+                        repair_path_dict["algo"][1]["flags"] = flags
+                    else:
+                        source_ip_dict["algo"][1]["sid_index"] = int(group["spf_sid_ind"])
+                        source_ip_dict["algo"][1]["flags"] = flags
+
                 continue
 
             # type: Micro-Loop Avoidance Explicit-Path
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["u_loop_enabled"]) = True
-                continue
-
-            # strict-SPF SID index 6 - Bound (SR_POLICY_STRICT)
-            # strict-SPF SID index 505 - Bound(TE)
-            m = p16.match(line)
-            if m:
-                group = m.groupdict()
-                strict_attribute = group["strict_attribute"]
-                (ret_dict["tag"][tag]["prefix"]
-                         [ip]["strict_spf_sid_index"]) = int(group["strict_sid_index"])
-                        
-                if strict_attribute == "TE":
-                    (ret_dict["tag"][tag]["prefix"]
-                         [ip]["strict_sid_bound_attribute_te"]) = True
-                else:
-                    (ret_dict["tag"][tag]["prefix"]
-                            [ip]["strict_sid_bound_attribute"]) = group["strict_attribute"]
+                source_ip_dict["u_loop_enabled"] = True
+                
                 continue
 
             # TI-LFA link-protecting
@@ -2044,8 +2159,248 @@ class ShowIsisRib(ShowIsisRibSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                (ret_dict["tag"][tag]["prefix"][ip]["via_interface"]
-                         [interface]["repair_path"]["lfa_type"]) = group["lfa_type"]
+                repair_path_dict["lfa_type"] = group["lfa_type"]
+
+                continue
+
+        return ret_dict
+
+class ShowIsisRibRedistributionSchema(MetaParser):
+    """Schema for show isis rib redistributon"""
+    schema = {
+        'tag': { 
+            Any(): {
+                'topo_type': { 
+                    Any() : {
+                        'topo_name': str,
+                        'mtid': str,
+                        'topo_id': str,
+                        'level': {
+                            str: {
+                                Optional('prefix'): {
+                                    str: {
+                                        'mask_len': int,
+                                        'route_type': str,
+                                        'metric': int,
+                                        Optional('external'): bool,
+                                        Optional('interarea'): bool,
+                                        Optional('isis'): bool,
+                                        Optional('tag'): str,
+                                        Optional('algo'): {
+                                            int: {
+                                                'index': int,
+                                                'r_flag': bool,
+                                                'n_flag': bool,
+                                                'p_flag': bool,
+                                                'e_flag': bool,
+                                                'v_flag': bool,
+                                                'l_flag': bool,
+                                                Optional('map_type'): str,
+                                                Optional('pfx_metric'): int,
+                                                Optional('advertise'): bool
+                                            },
+                                        },
+                                        Optional('x_flag'): bool,
+                                        Optional('r_flag'): bool,
+                                        Optional('n_flag'): bool,
+                                        Optional('src_rtr_id'): str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisRibRedistribution(ShowIsisRibRedistributionSchema):
+    """Parser for show isis rib redistribution"""
+
+    
+    cli_command = ['show isis rib redistribution']
+
+    def cli(self, output=None):
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        #######  Reg-exes  ##########
+        # IPv4 redistribution RIB for IS-IS process 1
+        p1 = re.compile(r'^IPv4 redistribution RIB for IS-IS process +'
+                        '(?P<isis_name>\S+)$')
+
+        #IPV4 unicast base topology (TID 0, TOPOID 0x0) =================
+        p2 = re.compile(r'^IPV4 (?P<topo>unicast|multicast) (?P<topo_name>.+)'
+                        ' \(TID (?P<mtid>\d+), TOPOID (?P<topoid>\S+)\).*')
+
+        #====== Level 1 ======
+        p3 = re.compile(r'^=*\s*Level\s*(?P<level>\d)\s*=*$')
+
+        #22.22.22.22/32
+        p4 = re.compile(r'^(?P<prefix>\d+(\.\d+){3})/(?P<masklen>\d+)$')
+
+        #[Connected/10]
+        #[ISIS/0] external  prefix-SID index: 44, R:1 N:0 P:1 E:0 V:0 L:0
+        p5 = re.compile(r'^\[(?P<rt_pdb>Connected|Static|BGP|RIP|IGRP|EIGRP'
+             '|OSPF|OSPFv3|ISIS|Mobil|ODR|LISP|OMP|NAT Route)/'
+             '(?P<metric>\d+)\] *'
+             '(?P<interarea>interarea)? *(?P<external>external)? *'
+             '(?P<isis>isis )? *(?P<algo>prefix-SID index: )?(?P<index>\d+)?'
+             '(, R:)*(?P<r_flag>0|1)?( N:)*(?P<n_flag>0|1)?'
+             '( P:)*(?P<p_flag>0|1)?( E:)*(?P<e_flag>0|1)?'
+             '( V:)*(?P<v_flag>0|1)?( L:)*(?P<l_flag>0|1)?')
+
+        #strict-SPF SID index: 404, R:1 N:0 P:1 E:0 V:0 L:0
+        p6 = re.compile(r'^(?P<algo>strict-SPF SID index: )(?P<index>\d+)'
+             ', R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)'
+             ' E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1)$')
+        
+        #flex-algo 129 SID index: 122, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+        p7 = re.compile(r'^flex-algo (?P<algo>\d+) SID index: (?P<index>\d+)'
+             ', R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)'
+             ' E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1) '
+             'map (?P<map>.*)$')
+        
+        #prefix-metric: 0, not advertised
+        p8 = re.compile(r'^prefix-metric: (?P<metric>\d+), '
+             '(?P<not_advertised>not )?advertised$')
+      
+        #prefix attr: X:0 R:0 N:1
+        p9 = re.compile(r'^prefix attr: X:(?P<x_flag>0|1) R:(?P<r_flag>0|1) '
+             'N:(?P<n_flag>0|1)$')
+
+        #source router id: 22.22.22.22
+        p10 = re.compile(r'^source router id: (?P<src>\d+(\.\d+){3})$')
+  
+        ########## Searching the output ################
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IPv4 redistribution RIB for IS-IS process 1
+            m = p1.match(line)
+            if m:
+                l_isis_name = m.groupdict()['isis_name']
+                tag_dict = ret_dict.setdefault('tag', {}).setdefault(l_isis_name, {})
+                continue
+
+            #IPV4 unicast base topology (TID 0, TOPOID 0x0) =================
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                l_topo = group['topo']
+                l_mtid = group['mtid']
+                l_topoid = group['topoid']
+                topo_dict = tag_dict.setdefault('topo_type', {}).setdefault(l_topo, {})
+                topo_dict['topo_name'] = group['topo_name']
+                topo_dict['mtid'] = l_mtid
+                topo_dict['topo_id'] = l_topoid
+                continue
+
+            #====== Level 1 ======
+            m = p3.match(line)
+            if m:
+                level = m.groupdict()['level']
+                lvl_dict = topo_dict.setdefault('level', {}).setdefault(level, {})
+                continue
+
+            #22.22.22.22/32
+            m = p4.match(line)
+            if m:
+                prefix = m.groupdict()['prefix']
+                masklen = m.groupdict()['masklen']
+                pfx_dict = lvl_dict.setdefault('prefix', {}).setdefault(prefix, {})
+                pfx_dict['mask_len'] = int(masklen)
+                continue
+
+            #[ISIS/0] external  prefix-SID index: 44, R:1 N:0 P:1 E:0 V:0 L:0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pfx_dict['route_type'] = (group['rt_pdb']).lower()
+                pfx_dict['metric'] = int(group['metric'])
+                external = group['external'] 
+                interarea = group['interarea']
+                isis = group['isis']
+                algo = group['algo']
+                index = group['index']
+                pfx_dict['external'] = (external is not None);
+                pfx_dict['interarea'] = (interarea is not None);
+                pfx_dict['isis'] = (isis is not None);
+                if algo is not None:
+                    sid_dict = pfx_dict.setdefault('algo', {}).setdefault(0, {})
+                    sid_dict['index'] = int(index)
+                    sid_dict['p_flag'] = (group['p_flag'] == "1")
+                    sid_dict['r_flag'] = (group['r_flag'] == "1")
+                    sid_dict['v_flag'] = (group['v_flag'] == "1")
+                    sid_dict['e_flag'] = (group['e_flag'] == "1")
+                    sid_dict['l_flag'] = (group['l_flag'] == "1")
+                    sid_dict['n_flag'] = (group['n_flag'] == "1")
+                continue
+
+            #strict-SPF SID index: 404, R:1 N:0 P:1 E:0 V:0 L:0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                algo = group['algo']
+                index = group['index']
+                sid_dict = pfx_dict.setdefault('algo', {}).setdefault(1, {})
+                sid_dict['index'] = int(index)
+                sid_dict['p_flag'] = (group['p_flag'] == "1")
+                sid_dict['r_flag'] = (group['r_flag'] == "1")
+                sid_dict['v_flag'] = (group['v_flag'] == "1")
+                sid_dict['e_flag'] = (group['e_flag'] == "1")
+                sid_dict['l_flag'] = (group['l_flag'] == "1")
+                sid_dict['n_flag'] = (group['n_flag'] == "1")
+                continue
+
+            #flex-algo 129 SID index: 122, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                algo = group['algo']
+                index = group['index']
+                maps = group['map']
+                sid_dict = pfx_dict.setdefault('algo', {}).setdefault(int(algo), {})
+                sid_dict['index'] = int(index)
+                sid_dict['p_flag'] = (group['p_flag'] == "1")
+                sid_dict['r_flag'] = (group['r_flag'] == "1")
+                sid_dict['v_flag'] = (group['v_flag'] == "1")
+                sid_dict['e_flag'] = (group['e_flag'] == "1")
+                sid_dict['l_flag'] = (group['l_flag'] == "1")
+                sid_dict['n_flag'] = (group['n_flag'] == "1")
+                sid_dict['map_type'] = maps
+                continue
+
+            #prefix-metric: 0, not advertised
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                metric = group['metric']
+                not_adv = group['not_advertised']
+                sid_dict['pfx_metric'] = int(metric)
+                sid_dict['advertise'] = (not_adv is None)
+                continue
+
+            #prefix attr: X:0 R:0 N:1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                pfx_dict['x_flag'] = (group['x_flag'] == '1')
+                pfx_dict['r_flag'] = (group['r_flag'] == '1')
+                pfx_dict['n_flag'] = (group['n_flag'] == '1')
+                continue
+
+            #source router id: 22.22.22.22
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                pfx_dict['src_rtr_id'] = group['src']
                 continue
 
         return ret_dict

@@ -2,10 +2,32 @@ IPv4 local RIB for IS-IS process 1
 
 IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
 
-15.0.0.15/32  prefix attr X:0 R:0 N:0 (SR_POLICY_STRICT)(TE)
-  [115/L1/30] via 10.10.10.2(GigabitEthernet0/0/3), from 5.5.5.5, tag 0, LSP[2/4/577]
-     prefix attr: X:0 R:0 N:0
-              (installed)
-  [115/L1/30] via 20.20.20.2(TenGigabitEthernet0/0/5), from 5.5.5.5, tag 0, LSP[1/4/577]
-     prefix attr: X:0 R:0 N:0
-              (installed)
+Flex-algo 128
+
+2.2.2.2/32  prefix attr X:0 R:0 N:1  source router id: 2.2.2.2  SID index 23 - Bound
+  [115/L1/10] via 12.1.1.2(Ethernet0/1) R2.00-00, from 2.2.2.2, tag 0
+     LSP 3/3/9(9), prefix attr: X:0 R:0 N:1
+     Source router id: 2.2.2.2
+      Prefix-SID index: 23, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+  [115/L2/10] via 12.1.1.2(Ethernet0/1) R2.00-00, from 2.2.2.2, tag 0
+     LSP 4/4/15(15), prefix attr: X:0 R:0 N:1
+     Source router id: 2.2.2.2
+      Prefix-SID index: 23, R:0 N:1 P:0 E:0 V:0 L:0
+  [115/L2/30] via 13.1.1.2(Ethernet0/2) R3.00-00, from 3.3.3.3, tag 0
+     LSP 6/6/17(17), prefix attr: X:0 R:1 N:1
+     Source router id: 2.2.2.2
+      Prefix-SID index: 23, R:0 N:1 P:0 E:0 V:0 L:0
+
+3.3.3.3/32  prefix attr X:0 R:0 N:1  SID index 33 - Bound
+  [115/L1/10] via 13.1.1.2(Ethernet0/2) R3.00-00, from 3.3.3.3, tag 0
+     LSP 5/5/9(9), prefix attr: X:0 R:0 N:1
+      Prefix-SID index: 33, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+  [115/L2/10] via 13.1.1.2(Ethernet0/2) R3.00-00, from 3.3.3.3, tag 0
+     LSP 6/6/17(17), prefix attr: X:0 R:0 N:1
+      Prefix-SID index: 33, R:0 N:1 P:0 E:0 V:0 L:0
+  [115/L2/30] via 12.1.1.2(Ethernet0/1) R2.00-00, from 2.2.2.2, tag 0
+     LSP 4/4/15(15), prefix attr: X:0 R:1 N:1
+      Prefix-SID index: 33, R:1 N:1 P:1 E:0 V:0 L:0
+

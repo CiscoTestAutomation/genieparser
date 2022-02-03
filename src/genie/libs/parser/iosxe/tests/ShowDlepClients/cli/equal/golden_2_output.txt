@@ -1,0 +1,22 @@
+DLEP Clients for Interface GigabitEthernet5
+DLEP Server IP=8.8.8.11:11115 Sock=2
+
+
+DLEP Client IP=8.8.8.12:856 TCP Socket fd=3
+ Peer ID=5, Virtual template=2
+ Description: radio_2
+ Peer Timers (all values in milliseconds):
+  Heartbeat=5000, Dead Interval=10000, Terminate ACK=20000
+ Neighbor Timers (all values in seconds):
+  Activity timeout=0, Neighbor Down ACK=10
+
+ Supported Metrics:
+  Link RLQ RX Metric : 100
+  Link RLQ TX Metric : 100
+  Link Resources Metric : 100
+  Link MTU Metric : 100
+  Link Latency Metric : 250 microseconds
+  Link CDR RX Metric : 100000000 bps
+  Link CDR TX Metric : 100000000 bps
+  Link MDR RX Metric : 100000000 bps
+  Link MDR TX Metric : 100000000 bps

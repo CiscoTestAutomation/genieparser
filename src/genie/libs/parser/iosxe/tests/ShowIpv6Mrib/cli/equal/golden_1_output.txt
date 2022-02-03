@@ -1,0 +1,6 @@
+(2001:192:168:1::10,FF05:1:1::1) RPF nbr: 2001:192:168:1::10 Flags:
+  Vlan2001 Flags: A F
+  LISP0.1 Flags: F	Next-hop: 100.33.33.33
+  LISP0.1 Flags: F	Next-hop: 100.154.154.154
+  LISP0.1 Flags: F	Next-hop: 100.22.22.22
+  LISP0.1 Flags: F	Next-hop: 100.88.88.88

@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
    * show crypto pki certificates <WORD>
+   * show crypto entropy status
 """
 
 # Python
@@ -1265,3 +1266,1269 @@ class ShowCryptoSessionDetail(ShowCryptoSessionSuperParser,ShowCryptoSessionSche
         else:
             out = output
         return super().cli(output=out)
+
+# =====================================
+# Schema for:
+#  * 'show crypto entropy status' 
+# =====================================
+class ShowCryptoEntropyStatusSchema(MetaParser):
+    """Schema for show crypto entropy status."""
+
+    schema = {
+        "entropy_collection": str,
+        "entropy_collection_recent": str,
+        "Entropy_target": str,
+        "entropy_actual_collection" : str,
+        "entropies" : {
+            int : {
+                "source": str,
+                "type": str,
+                "status": str,
+                "requests": str,
+                "entropy_bits": str,
+            }
+        }
+    }
+# =====================================
+# Parser for:
+#  * 'show crypto entropy status'
+# =====================================
+class ShowCryptoEntropyStatus(ShowCryptoEntropyStatusSchema):
+    """Parser for show crypto entropy status"""
+
+    cli_command = 'show crypto entropy status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+		## Entropy source       Type Status  Entropy Bits
+		#1 ACT-2                 HW  Working  384
+		#2 randfill              SW  Working  128(*)
+        #3 getrandombytes        SW  Working  160(*)
+        p1 = re.compile(r"^(?P<count>\d+)\s+(?P<source>\S+)\s+(?P<type>\S+)\s+(?P<status>\S+)(\s+|\s+(?P<requests>\d+)\s+)(?P<entropy_bits>(\S+|\d+\/\d+\s+\(\*\)))$")
+							
+	    #Fresh entropy collected once every 60 minutes
+        p2 = re.compile(r'^Fresh +entropy +collected +once +every +(?P<total>[\d\s\w]+)$')
+											   
+		#Entropy most recently collected 22 minutes ago
+        p3 = re.compile(r'^Entropy +most +recently +collected +(?P<count>[\d\s\w]+)$')
+		
+		#Entropy target = 256 bits; entropy actually collected = 384 bits
+        p4 = re.compile(r'^Entropy +target\s+=\s+(?P<count1>[\d\s\w]+);\s+entropy +actually +collected\s+=\s+(?P<count2>[\d\s\w]+)$')
+
+        chassis_obj = {}
+        
+        for line in output.splitlines():
+            line = line.strip()
+                    
+            m=p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = chassis_obj.setdefault("entropies", {})
+                count = int(group["count"])
+                entry_dict.update(
+                    { int(count) : {
+                        "source" : group["source"],
+                        "type" : group["type"],
+                        "status" : group["status"],
+                        "requests" : str(group["requests"]),
+                        "entropy_bits" : group["entropy_bits"],
+                                }
+                            }
+                        )
+                continue 
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                chassis_obj['entropy_collection'] = group['total']
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                chassis_obj['entropy_collection_recent'] = group['count']
+                continue
+                    
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                chassis_obj['Entropy_target'] = group['count1']
+                chassis_obj['entropy_actual_collection'] = group['count2']
+                
+        return chassis_obj
+
+# =================================================
+#  Schema for 'show crypto pki server'
+# =================================================
+class ShowCryptoPkiServerSchema(MetaParser):
+    """Schema for show crypto pki server"""
+    schema = {
+        'server':{
+            Any():
+                {
+                    'status': str, 
+                    'state': str, 
+                    'issuer': str,
+                    'fingerprint': str,
+                    Optional('subca_fingerprint'): str,
+                    Optional('ra_fingerprint'): str,
+                    Optional('ca_type'): str,
+                    Optional('grant_mode'): str,
+                    Optional('last_serial_num'): str,
+                    'ca_expiry_timer': str,
+                    Optional('crl_next_update_timer'): str,
+                    Optional('primary_storage'): str,
+                    Optional('database_level'): str,
+                    Optional('auto_rollover_timer'): str
+                },
+            },
+        }
+
+# =========================================================
+#  Parser for 'show crypto pki server'
+# =========================================================   
+class ShowCryptoPkiServer(ShowCryptoPkiServerSchema):
+    """Parser for 
+        * show crypto pki server
+    """
+
+    cli_command = 'show crypto pki server'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Certificate Server root:
+        p1 = re.compile(r'^Certificate +Server +(?P<server_name>\S+):$')
+    
+        # Status: enabled
+        p2 = re.compile(r'^Status:\s+(?P<ca_status>\w+)$')
+
+        # State: enabled
+        p3 = re.compile(r'^State:\s+(?P<ca_state>\w+)$')
+        
+        # Issuer name: CN=root
+        p4 = re.compile(r'^Issuer\s+name:\s+(?P<cert_issuer>[\S\s]+)$')
+
+        # CA cert fingerprint: CF2C23D1 560F25DB 22E9D10F E595A6D6
+        p5 = re.compile(r'^CA\s+cert\s+fingerprint:\s+(?P<ca_fingerprint>[\S\s]+)$')
+
+        # Granting mode is: auto
+        p6 = re.compile(r'^Granting\s+mode\s+is:\s+(?P<mode>\w+)$')
+
+        # Last certificate issued serial number (hex): 1
+        p7 = re.compile(r'Last\s+certificate\s+issued\s+serial\s+number\s+\(hex\):\s+(?P<serial>\S+)$')
+
+        # CA certificate expiration timer: 12:58:34 UTC Jan 4 2025
+        p8 = re.compile(r'^CA\s+certificate\s+expiration\s+timer:\s+(?P<ca_expiry>[\S\s]+)$')
+
+        # CRL NextUpdate timer: 18:58:35 UTC Jan 5 2022
+        p9 = re.compile(r'^CRL\s+NextUpdate\s+timer:\s+(?P<crl_update>[\S\s]+)$')
+
+        # Current primary storage dir: nvram:
+        p10 = re.compile(r'^Current\s+primary\s+storage\s+dir:\s+(?P<storage>\S+)$')
+
+        # Database Level: Complete - all issued certs written as <serialnum>.cer 
+        p11 = re.compile(r'^Database Level:\s+(?P<level>\w+)$')
+
+        # Autorollover timer: 12:58:34 UTC Jan 3 2025
+        p12 = re.compile(r'^Autorollover\s+timer:\s+(?P<rollover_timer>[\S\s]+)$')
+
+        # Upper CA cert fingerprint: 8EF4710D 2C01F563 2ADBFC3C 716442CC
+        p13 = re.compile(r'^Upper\s+CA\s+cert\s+fingerprint:\s+(?P<subca_fp>[\S\s]+)$')
+
+        # RA cert fingerprint: 885DA102 58DDDE50 3ECBA461 C0E71AEB
+        p14 = re.compile(r'^RA\s+cert\s+fingerprint:\s+(?P<ra_fp>[\S\s]+)$')
+
+        # Server configured in RA mode
+        p15 = re.compile(r'^Server\s+configured\s+in\s+(?P<type>[\S\s]+)\s+mode$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Certificate Server root:
+            m = p1.match(line)
+            if m:
+                ca_name = m.groupdict()['server_name']
+                ser_dict = ret_dict.setdefault('server', {}).setdefault(ca_name, {}) 
+                continue
+
+            # Status: enabled
+            m = p2.match(line)
+            if m:
+                ser_dict['status'] = m.groupdict()['ca_status']
+                continue
+             
+            # State: enabled
+            m = p3.match(line)
+            if m:
+                ser_dict['state'] = m.groupdict()['ca_state']
+                continue
+
+            # Issuer name: CN=root
+            m = p4.match(line)
+            if m:
+                ser_dict['issuer'] = m.groupdict()['cert_issuer']
+                continue
+     
+            # CA cert fingerprint: CF2C23D1 560F25DB 22E9D10F E595A6D6
+            m = p5.match(line)
+            if m:
+                ser_dict['fingerprint'] = m.groupdict()['ca_fingerprint']
+                continue
+
+            # Granting mode is: auto
+            m = p6.match(line)
+            if m:
+                ser_dict['grant_mode'] = m.groupdict()['mode']
+                continue
+ 
+            # Last certificate issued serial number (hex): 1
+            m = p7.match(line)
+            if m:
+                ser_dict['last_serial_num'] = m.groupdict()['serial']
+                continue
+            
+            # CA certificate expiration timer: 12:58:34 UTC Jan 4 2025
+            m = p8.match(line)
+            if m:
+                ser_dict['ca_expiry_timer'] = m.groupdict()['ca_expiry']
+                continue
+
+            # CRL NextUpdate timer: 18:58:35 UTC Jan 5 2022
+            m = p9.match(line)
+            if m:
+                ser_dict['crl_next_update_timer'] = m.groupdict()['crl_update']
+                continue
+            
+            # Current primary storage dir: nvram:
+            m = p10.match(line)
+            if m:
+                ser_dict['primary_storage'] = m.groupdict()['storage']
+                continue
+
+            # Database Level: Complete - all issued certs written as <serialnum>.cer 
+            m = p11.match(line)
+            if m:
+                ser_dict['database_level'] = m.groupdict()['level']
+                continue
+
+
+            # Autorollover timer: 12:58:34 UTC Jan 3 2025
+            m = p12.match(line)
+            if m:
+                ser_dict['auto_rollover_timer'] = m.groupdict()['rollover_timer']
+                continue
+            
+            # Upper CA cert fingerprint: 8EF4710D 2C01F563 2ADBFC3C 716442CC
+            m = p13.match(line)
+            if m:
+                ser_dict['subca_fingerprint'] = m.groupdict()['subca_fp']
+                continue
+
+            # RA cert fingerprint: 885DA102 58DDDE50 3ECBA461 C0E71AEB
+            m = p14.match(line)
+            if m:
+                ser_dict['ra_fingerprint'] = m.groupdict()['ra_fp']
+                continue
+
+            # Server configured in RA mode
+            m = p15.match(line)
+            if m:
+                ser_dict['ca_type'] = m.groupdict()['type']
+                continue
+
+        return ret_dict 
+
+# =================================================
+#  Schema for 'show crypto pki timer detail'
+# =================================================
+class ShowCryptoPkiTimerDetailSchema(MetaParser):
+    """  Schema for show crypto pki timer detail """
+    schema = {
+        'timer':{
+            'session_cleanup': str,
+            'session_cleanup_iso': str, 
+            Optional('renew_timer'): str, 
+            Optional('renew_timer_iso'): str,
+            Optional('shadow_timer'): str, 
+            Optional('shadow_timer_iso'): str,
+            Optional('poll_timer'): str, 
+            Optional('poll_timer_iso'): str,
+            Optional('expiry_alert_id'): str,
+            Optional('expiry_alert_id_iso'): str,
+            Optional('expiry_alert_ca'): str,
+            Optional('expiry_alert_ca_iso'): str,
+            Optional('crl_expire'): str,
+            Optional('crl_expire_iso'): str,
+            Optional('crl_update'): str,
+            Optional('crl_update_iso'): str,
+            Optional('crl_dwnld_retry'): str,
+            Optional('crl_dwnld_retry_iso'): str,
+            Optional('trustpool_timer'): str,
+            Optional('trustpool_timer_iso'): str,
+            Optional('est_connect_retry'): str,
+            Optional('est_connect_retry_iso'): str,
+            Optional('cs_crl_update'): str,
+            Optional('cs_crl_update_iso'): str,
+            Optional('cs_shadow_gen'): str,
+            Optional('cs_shadow_gen_iso'): str,
+            Optional('cs_cert_expiry'): str,
+            Optional('cs_cert_expiry_iso'): str,
+            Optional('enroll_req_expiry'): str,
+            Optional('enroll_req_expiry_iso'): str
+            },
+        }
+
+# =========================================================
+#  Parser for 'show crypto pki timer <>'
+# =========================================================   
+class ShowCryptoPkiTimerDetail(ShowCryptoPkiTimerDetailSchema):
+    """Parser for 
+        * show crypto pki timer detail
+    """
+
+    cli_command = 'show crypto pki timer detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        #  |        8:02.030  (2022-01-16T03:09:36Z) SESSION CLEANUP
+        p1 = re.compile(r'^\s*\|?\s*(?P<sess_cleanup>\S+)\s+\((?P<sess_cleanup_iso>\S+)\)\s+SESSION\s+CLEANUP$')
+    
+        # |291d23:59:52.231  (2022-11-04T03:01:26Z) RENEW client
+        p2 = re.compile(r'^\s*\|?\s*(?P<renew>\S+)\s+\((?P<renew_iso>\S+)\)\s+RENEW\s+\S+$')
+
+        #  |985d11:54:30.614  (2024-09-26T20:48:17Z) SHADOW client
+        p3 = re.compile(r'^\s*\|?\s*(?P<shadow>\S+)\s+\((?P<shadow_iso>\S+)\)\s+SHADOW\s+\S+$')
+        
+        # |          57.782  (2022-01-16T05:02:44Z) POLL client
+        p4 = re.compile(r'^\s*\|?\s*(?P<poll>\S+)\s+\((?P<poll_iso>\S+)\)\s+POLL\s+\S+$')
+
+        # |304d23:54:53.213  (2022-11-17T03:01:26Z) ID(client)
+        p5 = re.compile(r'^\s*\|?\s*(?P<expiry_id>\S+)\s+\((?P<expiry_id_iso>\S+)\)\s+ID\(\S+\)$')
+
+        # |1034d 5:41:45.106  (2024-11-15T08:48:18Z) CS(root)
+        p6 = re.compile(r'^\s*\|?\s*(?P<expiry_ca>\S+)\s+\((?P<expiry_ca_iso>\S+)\)\s+CS\(\S+\)$')
+
+        #  |     5:58:01.690  (2022-01-16T19:51:22Z) CRL EXPIRE c=US,o=Let's Encrypt,cn=R3
+        p7 = re.compile(r'^\s*\|?\s*(?P<crl_exp>\S+)\s+\((?P<crl_exp_iso>\S+)\)\s+CRL\s+EXPIRE\s+\S+$')
+
+        #|     5:58:01.690  (2022-01-16T19:51:22Z) CRL UPDATE *c=US,o=Let's Encrypt,cn=R3
+        p8 = re.compile(r'^\s*\|?\s*(?P<crl_up>\S+)\s+\((?P<crl_up_iso>\S+)\)\s+CRL\s+UPDATE\s+\S+$')
+
+        #|       29:47.358  (2022-01-16T03:36:20Z) CRL auto-download retry timer
+        p9 = re.compile(r'^\s*\|?\s*(?P<crl_dnld>\S+)\s+\((?P<crl_dnld_iso>\S+)\)\s+CRL\s+auto-download\s+retry\s+timer$')
+
+        # |2655d22:49:09.717  (2029-04-25T01:55:42Z) TRUSTPOOL
+        p10 = re.compile(r'^\s*\|?\s*(?P<trustpool>\S+)\s+\((?P<trustpool_iso>\S+)\)\s+TRUSTPOOL$')
+
+        #| 6.908 (2020-05-02T04:10:40Z) CONNECT RETRY estclient
+        p11 = re.compile(r'^\s*\|?\s*(?P<est_retry>\S+)\s+\((?P<est_retry_iso>\S+)\)\s+CONNECT\s+RETRY\s+\S+$')
+
+        # |     5:40:16.483  (2022-01-16T08:46:49Z) CS CRL UPDATE
+        p12 = re.compile(r'^\s*\|?\s*(?P<cs_crl>\S+)\s+\((?P<cs_crl_iso>\S+)\)\s+CS\s+CRL\s+UPDATE$')
+
+        # |1094d 5:21:45.573  (2025-01-14T08:28:18Z) CS SHADOW CERT GENERATION
+        p13 = re.compile(r'^\s*\|?\s*(?P<cs_shadow>\S+)\s+\((?P<cs_shadow_iso>\S+)\)\s+CS\s+SHADOW\s+CERT\s+GENERATION$')
+
+        # |1094d 5:41:45.332  (2025-01-14T08:48:18Z) CS CERT EXPIRE
+        p14 = re.compile(r'^\s*\|?\s*(?P<cs_expiry>\S+)\s+\((?P<cs_expiry_iso>\S+)\)\s+CS\s+CERT\s+EXPIRE$')
+
+        # |  6d23:59:57.701  (2025-01-14T08:48:18Z) ER EXPIRE 1
+        p15 = re.compile(r'^\s*\|?\s*(?P<er_expiry>\S+)\s+\((?P<er_expiry_iso>\S+)\)\s+ER\s+EXPIRE\s+\d+$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            #  |        8:02.030  (2022-01-16T03:09:36Z) SESSION CLEANUP
+            m = p1.match(line)
+            if m:
+                ser_dict = ret_dict.setdefault('timer', {})
+                ser_dict['session_cleanup'] = m.groupdict()['sess_cleanup']
+                ser_dict['session_cleanup_iso'] = m.groupdict()['sess_cleanup_iso']
+                continue
+
+            # |291d23:59:52.231  (2022-11-04T03:01:26Z) RENEW client
+            m = p2.match(line)
+            if m:
+                ser_dict['renew_timer'] = m.groupdict()['renew']
+                ser_dict['renew_timer_iso'] = m.groupdict()['renew_iso']
+                continue
+             
+            #  |985d11:54:30.614  (2024-09-26T20:48:17Z) SHADOW client
+            m = p3.match(line)
+            if m:
+                ser_dict['shadow_timer'] = m.groupdict()['shadow']
+                ser_dict['shadow_timer_iso'] = m.groupdict()['shadow_iso']
+                continue
+
+            # |          57.782  (2022-01-16T05:02:44Z) POLL client
+            m = p4.match(line)
+            if m:
+                ser_dict['poll_timer'] = m.groupdict()['poll']
+                ser_dict['poll_timer_iso'] = m.groupdict()['poll_iso']
+                continue
+     
+            # |304d23:54:53.213  (2022-11-17T03:01:26Z) ID(client)
+            m = p5.match(line)
+            if m:
+                ser_dict['expiry_alert_id'] = m.groupdict()['expiry_id']
+                ser_dict['expiry_alert_id_iso'] = m.groupdict()['expiry_id_iso']
+                continue
+
+            # |1034d 5:41:45.106  (2024-11-15T08:48:18Z) CS(root)
+            m = p6.match(line)
+            if m:
+                ser_dict['expiry_alert_ca'] = m.groupdict()['expiry_ca']
+                ser_dict['expiry_alert_ca_iso'] = m.groupdict()['expiry_ca_iso']
+                continue
+ 
+            #  |     5:58:01.690  (2022-01-16T19:51:22Z) CRL EXPIRE c=US,o=Let's Encrypt,cn=R3
+            m = p7.match(line)
+            if m:
+                ser_dict['crl_expire'] = m.groupdict()['crl_exp']
+                ser_dict['crl_expire_iso'] = m.groupdict()['crl_exp_iso']
+                continue
+            
+            #|     5:58:01.690  (2022-01-16T19:51:22Z) CRL UPDATE *c=US,o=Let's Encrypt,cn=R3
+            m = p8.match(line)
+            if m:
+                ser_dict['crl_update'] = m.groupdict()['crl_up']
+                ser_dict['crl_update_iso'] = m.groupdict()['crl_up_iso']
+                continue
+
+            #|       29:47.358  (2022-01-16T03:36:20Z) CRL auto-download retry timer
+            m = p9.match(line)
+            if m:
+                ser_dict['crl_dwnld_retry'] = m.groupdict()['crl_dnld']
+                ser_dict['crl_dwnld_retry_iso'] = m.groupdict()['crl_dnld_iso']
+                continue
+            
+            # |2655d22:49:09.717  (2029-04-25T01:55:42Z) TRUSTPOOL
+            m = p10.match(line)
+            if m:
+                ser_dict['trustpool_timer'] = m.groupdict()['trustpool']
+                ser_dict['trustpool_timer_iso'] = m.groupdict()['trustpool_iso']
+                continue
+
+            #| 6.908 (2020-05-02T04:10:40Z) CONNECT RETRY estclient
+            m = p11.match(line)
+            if m:
+                ser_dict['est_connect_retry'] = m.groupdict()['est_retry']
+                ser_dict['est_connect_retry_iso'] = m.groupdict()['est_retry_iso']
+                continue
+
+
+            # |     5:40:16.483  (2022-01-16T08:46:49Z) CS CRL UPDATE
+            m = p12.match(line)
+            if m:
+                ser_dict['cs_crl_update'] = m.groupdict()['cs_crl']
+                ser_dict['cs_crl_update_iso'] = m.groupdict()['cs_crl_iso']
+                continue
+            
+            # |1094d 5:21:45.573  (2025-01-14T08:28:18Z) CS SHADOW CERT GENERATION
+            m = p13.match(line)
+            if m:
+                ser_dict['cs_shadow_gen'] = m.groupdict()['cs_shadow']
+                ser_dict['cs_shadow_gen_iso'] = m.groupdict()['cs_shadow_iso']
+                continue
+
+            # |1094d 5:41:45.332  (2025-01-14T08:48:18Z) CS CERT EXPIRE
+            m = p14.match(line)
+            if m:
+                ser_dict['cs_cert_expiry'] = m.groupdict()['cs_expiry']
+                ser_dict['cs_cert_expiry_iso'] = m.groupdict()['cs_expiry_iso']
+                continue
+
+            # Server configured in RA mode
+            m = p15.match(line)
+            if m:
+                ser_dict['enroll_req_expiry'] = m.groupdict()['er_expiry']
+                ser_dict['enroll_req_expiry_iso'] = m.groupdict()['er_expiry_iso']
+                continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto pki server <> requests'
+# =================================================
+class ShowCryptoPkiServerRequestsSchema(MetaParser):
+    """  Schema for show crypto pki server <> requests """
+    schema = {
+                'request': {
+                    Any(): {
+                        Any(): {
+                            Optional('state'): str,
+                            Optional('fingerprint'): str,
+                            Optional('subject_name'): str
+                        },
+                    },
+                },
+            }          
+            
+        
+    
+
+# =========================================================
+#  Parser for 'show crypto pki server <> requests'
+# =========================================================   
+class ShowCryptoPkiServerRequests(ShowCryptoPkiServerRequestsSchema):
+    """Parser for 
+        * show crypto pki server {server} requests
+    """
+
+    cli_command = ['show crypto pki server {server} requests']
+
+    def cli(self, server='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(server=server))
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Subordinate CA certificate requests:
+        # RA certificate requests:
+        # Router certificates requests:
+        p1 = re.compile(r'^(?P<request_type>[\S\s]*) (certificate|certificates) requests:$')
+    
+        # 1      granted    744566E755B84AEE18A86DF715D8EE33 hostname=pki-reg2.cisco.com,cn=R1 C=pki
+        # 2      pending    744866E755B84AEE18A86DF715D8EE33 hostname=pki-reg2.cisco.com,cn=R1 C=pki
+        # 3      authorized 744866E755B84AEE18A86DF715D8EE35 hostname=pki-reg2.cisco.com,cn=R1 C=pki
+        p2 = re.compile(r'^(?P<serial>\d+)\s+(?P<status>\S+)\s+(?P<fp>\S+)\s+(?P<subject>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            m = p1.match(line)
+            
+            if m:
+                request_type = m.groupdict()['request_type'].lower().replace(" ", "_")
+                cert_dict = ret_dict.setdefault('request', {}).setdefault(request_type, {})
+                continue
+            
+
+            m = p2.match(line)
+            if m:
+                serial_num = m.groupdict()['serial']
+                sub_dict = cert_dict.setdefault(serial_num, {})
+                sub_dict['state'] = m.groupdict()['status']
+                sub_dict['fingerprint'] = m.groupdict()['fp']
+                sub_dict['subject_name'] = m.groupdict()['subject']
+                continue
+
+        if ret_dict['request']['ra'] == {}:
+            del ret_dict['request']['ra']
+
+        if ret_dict['request']['router'] == {}:
+            del ret_dict['request']['router']
+
+        if ret_dict['request']['subordinate_ca'] == {}:
+            del ret_dict['request']['subordinate_ca']
+        
+        return ret_dict
+    
+# ==============================
+# Schema for
+#   'show crypto session remote {remote_ip}'
+#   'show crypto session remote {remote_ip} detail'
+# ==============================
+class ShowCryptoSessionRemoteSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto session remote {remote_ip}'
+        * 'show crypto session remote {remote_ip} detail'
+    """
+    
+    schema = {
+        'interfaces': {
+                Any():{
+                    Optional('profile'): str,
+                    Optional('uptime'): str,
+                    'session_status': str,
+                    'peer_ip': str,
+                    Optional('peer_port'): int,
+                    Optional('fvrf'): str,
+                    Optional('ivrf'): str,
+                    Optional('phase_id'): str,
+                    Optional('session_id'):int,
+                    Any():{
+                        Optional('local_ip'):str,
+                        Optional('local_port'):int,
+                        Optional('remote_ip'):str,
+                        Optional('remote_port'):int,
+                        Optional('capabilities'):str,
+                        Optional('connid'):int,
+                        Optional('lifetime'):str
+                    },
+                    Optional('ipsec_flow'):{
+                        Any():{
+                            Optional('flow'):str,
+                            Optional('active_sa'):int,
+                            Optional('origin'):str,
+                            Optional('inbound'):{
+                                Optional('decrypted'):int,
+                                Optional('dropped'):int,
+                                Optional('life_in_kb'):int,
+                                Optional('life_in_sec'):int
+                            },
+                            Optional('outbound'):{
+                                Optional('encrypted'):int,
+                                Optional('dropped'):int,
+                                Optional('life_in_kb'):int,
+                                Optional('life_in_sec'):int
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    
+
+class ShowCryptoSessionRemoteSuper(ShowCryptoSessionRemoteSchema):
+    """
+    Parser for
+        * 'show crypto session remote {remote_ip}'
+        * 'show crypto session remote {remote_ip} detail'
+    """
+    
+    # Defines a function to run the cli_command
+    def cli(self, remote_ip=None, output=None):
+        # initial return dictionary
+        ret_dict = {}
+
+        # Interface: Virtual-Access1325
+        p1 = re.compile(r'^Interface:\s+(?P<interface>\S+)$')
+    
+        # Profile: IKEV2_PROFILE
+        p2 = re.compile(r'^Profile:\s+(?P<profile>\S+)$')
+
+        # Uptime: 13:17:14
+        p3 = re.compile(r'^Uptime:\s+(?P<up>\S+)$')
+        
+        # Session status: UP-ACTIVE 
+        p4 = re.compile(r'^Session status:\s+(?P<session_stats>\S+)$')
+
+        # Peer: 17.27.1.11 port 38452 fvrf: (none) ivrf: 10
+        p5 = re.compile(r'^Peer:\s+(?P<peer>\S+)\s+port\s+(?P<port>\d+)(\s+fvrf:\s+\(?(?P<f_vrf>(\w+|\d+))\)?\s+ivrf:\s+\(?(?P<i_vrf>(\w+|\d+))\)?)?$')
+
+        # Phase1_id: scale
+        p6 = re.compile(r'^Phase1_id:\s+(?P<phase_name>\S+)$')
+
+        # Session ID: 22062
+        p7 = re.compile(r'^Session\s+ID:\s+(?P<session_num>\S+)$')
+
+        # IKEv2 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active
+        p8 = re.compile(r'^(?P<version>\w+)\s+SA:\s+local\s+(?P<localip>\S+)\/(?P<localport>\d+)\s+remote\s+(?P<remoteip>\S+)\/(?P<remoteport>\d+)\s+\S+$')
+
+        # Capabilities:DN connid:323 lifetime:10:43:07
+        p9 = re.compile(r'^Capabilities:(?P<caps>\S+)\s+connid:(?P<conn>\d+)\s+lifetime:(?P<life>\S+)$')
+
+        # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88 
+        p10 = re.compile(r'^IPSEC\s+FLOW:\s+(?P<TS>[\S\s]+)$')
+
+        # Active SAs: 2, origin: crypto map
+        p11 = re.compile(r'^Active\s+SAs:\s+(?P<sa_count>\d+)\,\s+origin:\s+(?P<origin_type>[\S\s]+)$')
+
+        # Inbound:  #pkts dec'ed 47668 drop 0 life (KB/Sec) 4607746/1687
+        p12 = re.compile(r'^Inbound:\s+#pkts\s+dec\'ed\s+(?P<decrypt_count>\d+)\s+drop\s+(?P<in_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<in_life_kb>\d+)\/(?P<in_life_sec>\d+)$')
+
+        # Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
+        p13 = re.compile(r'^Outbound:\s+#pkts\s+enc\'ed\s+(?P<encrypt_count>\d+)\s+drop\s+(?P<out_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<out_life_kb>\d+)\/(?P<out_life_sec>\d+)$')
+
+        
+        count = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Interface: Virtual-Access1325
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                ser_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                continue
+
+            # Profile: IKEV2_PROFILE
+            m = p2.match(line)
+            if m:
+                ser_dict['profile'] = m.groupdict()['profile']
+                continue
+             
+            # Uptime: 13:17:14
+            m = p3.match(line)
+            if m:
+                ser_dict['uptime'] = m.groupdict()['up']
+                continue
+
+            # Session status: UP-ACTIVE 
+            m = p4.match(line)
+            if m:
+                ser_dict['session_status'] = m.groupdict()['session_stats']
+                continue
+     
+            # Peer: 17.27.1.11 port 38452 fvrf: (none) ivrf: 10
+            m = p5.match(line)
+            if m:
+                ser_dict['peer_ip'] = m.groupdict()['peer']
+                ser_dict['peer_port'] = int(m.groupdict()['port'])
+                if m.groupdict()['f_vrf'] is not None:
+                    ser_dict['fvrf'] = m.groupdict()['f_vrf']
+                if m.groupdict()['i_vrf'] is not None:
+                    ser_dict['ivrf'] = m.groupdict()['i_vrf']
+                continue
+
+            # Phase1_id: scale
+            m = p6.match(line)
+            if m:
+                ser_dict['phase_id'] = m.groupdict()['phase_name']
+                continue
+ 
+            # Session ID: 22062
+            m = p7.match(line)
+            if m:
+                ser_dict['session_id'] = int(m.groupdict()['session_num'])
+                continue
+            
+            # IKEv2 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active
+            m = p8.match(line)
+            if m:
+                count = 0
+                ike_version = m.groupdict()['version']
+                ikev2_dict = ser_dict.setdefault(ike_version, {})
+                ikev2_dict['local_ip'] = m.groupdict()['localip']
+                ikev2_dict['local_port'] = int(m.groupdict()['localport'])
+                ikev2_dict['remote_ip'] = m.groupdict()['remoteip']
+                ikev2_dict['remote_port'] = int(m.groupdict()['remoteport'])
+                continue
+
+            # Capabilities:DN connid:323 lifetime:10:43:07
+            m = p9.match(line)
+            if m:
+                ikev2_dict['capabilities'] = m.groupdict()['caps']
+                ikev2_dict['connid'] = int(m.groupdict()['conn'])
+                ikev2_dict['lifetime'] = m.groupdict()['life']
+                continue
+            
+            # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88 
+            m = p10.match(line)
+            if m:
+                count += 1
+                ipsec_dict = ser_dict.setdefault('ipsec_flow', {}).setdefault(count, {})
+                ipsec_dict['flow'] = m.groupdict()['TS']
+                continue
+
+            # Active SAs: 2, origin: crypto map
+            m = p11.match(line)
+            if m:
+                ipsec_dict['active_sa'] = int(m.groupdict()['sa_count'])
+                ipsec_dict['origin'] = m.groupdict()['origin_type']
+                continue
+
+
+            # Inbound:  #pkts dec'ed 47668 drop 0 life (KB/Sec) 4607746/1687
+            m = p12.match(line)
+            if m:
+                inbound_dict = ipsec_dict.setdefault('inbound', {})
+                inbound_dict['decrypted'] = int(m.groupdict()['decrypt_count'])
+                inbound_dict['dropped'] = int(m.groupdict()['in_drop'])
+                inbound_dict['life_in_kb'] = int(m.groupdict()['in_life_kb'])
+                inbound_dict['life_in_sec'] = int(m.groupdict()['in_life_sec'])
+                continue
+            
+            # Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
+            m = p13.match(line)
+            if m:
+                outbound_dict = ipsec_dict.setdefault('outbound', {})
+                outbound_dict['encrypted'] = int(m.groupdict()['encrypt_count'])
+                outbound_dict['dropped'] = int(m.groupdict()['out_drop'])
+                outbound_dict['life_in_kb'] = int(m.groupdict()['out_life_kb'])
+                outbound_dict['life_in_sec'] = int(m.groupdict()['out_life_sec'])
+                continue
+
+        return ret_dict
+
+class ShowCryptoSessionRemote(ShowCryptoSessionRemoteSuper,ShowCryptoSessionRemoteSchema):
+    '''Parser for:
+        * 'show crypto session remote {remote_ip}'
+    '''
+
+    cli_command = ['show crypto session remote {remote_ip}']
+
+    def cli(self, remote_ip='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(remote_ip=remote_ip))
+        else:
+            out = output
+        return super().cli(output=out)
+
+class ShowCryptoSessionRemoteDetail(ShowCryptoSessionRemoteSuper,ShowCryptoSessionRemoteSchema):
+    '''Parser for:
+        * 'show crypto session remote {remote_ip} detail'
+    '''
+
+    cli_command = ['show crypto session remote {remote_ip} detail']
+
+    def cli(self, remote_ip='', output=None):
+        if output is None:
+           out = self.device.execute(self.cli_command[0].format(remote_ip=remote_ip))
+        else:
+            out = output
+        return super().cli(output=out)
+
+
+# ==============================
+# Schema for
+#   'show crypto ikev2 stats'
+# ==============================
+class ShowCryptoIkev2StatsExtSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto ikev2 stats ext-service'
+    """
+    
+    schema = {
+        'ikev2_stats': {
+                'aaa_operation':{
+                    'receive_pskey': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'eap_auth': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'start_acc': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'stop_acc': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'authorization': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'ipsec_operation': {
+                    'ipsec_policy_verify': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'sa_creation': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'sa_deletion':{
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'crypto_engine_operation': {
+                    'dh_key_generated': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'secret_generated': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'signature_sign': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'signature_verify': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'pki_operation': {
+                    'verify_cert': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'cert_using_http': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'peer_cert_using_http': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'get_issuers': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'get_cert_from_issuers': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'get_dn_from_cert': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'gkm_operation': {
+                    'get_policy': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'set_policy': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'ppk_sks_operation': {
+                    'ppk_get_cap': {
+                        'passed': int,
+                        'failed': int
+                    },
+                    'ppk_get_key': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+                'ike_preroute': {
+                    'idb_verification': {
+                        'passed': int,
+                        'failed': int
+                    }
+                },
+            },        
+        }
+    
+# =========================================================
+#  Parser for 'show crypto ikev2 stats ext-service'
+# =========================================================   
+class ShowCryptoIkev2StatsExt(ShowCryptoIkev2StatsExtSchema):
+    """
+    Parser for
+        * 'show crypto ikev2 stats ext-service'
+    """
+    
+    # Defines a function to run the cli_command
+    cli_command = 'show crypto ikev2 stats ext-service'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # RECEIVING PSKEY                                   0          0
+        p1 = re.compile(r'^RECEIVING PSKEY\s+(?P<rec_ps_pass>\d+)\s+(?P<rec_ps_fail>\d+)$')
+    
+        # AUTHENTICATION USING EAP                      23986          0
+        p2 = re.compile(r'^AUTHENTICATION\s+USING\s+EAP\s+(?P<eap_auth_pass>\d+)\s+(?P<eap_auth_fail>\d+)$')
+
+        # START ACCOUNTING                               3990          0
+        p3 = re.compile(r'^START\s+ACCOUNTING\s+(?P<start_acc_pass>\d+)\s+(?P<start_acc_fail>\d+)$')
+        
+        # STOP ACCOUNTING                                3186          0
+        p4 = re.compile(r'^STOP ACCOUNTING\s+(?P<stop_acc_pass>\d+)\s+(?P<stop_acc_fail>\d+)$')
+
+        # AUTHORIZATION                                     0          0
+        p5 = re.compile(r'^AUTHORIZATION\s+(?P<auth_pass>\d+)\s+(?P<auth_fail>\d+)$')
+
+        # IPSEC POLICY VERIFICATION                      8895          0
+        p6 = re.compile(r'^IPSEC POLICY VERIFICATION\s+(?P<policy_ver_pass>\d+)\s+(?P<policy_ver_fail>\d+)$')
+
+        # SA CREATION                                    8895          0
+        p7 = re.compile(r'^SA CREATION\s+(?P<sa_creation_pass>\d+)\s+(?P<sa_creation_fail>\d+)$')
+
+        # SA DELETION                                   16182          0
+        p8 = re.compile(r'^SA DELETION\s+(?P<sa_del_pass>\d+)\s+(?P<sa_del_fail>\d+)$')
+
+        # DH PUBKEY GENERATED                           11432          0
+        p9 = re.compile(r'^DH\s+PUBKEY\s+GENERATED\s+(?P<pubkey_gen_pass>\d+)\s+(?P<pubkey_gen_fail>\d+)$')
+
+        # DH SHARED SECKEY GENERATED                    11432          0
+        p10 = re.compile(r'^DH\s+SHARED\s+SECKEY\s+GENERATED\s+(?P<secret_gen_pass>\d+)\s+(?P<secret_gen_fail>\d+)$')
+
+        # SIGNATURE SIGN                                 4000          0
+        p11 = re.compile(r'^SIGNATURE\s+SIGN\s+(?P<sign_pass>\d+)\s+(?P<sign_fail>\d+)$')
+
+        # SIGNATURE VERIFY                                  0          0
+        p12 = re.compile(r'^SIGNATURE VERIFY\s+(?P<sign_ver_pass>\d+)\s+(?P<sign_ver_fail>\d+)$')
+
+        # VERIFY CERTIFICATE                                0          0
+        p13 = re.compile(r'^VERIFY CERTIFICATE\s+(?P<ver_cert_pass>\d+)\s+(?P<ver_cert_fail>\d+)$')
+
+        # FETCHING CERTIFICATE USING HTTP                   0          0
+        p14 = re.compile(r'^FETCHING\s+CERTIFICATE\s+USING\s+HTTP\s+(?P<cert_http_pass>\d+)\s+(?P<cert_http_fail>\d+)$')
+
+        # FETCHING PEER CERTIFICATE USING HTTP              0          0
+        p15 = re.compile(r'^FETCHING\s+PEER\s+CERTIFICATE\s+USING\s+HTTP\s+(?P<peer_cert_http_pass>\d+)\s+(?P<peer_cert_http_fail>\d+)$')
+
+        # GET ISSUERS                                   13054          0
+        p16 = re.compile(r'^GET\s+ISSUERS\s+(?P<get_issuers_pass>\d+)\s+(?P<get_issuers_fail>\d+)$') 
+
+        # GET CERTIFICATES FROM ISSUERS                  6518          0
+        p17 = re.compile(r'^GET\s+CERTIFICATES\s+FROM\s+ISSUERS\s+(?P<get_cert_pass>\d+)\s+(?P<get_cert_fail>\d+)$')
+
+        # GET DN FROM CERT                                  0          0
+        p18 = re.compile(r'^GET\s+DN\s+FROM\s+CERT\s+(?P<get_dn_pass>\d+)\s+(?P<get_dn_fail>\d+)$')        
+
+        # GET_POLICY                                        0          0
+        p19 = re.compile(r'^GET_POLICY\s+(?P<get_policy_pass>\d+)\s+(?P<get_policy_fail>\d+)$')
+
+        # SET_POLICY                                        0          0
+        p20 = re.compile(r'^SET_POLICY\s+(?P<set_policy_pass>\d+)\s+(?P<set_policy_fail>\d+)$')
+
+        # PPK GET CAP                                       0          0
+        p21 = re.compile(r'^PPK\s+GET\s+CAP\s+(?P<ppk_get_cap_pass>\d+)\s+(?P<ppk_get_cap_fail>\d+)$')
+
+        # PPK GET KEY                                       0          0
+        p22 = re.compile(r'^PPK\s+GET\s+KEY\s+(?P<ppk_get_key_pass>\d+)\s+(?P<ppk_get_key_fail>\d+)$')
+
+        # IKE PREROUTE IDB VERIFICATION                     0          0
+        p23 = re.compile(r'^IKE\s+PREROUTE\s+IDB\s+VERIFICATION\s+(?P<idb_ver_pass>\d+)\s+(?P<idb_ver_fail>\d+)$')
+
+        # initial return dictionary
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # RECEIVING PSKEY                                   0          0
+            m = p1.match(line)
+            if m:
+                ser_dict = ret_dict.setdefault('ikev2_stats', {})
+                aaa_dict = ser_dict.setdefault('aaa_operation', {})
+                aaa_dict.update ( { 'receive_pskey' : {
+                        'passed': int(m.groupdict()['rec_ps_pass']),
+                        'failed': int(m.groupdict()['rec_ps_fail'])
+                    }
+                })
+                continue
+
+            # AUTHENTICATION USING EAP                      23986          0
+            m = p2.match(line)
+            if m:
+                aaa_dict.update ( { 'eap_auth' : {
+                        'passed': int(m.groupdict()['eap_auth_pass']),
+                        'failed': int(m.groupdict()['eap_auth_fail'])
+                    }
+                })
+                continue
+             
+            # START ACCOUNTING                               3990          0
+            m = p3.match(line)
+            if m:
+                aaa_dict.update ( { 'start_acc' : {
+                        'passed': int(m.groupdict()['start_acc_pass']),
+                        'failed': int(m.groupdict()['start_acc_fail'])
+                    }
+                })
+                continue
+
+            # STOP ACCOUNTING                                3186          0
+            m = p4.match(line)
+            if m:
+                aaa_dict.update ( { 'stop_acc' : {
+                        'passed': int(m.groupdict()['stop_acc_pass']),
+                        'failed': int(m.groupdict()['stop_acc_fail'])
+                    }
+                })
+                continue
+     
+            # AUTHORIZATION                                     0          0
+            m = p5.match(line)
+            if m:
+                aaa_dict.update ( { 'authorization' : {
+                        'passed': int(m.groupdict()['auth_pass']),
+                        'failed': int(m.groupdict()['auth_fail'])
+                    }
+                })
+                continue
+
+            # IPSEC POLICY VERIFICATION                      8895          0
+            m = p6.match(line)
+            if m:
+                ipsec_dict = ser_dict.setdefault('ipsec_operation', {})
+                ipsec_dict.update ( { 'ipsec_policy_verify' : {
+                        'passed': int(m.groupdict()['policy_ver_pass']),
+                        'failed': int(m.groupdict()['policy_ver_fail'])
+                    }
+                })
+                continue
+ 
+            # SA CREATION                                    8895          0
+            m = p7.match(line)
+            if m:
+                ipsec_dict.update ( { 'sa_creation' : {
+                        'passed': int(m.groupdict()['sa_creation_pass']),
+                        'failed': int(m.groupdict()['sa_creation_fail'])
+                    }
+                })
+                continue
+            
+            # SA DELETION                                   16182          0
+            m = p8.match(line)
+            if m:
+                ipsec_dict.update ( { 'sa_deletion' : {
+                        'passed': int(m.groupdict()['sa_del_pass']),
+                        'failed': int(m.groupdict()['sa_del_fail'])
+                    }
+                })
+                continue
+
+            # DH PUBKEY GENERATED                           11432          0
+            m = p9.match(line)
+            if m:
+                crypto_dict = ser_dict.setdefault('crypto_engine_operation', {})
+                crypto_dict.update ( { 'dh_key_generated' : {
+                        'passed': int(m.groupdict()['pubkey_gen_pass']),
+                        'failed': int(m.groupdict()['pubkey_gen_fail'])
+                    }
+                })
+                continue
+                        
+            # DH SHARED SECKEY GENERATED                    11432          0
+            m = p10.match(line)
+            if m:
+                crypto_dict.update ( { 'secret_generated' : {
+                        'passed': int(m.groupdict()['secret_gen_pass']),
+                        'failed': int(m.groupdict()['secret_gen_fail'])
+                    }
+                })
+                continue
+
+            # SIGNATURE SIGN                                 4000          0
+            m = p11.match(line)
+            if m:
+                crypto_dict.update ( { 'signature_sign' : {
+                        'passed': int(m.groupdict()['sign_pass']),
+                        'failed': int(m.groupdict()['sign_fail'])
+                    }
+                })
+                continue
+            
+            # SIGNATURE VERIFY                                  0          0
+            m = p12.match(line)
+            if m:
+                crypto_dict.update ( { 'signature_verify' : {
+                        'passed': int(m.groupdict()['sign_ver_pass']),
+                        'failed': int(m.groupdict()['sign_ver_fail'])
+                    }
+                })
+                continue
+            
+            # VERIFY CERTIFICATE                                0          0
+            m = p13.match(line)
+            if m:
+                pki_dict = ser_dict.setdefault('pki_operation', {})
+                pki_dict.update ( { 'verify_cert' : {
+                        'passed': int(m.groupdict()['ver_cert_pass']),
+                        'failed': int(m.groupdict()['ver_cert_fail'])
+                    }
+                })
+                continue
+            
+            # FETCHING CERTIFICATE USING HTTP                   0          0
+            m = p14.match(line)
+            if m:
+                pki_dict.update ( { 'cert_using_http' : {
+                        'passed': int(m.groupdict()['cert_http_pass']),
+                        'failed': int(m.groupdict()['cert_http_fail'])
+                    }
+                })
+                continue
+
+            # FETCHING PEER CERTIFICATE USING HTTP              0          0
+            m = p15.match(line)
+            if m:
+                pki_dict.update ( { 'peer_cert_using_http' : {
+                        'passed': int(m.groupdict()['peer_cert_http_pass']),
+                        'failed': int(m.groupdict()['peer_cert_http_fail'])
+                    }
+                })
+                continue
+
+            # GET ISSUERS                                   13054          0
+            m = p16.match(line)
+            if m:
+                pki_dict.update ( { 'get_issuers' : {
+                        'passed': int(m.groupdict()['get_issuers_pass']),
+                        'failed': int(m.groupdict()['get_issuers_fail'])
+                    }
+                })
+                continue            
+
+            # GET CERTIFICATES FROM ISSUERS                  6518          0
+            m = p17.match(line)
+            if m:
+                pki_dict.update ( { 'get_cert_from_issuers' : {
+                        'passed': int(m.groupdict()['get_cert_pass']),
+                        'failed': int(m.groupdict()['get_cert_fail'])
+                    }
+                })
+                continue            
+
+            # GET DN FROM CERT                                  0          0
+            m = p18.match(line)
+            if m:
+                pki_dict.update ( { 'get_dn_from_cert' : {
+                        'passed': int(m.groupdict()['get_dn_pass']),
+                        'failed': int(m.groupdict()['get_dn_fail'])
+                    }
+                })
+                continue   
+            
+            # GET_POLICY                                        0          0
+            m = p19.match(line)
+            if m:    
+                gkm_dict = ser_dict.setdefault('gkm_operation', {})
+                gkm_dict.update ( { 'get_policy' : {
+                        'passed': int(m.groupdict()['get_policy_pass']),
+                        'failed': int(m.groupdict()['get_policy_fail'])
+                    }
+                })
+                continue 
+
+            # SET_POLICY                                        0          0
+            m = p20.match(line)
+            if m:    
+                gkm_dict.update ( { 'set_policy' : {
+                        'passed': int(m.groupdict()['set_policy_pass']),
+                        'failed': int(m.groupdict()['set_policy_fail'])
+                    }
+                })            
+                continue
+
+            # PPK GET CAP                                       0          0
+            m = p21.match(line)
+            if m:   
+                ppk_dict = ser_dict.setdefault('ppk_sks_operation', {})
+                ppk_dict.update ( { 'ppk_get_cap' : {
+                        'passed': int(m.groupdict()['ppk_get_cap_pass']),
+                        'failed': int(m.groupdict()['ppk_get_cap_fail'])
+                    }
+                })      
+                continue
+
+            # PPK GET KEY                                       0          0
+            m = p22.match(line)
+            if m:   
+                ppk_dict.update ( { 'ppk_get_key' : {
+                        'passed': int(m.groupdict()['ppk_get_key_pass']),
+                        'failed': int(m.groupdict()['ppk_get_key_fail'])
+                    }
+                })      
+                continue
+
+            # IKE PREROUTE IDB VERIFICATION                     0          0
+            m = p23.match(line)
+            if m:   
+                ike_dict = ser_dict.setdefault('ike_preroute', {})
+                ike_dict.update ( { 'idb_verification' : {
+                        'passed': int(m.groupdict()['idb_ver_pass']),
+                        'failed': int(m.groupdict()['idb_ver_fail'])
+                    }
+                }) 
+                continue
+            
+        return ret_dict
