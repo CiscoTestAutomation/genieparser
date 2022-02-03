@@ -6,6 +6,7 @@ IOSXR parsers for the following show commands:
     * show controllers coherentDSP {port}
     * show controllers optics {port}
     * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
+    * show controllers {ethernet_interface_name} phy
 '''
 
 # Python
