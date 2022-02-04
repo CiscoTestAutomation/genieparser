@@ -4831,17 +4831,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                         continue
         else:
             if self.check_number_of_prefixes(output) == 0:
-                return {
-                    "vrf": {
-                        "default": {
-                            "neighbor": {
-                                neighbor: {
-                                    "address_family": {}
-                                }
-                            }
-                        }
-                    }
-                }
+                return {}
 
         # Init vars
         route_dict = {}
