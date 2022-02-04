@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * show license all
     * show license eventlog 2
     * show license usage
+    * show license tech support
 
 '''
 
@@ -70,7 +71,7 @@ class ShowLicense(ShowLicenseSchema):
         p1 = re.compile(r"Index\s+(?P<id>\d+)\s+Feature:\s+(?P<feature>\S+)")
         #         Period left: Life time
         p2 = re.compile(r"\s+(?P<period_left>(Life\s+time|Not\s+Activated))")
-        # 	        Period Used: 0  minute  0  second
+        #           Period Used: 0  minute  0  second
         p3 = re.compile(r"\s+(?P<period_minutes>\d+)\s+minute\s+(?P<period_seconds>\d+)\s+second")
         #         License Type: Permanent
         p4 = re.compile(r"\s+(?P<license_type>(Permanent|EvalRightToUse))")
@@ -1388,7 +1389,7 @@ class ShowLicenseAllSchema(MetaParser):
         },
         'purchased_licenses':str,
       },
-      'usage_report_summary':{
+      Optional('usage_report_summary'):{
         'total':str,
         'purged':str,
         'total_acknowledged_received':str,
@@ -1817,9 +1818,9 @@ class ShowLicenseAll(ShowLicenseAllSchema):
             if group['trust_code_installed']:
               if group['trust_code_installed'].strip()=='<none>':
                 continue
-              else:
-                trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',group['trust_code_installed'].strip())
-                continue
+              # else:
+                # trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',group['trust_code_installed'].strip())
+                # continue
             else:
               trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',{})
               continue
@@ -2379,4 +2380,963 @@ class ShowLicenseEventlog2(ShowLicenseEventlog2Schema):
                 ret_dict['event_log'].append({"log_message":m.groupdict()['log_message']})
                 continue
 
-        return ret_dict       
+        return ret_dict     
+
+# ===========================================
+#  Schema for: 'show license tech support'   
+# ===========================================
+
+class ShowLicenseTechSupportSchema(MetaParser):
+    schema={
+        Optional('primary_load_time_percent'): int,
+        Optional('secondary_load_time_percent'): int,
+        Optional('one_minute_load_percent'): int,
+        Optional('five_minute_load_percent'): int,
+        Optional('ntp_time'): str,
+        Optional('smart_licensing_status'):{
+            Optional('export_authorization_key'):{
+            Optional('features_authorized'):str,
+            },
+            'utility':{
+                'status':str,
+            },
+            Optional('smart_licensing_using_policy'):{
+                'status':str,
+            },
+            Optional('account_information'):{
+                Optional('smart_account'):str,
+                Optional('virtual_account'):str,
+            },
+            'data_privacy':{
+                'sending_hostname':str,
+                'callhome_hostname_privacy':str,
+                'smart_licensing_hostname_privacy':str,
+                'version_privacy':str,
+            },
+            'transport':{
+                Optional('type'):str,
+                Optional('cslu_address'):str,
+                Optional('proxy'):{
+                    Optional('address'):str,
+                    Optional('port'):str,
+                    Optional('username'):str,
+                    Optional('password'):str,
+                },
+                Optional('server_identity_check'):str,
+                Optional('vrf'):str,
+            },
+            'miscellaneous':{
+                'custom_id':str,
+            },
+            'policy':{
+                'policy_in_use':str,
+                Optional('policy_name'):str,
+                'reporting_ack_required':str,
+                Any():{
+                    'first_report_requirement_days':str,
+                    'reporting_frequency_days':str,
+                    'report_on_change_days':str,
+                },
+            },
+            'usage_reporting':{
+                'last_ack_received':str,
+                'next_ack_deadline':str,
+                'reporting_push_interval':str,
+                'next_ack_push_check':str,
+                'next_report_push':str,
+                'last_report_push':str,
+                'last_report_file_write':str,
+            },
+        },
+        'license_usage':{
+            'handle':{
+                int:{
+                    'license':str,
+                    'entitlement_tag':str,
+                    'description': str,
+                    'count': int,
+                    'version': str,
+                    'status': str,
+                    'status_time':str,
+                    'request_time':str,
+                    'export_status': str,
+                    'feature_name': str,
+                    'feature_description': str,
+                    'enforcement_type': str,
+                    'license_type': str,
+                    Optional('measurements'):{
+                        Optional('entitlement'):{
+                              Optional('interval'):str,
+                              Optional('current_value'):int,
+                              Optional('current_report'):int,
+                              Optional('previous'):int,
+                          },
+                    },
+                    Optional('soft_enforced'):str,
+                },
+            },
+        },
+        Optional('product_information'):{
+            Optional('udi'):{
+                Optional('pid'):str,
+                Optional('sn'):str,
+            },
+            Optional('ha_udi_list'):{
+                Any():{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                },
+            },
+        },
+        'agent_version':{
+            'smart_agent_for_licensing':str,
+        },
+        'upcoming_scheduled_jobs':{
+            'current_time':str,
+            'daily':str,
+            'authorization_renewal':str,
+            'init_flag_check':str,
+            Optional('register_period_expiration_check'):str,
+            Optional('ack_expiration_check'):str,
+            'reservation_configuration_mismatch_between_nodes_in_ha_mode':str,
+            Optional('retrieve_data_processing_result'):str,
+            'start_utility_measurements':str,
+            'send_utility_rum_reports':str,
+            'save_unreported_rum_reports':str,
+            Optional('process_utility_rum_reports'):str,
+            Optional('authorization_code_process'):str,
+            Optional('authorization_confirmation_code_process'):str,
+            'data_synchronization':str,
+            'external_event':str,
+            Optional('operational_model'):str,
+            Optional('hello_message'):str,
+        },
+        Optional('communication_statistics'):{
+            'communication_level_allowed':str,
+            'overall_state':str,
+            Any():{
+                'attempts':str,
+                'ongoing_failure':str,
+                'last_response':str,
+                'failure_reason':str,
+                'last_success_time':str,
+                'last_failure_time':str,
+            },
+        }, 
+        'license_certificates':{
+            'production_cert':str,
+        },
+        'ha_info':{
+            'rp_role':str,
+            'chassis_role':str,
+            'behavior_role':str,
+            'rmf':str,
+            'cf':str,
+            'cf_state':str,
+            'message_flow_allowed':str,
+        },
+        'reservation_info':{
+            'license_reservation':str,
+            'overall_status':{
+                Any():{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    'reservation_status':str,
+                    'request_code':str,
+                    'last_return_code':str,
+                    'last_confirmation_code':str,                    
+                    'reservation_authorization_code':str,
+                }, 
+            },
+            Optional('authorizations'):{
+                Optional('description'):str,
+                Optional('total_available_count'):str,
+                Optional('enforcement_type'):str,
+                Optional('term_information'):{
+                    Any():{
+                        Optional('pid'):str,
+                        Optional('sn'):str,
+                        Optional('authorization_type'):str,
+                        Optional('license_type'):str,
+                        Optional('start_date'):str,
+                        Optional('end_date'):str,
+                        Optional('term_count'):str,
+                        Optional('subscription_id'):str,
+                    },
+                },
+            },
+            'purchased_licenses':str,
+            Optional('last_reporting_not_required'):{
+                Optional('entitlement_tag'):str,
+            }   
+        },
+        Optional('usage_report_summary'):{
+            'total':int,
+            'purged':str,
+            'total_acknowledged_received':int,
+            'waiting_for_ack':str,
+            'available_to_report':int,
+            'collecting_data':int,
+            Optional('maximum_display'):int,
+            Optional('in_storage'):int,
+            Optional('mia'):str,
+            Optional('report_module_status'):str,
+        },
+        'other_info':{
+            'software_id':str,
+            'agent_state':str,
+            'ts_enable':str,
+            'transport':str,
+            Optional('default_url'):str,
+            'locale':str,
+            'debug_flags':str,
+            'privacy_send_hostname':str,
+            'privacy_send_ip':str,
+            Optional('build_type'):str,
+            'sizeof_char':int,
+            'sizeof_int':int,
+            'sizeof_long':int,
+            'sizeof_char_*':int,
+            'sizeof_time_t':int,
+            'sizeof_size_t':int,
+            'endian':str,
+            'write_erase_occurred':str,
+            'xos_version':str,
+            'config_persist_received':str,
+            'message_version':str,
+            Optional('connect_info_name'):str,
+            Optional('connect_info_version'):str,
+            Optional('connect_info_additional'):str,
+            Optional('connect_info_prod'):str,
+            Optional('connect_info_capabilities'):str,
+            'agent_capabilities':str,
+            'check_point_interface':str,
+            'config_management_interface':str,
+            'license_map_interface':str,
+            'ha_interface':str,
+            'trusted_store_interface':str,
+            'platform_data_interface':str,
+            'crypto_version_2_interface':str,
+            'sapluginmgmtinterfacemutex':str,
+            'sapluginmgmtipdomainname':str,
+            Optional('smarttransportvrfsupport'):str,
+            'smartagentclientwaitforserver':int,
+            'smartagentcmretrysend':str,
+            'smartagentclientisunified':str,
+            'smartagentcmclient':str,
+            'smartagentclientname':str,
+            'builtinencryption':str,
+            'enableoninit':str,
+            'routingreadybyevent':str,
+            'systeminitbyevent':str,
+            'smarttransportserveridcheck':str,
+            'smarttransportproxysupport':str,
+            Optional('smartagentusagestatisticsenable'):str,
+            Optional('smartagentpolicydisplayformat'):int,
+            Optional('smartagentreportonupgrade'):str,
+            Optional('smartagentindividualrumencrypt'):int,
+            'smartagentmaxrummemory':int,
+            'smartagentconcurrentthreadmax':int,
+            'smartagentpolicycontrollermodel':str,
+            'smartagentpolicymodel':str,
+            'smartagentfederallicense':str,
+            'smartagentmultitenant':str,
+            'attr365dayevalsyslog':str,
+            'checkpointwriteonly':str,
+            'smartagentdelaycertvalidation':str,
+            'enablebydefault':str,
+            'conversionautomatic':str,
+            'conversionallowed':str,
+            'storageencryptdisable':str,
+            'storageloadunencrypteddisable':str,
+            'tsplugindisable':str,
+            'bypassudicheck':str,
+            'loggingaddtstamp':str,
+            'loggingaddtid':str,
+            'highavailabilityoverrideevent':str,
+            'platformindependentoverrideevent':str,
+            'platformoverrideevent':str,
+            'waitforharole':str,
+            'standbyishot':str,
+            'chkpttype':int,
+            'delaycomminit':str,
+            'rolebyevent':str,
+            'maxtracelength':int,
+            'tracealwayson':str,
+            'debugflags':int,
+            Optional('error'):str,
+            'event_log_max_size':str,
+            'event_log_current_size':str,
+            Optional('trust_data'):{
+                Any():{
+                Optional('p'):str,  
+                Optional('trustvalue'):str,
+                Optional('trustid'):int,
+                },
+            },  
+            'overall_trust':str,
+            'clock_synced_with_ntp':str,
+        },
+        Optional('platform_provided_mapping_table'):{
+            Optional('pid'):str,
+            Optional('total_licenses_found'):int,
+            Optional('enforced_licenses'):{
+                Any():{
+                Optional('pid'):str,
+                Optional('hseck9_entitlement_tag'):str,
+                Optional('hseck9_no'):int,
+                Optional('hseck9'):str,
+                }
+            },
+        },
+    }
+    
+# ===========================================
+#  Parser for: 'show license tech support'   
+# =========================================== 
+
+class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
+    """ Parser for show license tech support """
+
+    cli_command = 'show license tech support'
+
+    def cli(self,output=None):
+        if output is None: 
+            output = self.device.execute(self.cli_command)
+
+        ret_dict={}
+        
+        #Below code for handling special NTP lines 
+        #Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+        p0 = re.compile(r'^Load for five secs:\s*(?P<primary_load_time_percent>[0-9]+)\%\/(?P<secondary_load_time_percent>[0-9]+)\%\;\s*one minute:\s*(?P<one_minute_load_percent>[0-9]+)\%\;\s*five minutes:\s*(?P<five_minute_load_percent>[0-9]+)\%')
+        #Time source is NTP, .06:17:59.041 UTC Thu Sep 9 2021
+        p0_1 = re.compile(r'^Time source is NTP, +(?P<ntp_time>.*)$')
+        
+        #Below set of regular expressions to match headings and sub headings from output
+        #Smart Licensing Status
+        p1 = re.compile(r'^(?P<smart_licensing_status_dict>Smart +Licensing +Status)$')
+        #Export Authorization Key:
+        p1_1 = re.compile(r'^(?P<export_authorization_key>Export +Authorization +Key)\:$')
+        #Utility:
+        p1_2 = re.compile(r'^(?P<utility>Utility)\:$')
+        #Smart Licensing Using Policy:
+        p1_3 = re.compile(r'^(?P<smart_licensing_using_policy>Smart +Licensing +Using +Policy)\:$')
+        #Account Information:
+        p1_4 = re.compile(r'^(?P<account_information>Account +Information)\:$')
+        #Data Privacy:
+        p1_5 = re.compile(r'^(?P<data_privacy>Data +Privacy)\:$')
+        #Transport:
+        p1_6 = re.compile(r'^(?P<transport>Transport)\:$')
+        #Proxy:
+        p1_6_1 = re.compile(r'^\s*(?P<proxy>Proxy)\:$')
+        #Miscellaneous:
+        p1_7 = re.compile(r'^(?P<miscellaneous>Miscellaneous)\:$')
+        #Policy:
+        p1_8 = re.compile(r'^(?P<policy>Policy)\:$')
+        #Unenforced/Non-Export Perpetual Attributes:
+        #Unenforced/Non-Export Subscription Attributes:
+        #Enforced (Perpetual/Subscription) License Attributes:
+        #Export (Perpetual/Subscription) License Attributes:
+        p1_8_1 = re.compile(r'^\s*(?P<policy_sub_header>[Unenforced|Enforced|Export]+[\/]*[\w\-\w]* +[\(]*[Perpetual|Subscription]+[\/]*[Perpetual|Subscription]*[\)]*.*Attributes)\:$')
+        #Usage Reporting:
+        p1_9 = re.compile(r'^(?P<usage_reporting>Usage Reporting)\:$')
+        
+        #License Usage
+        p2 = re.compile(r'^(?P<license_usage>License +Usage)$')
+        #Handle: 1
+        p2_1 = re.compile(r'^(?P<handle>Handle)\: +(?P<value>\d+)$')
+        #Measurements:
+        p2_1_1 = re.compile(r'^\s*(?P<measurements>Measurements)\:$')
+        #ENTITLEMENT:
+        p2_1_1_1 = re.compile(r'^\s*(?P<entitlement>ENTITLEMENT)\:$')
+        
+        #Product Information
+        p3 = re.compile(r'^(?P<product_information>Product +Information)$')
+        #UDI: PID:C9410R,SN:FXS2202037E  
+		#Added this regexp  to update the data with heading.
+        p3_1 = re.compile(r'^(?P<udi>UDI)\:\s*PID:(?P<pid>\S+),SN:(?P<sn>\S+)$') 
+        #HA UDI List:
+        p3_2 = re.compile(r'^(?P<ha_udi_list>HA UDI List)\:$')
+        
+        #Agent Version
+        p4 = re.compile(r'^(?P<agent_version>Agent +Version)$')
+        
+        #Upcoming Scheduled Jobs
+        p5 = re.compile(r'^(?P<upcoming_scheduled_jobs>Upcoming +Scheduled +Jobs)$')
+        
+        #Communication Statistics:
+        p6 = re.compile(r'^(?P<communication_statistics>Communication +Statistics)\:$')
+        #Trust Establishment:
+        p6_1 = re.compile(r'^(?P<trust_establishment>Trust +Establishment)\:$')
+        #Trust Acknowledgement:
+        p6_2 = re.compile(r'^(?P<trust_acknowledgement>Trust +Acknowledgement)\:$')     
+        #Result Polling:
+        p6_4 = re.compile(r'^(?P<result_polling>Result +Polling)\:$')
+        #Authorization Request:
+        p6_5 = re.compile(r'^(?P<authorization_request>Authorization +Request)\:$')
+        #Authorization Confirmation:
+        p6_6 = re.compile(r'^(?P<authorization_confirmation>Authorization +Confirmation)\:$')
+        #Authorization Return:
+        p6_7 = re.compile(r'^(?P<authorization_return>Authorization +Return)\:$')
+        #Trust Sync:
+        p6_8 = re.compile(r'^(?P<trust_sync>Trust +Sync)\:$')
+        #Hello Message:
+        p6_9 = re.compile(r'^(?P<hello_message>Hello +Message)\:$')
+        
+        #License Certificates
+        p7 = re.compile(r'^(?P<license_certificates>License +Certificates)$')
+        
+        #HA Info
+        p8 = re.compile(r'^(?P<ha_info>HA +Info)$')
+        
+        #Reservation Info
+        p9 = re.compile(r'^(?P<reservation_info>Reservation +Info)$')
+        #Overall status:
+        p9_1 = re.compile(r'^(?P<overall_status>Overall +status)\:$')
+        #Authorizations:
+        p9_2 = re.compile(r'^(?P<authorizations>Authorizations)\:$')
+        #C9K HSEC (Cat9K HSEC):
+        p9_2_1 = re.compile(r'^(?P<c9k_hsec>C9K HSEC)\s*\(Cat9K +HSEC\)\:$')
+        #Term information:
+        p9_2_1_1 = re.compile(r'^(?P<term_information>Term +information)\:$')
+        #Last Reporting Not Required:
+        p9_3 = re.compile(r'^(?P<last_reporting_not_required>Last +Reporting +Not +Required)\:$')
+        
+        #Usage Report Summary:
+        p10 = re.compile(r'^(?P<usage_report_summary>Usage +Report +Summary)\:$')
+        
+        #Other Info
+        p11 = re.compile(r'^(?P<other_info>Other +Info)$')
+        
+        #Platform Provided Mapping Table
+        p12 = re.compile(r'^(?P<platform_provided_mapping_table>Platform +Provided +Mapping +Table)$')
+        #Enforced Licenses:
+        p12_1 = re.compile(r'^(?P<enforced_licenses>Enforced +Licenses)\:$')
+
+        #Below set of expressions are for capturing data lines (For eg. key-value pairs)
+        #<none>
+        p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
+
+        #No Purchase Information Available
+        p0_5 = re.compile(r'^\s*(?P<value>No +Purchase +Information +Available)$')
+
+        #Generalised expression for all lines in <Key>: <Value> format
+        p0_3=re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+
+        #Active: PID:C9300-24UX,SN:FCW2134L00C
+        #Standby: PID:C9300-24U,SN:FOC2129Z02H
+        #Member: PID:C9300-24T,SN:FCW2125L07Y
+        p0_4=re.compile(r'^\s*(?P<member_type>\S+):\s*PID:(?P<pid>\S+),SN:(?P<sn>\S+)$')
+
+        #Below set of regular expressions are for special cases which could not be handled in above generic expressions
+        #In variable name, the digit next to p identifies the heading under which this output line appears
+        #For eg. p2_data1, this output line comes under heading matched with variable p2
+        #Current Report: 1640690706       Previous: 1640626219
+        p2_data1 = re.compile(r'^Current +Report: +(?P<current_report>[\S ]+)  +'r'Previous: +(?P<previous>.*)$')
+
+        #Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+        p6_data1= re.compile(r'^\s*(?P<key1>Attempts)\:\s+(?P<value1>.*)\s*(?P<key2>Ongoing Failure)\:\s*(?P<value2>.*)$')
+
+        #Total: 88,  Purged: 0(0)
+        p10_data1 = re.compile(r'^Total: +(?P<total>[\S ]+), +'r'Purged: +(?P<purged>.*)$')
+
+        #Total Acknowledged Received: 0,  Waiting for Ack: 0(4)
+        p10_data2= re.compile(r'^Total +Acknowledged +Received: +(?P<total_acknowledged_received>[\S ]+), +'r'Waiting +for +Ack: +(?P<waiting_for_ack>.*)$')
+
+        #Available to Report: 8  Collecting Data: 0
+        p10_data3= re.compile(r'^Available +to +Report: +(?P<available_to_report>[\S ]+)  +'r'Collecting +Data: +(?P<collecting_data>.*)$')
+
+        #Maximum Display: 40  In Storage: 36,  MIA: 0(0)
+        p10_data4= re.compile(r'^Maximum +Display: +(?P<maximum_display>[\S ]+)  +'r'In +Storage: +(?P<in_storage>[\S ]+), +'r'MIA: +(?P<mia>.*)$')
+
+        #P:C9300-24UX,S:FCW2134L00C: P:C9300-24UX,S:FCW2134L00C, state[2], Trust Data INSTALLED  TrustId:903
+        p11_data1 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*TrustId\:+(?P<trustid>\d+)$')
+        #P:C9300-24UX,S:FCW2134L00C: No Trust Data
+        p11_data1_2 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\: +(?P<trustvalue>No +Trust +Data)$')
+        #P:C9300-24UX,S:FCW2134L00C: P:C9300-24UX,S:FCW2134L00C, state[2], Trust Data INSTALLED
+        p11_data1_3 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:+.*(?P<trustvalue>Trust +Data +INSTALLED)$')
+        
+        #C9300-24UX: Total licenses found: 198
+        p12_data1 = re.compile(r'^\s*(?P<pid>\S+)\: +Total licenses found\: +(?P<total_licenses_found>\d+)$')
+        #P:C9300-24UX,S:FCW2134L00C:
+        p12_data2 = re.compile(r'^\s*P\:(?P<pid>\S+)\,S\:(?P<sn>\S+)\:$')
+        #hseck9: regid.2021-05.com.cisco.C9K_HSEC,1.0_90fdf411-3823-45bd-bd8c-5a5d0e0e1ea2 (3)
+        p12_data3 = re.compile(r'^\s*hseck9\: +(?P<hseck9_entitlement_tag>regid\.\S.*) +\((?P<hseck9_no>\d+)\)$')
+
+        for line in output.splitlines():
+            line=line.strip()            
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                group['primary_load_time_percent'] = int(group['primary_load_time_percent'])
+                group['secondary_load_time_percent'] = int(group['secondary_load_time_percent'])
+                group['one_minute_load_percent'] = int(group['one_minute_load_percent'])
+                group['five_minute_load_percent'] = int(group['five_minute_load_percent'])
+                ret_dict.update(group)
+                continue
+            
+            m = p0_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update(group)
+                continue    
+            
+            #Set the dictionary position for main headings 
+            m = p1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('smart_licensing_status', {})
+                continue
+            
+            m = p2.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('license_usage', {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('product_information', {})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('agent_version', {})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('upcoming_scheduled_jobs', {})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('communication_statistics', {})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('license_certificates', {})
+                continue
+
+            m = p8.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('ha_info', {})
+                continue
+
+            m = p9.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('reservation_info', {})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('usage_report_summary', {})
+                continue
+
+            m = p11.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('other_info', {})
+                continue
+
+            m = p12.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})           
+                continue
+
+            #Setting the dictionary position for sub headings (2nd level and further levels down)
+            m = p1_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('export_authorization_key', {})
+                continue
+
+            #In current output there is no data (key, value pairs) under sub heading "Features Authorized", so creating 
+            #dictionary after checking the match for next data line. This is a special case and hence handled seperately
+            m = p0_2.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('export_authorization_key',{}).setdefault('features_authorized', group['value'])
+                continue
+            
+            m = p1_2.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('utility', {})
+                continue    
+
+            m = p1_3.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('smart_licensing_using_policy', {})
+                continue    
+
+            m = p1_4.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('account_information', {})
+                continue    
+         
+            m = p1_5.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('data_privacy', {})
+                continue     
+            
+            m = p1_6.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport', {})
+                continue     
+            
+            m = p1_6_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport',{}).setdefault('proxy', {})
+                continue     
+
+            m = p1_7.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('miscellaneous', {})
+                continue     
+
+            m = p1_8.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('policy', {})
+                continue     
+
+            m = p1_8_1.match(line)
+            if m:
+                group=m.groupdict()
+                group['policy_sub_header'] = group['policy_sub_header'].replace(' ','_').replace('(', "").replace(')', "").replace('/', '_').replace('-', '_')
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('policy',{}).setdefault(group['policy_sub_header'].lower(), {})
+                continue 
+            
+            m = p1_9.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('usage_reporting', {})
+                if ret_dict.get('communication_statistics'):
+                    current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('usage_reporting', {})       
+                continue 
+
+            m = p2_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('license_usage',{}).setdefault(group['handle'].lower(), {}).setdefault(int(group['value']),{})
+                handle_dict = current_dict
+                continue 
+
+            m = p2_1_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = handle_dict.setdefault('measurements',{})
+                continue 
+
+            m = p2_1_1_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = handle_dict.setdefault('measurements',{}).setdefault('entitlement',{})
+                continue 
+
+            m = p3_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('product_information',{}).setdefault('udi', {})
+                current_dict.update({
+                        'pid': group['pid'],
+                        'sn': group['sn']})
+                continue     
+
+            m = p3_2.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {})
+                continue     
+
+            m = p6_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('trust_establishment', {})
+                continue     
+
+            m = p6_2.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('trust_acknowledgement', {})
+                continue     
+
+            m = p6_4.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('result_polling', {})
+                continue     
+
+            m = p6_5.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('authorization_request', {})
+                continue     
+
+            m = p6_6.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('authorization_confirmation', {})
+                continue     
+
+            m = p6_7.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('authorization_return', {})
+                continue     
+
+            m = p6_8.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('trust_sync', {})
+                continue     
+
+            m = p6_9.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('hello_message', {})
+                continue     
+
+            m = p9_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('overall_status', {})
+                continue
+
+            #In current output there is no data (key, value pairs) under sub heading "Purchased Licenses", so creating 
+            #dictionary after checking the match for next data line. This is a special case and hence handled seperately
+            m = p0_5.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('purchased_licenses', group['value'])
+                continue
+            
+            m = p9_2.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('authorizations', {})
+                continue
+            
+            m = p9_2_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('authorizations',{}).setdefault('c9k_hsec' ,{})
+                continue
+            
+            m = p9_2_1_1.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('authorizations',{}).setdefault('c9k_hsec' ,{}).setdefault('term_information' ,{})
+                continue
+                
+            m = p9_3.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('last_reporting_not_required',{})
+                continue
+                
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict = ret_dict.setdefault('platform_provided_mapping_table',{}).setdefault('enforced_licenses',{})
+                continue
+
+            #Handling of header section ends here
+            #Code sections below are for handling data lines
+            
+            #Dictionary for member types (Active, Standby, Member) needs to be created under two different sub headings
+            #These subheadings contain different information for each member
+            #To ensure these information (lines) are added to the dictionary under correct sub heading flags are used in
+            #below section
+            flag_term_information = False
+            flag_overall_status = False
+            m = p0_4.match(line)
+            if m:
+                group = m.groupdict()
+                try:
+                    temp_dict = ret_dict.get('reservation_info').get('authorizations').get('c9k_hsec')
+                    if temp_dict.get('term_information') is not None:
+                        flag_term_information = True
+                        flag_overall_status = False
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                if not flag_term_information:
+                    try:    
+                        temp_dict = ret_dict.get('reservation_info')
+                        if temp_dict.get('overall_status') is not None:
+                            flag_overall_status = True
+                        
+                    except KeyError:
+                        pass
+                    except AttributeError:
+                        pass
+                
+                if flag_term_information:
+                    current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('authorizations', {}).setdefault('c9k_hsec' ,{}).setdefault('term_information' ,{}).setdefault(group['member_type'].lower(),{})
+                    current_dict.update({
+                            'pid': group['pid'],
+                            'sn': group['sn']})
+                    continue    
+                if flag_overall_status:
+                    current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('overall_status', {}).setdefault(group['member_type'].lower(),{})
+                    current_dict.update({
+                            'pid': group['pid'],
+                            'sn': group['sn']})
+                    continue   
+
+                if group['member_type'] == 'UDI':
+                    current_dict.update({
+                        'pid': group['pid'],
+                        'sn': group['sn']})
+                    continue
+                else:
+                    current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(group['member_type'].lower(),{})
+                    current_dict.update({
+                        'pid': group['pid'],
+                        'sn': group['sn']})
+                    continue
+
+            #Below sections are to handle data lines
+            #P:C9300-24UX,S:FCW2134L00C:
+            m = p12_data2.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict = ret_dict.setdefault('platform_provided_mapping_table', {}).setdefault('enforced_licenses', {}).setdefault(group['sn'].lower(), {})
+                current_dict.update({'pid': group['pid']})
+                continue
+            
+            #Generalised expression for handling <key>:<value> paired lines
+            #Data lines that required special handling are done below with further checks and regular expressions
+            m = p0_3.match(line)
+            if m:
+            
+                m1 = p12_data3.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict.update({'hseck9_entitlement_tag': group['hseck9_entitlement_tag'],
+                                         'hseck9_no': int(group['hseck9_no'])})
+                    continue                     
+                
+                m1 = p12_data1.match(line)
+                if m1:
+                    group = m1.groupdict()          
+                    current_dict.update({'pid': group['pid'] , 'total_licenses_found': int(group['total_licenses_found'])})
+                    continue
+                    
+                m1 = p11_data1_2.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict = ret_dict.setdefault('other_info', {}).setdefault('trust_data', {}).setdefault(group['s'].lower(), {})
+                    current_dict.update({'p': group['p'], 'trustvalue':group['trustvalue']})
+                    current_dict = ret_dict.setdefault('other_info', {})
+                    continue                
+                    
+                m1 = p11_data1.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    group['s'] = group['s'].replace(':',"").replace(',',"")
+                    current_dict = ret_dict.setdefault('other_info', {}).setdefault('trust_data', {}).setdefault(group['s'].lower(), {})
+                    group['trustid'] = int(group['trustid'])
+                    current_dict.update({'p': group['p'], 'trustid':group['trustid']})
+                    current_dict = ret_dict.setdefault('other_info', {})
+                    continue    
+                    
+                m1 = p11_data1_3.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict = ret_dict.setdefault('other_info', {}).setdefault('trust_data', {}).setdefault(group['s'].lower(), {})
+                    current_dict.update({'p': group['p'], 'trustvalue':group['trustvalue']})
+                    current_dict = ret_dict.setdefault('other_info', {})
+                    continue
+                    
+                m1= p10_data1.match(line)
+                if m1:
+                    group = m1.groupdict()            
+                    group['total'] = int(group['total'])
+                    current_dict.update(group)
+                    continue
+
+                m1= p10_data2.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    group['total_acknowledged_received'] = int(group['total_acknowledged_received'])
+                    current_dict.update(group)
+                    continue
+
+                m1 = p10_data3.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    group['available_to_report'] = int(group['available_to_report'])
+                    group['collecting_data'] = int(group['collecting_data'])
+                    current_dict.update(group)
+                    continue
+
+                m1 = p10_data4.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    group['maximum_display'] = int(group['maximum_display'])
+                    group['in_storage'] = int(group['in_storage'])
+                    current_dict.update(group)
+                    continue
+
+                m1 = p6_data1.match(line)        
+                if m1:
+                    group = m1.groupdict()
+                    key1 = group['key1'].replace(' ', '_').lower()
+                    key2 = group['key2'].replace(' ', '_').lower()
+                    value1 = group['value1'].strip()
+                    value2 = group['value2'].strip()
+                    current_dict.update({key1: value1})
+                    current_dict.update({key2: value2})
+                    continue
+
+                m1 = p2_data1.match(line)
+                if m1:
+                    group = m1.groupdict()          
+                    group['current_report'] = int(group['current_report'].strip())
+                    group['previous'] = int(group['previous'].strip())
+                    current_dict.update(group)
+                    current_dict = handle_dict
+                    continue
+                else:
+                    group = m.groupdict()
+                    if 'sizeof' in group['key']:
+                        key = group['key'].strip().replace('(', "_").replace(' ','_').replace(')', "").lower()
+                        current_dict.update({key: int(group['value'])})              
+                        continue
+                    key = group['key'].replace(' ', '_').replace('.', '_').replace('-', "").replace(':', "").replace('(', "").replace(')', "").lower()
+                    if key == 'server_identity_check' or key == 'vrf':
+                        current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport',{})   
+                    if key == 'soft_enforced':
+                        current_dict = handle_dict
+                        
+                    if group['value'].isdigit():
+                        current_dict.update({key: int(group['value'])}) 
+                        continue
+                    else:
+                        #ForkedPdb().set_trace()
+                        current_dict.update({key: group['value']})
+                        continue                   
+
+        return ret_dict
+        

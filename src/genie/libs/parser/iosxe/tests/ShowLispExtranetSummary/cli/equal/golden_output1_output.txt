@@ -1,0 +1,22 @@
+
+MSMR1#show lisp extranet summary 
+Extranet summary 
+-----------------
+Total extranets: 1
+Max allowed Extranet IPV4 EID prefixes: 4294967295
+Total Extranet IPV4 EID prefixes      : 4
+Max allowed Extranet IPV6 EID prefixes: 4294967295
+Total Extranet IPV6 EID prefixes      : 0
+
+Extranet name: ext1
+  Provider Instance ID                  : 111 
+    Total Provider IPV4 EID prefixes    : 0
+    Total Provider IPV6 EID prefixes    : 0
+    Total Provider EID prefixes         : 0
+  Total Subscriber Instances            : 1
+    Total Subscriber IPV4 EID prefixes  : 4
+    Total Subscriber IPV6 EID prefixes  : 0
+    Total Subscriber EID prefixes       : 4
+  Total IPV4 EID prefixes               : 4
+  Total IPV6 EID prefixes               : 0
+  Total EID prefixes                    : 4

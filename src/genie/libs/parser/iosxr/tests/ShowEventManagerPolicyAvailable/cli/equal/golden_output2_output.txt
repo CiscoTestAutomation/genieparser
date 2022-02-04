@@ -1,0 +1,16 @@
+RP/0/RSP0/CPU0:ios#show event manager policy available system
+Fri Dec  3 10:18:35.038 UTC
+
+No. Type      TimeCreated                   Name
+1   system    Thu Jul 22 14:16:45 2021      isis_adj_group_routing_xr.tcl
+2   system    Thu Jul 22 14:23:12 2021      periodic_diag_cmds.tcl
+3   system    Thu Jul 22 14:23:12 2021      periodic_proc_avail.tcl
+4   system    Thu Jul 22 14:23:12 2021      periodic_sh_log.tcl
+5   system    Thu Jul 22 14:23:55 2021      rcmd_diags.tcl
+6   system    Thu Jul 22 14:23:55 2021      rcmd_frr_diags.tcl
+7   system    Thu Jul 22 14:23:55 2021      rcmd_ldp_rlfa_diags.tcl
+8   system    Thu Jul 22 14:23:12 2021      sch.tcl
+9   system    Thu Jul 22 14:26:16 2021      sl_sysdb_timeout.tcl
+10  system    Thu Jul 22 14:23:12 2021      tm_cli_cmd.tcl
+11  system    Thu Jul 22 14:23:12 2021      tm_crash_hist.tcl
+

@@ -5,6 +5,8 @@ NXOS parsers for the following commands
 
     * 'show forwarding ipv4'
     * 'show forwarding ipv4 vrf {vrf}'
+    * 'show forwarding ipv4 recursive'
+    * 'show forwarding ipv4 recursive vrf {vrf}'
 """
 # Python
 import re 
@@ -94,6 +96,12 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                           '\s*(?P<label>[\w\:\ \w]+)?'
                           )
          
+        #1.1.1.2/32           fe80::a111:2222:3333:e13                  Ethernet1/1
+        p4 = re.compile(r'^(?P<is_best_next_hop>\*)?'
+                        r'(?P<prefix>[0-9\.]+\/[0-9]+)'
+                        r' +(?P<next_hop>[a-fA-F0-9\:]+)'
+                        r' +(?P<interface>[\w\-\/\.]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             
@@ -168,15 +176,38 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                     next_hop_dict['label'] = label
                 continue
             
+            #1.1.1.2/32           fe80::a111:2222:3333:e13                  Ethernet1/1   
+            #*1.1.1.2/32           fe80::a111:2222:3333:e13                  Ethernet1/1   
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                next_hop = group['next_hop']
+                interface = group['interface']
+                is_best = group['is_best_next_hop']
+
+                is_best = is_best is not None
+
+                prefix_dict = route_table_dict.setdefault('prefix', {}).setdefault(prefix, {}) 
+                next_hop_dict = prefix_dict.setdefault('next_hop', {}).setdefault(next_hop, {})
+                next_hop_dict['interface'] = interface          
+                next_hop_dict['is_best'] = is_best      
+                continue
 
         return result_dict                    
 
-    
-        
-             
-        
-    
-    
 
+class ShowForwardingIpv4Recursive(ShowForwardingIpv4, ShowForwardingIpv4Schema):
+    "parser for show forwarding ipv4 recursive"
+    cli_command = ['show forwarding ipv4 recursive', 'show forwarding ipv4 recursive vrf {vrf}']
 
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                output = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                output = self.device.execute(self.cli_command[0])
+    
+        ret_dict = super().cli(output=output)
 
+        return ret_dict

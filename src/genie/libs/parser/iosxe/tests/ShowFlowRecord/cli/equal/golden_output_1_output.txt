@@ -1,0 +1,340 @@
+flow record wireless avc basic:
+  Description:        Basic IPv4 Wireless AVC template
+  No. of users:       0
+  Total field space:  78 bytes
+  Fields:
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match flow direction
+    match application name
+    match wireless ssid
+    collect counter bytes long
+    collect counter packets long
+    collect wireless ap mac address
+    collect wireless client mac address
+
+flow record wireless avc ipv6 basic:
+  Description:        Basic IPv6 Wireless AVC template
+  No. of users:       0
+  Total field space:  102 bytes
+  Fields:
+    match ipv6 protocol
+    match ipv6 source address
+    match ipv6 destination address
+    match transport source-port
+    match transport destination-port
+    match flow direction
+    match wireless ssid
+    collect counter bytes long
+    collect counter packets long
+    collect application name
+    collect wireless ap mac address
+    collect wireless client mac address
+
+flow record netflow ipv6 app-client-server-stats:
+  Description:        Application client server statistics
+  No. of users:       0
+  Total field space:  102 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 protocol
+    match application name
+    match connection client ipv6 address
+    match connection server transport port
+    match connection server ipv6 address
+    match flow observation point
+    collect flow direction
+    collect timestamp absolute first
+    collect timestamp absolute last
+    collect connection initiator
+    collect connection new-connections
+    collect connection server counter packets long
+    collect connection client counter packets long
+    collect connection server counter bytes network long
+    collect connection client counter bytes network long
+
+flow record netflow ipv6 app-client-server-trans-stats:
+  Description:        Application client-server transaction statistics
+  No. of users:       0
+  Total field space:  104 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 protocol
+    match application name
+    match connection client transport port
+    match connection client ipv6 address
+    match connection server transport port
+    match connection server ipv6 address
+    match flow observation point
+    collect flow direction
+    collect timestamp absolute first
+    collect timestamp absolute last
+    collect connection initiator
+    collect connection new-connections
+    collect connection server counter packets long
+    collect connection client counter packets long
+    collect connection server counter bytes network long
+    collect connection client counter bytes network long
+
+flow record netflow ipv6 app-stats-input:
+  Description:        Application statistics - input
+  No. of users:       0
+  Total field space:  97 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 protocol
+    match ipv6 source address
+    match ipv6 destination address
+    match transport source-port
+    match transport destination-port
+    match interface input
+    match application name
+    collect datalink dot1q vlan input
+    collect datalink mac source address input
+    collect datalink mac destination address input
+    collect transport tcp flags
+    collect interface output
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record netflow ipv6 app-stats-output:
+  Description:        Application statistics - output
+  No. of users:       0
+  Total field space:  97 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 protocol
+    match ipv6 source address
+    match ipv6 destination address
+    match transport source-port
+    match transport destination-port
+    match interface output
+    match application name
+    collect datalink dot1q vlan output
+    collect datalink mac source address output
+    collect datalink mac destination address output
+    collect transport tcp flags
+    collect interface input
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record netflow ipv4 app-client-server-stats:
+  Description:        Application client server statistics
+  No. of users:       0
+  Total field space:  78 bytes
+  Fields:
+    match ipv4 version
+    match ipv4 protocol
+    match application name
+    match connection client ipv4 address
+    match connection server ipv4 address
+    match connection server transport port
+    match flow observation point
+    collect flow direction
+    collect timestamp absolute first
+    collect timestamp absolute last
+    collect connection initiator
+    collect connection new-connections
+    collect connection server counter packets long
+    collect connection client counter packets long
+    collect connection server counter bytes network long
+    collect connection client counter bytes network long
+
+flow record netflow ipv4 app-client-server-trans-stats:
+  Description:        Application client-server transaction statistics
+  No. of users:       0
+  Total field space:  80 bytes
+  Fields:
+    match ipv4 version
+    match ipv4 protocol
+    match application name
+    match connection client ipv4 address
+    match connection client transport port
+    match connection server ipv4 address
+    match connection server transport port
+    match flow observation point
+    collect flow direction
+    collect timestamp absolute first
+    collect timestamp absolute last
+    collect connection initiator
+    collect connection new-connections
+    collect connection server counter packets long
+    collect connection client counter packets long
+    collect connection server counter bytes network long
+    collect connection client counter bytes network long
+
+flow record netflow ipv4 app-stats-input:
+  Description:        Application statistics - input
+  No. of users:       0
+  Total field space:  73 bytes
+  Fields:
+    match ipv4 version
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match interface input
+    match application name
+    collect datalink dot1q vlan input
+    collect datalink mac source address input
+    collect datalink mac destination address input
+    collect transport tcp flags
+    collect interface output
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record netflow ipv4 app-stats-output:
+  Description:        Application statistics - output
+  No. of users:       0
+  Total field space:  73 bytes
+  Fields:
+    match ipv4 version
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match interface output
+    match application name
+    collect datalink dot1q vlan output
+    collect datalink mac source address output
+    collect datalink mac destination address output
+    collect transport tcp flags
+    collect interface input
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_l2_in:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  48 bytes
+  Fields:
+    match datalink ethertype
+    match datalink vlan input
+    match datalink mac source address input
+    match datalink mac destination address input
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_l2_out:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  48 bytes
+  Fields:
+    match datalink ethertype
+    match datalink mac source address input
+    match datalink mac destination address output
+    match datalink vlan output
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_ipv4_in:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  49 bytes
+  Fields:
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match interface input
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_ipv4_out:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  49 bytes
+  Fields:
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match interface output
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_ipv6_in:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  72 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 traffic-class
+    match ipv6 protocol
+    match ipv6 hop-limit
+    match ipv6 source address
+    match ipv6 destination address
+    match interface input
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record record_ipv6_out:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  72 bytes
+  Fields:
+    match ipv6 version
+    match ipv6 traffic-class
+    match ipv6 protocol
+    match ipv6 hop-limit
+    match ipv6 source address
+    match ipv6 destination address
+    match interface output
+    collect counter bytes long
+    collect counter packets long
+    collect timestamp absolute first
+    collect timestamp absolute last
+
+flow record fr-wdavc-in:
+  Description:        User defined
+  No. of users:       1
+  Total field space:  80 bytes
+  Fields:
+    match ipv4 version
+    match ipv4 protocol
+    match application name
+    match connection client ipv4 address
+    match connection client transport port
+    match connection server ipv4 address
+    match connection server transport port
+    match flow observation point
+    collect flow direction
+    collect timestamp absolute first
+    collect timestamp absolute last
+    collect connection initiator
+    collect connection new-connections
+    collect connection server counter packets long
+    collect connection client counter packets long
+    collect connection server counter bytes network long
+    collect connection client counter bytes network long
+
+flow record test:
+  Description:        User defined
+  No. of users:       0
+  Total field space:  0 bytes
+  Fields:

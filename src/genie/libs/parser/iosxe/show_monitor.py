@@ -565,3 +565,97 @@ class ShowMonitorCapture(ShowMonitorCaptureSchema):
                 continue
 
         return ret_dict
+
+
+#=================================================
+# Schema for 'monitor capture {capture_name} stop'
+#=================================================
+
+class MonitorCaptureStopSchema(MetaParser):
+    schema = {
+        'capture_duration': int,
+        'packets_received': int,
+        'packets_dropped': int,
+        'packets_oversized': int,
+        'bytes_dropped_in_asic': int,
+        'stopped_capture_name': str
+    }
+
+#=================================================
+# Parser for 'monitor capture {capture_name} stop'
+#=================================================
+
+class MonitorCaptureStop(MonitorCaptureStopSchema):
+
+    cli_command = 'monitor capture {capture_name} stop'
+
+    def cli(self, capture_name=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(capture_name=capture_name))
+
+        # Capture duration - 56 seconds
+        p1 = re.compile(r'Capture\sduration\s\-\s+(?P<capture_duration>\d+)\s+seconds')
+
+        # Packets received - 0
+        p2 = re.compile(r'Packets\sreceived\s+\-\s+(?P<packets_received>\d+)')
+
+        # Packets dropped - 0
+        p3 = re.compile(r'Packets\sdropped\s+\-\s+(?P<packets_dropped>\d+)')
+
+        # Packets oversized - 0
+        p4 = re.compile(r'Packets\soversized\s+\-\s+(?P<packets_oversized>\d+)')
+
+        # Bytes dropped in asic - 0
+        p5 = re.compile(r'Bytes\sdropped\sin\sasic\s+\-\s+(?P<bytes_dropped_in_asic>\d+)')
+
+        # Stopped capture point : cap1
+        p6 = re.compile(r'Stopped\scapture\spoint\s\:\s+(?P<stopped_capture_name>\S+)')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Capture duration - 56 seconds
+            m = p1.match(line)
+            if m:
+                capture_duration = m.groupdict()['capture_duration']
+                ret_dict.update({'capture_duration': int(capture_duration)})
+                continue
+
+            # Packets received - 0
+            m = p2.match(line)
+            if m:
+                packets_received = m.groupdict()['packets_received']
+                ret_dict.update({'packets_received': int(packets_received)})
+                continue
+
+            # Packets dropped - 0
+            m = p3.match(line)
+            if m:
+                packets_dropped = m.groupdict()['packets_dropped']
+                ret_dict.update({'packets_dropped': int(packets_dropped)})
+                continue
+
+            # Packets oversized - 0
+            m = p4.match(line)
+            if m:
+                packets_oversized = m.groupdict()['packets_oversized']
+                ret_dict.update({'packets_oversized': int(packets_oversized)})
+                continue
+
+            # Bytes dropped in asic - 0
+            m = p5.match(line)
+            if m:
+                bytes_dropped_in_asic = m.groupdict()['bytes_dropped_in_asic']
+                ret_dict.update({'bytes_dropped_in_asic': int(bytes_dropped_in_asic)})
+                continue
+
+            # Stopped capture point : cap1
+            m = p6.match(line)
+            if m:
+                stopped_capture_name = m.groupdict()['stopped_capture_name']
+                ret_dict.update({'stopped_capture_name': stopped_capture_name})
+                continue
+
+        return ret_dict

@@ -1,0 +1,4 @@
+IPC                  Status
+===                  ======
+cpm-cm               connected
+cpm-fed              connected

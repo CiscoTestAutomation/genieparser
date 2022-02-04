@@ -18,12 +18,12 @@ IOSXE parsers for the following show commands:
     * show mdns-sd summary vlan
     * show mdns-sd service-policy association role
     * show mdns-sd controller summary
-    
+    * Show mdns-sd controller detail
+       
 '''
 
 # Python
 import re
-
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
@@ -574,7 +574,8 @@ class ShowMdnsSdControllerStatistics(ShowMdnsSdControllerStatisticsSchema):
         p7 = re.compile(r"^Total +RESYNC +state +count +: +(?P<resync_state_count>[\d]+)$")
         
         # Last successful RESYNC           : Not-Applicable
-        p8 = re.compile(r"^Last +successful +RESYNC +: +(?P<last_successful_resync>[\w-]+)$")     
+        #p8 = re.compile(r"^Last +successful +RESYNC +: +(?P<last_successful_resync>[\w-]+)$") 
+        p8 = re.compile(r"^Last +successful +RESYNC +: +(?P<last_successful_resync>[\w\s:-]+)$")    
 
         # Advertisements sent             : 0
         p9 = re.compile(r"^Advertisements +sent  +: +(?P<adv_sent>[\d]+)$")
@@ -965,32 +966,31 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
         # initial variables
         ret_dict = {}
          
-        # Trusted Trunks         : Te5/0/3 
-        p0 = re.compile(r"^Trusted +Trunks\s+: +(?P<trust_links>(([A-Za-z\d\/]+[\d\/])+)|NA)$")
+        # Trusted Trunks         : Twe1/0/13 
+        p0 = re.compile(r"^Trusted +Trunks\s+: +(?P<trust_links>(.*))$")
         
-        # Vlan's                 : 851-854,1101-1102
+        # Vlan's                 : 2801-2802
         p1 = re.compile(r"^Vlan.*: +(?P<vlans_added>[\d\-,]+)$")
          
         # Total Number of Location Groups: 0
         p2 = re.compile(r"^Total +Number +of +Location +Groups: +(?P<total_loc_grps>([0-9]+))$")
         
-        # 851                          1          0       Te5/0/27, 
+        # 2801                         1          0  	Twe1/0/1, Twe1/0/24, 
         p3 = re.compile(r"^(?P<vlans>\d+)\s+(?P<no_of_lg>\d+)\s+(?P<lg_id>\d+)\s+(?P<ports>.*),?$")
         
-        # 0       Te5/0/27, 
+        # 2802                         1          0  	Twe1/0/7, 
         p4 = re.compile(r"^(?P<lg_id>\d+)\s+(?P<ports>.*),?$")
 
         for line in out.splitlines():
             line = line.strip()
             
-            # Trusted Trunks         : Te5/0/3 
+            # Trusted Trunks         : Twe1/0/13 
             m = p0.match(line)
             if m:
-                ret_dict['trust_links'] = \
-                    Common.convert_intf_name(m.groupdict()['trust_links'])
+                ret_dict['trust_links'] = Common.convert_intf_name(m.groupdict()['trust_links'])
                 continue
                            
-            # Vlan's                 : 851-854,1101-1102                    -           -
+            # Vlan's                 : 2801-2802                    -           -
             m = p1.match(line)
             if m:
                 ret_dict['vlans_added'] =  m.groupdict()['vlans_added']
@@ -1002,7 +1002,7 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
                 ret_dict['total_loc_grps'] =  m.groupdict()['total_loc_grps']
                 continue
             
-            # 851                          1          0       Te5/0/27, 
+            #2801                         1          0  	Twe1/0/1, Twe1/0/24, 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1012,25 +1012,19 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
                 vlan_dict['no_of_lg'] = m.groupdict()['no_of_lg']
                 lg_ids = vlan_dict.setdefault('lg_ids', {})
                 lg_id = lg_ids.setdefault(group['lg_id'], {})
-                lg_id.update({
-                    'ports': Common.convert_intf_name(m.groupdict()['ports']),
-                })
+                lg_id.update({'ports': ",".join(list(map(Common.convert_intf_name,m.groupdict()['ports'].split(',')))), })
                 continue
                 
-            # 0       Te5/0/27,  
+            # 2802                         1          0  	Twe1/0/7,  
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 lg_id = lg_ids.setdefault(group['lg_id'], {})
                 if group['lg_id']:
-                    lg_id.update({
-                        'ports': Common.convert_intf_name(
-                            m.groupdict()['ports']),
-                    })
+                    lg_id.update({'ports': Common.convert_intf_name(m.groupdict()['ports']),})
                 continue
                
         return ret_dict
-
 
 # =================
 # Schema for:
@@ -1190,34 +1184,50 @@ class ShowMdnsSdSpSdgStatisticsSchema(MetaParser):
     schema = {
         'average_input_rate_pps': {
             'one_min': int,
-            '5_mins': int,
-            '1_hour': int
+            'five_mins': int,
+            'one_hour': int
         },
         'average_output_rate_pps': {
             'one_min': int,
-            '5_mins': int,
-            '1_hour': int
+            'five_mins': int,
+            'one_hour': int
         },
-        'messages_sent': {
-            'query':  int,
-            'any_query':  int,
-            'advertisements':  int,
-            'advertisement_withdraw':  int,
-            'interface_down':  int,
-            'vlan_down':  int,
-            'service_peer_cache_clear':  int,
-            'resync_response':  int,
-            'srvc_discovery_response':  int,
-            'keep_alive':  int,
+        'messages_sent':{
+            Optional('query'):  int,
+            Optional('any_query'):  int,
+            Optional('advertisements'):  int,
+            Optional('advertisement_withdraw'):  int,
+            Optional('interface_down'):  int,
+            Optional('vlan_down'):  int,
+            Optional('service_peer_cache_clear'):  int,
+            Optional('resync_response'):  int,
+            Optional('srvc_discovery_response'):  int,
+            Optional('keep_alive'):  int,
+            Optional('query_response'): int,
+            Optional('any_query_response'): int,
+            Optional('cache_sync'): int,
+            Optional('get_service_instance'): int,
+            Optional('srvc_discovery_request'): int,
+            Optional('keep_alive_response'): int,
         },
         'messages_received':{
-            'query_response':  int,
-            'any_query_response':  int,
-            'cache_sync':  int,
-            'get_service_instance':  int,
-            'srvc_discovery_request':  int,
-            'keep_alive_response':  int,
-        },
+            Optional('query'):  int,
+            Optional('any_query'):  int,
+            Optional('advertisements'):  int,
+            Optional('advertisement_withdraw'):  int,
+            Optional('interface_down'):  int,
+            Optional('vlan_down'):  int,
+            Optional('service_peer_cache_clear'):  int,
+            Optional('resync_response'):  int,
+            Optional('srvc_discovery_response'):  int,
+            Optional('keep_alive'):  int,
+            Optional('query_response'): int,
+            Optional('any_query_response'): int,
+            Optional('cache_sync'): int,
+            Optional('get_service_instance'): int,
+            Optional('srvc_discovery_request'): int,
+            Optional('keep_alive_response'): int,
+            },
     }
                
 class ShowMdnsSdSpSdgStatistics(ShowMdnsSdSpSdgStatisticsSchema):
@@ -1225,8 +1235,7 @@ class ShowMdnsSdSpSdgStatistics(ShowMdnsSdSpSdgStatisticsSchema):
     
         * show mdns-sd sp-sdg statistics
         
-    """
-    
+    """   
     cli_command = 'show mdns-sd sp-sdg statistics'
 
     def cli(self, output=None):
@@ -1236,14 +1245,14 @@ class ShowMdnsSdSpSdgStatistics(ShowMdnsSdSpSdgStatisticsSchema):
                
         ret_dict = {}
         
-        #Average Input rate (pps) : 0, 0, 0
+        # Average Input rate (pps) : 0, 0, 0
         p0 = re.compile(r'Average Input rate +\(pps\) +: +(?P<one_min>\d+),\s+(?P<five_mins>\d+),\s+(?P<one_hour>\d+)')
         
-        #Average Output rate (pps) : 0, 0, 0
+        # Average Output rate (pps) : 0, 0, 0
         p1 = re.compile(r'Average Output rate +\(pps\) +: +(?P<one_min>\d+),\s+(?P<five_mins>\d+),\s+(?P<one_hour>\d+)')
-               
+        
         # Messages sent:
-        p2 = re.compile(r'Messages sent')
+        p2 = re.compile(r'Messages sent:')
         
         # Query : 15050
         p3 = re.compile(r'Query +: +(?P<query>\d+)')
@@ -1276,7 +1285,7 @@ class ShowMdnsSdSpSdgStatistics(ShowMdnsSdSpSdgStatisticsSchema):
         p12 = re.compile(r'Keep-Alive +: +(?P<keep_alive>\d+)')
         
         # Messages received:
-        p13 = re.compile(r'Messages received')
+        p13 = re.compile(r'Messages received:')
         
         # Query response : 0
         p14 = re.compile(r'Query +response +: +(?P<qry_resp>\d+)')
@@ -1298,131 +1307,119 @@ class ShowMdnsSdSpSdgStatistics(ShowMdnsSdSpSdgStatisticsSchema):
         
         for line in output.splitlines():
             line = line.strip()
-            
-            # Average Input rate (pps) : One min, 5 mins, 1 hour  
+        
+            # Average Input rate (pps) : One min, 5 mins, 1 hour
             m = p0.match(line)
             if m:
-                group = m.groupdict()
-                average_input_rate_pps = ret_dict.setdefault('average_input_rate_pps', {})
-                average_input_rate_pps['one_min'] = int(group["one_min"])
-                average_input_rate_pps['5_mins'] = int(group["five_mins"])
-                average_input_rate_pps['1_hour'] = int(group["one_hour"])
-                                                      
+                key = "average_input_rate_pps"
+                ret_dict[key] = {}
+                ret_dict[key]['one_min'] = int(m.groupdict()['one_min'])
+                ret_dict[key]['five_mins'] = int(m.groupdict()['five_mins'])
+                ret_dict[key]['one_hour'] = int(m.groupdict()['one_hour'])
+                #ret_dict[key].update(m.groupdict())
+                
             # Average Output rate (pps) : One min, 5 mins, 1 hour
-            m = p1.match(line) 
-            if m:            
-                group = m.groupdict()
-                average_output_rate_pps = ret_dict.setdefault('average_output_rate_pps', {})
-                average_output_rate_pps['one_min'] = int(group["one_min"])
-                average_output_rate_pps['5_mins'] = int(group["five_mins"])
-                average_output_rate_pps['1_hour'] = int(group["one_hour"])
-                            
+            m = p1.match(line)
+            if m:
+                key = "average_output_rate_pps"
+                ret_dict[key] = {}
+                ret_dict[key]['one_min'] = int(m.groupdict()['one_min'])
+                ret_dict[key]['five_mins'] = int(m.groupdict()['five_mins'])
+                ret_dict[key]['one_hour'] = int(m.groupdict()['one_hour'])
+                #ret_dict[key].update(m.groupdict())
+        
             # Messages sent:
             m = p2.match(line)
             if m:
-                messages_sent = ret_dict.setdefault('messages_sent', {})
-                
-            # Query : 15050    
+                key = "messages_sent"
+                ret_dict[key] = {}
+        
+            # Query : 15050
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["query"] = int(group["query"])
-                
+                ret_dict[key]['query'] = int(m.groupdict()['query'])
+        
             # ANY query : 0
             m = p4.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["any_query"] = int(group["any_qry"])
-                
-            # Advertisements : 2684    
+                ret_dict[key]['any_query'] = int(m.groupdict()['any_qry'])
+        
+            # Advertisements : 2684
             m = p5.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["advertisements"] = int(group["advts"])
-                
-            # Advertisement Withdraw : 0    
+                ret_dict[key]['advertisements'] = int(m.groupdict()['advts'])
+        
+            # Advertisement Withdraw : 0
             m = p6.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["advertisement_withdraw"] = int(group["advt_wtdrw"])
-                
-            # Interface down : 0    
+                ret_dict[key]['advertisement_withdraw'] = int(m.groupdict()['advt_wtdrw'])
+        
+            # Interface down : 0
             m = p7.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["interface_down"] = int(group["intf_down"])
-                
-            # Vlan down : 0    
+                ret_dict[key]['interface_down'] = int(m.groupdict()['intf_down'])
+        
+            # Vlan down : 0
             m = p8.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["vlan_down"] = int(group["vlan_down"])
-                
-            # Service-peer cache clear : 0    
+                ret_dict[key]['vlan_down'] = int(m.groupdict()['vlan_down'])
+        
+            # Service-peer cache clear : 0
             m = p9.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["service_peer_cache_clear"] = int(group["srvic_cach_clear"])
-                
-            # Resync response : 0    
+                ret_dict[key]['service_peer_cache_clear'] = int(m.groupdict()['srvic_cach_clear'])
+        
+            # Resync response : 0
             m = p10.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["resync_response"] = int(group["rsync_resp"])
-                
-            # Srvc Discovery response : 0    
+                ret_dict[key]['resync_response'] = int(m.groupdict()['rsync_resp'])
+        
+            # Srvc Discovery response : 0
             m = p11.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["srvc_discovery_response"] = int(group["srvc_discv_resp"])
-                
+                ret_dict[key]['srvc_discovery_response'] = int(m.groupdict()['srvc_discv_resp'])
+        
             # Keep-Alive : 5421
             m = p12.match(line)
             if m:
-                group = m.groupdict()
-                messages_sent["keep_alive"] = int(group["keep_alive"])
-                
+                ret_dict[key]['keep_alive'] = int(m.groupdict()['keep_alive'])
+        
             # Messages received:
             m = p13.match(line)
             if m:
-                messages_received = ret_dict.setdefault('messages_received', {})
-                
+                key = "messages_received"
+                ret_dict[key] = {}
+        
             # Query response : 0
             m = p14.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["query_response"] = int(group["qry_resp"])
-                
+                ret_dict[key]['query_response'] = int(m.groupdict()['qry_resp'])
+        
             # ANY Query response : 0
             m = p15.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["any_query_response"] = int(group["any_qry_resp"])
-                
+                ret_dict[key]['any_query_response'] = int(m.groupdict()['any_qry_resp'])
+        
             # Cache-sync : 60
             m = p16.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["cache_sync"] = int(group["cache_sync"])
-                
+                ret_dict[key]['cache_sync'] = int(m.groupdict()['cache_sync'])
+        
             # Get service-instance : 0
             m = p17.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["get_service_instance"] = int(group["get_srvc_inst"])
-                
+                ret_dict[key]['get_service_instance'] = int(m.groupdict()['get_srvc_inst'])
+        
             # Srvc Discovery request : 0
             m = p18.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["srvc_discovery_request"] = int(group["srvc_discv_reqst"])
-                
+                ret_dict[key]['srvc_discovery_request'] = int(m.groupdict()['srvc_discv_reqst'])
+        
             # Keep-Alive Response : 5421
             m = p19.match(line)
             if m:
-                group = m.groupdict()
-                messages_received["keep_alive_response"] = int(group["keep_alive_resp"])
-                
+                ret_dict[key]['keep_alive_response'] = int(m.groupdict()['keep_alive_resp'])
+                       
         return ret_dict
         
 class ShowMdnsSdStatisticsCacheAllSchema(MetaParser):
@@ -1865,17 +1862,15 @@ class ShowMdnsSdSummaryVlanSchema(MetaParser):
         'vlan': str,
         'mdns_gateway': str,  
         'mdns_service_policy': str,  
-        'active_query': {
-            'status': str,
-            Optional('periodicity_mins'): int,
-        },
+        'active_query': str,
+        'periodicity': str, 
         'transport_type': str,
         'service_instance_suffix': str,   
-        'mdns_query_type': str,     
-        'sdg_agent_ip': str,
-        'source_interface': str           
+        'mdns_query_type': str,
+        Optional('sdg_agent_ip'): str,
+        Optional('source_interface'): str    
     }
-
+        
 class ShowMdnsSdSummaryVlan(ShowMdnsSdSummaryVlanSchema):
     """ Parser for
         * show mdns-sd summary vlan 1101       
@@ -1889,108 +1884,100 @@ class ShowMdnsSdSummaryVlan(ShowMdnsSdSummaryVlanSchema):
            output = self.device.execute(self.cli_command.format(vlan=vlan))
               
         ret_dict = {}
-
+                
         # VLAN  :  1101
         p1 = re.compile(r'VLAN +: +(?P<vln>\d+)')
 
         # mDNS Gateway               : Enabled
         p2 = re.compile(r'mDNS +Gateway +: +(?P<mdns_gty>\w+)')
-
+    
         # mDNS Service Policy : default-mdns-service-policy
         p3 = re.compile(r'mDNS +Service +Policy +: +(?P<mdns_plcy>(.*))')
-
-        # Active Query :
-        p4 = re.compile(r'Active Query')
-
-        #Status             : Enabled
-        p5 = re.compile(r'Status +: +(?P<stats>\w+)')
-
-        # Periodicity mins    : 30
-        p6 = re.compile(r'Periodicity +mins +: +(?P<prdcty>\d+)')
-
-        # Transport Type           : IPv4
-        p7 = re.compile(r'Transport +Type +\: +(?P<trnsprt_type>(.*))')
-
+        
+        # Active Query             : Enabled
+        p4 = re.compile(r'Active +Query +: +(?P<act_qry>\w+)')
+    
+        #                         : Periodicity 30 minutes
+        p5 = re.compile(r': +(?P<prdcty>(.*))')
+                
+        # Transport Type           : IPv4 
+        p6 = re.compile(r'Transport +Type +\: +(?P<trnsprt_type>(.*))')
+        
         # Service Instance Suffix  : Not-Configured
-        p8 = re.compile(r'Service +Instance +Suffix +: +(?P<srvc_inst>(.*))')
-
+        p7 = re.compile(r'Service +Instance +Suffix +: +(?P<srvc_inst>(.*))')
+        
         # mDNS Query Type            : ALL
-        p9 = re.compile(r'mDNS +Query +Type +: +(?P<mdns_qry_type>(.*))')
-
+        p8 = re.compile(r'mDNS +Query +Type +: +(?P<mdns_qry_type>(.*))')
+    
         # SDG Agent IP               : 10.1.1.2
-        p10 = re.compile(r'SDG +Agent +IP +: +(?P<sdg_ip>\d+.+\d+.+\d+.+\d+)')
-
+        p9 = re.compile(r'SDG +Agent +IP +: +(?P<sdg_ip>\d+.+\d+.+\d+.+\d+)')
+    
         # Source Interface : Vlan4025
-        p11 = re.compile(r'Source +Interface +\: +(?P<src_intef>(.*))')
-
+        p10 = re.compile(r'Source +Interface +\: +(?P<src_intef>(.*))')
+           
         for line in output.splitlines():
             line = line.strip()
             
-            # VLAN  :  1101
+            # VLAN  :  1101            
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["vlan"] = group["vln"]
-
-            # mDNS Gateway               : Enabled
+                
+            # mDNS Gateway               : Enabled    
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["mdns_gateway"] = group["mdns_gty"]
-
+                
             # mDNS Service Policy : default-mdns-service-policy
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["mdns_service_policy"] = group["mdns_plcy"]
-
-            # Active Query:
+                
+            # Active Query             : Enabled
             m = p4.match(line)
             if m:
-                active_query = ret_dict.setdefault('active_query', {})
-
-            #status             : Enabled
+                group = m.groupdict()
+                ret_dict["active_query"] = group["act_qry"]
+                
+            #                         : Periodicity 30 minutes
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                active_query["status"] = group["stats"]
-
-            # periodicity mins     : Periodicity 30 minutes
+                ret_dict["periodicity"] = group["prdcty"]
+                
+            # Transport Type           : IPv4
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                active_query["periodicity_mins"] = int(group["prdcty"])
-
-            # Transport Type           : IPv4
+                ret_dict["transport_type"] = group["trnsprt_type"]
+                
+            # Service Instance Suffix  : Not-Configured
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict["transport_type"] = group["trnsprt_type"]
-
-            # Service Instance Suffix  : Not-Configured
+                ret_dict["service_instance_suffix"] = group["srvc_inst"]
+                
+            # mDNS Query Type            : ALL
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict["service_instance_suffix"] = group["srvc_inst"]
-
-            # mDNS Query Type            : ALL
+                ret_dict["mdns_query_type"] = group["mdns_qry_type"]
+                
+            # SDG Agent IP               : 10.1.1.2
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict["mdns_query_type"] = group["mdns_qry_type"]
-
-            # SDG Agent IP               : 10.1.1.2
+                ret_dict["sdg_agent_ip"] = group["sdg_ip"]
+                
+            # Source Interface : Vlan4025
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict["sdg_agent_ip"] = group["sdg_ip"]
-
-            # Source Interface : Vlan4025
-            m = p11.match(line)
-            if m:
-                group = m.groupdict()
                 ret_dict["source_interface"] = group["src_intef"]
-               
+                
         return ret_dict
         
 class ShowMdnsSdServicePolicyAssociationRoleSchema(MetaParser):
@@ -2160,4 +2147,236 @@ class ShowMdnsSdControllerSummary(ShowMdnsSdControllerSummarySchema):
                 group = m.groupdict()
                 controller_summary["service_buffer"] = group["servc_buff"]
                 
+        return ret_dict
+                        
+class ShowMdnsSdControllerDetailSchema(MetaParser):
+    """Schema for show mdns-sd controller detail"""
+  
+    schema = {
+        'policy' : str,
+        'controller_policy': {
+            'cont_ip': str,
+            'dest_port': int,
+            'src_port': int,
+            'state': str,
+            'src_intf': str,
+            'md5_mode': str,
+            'hello_timer': int,
+            'dead_timer': int,
+            'next_hello': str,
+            'up_time': str,
+            'srvc_buffer': str,
+        },
+        'service_announcement': {
+            'filter': str,
+            'count': int,
+            'delay_timer': int,
+            'pending_announcement': int,
+            'pending_withdrw': int,
+            'tot_exp_count': int,
+            'next_exp': str,
+        },
+        'service_query': {
+            'qry_suppression': str,
+            'qry_count': int,
+            'qry_delay_timer': int,
+            'pending': int,
+            'tot_qry_count': int,
+            'next_qry': str,
+        },
+        'service_enum': {
+            'req_count': int,
+            'last_req': str,
+            'res_count': int,
+            'last_res': str,
+        },
+    }       
+
+class ShowMdnsSdControllerDetail(ShowMdnsSdControllerDetailSchema):
+    '''Parser for show mdns-sd controller detail'''
+
+    cli_command = 'show mdns-sd controller detail'
+    
+    def cli(self, ipv4="", output=None):
+    
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command.format(ipv4=ipv4))
+        else:
+            out = output
+            
+        # initial variables   
+        ret_dict = {}
+
+        #Controller : DNAC-CONTROLLER-POLICY
+        p0 = re.compile(r"^Controller +: +(?P<policy>[\w-]+)$")
+
+        #IP : 98.98.98.10, Dest Port : 9991, Src Port : 25204, State : UP
+        p1 = re.compile(r"^IP +: +(?P<cont_ip>[\d.]+)\, +Dest +Port +: (?P<dest_port>[\d]+)\, +Src +Port +: +(?P<src_port>[\d]+)\, +State +: +(?P<state>\w+)$")
+
+        #Source Interface : Loopback0, MD5 Enabled, Synchronized
+        p2 = re.compile(r"^Source +Interface +: +(?P<src_intf>[\w\d]+)\, +MD5 +(?P<md5_mode>[\w]+)")
+
+        #Hello Timer 40 sec, Dead Timer 160 sec, Next Hello 00:00:08
+        p3 = re.compile(r"^Hello +Timer +(?P<hello_timer>[\d]+) +sec\, +Dead +Timer +(?P<dead_timer>[\d]+) +sec\, +Next +Hello +(?P<next_hello>[\d:]+)$")
+        
+        #Uptime 2d00h (15:32:56 IST Nov 3 2021)
+        p4 = re.compile(r"^Uptime +(?P<up_time>(.*))$")
+
+        #Service Buffer : Enabled
+        p5 = re.compile(r"^Service +Buffer +: +(?P<srvc_buffer>[\w]+)$")
+
+        #Service Announcement :
+        p6 = re.compile(r"^Service +Announcement +:$")
+
+        #Filter : WIDE-AREA-POLICY
+        p7 = re.compile(r"^Filter +: +(?P<filter>[\w-]+)$")
+
+        # Count 50, Delay Timer 30 sec, Pending Announcement 0, Pending Withdraw 0
+        p8 = re.compile(r"^Count +(?P<count>[\d]+)\, +Delay +Timer +(?P<delay_timer>[\d]+) +sec\, +Pending +Announcement +(?P<pending_announcement>[\d]+)\, +Pending +Withdraw +(?P<pending_withdrw>[\d]+)$")
+
+        # Total Export Count 387, Next Export in 00:00:18
+        p9 = re.compile(r"^Total +Export +Count +(?P<tot_exp_count>[\d]+), +Next +Export +in +(?P<next_exp>[\d:]+)$")
+
+        #Service Query :
+        p10 = re.compile(r"^Service +Query +:$")
+
+        # Query Suppression Disabled
+        p11 = re.compile(r"^Query +Suppression +(?P<qry_suppression>[\w]+)$")
+
+        # Query Count 50, Query Delay Timer 15 sec, Pending 4
+        p12 = re.compile(r"^Query +Count +(?P<qry_count>[\d]+)\, +Query +Delay +Timer +(?P<qry_delay_timer>[\d]+) +sec\, +Pending +(?P<pending>[\d]+)$")
+
+        # Total Query Count 171143, Next Query in 00:00:03
+        p13 = re.compile(r"^Total +Query +Count +(?P<tot_qry_count>[\d]+)\, +Next +Query +in +(?P<next_qry>[\d:]+)$")
+
+        #Service Enumeration :
+        p14 = re.compile(r"^Service +Enumeration +:$")
+
+        # Request Count 0, Last Requested :
+        p15 = re.compile(r"^Request +Count +(?P<req_count>[\d]+)\, +Last +Requested +:(?P<last_req>.*)$")
+
+        #Response Count 0, Last Responded :
+        p16 = re.compile(r"^Response +Count +(?P<res_count>[\d]+)\, +Last +Responded +:(?P<last_res>.*)$")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Controller : DNAC-CONTROLLER-POLICY
+            m = p0.match(line)
+            if m:
+                ret_dict['policy'] =  m.groupdict()['policy']
+                
+            #IP : 98.98.98.10, Dest Port : 9991, Src Port : 25204, State : UP
+            m = p1.match(line)
+            if m:
+                 cont_policy = ret_dict.setdefault('controller_policy', {})
+                 cont_policy['cont_ip'] = m.groupdict()['cont_ip']
+                 cont_policy['dest_port'] = int(m.groupdict()['dest_port'])
+                 cont_policy['src_port'] = int(m.groupdict()['src_port'])
+                 cont_policy['state'] = m.groupdict()['state']
+                 continue
+
+            #Source Interface : Loopback0, MD5 Enabled, Synchronized
+            m = p2.match(line)
+            if m:
+                cont_policy['src_intf'] = m.groupdict()['src_intf']
+                cont_policy['md5_mode'] = m.groupdict()['md5_mode']
+                continue
+                
+            #Hello Timer 40 sec, Dead Timer 160 sec, Next Hello 00:00:08 
+            m = p3.match(line)
+            if m:
+                cont_policy['hello_timer'] = int(m.groupdict()['hello_timer'])
+                cont_policy['dead_timer'] = int(m.groupdict()['dead_timer'])
+                cont_policy['next_hello'] = m.groupdict()['next_hello']
+                continue
+            
+            #Uptime 2d00h (15:32:56 IST Nov 3 2021)
+            m = p4.match(line)
+            if m:
+                cont_policy['up_time'] = m.groupdict()['up_time']
+                continue
+
+            #Service Buffer : Enabled
+            m = p5.match(line)
+            if m:
+                cont_policy['srvc_buffer'] = m.groupdict()['srvc_buffer']
+                continue
+
+            #Service Announcement :
+            m = p6.match(line)
+            if m:
+                 service_announcement = ret_dict.setdefault('service_announcement', {})
+                 continue
+
+            #Filter : WIDE-AREA-POLICY
+            m = p7.match(line)
+            if m:
+                 service_announcement['filter'] = m.groupdict()['filter']
+                 continue
+
+            #Count 50, Delay Timer 30 sec, Pending Announcement 0, Pending Withdraw 0
+            m = p8.match(line)
+            if m:
+                 service_announcement['count'] = int(m.groupdict()['count'])
+                 service_announcement['delay_timer'] = int(m.groupdict()['delay_timer'])
+                 service_announcement['pending_announcement'] = int(m.groupdict()['pending_announcement'])
+                 service_announcement['pending_withdrw'] = int(m.groupdict()['pending_withdrw'])
+                 continue
+
+            #Total Export Count 387, Next Export in 00:00:18
+            m = p9.match(line)
+            if m:
+                 service_announcement['tot_exp_count'] = int(m.groupdict()['tot_exp_count'])
+                 service_announcement['next_exp'] = m.groupdict()['next_exp']
+                 continue
+
+            #Service Query :
+            m = p10.match(line)
+            if m:
+                 service_query = ret_dict.setdefault('service_query', {})
+                 continue
+
+            #Query Suppression Disabled
+            m = p11.match(line)
+            if m:
+                 service_query['qry_suppression'] = m.groupdict()['qry_suppression']
+                 continue
+
+            #Query Count 50, Query Delay Timer 15 sec, Pending 4
+            m = p12.match(line)
+            if m:
+                 service_query['qry_count'] = int(m.groupdict()['qry_count'])
+                 service_query['qry_delay_timer'] = int(m.groupdict()['qry_delay_timer'])
+                 service_query['pending'] = int(m.groupdict()['pending'])
+                 continue
+
+            #Total Query Count 171143, Next Query in 00:00:03
+            m = p13.match(line)
+            if m:
+                 service_query['tot_qry_count'] = int(m.groupdict()['tot_qry_count'])
+                 service_query['next_qry'] = m.groupdict()['next_qry']
+                 continue
+            
+            #Service Enumeration :
+            m = p14.match(line)
+            if m:
+                 service_enum = ret_dict.setdefault('service_enum', {})
+                 continue
+            
+            #Request Count 0, Last Requested :
+            m = p15.match(line)
+            if m:
+                 service_enum['req_count'] = int(m.groupdict()['req_count'])
+                 service_enum['last_req'] = m.groupdict()['last_req']
+                 continue
+
+            #Response Count 0, Last Responded :
+            m = p16.match(line)
+            if m:
+                 service_enum['res_count'] = int(m.groupdict()['res_count'])
+                 service_enum['last_res'] = m.groupdict()['last_res']
+                 continue
+
         return ret_dict
