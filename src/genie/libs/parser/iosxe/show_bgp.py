@@ -6450,6 +6450,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     if m1.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
                         continue
+                    else:
+                        af_dict['routes'][prefix]['index'][index]['path'] = ''
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
@@ -6461,6 +6463,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
                         continue
+                    else:
+                        af_dict['routes'][prefix]['index'][index]['path'] = ''
                 elif m3:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
                     af_dict['routes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
