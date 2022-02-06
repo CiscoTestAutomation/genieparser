@@ -185,7 +185,7 @@ class ShowSnmp(ShowSnmpSchema):
         p_chassis = re.compile(r"Chassis:\s+(?P<chassis>\S+)$")
 
         # Contact: "something@cisco.com"
-        p_contact = re.compile(r"Contact:\s+(?P<contact>\S+)")
+        p_contact = re.compile(r"Contact:\s+(?P<contact>.*)$")
 
         # Location: "To be filled in"
         p_location_not_filled = re.compile(r"Location:\s+\"To\s+be\s+filled\s+in\"$")

@@ -1,0 +1,15 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 vrf vrf1                              
+Mon Nov 22 04:46:24.497 UTC
+
+RIP config:
+Active:                    Yes
+Added to socket:           Yes
+Out-of-memory state:        Normal
+Default metric:             Not set
+Maximum paths:              4
+Packet source validation:  Yes
+NSF:                        Disabled
+Timers: Update:             30 seconds (9 seconds until next update)
+        Invalid:            180 seconds
+        Holddown:           180 seconds
+        Flush:              240 seconds

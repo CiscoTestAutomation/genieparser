@@ -1,0 +1,39 @@
+DLEP Neighbors for all interfaces:
+
+
+
+DLEP Neighbors for Interface GigabitEthernet3
+DLEP Server IP=9.9.9.11:11111 Sock=0
+
+
+SID=2154  MAC_Address=0050.56bd.7503
+  Addresses:
+  IPv4 : 9.9.9.1  IPv6 LL : FE80::21E:BDFF:FE08:5000
+ Supported Metrics:
+  RLQ RX Metric : 100
+  RLQ TX Metric : 100
+  Resources Metric : 100
+  MTU Metric : 1500
+  Latency Metric : 250 microseconds
+  CDR RX Metric : 100000000 bps
+  CDR TX Metric : 100000000 bps
+  MDR RX Metric : 100000000 bps
+  MDR TX Metric : 100000000 bps
+
+DLEP Neighbors for Interface GigabitEthernet5
+DLEP Server IP=8.8.8.11:11115 Sock=2
+
+
+SID=2155  MAC_Address=0050.56bd.0174
+  Addresses:
+  IPv4 : 8.8.8.1  IPv6 LL : FE80::21E:BDFF:FE08:5000
+ Supported Metrics:
+  RLQ RX Metric : 100
+  RLQ TX Metric : 100
+  Resources Metric : 100
+  MTU Metric : 1500
+  Latency Metric : 250 microseconds
+  CDR RX Metric : 100000000 bps
+  CDR TX Metric : 100000000 bps
+  MDR RX Metric : 100000000 bps
+  MDR TX Metric : 100000000 bps

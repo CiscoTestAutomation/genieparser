@@ -1019,8 +1019,8 @@ class ShowFlowRecordSchema(MetaParser):
                 'no_of_users': int,
                 'total_field_space': int,
                 'fields': {
-                    'match_list': ListOf(str),
-                    'collect_list': ListOf(str),
+                    Optional('match_list'): ListOf(str),
+                    Optional('collect_list'): ListOf(str),
 
                 }
             }

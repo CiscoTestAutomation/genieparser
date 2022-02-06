@@ -11,9 +11,10 @@ class ShowVersionSchema(MetaParser):
     """Schema for show version"""
     schema = {
         'os': str,
+        Optional('os_flavor'): str,
         'version': str,
         Optional('platform'): str,
-        Optional('model'): str,
+        Optional('pid'): str,
     }
 
 
@@ -43,7 +44,7 @@ class ShowVersion(ShowVersionSchema):
         asa_platform_pattern = re.compile(r'^Hardware:\s+(?P<platform>.*), .*, .*$')
 
         # Model Id:   ASAv10
-        asa_model_pattern = re.compile(r'Model\s+Id\:\s+(?P<model>.+)')
+        asa_pid_pattern = re.compile(r'Model\s+Id\:\s+(?P<pid>.+)')
 
 
         # ********************************************
@@ -71,7 +72,7 @@ class ShowVersion(ShowVersionSchema):
         # cisco WS-C3650-48PD (MIPS) processor with 4194304K bytes of physical memory.
         # cisco C9500-24Y4C (X86) processor with 2900319K/6147K bytes of memory.
         # cisco CSR1000V (VXE) processor (revision VXE) with 715705K/3075K bytes of memory.
-        iosxe_model_pattern = re.compile(r'^[Cc]isco (?P<model>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
+        iosxe_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
 
         # Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
         iosxe_backup_os_pattern = re.compile(r'^[Cc]isco IOS(?: |-)XE [Ss]oftware.*$')
@@ -79,10 +80,10 @@ class ShowVersion(ShowVersionSchema):
         # Switch Ports Model              SW Version        SW Image              Mode
         # ------ ----- -----              ----------        ----------            ----
         # *    1 41    C9300-24P          17.07.01          CAT9K_IOSXE           INSTALL
-        iosxe_backup_model_version_pattern = re.compile(r'^\*?\s*\d+\s+\d+\s+(?P<model>[\w\-]+)\s+(?P<version>[\w\-\.]+)\s+\w+\s+\w+$')
+        iosxe_backup_pid_version_pattern = re.compile(r'^\*?\s*\d+\s+\d+\s+(?P<pid>[\w\-]+)\s+(?P<version>[\w\-\.]+)\s+\w+\s+\w+$')
 
         # Model Number                       : C9300-24P
-        iosxe_backup_model_pattern = re.compile(r'^Model\s+Number\s+\:\s+(?P<model>.+)$')
+        iosxe_backup_pid_pattern = re.compile(r'^Model\s+Number\s+\:\s+(?P<pid>.+)$')
 
         # ********************************************
         # *                  IOSXR                   *
@@ -92,13 +93,14 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS XR Software, Version 6.2.1.23I[Default]
         # Cisco IOS XR Software, Version 6.3.1.15I
         # Cisco IOS XR Software, Version 6.4.2[Default]
-        iosxr_os_version_pattern = re.compile(r'^Cisco IOS XR Software, Version (?P<version>[\w\.]+).*$')
+        # Cisco IOS XR Software, Version 7.5.1.20I LNT
+        iosxr_os_version_pattern = re.compile(r'^Cisco IOS XR Software, Version (?P<version>[\w\.]+)(\[.*\])?\s*(?P<os_flavor>\w+)?$')
 
         # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
         # cisco IOS XRv Series (Pentium Celeron Stepping 3) processor with 4193911K bytes of memory.
         # cisco IOS-XRv 9000 () processor
         # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
-        iosxr_platform_pattern = re.compile(r'^^cisco (?P<platform>\S+|IOS(?: |-)XRv ?\d*)(?: Series)? \(.*\) processor.*$')
+        iosxr_platform_pattern = re.compile(r'^cisco (?P<platform>\S+|IOS(?: |-)XRv ?\d*)(?: Series)? \(.*\) processor.*$')
 
 
         # ********************************************
@@ -113,7 +115,7 @@ class ShowVersion(ShowVersionSchema):
         ios_os_version_platform_pattern = re.compile(r'^(?!.*XE Software.*)(Cisco IOS Software|IOS \(\S+\))(?: \[.*\])?,?\s*(?P<alternate_platform>.+)?\s+Software \((?P<platform>[^\-]+).*\),(?: Experimental)? Version (?P<version>[\w\.\:\(\)]+),?.*$')
 
         # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
-        ios_model_pattern = re.compile(r'^[Cc]isco (?P<model>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
+        ios_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
 
 
         # ********************************************
@@ -124,7 +126,7 @@ class ShowVersion(ShowVersionSchema):
         junos_os_version_pattern = re.compile(r'^Junos: (?P<version>\S+)$')
 
         # Model: ex4200-24p
-        junos_model_pattern = re.compile(r'^Model: (?P<model>\S+)$')
+        junos_pid_pattern = re.compile(r'^Model: (?P<pid>\S+)$')
 
 
         # ********************************************
@@ -140,7 +142,7 @@ class ShowVersion(ShowVersionSchema):
 
         # cisco Nexus 3048 Chassis ("48x1GE + 4x10G Supervisor")
         # cisco Nexus9000 C9396PX Chassis
-        nxos_platform_and_model_pattern = re.compile(r'^cisco (?P<platform>Nexus\s?[\d]+) ?(?P<model>\S+)? Chassis.*$')
+        nxos_platform_and_pid_pattern = re.compile(r'^cisco (?P<platform>Nexus\s?[\d]+) ?(?P<pid>\S+)? Chassis.*$')
 
 
         # ********************************************
@@ -173,9 +175,9 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # Model Id:   ASAv10
-            m = asa_model_pattern.match(line)
+            m = asa_pid_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model'].lower()
+                ret_dict['pid'] = m.groupdict()['pid'].lower()
                 continue
 
 
@@ -212,9 +214,9 @@ class ShowVersion(ShowVersionSchema):
             # cisco WS-C2940-8TT-S (RC32300) processor (revision H0) with 19868K bytes of memory.
             # cisco WS-C3650-48PD (MIPS) processor with 4194304K bytes of physical memory.
             # cisco C9500-24Y4C (X86) processor with 2900319K/6147K bytes of memory.
-            m = iosxe_model_pattern.match(line)
+            m = iosxe_pid_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model']
+                ret_dict['pid'] = m.groupdict()['pid']
                 continue
 
             # Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -225,16 +227,16 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # *    1 41    C9300-24P          17.07.01          CAT9K_IOSXE           INSTALL
-            m = iosxe_backup_model_version_pattern.match(line)
+            m = iosxe_backup_pid_version_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model']
+                ret_dict['pid'] = m.groupdict()['pid']
                 ret_dict['version'] = m.groupdict()['version']
                 continue
 
             # Model Number                       : C9300-24P
-            m = iosxe_backup_model_pattern.match(line)
+            m = iosxe_backup_pid_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model']
+                ret_dict['pid'] = m.groupdict()['pid']
                 continue
 
             # ********************************************
@@ -247,8 +249,11 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS XR Software, Version 6.4.2[Default]
             m = iosxr_os_version_pattern.match(line)
             if m:
+                group = m.groupdict()
                 ret_dict['os'] = 'iosxr'
-                ret_dict['version'] = m.groupdict()['version']
+                ret_dict['version'] = group['version']
+                if group['os_flavor']:
+                    ret_dict['os_flavor'] = group['os_flavor']
                 continue
 
             # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
@@ -290,9 +295,9 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
-            m = ios_model_pattern.match(line)
+            m = ios_pid_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model']
+                ret_dict['pid'] = m.groupdict()['pid']
                 continue
 
 
@@ -308,9 +313,9 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # Model: ex4200-24p
-            m = junos_model_pattern.match(line)
+            m = junos_pid_pattern.match(line)
             if m:
-                ret_dict['model'] = m.groupdict()['model'].lower()
+                ret_dict['pid'] = m.groupdict()['pid'].lower()
                 continue
 
 
@@ -337,13 +342,13 @@ class ShowVersion(ShowVersionSchema):
 
             # cisco Nexus 3048 Chassis ("48x1GE + 4x10G Supervisor")
             # cisco Nexus9000 C9396PX Chassis
-            m = nxos_platform_and_model_pattern.match(line)
+            m = nxos_platform_and_pid_pattern.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['platform'] = group['platform'].lower()
                 ret_dict['platform'] = re.sub(r'nexus\s*(\d)\d{3}', r'n\1k', ret_dict['platform'])
-                if group['model']:
-                    ret_dict['model'] = group['model']
+                if group['pid']:
+                    ret_dict['pid'] = group['pid']
                 continue
 
             # ********************************************

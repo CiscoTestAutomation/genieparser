@@ -23,6 +23,9 @@ IOSXE parsers for the following show commands:
     * show ipv6 pim neighbor detail
     * show ipv6 pim [vrf <WORD>] neighbor detail
     * show ip pim [vrf <WORD>] interface df
+    * show ip pim tunnel
+    * show {addr_family} pim tunnel
+    * show {addr_family} pim vrf {vrf} tunnel
 '''
 
 # Python
@@ -2025,6 +2028,8 @@ class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
 class ShowIpPimTunnelSchema(MetaParser):
     """
     Schema for 'show ip pim tunnel'
+    Schema for 'show {addr_family} pim tunnel'
+    Schema for 'show {addr_family} pim vrf {vrf} tunnel'
     """
 
     schema = {
@@ -2033,9 +2038,9 @@ class ShowIpPimTunnelSchema(MetaParser):
                 'type': str,
                 'rp': str,
                 'source': str,
-                'state' : str,
-                'last_event': str,
-                'uptime': str
+                Optional('state') : str,
+                Optional('last_event'): str,
+                Optional('uptime'): str
             },
         }
     }
@@ -2044,12 +2049,21 @@ class ShowIpPimTunnelSchema(MetaParser):
 class ShowIpPimTunnel(ShowIpPimTunnelSchema):
     """
     Parser for 'show ip pim tunnel'
+    Parser for 'show {addr_family} pim tunnel'
+    Parser for 'show {addr_family} pim vrf {vrf} tunnel'
     """
-    cli_command = 'show ip pim tunnel'
+    cli_command = ['show ip pim tunnel', 'show {addr_family} pim tunnel', 'show {addr_family} pim vrf {vrf} tunnel']
 
-    def cli(self, output=None):
+    def cli(self, output=None, addr_family=None, vrf=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if addr_family and vrf:
+                cmd = self.cli_command[2].format(addr_family = addr_family, vrf = vrf)
+            elif addr_family:
+                cmd = self.cli_command[1].format(addr_family = addr_family)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2060,19 +2074,21 @@ class ShowIpPimTunnel(ShowIpPimTunnelSchema):
         p1 = re.compile(r'Tunnel(?P<tunnel>\d+)')
 
         #Type       : PIM Encap
-        p2 = re.compile(r'Type\s+\S+\s+(?P<type>\S+\s+\S+)')
+        p2 = re.compile(r'^Type\s+\:\s+(?P<type>.*)$')
 
         #RP         : 4.4.4.4
-        p3 = re.compile(r'RP\s+\S+\s+(?P<rp>\S+)')
+        #RP    : Embedded RP Tunnel
+        p3 = re.compile(r'^RP\s+\:\s+(?P<rp>.*)$')
 
         #Source     : 87.1.1.1
-        p4 = re.compile(r'Source\s+\S+\s+(?P<source>\S+)')
+        #Source: 77:77:77::77
+        p4 = re.compile(r'^Source(\s+)?\:\s+(?P<source>\S+)$')
 
         #State      : UP
-        p5 = re.compile(r'State\s+\S+\s+(?P<state>\S+)')
+        p5 = re.compile(r'^State\s+\:\s+(?P<state>\S+)$')
 
         #Last event : RP address reachable (1d10h)
-        p6 = re.compile(r'Last event\s+:\s+(?P<last_event>(.*?))\s+\((?P<uptime>\S+)\)')
+        p6 = re.compile(r'^Last\s+event\s+:\s+(?P<last_event>(.*?))\s+\((?P<uptime>\S+)\)$')
 
         for line in out.splitlines():
             line = line.strip()

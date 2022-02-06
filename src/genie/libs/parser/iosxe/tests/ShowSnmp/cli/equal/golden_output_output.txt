@@ -1,5 +1,5 @@
 Chassis: FCE2310A48M
-Contact: "something@cisco.com"
+Contact: "something@cisco.com someone2@cisco.com"
 Location: "To be filled in"
 35072424 SNMP packets input
     0 Bad SNMP version errors
