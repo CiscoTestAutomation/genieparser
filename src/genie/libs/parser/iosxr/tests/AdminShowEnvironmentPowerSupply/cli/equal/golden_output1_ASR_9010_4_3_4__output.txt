@@ -1,0 +1,80 @@
+R/S/I   Modules         Capacity        Status
+                        (W)
+0/PM0/*
+        host    PM      4400            Ok
+
+0/PM2/*
+        host    PM      4400            Ok
+
+0/PM4/*
+        host    PM      0               Ok
+
+0/PM6/*
+        host    PM      0               Ok
+
+
+R/S/I           Power Supply    Voltage         Current
+                (W)             (V)             (A)
+ 0/PM0/*         898.1          55.1            16.3
+ 0/PM2/*         883.8          54.9            16.1
+ 0/PM4/*         472.1          54.9             8.6
+ 0/PM6/*         467.5          55.0             8.5
+--------------
+Total:  2721.5
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+ 0/FT0/*         153.4          54.8             2.8
+ 0/FT1/*         180.5          54.7             3.3
+--------------
+Total:  333.9
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+0/RSP0/*         205 **
+0/RSP1/*         205 **
+--------------
+Total:  410.0
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+   0/0/*         320 **
+   0/1/*         320 **
+   0/2/*         532.5          54.9             9.7
+   0/3/*         548.0          54.8            10.0
+   0/4/*         320 **
+   0/5/*         320 **
+--------------
+Total:  2360.5
+** Indicates worst case power draw
+
+Power Budget Summary for Rack 0
+--------------------------------
+
+
+Power Shelves Type: DC
+Power Budget Strict Mode: Disabled
+
+Total Power Capacity:                           8800W
+Usable Power Capacity:                          8800W
+Supply Failure Protected Capacity:              4400W
+Worst Case Power Used:                          4070W
+
+ Slot                                                      Max Watts
+ ----                                                      ---------
+ 0/0/CPU0                                                        320
+ 0/1/CPU0                                                        320
+ 0/2/CPU0                                                        590
+ 0/3/CPU0                                                        590
+ 0/RSP0/CPU0                                                     205
+ 0/RSP1/CPU0                                                     205
+ 0/4/CPU0                                                        320
+ 0/5/CPU0                                                        320
+ 0/FT0/SP                                                        600
+ 0/FT1/SP                                                        600
+
+Worst Case Power Available:             4730W
+Supply Protected Capacity Available:     330W

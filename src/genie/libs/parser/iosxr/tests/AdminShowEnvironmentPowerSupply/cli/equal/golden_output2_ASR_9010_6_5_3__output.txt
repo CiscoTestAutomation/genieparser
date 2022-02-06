@@ -1,0 +1,47 @@
+R/S/I   Modules         Capacity        Status
+                        (W)
+
+R/S/I           Power Supply    Voltage         Current
+                (W)             (V)             (A)
+--------------
+Total:  0.0
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+0/RSP0/*         229.3          54.6             4.2
+--------------
+Total:  229.3
+** Indicates worst case power draw (No power measuring sensor)
+
+Chassis Power Draw for rack 0: 0.0 (W)
+
+Power Budget Summary for Rack 0
+--------------------------------
+
+
+Power Shelves Type: DC
+Power Budget Strict Mode: Disabled
+Power Budget Enforcement: Enabled
+Power Redundancy Mode: N + 1
+
+Total Power Capacity:                           13200W
+Usable Power Capacity:                          13200W
+N+1 Supply Failure Protected Capacity:          8800W
+Worst Case Power Used:                          5980W
+
+ Slot                                                      Max Watts
+ ----                                                      ---------
+ 0/0/CPU0                                                        475
+ 0/1/CPU0                                                        475
+ 0/RSP0/CPU0                                                     295
+ 0/RSP1/CPU0                                                     295
+ 0/4/CPU0                                                        810
+ 0/5/CPU0                                                        810
+ 0/6/CPU0                                                        810
+ 0/7/CPU0                                                        810
+ 0/FT0/SP                                                        600
+ 0/FT1/SP                                                        600
+
+Worst Case Power Available:             7220W
+N+1 Supply Protected Capacity Available:        2820W
