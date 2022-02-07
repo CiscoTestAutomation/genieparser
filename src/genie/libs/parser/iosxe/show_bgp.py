@@ -4829,9 +4829,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             break
                     else:
                         continue
-        else:
-            if self.check_number_of_prefixes(output) == 0:
-                return {}
 
         # Init vars
         route_dict = {}
@@ -5211,13 +5208,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
         return route_dict
 
-    def check_number_of_prefixes(self, output):
-        number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
-        m = number_of_prefixes.search(output)
-        if not m:
-            return 0
-        return int(m["number_of_prefixes"])
-
 
 # ===========================================================================
 # Parser for:
@@ -5317,11 +5307,22 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            if self.check_number_of_prefixes(output) == 0:
+                return {}
             show_output = output
 
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
+
+    def check_number_of_prefixes(self, output):
+        number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
+        m = number_of_prefixes.search(output)
+        if not m:
+            return 0
+        return int(m["number_of_prefixes"])
+
+
 # =================================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
