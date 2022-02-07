@@ -65,14 +65,14 @@ class ShowTacacs(ShowTacacsSchema):
             r'^Server:\s(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})\sopens=(?P<opens>\d+)\scloses=(?P<closes>\d+)\saborts=(?P<aborts>\d+)\serrors=(?P<errors>\d+)$')
 
         # opens=123309 closes=123309 aborts=592 errors=0
-        p2 = re.compile(r'opens=(?P<opens>\d+)\scloses=(?P<closes>\d+)\saborts=(?P<aborts>\d+)\serrors=(?P<errors>\d+)')
+        p2 = re.compile(r'^opens=(?P<opens>\d+)\scloses=(?P<closes>\d+)\saborts=(?P<aborts>\d+)\serrors=(?P<errors>\d+)$')
 
         #  packets in=134136 packets out=134161
-        p3 = re.compile(r'packets\sin=(?P<packets_in>\d+)\spackets\sout=(?P<packets_out>\d+)')
+        p3 = re.compile(r'^packets\sin=(?P<packets_in>\d+)\spackets\sout=(?P<packets_out>\d+)$')
 
         # status=up single-connect=false family=IPv4
         p4 = re.compile(
-            r'status=(?P<status>\w+)\ssingle-connect=(?P<single_connect>\w+)\sfamily=(?P<family>\S+)')
+            r'^status=(?P<status>\w+)\ssingle-connect=(?P<single_connect>\w+)\sfamily=(?P<family>\S+)$')
 
         # IP which is processed right now, will be used as dictionary index
         current_ip = ''
