@@ -1,0 +1,27 @@
+BGP table version is 1186969, local router ID is 10.250.6.2
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ r>i 0.0.0.0          10.250.6.1               0    300      0 65000 i
+ *>i 10.0.0.0         10.250.6.1             768    300      0 65000 ?
+ *>i 10.1.100.23/32   10.250.6.1               0    300      0 65000 65000 65000 65005 i
+ *>i 10.1.138.0/24    10.250.6.1            3328    300      0 65000 ?
+ *>i 10.2.28.11/32    10.250.6.1           51968    300      0 65000 ?
+ *>  10.21.198.0/24   192.168.198.14       51712         32768 ?
+ *>i 10.100.248.128/26
+                       10.250.6.1            3328    300      0 65000 ?
+ *>i 10.105.144.128/25
+                       10.250.6.1            3328    300      0 65000 ?
+ *>i 10.105.145.0/25  10.250.6.1            3328    300      0 65000 ?
+ *>i 10.105.145.128/25
+                       10.250.6.1            3328    300      0 65000 ?
+ *>i 10.105.146.0/25  10.250.6.1            3328    300      0 65000 ?
+ *>i 10.105.146.128/25
+                       10.250.6.1            3328    300      0 65000 ?
+
+ Total number of prefixes 12
+ 
