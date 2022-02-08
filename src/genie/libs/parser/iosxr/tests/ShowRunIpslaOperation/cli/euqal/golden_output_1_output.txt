@@ -6,7 +6,6 @@ ipsla
    vrf VRF-1
    source address 1.1.1.1
    destination address 2.2.2.2
-   control disable
    packet count 1000
    packet interval 20
    timeout 3000

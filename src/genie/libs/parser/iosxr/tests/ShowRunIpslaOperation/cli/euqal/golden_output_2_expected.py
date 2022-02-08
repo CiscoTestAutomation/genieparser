@@ -18,7 +18,7 @@ expected_output = {
               "data_size_req": 500,
               "dest_port": 15000,
               "frequency": 60,
-              "verify-data": true
+              "verify-data": True
             }
           }
         },
@@ -38,7 +38,7 @@ expected_output = {
               "data_size_req": 500,
               "dest_port": 10000,
               "frequency": 60,
-              "verify-data": true
+              "verify-data": True
             }
           }
         }

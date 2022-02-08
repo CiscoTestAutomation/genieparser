@@ -4,9 +4,6 @@ IOSXR parsers for the following show commands:
     * show run ipsla operation
 """
 
-__author__ = "Muhammad Rafi"
-__version__ = "0.1.0"
-
 # Python regex and rich module
 import re
 
@@ -20,8 +17,6 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 class ShowRunIpslaOperationSchema(MetaParser):
     """Schema for show run ipsla operation"""
-
-    # schema = {}
 
     schema = {
         'ipsla': {
@@ -112,8 +107,6 @@ class ShowRunIpslaOperation(ShowRunIpslaOperationSchema):
 
         # verify-data
         p13 = re.compile(r'^(?P<verify_data>verify\-\w+)$')
-
-        # breakpoint()
 
         for line in out.splitlines():
             if line:
