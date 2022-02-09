@@ -3059,33 +3059,25 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
     """parser for show interface summary
     """
 
-    cli_command = ['show interface summary']
+    cli_command = 'show interface summary'
 
-    def cli(self, interface="", output=None):
+    def cli(self, output=None):
         if output is None:
-            if interface:
-                cmd = self.cli_command[1].format(interface=interface)
-            else:
-                cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        interface_dict = {}
         ret_dict = {}
 
-        # <INTERFACE_TYPE_NAME> 60 20 0 1
-        p1 = re.compile(r'^(?P<type>\w+\s?\w+)\s+(?P<total>\d+)\s+(?P<up>\d+)\s+(?P<down>\d+)\s+(?P<admin_down>\d+)$')
+        # IFT_FORTYGETHERNET      2        1        0        1
+        p1 = re.compile(r'^(?P<type>\w+|ALL TYPES)\s+(?P<total>\d+)\s+(?P<up>\d+)\s+(?P<down>\d+)\s+(?P<admin_down>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            res = p1.match(line)
-            if res:
-                if 'interface_types' not in ret_dict:
-                    interface_dict = ret_dict.setdefault('interface_types', {})
-
-                group = res.groupdict()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
 
                 # Replace whitespaces with _ to create valid dict key (e.g: ALL TYPES => ALL_TYPES)
                 interface_type = group['type'].replace(" ", "_")
@@ -3094,10 +3086,13 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                 down = group['down']
                 admin_down = group['admin_down']
 
-                interface_dict[interface_type] = {}
-                interface_dict[interface_type]['total'] = total
-                interface_dict[interface_type]['up'] = up
-                interface_dict[interface_type]['down'] = down
-                interface_dict[interface_type]['admin_down'] = admin_down
+                interface_dict = ret_dict.setdefault('interface_types', {}).setdefault(interface_type, {})
+
+                interface_dict.update({
+                    'total': total,
+                    'up': up,
+                    'down': down,
+                    'admin_down': admin_down
+                })
 
         return ret_dict
