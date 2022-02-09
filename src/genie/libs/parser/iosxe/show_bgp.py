@@ -4794,13 +4794,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def cli(self, neighbor, address_family='', output=None):
 
-        # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
-        # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
-        p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                        '(, +vrf +(?P<vrf>\S+))?, +remote AS '
-                        '+(?P<remote_as_id>[0-9]+), '
-                        '+(?P<internal_external_link>[a-z\s]+)$')
-
         p1 = re.compile(r'^\s*For +address +family:'
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
 
@@ -4837,20 +4830,27 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
-        # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
-        out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
         vrf = 'default'
-        for line in out_vrf.splitlines():
-            line = line.strip()
-            # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
-            m = p.match(line)
-            if m:
-                if m.groupdict()['bgp_neighbor'] == neighbor:
-                    if m.groupdict()['vrf']:
-                        vrf = str(m.groupdict()['vrf'])
-                        break
-                else:
-                    continue
+        if output is None:
+            # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
+            out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
+            bgp_neighbor_re = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
+                                '(, +vrf +(?P<vrf>\S+))?, +remote AS '
+                                '+(?P<remote_as_id>[0-9]+), '
+                                '+(?P<internal_external_link>[a-z\s]+)$')
+            for line in out_vrf.splitlines():
+                line = line.strip()
+                # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
+                # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+                # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
+                m = bgp_neighbor_re.match(line)
+                if m:
+                    if m['bgp_neighbor'] == neighbor:
+                        if m['vrf']:
+                            vrf = str(m['vrf'])
+                            break
+                    else:
+                        continue
 
         # Init vars
         route_dict = {}
@@ -5329,11 +5329,22 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            if self.check_number_of_prefixes(output) == 0:
+                return {}
             show_output = output
 
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
+
+    def check_number_of_prefixes(self, output):
+        number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
+        m = number_of_prefixes.search(output)
+        if not m:
+            return 0
+        return int(m["number_of_prefixes"])
+
+
 # =================================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
