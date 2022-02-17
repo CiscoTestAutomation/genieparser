@@ -20,31 +20,8 @@ class ShowRunIpslaOperationSchema(MetaParser):
 
     schema = {
         'ipsla': {
-          Any(): {
-            Any(): list [
-            {
-              Optional('oper_id'): int,
-              Optional('oper_types'): 
-              {
-                Optional('type'): {
-                  Optional('name'): str,
-                  Optional('vrf'): str,
-                  Optional('src_addr'): str,
-                  Optional('dest_addr'): str,
-                  Any(): {
-                    Optional('count'): int,
-                    Optional('interval'): int
-                  },
-                  Optional('time_out'): int,
-                  Optional('data_size_req'): int,
-                  Optional('dest_port'): int,
-                  Optional('frequency'): int,
-                  Optional('verify-data'): bool
-                }
-               }
-              }
-             ]
-            }
+          Optional('operations'): {
+            Optional('operation_ids'): list             }
            }
           }
 
