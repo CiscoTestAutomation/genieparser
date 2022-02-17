@@ -21,7 +21,8 @@ class ShowRunIpslaOperationSchema(MetaParser):
     schema = {
         'ipsla': {
           Optional('operations'): {
-            Optional('operation_ids'): list             }
+            Optional('operation_ids'): list 
+            }
            }
           }
 
