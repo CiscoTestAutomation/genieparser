@@ -9,7 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 
 # ====================================
 # Schema for 'show run ipsla operation'
@@ -20,8 +20,29 @@ class ShowRunIpslaOperationSchema(MetaParser):
 
     schema = {
         'ipsla': {
-          Optional('operations'): {
-            Optional('operation_ids'): list 
+          Any(): {
+            Any(): ListOf({
+              Optional('oper_id'): int,
+              Optional('oper_types'): {
+                Optional('type'): {
+                  Optional('name'): str,
+                  Optional('tag'): str,
+                  Optional('vrf'): str,
+                  Optional('src_addr'): str,
+                  Optional('dest_addr'): str,
+                  Optional('packet'): {
+                    Optional('count'): int,
+                    Optional('interval'): int
+                  },
+                  Optional('time_out'): int,
+                  Optional('data_size_req'): int,
+                  Optional('dest_port'): int,
+                  Optional('frequency'): int,
+                  Optional('verify-data'): bool
+                }
+               }
+              }
+             )
             }
            }
           }
