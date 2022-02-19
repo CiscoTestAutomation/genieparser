@@ -6345,7 +6345,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         # weight path
                         # 0 200 33299 51178 47751 {27016}
                         m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                    '(?P<path>(([\d]+\s)|(\{\d+\}\s))+)$')\
+                                    '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
                                 .match(group_num)
         
                         if m1:
