@@ -5738,7 +5738,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) '
                             '+(?P<next_hop>[\w\.\/]+) +'
                             '(?P<metric>\d+) +(?P<localprf>\d+) '
-                            '+(?P<weight>\d+) +(?P<path>[()\d ]+) +'
+                            '+(?P<weight>\d+) +(?P<path>[\d ]+) +'
                             '(?P<origin_codes>(i|e|\?|\||&))$')
         p3_1_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             ' (?P<path_type>(i|e|c|l|a|r|I)) '
@@ -5792,7 +5792,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
         p14 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
-        p15 = re.compile(r'^(?P<next_hop>[\w\.\:]+) *(?P<number>[()\d\s\{\}]+)?'
+        p15 = re.compile(r'^(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
                             '(?: *(?P<origin_codes>(i|e|\?)))$')
         p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +'
                             '(?P<processed_paths>[0-9]+) +paths$')
@@ -5994,7 +5994,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  '(?P<localprf>[0-9]+)'
                                  '(?P<space2>\s{5,10})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
@@ -6003,11 +6003,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,21})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[()0-9\{\}\s]+)$').match(numbers)
+                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6044,7 +6044,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  '(?P<localprf>[0-9]+)'
                                  '(?P<space2>\s{5,10})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
@@ -6053,11 +6053,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,21})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[()0-9\{\}\s]+)$').match(numbers)
+                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6156,7 +6156,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  '(?P<localprf>[0-9]+)'
                                  '(?P<space2>\s{5,10})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
@@ -6165,11 +6165,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,21})'
                                  '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[()0-9\{\}\s]+))?$').match(numbers)
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[()0-9\{\}\s]+)$').match(numbers)
+                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6330,7 +6330,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
                                     '(?P<locprf>[0-9]+)  +'
                                     '(?P<weight>[0-9]+) '
-                                    '(?P<path>[()0-9\{\}\s]+)$').match(group_num)
+                                    '(?P<path>[0-9\{\}\s]+)$').match(group_num)
         
                         # metric   locprf  weight path
                         # 2219                0 200 33299 51178 47751 {27016}
@@ -6340,12 +6340,12 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         m2 = re.compile(r'^(?P<value>[0-9]+)'
                                     '(?P<space>\s{2,20})'
                                     '(?P<weight>[0-9]+) '
-                                    '(?P<path>[()0-9\{\}\s]+)$').match(group_num)
+                                    '(?P<path>[0-9\{\}\s]+)$').match(group_num)
         
                         # weight path
                         # 0 200 33299 51178 47751 {27016}
                         m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                    '(?P<path>(([()\d]+\s)|(\{\d+\}\s))+)$')\
+                                    '(?P<path>(([\d]+\s)|(\{\d+\}\s))+)$')\
                                 .match(group_num)
         
                         if m1:
