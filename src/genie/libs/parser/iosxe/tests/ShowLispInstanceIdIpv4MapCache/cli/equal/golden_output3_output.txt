@@ -1,0 +1,6 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 4100), 1 entries
+20.20.1.100/32, uptime: 00:00:00, expires: 00:01:08, via map-reply, unknown-eid-forward, remote-to-site
+  SGT: 10, software only
+  Locator    Uptime    State       Pri/Wgt     Encap-IID
+  10.0.1.2   00:00:00  up            0/0         -
+  10.0.1.5   00:00:00  admin-down  255/0         -

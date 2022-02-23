@@ -1,0 +1,3 @@
+Ethernet1/45 is down (Transceiver validation failed)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: d4e8.8058.a6bf (bia 10b3.d60e.4494)

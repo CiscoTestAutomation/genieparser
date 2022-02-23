@@ -22,6 +22,7 @@ class ShowSslproxyStatusSchema(MetaParser):
             'unsupported_cipher_suites': str,
             'failure_mode_action': str,
             'min_tls_ver': str,
+            Optional('dual_side_optimization'): str,
         },
         'status': {
             Optional('ssl_proxy_operational_state'): str,
@@ -67,6 +68,7 @@ class ShowSslproxyStatus(ShowSslproxyStatusSchema):
         # SSL Proxy Operational State    : RUNNING
         # TCP Proxy Operational State    : RUNNING
         # Clear Mode                     : FALSE
+        # Dual-Side Optimization         : TRUE 
         p3 = re.compile(r'^(?P<key>[\s\S]+\w) +: +(?P<value>[\s\S]+)$')
 
         for line in out.splitlines():
@@ -104,10 +106,11 @@ class ShowSslproxyStatus(ShowSslproxyStatusSchema):
             # SSL Proxy Operational State    : RUNNING
             # TCP Proxy Operational State    : RUNNING
             # Clear Mode                     : FALSE
+            # Dual-Side Optimization         : TRUE
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                key = groups['key'].replace(' ', '_').lower()
+                key = groups['key'].replace(' ', '_').replace('-', '_').lower()
                 try:
                     value = int(groups['value'])
                 except ValueError:

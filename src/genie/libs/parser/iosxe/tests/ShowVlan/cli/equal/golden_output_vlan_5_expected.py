@@ -71,5 +71,19 @@ expected_output = {
             "trans1": 0,
             "trans2": 0,
         },
+        "1006": {
+            "bridge_no": "15",
+            "interfaces": ["GigabitEthernet0/0/0"],
+            "mtu": 4472,
+            "name": "fddinet-fdnet-trbrf-default-Test-long",
+            "said": 101006,
+            "shutdown": False,
+            "state": "unsupport",
+            "stp": "ibm",
+            "trans1": 0,
+            "trans2": 0,
+            "type": "trbrf",
+            "vlan_id": "1006",
+        }
     }
 }

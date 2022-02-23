@@ -226,6 +226,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # 00:25:46        2         GigabitEthernet4   NEWADJ DIS
         p3 = re.compile(r'^(?P<when>[\w\:]+) +(?P<count>\d+)( +(?P<interface>[a-zA-Z]+[\d/.]+))? +(?P<triggers>[\S\ ]+)$')
 
+        tag = "none"
         for line in out.splitlines():
             line = line.strip()
 

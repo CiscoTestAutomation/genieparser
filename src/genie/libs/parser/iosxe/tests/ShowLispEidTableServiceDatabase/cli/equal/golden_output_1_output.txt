@@ -1,0 +1,15 @@
+LISP ETR IPv6 Mapping Database for LISP 0 EID-table vrf red (IID 4100), LSBs: 0x1
+Entries total 2, no-route 0, inactive 0, do-not-register 1
+
+2001:192:168:1::1/128, dynamic-eid 2001_192_168_1, do not register, inherited from default locator-set RLOC
+  Uptime: 8w1d, Last-change: 8w1d
+  Domain-ID: local
+  Service-Insertion: N/A (0)
+  Locator      Pri/Wgt  Source     State
+  11.11.11.11   10/10   cfg-intf   site-self, reachable
+2001:192:168:1::71/128, dynamic-eid 2001_192_168_1, inherited from default locator-set RLOC
+  Uptime: 8w1d, Last-change: 8w1d
+  Domain-ID: local
+  Service-Insertion: N/A (0)
+  Locator      Pri/Wgt  Source     State
+  11.11.11.11   10/10   cfg-intf   site-self, reachable

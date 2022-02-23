@@ -4176,6 +4176,11 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             else:
                 af = 'vpnv4 unicast'
         address_family = None
+
+        # p0 is for instances where the line has been wrapped around due to the network name being too long
+        # [5][0][64][2002:60:60:60::]/176
+        p0 = re.compile(r'^[\d\:\[\]\.]+/\d+$')
+
         p1 = re.compile(
             r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>['
             r'a-zA-Z0-9\-\_\']+)$')
@@ -4184,15 +4189,24 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         p3 = re.compile(r'^Route *Distinguisher: *(?P<route_distinguisher>\S+) *'
                         '(\(default *for *vrf (?P<default_vrf>[0-9A-Z]+)\))?$')
         p4 = re.compile(
-            r'^(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
+            r'^(?P<prefix>(?P<ip>[\w\.\:\[\]]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
             r'?P<froms>[\w\.\:]+) *'
             r'(?P<path>[\d\.\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
         p5_1 = re.compile(r'(?P<path>[\d\.\{\}\s]+)(?P<origin_code>e|i)?$')
         p6 = re.compile(
             r'^Processed *(?P<processed_prefixes>[0-9]+) *prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
-        for line in out.splitlines():
+        line_iterator = iter(out.splitlines())
+        for line in line_iterator:
             line = line.strip()
+
+            # [5][0][64][2002:60:60:60::]/176
+            m = p0.match(line)
+            if m:
+                # Long network name has split the line, so combine the network
+                # name with the next line it goes with
+                line += next(line_iterator, None)
+                line = line.strip()
 
             # BGP instance 0: 'default'
 

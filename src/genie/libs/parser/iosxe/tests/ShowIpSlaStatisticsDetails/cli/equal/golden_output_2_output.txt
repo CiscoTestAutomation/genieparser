@@ -1,0 +1,120 @@
+IPSLA operation id: 2
+Type of operation: mcast
+Latest operation start time: 07:37:48 UTC Fri Oct 22 2021
+Latest operation return code: OK
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            3246997/3248457/3248998             10.50.10.100
+
+Number of successes: 99
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 3
+Type of operation: mcast
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+
+oper-id        status               lossSD       delay                  destination                             
+393146530      OK                   0            3247/3248/3248                10.50.10.100
+
+Number of successes: 50
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 50
+        Latest RTT: 2 milliseconds
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 50
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 51
+        Latest RTT: 2 milliseconds
+Latest operation start time: 07:37:49 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 100
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 52
+        Latest RTT: 8 milliseconds
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 50
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 53
+        Latest RTT: NoConnection/Busy/Timeout
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: No connection
+Over thresholds occurred: FALSE
+Number of successes: 0
+Number of failures: 50
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 54
+        Latest RTT: 0 milliseconds
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: Socket connect error
+Over thresholds occurred: FALSE
+Number of successes: 0
+Number of failures: 50
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 100
+        Latest RTT: 2 milliseconds
+Latest operation start time: 07:37:34 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 49
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never
+
+
+
+IPSLA operation id: 101
+        Latest RTT: 5 milliseconds
+Latest operation start time: 07:37:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 49
+Number of failures: 0
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never

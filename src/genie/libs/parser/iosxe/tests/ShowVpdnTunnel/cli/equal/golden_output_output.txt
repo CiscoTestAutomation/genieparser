@@ -1,0 +1,5 @@
+L2TP Tunnel and Session Information Total tunnels 1 sessions 1
+
+LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
+                                                           Count VPDN Group
+7658       8656       LAC           est    18.18.18.1      1     1

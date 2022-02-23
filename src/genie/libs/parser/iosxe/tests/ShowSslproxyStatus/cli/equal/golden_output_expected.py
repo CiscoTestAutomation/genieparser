@@ -13,6 +13,7 @@ expected_output = {
         "unsupported_cipher_suites": "drop",
         "failure_mode_action": "close",
         "min_tls_ver": "TLS Version 1.1",
+        "dual_side_optimization": "TRUE",
     },
     "status": {
         "ssl_proxy_operational_state": "RUNNING",

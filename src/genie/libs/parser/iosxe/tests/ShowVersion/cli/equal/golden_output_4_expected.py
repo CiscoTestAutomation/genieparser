@@ -8,6 +8,7 @@ expected_output = {
         "image_type": "production image",
         "compiled_date": "Wed 12-Jul-17 13:06",
         "compiled_by": "prod_rel_team",
+        "copyright_years": "1986-2017",
         "rom": "Bootstrap program is C2960X boot loader",
         "bootldr": "C2960X Boot Loader (C2960X-HBOOT-M) Version 15.2(2r)E1, RELEASE SOFTWARE (fc1)",
         "hostname": "testname",

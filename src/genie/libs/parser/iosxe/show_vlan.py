@@ -1,19 +1,13 @@
 """show_vlan.py
 
 """
-import xmltodict
 import re
 import logging
 
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
-from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
+from genie.metaparser.util.schemaengine import Any, Optional
+
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +75,12 @@ class ShowVlan(ShowVlanSchema):
         else:
             out = output
 
+        # This pattern is for when the Name field is so long that it causes the 
+        # line to wrap around. For example:
+        # 1832 blablablablablablablablablablablablablabla
+        #                                       active 
+        p0 = re.compile(r'^\s*(active|suspended|\w+/lshut|\w+/unsup)+.*$')
+
         # VLAN Name                             Status    Ports
         # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
         # 2    VLAN_0002                        active
@@ -132,12 +132,19 @@ class ShowVlan(ShowVlanSchema):
                          '(?P<backup_crf>\S+)\s*$')
 
         vlan_dict = {}
-        primary = ""
+        primary = prev_line = ""
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
+
+            # active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
+            # active
+            # suspended
+            m = p0.match(line)
+            if m:
+                line = prev_line + ' ' + line
 
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
@@ -331,6 +338,15 @@ class ShowVlan(ShowVlanSchema):
                     vlan_dict['vlans'][secondary]['private_vlan']['ports'] = private_vlan_interfaces
 
                 continue
+
+            """
+            Save previous line in case lines like 
+            1832 blablablabla blablablablabla blablablabla bla
+                                                 active 
+            need to be combined into 
+            1832 blablablabla blablablablabla blablablabla bla active
+            """
+            prev_line = line
 
         return vlan_dict
 

@@ -1,0 +1,5 @@
+(*,229.1.0.0/16), 00:03:58/-, RP 30.0.1.1, flags: B
+  Bidir-Upstream: Lspvif2, RPF nbr: 1.1.1.1
+  Incoming interface list:
+    Vlan3001, Accepting/Sparse
+    Lspvif2, Accepting/Sparse

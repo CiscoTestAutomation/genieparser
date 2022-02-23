@@ -1,0 +1,83 @@
+IPv4 Crypto IKEv2 Session 
+
+Session-id:3, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1         1.1.1.1/500           1.1.1.2/500           none/none            READY  
+      Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/38157 sec
+      CE id: 1008, Session-id: 3
+      Status Description: Negotiation done
+      Local spi: 6F86196AB2C574E3       Remote spi: 74AD695CF23C4805
+      Local id: 1.1.1.1
+      Remote id: 1.1.1.2
+      Local req msg id:  2              Remote req msg id:  0         
+      Local next msg id: 2              Remote next msg id: 0         
+      Local req queued:  2              Remote req queued:  0         
+      Local window:      5              Remote window:      5         
+      DPD configured for 0 seconds, retry 0
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected  
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : Yes
+Child sa: local selector 30.10.10.0/0 - 50.10.10.255/65535
+          local selector 20.10.10.0/0 - 40.10.10.255/65535
+          remote selector 172.17.2.0/0 - 172.17.2.255/65535
+          remote selector 172.17.2.0/0 - 172.17.3.255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          AH spi in/out: 0x0/0x0  
+          CPI in/out: 0x0/0x0  
+          Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+          ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+
+Child sa: local selector  20.10.10.0/0 - 40.10.10.255/65535
+          remote selector 50.20.20.0/0 - 60.20.20.255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          AH spi in/out: 0x0/0x0  
+          CPI in/out: 0x0/0x0  
+          Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+          ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+
+IPv6 Crypto IKEv2 Session
+Session-id:5, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1         1.1.1::1/500           1.1.1::2/500           none/none            READY  
+      Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/38157 sec
+      CE id: 1008, Session-id: 3
+      Status Description: Negotiation done
+      Local spi: 6F86196AB2C574E5       Remote spi: 74AD695CF23C4806
+      Local id: 1.1.1::1
+      Remote id: 1.1.1::2
+      Local req msg id:  2              Remote req msg id:  0         
+      Local next msg id: 2              Remote next msg id: 0         
+      Local req queued:  2              Remote req queued:  0         
+      Local window:      5              Remote window:      5         
+      DPD configured for 0 seconds, retry 0
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected  
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : Yes
+Child sa: local selector 30.10.10::0/0 - 50.10.10::255/65535
+          local selector 20.10.10::0/0 - 40.10.10::255/65535
+          remote selector 172.17.2::0/0 - 172.17.2::255/65535
+          remote selector 172.17.2::0/0 - 172.17.3::255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          AH spi in/out: 0x0/0x0  
+          CPI in/out: 0x0/0x0  
+          Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+          ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+
+Child sa: local selector  20.10.10::0/0 - 40.10.10::255/65535
+          remote selector 50.20.20::0/0 - 60.20.20::255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          AH spi in/out: 0x0/0x0  
+          CPI in/out: 0x0/0x0  
+          Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+          ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+

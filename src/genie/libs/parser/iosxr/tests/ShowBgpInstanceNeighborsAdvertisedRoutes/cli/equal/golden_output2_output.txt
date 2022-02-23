@@ -1,0 +1,69 @@
+Wed Jan 19 14:49:23.109 UTC
+
+BGP instance 0: 'default'
+=========================
+
+Address Family: VPNv4 Unicast
+-----------------------------
+
+Network            Next Hop        From            AS Path
+Route Distinguisher: 192.168.2.2:40000
+3.2.12.0/24        192.168.2.11    192.168.2.11    ?
+3.2.21.0/24        192.168.1.13    192.168.2.11    ?
+3.3.13.0/24        192.168.1.13    192.168.2.11    ?
+192.0.201.0/31     192.168.2.2     Local           ?
+
+
+
+Processed 19 prefixes, 19 paths
+
+Address Family: VPNv6 Unicast
+-----------------------------
+
+Network            Next Hop        From            AS Path
+Route Distinguisher: 192.168.2.2:40000
+2002:3:2:21::/64   192.168.2.11    192.168.2.11    ?
+2003:192:3:1::13/128
+                      192.168.1.13    192.168.2.11    ?
+
+Processed 13 prefixes, 13 paths
+
+Address Family: IPv4 Labeled-unicast
+------------------------------------
+
+Network            Next Hop        From            AS Path
+192.168.1.1/32     192.168.2.2     192.168.1.2     i
+192.168.2.2/32     192.168.2.2     Local           i
+
+
+Processed 17 prefixes, 17 paths
+
+Address Family: IPv4 Unicast
+----------------------------
+
+
+Address Family: IPv6 Unicast
+----------------------------
+
+
+Address Family: L2VPN EVPN
+--------------------------
+
+Network            Next Hop        From            AS Path
+Route Distinguisher: 192.168.1.1:40000
+[5][0][16][150.0.0.0]/80
+                      192.168.1.1     192.168.1.2     ?
+Route Distinguisher: 192.168.1.2:40000
+[5][0][31][192.0.101.0]/80
+                      192.168.2.2     192.168.1.2     ?
+Route Distinguisher: 192.168.1.11:40000
+[5][0][24][1.0.0.0]/80
+                      192.168.1.11    192.168.1.2     ?
+[5][0][64][2002:60:60:60::]/176
+                      192.168.1.11    192.168.1.2     ?
+
+
+Processed 269 prefixes, 269 paths
+
+Address Family: Link-state Link-state
+------------------------------------

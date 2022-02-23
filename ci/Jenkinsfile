@@ -13,6 +13,8 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genielibs']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genielibs.git']]])
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'unicon']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/unicon.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'unicon.plugins']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/unicon.plugins.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'pyats']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/pyats.git']]])
                 script {
                     sh """
                     ls -l
@@ -21,6 +23,10 @@ pipeline {
                     cd ../genielibs
                     git remote -v
                     cd ../unicon
+                    git remote -v
+                    cd ../unicon.plugins
+                    git remote -v
+                    cd ../pyats
                     git remote -v
                     """
                 }
@@ -39,6 +45,10 @@ pipeline {
                     cd ../genielibs
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     cd ../unicon
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../unicon.plugins
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../pyats
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
@@ -66,6 +76,10 @@ pipeline {
                     make develop
                     git status
                     cd $WORKSPACE/unicon
+                    make develop
+                    cd $WORKSPACE/unicon.plugins
+                    make develop
+                    cd $WORKSPACE/pyats
                     make develop
                     cd $WORKSPACE
                     make develop

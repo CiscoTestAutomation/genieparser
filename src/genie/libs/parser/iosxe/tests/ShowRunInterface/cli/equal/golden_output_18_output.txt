@@ -1,0 +1,9 @@
+farscape-pinfra-2#sh run int HundredGigE1/0/1
+Building configuration...
+
+Current configuration : 60 bytes
+!
+interface HundredGigE1/0/1
+ stackwise-virtual link 1
+end
+

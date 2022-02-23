@@ -1,4 +1,5 @@
 expected_output = {
+   "local_port_priority":128,
    "ptp_port_dataset":{
       "announce_interval":0,
       "announce_receipt_time_out":3,
