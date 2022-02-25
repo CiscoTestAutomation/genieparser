@@ -1,0 +1,9 @@
+farscape-pinfra-2#sh run int HundredGigE1/0/2
+Building configuration...
+
+Current configuration : 75 bytes
+!
+interface HundredGigE1/0/2
+ stackwise-virtual dual-active-detection
+end
+

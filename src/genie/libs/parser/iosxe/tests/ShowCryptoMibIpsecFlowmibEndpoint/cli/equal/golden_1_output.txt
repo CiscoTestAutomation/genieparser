@@ -1,0 +1,37 @@
+ vrf CC-INTERNET
+  Index:                       17        
+  Local type:                  Single IP address
+  Local address:               1.1.0.100
+  Protocol:                    47        
+  Local port:                  0         
+  Remote type:                 Single IP address
+  Remote address:              1.1.0.101
+  Remote port:                 0         
+
+  Index:                       18        
+  Local type:                  Single IP address
+  Local address:               1.1.0.100
+  Protocol:                    47        
+  Local port:                  0         
+  Remote type:                 Single IP address
+  Remote address:              1.1.0.102
+  Remote port:                 0 
+  
+ vrf CC-local
+  Index:                       25        
+  Local type:                  Single IP address
+  Local address:               1.1.0.100
+  Protocol:                    47        
+  Local port:                  0         
+  Remote type:                 Single IP address
+  Remote address:              1.1.0.101
+  Remote port:                 0         
+
+  Index:                       26        
+  Local type:                  Single IP address
+  Local address:               1.1.0.100
+  Protocol:                    47        
+  Local port:                  0         
+  Remote type:                 Single IP address
+  Remote address:              1.1.0.102
+  Remote port:                 0

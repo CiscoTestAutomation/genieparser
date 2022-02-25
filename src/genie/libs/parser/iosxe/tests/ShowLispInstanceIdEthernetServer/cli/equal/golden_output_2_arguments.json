@@ -1,3 +1,4 @@
 {
-    "instance_id": 8192
+    "lisp_id":"all",
+    "instance_id": "*"
 }

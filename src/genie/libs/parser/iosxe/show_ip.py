@@ -30,7 +30,20 @@ IOSXE parsers for the following show commands:
     * show ip mfib vrf {vrf} {group} {source}
     * show ip mfib vrf {vrf} verbose
     * show ip mfib vrf {vrf} {group} verbose
-    * show ip mfib vrf {vrf} {group} {source} verbose'''
+    * show ip mfib vrf {vrf} {group} {source} verbose
+    *  show ip mrib route
+    * show ip mrib route {group}
+    * show ip mrib route {group} {source} 
+    * show ip mrib route vrf {vrf}
+    * show ip mrib route vrf {vrf} {group}
+    * show ip mrib route vrf {vrf} {group} {source}
+    * show ip sla statistics
+    * show ip sla statistics {probe_id}
+    * show ip sla statistics details
+    * show ip sla statistics {probe_id} details
+    * show ip sla statistics aggregated
+    * show ip sla statistics aggregated {probe_id}
+    '''
 
 # Python
 import re
@@ -2091,3 +2104,700 @@ class ShowIpMfib(ShowIpMfibSchema):
 
                 continue                         
         return mfib_dict
+
+class ShowIpMribSchema(MetaParser):
+    """Schema for:
+       show ip mrib route
+       show ip mrib route {group}
+       show ip mrib route {group} {source} 
+       show ip mrib route vrf {vrf}
+       show ip mrib route vrf {vrf} {group}
+       show ip mrib route vrf {vrf} {group} {source}
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'multicast_group': {
+                            Any(): {
+                                'source_address': {
+                                    Any(): {                            
+                                        'rpf_nbr': str,
+                                        Optional('flags'): str,                                  
+                                        'incoming_interface_list': {
+                                            Any(): {
+                                                'ingress_flags': str,
+                                            } 
+                                        },
+                                        'egress_interface_list': {
+                                            Any(): {
+                                                'egress_flags': str,
+                                                Optional('egress_next_hop'): str,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpMrib(ShowIpMribSchema):
+    """Parser for:
+    show ip mrib route
+    show ip mrib route {group}
+    show ip mrib route {group} {source}
+    show ip mrib route vrf {vrf}
+    show ip mrib route vrf {vrf} {group}
+    show ip mrib route vrf {vrf} {group} {source}"""
+
+    cli_command = ['show ip mrib route',  
+                   'show ip mrib route {group}',
+                   'show ip mrib route {group} {source}',
+                   'show ip mrib vrf {vrf} route', 
+                   'show ip mrib vrf {vrf} route {group}', 
+                   'show ip mrib vrf {vrf} route {group} {source}']
+
+
+    def cli(self, vrf='default', group='',source='',address_family='ipv4',output=None):
+        cmd="show ip mrib "
+        if output is None:
+            
+            if vrf != 'default':
+                cmd += " vrf {vrf} ".format(vrf=vrf)            
+            cmd += "route"                        
+            if group:
+                cmd += " {group}".format(group=group)
+            if source:
+                cmd += " {source}".format(source=source)               
+                  
+            output = self.device.execute(cmd)
+
+        # initial variables        
+        mrib_dict = {}
+        sub_dict = {}
+        outgoing = False				 
+					 
+        # (*,225.1.1.1) RPF nbr: 10.10.10.1 Flags: C          
+        # (3.3.3.3,225.1.1.1) RPF nbr: 10.10.10.1 Flags:
+        # (*,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: C
+        #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
+
+        p1 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
+                     '(?P<multicast_group>[\w\:\.\/]+)\)'
+                     ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
+                     '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
+
+        # GigabitEthernet2/0/6 Flags: A NS 
+        # Tunnel1 Flags: A NS  		 
+        p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
+                         '\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
+						 
+        #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
+        #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
+        p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
+                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
+
+        #  Vlan2006 Flags: F LI NS
+        p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
+                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
+
+        for line in output.splitlines():
+            line=(line.strip()).replace('\t',' ')
+
+     
+
+            #  (*,225.1.1.1) Flags: C HW
+            # (70.1.1.10,225.1.1.1) Flags: HW
+            #  (*,FF05:1:1::1) Flags: C HW
+            # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
+            m = p1.match(line)
+            if m:
+                mrib_dict.setdefault('vrf',{})         
+                mrib_data = mrib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
+                group = m.groupdict()
+                source_address = group['source_address']
+                multicast_group = group['multicast_group']
+
+                mrib_data.setdefault('multicast_group',{})
+                sub_dict = mrib_data['multicast_group']\
+                    .setdefault(multicast_group,{})\
+                    .setdefault('source_address',{})\
+                    .setdefault(source_address,{})                
+                sub_dict['rpf_nbr'] = m.groupdict()['RPF_nbr']
+                sub_dict['flags'] = m.groupdict()['mrib_flags']
+                
+                continue
+                
+            # GigabitEthernet2/0/6 Flags: A NS	
+            # Tunnel50 Flags: A            
+            sw_data=sub_dict
+            m=p2.match(line)
+            if m:
+                group = m.groupdict()
+                ingress_interface = group['ingress_if']
+                ing_intf_dict=sw_data.setdefault('incoming_interface_list',{}).setdefault(ingress_interface,{})   
+                ing_intf_dict['ingress_flags'] = group['ingress_flags']
+                continue
+                    
+
+            #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154 
+            # LISP0.1 Flags: F NS	Next-hop: (100.11.11.11, 235.1.3.167)
+            m=p3.match(line)
+            if m:
+                group = m.groupdict()
+                egress_interface = group['egress_if']  
+
+                if group['egress_next_hop']:
+                     
+                    egress_next_hop = group['egress_next_hop']
+                    #Overlay interfaces have multiple egress interfaces with same  ID
+                    #appending egress interface with nexthop to get complete data structure
+                    # LISP0.1 Flags: F      Next-hop: 100.154.154.154
+                    # LISP0.1 Flags: F      Next-hop: 100.33.33.33
+                    # LISP0.1 Flags: F      Next-hop: 100.88.88.88
+
+                    egress_interface = group['egress_if']+'-'+egress_next_hop
+
+                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})  
+                egress_data['egress_flags'] = group['egress_flags']                 
+                egress_data['egress_next_hop'] =  group['egress_next_hop']
+                   
+                continue    
+
+            # Vlan2001 Flags: F NS
+            m=p4.match(line)
+            if m:
+                group = m.groupdict()
+                egress_flags = group['egress_flags'] 
+                egress_interface = group['egress_if']
+                    
+                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})                                    
+                egress_data['egress_flags'] = egress_flags                  
+                  
+                continue                     
+                       
+        return mrib_dict
+
+# ===============================
+# Schema for:
+#    * 'show ip sla statistics'
+#    * 'show ip sla statistics {probe_id}'
+# ===============================
+class ShowIpSlaStatisticsSchema(MetaParser):
+    ''' Schema for:
+        * "show ip sla statistics"
+        * "show ip sla statistics {probe_id}" 
+    '''
+    schema = {
+        'ids': {
+            Any(): {
+                'probe_id': int,
+                Optional('rtt_stats'): str,
+                Optional('start_time'): str,
+                Optional('return_code'): str,
+                Optional('no_of_success'): int,
+                Optional('no_of_failures'): int,
+                Optional('ttl'): int,	
+                Optional('return_code'): str,
+                Optional('oper_id'): int,	
+                Optional('no_of_failures'): int,
+                Optional('delay'): str,
+                Optional('destination'): str,		
+            },
+        }
+    }
+
+
+# ===============================
+# Parser for:
+#    * 'show ip sla statistics'
+#    * 'show ip sla statistics {probe_id}'
+# ===============================
+class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
+    '''Parser for:
+       * "show ip sla statistics"
+       * "show ip sla statistics {probe_id}"
+    '''
+    cli_command = ['show ip sla statistics','show ip sla statistics {probe_id}']
+
+    def cli(self, probe_id='', output=None):
+
+        if output is None:
+            if probe_id:
+                cmd = self.cli_command[1].format(probe_id=probe_id)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+        
+        # Initialize dictionary
+        parsed_dict = {}
+        
+        # IPSLA operation id: 1
+        p1 = re.compile(r'^IPSLA operation id: (?P<probe_id>\d+)$')
+
+        # Latest RTT: NoConnection/Busy/Timeout
+        p2 = re.compile(r'^Latest RTT: (?P<rtt_stats>.*).*$')
+
+        # Latest operation start time: 00:33:01 PDT Mon Sep 20 2021
+        p3 = re.compile(r'^Latest operation start time: (?P<start_time>.*)$')
+
+        # Latest operation return code: Timeout
+        p4 = re.compile(r'^Latest operation return code: (?P<return_code>\w+)')
+
+        # Number of successes: 0
+        p5 = re.compile(r'^Number of successes: (?P<no_of_success>\d+)$')
+
+        # Number of failures: 1
+        p6 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
+
+        # Operation time to live: 3569 sec
+        p7 = re.compile(r'^Operation time to live: (?P<ttl>\d+).*$')
+
+        # oper-id        status               lossSD       delay                  destination                             
+        # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
+        p8 = re.compile(r'^(?P<oper_id>^\d+)\s+'
+                r'(?P<return_code>\w+)\s+'
+                r'(?P<no_of_failures>\d+)\s+'
+                r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
+                r'(?P<destination>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IPSLA operation id: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                id = group['probe_id']
+                id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
+                id_dict.update({'probe_id':int(group['probe_id'])})
+                continue
+
+            # Latest RTT: NoConnection/Busy/Timeout
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'rtt_stats':group['rtt_stats']})
+                continue
+
+            # Latest operation start time: 00:33:01 PDT Mon Sep 20 2021
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'start_time':group['start_time']})
+                continue
+
+            # Latest operation return code: Timeout
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'return_code':group['return_code']})
+                continue
+
+            # Number of successes: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'no_of_success':int(group['no_of_success'])})
+                continue
+
+            # Number of failures: 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'no_of_failures':int(group['no_of_failures'])})
+                continue
+
+            # Operation time to live: 3569 sec
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'ttl':int(group['ttl'])})
+                continue
+
+            # oper-id        status               lossSD       delay                  destination                             
+            # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({
+                    'oper_id':int(group['oper_id']),
+                    'return_code': group['return_code'],
+                    'no_of_failures':int(group['no_of_failures']),
+                    'delay': group['delay'],
+                    'destination': group['destination']})
+                continue
+
+        return parsed_dict
+
+# ===============================
+# Schema for:
+#    * 'show ip sla statistics details'
+#    * 'show ip sla statistics {probe_id} details'
+# ===============================
+
+class ShowIpSlaStatisticsDetailsSchema(MetaParser):
+    """ Schema for:
+        * 'show ip sla statistics details'
+        * 'show ip sla statistics {probe_id} details'
+    """
+    schema = {
+        'ids': {
+            Any(): {
+                'probe_id': int,
+                Optional('rtt_stats'): str,
+                Optional('start_time'): str,
+                Optional('return_code'): str,
+                Optional('no_of_success'): int,
+                Optional('no_of_failures'): int,
+                Optional('ttl'): int,
+                Optional('threshold_occurances'): str,
+                'state_of_entry': str,
+                'reset_time': str,
+                Optional('type_of_operation'): str,
+                Optional('delay'): str,
+                Optional('destination'): str,
+                Optional('oper_id'): int,		
+            },
+        }
+    }
+
+# ===============================
+# Parser for:
+#    * 'show ip sla statistics details'
+#    * 'show ip sla statistics {probe_id} details'
+# ===============================
+
+class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
+    """ Parser for:
+        * 'show ip sla statistics details'
+        * 'show ip sla statistics {probe_id} details'
+    """
+
+    cli_command = ['show ip sla statistics details', 'show ip sla statistics {probe_id} details']
+
+    def cli(self, probe_id='', output=None):
+        if output is None:
+            if probe_id:
+                cmd =  self.cli_command[1].format(probe_id=probe_id)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+        # Initialize dictionary
+        parsed_dict = {}
+            
+        # IPSLA operation id: 50
+        p1 = re.compile(r'^IPSLA operation id: (?P<probe_id>\d+)$')
+
+        # Latest RTT: 1 milliseconds
+        p2 = re.compile(r'^Latest RTT: (?P<rtt_stats>.*).*$')
+
+        # Latest operation start time: 05:47:54 UTC Tue Sep 28 2021
+        p3 = re.compile(r'^Latest operation start time: (?P<start_time>.*)$')
+
+        # Latest operation return code: OK
+        p4 = re.compile(r'^Latest operation return code: (?P<return_code>\w+)$')
+
+        # Number of successes: 48
+        p5 = re.compile(r'^Number of successes: (?P<no_of_success>\d+)$')
+
+        # Number of failures: 0
+        p6 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
+
+        # Operation time to live: Forever
+        p7 = re.compile(r'^Operation time to live: (?P<ttl>\d+).*$')
+
+        # Over thresholds occurred: FALSE
+        p8 = re.compile(r'^Over thresholds occurred: (?P<threshold_occurances>.*)$')
+
+        # Operational state of entry: Active
+        p9 = re.compile(r'^Operational state of entry: (?P<state_of_entry>.*)$')
+
+        # Last time this entry was reset: Never
+        p10 = re.compile(r'^Last time this entry was reset: (?P<reset_time>.*)$')
+
+        # Type of operation: mcast
+        p11 = re.compile(r'^Type of operation: (?P<type_of_operation>.*)$')
+
+        # oper-id        status               lossSD       delay                  destination                             
+        # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
+        p12 = re.compile(r'^(?P<oper_id>^\d+)\s+'
+                r'(?P<return_code>\w+)\s+'
+                r'(?P<no_of_failures>\d+)\s+'
+                r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
+                r'(?P<destination>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPSLA operation id: 50
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                id = group['probe_id']
+                id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
+                id_dict.update({'probe_id':int(group['probe_id'])})
+                continue
+            
+            # Latest RTT: 1 milliseconds
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'rtt_stats':group['rtt_stats']})
+                continue
+
+            # Latest operation start time: 05:47:54 UTC Tue Sep 28 2021
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'start_time':group['start_time']})
+                continue
+
+            # Latest operation return code: OK
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'return_code':group['return_code']})
+                continue
+
+            # Number of successes: 48
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'no_of_success':int(group['no_of_success'])})
+                continue
+
+            # Number of failures: 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'no_of_failures':int(group['no_of_failures'])})
+                continue
+
+            # Operation time to live: Forever
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'ttl':int(group['ttl'])})
+                continue
+
+            # Over thresholds occurred: FALSE
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'threshold_occurances':group['threshold_occurances']})
+                continue
+
+            # Operational state of entry: Active
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'state_of_entry':group['state_of_entry']})
+                continue
+
+            # Last time this entry was reset: Never
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'reset_time':group['reset_time']})
+                continue
+
+            # Type of operation: mcast
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'type_of_operation':group['type_of_operation']})
+                continue
+
+            # oper-id        status               lossSD       delay                  destination                             
+            # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({
+                    'oper_id': int(group['oper_id']),
+                    'return_code': group['return_code'],
+                    'no_of_failures': int(group['no_of_failures']),
+                    'delay': group['delay'],
+                    'destination': group['destination']})
+                continue
+                
+        return parsed_dict
+
+# ===============================
+# Schema for:
+#    * 'show ip sla statistics aggregated'
+#    * 'show ip sla statistics aggregated {probe_id}'
+# ===============================
+
+class ShowIpSlaStatisticsAggregatedSchema(MetaParser):
+    """ Schema for:
+        * 'show ip sla statistics aggregated'
+        * 'show ip sla statistics aggregated {probe_id}'
+    """
+
+    schema = {
+        'ids': {
+            Any(): {
+                Optional('probe_id'): int,
+                Optional('type_of_operation'): str,
+                # Optional('operation_status'): str,
+                Optional('start_time'): {
+                    Any(): { 
+                        Optional('no_of_success'): int,
+                        Optional('no_of_failures'): int,
+                        Optional('oper_id'): int,
+                        Optional('status'): str,
+                        Optional('loss_sd'): int,
+                        Optional('delay'): str,
+                        Optional('destination'): str,
+                        Optional('dns_rtt'): int,
+                        Optional('tcp_connection_rtt'): int,
+                        Optional('http_transaction_rtt'): int,
+                    }
+                },	
+            }
+        }
+    }
+
+
+# ===============================
+# Parser for:
+#    * 'show ip sla statistics aggregated'
+#    * 'show ip sla statistics aggregated {probe_id}'
+# ===============================
+
+class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
+    '''Parser for:
+            * 'show ip sla statistics aggregated'
+            * 'show ip sla statistics aggregated {probe_id}'
+    '''
+    cli_command = ['show ip sla statistics aggregated', 'show ip sla statistics aggregated {probe_id}']
+
+    def cli(self, probe_id='', output=None):
+        if output is None:
+            if probe_id:
+                cmd =  self.cli_command[1].format(probe_id=probe_id)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+
+        # IPSLA operation id: 50
+        p1 = re.compile(r'^IPSLA operation id: (?P<probe_id>\d+)$')
+
+        # Type of operation: tcp-connect
+        p2 = re.compile(r'^Type of operation: (?P<type_of_operation>.*)$')
+
+        # Start Time Index: 13:48:19 UTC Thu Oct 21 2021
+        p3 = re.compile(r'^Start Time Index: (?P<start_time>.*)$')
+
+        # Number of successes: 60
+        p4 = re.compile(r'^Number of successes: (?P<no_of_success>\d+)$')
+
+        # Number of failures: 0
+        p5 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
+
+        # oper-id        status               lossSD       delay                  destination                             
+        # 60988531       OK                   0            985992/996505/1057999             10.50.10.100
+        p6 = re.compile(r'^(?P<oper_id>^\d+)\s+'
+                r'(?P<status>\w+)\s+'
+                r'(?P<loss_sd>\d+)\s+'
+                r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
+                r'(?P<destination>.*)$')
+        
+        # DNS RTT: 0
+        p7 = re.compile(r'^DNS RTT: (?P<dns_rtt>\d+)$')
+
+        # TCP Connection RTT: 56
+        p8 = re.compile(r'^TCP Connection RTT: (?P<tcp_connection_rtt>\d+)$')
+
+        # HTTP Transaction RTT: 360
+        p9 = re.compile(r'^HTTP Transaction RTT: (?P<http_transaction_rtt>\d+)$')
+        
+
+        for line in output.splitlines():
+            line = line.strip()
+          
+            # IPSLA operation id: 50
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                id = group['probe_id']
+                id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
+                id_dict.update({'probe_id':int(group['probe_id'])})
+                continue
+
+            # Type of operation: tcp-connect
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'type_of_operation':group['type_of_operation']})
+                continue
+
+            # Start Time Index: 13:48:19 UTC Thu Oct 21 2021
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict = id_dict.setdefault('start_time', {}).setdefault(group['start_time'], {})
+                continue
+            
+            # Number of successes: 60
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({'no_of_success':int(group['no_of_success'])})
+                continue
+
+            # Number of failures: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({'no_of_failures':int(group['no_of_failures'])})
+                continue
+
+            # oper-id        status               lossSD       delay                  destination                             
+            # 60988531       OK                   0            985992/996505/1057999             10.50.10.100
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({
+                    'oper_id':int(group['oper_id']),
+                    'status': group['status'],
+                    'loss_sd':int(group['loss_sd']),
+                    'delay': group['delay'],
+                    'destination': group['destination']})
+                continue
+
+            # DNS RTT: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({'dns_rtt': int(group['dns_rtt'])})
+                continue
+            
+            # TCP Connection RTT: 56
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({'tcp_connection_rtt': int(group['tcp_connection_rtt'])})
+                continue
+
+            # HTTP Transaction RTT: 360
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict.update({'http_transaction_rtt': int(group['http_transaction_rtt'])})
+                continue
+
+        return parsed_dict

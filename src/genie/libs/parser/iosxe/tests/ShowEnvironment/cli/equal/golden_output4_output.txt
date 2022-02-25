@@ -1,0 +1,48 @@
+show environment
+
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
+
+ Slot        Sensor          Current State   Reading        Threshold(Minor,Major,Critical,Shutdown)
+ ----------  --------------  --------------- ------------   ---------------------------------------
+ R0          PSOC-MB_0: VOUT Normal          12058 mV     	na
+ R0          PSOC-MB_1: VOUT Normal          3292  mV     	na
+ R0          PSOC-MB_2: VOUT Normal          11990 mV     	na
+ R0          PSOC-MB_3: VOUT Normal          11990 mV     	na
+ R0          PSOC-MB_4: VOUT Normal          5000  mV     	na
+ R0          PSOC-MB_5: VOUT Normal          3299  mV     	na
+ R0          PSOC-MB_7: VOUT Normal          2499  mV     	na
+ R0          PSOC-MB_8: VOUT Normal          1800  mV     	na
+ R0          PSOC-MB_9: VOUT Normal          1200  mV     	na
+ R0          PSOC-MB_10: VOU Normal          1200  mV     	na
+ R0          3570MB1 _0: VOU Normal          1001  mV     	na
+ R0          3570MB2 _0: VOU Normal          999   mV     	na
+ R0          3570MB3 _0: VOU Normal          1652  mV     	na
+ R0          35215MB1_0: VOU Normal          840   mV     	na
+ R0          35215MB2_0: VOU Normal          806   mV     	na
+ R0          Temp: Outlet_A  Normal          30    Celsius	(55 ,60 ,65 ,75 )(Celsius)
+ R0          Temp: Outlet_B  Normal          26    Celsius	(60 ,65 ,70 ,80 )(Celsius)
+ R0          Temp: Inlet_A   Normal          30    Celsius	(45 ,55 ,65 ,70 )(Celsius)
+ R0          Temp: Inlet_B   Normal          26    Celsius	(55 ,65 ,75 ,80 )(Celsius)
+ R0          Temp: UADP_0_0  Normal          38    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_1  Normal          37    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_2  Normal          37    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_3  Normal          34    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_4  Normal          37    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_5  Normal          34    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_6  Normal          35    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_7  Normal          34    Celsius	(105,110,120,124)(Celsius)
+ R0          Temp: UADP_0_8  Normal          36    Celsius	(105,110,120,124)(Celsius)
+ R0          PSOC-DB_1: VOUT Normal          5001  mV     	na
+ R0          PSOC-DB_2: VOUT Normal          3299  mV     	na
+ R0          PSOC-DB_4: VOUT Normal          2499  mV     	na
+ R0          PSOC-DB_5: VOUT Normal          1699  mV     	na
+ R0          PSOC-DB_7: VOUT Normal          1500  mV     	na
+ R0          PSOC-DB_8: VOUT Normal          1299  mV     	na
+ R0          PSOC-DB_11: VOU Normal          601   mV     	na
+ R0          3570DB1 _0: VOU Normal          1790  mV     	na
+ R0          3570DB2 _0: VOU Normal          1201  mV     	na
+ R0          3570DB3 _0: VOU Normal          1051  mV     	na
+ R0          Temp: Coretemp  Normal          36    Celsius	(107,117,123,125)(Celsius)
+ R0          Temp: OutletDB  Normal          28    Celsius	(65 ,70 ,75 ,85 )(Celsius)

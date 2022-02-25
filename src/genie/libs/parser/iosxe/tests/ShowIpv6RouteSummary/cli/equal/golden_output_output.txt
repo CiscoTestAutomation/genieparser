@@ -1,0 +1,30 @@
+IPv6 routing table name is default(0) global scope - 526 entries
+IPv6 routing table default maximum-paths is 16
+Route Source    Networks    Overhead    Memory (bytes)
+connected       7           1344        1512        
+local           8           1536        1728        
+ND              0           0           0           
+  Default: 0  Prefix: 0  Destination: 0  Redirect: 0
+ospf 200        500         96000       108000      
+  Intra-area: 500  Inter-area: 0  External-1: 0  External-2: 0
+  NSSA External 1: 0  NSSA External 2: 0
+ospf 100        0           0           0           
+  Intra-area: 0  Inter-area: 0  External-1: 0  External-2: 0
+  NSSA External 1: 0  NSSA External 2: 0
+ospf 702        11          2112        2376        
+  Intra-area: 11  Inter-area: 0  External-1: 0  External-2: 0
+  NSSA External 1: 0  NSSA External 2: 0
+bgp 65001       0           0           0           
+  Internal: 0  External: 0  Local: 0
+static          0           0           0           
+  Static: 0  Per-user static: 0
+ospf 99         0           0           0           
+  Intra-area: 0  Inter-area: 0  External-1: 0  External-2: 0
+  NSSA External 1: 0  NSSA External 2: 0
+ospf 202        0           0           0           
+  Intra-area: 0  Inter-area: 0  External-1: 0  External-2: 0
+  NSSA External 1: 0  NSSA External 2: 0
+Total           526         100992      113616      
+
+  Number of prefixes:
+    /8: 1, /64: 8, /128: 517

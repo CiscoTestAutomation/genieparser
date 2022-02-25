@@ -4,6 +4,7 @@ expected_output = {
     "chassis_sn": "YYY6666Y6R6",
     "compiled_by": "prod_rel_team",
     "compiled_date": "Fri 07-Mar-14 08:07",
+    "copyright_years": "1986-2014",
     "curr_config_register": "0x2102",
     "hostname": "C1900",
     "image_id": "C1900-UNIVERSALK9-M",

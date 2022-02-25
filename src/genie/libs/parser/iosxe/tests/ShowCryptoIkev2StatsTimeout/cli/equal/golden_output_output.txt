@@ -1,0 +1,7 @@
+-----------------------------------------
+IKEV2 TIMER                     TIMED OUT
+-----------------------------------------
+EXT SERVICE TIMER                       0
+AUTH TIMER                              0
+PACKET MAXIMUM RETRANS TIMER         7736
+DPD MAX RETRANS TIMER                   0

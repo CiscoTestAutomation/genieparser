@@ -8,6 +8,7 @@ expected_output = {
         "image_type": "production image",
         "compiled_date": "Wed 12-Jul-17 16:55",
         "compiled_by": "prod_rel_team",
+        "copyright_years": "1986-2017",
         "rom": "IOS-XE ROMMON",
         "bootldr": "CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 1.2, RELEASE SOFTWARE (P)",
         "hostname": "testhost",

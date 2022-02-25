@@ -11,6 +11,8 @@ IOSXE parsers for the following show commands:
     * 'show policy-map control-plane'
     * 'show policy-map interface',
     * 'show policy-map type control subscriber binding <policymap name>',
+    * 'show policy-map type queueing interface {interface} output class {class_name}',
+    * 'show policy-map type queueing interface {interface} output',
 '''
 
 # Python
@@ -38,6 +40,8 @@ from genie.libs.parser.utils.common import Common
 #   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
 #   * 'show policy-map interface',
+#   * 'show policy-map type queueing interface {interface} output class {class_name}'
+#   * 'show policy-map type queueing interface {interface} output'
 # ===========================================================================
 class ShowPolicyMapTypeSchema(MetaParser):
 
@@ -2320,4 +2324,334 @@ class ShowPolicyMapClass(ShowPolicyMapClassSchema):
                 continue
 
         return ret_dict
+
+# =====================================================================
+# Super Parser for:
+#   * 'show policy-map type queueing interface {interface} output class {class_name}',
+#   * 'show policy-map type queueing interface {interface} output',
+# =====================================================================
+class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
+    ''' Super Parser for
+        * 'show policy-map type queueing interface {interface} output class {class_name}',
+        * 'show policy-map type queueing interface {interface} output',
+    '''    
+
+    def cli(self, interface='', class_name='', output=None):
+
+        # Init vars
+        ret_dict = {}
+        priority_level_status = False
+
+        # GigabitEthernet0/1/5
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
+                         'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
+
+        # Port-channel1: Service Group 1
+        p0_1 = re.compile(r'^(?P<top_level>([Pp]ort.*)): +Service Group +(?P<service_group>(\d+))$')
+
+        # Service-policy queueing output: parent
+        # Service-policy queueing : child
+        p1 = re.compile(r'^[Ss]ervice-policy queueing +(?P<service_policy>(|output)):+ *(?P<policy_name>([\w\-]+).*)')
+
+        # service policy : child
+        p1_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>([\w\-]+))$')
+
+        # Class-map: Ping_Class (match-all)
+        # Class-map:TEST (match-all)
+        # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
+        p2 = re.compile(r'^[Cc]lass-map *:(\s*)?(?P<class_map>\S+) +\((?P<match_all>[\w-]+)\)$')
+
+        # queue stats for all priority classes:
+        p2_1 = re.compile(r'^queue +stats +for +all +priority +classes:$')
+
+        # priority level 2
+        p2_1_1 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
+
+        # 8 packets, 800 bytes
+        p3 = re.compile(r'^(?P<packets>(\d+)) packets(, (?P<bytes>(\d+)) +bytes)?')
+
+        # 8 packets
+        p3_1 = re.compile(r'^(?P<packets>(\d+)) packets')
+
+
+        # Match: access-group name Ping_Option
+        # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
+        # Match: traffic-class 7
+        p4 = re.compile(r'^[Mm]atch:( +)?(?P<match>([\S\s]+))$')
+
+
+        # Queueing
+        p5 = re.compile(r'^Queueing$')
+
+        # queue size 0, queue limit 4068
+        p6 = re.compile(r'^queue +size +(?P<queue_size>(\d+)), +queue +limit +(?P<queue_limit>(\d+))$')
+
+        # queue limit 64 packets
+        p7 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) packets$')
+
+        # queue limit 62500 bytes
+        p8 = re.compile(r'^queue +limit +(?P<queue_limit_bytes>(\d+)) bytes$')
+        
+        # (total drops) 0
+        p9 = re.compile(r'^\(total +drops\) +(?P<total_drops>(\d+))$')
+
+        # (bytes output) 0
+        p10 = re.compile(r'^\(bytes +output\) +(?P<bytes_output>(\d+))$')
+        
+        # shape (average) cir 474656, bc 1899, be 1899
+        p11 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
+                            'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
+
+        # target shape rate 474656
+        p12 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
+
+        # queue limit 1966 us/ 49152 bytes
+        p13 = re.compile(r'^queue +limit +(?P<queue_limit_us>(\d+)) +us/ +(?P<queue_limit_bytes>(\d+)) bytes$')
+
+        # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+        p14 = re.compile(r'^Priority:\s+(?P<percent>(\d+))%\s+\((?P<kbps>(\d+))\s+kbps\),\s+burst\sbytes\s+(?P<burst_bytes>(\d)+),(\s+'
+                          'b/w\sexceed\sdrops:\s+(?P<exceed_drops>(\d+)))?$')
+
+        # Priority Level: 1
+        p15 = re.compile(r'^Priority +Level: +(?P<priority_level>(\d+))$')
+        
+        # Priority: Strict, b/w exceed drops: 0
+        p16 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
+
+        count=0
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Control Plane 
+            m = p0.match(line)
+            if m:
+                top_level = m.groupdict()['top_level']
+                top_level_dict = ret_dict.setdefault(top_level, {})
+                continue
+
+            # Port-channel1: Service Group 1
+            m = p0_1.match(line)
+            if m:
+                top_level = m.groupdict()['top_level']
+                service_group = int(m.groupdict()['service_group'])
+                top_level_dict = ret_dict.setdefault(top_level, {})
+                top_level_dict['service_group'] = service_group
+                continue
+
+            # Service-policy input: Control_Plane_In
+            # Service-policy output: Control_Plane_Out
+            m = p1.match(line)
+            if m:
+                 
+                top_level_dict = ret_dict.setdefault(interface, {})
+                group = m.groupdict()
+                if group['service_policy'] == '':
+                    count=count+1
+                    service_policy = 'output'+str(count)
+                else:
+                    service_policy = group['service_policy']
+                policy_name = group['policy_name']
+
+                # Set dict
+                service_policy_dict = top_level_dict.setdefault('service_policy', {}).\
+                                                     setdefault(service_policy, {})
+                policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
+                                                       setdefault(policy_name, {})
+                parent_policy_dict = policy_name_dict
+                continue
+
+            # Service policy : child
+            m = p1_1.match(line)
+            if m:
+                policy_name = m.groupdict()['policy_name']
+                policy_name_dict = parent_policy_dict.setdefault('child_policy_name', {}).\
+                                                       setdefault(policy_name, {})
+                continue
+
+            # Class-map: Ping_Class (match-all)
+            # Class-map:TEST (match-all)
+            # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
+            m = p2.match(line)
+            if m:
+                match_list = []
+                class_line_type = None
+                queue_stats = 0
+                class_map = m.groupdict()['class_map']
+                class_map_dict = policy_name_dict.setdefault('class_map', {}).\
+                                                  setdefault(class_map, {})
+                class_map_dict['match_evaluation'] =  m.groupdict()['match_all']
+                continue
+
+            # queue stats for all priority classes:
+            m = p2_1.match(line)
+            if m:
+                queue_stats = 1
+                queue_dict = policy_name_dict.setdefault('queue_stats_for_all_priority_classes', {})
+                continue
+
+            # priority level 2
+            m = p2_1_1.match(line)
+            if m:
+                priority_level_status = True
+                priority_level = m.groupdict()['priority_level']
+                priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
+                priority_dict['queueing'] = queueing_val
+                continue
+
+            # 8 packets, 800 bytes
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                packets = group['packets']
+                class_map_dict['packets'] = int(packets)
+                if 'bytes' in group and group['bytes']:
+                    bytes = group['bytes']
+                    class_map_dict['bytes'] = int(bytes)
+                continue
+
+            # 8 packets
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                packets = group['packets'].strip()
+                class_map_dict['packets'] = int(packets)
+                continue
+
+            # Match: access-group name Ping_Option
+            # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
+            # Match: traffic-class 7
+            m = p4.match(line)
+            if m:
+                match_list.append(m.groupdict()['match'])
+                class_map_dict['match'] = match_list
+                continue
+
+            # Queueing
+            m = p5.match(line)
+            if m:
+                if queue_stats == 1:
+                    queueing_val = True
+                    
+                else:
+                    class_map_dict['queueing'] = True
+                continue
+
+            # queue size 0, queue limit 4068
+            m = p6.match(line)
+            if m:
+                class_map_dict['queue_size'] = int(m.groupdict()['queue_size'])
+                class_map_dict['queue_limit'] = int(m.groupdict()['queue_limit'])
+                continue
+
+            # queue limit 64 packets
+            m = p7.match(line)
+            if m:
+                if queue_stats == 1:
+                    if not priority_level_status:
+                        priority_dict = queue_dict.setdefault('priority_level',
+                                                              {}).setdefault('default', {})
+                        priority_dict['queueing'] = queueing_val
+                    priority_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
+                else:
+                    class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
+                continue
+
+            # queue limit 62500 bytes
+            m = p8.match(line)
+            if m:
+                class_map_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                continue
+                
+            # (total drops) 0
+            m = p9.match(line)
+            if m:
+                class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                continue
+            
+            # (bytes output) 0
+            m = p10.match(line)
+            if m:
+                class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                continue
+                
+            # shape (average) cir 474656, bc 1899, be 1899
+            m = p11.match(line)
+            if m:
+                class_map_dict.update({k : v if k =='shape_type' else int(v)  for k,v in m.groupdict().items()})
+                continue
+
+            # target shape rate 474656
+            m = p12.match(line)
+            if m:
+                class_map_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
+                continue
+
+            # queue limit 1966 us/ 49152 bytes
+            m = p13.match(line)
+            if m:
+                if queue_stats == 1 :
+                    priority_dict['queue_limit_us'] = int(m.groupdict()['queue_limit_us'])
+                    priority_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                else:
+                    class_map_dict['queue_limit_us'] = int(m.groupdict()['queue_limit_us'])
+                    class_map_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                continue
+
+            # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+            m = p14.match(line)
+            if m:
+                pri_dict = class_map_dict.setdefault('priority', {})
+                pri_dict.update({k:int(v) for k,v in m.groupdict().items()})
+                continue
+
+            # Priority Level: 1
+            m = p15.match(line)
+            if m:
+                class_map_dict['priority_level'] = int(m.groupdict()['priority_level'])
+                continue
+
+
+            # Priority: Strict, b/w exceed drops: 0
+            m = p16.match(line)
+            if m:
+                pri_dict = class_map_dict.setdefault('priority', {})
+                pri_dict['type'] = m.groupdict()['type']
+                pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
+                continue
+      
+        return ret_dict
+
+
+
+# =====================================================================
+# Parser for:
+#   * 'show policy-map type queueing interface {interface} output class {class_name}'
+#   * 'show policy-map type queueing interface {interface} output'
+# =====================================================================
+class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map type queueing interface {interface} output class {class_name}'
+        * 'show policy-map type queueing interface {interface} output'
+    '''
+    cli_command = ['show policy-map type queueing interface {interface} output class {class_name}',
+                   'show policy-map type queueing interface {interface} output'
+                   ]
+    
+
+    def cli(self, interface, class_name='', output=None):
+
+        if output is None:
+            # Build command
+            if interface and class_name:
+                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            else:
+                cmd = self.cli_command[1].format(interface=interface)
+
+            # Execute command
+            output = self.device.execute(cmd)
+        
+        # Call super      
+        return super().cli(output=output, interface=interface, class_name=class_name)
+
 

@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show logging onboard rp active uptime
     * show logging onboard rp active status
     * show logging onboard rp active {include}
+    * show logging onboard rp {rp} {feature} detail
 '''
 
 # Python
@@ -956,4 +957,78 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
                     root_dict[group['time']].append(group['info'])
                 continue
                 
+        return ret_dict
+        
+        
+class ShowLoggingOnboardRpActiveTemperatureDetailSchema(MetaParser):
+    """Schema for show logging onboard rp [active|syandby] [temperature|voltage] detail 
+                """
+
+    schema = {
+        Optional('number_of_sensors'): int,
+        'sensors': {
+            Any(): {
+                'sensor_id': int,
+                'normal_range_min': int,
+                'normal_range_max': int,
+                'maximum_sensor_value': int
+            },
+        }
+    }
+
+
+
+class ShowLoggingOnboardRpActiveTemperatureDetail(ShowLoggingOnboardRpActiveTemperatureDetailSchema):
+    """Schema for show logging onboard rp [active|standby] [temperature|voltage] detail 
+                """
+
+    cli_command = 'show logging onboard rp {rp} {feature} detail'
+
+    def cli(self, rp , feature , output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(rp=rp,feature=feature))
+
+        ret_dict = {}
+
+        #Number of sensors          : 15
+        p1 = re.compile(r'^Number +of +sensors +: +(?P<number_of_sensors>\d+)$')
+
+        #--------------------------------------------------------------------------------
+        #Sensor                    ID         Normal Range          Maximum Sensor Value
+        #--------------------------------------------------------------------------------
+        #SYSTEM OUTLET-A           35         0 - 70                121
+        #SYSTEM OUTLET-B           36         0 - 60                121
+        #SYSTEM INLET-A            37         0 - 50                121
+        #SYSTEM INLET-B            38         0 - 45                121
+        #Temp: UADP_0_0            39         0 - 105               121                  
+        #DOPPLER0 UADP_0_2         6          0 - 124               91
+        p2 = re.compile(r'^(?P<sensors>.+?)\s+(?P<sensor_id>\d+)\s+(?P<normal_range_min>\d+) - (?P<normal_range_max>\d+)\s+(?P<maximum_sensor_value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Number of sensors          : 15
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_sensors'] = int(group['number_of_sensors'])
+                continue
+
+            #--------------------------------------------------------------------------------
+            #Sensor                    ID         Normal Range          Maximum Sensor Value
+            #--------------------------------------------------------------------------------
+            #SYSTEM OUTLET-A           35         0 - 70                121
+            #SYSTEM OUTLET-B           36         0 - 60                121
+            #SYSTEM INLET-A            37         0 - 50                121
+            #SYSTEM INLET-B            38         0 - 45                121
+            #Temp: UADP_0_0            39         0 - 105               121                  
+            #DOPPLER0 UADP_0_2         6          0 - 124               91
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sensors = group.pop('sensors')
+                temp_dict = ret_dict.setdefault('sensors', {}).setdefault(sensors, {})
+                temp_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
         return ret_dict

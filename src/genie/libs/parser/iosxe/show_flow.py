@@ -1277,3 +1277,78 @@ class ShowRunningConfigFlowExporter(ShowRunningConfigFlowExporterSchema):
                 continue
 
         return ret_dict
+
+
+class ShowRunningConfigFlowRecordSchema(MetaParser):
+    schema = {
+        'flow_record': {
+            Any(): {
+                Optional('match_list'): ListOf(str),
+                Optional('collect_list'): ListOf(str),
+            }
+        }
+    }
+
+class ShowRunningConfigFlowRecord(ShowRunningConfigFlowRecordSchema):
+
+    cli_command = 'show running-config flow record'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # flow record record_l2_in
+        p1 = re.compile(r'^flow\srecord\s(?P<flow_record>.*)$')
+
+        # match datalink ethertype
+        # match datalink vlan input
+        # match datalink mac source address input
+        # match datalink mac destination address input
+        p2 = re.compile(r'^match\s(?P<match_list>.*)$')
+
+        # collect counter bytes long
+        # collect counter packets long
+        # collect timestamp absolute first
+        p3 = re.compile(r'^collect\s(?P<collect_list>.*)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            # flow record record_l2_in
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                flow_record_name = group['flow_record']
+                flow_dict = ret_dict.setdefault('flow_record', {}).setdefault(flow_record_name, {})
+                continue
+
+            # match datalink ethertype
+            # match datalink vlan input
+            # match datalink mac source address input
+            # match datalink mac destination address input
+            m = p2.match(line)
+
+            if m:
+                group = m.groupdict()
+                match_list = group['match_list']
+                match_filed_list = flow_dict.setdefault('match_list', [])
+                match_filed_list.append(match_list)
+                continue
+
+            # collect counter bytes long
+            # collect counter packets long
+            # collect timestamp absolute first
+            m = p3.match(line)
+
+            if m:
+                group = m.groupdict()
+                collect_list = group['collect_list']
+                collect_field_list = flow_dict.setdefault('collect_list', [])
+                collect_field_list.append(collect_list)
+                continue
+
+        return ret_dict

@@ -1,4 +1,4 @@
 {
-    "instance_id": "101",
-    "service": "ipv6"
+    "lisp_id": "all",
+    "service": "ipv4"
 }

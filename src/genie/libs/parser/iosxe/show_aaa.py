@@ -4,6 +4,7 @@
      * show aaa user all
      * show aaa fqdn all
      * show aaa common-criteria policy name {policy_name}  
+     * show aaa method-lists {type}
 """
 
 #python
@@ -1303,5 +1304,127 @@ class ShowAAACommonCriteraPolicy(ShowAAACommonCriteraPolicySchema):
                 grouped_words = [' '.join(words[i: i + 2]) for i in range(0, len(words), 2)]
                 for val in grouped_words:
                     lifetime_dict[val.split()[1]] = int(val.split()[0])
+        return ret_dict
+
+# ==============================================================
+#  Schema for 'show aaa method-lists {type}'
+# ==============================================================
+class ShowAAAMethodListSchema(MetaParser):
+    """
+    Schema for 'show aaa method-lists {type}'
+    """
+
+    schema = {
+        Any() : {
+            'queue' : {
+                Any() : {
+                    Optional('name'): str,
+                    Optional('valid'): bool,
+                    Optional('id'): int,
+                    Optional('state'): str,
+                    Optional('method_list'): str,
+                    Optional('action'): str,
+                },
+            },
+            Optional('permanent_list') : {
+                Any() : {
+                    Optional('name'): str,
+                    Optional('valid'): bool,
+                    Optional('id'): int,
+                    Optional('state'): str,
+                    Optional('method_list'): str,
+                    Optional('action'): str,
+                }
+            }
+        },
+    }
+
+# ==============================================================
+#  Parser for 'show aaa method-lists {type}'
+# ==============================================================
+class ShowAAAMethodList(ShowAAAMethodListSchema):
+    """
+    Parser for 'show aaa method-lists {type}'
+    """
+    cli_command = 'show aaa method-lists {type}'
+    def cli(self, type='all', output=None):
+        if output == None:
+            cmd = self.cli_command.format(type=type)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        # authen queue=AAA_ML_AUTHEN_LOGIN
+        # author queue=AAA_ML_AUTHOR_SHELL
+        # acct queue=AAA_ML_ACCT_AUTH_PROXY
+        p1 = re.compile(r'^(?P<type>\S+)\squeue=(?P<queue_type>\S+)$')
+        
+        # permanent lists
+        p2 = re.compile(r'^permanent\slists$')
+        
+        # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+        p3 = re.compile(r'^name=\s*(?P<name>[\S\s]+)valid=\s*(?P<valid>\S+)\sid=\s*(?P<id>\d+)\s:state=\s*(?P<state>\S+)\s:(?P<method_list>[\S\s]*)$')
+        
+        # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+        p4 = re.compile(r'^name=\s*(?P<name>[\S\s]+)valid=\s*(?P<valid>\S+)\sid=\s*(?P<id>\d+)\sAction=\s*(?P<action>\S+)\s:state=\s*(?P<state>\S+)\s:(?P<method_list>[\S\s]*)$')
+        
+        ret_dict = {}
+        
+        # declaring two flags to deal with method list and permanent list in order to leverage the same set of regexp
+        method_list_flag = True
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # authen queue=AAA_ML_AUTHEN_LOGIN
+            # author queue=AAA_ML_AUTHOR_SHELL
+            # acct queue=AAA_ML_ACCT_AUTH_PROXY
+            m = p1.match(line)
+            if m:
+                method_list_flag = True
+                group = m.groupdict()
+                aaa_type_dict = ret_dict.setdefault(group['type'],{})
+                aaa_queue_dict = aaa_type_dict.setdefault('queue',{})
+                aaa_method_list_dict = aaa_queue_dict.setdefault(group['queue_type'],{})
+                continue
+            
+            # permanent lists
+            m = p2.match(line)
+            if m:
+                method_list_flag = False
+                group = m.groupdict()
+                aaa_method_list_dict = aaa_type_dict.setdefault('permanent_list',{})
+            
+            # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if method_list_flag:
+                    name_aaa_method_list_dict = aaa_method_list_dict
+                else:
+                    name_aaa_method_list_dict = aaa_method_list_dict.setdefault('_'.join(group['name'].strip().split()),{})
+                
+                name_aaa_method_list_dict.update({
+                    'name': group['name'].strip(),
+                    'valid': group['valid'].strip() == 'TRUE',
+                    'id': int(group['id'].strip()),
+                    'state': group['state'].strip(),
+                    'method_list': group['method_list'].strip(),
+                })
+
+            # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                name_aaa_method_list_dict = aaa_method_list_dict.setdefault('_'.join(group['name'].strip().split()),{})
+                name_aaa_method_list_dict.update({
+                    'name': group['name'].strip(),
+                    'valid': group['valid'].strip() == 'TRUE',
+                    'id': int(group['id'].strip()),
+                    'state': group['state'].strip(),
+                    'action': group['state'].strip(),
+                    'method_list': group['method_list'].strip(),
+                })
+
         return ret_dict
 

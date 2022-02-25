@@ -8,6 +8,7 @@ expected_output = {
         "image_type": "production image",
         "compiled_date": "Mon 04-May-15 02:44",
         "compiled_by": "prod_rel_team",
+        "copyright_years": "1986-2015",
         "rom": "15.0(1r)SG10",
         "hostname": "sample_4510r_e",
         "uptime": "2 years, 11 weeks, 3 days, 3 hours, 3 minutes",
