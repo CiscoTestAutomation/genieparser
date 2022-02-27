@@ -1300,7 +1300,7 @@ class ShowWirelessFabricSummarySchema(MetaParser):
                 }
             }
         }
-    }
+    }                    
 #  * 'show wireless client summary'
 # =================================
 class ShowWirelessClientSummarySchema(MetaParser):
@@ -1767,8 +1767,8 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_info_obj["ap_name"].update(ap_name_dict)
 
         return ap_info_obj
-
-
+      
+      
 # ========================================
 # Schema for:
 #  * 'show wireless fabric client summary'
@@ -1809,18 +1809,18 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         # Number of Fabric Clients : 8
 
-        # MAC Address    AP Name                          WLAN State              Protocol Method
+        # MAC Address    AP Name                          WLAN State              Protocol Method     
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
-        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
-        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
+        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x
-        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
-        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB
-        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB       
+        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -3095,7 +3095,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
         return ret_dict
 
-
+    
 # ======================================
 # Schema for:
 #  * 'show wireless fabric vnid mapping'
@@ -3116,9 +3116,9 @@ class ShowWirelessFabricVnidMappingSchema(MetaParser):
         }
       }
     }
-
-
-# ======================================
+    
+    
+# ======================================    
 # Parser for:
 #  * 'show wireless fabric vnid mapping'
 # ======================================
@@ -3126,7 +3126,7 @@ class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
     """Parser for show wireless fabric vnid mapping"""
 
     cli_command = 'show wireless fabric vnid mapping'
-
+    
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
@@ -3186,7 +3186,7 @@ class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
                 continue
 
         return fabric_dict
-
+      
 
 # ==============================================
 # Schema for:
@@ -3424,7 +3424,7 @@ class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsS
     """Parser for show wireless stats client delete reasons"""
 
     cli_command = 'show wireless stats client delete reasons'
-
+    
     def change_data_type(self, value):
         if value.isdigit():
             value = value.strip()
@@ -3437,7 +3437,7 @@ class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsS
                 # if the value is not an int or float, leave it as a string.
                 pass
         return value
-
+      
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
@@ -3446,7 +3446,7 @@ class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsS
 
         section_tracker = []
         client_delete_dict = {}
-
+        
         # Total client delete reasons
         p_total_client_delete_reasons = re.compile(r"^Total\s+client\s+delete\s+reasons$")
 
@@ -4033,7 +4033,7 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
             output = self.device.execute(self.cli_command)
         else:
           output = output
-
+            
         # Total Number of Clients : 16
         p_total_client = re.compile(r"^Total\s+Number\s+of\s+Clients\s+:\s+(?P<value>\d+)$")
 
@@ -4135,7 +4135,7 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
 
         # TxTotal = 185057
         p_dot1_tx_total = re.compile(r"TxTotal\s+=\s+(?P<tx_total>\d+)$")
-
+        
         # Total client delete reasons
         p_total_client_delete_reasons = re.compile(r"^Total\s+client\s+delete\s+reasons$")
 
@@ -4153,7 +4153,7 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
 
         # [key] : [value]
         p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\d+)$")
-
+        
         def change_data_type(self, value):
             if value.isdigit():
                 value = value.strip()
@@ -4166,8 +4166,8 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
                     # if the value is not an int or float, leave it as a string.
                     pass
             return value
-
-
+        
+        
         section_tracker = []
         client_detail_dict = {}
 
@@ -4443,7 +4443,7 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
 
         return client_detail_dict
 
-
+      
 # =================================
 # Schema for:
 #  * 'show wireless stats mobility'
@@ -4657,7 +4657,7 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
                     header_tracking = "subheader"
 
             sub_subheader_capture_list = [export_anchor_response_received_capture, export_anchor_response_sent_capture]
-
+            
             for capture in sub_subheader_capture_list:
                 if capture.match(line):
                     line_format = line.strip(":").strip().replace(" ", "_").lower()
@@ -4729,59 +4729,59 @@ class ShowWirelessManagementTrustPoint(ShowWirelessManagementTrustPointSchema):
             out = output
         ret_dict = {}
 
-        # Trustpoint Name : ewlc-tp1
+        # Trustpoint Name : ewlc-tp1  
         p1 = re.compile('^Trustpoint +Name +:( +(?P<trustpoint_name>.*))?$')
-
+        
         # Certificate Info : Available
         p2 = re.compile(r'^Certificate +Info +: +(?P<certificate_info>.*)$')
-
+        
         # Certificate Type : SSC
         p3 = re.compile(r'^Certificate +Type +: +(?P<certificate_type>.*)$')
-
+        
         # FIPS suitability : Not Applicable
         p4 = re.compile(r'^FIPS +suitability +: +(?P<fips_suitability>.*)$')
-
+        
         # Private key Info : Available
         p5 = re.compile(r'^Private +key +Info +: +(?P<private_key_info>.*)$')
-
-        # Certificate Hash : 4a5d777c5b2071c17faef376febc08398702184e
+        
+        # Certificate Hash : 4a5d777c5b2071c17faef376febc08398702184e       
         p6 = re.compile(r'^Certificate +Hash +: +(?P<certificate_hash>.*)$')
-
-
+        
+         
         for line in out.splitlines():
-
+        
             # Trustpoint Name : ewlc-tp1
-            m = p1.match(line)
+            m = p1.match(line)            
             if m:
                 trustpoint_name = m.groupdict()['trustpoint_name']
                 if trustpoint_name:
                     ret_dict["trustpoint_name"] = trustpoint_name.strip()
                 else:
                     ret_dict["trustpoint_name"] = ""
-
-            # Certificate Info : Available
+                
+            # Certificate Info : Available                
             m = p2.match(line)
             if m:
                 ret_dict["certificate_info"] = m.groupdict()['certificate_info'].strip()
-
-            # Certificate Type : SSC
+        
+            # Certificate Type : SSC        
             m = p3.match(line)
             if m:
                 ret_dict["certificate_type"] = m.groupdict()['certificate_type'].strip()
-
-            # FIPS suitability : Not Applicable
+                
+            # FIPS suitability : Not Applicable        
             m = p4.match(line)
             if m:
                 ret_dict["fips_suitability"] = m.groupdict()['fips_suitability'].strip()
-
-            # Private key Info : Available
+        
+            # Private key Info : Available         
             m = p5.match(line)
             if m:
                 ret_dict["private_key_info"] = m.groupdict()['private_key_info'].strip()
-
+        
             # Certificate Hash : 4a5d777c5b2071c17faef376febc08398702184e
             m = p6.match(line)
             if m:
                 ret_dict["certificate_hash"] = m.groupdict()['certificate_hash'].strip()
-
-        return ret_dict
+              
+        return ret_dict   
