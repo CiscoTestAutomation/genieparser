@@ -20,11 +20,10 @@ class ShowRunIpslaOperationSchema(MetaParser):
 
     schema = {
         'ipsla': {
-          Any(): {
-            Any(): ListOf({
-              Optional('oper_id'): int,
-              Optional('oper_types'): {
-                Optional('type'): {
+          Optional('operations'): {
+            Any(): {
+              Optional('type'): {
+                Any(): {
                   Optional('name'): str,
                   Optional('tag'): str,
                   Optional('vrf'): str,
@@ -39,10 +38,9 @@ class ShowRunIpslaOperationSchema(MetaParser):
                   Optional('dest_port'): int,
                   Optional('frequency'): int,
                   Optional('verify-data'): bool
-                }
                }
               }
-             )
+             }
             }
            }
           }
@@ -107,6 +105,8 @@ class ShowRunIpslaOperation(ShowRunIpslaOperationSchema):
         # verify-data
         p13 = re.compile(r'^(?P<verify_data>verify\-\w+)$')
 
+        # breakpoint()
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -127,12 +127,9 @@ class ShowRunIpslaOperation(ShowRunIpslaOperationSchema):
                 group = m.groupdict()
                 oper_id = int(group['oper_id'])
 
-                oper_id_list = ipsla_dict.setdefault('operation_ids', [])
-
                 oper_id_dict = {}
-                oper_id_dict['oper_id'] = oper_id
                 
-                oper_id_list = oper_id_list.append(oper_id_dict)
+                ipsla_dict[oper_id] = oper_id_dict
                 continue
 
             # type udp jitter
@@ -140,12 +137,12 @@ class ShowRunIpslaOperation(ShowRunIpslaOperationSchema):
             if m:
                 group = m.groupdict()
                 oper_type_name = group['oper_type_name']
-                oper_types_dict = oper_id_dict.setdefault('oper_types', {})
+                oper_type_dict = oper_id_dict.setdefault('type', {})
                 
                 type_dict = {}
-                type_dict['name'] = oper_type_name
+                oper_type_dict[oper_type_name] = type_dict
 
-                type_dict = oper_types_dict.setdefault('type', type_dict)
+                # type_dict = oper_type_dict
                 continue
 
             # tag ABC
