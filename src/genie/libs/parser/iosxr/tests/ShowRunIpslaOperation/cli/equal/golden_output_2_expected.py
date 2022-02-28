@@ -1,13 +1,10 @@
 expected_output = {
   "ipsla": {
-    "operations": {
-      "operation_ids": [
-        {
-          "oper_id": 100,
-          "oper_types": {
-            "type": {
-              "name": "udp jitter",
-              "vrf": "VRF-1",
+    "operation": {
+      100: {
+        "type": {
+          "udp jitter": { 
+            "vrf": "VRF-1",
               "src_addr": "1.1.1.1",
               "dest_addr": "2.2.2.2",
               "packet": {
