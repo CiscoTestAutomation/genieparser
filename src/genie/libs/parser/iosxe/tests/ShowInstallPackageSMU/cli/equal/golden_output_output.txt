@@ -1,0 +1,39 @@
+C9300-48P#show install package flash:C9800-SW-iosxe-wlc.BLD_POLARIS_DEV_LATEST_20211206_041312_V17_8_0_26.SSA.bin
+
+Name: C9800-SW-iosxe-wlc.BLD_POLARIS_DEV_LATEST_20211206_041312_V17_8_0_26.SSA.bin
+Version: 17.08.01.0.150818.1638769329..Cupertino
+Platform: CAT9K
+Package Type: PKG  
+Defect ID:
+Package State: Not Installed
+Supersedes List:
+SMU Fixes List:
+SMU ID: 1000
+SMU Type: reload
+SMU Compatible with Version: 17.08.01.0.150818
+SMUImpact:
+Package: cat9k-wlc.BLD_POLARIS_DEV_LATEST_20211206_041312_V17_8_0_26.SSA.pkg
+Size: 657171504
+Timestamp:
+
+Raw disk-file SHA1sum:
+4e739aa1b7f4705bbce4ddddf4afab969ce0a7f0
+Header size: 1072 bytes
+Package type: 0   
+Package flags: 0
+Header version: 3
+
+Internal package information:
+Name: rp_wlc
+BuildTime: 2021-12-05_21.42
+ReleaseDate: 2021-12-06_04.53
+BootArchitecture: none
+RouteProcessor: cat9k
+Platform: CAT9K
+User: mcpre
+PackageName: wlc
+Build: BLD_POLARIS_DEV_LATEST_20211206_041312_V17_8_0_26
+CardTypes:
+
+Package is not bootable.
+        

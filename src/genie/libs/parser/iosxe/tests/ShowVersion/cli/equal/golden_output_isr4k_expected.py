@@ -4,6 +4,8 @@ expected_output = {
         "chassis_sn": "FGL273610NK",
         "compiled_by": "mcpre",
         "compiled_date": "Mon 10-Dec-18 13:10",
+        "copyright_years": "1986-2018",
+        "location": "Everest",
         "returned_to_rom_at": "07:15:43 UTC Fri Feb 1 2019",
         "returned_to_rom_by": "Reload Command",
         "curr_config_register": "0x2102",

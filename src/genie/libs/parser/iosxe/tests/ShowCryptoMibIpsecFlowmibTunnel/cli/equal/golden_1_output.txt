@@ -1,0 +1,89 @@
+vrf CC-INTERNET
+  Index:                       17        
+  Local address:               1.1.0.100
+  Remote address:              1.1.0.101
+  IPSEC keying:                IKE
+  Encapsulation mode:          2         
+  Lifetime (KB):               4608000   
+  Lifetime (Sec):              3600      
+  Active time:                 00:05:50
+  Lifetime threshold (KB):     64        
+  Lifetime threshold (Sec):    10        
+  Total number of refreshes:   0         
+  Expired SA instances:        0         
+  Current SA instances:        2         
+  In SA DH group:              None
+  In sa encrypt algorithm:     aes
+  In SA AH auth algorithm:     None
+  In SA ESP auth algo:         None
+  In SA uncompress algorithm:  None
+  Out SA DH group:             None
+  Out SA encryption algorithm: aes
+  Out SA auth algorithm:       None
+  Out SA ESP auth algorithm:   None
+  Out SA uncompress algorithm: None
+  In octets:                   386160
+  Decompressed octets:         386160
+  In packets:                  3210      
+  In drops:                    0         
+  In replay drops:             0         
+  In authentications:          3210      
+  In authentication failures:  0         
+  In decrypts:                 3210      
+  In decrypt failures:         0         
+  Out octets:                  194700
+  Out uncompressed octets:     194700
+  Out packets:                 3222      
+  Out drops:                   0         
+  Out authentications:         3222      
+  Out authentication failures: 0         
+  Out encryptions:             3222      
+  Out encryption failures:     0         
+  Compressed octets:           0
+  Decompressed octets:         0
+  Out uncompressed octets:     0
+
+
+  Index:                       18        
+  Local address:               1.1.0.100
+  Remote address:              1.1.0.102
+  IPSEC keying:                IKE
+  Encapsulation mode:          2         
+  Lifetime (KB):               4608000   
+  Lifetime (Sec):              3600      
+  Active time:                 00:05:49
+  Lifetime threshold (KB):     64        
+  Lifetime threshold (Sec):    10        
+  Total number of refreshes:   0         
+  Expired SA instances:        0         
+  Current SA instances:        2         
+  In SA DH group:              None
+  In sa encrypt algorithm:     aes
+  In SA AH auth algorithm:     None
+  In SA ESP auth algo:         None
+  In SA uncompress algorithm:  None
+  Out SA DH group:             None
+  Out SA encryption algorithm: aes
+  Out SA auth algorithm:       None
+  Out SA ESP auth algorithm:   None
+  Out SA uncompress algorithm: None
+  In octets:                   386520
+  Decompressed octets:         386520
+  In packets:                  3213      
+  In drops:                    0         
+  In replay drops:             0         
+  In authentications:          3213      
+  In authentication failures:  0         
+  In decrypts:                 3213      
+  In decrypt failures:         0         
+  Out octets:                  195339
+  Out uncompressed octets:     195339
+  Out packets:                 3218      
+  Out drops:                   0         
+  Out authentications:         3218      
+  Out authentication failures: 0         
+  Out encryptions:             3218      
+  Out encryption failures:     0         
+  Compressed octets:           0
+  Decompressed octets:         0
+  Out uncompressed octets:     0

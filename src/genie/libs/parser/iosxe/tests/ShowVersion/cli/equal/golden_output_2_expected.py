@@ -8,6 +8,7 @@ expected_output = {
         "image_type": "developer image",
         "compiled_date": "Tue 08-Jul-08 00:06",
         "compiled_by": "amvarma",
+        "copyright_years": "1986-2008",
         "image": {"text_base": "0x80010000", "data_base": "0x8068C000"},
         "rom": "Bootstrap program is C2950 boot loader",
         "hostname": "testsw01",

@@ -1,0 +1,20 @@
+=================================================
+Output for router lisp 0
+=================================================
+Router-lisp ID:        0
+Domain ID:             0
+Multihoming ID:        0
+Locator table:         default
+Locator default-set:   N/A
+EID instance count:    7
+Capability:            Publish-Subscribe Instance-ID
+                       Domain-Info
+                       Route-Tag
+                       SGT
+                       Default-originate
+                       Service-registration
+                       Extranet-policy-propagation
+                       Default-ETR Route-metric
+                       Unknown vendor type skip
+                       RAR-notify
+TCP path mtu discovery OFF

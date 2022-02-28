@@ -1,0 +1,23 @@
+show module
+Chassis Type: C9407R
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   48   48-Port POE+ 10/100/1000 (RJ-45)            C9400-LC-48P     JAD25080BGR
+2   48   48-Port POE+ 10/100/1000 (RJ-45)            C9400-LC-48P     JAD25100E8N
+3   11   Supervisor 1 XL Module                      C9400-SUP-1XL    JAE25151HGT
+4   11   Supervisor 1 XL Module                      C9400-SUP-1XL    JAE25151HH7
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   F8A7.3A48.F4C0 to F8A7.3A48.F4EF 1.0  17.6.1r[FC2]  BLD_POLARIS_DEV_LA ok
+2   F8A7.3A8C.A7F0 to F8A7.3A8C.A81F 1.0  17.6.1r[FC2]  BLD_POLARIS_DEV_LA ok
+3   ECCE.1320.05EC to ECCE.1320.05F6 2.1  17.6.1r[FC2]  BLD_POLARIS_DEV_LA ok
+4   ECCE.1320.05F6 to ECCE.1320.0600 2.1  17.6.1r[FC2]  BLD_POLARIS_DEV_LA ok
+
+Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+---+-------------------+---------------+---------------+------------------
+3   Active              sso             sso              Active
+4   Standby             sso             sso              Standby Hot
+
+Chassis MAC address range: 44 addresses from ecce.1320.05c0 to ecce.1320.05eb    

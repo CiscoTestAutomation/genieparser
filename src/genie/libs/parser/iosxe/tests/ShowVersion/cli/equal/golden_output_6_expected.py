@@ -10,6 +10,8 @@ expected_output = {
         "image_type": "production image",
         "compiled_date": "Sun 11-Apr-21 17:14",
         "compiled_by": "mcpre",
+        "copyright_years": "1986-2021",
+        "location": "Bengaluru",
         "rom": "16.9(4r)",
         "hostname": "COL-B-ASR1001-X-1",
         "uptime": "4 weeks, 14 hours, 49 minutes",

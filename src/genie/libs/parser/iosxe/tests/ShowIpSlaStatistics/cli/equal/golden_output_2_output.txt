@@ -1,0 +1,98 @@
+IPSLA operation id: 1
+        Latest RTT: NoConnection/Busy/Timeout
+Latest operation start time: 07:10:18 UTC Fri Oct 22 2021
+Latest operation return code: Timeout
+Latest DNS RTT: 0 ms
+Latest TCP Connection RTT: 2019 ms
+Latest HTTP Transaction RTT: 0 ms
+Number of successes: 0
+Number of failures: 11
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 2
+Type of operation: mcast
+Latest operation start time: 07:11:18 UTC Fri Oct 22 2021
+Latest operation return code: OK
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            3239998/3240718/3240998             10.50.10.100
+
+Number of successes: 46
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 3
+Type of operation: mcast
+Latest operation start time: 07:11:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+
+oper-id        status               lossSD       delay                  destination                             
+393146530      OK                   0            3239/3240/3240                10.50.10.100
+
+Number of successes: 24
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 50
+        Latest RTT: 6 milliseconds
+Latest operation start time: 07:11:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Number of successes: 24
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 51
+        Latest RTT: 11 milliseconds
+Latest operation start time: 07:11:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Number of successes: 47
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 52
+        Latest RTT: 11 milliseconds
+Latest operation start time: 07:11:19 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Number of successes: 24
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 53
+        Latest RTT: NoConnection/Busy/Timeout
+Latest operation start time: 07:10:19 UTC Fri Oct 22 2021
+Latest operation return code: No connection
+Number of successes: 0
+Number of failures: 23
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 54
+        Latest RTT: 0 milliseconds
+Latest operation start time: 07:11:19 UTC Fri Oct 22 2021
+Latest operation return code: Socket connect error
+Number of successes: 0
+Number of failures: 24
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 100
+        Latest RTT: 1 milliseconds
+Latest operation start time: 07:11:08 UTC Fri Oct 22 2021
+Latest operation return code: OK
+Number of successes: 23
+Number of failures: 0
+Operation time to live: Forever

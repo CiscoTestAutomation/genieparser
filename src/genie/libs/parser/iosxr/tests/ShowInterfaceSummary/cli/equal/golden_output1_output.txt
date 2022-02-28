@@ -1,0 +1,13 @@
+Mon Feb  7 09:43:34.089 CET
+Interface Type          Total    UP       Down     Admin Down
+--------------          -----    --       ----     ----------
+ALL TYPES               60       30       0        30
+--------------
+IFT_ETHERBUNDLE         1        1        0        0
+IFT_VLAN_SUBIF          28       19       0        9
+IFT_FORTYGETHERNET      2        1        0        1
+IFT_HUNDREDGE           4        3        0        1
+IFT_LOOPBACK            2        2        0        0
+IFT_ETHERNET            2        2        0        0
+IFT_NULL                1        1        0        0
+IFT_TENGETHERNET        20       1        0        19

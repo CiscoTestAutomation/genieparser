@@ -5,7 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show running-config interface {interface}'
         * 'show running-config all | sec {interface}'
         * 'show running-config mdns-sd' 
-
+    * 'show running-config aaa'
 '''
 
 # Python
@@ -415,6 +415,8 @@ class ShowRunInterfaceSchema(MetaParser):
                           Optional('local_routing'): bool
                           }
                      },
+                Optional('stackwise_virtual_link'): int,
+                Optional('dual_active_detection'): bool,
             }
         }
     }
@@ -696,6 +698,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         #device-tracking attach-policy IPDT_POLICY
         p79 = re.compile(r'^device-tracking\sattach-policy\s+(?P<device_tracking_attach_policy>\S+)$')
+
+        # stackwise-virtual link 1
+        p80 = re.compile(r'^stackwise-virtual\slink\s+(?P<stackwise_virtual_link>\d+)$')
+
+        # stackwise-virtual dual-active-detection
+        p81 = re.compile(r'^stackwise-virtual\s+(?P<dual_active_detection>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1345,7 +1353,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'device_tracking_attach_policy': group['device_tracking_attach_policy']})
                 continue
-
+            
+            # stackwise-virtual link 1
+            m = p80.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'stackwise_virtual_link': int(group['stackwise_virtual_link'])})
+                continue
+            
+            # stackwise-virtual dual-active-detection
+            m = p81.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'dual_active_detection': group['dual_active_detection'] == "dual-active-detection"})
+                continue
         return config_dict
 
 
@@ -2549,4 +2570,197 @@ class ShowRunningConfigFlowMonitor(ShowRunningConfigFlowMonitorSchema):
 
         return ret_dict
 
+# ==================================================
+# Schema for:
+# 	* show running-config aaa
+# ==================================================
+class ShowRunningConfigAAASchema(MetaParser):
+    """
+        Schema for :
+        * 'show running-config aaa'
+    """
+    schema = {
+        Optional('radius'): {
+            'server': {
+                Any() : {
+                    Optional('address_type'): str,
+                    Optional('address'): str,
+                    Optional('auth_port'): int,
+                    Optional('acct_port'): int,
+                    Optional('key'): str,
+                }
+            },
+        },
+        Optional('tacacs'): {
+            'server': {
+                Any() : {
+                    Optional('address_type'): str,
+                    Optional('address'): str,
+                    Optional('auth_port'): int,
+                    Optional('acct_port'): int,
+                    Optional('key'): str,
+                }
+            },
+        },
+        Optional('group_server'): {
+            Any() : {
+                Any() : {
+                    Optional('server_name'): str,
+                    Optional('vrf'): str,
+                    Optional('source_interface'): str,
+                }
+            }
+        },
+        Optional('new_model'): bool,
+        Optional('session_id'): str,
+    }
+
+
+# ==================================================
+# Parser for:
+#   * show running-config aaa
+# ==================================================
+class ShowRunningConfigAAA(ShowRunningConfigAAASchema):
+    """Parser for :
+        * 'show running-config aaa'
+    """
+
+    cli_command = 'show running-config aaa'
+
+    def cli(self, output=None):
+        if output == None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # radius server RADIUS_1
+        p1 = re.compile(r'^(?P<server_type>\S+)\sserver\s(?P<server_name>\S+)$')
+        
+        # address ipv4 11.15.24.213 auth-port 1812 acct-port 1813
+        p2_1 = re.compile(r'^address\s(?P<address_type>\S+)\s(?P<address>\S+)\sauth-port\s(?P<auth_port>\S+)\sacct-port\s(?P<acct_port>\S+)$')
+
+        # address ipv4 11.15.24.213
+        p2_2 = re.compile(r'^address\s(?P<address_type>\S+)\s(?P<address>\S+)$')
+
+        # key Cisco123
+        p3 = re.compile(r'^key\s(?P<key>\S+)$')
+
+        # aaa group server radius RADIUS_GROUP
+        p4 = re.compile(r'^aaa\sgroup\sserver\s(?P<server_type>\S+)\s(?P<server>\S+)$')
+
+        # server name RADIUS_1
+        p5 = re.compile(r'^server\sname\s(?P<server_name>\S+)$')
+
+        # ip vrf forwarding newVRF2
+        p6 = re.compile(r'^ip\svrf\sforwarding\s(?P<vrf>\S+)$')
+
+        # ip radius source-interface TenGigabitEthernet1/0/13
+        p7 = re.compile(r'^ip\s(?P<server_type>\S+)\ssource-interface\s(?P<source_interface>\S+)$')
+
+        # aaa new-model
+        p8 = re.compile(r'^aaa\s(?P<new_model>\S+)$')
+
+        # aaa session-id common
+        p9 = re.compile(r'^aaa\ssession-id\s(?P<session_id>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # radius/tacacs server RADIUS_1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                server_type_dict = ret_dict.setdefault(group['server_type'],{})
+                server_dict = server_type_dict.setdefault('server',{})
+                server_name_dict = server_dict.setdefault(group['server_name'],{})
+                continue
+
+            # address ipv4 11.15.24.213 auth-port 1812 acct-port 1813
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                server_name_dict.update({
+                    'address_type': group['address_type'],
+                    'address': group['address'],
+                    'auth_port': int(group['auth_port']),
+                    'acct_port': int(group['acct_port']),
+                })
+                continue
+
+            # address ipv4 11.15.24.213
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                server_name_dict.update({
+                    'address_type': group['address_type'],
+                    'address': group['address'],
+                })
+                continue
+
+            # key Cisco123
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                server_name_dict.update({
+                    'key': group['key'],
+                })
+                continue
+
+            # aaa group server radius RADIUS_GROUP
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group_server_dict = ret_dict.setdefault('group_server',{})
+                group_server_name_dict = group_server_dict.setdefault(group['server_type'],{})
+                group_name_dict = group_server_name_dict.setdefault(group['server'], {})
+                continue
+
+            # server name RADIUS_1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group_name_dict.update({
+                    'server_name': group['server_name'],
+                })
+                continue
+
+            # ip vrf forwarding newVRF2
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group_name_dict.update({
+                    'vrf': group['vrf'],
+                })
+                continue
+
+            # ip radius source-interface TenGigabitEthernet1/0/13
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                group_name_dict.update({
+                    'source_interface': group['source_interface'],
+                })
+                continue
+
+            # aaa new-model
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'new_model': bool(group['new_model'] == 'new-model')
+                })
+                continue
+
+            # aaa session-id common
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'session_id': group['session_id']
+                })
+                continue
+
+        return ret_dict
 

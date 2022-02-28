@@ -4,6 +4,7 @@ expected_output = {
         "chassis_sn": "FOX093206HY",
         "compiled_by": "someone",
         "compiled_date": "Wed 07-Sep-05 11:16",
+        "copyright_years": "1986-2005",
         "curr_config_register": "0x2102",
         "hostname": "GENIE123123",
         "image": {"data_base": "0x010BF898", "text_base": "0x00000000"},

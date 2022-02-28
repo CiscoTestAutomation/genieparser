@@ -1,3 +1,11 @@
+"""show_pstackwise.py
+   supported commands:
+     * 'show stackwise-virtual dual-active-detection'
+     * 'show stackwise-virtual bandwidth'
+     * 'show stackwise-virtual'
+     * 'show stackwise-virtual switch {number} link'
+
+"""
 import re
 
 from genie.metaparser import MetaParser
@@ -135,7 +143,50 @@ class ShowStackwiseVirtualBandwidth(ShowStackwiseVirtualBandwidthSchema):
 
         return ret_dict
 
+class ShowStackwiseVirtualLinkSchema(MetaParser):
+    """Schema for show stackwise-virtual link"""
 
+    schema = {
+        'switch' : {
+            Any():{
+                'svl' : int,
+                'ports' : str,
+                'link_status' : str,
+                'protocol_status' : str
+            }
+        }
+    }
+
+class ShowStackwiseVirtualLink(ShowStackwiseVirtualLinkSchema):
+    """Parser for show stackwise-virtual link"""
+  
+    cli_command = 'show stackwise-virtual link'
+    
+    def cli(self, output=None):
+        out = self.device.execute(self.cli_command) if output is None else output
+        
+        ret_dict = {}
+        #                        1              1        HundredGigE1/1/0/13          U                        R
+        pr = re.compile(r'^(?P<switch>\d+) + (?P<svl>\d+) +  (?P<ports>\S+) + (?P<link_status>\S+) + (?P<protocol_status>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            #                        1                 1        HundredGigE1/0/3          U                       R
+            m =  pr.match(line)
+            if m:
+               group = m.groupdict()
+               switch_dict = ret_dict.setdefault('switch', {})
+               stackw_dict = switch_dict.setdefault(int(group['switch']),{})     
+               stackw_dict.update({  
+                    'svl': int(group['svl']),
+                    'ports' : str(group['ports']),
+                    'link_status' : str(group['link_status']),
+                    'protocol_status' : str(group['protocol_status'])
+                }) 
+            continue
+        return ret_dict
+
+      
 class ShowStackwiseVirtualSchema(MetaParser):
     """Schema for show stackwise-virtual."""
 
@@ -237,3 +288,58 @@ class ShowStackwiseVirtual(ShowStackwiseVirtualSchema):
                 continue
 
         return stackwise_obj
+
+
+class ShowStackwiseLinkSchema(MetaParser):
+    """Schema for show stackwise-virtual switch 1 link."""
+
+    schema = {
+       'svl_info': {
+           Any(): {
+               'switch': int,
+               'svl': int,
+               'ports': str,
+               'link_status': str,
+               'protocol_status': str
+           }
+       }
+    }
+
+
+class ShowStackwiseLink(ShowStackwiseLinkSchema):
+    """Parser for show stackwise-virtual switch 1 link"""
+
+    cli_command = ["show stackwise-virtual switch {number} link"]
+
+    def cli(self, number="", output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command[0].format(number=number))
+
+        # initial return dictionary
+        ret_dict = {}
+        index = 0
+
+        # initial regexp pattern
+        # Switch SVL Ports Link-Status Protocol-Status
+        # ------ --- ----- ----------- ---------------
+        # 1 1 HundredGigE1/0/26 U R
+        p1 = re.compile(r'^(?P<switch>\d+)+\s+(?P<SVL>\d+)+\s+(?P<port>\S+)+\s+(?P<link_status>\w+)+\s+(?P<protocol_status>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Last configuration file parsed
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                svl_info = ret_dict.setdefault('svl_info', {}).setdefault(index, {})
+                svl_info.update({'switch': int(group['switch'])})
+                svl_info.update({'svl': int(group['SVL'])})
+                svl_info.update({'ports': group['port']})
+                svl_info.update({'link_status': group['link_status']})
+                svl_info.update({'protocol_status': group['protocol_status']})
+                continue
+
+        return ret_dict

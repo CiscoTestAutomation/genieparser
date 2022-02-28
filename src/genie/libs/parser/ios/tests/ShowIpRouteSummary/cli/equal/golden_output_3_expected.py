@@ -23,6 +23,10 @@ expected_output = {
                             "memory_bytes": 0
                         }
                     },
+                    "internal": {
+                        "memory_bytes": 210048,
+                        "networks": 96,
+                    },
                     "ospf": {
                         "100": {
                             "networks": 101,

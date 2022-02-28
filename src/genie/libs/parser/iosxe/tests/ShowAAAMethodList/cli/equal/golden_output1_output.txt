@@ -1,0 +1,31 @@
+show aaa method-lists accounting
+acct queue=AAA_ML_ACCT_SHELL
+acct queue=AAA_ML_ACCT_AUTH_PROXY
+acct queue=AAA_ML_ACCT_NET
+acct queue=AAA_ML_ACCT_CONN
+acct queue=AAA_ML_ACCT_SYSTEM
+acct queue=AAA_ML_ACCT_RESOURCE
+acct queue=AAA_ML_ACCT_RM
+acct queue=AAA_ML_ACCT_DOT1X
+acct queue=AAA_ML_ACCT_IDENTITY
+acct queue=AAA_ML_ACCT_CONNECTEDAPPS
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+permanent lists
+  name= Permanent None valid=TRUE id=0 Action=NOT_SET :state=ALIVE :
+Switch-9500#
+

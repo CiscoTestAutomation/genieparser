@@ -1,0 +1,18 @@
+Wed Dec 15 13:26:20.118 UTC
+GigabitEthernet0/0/0/6 direction input: Service Policy not installed
+
+GigabitEthernet0/0/0/6 output: p1
+
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         :                   0/0                    0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 56
+    High watermark                       : N/A
+    Inst-queue-len                       : N/A
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0

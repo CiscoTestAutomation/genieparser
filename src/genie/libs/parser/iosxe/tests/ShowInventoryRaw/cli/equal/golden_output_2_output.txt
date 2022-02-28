@@ -1,0 +1,11 @@
+NAME: "Gi2/0/1", DESCR: "Gi2/0/1"
+PID:                   , VID:      , SN:
+
+NAME: "Switch 3", DESCR: "C9300-48U - Provisioned"
+PID: C9300-48U         , VID:      , SN:
+
+NAME: "Twe2/1/1 Container", DESCR: "Twe2/1/1 Container"
+PID: Unknown PID       , VID:      , SN:
+
+NAME: "usbflash1", DESCR: "usbflash1-2"
+PID: SSD-120G          , VID: 3.10 , SN: STP23080N36

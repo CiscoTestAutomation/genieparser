@@ -1,37 +1,57 @@
 expected_output = {
-    "lisp_router_instances": {
+    'lisp_id': {
         0: {
-            "lisp_router_instance_id": 0,
-            "locator_sets": {"RLOC": {"locator_set_name": "RLOC"}},
-            "service": {
-                "ipv6": {
-                    "etr": {
-                        "local_eids": {
-                            "101": {
-                                "vni": "101",
-                                "total_eid_entries": 1,
-                                "no_route_eid_entries": 0,
-                                "inactive_eid_entries": 0,
-                                "eids": {
-                                    "2001:192:168::/64": {
-                                        "eid_address": {
-                                            "address_type": "ipv6",
-                                            "vrf": "red",
-                                        },
-                                        "id": "2001:192:168::/64",
-                                        "loopback_address": "10.16.2.2",
-                                        "priority": 50,
-                                        "rlocs": "RLOC",
-                                        "source": "cfg-intf",
-                                        "state": "site-self, reachable",
-                                        "weight": 50,
+            'instance_id': {
+                4100: {
+                    'eid_table': 'vrf red',
+                    'lsb': '0x1',
+                    'entries': {
+                        'total': 2,
+                        'no_route': 0,
+                        'inactive': 0,
+                        'eids': {
+                            '2001:192:168:1::1/128': {
+                                'eid': '2001:192:168:1::1',
+                                'mask': 128,
+                                'dynamic_eid': '2001_192_168_1',
+                                'locator_set': 'RLOC',
+                                'uptime': '01:08:34',
+                                'last_change': '01:08:34',
+                                'domain_id': 'local',
+                                'service_insertion': 'N/A (0)',
+                                'locators': {
+                                    '11.11.11.11': {
+                                        'priority': 10,
+                                        'weight': 10,
+                                        'source': 'cfg-intf',
+                                        'location': 'site-self',
+                                        'state': 'reachable'
+                                        }
                                     }
                                 },
+                            '2001:192:168:1::71/128': {
+                                'eid': '2001:192:168:1::71',
+                                'mask': 128,
+                                'dynamic_eid': '2001_192_168_1',
+                                'locator_set': 'RLOC',
+                                'uptime': '01:08:47',
+                                'last_change': '01:08:47',
+                                'domain_id': 'local',
+                                'service_insertion': 'N/A (0)',
+                                'locators': {
+                                    '11.11.11.11': {
+                                        'priority': 10,
+                                        'weight': 10,
+                                        'source': 'cfg-intf',
+                                        'location': 'site-self',
+                                        'state': 'reachable'
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            },
+            }
         }
     }
-}

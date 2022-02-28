@@ -6,6 +6,8 @@ IOSXE C9400 parsers for the following show commands:
     * 'show environment | include {include}'
     * 'show environment all'
     * 'show environment all | include {include}'
+    * 'show boot'
+    * 'Show module'
 '''
 
 # Python
@@ -373,4 +375,280 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                                         {}).setdefault(fantray_key,
                                                        fantray_value)
 
+        return ret_dict
+
+
+class ShowBootSchema(MetaParser):
+    """Schema for show boot"""
+
+    schema = {
+        'boot_variable': str,
+        'manual_boot': bool,
+        'baud_variable': str,
+        'enable_break': bool,
+        'boot_mode': str,
+        'ipxe_timeout': str,
+        'config_file': str,
+        'standby_boot_variable': str,
+        'standby_manual_boot': bool,
+        'standby_baud_variable': str,
+        'standby_enable_break': bool,
+        'standby_boot_mode': str,
+        'standby_ipxe_timeout': str,
+        'standby_config_file': str,
+    }
+
+
+class ShowBoot(ShowBootSchema):
+    """Parser for show boot"""
+
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # BOOT variable = flash:packages.conf;
+        p1 = re.compile(r'(^BOOT\s*variable)\s*=\s*(?P<boot_variable>.*);$')
+        # MANUAL_BOOT variable = no
+        p2 = re.compile(r'(^MANUAL_BOOT\s*variable)\s*=\s*(?P<manual_boot>\w+)$')
+        # BAUD variable = 9600
+        p3 = re.compile(r'(^BAUD\s*variable)\s*=\s*(?P<baud_variable>\w+)$')
+        # ENABLE_BREAK variable = yes
+        p4 = re.compile(r'(^ENABLE_BREAK\s*variable)\s*=?\s*(?P<enable_break>.*)$')
+        # BOOTMODE variable = yes
+        p5 = re.compile(r'(^BOOTMODE\s*variable)\s*=?\s*(?P<boot_mode>.*)$')
+        # IPXE_TIMEOUT variable = 0
+        p6 = re.compile(r'(^IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<ipxe_timeout>.*)$')
+        # CONFIG_FILE variable = 0
+        p7 = re.compile(r'(^CONFIG_FILE\s*variable)\s*=\s*(?P<config_file>.*)$')
+
+        # Standby BOOT variable = flash:packages.conf;
+        p8 = re.compile(r'(^Standby\s*BOOT\s*variable)\s*=\s*(?P<standby_boot_variable>.*);$')
+        # Standby MANUAL_BOOT variable = no
+        p9 = re.compile(r'(^Standby\s*MANUAL_BOOT\s*variable)\s*=\s*(?P<standby_manual_boot>\w+)$')
+        # Standby BAUD variable = 9600
+        p10 = re.compile(r'(^Standby\s*BAUD\s*variable)\s*=\s*(?P<standby_baud_variable>\w+)$')
+        # Standby ENABLE_BREAK variable = yes
+        p11 = re.compile(r'(^Standby\s*ENABLE_BREAK\s*variable)\s*=?\s*(?P<standby_enable_break>.*)$')
+        # Standby BOOTMODE variable = yes
+        p12 = re.compile(r'(^Standby\s*BOOTMODE\s*variable)\s*=?\s*(?P<standby_boot_mode>.*)$')
+        # Standby IPXE_TIMEOUT variable = 0
+        p13 = re.compile(r'(^Standby\s*IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<standby_ipxe_timeout>.*)$')
+        # Standby CONFIG_FILE variable = 0
+        p14 = re.compile(r'(^Standby\s*CONFIG_FILE\s*variable)\s*=\s*(?P<standby_config_file>.*)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            mo = p1.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p2.match(line)
+            if mo:
+                group = mo.groupdict()
+                manual_boot = group['manual_boot'] == 'yes'
+                ret_dict.update({'manual_boot': manual_boot})
+
+            mo = p3.match(line)
+            if mo:
+                group = mo.groupdict()
+                ret_dict.update({'baud_variable': group['baud_variable']})
+
+            mo = p4.match(line)
+            if mo:
+                group = mo.groupdict()
+                enable_break = group['enable_break'] == 'yes'
+                ret_dict.update({'enable_break': enable_break})
+
+            mo = p5.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p6.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p7.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p8.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p9.match(line)
+            if mo:
+                group = mo.groupdict()
+                standby_manual_boot = group['standby_manual_boot'] == 'yes'
+                ret_dict.update({'standby_manual_boot': standby_manual_boot})
+
+            mo = p10.match(line)
+            if mo:
+                group = mo.groupdict()
+                ret_dict.update({'standby_baud_variable': group['standby_baud_variable']})
+
+            mo = p11.match(line)
+            if mo:
+                group = mo.groupdict()
+                standby_enable_break = group['standby_enable_break'] == 'yes'
+                ret_dict.update({'standby_enable_break': standby_enable_break})
+
+            mo = p12.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p13.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+            mo = p14.match(line)
+            if mo:
+                ret_dict.update(mo.groupdict())
+
+        return ret_dict
+
+
+class ShowModuleSchema(MetaParser):
+    """Schema for show module"""
+    schema = {
+        Optional('switch'): {
+            Any(): {
+                'port': str,
+                'model': str,
+                'serial_number': str,
+                'mac_address': str,
+                'hw_ver': str,
+                'sw_ver': str
+            },
+        },
+        Optional('module'):{
+            int: {
+                'ports':int,
+                'card_type':str,
+                'model':str,
+                'serial':str,
+                'mac_address':str,
+                'hw':str,
+                'fw':str,
+                'sw':str,
+                'status':str,
+                Optional('redundancy_role'):str,
+                Optional('operating_redundancy_mode'):str,
+                Optional('configured_redundancy_mode'):str,
+                Optional('redundancy_status'):str,
+            },
+        },
+        Optional('number_of_mac_address'):int,
+        Optional('chassis_mac_address_lower_range'):str,
+        Optional('chassis_mac_address_upper_range'):str,
+    }
+
+
+class ShowModule(ShowModuleSchema):
+    """Parser for show module"""
+
+    cli_command = 'show module'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<switch>\d+) *'
+                        '(?P<port>\w+) +'
+                        '(?P<model>[\w\-]+) +'
+                        '(?P<serial_number>\w+) +'
+                        '(?P<mac_address>[\w\.]+) +'
+                        '(?P<hw_ver>\w+) +'
+                        '(?P<sw_ver>[\w\.]+)$')
+        
+        # Chassis Type: C9500X-28C8D
+
+        # Mod Ports Card Type                                   Model          Serial No.
+        # ---+-----+--------------------------------------+--------------+--------------
+        # 1   38   Cisco Catalyst 9500X-28C8D Switch           C9500X-28C8D     FDO25030SLN
+            
+        p2=re.compile(r'^(?P<mod>\d+) *(?P<ports>\d+) +(?P<card_type>.*) +(?P<model>\S+) +(?P<serial>\S+)$')
+                
+        # Mod MAC addresses                    Hw   Fw           Sw                 Status
+        # ---+--------------------------------+----+------------+------------------+--------
+        # 1   F87A.4125.1400 to F87A.4125.147D 0.2  17.7.0.41     BLD_POLARIS_DEV_LA ok
+            
+        p3=re.compile(r'^(?P<mod_1>\d+)+\s+(?P<mac_address>[\w\.]+) .*(?P<hw>\d+.?\d+?) +(?P<fw>\S+) +(?P<sw>\S+) +(?P<status>\S+)$')
+        
+        #Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+        #---+-------------------+---------------+---------------+------------------
+        #3   Active              sso             sso              Active
+        #4   Standby             sso             sso              Standby Hot        
+
+        p4=re.compile(r'^(?P<mod_2>\d+)+ *(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+) *(?P<redundancy_status>.*)$')
+        
+        #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff 
+        p5=re.compile(r'^Chassis MAC address range: (?P<number_of_mac_address>\d+) addresses from (?P<chassis_mac_address_lower_range>.*) to (?P<chassis_mac_address_upper_range>.*)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+            # ------  -----   ---------             -----------  --------------  -------       --------
+            #  1       56     WS-C3850-48P-E        FOC1902X062  689c.e2ff.b9d9  V04           16.9.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('switch')
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(int(switch), {})
+                switch_dict.update({k: v.lower() for k, v in group.items()})
+                continue    
+                
+            # Chassis Type: C9500X-28C8D
+
+            # Mod Ports Card Type                                   Model          Serial No.
+            # ---+-----+--------------------------------------+--------------+--------------
+            # 1   38   Cisco Catalyst 9500X-28C8D Switch           C9500X-28C8D     FDO25030SLN
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('mod')
+                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                switch_dict.update({k: v.strip() for k, v in group.items()})
+                switch_dict['ports']=int(group['ports'])
+                continue
+                
+            # Mod MAC addresses                    Hw   Fw           Sw                 Status
+            # ---+--------------------------------+----+------------+------------------+--------
+            # 1   F87A.4125.1400 to F87A.4125.147D 0.2  17.7.0.41     BLD_POLARIS_DEV_LA ok
+            
+            m=p3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('mod_1')
+                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                switch_dict.update({k: v.strip() for k, v in group.items()})
+                continue
+                
+            # Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+            # ---+-------------------+-------------------------+---------------------------
+            # 1   Active              non-redundant             Non-redundant
+            m=p4.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('mod_2')
+                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                switch_dict.update({k: v.lower().strip() for k, v in group.items()})
+                continue
+            
+            #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff 
+            m=p5.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.update({k: v.lower().strip() for k, v in group.items()})
+                ret_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
+                continue
+                
         return ret_dict

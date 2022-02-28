@@ -34,9 +34,29 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 class ShowIpMrouteSchema(MetaParser):
     """Schema for:
         show ip mroute
-        show ip mroute vrf <vrf>
+        show ip mroute {group}
+        show ip mroute {group} {source}
+        show ip mroute verbose
+        show ip mroute {group} verbose
+        show ip mroute {group} {source} verbose
+        show ip mroute vrf {vrf}
+        show ip mroute vrf {vrf} {group}
+        show ip mroute vrf {vrf} {group} {source}
+        show ip mroute vrf {vrf} verbose
+        show ip mroute vrf {vrf} {group} verbose
+        show ip mroute vrf {vrf} {group} {source} verbose
         show ipv6 mroute
-        show ipv6 mroute vrf <vrf>"""
+        show ipv6 mroute {group}
+        show ipv6 mroute {group} {source}
+        show ipv6 mroute verbose
+        show ipv6 mroute {group} verbose
+        show ipv6 mroute {group} {source} verbose
+        show ipv6 mroute vrf {vrf}
+        show ipv6 mroute vrf {vrf} {group}
+        show ipv6 mroute vrf {vrf} {group} {source}
+        show ipv6 mroute vrf {vrf} verbose
+        show ipv6 mroute vrf {vrf} {group} verbose
+        show ipv6 mroute vrf {vrf} {group} {source} verbose"""
 
     schema = {'vrf':         
                 {Any():
@@ -54,10 +74,17 @@ class ShowIpMrouteSchema(MetaParser):
                                              Optional('rp'): str,
                                              Optional('rpf_nbr'): str,
                                              Optional('rpf_info'): str,
+                                             Optional('upstream_interface'):
+                                                {Any():
+                                                    {
+                                                        'rpf_nbr': str,
+                                                    }
+                                                },
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
-                                                    {'rpf_nbr': str,
+                                                    {Optional('rpf_nbr'): str,
                                                      Optional('rpf_info'): str,
+                                                     Optional('state'): str,
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
@@ -66,6 +93,7 @@ class ShowIpMrouteSchema(MetaParser):
                                                      'expire': str,
                                                      'state_mode': str,
                                                      Optional('flags'): str,
+                                                     Optional('pkts'): int,
                                                      Optional('vcd'): str,
                                                      Optional('lisp_mcast_source'): str,
                                                      Optional('lisp_mcast_group'): str,
@@ -83,20 +111,48 @@ class ShowIpMrouteSchema(MetaParser):
 
 class ShowIpMroute(ShowIpMrouteSchema):
     """Parser for:
-        show ip mroute
-        show ip mroute vrf <vrf>"""
+      show ip mroute
+      show ip mroute {group}
+      show ip mroute {group} {source}
+      show ip mroute verbose
+      show ip mroute {group} verbose
+      show ip mroute {group} {source} verbose
+      show ip mroute vrf {vrf}
+      show ip mroute vrf {vrf} {group}
+      show ip mroute vrf {vrf} {group} {source}
+      show ip mroute vrf {vrf} verbose
+      show ip mroute vrf {vrf} {group} verbose
+      show ip mroute vrf {vrf} {group} {source} verbose"""
 
-    cli_command = ['show ip mroute', 'show ip mroute vrf {vrf}']
+    cli_command = ['show ip mroute',
+                   'show ip mroute vrf {vrf}',
+                   'show ip mroute vrf {vrf} {group} {source}',
+                   'show ip mroute vrf {vrf} {group}',
+                   'show ip mroute {group}',
+                   'show ip mroute {group} {source}',
+                   'show ip mroute {verbose}',
+                   'show ip mroute {group} {verbose}',
+                   'show ip mroute {group} {source} {verbose}',
+                   'show ip mroute vrf {vrf} {verbose}',
+                   'show ip mroute vrf {vrf} {group} {verbose}',
+                   'show ip mroute vrf {vrf} {group} {source} {verbose}' ]
     exclude = ['expire', 'uptime', 'outgoing_interface_list', 'flags']
 
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', verbose='', group='', source='', address_family='ipv4', output=None):
+        cmd="show ip mroute"
+        
         if output is None:
             if vrf:
-                cmd = self.cli_command[1].format(vrf=vrf)
+                cmd += " vrf {vrf}".format(vrf=vrf)
             else:
-                vrf = 'default'
-                cmd = self.cli_command[0]
+                vrf='default'    
+            if group:
+                cmd += " {group}".format(group=group)
+            if source:
+                cmd += " {source}".format(source=source)
+            if verbose:
+                cmd += " {verbose}".format(verbose=verbose)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -105,14 +161,55 @@ class ShowIpMroute(ShowIpMrouteSchema):
         mroute_dict = {}
         sub_dict = {}
         outgoing = False
-
+        # IP Multicast Routing Table
+        # Multicast Routing Table
+        p1 = re.compile(r'^(?P<address_family>[\w\W]+)? *[mM]ulticast'
+                        ' +[rR]outing +[tT]able$')
+        # (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
+        # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
+        # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
+        # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
+        p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'
+                            '(\s+)?(?P<multicast_group>[\w\:\.\/]+)\),'
+                            ' +(?P<uptime>[\w\:\.]+)\/'
+                            '(?P<expires>[\w\:\.\-]+),'
+                            '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
+                            ' +flags: *(?P<flags>[a-zA-Z]+)$')  
+        # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
+        # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
+        p3 = re.compile(r'^Incoming +interface:'
+                       ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
+                       ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
+                       '(, *(?P<status>\w+))?$')  
+        # Incoming interface:Tunnel5
+        p3_1 = re.compile(r'^Incoming +interface:'
+                         ' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')  
+        # RPF nbr:2001:db8:90:24::6
+        p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
+        # Outgoing interface list: Null
+        # Outgoing interface list:
+        p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
+                         '( *(?P<intf>\w+))?$')       
+        # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
+        # Vlan5, Forward/Dense, 00:04:35/00:02:30
+        # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
+        # POS4/0, Forward, 00:02:06/00:03:27
+        # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+        p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
+                            '(VCD +(?P<vcd>\d+))?(\,\s+)?'
+                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
+                            '(?P<uptime>[a-zA-Z0-9\:]+)\/'
+                            '(?P<expire>[\w\:]+)(\,\s+)?'
+                            '(Pkts\:(?P<pkts>\w+))?(\,\s+)?'
+                            '(flags\:\s+(?P<flags>\w+)?$|(,\s+flags\:)?$)')
         for line in out.splitlines():
             line = line.strip()
 
             # IP Multicast Routing Table
             # Multicast Routing Table
-            p1 = re.compile(r'^(?P<address_family>[\w\W]+)? *[mM]ulticast'
-                             ' +[rR]outing +[tT]able$')
+            ### add the default value, incase above commands not in output
+            #address_family='ipv4'
             m = p1.match(line)
             if m:
                 address_family = m.groupdict()['address_family']
@@ -120,49 +217,38 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     if address_family.strip().lower() == 'ip':
                         address_family = 'ipv4'
                 else:
-                    address_family = 'ipv6'
+                    address_family = 'ipv6'                   
+                continue    
 
-                if 'vrf' not in mroute_dict:
-                    mroute_dict['vrf'] = {}
-                if vrf not in mroute_dict['vrf']:
-                    mroute_dict['vrf'][vrf] = {}
-                if 'address_family' not in mroute_dict['vrf'][vrf]:
-                    mroute_dict['vrf'][vrf]['address_family'] = {}
-                if address_family not in mroute_dict['vrf'][vrf]['address_family']:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
-                continue
 
+            mroute_dict.setdefault('vrf',{})     
+            mroute_data = mroute_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
+    
+
+            # if IP Multicast Routing Table not in output
+            if 'vrf' not in mroute_dict:
+                mroute_dict['vrf'] = {}
+                mroute_dict['vrf'][vrf] = {}
+                mroute_dict['vrf'][vrf]['address_family'] = {}
+                address_family="ipv4"
+                mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
+                
             # (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
             # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
             # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
             # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
-            p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'
-                             ' +(?P<multicast_group>[\w\:\.\/]+)\),'
-                             ' +(?P<uptime>[\w\:\.]+)\/'
-                             '(?P<expires>[\w\:\.]+),'
-                             '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                             ' +flags: *(?P<flags>[a-zA-Z]+)$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
                 multicast_group = m.groupdict()['multicast_group']
+                ### initiate index value to zero for each S,G pair for multiple OG interfaces
+                idx=0
 
-                if 'multicast_group' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
-                if multicast_group not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group']:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group] = {}
-                if 'source_address' not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group'][multicast_group]:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'] = {}
-                if source_address not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
-                        ['multicast_group'][multicast_group]['source_address']:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                        ['source_address'][source_address] = {}
 
-                sub_dict = mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                        ['source_address'][source_address]
+                mroute_data.setdefault('multicast_group',{})
+                sub_dict = mroute_data.setdefault('multicast_group',{}).setdefault(
+                    multicast_group,{}).setdefault('source_address',
+                    {}).setdefault(source_address,{})
 
                 sub_dict['uptime'] = m.groupdict()['uptime']
                 sub_dict['expire'] = m.groupdict()['expires']
@@ -186,10 +272,6 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
             # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
             # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
-            p3 = re.compile(r'^Incoming +interface:'
-                             ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
-                             ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
-                             '(, *(?P<status>\w+))?$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -206,19 +288,14 @@ class ShowIpMroute(ShowIpMrouteSchema):
                         sub_dict['rpf_info'] = rpf_info.lower()
                     continue
 
-                if 'incoming_interface_list' not in sub_dict:
-                    sub_dict['incoming_interface_list'] = {}
-                if incoming_interface not in sub_dict['incoming_interface_list']:
-                    sub_dict['incoming_interface_list'][incoming_interface] = {}
-                sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
+                ing_intf_dict = sub_dict.setdefault('incoming_interface_list',{}).setdefault(incoming_interface,{})
+
+                ing_intf_dict['rpf_nbr'] = rpf_nbr
                 if rpf_info:
-                    sub_dict['incoming_interface_list'][incoming_interface]\
-                        ['rpf_info'] = rpf_info.lower()
+                    ing_intf_dict['rpf_info'] = rpf_info.lower()
                 continue
 
             # Incoming interface:Tunnel5
-            p3_1 = re.compile(r'^Incoming +interface:'
-                             ' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')
             m = p3_1.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -226,28 +303,35 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 if incoming_interface.lower() == 'null':
                     continue
 
+                ing_intf_dict = sub_dict.setdefault('incoming_interface_list',{}).setdefault(incoming_interface,{})
+
+                continue
+                
+            # ##Incoming interface list:
+            p3_4 = re.compile(r'^(?P<incoming_interface>\S+)\, +(?P<state>[\w\/-]+)$')
+            m = p3_4.match(line)
+            if m:
+                res = m.groupdict()
+                incmg_intf = res['incoming_interface']
                 if 'incoming_interface_list' not in sub_dict:
                     sub_dict['incoming_interface_list'] = {}
-                if incoming_interface not in sub_dict['incoming_interface_list']:
-                    sub_dict['incoming_interface_list'][incoming_interface] = {}
+                sub_dict['incoming_interface_list'][incmg_intf]={}
+                sub_dict['incoming_interface_list'][incmg_intf]['state']=res['state']
                 continue
-
+                
             # RPF nbr:2001:db8:90:24::6
-            p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
             m = p3_2.match(line)
             if m:
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 try:
                     sub_dict['rpf_nbr'] = rpf_nbr
-                    sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
+                    ing_intf_dict['rpf_nbr'] = rpf_nbr
                 except Exception:
                     sub_dict['rpf_nbr'] = rpf_nbr
                 continue
 
             # Outgoing interface list: Null
             # Outgoing interface list:
-            p4 =  re.compile(r'^Outgoing +interface +list:'
-                              '( *(?P<intf>\w+))?$')
             m = p4.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -262,44 +346,51 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
             # POS4/0, Forward, 00:02:06/00:03:27
             # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
-            p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
-                             '( +VCD +(?P<vcd>\d+),)?'
-                             '( \(((?P<lisp_mcast_source>[0-9\.,]+), (?P<lisp_mcast_group>[0-9\.,]+)+)\),)?'
-                             ' +(?P<state_mode>[\w\/-]+),'
-                             ' +(?P<uptime>[a-zA-Z0-9\:]+)\/'
-                             '(?P<expire>[\w\:]+)'
-                             '(, *(?P<flags>\w+))?$')
             m = p5.match(line)
             if m and outgoing:
-                outgoing_interface = m.groupdict()['outgoing_interface']
-                vcd = m.groupdict()['vcd']
-                uptime = m.groupdict()['uptime']
+                ### adding below code for multiple outgoing interfaces with same different rloc's example below
+                #### LISP0.1, 100.154.154.154, Forward/Sparse, 00:00:52/00:02:46, Pkts:2, flags: p
+                ####LISP0.1, 100.99.99.99, Forward/Sparse, 00:00:52/00:03:00, Pkts:2, flags: p
+                ####LISP0.1, 100.33.33.33, Forward/Sparse, 00:00:52/00:03:20, Pkts:2, flags: p
+                ####LISP0.1, 100.22.22.22, Forward/Sparse, 00:00:52/00:03:00, Pkts:2, flags: p
+
+                egress_interface = m.groupdict()['outgoing_interface']
                 lisp_mcast_source = m.groupdict()['lisp_mcast_source']
-                lisp_mcast_group = m.groupdict()['lisp_mcast_group']
-                state_mode = m.groupdict()['state_mode'].lower()
-                expire = m.groupdict()['expire']
-                flags = m.groupdict()['flags']
+                if idx:
+                    outgoing_interface='{}-{}'.format(m.groupdict()['outgoing_interface'],idx )
+                else:
+                    outgoing_interface=egress_interface
 
-                if 'outgoing_interface_list' not in sub_dict:
-                    sub_dict['outgoing_interface_list'] = {}
-                if outgoing_interface not in sub_dict['outgoing_interface_list']:
-                    sub_dict['outgoing_interface_list'][outgoing_interface] = {}
-
-                sub_dict['outgoing_interface_list'][outgoing_interface]['uptime'] = uptime
-                sub_dict['outgoing_interface_list'][outgoing_interface]['expire'] = expire
-                sub_dict['outgoing_interface_list'][outgoing_interface]['state_mode'] = state_mode
-                if flags:
-                    sub_dict['outgoing_interface_list'][outgoing_interface]['flags'] = flags
-                if vcd:
-                    sub_dict['outgoing_interface_list'][outgoing_interface]['vcd'] = vcd
-                if lisp_mcast_source:
-                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_source'] = lisp_mcast_source
-                if lisp_mcast_group:
-                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_group'] = lisp_mcast_group
+                out_intf_dict = sub_dict.setdefault('outgoing_interface_list',{}).setdefault(outgoing_interface,{})
+                sub_dict['outgoing_interface_list'][outgoing_interface]['uptime'] =  m.groupdict()['uptime']
+                sub_dict['outgoing_interface_list'][outgoing_interface]['expire'] = m.groupdict()['expire']
+                sub_dict['outgoing_interface_list'][outgoing_interface]['state_mode'] = m.groupdict()['state_mode'].lower()
+                if m.groupdict()['flags']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['flags'] = m.groupdict()['flags']
+                if m.groupdict()['pkts']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['pkts'] = int(m.groupdict()['pkts'])
+                if m.groupdict()['vcd']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['vcd'] = m.groupdict()['vcd']
+                if m.groupdict()['lisp_mcast_source']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_source'] = m.groupdict()['lisp_mcast_source']
+                if m.groupdict()['lisp_mcast_group']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_group'] = m.groupdict()['lisp_mcast_group']
+                idx+=1    
+                continue
+                
+            # Bidir-Upstream: Lspvif52, RPF nbr: 1.1.1.1
+            p6 = re.compile(r'^Bidir-Upstream: +(?P<upstream_interface>[a-zA-Z0-9\/\-\.]+), '
+                            '+RPF +nbr\:? +(?P<rpf_nbr>[\w\:\.]+)(, *(?P<status>\w+))?$')
+            m = p6.match(line)
+            if m:
+                r=m.groupdict()
+                upstream_interface=r['upstream_interface']
+                sub_dict['upstream_interface'] = {}
+                sub_dict['upstream_interface'][upstream_interface]={}
+                sub_dict['upstream_interface'][upstream_interface]['rpf_nbr']=r['rpf_nbr']
                 continue
 
         return mroute_dict
-
 
 # ===========================================
 # Parser for 'show ipv6 mroute'
@@ -307,26 +398,53 @@ class ShowIpMroute(ShowIpMrouteSchema):
 # ===========================================
 class ShowIpv6Mroute(ShowIpMroute):
     """Parser for:
-       show ipv6 mroute
-       show ipv6 mroute vrf <vrf>"""
+      show ipv6 mroute
+       show ipv6 mroute vrf {vrf}
+      show ipv6 mroute {group}
+      show ipv6 mroute {group} {source}
+      show ipv6 mroute verbose
+      show ipv6 mroute {group} verbose
+      show ipv6 mroute {group} {source} verbose
+      show ipv6 mroute vrf {vrf} {group}
+      show ipv6 mroute vrf {vrf} {group} {source}
+      show ipv6 mroute vrf {vrf} verbose
+      show ipv6 mroute vrf {vrf} {group} verbose
+      show ipv6 mroute vrf {vrf} {group} {source} verbose"""
 
-    cli_command = ['show ipv6 mroute', 'show ipv6 mroute vrf {vrf}']
+    cli_command = ['show ipv6 mroute',
+                   'show ipv6 mroute vrf {vrf}',
+                   'show ipv6 mroute {group}',
+                   'show ipv6 mroute vrf {vrf} {group} {source}',
+                   'show ipv6 mroute vrf {vrf} {group}',
+                   'show ipv6 mroute {group} {source}',
+                   'show ipv6 mroute {verbose}',
+                   'show ipv6 mroute {group} {verbose}',
+                   'show ipv6 mroute {group} {source} {verbose}',
+                   'show ipv6 mroute vrf {vrf} {verbose}',
+                   'show ipv6 mroute vrf {vrf} {group} {verbose}',
+                   'show ipv6 mroute vrf {vrf} {group} {source} {verbose}' ]
     exclude = ['expire', 'uptime', 'joins', 'leaves',
                'incoming_interface_list', '(Tunnel.*)']
 
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', verbose='', group='', source='', address_family='ipv6', output=None):
+        cmd="show ipv6 mroute"
         if output is None:
             if vrf:
-                cmd = self.cli_command[1].format(vrf=vrf)
+                cmd += " vrf {vrf}".format(vrf=vrf)
             else:
-                vrf = 'default'
-                cmd = self.cli_command[0]
+                vrf='default'    
+            if group:
+                cmd += " {group}".format(group=group)
+            if source:
+                cmd += " {source}".format(source=source)
+            if verbose:
+                cmd += " {verbose}".format(verbose=verbose)
             out = self.device.execute(cmd)
         else:
             out = output
 
-        return super().cli(vrf=vrf, output=out)
+        return super().cli(vrf=vrf, address_family='ipv6', output=out)
 
 
 # ===========================================

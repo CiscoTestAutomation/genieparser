@@ -29,6 +29,9 @@
     *  show ipv6 mfib vrf {vrf} verbose
     *  show ipv6 mfib vrf {vrf} {group} verbose
     *  show ipv6 mfib vrf {vrf} {group} {source} verbose
+    * show ipv6 dhcp pool
+    * show ipv6 dhcp pool {poolname}
+
 """
 
 # Python
@@ -1286,3 +1289,97 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                 egress_data.update(changedict)
                 continue
         return mfib_dict
+
+
+# ====================================================
+#  schema for show ipv6 dhcp pool
+# ====================================================
+class ShowIpv6DhcpPoolSchema(MetaParser):
+    """Schema for show ipv6 dhcp pool"""
+    schema = {
+            Any(): {
+                Optional('address_allocation_prefix'): str,
+                Optional('valid_lifetime'): int,
+                Optional('preferred_lifetime'): int,
+                Optional('in_use_address'): int,
+                Optional('conflicts'): int,
+                Optional('domain_name'): str,
+                'active_clients': int
+            },
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 dhcp pool'
+#   * 'show ipv6 dhcp pool {poolname}'
+# ================================================================
+class ShowIpv6DhcpPool(ShowIpv6DhcpPoolSchema):
+    """ Parser for:
+                show ipv6 dhcp pool
+                show ipv6 dhcp pool {poolname}
+    """
+    cli_command = ['show ipv6 dhcp pool {poolname}','show ipv6 dhcp pool']
+    def cli(self, poolname='', output=None):
+        """ cli for:
+         ' show ipv6 dhcp pool '
+        """
+
+        if output is None:
+            if poolname:
+                output = self.device.execute(self.cli_command[0].format(poolname=poolname))
+            else:
+                 output= self.device.execute(self.cli_command[1])
+
+        # Initialize dictionary
+        pool_dict = {}
+
+        #DHCPv6 pool: pool1
+        p1 = re.compile(r'^DHCPv6 +pool: +(?P<pool_name>\S+)$')
+
+        #Address allocation prefix: 2510:1::/64 valid 300 preferred 300 (1 in use, 0 conflicts)
+        p2 = re.compile(r'^Address +allocation +prefix: +(?P<address_allocation_prefix>\S+) +valid +(?P<valid_lifetime>\d+) +preferred +(?P<preferred_lifetime>\d+) +\S(?P<in_use_address>\d+) +in +use, +(?P<conflicts>\d+) +conflicts\S$')
+
+        #Domain name: cisco.com
+        p3 = re.compile(r'^Domain +name: +(?P<domain_name>\S+)$')
+
+        #Active clients: 1
+        p4 = re.compile(r'Active +clients: +(?P<active_clients>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            #DHCPv6 pool: pool1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                pool = group['pool_name']
+                if pool not in pool_dict:
+                    pool_dict[pool] = {}
+                continue
+
+            #Address allocation prefix: 2510:1::/64 valid 300 preferred 300 (1 in use, 0 conflicts)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict[pool]['address_allocation_prefix'] = group['address_allocation_prefix']
+                pool_dict[pool]['valid_lifetime'] = int(group['valid_lifetime'])
+                pool_dict[pool]['preferred_lifetime'] = int(group['preferred_lifetime'])
+                pool_dict[pool]['in_use_address'] = int(group['in_use_address'])
+                pool_dict[pool]['conflicts'] = int(group['conflicts'])
+                continue
+
+            #Domain name: cisco.com
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict[pool]['domain_name'] = group['domain_name']
+                continue
+
+            #Active Clients: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict[pool]['active_clients'] = int(group['active_clients'])
+                continue
+
+        return pool_dict
+
