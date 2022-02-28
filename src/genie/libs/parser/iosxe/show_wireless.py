@@ -149,7 +149,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
     def cli(self, policy_name="", output=None):
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
-            output = self.device.execute(self.cmd)
+            output = self.device.execute(cmd)
         else:
             output=output
 
