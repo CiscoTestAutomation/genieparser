@@ -55,7 +55,7 @@ class ShowInventory(ShowInventorySchema):
         # PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
         # PID: N/A, VID: N/A, SN: AAAAA11111
         # PID: N/A, VID: , SN: AAAAA11111
-        p2 = re.compile(r'^PID:\s+(?P<pid>.+),+\sVID:(?P<vid>.+),\s+SN:(?P<sn>.+)$')
+        p2 = re.compile(r'^PID:\s+(?P<pid>.+),\s+VID:\s?(?P<vid>.+),\s+SN:\s+(?P<sn>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
