@@ -1,4 +1,3 @@
-ciscoasa# show inventory
 Name: "Ethernet 1/13", DESCR: "10gbase-lr"
 PID: RTXM228-401-C98, VID: , SN: ACW111115H9
 
