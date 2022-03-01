@@ -49,7 +49,7 @@ class ShowInventory(ShowInventorySchema):
 
         # Name: "Chassis", DESCR: "ASA 5555-X with SW, 8 GE Data, 1 GE Mgmt"
         # Name: "power supply 1", DESCR: "ASA 5545-X/5555-X AC Power Supply"
-        p1 = re.compile(r'^Name:\s+"+(?P<name>.+)",\s+DESCR:\s"+(?P<description>.+)"$')
+        p1 = re.compile(r'^Name:\s+"(?P<name>.+)",\s+DESCR:\s+"(?P<description>.+)"$')
 
         # PID: ASA5555, VID: V01, SN: AAAAA11111
         # PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
