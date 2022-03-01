@@ -74,6 +74,7 @@ class ShowInterfaceSchema(MetaParser):
             "enabled": bool,
             Optional("mac_address"): str,
             Optional("auto_negotiate"): bool,
+            Optional("fec_mode"): str,
             Optional("duplex_mode"): str,
             Optional("port_mode"): str,
             Optional("auto_mdix"): str,
@@ -354,12 +355,16 @@ class ShowInterface(ShowInterfaceSchema):
         p11 = re.compile(r'^Beacon *is *turned *(?P<beacon>[a-z]+)$')
 
         # Auto-Negotiation is turned off
+        # Auto-Negotiation is turned off  FEC mode is Auto
         p12 = re.compile(r'^Auto-Negotiation *is *turned'
-                         r' *(?P<auto_negotiate>(off))$')
+                         r' *(?P<auto_negotiate>(off))'
+                         r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
 
         # Auto-Negotiation is turned on
+        # Auto-Negotiation is turned on  FEC mode is Auto
         p12_1 = re.compile(r'^Auto-Negotiation *is *turned'
-                           r' *(?P<auto_negotiate>(on))$')
+                           r' *(?P<auto_negotiate>(on))'
+                           r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
 
         # Input flow-control is off, output flow-control is off
         p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off)+),'
@@ -800,6 +805,8 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 auto_negotiation = m.groupdict()['auto_negotiate']
                 interface_dict[interface]['auto_negotiate'] = False
+                if m.groupdict()['fec_mode']:
+                    interface_dict[interface]['fec_mode'] = m.groupdict()['fec_mode']
                 continue
 
             # Auto-Negotiation is turned on
@@ -807,6 +814,8 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 auto_negotiation = m.groupdict()['auto_negotiate']
                 interface_dict[interface]['auto_negotiate'] = True
+                if m.groupdict()['fec_mode']:
+                    interface_dict[interface]['fec_mode'] = m.groupdict()['fec_mode']
                 continue
 
             # Input flow-control is off, output flow-control is off
