@@ -1,6 +1,0 @@
-LISP ETR IPv4 Mapping Database for EID-table vrf DEVICE_VN (IID 4100), LSBs: 0x1
-Entries total 2, no-route 0, inactive 0
-
-192.168.11.11/32, dynamic-eid 192_168_11_0-DEVICE_VN-IPV4, inherited from default locator-set rloc_aba7a76a-fadd-4f6e-a44e-ef4258a1c129
-  Locator     Pri/Wgt  Source     State
-  172.24.0.3   10/10   cfg-intf   site-self, reachable

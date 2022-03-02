@@ -47,6 +47,11 @@ class ShowPolicyMapInterfaceSchema(MetaParser):
                                             Optional('inst_queue_len'): str,
                                             Optional('avg_queue_len'): str,
                                             Optional('taildropped'): str,
+                                            Optional('queue_conform_packets'): int,
+                                            Optional('queue_conform_bytes'): int,
+                                            Optional('queue_conform_rate'): int,
+                                            Optional('red_random_drops_packets'): int,
+                                            Optional('red_random_drops_bytes'): int,
                                         },
                                     }
                                 }
@@ -81,53 +86,58 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
         ret_dict = {}
 
         # TenGigE0/2/0/3 direction input: Service Policy not installed
-        p1 = re.compile('^.*direction +input: +Service +Policy +not +installed$')
+        p1 = re.compile(r'^.*direction +input: +Service +Policy +not +installed$')
 
         # TenGigE0/2/0/3 direction input: cap
-        p2 = re.compile('^.*direction +input: +(?P<input>\D+)$')
+        p2 = re.compile(r'^.*direction +input: +(?P<input>\w+)$')
 
         # TenGigE0/2/0/3 output: Service Policy not installed
-        p3 = re.compile('^.*output: +Service +Policy +not +installed$')
+        p3 = re.compile(r'^.*output: +Service +Policy +not +installed$')
 
         # TenGigE0/2/0/3 output: cap
-        p4 = re.compile('^.*output: +(?P<output>\D+)$')
+        p4 = re.compile(r'^.*output: +(?P<output>\w+)$')
 
         # Class cap
-        p5 = re.compile('^Class +(?P<class_name>\D+)$')
+        p5 = re.compile(r'^Class +(?P<class_name>\D+)$')
 
         # Matched             : N / A
-        p6 = re.compile('^Matched\s+: +(?P<matched>[\D\s]+)$')
+        p6 = re.compile(r'^Matched\s+: +(?P<matched>[\D\s]+)$')
 
         # Matched             :                 638/42108                10
-        p7 =  re.compile('^Matched\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p7 =  re.compile(r'^Matched\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
 
         # Transmitted         : N / A
-        p8 = re.compile('^Transmitted\s+: +(?P<transmitted>[\D\s]+)$')
+        p8 = re.compile(r'^Transmitted\s+: +(?P<transmitted>[\D\s]+)$')
 
         # Transmitted             :                 638/42108                10
-        p9 =  re.compile('^Transmitted\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p9 = re.compile(r'^Transmitted\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
 
         # Total Dropped       : N/A
-        p10 = re.compile('^Total Dropped\s+: +(?P<total_dropped>[\D\s]+)$')
+        p10 = re.compile(r'^Total Dropped\s+: +(?P<total_dropped>[\D\s]+)$')
 
         # Total Dropped             :                 638/42108                10
-        p11 = re.compile('^Total Dropped\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
+        p11 = re.compile(r'^Total Dropped\s+\:\s+(?P<packets_bytes>[\d\/]+)\s+(?P<rate_kbps>[\d]+)$')
 
         # Queue ID                             : 44
-        p12 = re.compile('^Queue ID\s+: +(?P<queue_id>[\d]+)$')
+        p12 = re.compile(r'^Queue ID\s+: +(?P<queue_id>[\d]+)$')
 
         # High watermark  (bytes)/(ms)         : 0/0
-        p13 = re.compile('^High +watermark[\S\D]+:\s+(?P<high_watermark>[\d\S]+)$')
+        p13 = re.compile(r'^High +watermark[\S\D]+:\s+(?P<high_watermark>[\d\S]+)$')
 
         # Inst-queue-len  (bytes)/(ms)         : 0/0
-        p14 = re.compile('^Inst-queue-len[\S\D]+:\s+(?P<inst_queue_len>[\d\S]+)$')
+        p14 = re.compile(r'^Inst-queue-len[\S\D]+:\s+(?P<inst_queue_len>[\d\S]+)$')
 
         # Avg-queue-len   (bytes)/(ms)         : 0/0
-        p15 = re.compile('^Avg-queue-len[\S\D]+:\s+(?P<avg_queue_len>[\d\S]+)$')
+        p15 = re.compile(r'^Avg-queue-len[\S\D]+:\s+(?P<avg_queue_len>[\d\S]+)$')
 
         # Taildropped(packets/bytes)           : 0/0
-        p16 = re.compile('^Taildropped[\S\D]+:\s+(?P<taildropped>[\d\S]+)$')
+        p16 = re.compile(r'^Taildropped[\S\D]+:\s+(?P<taildropped>[\d\S]+)$')
 
+        # Queue(conform)      :                   0/0                    0
+        p17 = re.compile(r'^Queue\(conform\)\s*:\s*(?P<packets>\d+)\/(?P<bytes>\d+)\s+(?P<rate>\d+)$')
+
+        # RED random drops(packets/bytes)      : 0/0
+        p18 = re.compile(r'^RED\s+random\s+drops\(packets/bytes\)\s*:\s*(?P<packets>\d+)\/(?P<bytes>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -311,6 +321,27 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
             if m:
                 group = m.groupdict()
                 queue_stat_dict.update({'taildropped': group['taildropped']})
+                continue
+
+            # Queue(conform)      :                   0/0                    0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({
+                    'queue_conform_packets': int(group['packets']),
+                    'queue_conform_bytes': int(group['bytes']),
+                    'queue_conform_rate': int(group['rate'])
+                })
+                continue
+
+            # RED random drops(packets/bytes)      : 0/0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                queue_stat_dict.update({
+                    'red_random_drops_packets': int(group['packets']),
+                    'red_random_drops_bytes': int(group['bytes']),
+                })
                 continue
 
         return ret_dict

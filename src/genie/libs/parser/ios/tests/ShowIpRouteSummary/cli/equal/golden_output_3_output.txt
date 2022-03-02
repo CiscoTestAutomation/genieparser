@@ -1,14 +1,14 @@
 IP routing table name is Default-IP-Routing-Table(0)
 IP routing table maximum-paths is 32
-Route Source Networks Subnets Overhead Memory (bytes)
-connected 2 43 9260 6480
-static 6 58 19508 9216
-eigrp 1 0 0 0 0
-ospf 100 101 4344 352008 642124
-Intra-area: 80 Inter-area: 638 External-1: 3148 External-2: 578
-NSSA External-1: 1 NSSA External-2: 0
-bgp 65448 133 72 43092 31564
-External: 0 Internal: 197 Local: 8
-internal 96 210048
-Total 338 4517 423868 899432
+Route Source    Networks    Subnets     Overhead    Memory (bytes)
+connected       2           43          9260        6480
+static          6           58          19508       9216
+eigrp 1         0           0           0           0
+ospf 100        101         4344        352008      642124
+  Intra-area: 80 Inter-area: 638 External-1: 3148 External-2: 578
+  NSSA External-1: 1 NSSA External-2: 0
+bgp 65448       133 72 43092 31564
+  External: 0 Internal: 197 Local: 8
+internal        96                                  210048
+Total           338         4517        423868      899432
 Removing Queue Size 0

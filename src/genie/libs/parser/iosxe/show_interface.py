@@ -3260,6 +3260,16 @@ class ShowInterfacesCounters(ShowInterfacesCountersSchema):
                 continue
         return ret_dict
 
+class ShowInterfacesCountersEtherchannel(ShowInterfacesCounters):
+    """parser for show interfaces <WORD> counter etherchannel"""
+
+    cli_command = 'show interfaces {interface} counter etherchannel'
+
+    def cli(self, interface,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        return super().cli(interface=interface, output=output)
 
 class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interfaces accounting"""

@@ -13,3 +13,4 @@
   Peer delay request interval(log mean): 0
   Sync fault limit: 500000000
  ptp role primary : Disabled
+Local port priority : 128

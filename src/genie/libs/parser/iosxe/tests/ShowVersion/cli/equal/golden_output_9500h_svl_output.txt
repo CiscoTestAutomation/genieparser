@@ -1,0 +1,85 @@
+show ver
+Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20211003_004933
+Cisco IOS Software [], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.8.20211003:014100 [BLD_POLARIS_DEV_LATEST_20211003_004933:/nobackup/mcpre/s2c-build-ws 100]
+Copyright (c) 1986-2021 by Cisco Systems, Inc.
+Compiled Sat 02-Oct-21 18:41 by mcpre
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2021 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+ROM: IOS-XE ROMMON
+BOOTLDR: System Bootstrap, Version 17.7.1r[FC2], RELEASE SOFTWARE (P)
+intrepid-2 uptime is 29 minutes
+Uptime for this control processor is 35 minutes
+System returned to ROM by Reload Command
+System image file is "bootflash:cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20211003_004933.SSA.bin"
+Last reload reason: Reload Command
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+
+Technology Package License Information: 
+
+------------------------------------------------------------------------------
+Technology-package                                     Technology-package
+Current                        Type                       Next reboot  
+------------------------------------------------------------------------------
+network-advantage       Smart License                    network-advantage   
+dna-advantage           Subscription Smart License       dna-advantage                 
+AIR License Level: AIR DNA Advantage
+Next reload AIR license Level: AIR DNA Advantage
+
+
+Smart Licensing Status: Registration Not Applicable/Not Applicable
+
+cisco C9606R (X86) processor (revision V01) with 6036071K/6147K bytes of memory.
+Processor board ID FXS2522Q2PC
+1 Virtual Ethernet interface
+48 Forty/Hundred Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+33554432K bytes of physical memory.
+11161600K bytes of Bootflash at bootflash:.
+1638400K bytes of Crash Files at crashinfo:.
+234430023K bytes of SATA hard disk at disk0:.
+
+Base Ethernet MAC Address          : bc:d2:95:fd:b4:00
+Motherboard Assembly Number        : 4DB9
+Motherboard Serial Number          : FXS251500ME
+Model Revision Number              : V02
+Motherboard Revision Number        : 3
+Model Number                       : C9606R
+System Serial Number               : FXS2522Q2PC
+
+Switch 02
+---------
+Base Ethernet MAC Address          : bc:d2:95:fd:b5:00
+Motherboard Assembly Number        : 4DB9
+Motherboard Serial Number          : FXS251701Q0
+Model Revision Number              : V02
+Motherboard Revision Number        : 3
+Model Number                       : C9606R
+System Serial Number               : FXS2522Q2PV

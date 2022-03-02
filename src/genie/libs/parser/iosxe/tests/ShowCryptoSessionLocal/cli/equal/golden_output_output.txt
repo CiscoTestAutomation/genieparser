@@ -1,0 +1,10 @@
+Crypto session current status
+ 
+Interface: Tunnel1
+Profile: IKEV2_PROFILE
+Session status: UP-ACTIVE    
+Peer: 10.1.1.1 port 4500
+  Session ID: 78 
+  IKEv2 SA: local 4.4.4.1/4500 remote 10.1.1.1/4500 Active
+  IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 0.0.0.0/0.0.0.0
+        Active SAs: 2, origin: crypto map

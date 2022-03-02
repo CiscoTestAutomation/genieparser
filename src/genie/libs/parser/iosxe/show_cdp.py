@@ -168,25 +168,29 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 
     schema = {
         'total_entries_displayed': int,
-        Optional('index'):
-            {Any():
-                {Optional('device_id'): str,
-                 'platform': str,
-                 Optional('capabilities'): str,
-                 'local_interface': str,
-                 'port_id': str,
-                 'hold_time': int,
-                 'software_version': str,
-                 'entry_addresses':
-                    {Any():
-                        {Optional('type'): str, }, },
-                 'management_addresses':
-                    {Any():
-                        {Optional('type'): str, }, },
-                 Optional('duplex_mode'): str,
-                 Optional('advertisement_ver'): int,
-                 Optional('native_vlan'): str,
-                 Optional('vtp_management_domain'): str},
+        Optional('index'): {
+            Any(): {
+                Optional('device_id'): str,
+                'platform': str,
+                Optional('capabilities'): str,
+                'local_interface': str,
+                Optional('port_id'): str,
+                'hold_time': int,
+                'software_version': str,
+                'entry_addresses': {
+                    Any(): {
+                        Optional('type'): str,
+                    },
+                },
+                'management_addresses': {
+                    Any(): {
+                        Optional('type'): str,
+                    },
+                },
+                Optional('duplex_mode'): str,
+                Optional('advertisement_ver'): int,
+                Optional('native_vlan'): str,
+                Optional('vtp_management_domain'): str},
             },
         }
 
@@ -202,9 +206,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
     def cli(self, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # Device ID: R7(9QBDKB58F76)
         # Device ID:
@@ -228,49 +230,50 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
         # Interface: Serial0/0/0:1,  Port ID (outgoing port): Serial1/4:1
         # Interface: FastEthernet0/0.1,  Port ID (outgoing port): GigabitEthernet7/27
-        interface_port_re = re.compile(r'Interface:\s*'
-                                      '(?P<interface>[\w\s\-\/\/\:\.]+)\s*\,'
-                                      '*\s*Port\s*ID\s*[\(\w\)\s\:]+:\s*'
-                                      '(?P<port_id>[\S\s]+$)')
+        # Interface: GigabitEthernet0/5, Port ID (outgoing port):
+        interface_port_re = re.compile(r'^Interface:\s*'
+                                       r'(?P<interface>[\w\s\-\/\/\:\.]+)\s*\,'
+                                       r'*\s*Port\s*ID\s*[\(\w\)\s\:]+:\s*'
+                                       r'(?P<port_id>[\S\s]+)?$')
 
         # Native VLAN: 42
-        native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
-                                    '(?P<native_vlan>\d+)')
+        native_vlan_re = re.compile(r'^Native\s*VLAN\s*:\s*'
+                                    r'(?P<native_vlan>\d+)')
 
-        # VTP Management Domain: 'Accounting Group'      
-        vtp_management_domain_re = re.compile(r'VTP\s*Management\s*'
-                                    'Domain\s*:\s*'
-                                    '\W*(?P<vtp_management_domain>([a-zA-Z\s]+'
-                                    '))\W*')
+        # VTP Management Domain: 'Accounting Group'
+        vtp_management_domain_re = re.compile(r'^VTP\s*Management\s*'
+                                              r'Domain\s*:\s*'
+                                              r'\W*(?P<vtp_management_domain>([a-zA-Z\s]+'
+                                              r'))\W*')
 
         # Holdtime : 126 sec
-        hold_time_re = re.compile(r'Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
+        hold_time_re = re.compile(r'^Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
 
         # advertisement version: 2
-        advertver_re = re.compile(r'advertisement\s*version:\s*'
-                        '(?P<advertisement_ver>\d+)')
+        advertver_re = re.compile(r'^advertisement\s*version:\s*'
+                                  r'(?P<advertisement_ver>\d+)')
 
         # Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
-        software_version_re = re.compile(r'(?P<software_version>[\s\S]+)')
+        software_version_re = re.compile(r'^(?P<software_version>[\s\S]+)$')
 
         # Duplex: full
         # Duplex Mode: half
-        duplex_re = re.compile(r'Duplex\s*(Mode)*:\s*(?P<duplex_mode>\w+)')
+        duplex_re = re.compile(r'^Duplex\s*(Mode)*:\s*(?P<duplex_mode>\w+)')
 
         # Regexes for Flags:
         # Version:
-        software_version_flag_re = re.compile(r'Version\s*:\s*')
+        software_version_flag_re = re.compile(r'^Version\s*:\s*')
         # Management address(es):
-        mngaddress_re = re.compile(r'Management\s*address\s*\([\w]+\)\s*\:\s*')
+        mngaddress_re = re.compile(r'^Management\s*address\s*\([\w]+\)\s*\:\s*')
         # Entry address(es):
-        entryaddress_re = re.compile(r'Entry\s*address\s*\(\w+\)\s*\:\s*')       
+        entryaddress_re = re.compile(r'^Entry\s*address\s*\(\w+\)\s*\:\s*')
 
         # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
         # IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
-        ipv6_adress_re = re.compile('IPv6\s*address\s*:\s*(?P<ip_adress>\S+)'
-                                    '\s*\((?P<type>[\s\w\-]+)\)')
+        ipv6_adress_re = re.compile(r'^IPv6\s*address\s*:\s*(?P<ip_adress>\S+)'
+                                    r'\s*\((?P<type>[\s\w\-]+)\)')
         # IP address: 172.16.1.204
-        ipaddress_re = re.compile(r'\S*IP\s*address:\s*(?P<id_adress>\S*)')
+        ipaddress_re = re.compile(r'^IP\s*address:\s*(?P<id_adress>\S*)')
 
         # 0 or 1 flags
         entry_address_flag = 0
@@ -278,10 +281,9 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         software_version_flag = 0
 
         # Init vars
-        sw_version = []
         parsed_dict = {}
         index_device = 0
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             result = deviceid_re.match(line)
@@ -326,8 +328,9 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
             if result:
                 interface_port_dict = result.groupdict()
-                devices_dict['port_id'] = \
-                    interface_port_dict['port_id']
+                if interface_port_dict['port_id']:
+                    devices_dict['port_id'] = \
+                        interface_port_dict['port_id']
                 devices_dict['local_interface'] = \
                     interface_port_dict['interface']
                 continue
@@ -378,30 +381,25 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
                 continue
 
+            result = advertver_re.match(line)
+            if result:
+                software_version_flag = 0
+                devices_dict['advertisement_ver'] = \
+                    int(result.group('advertisement_ver'))
+                continue
+
             if software_version_flag_re.match(line):
                 software_version_flag = 1
                 continue
 
             if software_version_flag:
-                if line and not advertver_re.match(line):
-
-                    sw_version.append(line)
-                    continue
-                elif not line or advertver_re.match(line):
-
-                    parsed_sw_ver = '\n'.join(sw_version)
-                    
-                    result = software_version_re.match(parsed_sw_ver)
-
-                    devices_dict['software_version'] = \
-                        result.group('software_version')
-                    software_version_flag = 0
-                    sw_version.clear()
-
-            result = advertver_re.match(line)
-            if result:
-                devices_dict['advertisement_ver'] = \
-                    int(result.group('advertisement_ver'))
+                result = software_version_re.match(line)
+                if result:
+                    sw_version = devices_dict.get('software_version', '')
+                    # append lines to software_version
+                    sw_version = '\n'.join(filter(
+                        None, [sw_version, result.group('software_version')]))
+                    devices_dict['software_version'] = sw_version
                 continue
 
             result = native_vlan_re.match(line)

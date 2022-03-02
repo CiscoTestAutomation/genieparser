@@ -5,6 +5,8 @@ expected_output = {
         "platform": "ASR1000",
         "compiled_by": "mcpre",
         "compiled_date": "Mon 10-Apr-17 04:35",
+        "copyright_years": "1986-2017",
+        "location": "Denali",
         "returned_to_rom_at": "02:14:51 PDT Mon Apr 10 2017",
         "returned_to_rom_by": "reload",
         "version": "16.3.20170410:103306",

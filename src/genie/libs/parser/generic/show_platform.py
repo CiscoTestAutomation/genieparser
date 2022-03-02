@@ -206,9 +206,11 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 ret_dict['os'] = 'iosxe'
                 group = m.groupdict()
-                if group['platform']:
-                    ret_dict['platform'] = group['platform'].lower()
                 ret_dict['version'] = group['version']
+                if group['platform']:
+                    platform = group['platform'].lower()
+                    if 'x86_64_linux' not in platform:
+                        ret_dict['platform'] = platform
                 continue
 
             # cisco WS-C2940-8TT-S (RC32300) processor (revision H0) with 19868K bytes of memory.
@@ -285,11 +287,15 @@ class ShowVersion(ShowVersionSchema):
                     ret_dict['os'] = 'ios'
 
                 # Clean up platform a bit before adding to ret_dict
-                if group['platform'].lower().startswith('x86_64_linux') \
-                        and group['alternate_platform']:
-                    group['platform'] = group['alternate_platform']
+                platform = group['platform'].lower()
+                if 'x86_64_linux' in platform:
+                    if group['alternate_platform']:
+                        platform = group['alternate_platform'].lower()
+                    else:
+                        continue
+
                 ret_dict['platform'] = \
-                    re.sub(r'\_(ios).*', r'', group['platform'].lower())
+                    re.sub(r'\_(ios).*', r'', platform)
                 ret_dict['platform'] = \
                     re.sub(r'cat(\d)\d{3}', r'cat\1k', ret_dict['platform'])
                 continue

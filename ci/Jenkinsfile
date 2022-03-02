@@ -12,7 +12,13 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genielibs']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genielibs.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genielibs.cisco']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genielibs.cisco.git']]])
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'unicon']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/unicon.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'unicon.plugins']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/unicon.plugins.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'pyats']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/pyats.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genietelemetry']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genietelemetry.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genietrafficgen']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genietrafficgen.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'pyats.contrib']], userRemoteConfigs: [[url: 'https://github.com/CiscoTestAutomation/pyats.contrib.git']]])
                 script {
                     sh """
                     ls -l
@@ -20,7 +26,19 @@ pipeline {
                     git remote -v
                     cd ../genielibs
                     git remote -v
+                    cd ../genielibs.cisco
+                    git remote -v
                     cd ../unicon
+                    git remote -v
+                    cd ../unicon.plugins
+                    git remote -v
+                    cd ../pyats
+                    git remote -v
+                    cd ../genietelemetry
+                    git remote -v
+                    cd ../genietrafficgen
+                    git remote -v
+                    cd ../pyats.contrib
                     git remote -v
                     """
                 }
@@ -38,7 +56,19 @@ pipeline {
                     # checkout same branch on genielibs, if it exists
                     cd ../genielibs
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../genielibs.cisco
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     cd ../unicon
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../unicon.plugins
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../pyats
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../genietelemetry
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../genietrafficgen
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    cd ../pyats.contrib
                     git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
@@ -64,23 +94,35 @@ pipeline {
                     make develop
                     cd $WORKSPACE/genielibs
                     make develop
+                    cd $WORKSPACE/genielibs.cisco
+                    make develop
                     git status
                     cd $WORKSPACE/unicon
                     make develop
+                    cd $WORKSPACE/unicon.plugins
+                    make develop
+                    cd $WORKSPACE/pyats
+                    make develop
+                    cd $WORKSPACE/genietelemetry
+                    make develop
+                    cd $WORKSPACE/genietrafficgen
+                    make develop
+                    cd $WORKSPACE/pyats.contrib
+                    make develop
                     cd $WORKSPACE
                     make develop
-                    
-                    
+
+
                     git diff --exit-code ./sdk_generator/outputs/github_parser.json || \
                     (echo "Parser JSON may be corrupted. Ensure your branch is up to date, run 'make json', and re-push to branch" && false)
-                    
+
                     cd $WORKSPACE/genielibs
                     make json
                     cd $WORKSPACE/genie
                     make json
                     cd $WORKSPACE
                     make json
-                    
+
                     env
                     pip list
                     pip freeze
@@ -97,7 +139,7 @@ pipeline {
                 """
             }
         }
-        
+
         stage("Test changelogs") {
             steps {
                 sh"""
@@ -106,7 +148,7 @@ pipeline {
                 """
             }
         }
-        
+
         stage("Run folder_parsing_job") {
             steps {
                 sh """
@@ -146,7 +188,7 @@ pipeline {
                 """
             }
         }
-        
+
         stage("Genie runAll") {
             steps {
                 sh """
@@ -156,7 +198,7 @@ pipeline {
                 """
             }
         }
-        
+
         stage("Ops runAll") {
             steps {
                 sh """
@@ -166,7 +208,6 @@ pipeline {
                 """
             }
         }
-
     }
     post {
         cleanup {

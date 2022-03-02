@@ -1059,3 +1059,71 @@ class ShowTelemetryReceiverAll(ShowTelemetryReceiverNameSchema):
 
             ret_dict = {"name": ret_dict}
         return ret_dict
+
+class ShowTelemetryIETFSubscriptionSummarySchema(MetaParser):
+    """Schema for:
+        show telemetry ietf subscription summary
+    """
+
+    schema = {
+        "max_supported": int,
+        "type": {
+            str: {
+                "total": int,
+                "valid": int,
+                "invalid": int,
+            },
+        }
+    }
+
+class ShowTelemetryIETFSubscriptionSummary(ShowTelemetryIETFSubscriptionSummarySchema):
+    """Parser for:
+        show telemetry ietf subscription summary
+    """
+
+    cli_command = "show telemetry ietf subscription summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Maximum supported: 128
+        p1 = re.compile(r'^Maximum +supported: +(?P<max_supported>[0-9]+)$')
+
+        # Subscription     Total       Valid      Invalid
+        # -----------------------------------------------
+        # All              0           0          0
+        # Dynamic          0           0          0
+        # Configured       0           0          0
+        # Permanent        0           0          0
+        p2 = re.compile(r'^(?P<type>(All|Dynamic|Configured|Permanent)+) +(?P<total>[0-9]+) +'
+                        r'(?P<valid>[0-9]+) +(?P<invalid>[0-9]+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Maximum supported: 128
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['max_supported'] = int(group['max_supported'])
+                continue
+
+            # Subscription     Total       Valid      Invalid
+            # -----------------------------------------------
+            # All              0           0          0
+            # Dynamic          0           0          0
+            # Configured       0           0          0
+            # Permanent        0           0          0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                types = ret_dict.setdefault('type', {})
+                states = types.setdefault(group['type'].lower(), {})
+                for state in ['total', 'valid', 'invalid']:
+                    states.update({state: int(group[state])})
+                continue
+
+        return ret_dict

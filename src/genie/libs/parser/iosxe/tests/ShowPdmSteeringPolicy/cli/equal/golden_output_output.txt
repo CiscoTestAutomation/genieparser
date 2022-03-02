@@ -1,0 +1,5 @@
+Steering Policy Contract2-01
+    1 redirect protocol 6 src-port any dst-port eq 15000 service service_INFRA_VN (0 match)
+    2 redirect protocol 17 src-port any dst-port any service service_INFRA_VN (70827 matches)
+Steering Policy Contract1-01
+    1 redirect protocol 17 src-port eq 20 dst-port eq 30 service service_red (0 match)

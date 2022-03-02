@@ -1,0 +1,22 @@
+=================================================
+Output for router lisp 0
+=================================================
+                     ----------- IPv4 ----------- ----------- IPv6 ----------- ----------- MAC -----------
+Site name            Configured Registered Incons Configured Registered Incons Configured Registered Incons
+Shire                         4          2      0          3          1      0          3          1      0
+
+Site-registration limit for router lisp 0:              0
+Site-registration count for router lisp 0:              4
+Number of address-resolution entries:                   3
+Number of configured sites:                             1
+Number of registered sites:                             1
+Sites with inconsistent registrations:                  0
+IPv4
+  Number of configured EID prefixes:                    4
+  Number of registered EID prefixes:                    2
+IPv6
+  Number of configured EID prefixes:                    3
+  Number of registered EID prefixes:                    1
+MAC
+  Number of configured EID prefixes:                    3
+  Number of registered EID prefixes:                    1

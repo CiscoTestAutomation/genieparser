@@ -1,0 +1,22 @@
+IPv6-EIGRP Topology Table for AS(1)/ID(2001:10::1) VRF default
+
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+        r - reply Status, s - sia Status 
+
+P 2001:1::1:0/112, 1 successors, FD is 2816
+        via Connected, Ethernet1/2
+P 2001:11::/112, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 2001:1::1:2 (3072/576), Ethernet1/2
+P 2001:11::1:0/112, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 2001:1::1:2 (3072/576), Ethernet1/2
+P 2001:11::2:0/112, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 2001:1::1:2 (3072/576), Ethernet1/2
+P 2001:11::3:0/112, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 2001:1::1:2 (3072/576), Ethernet1/2
+P 2001:11::4:0/112, 1 successors, FD is Inaccessible
+        via Rstatic (51200/0)
+        via 2001:1::1:2 (3072/576), Ethernet1/2
