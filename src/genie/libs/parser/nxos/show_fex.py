@@ -55,7 +55,7 @@ class ShowFex(ShowFexSchema):
                 fex_dict['description'] = group['description']
                 fex_dict['state'] = group['state']
                 fex_dict['model'] = group['model']
-                fex_dict['serial'] = group['serial']
+                fex_dict['serial_number'] = group['serial']
 
         return parsed_dict
 
