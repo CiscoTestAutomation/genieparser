@@ -43,7 +43,7 @@ class ShowFex(ShowFexSchema):
         # Initial return dictionary
         parsed_dict = {}
 
-        p1 = re.compile(r'(?P<number>(\d+)) +(?P<description>(\S+)) +(?P<state>(Online|Offline)) +(?P<model>(\S+)) +(?P<serial>(\S+))$')
+        p1 = re.compile(r'(?P<number>(\d+)) +(?P<description>(\S+)) +(?P<state>(\S+)) +(?P<model>(\S+)) +(?P<serial>(\S+))$')
 
         for line in out.splitlines():
             line = line.strip()
