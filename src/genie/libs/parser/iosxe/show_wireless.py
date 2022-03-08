@@ -146,9 +146,10 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
 
     cli_command = 'show wireless profile policy detailed {policy_name}'
 
-    def cli(self, policy_name="",  output=None):
+    def cli(self, policy_name="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(policy_name=policy_name)
+            output = self.device.execute(cmd)
         else:
             output=output
 
