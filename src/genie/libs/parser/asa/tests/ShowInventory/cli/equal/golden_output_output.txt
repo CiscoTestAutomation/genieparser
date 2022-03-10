@@ -1,5 +1,3 @@
-
-ciscoasa> show inventory
 Name: "Chassis", DESCR: "ASA 5555-X with SW, 8 GE Data, 1 GE Mgmt"
 PID: ASA5555, VID: V01, SN: AAAAA11111
         

@@ -1,0 +1,27 @@
+Chassis: FCE2310A48M
+35072424 SNMP packets input
+    0 Bad SNMP version errors
+    2089 Unknown community name
+    68 Illegal operation for community name supplied
+    0 Encoding errors
+    341796946 Number of requested variables
+    7328 Number of altered variables
+    954173 Get-request PDUs
+    31072480 Get-next PDUs
+    3878 Set-request PDUs
+    0 Input queue packet drops (Maximum queue size 1000)
+35598123 SNMP packets output
+    0 Too big errors (Maximum packet size 1500)
+    1 No such name errors
+    0 Bad values errors
+    0 General errors
+    322899 Response PDUs
+    527788 Trap PDUs
+Packets currently in SNMP process input queue: 0
+SNMP global trap: enabled
+
+SNMP logging: enabled
+    Logging to 10.76.1.12.151, 0/10, 102045 sent, 3065 dropped.
+    Logging to 10.76.133.10.111, 0/10, 102045 sent, 3065 dropped.
+    Logging to 10.16.154.186.169, 0/10, 201075 sent, 11383 dropped.
+    Logging to 10.166.67.19.108, 0/10, 102045 sent, 3065 dropped.

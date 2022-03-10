@@ -1,0 +1,5 @@
+Name: "Ethernet 1/13", DESCR: "10gbase-lr"
+PID: RTXM228-401-C98, VID: , SN: ACW111115H9
+
+Name: "Ethernet 1/14", DESCR: "1glx"
+PID: FTLF1318P3BTL-C, VID: , SN: FNS11111J1K
