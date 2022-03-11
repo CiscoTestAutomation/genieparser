@@ -12,6 +12,7 @@ expected_output = {
         "image_id": "VIOS-ADVENTERPRISEK9-M",
         "compiled_by": "prod_rel_team",
         "compiled_date": "Wed 29-Mar-17 14:05",
+        "copyright_years": "1986-2017",
         "processor_type": "revision 1.0",
         "platform": "IOSv",
         "image_type": "production image",

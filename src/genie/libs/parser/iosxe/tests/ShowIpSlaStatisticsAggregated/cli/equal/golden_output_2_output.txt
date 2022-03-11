@@ -1,0 +1,196 @@
+IPSLA operation id: 1
+Type of operation: http
+Start Time Index: 04:21:11 UTC Mon Nov 22 2021
+DNS RTT: 0
+TCP Connection RTT: 19
+HTTP Transaction RTT: 160
+Number of successes: 25
+Number of failures: 0
+
+Start Time Index: 03:21:11 UTC Mon Nov 22 2021
+DNS RTT: 0
+TCP Connection RTT: 61
+HTTP Transaction RTT: 343
+Number of successes: 60
+Number of failures: 0
+          
+
+
+
+IPSLA operation id: 2
+Start Time Index: 00:13:17 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            795993/902821/1057999             10.50.10.100
+
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 01:13:17 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            795993/902821/1057999             10.50.10.100
+
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 02:13:17 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            795993/902821/1057999             10.50.10.100
+
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 03:13:17 UTC Mon Nov 22 2021
+Type of operation: mcast
+          
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            795993/902821/1057999             10.50.10.100
+
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 04:13:17 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+60988531       OK                   0            795993/902821/1057999             10.50.10.100
+
+Number of successes: 66
+Number of failures: 0
+
+
+          
+
+IPSLA operation id: 3
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+393146530      OK                   0            796/901/1016                10.50.10.100
+
+Number of successes: 34
+Number of failures: 0
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Type of operation: mcast
+
+oper-id        status               lossSD       delay                  destination                             
+393146530      OK                   0            796/901/1016                10.50.10.100
+          
+Number of successes: 60
+Number of failures: 0
+
+
+
+
+IPSLA operation id: 50
+Type of operation: tcp-connect
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Number of successes: 34
+Number of failures: 0
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Number of successes: 60
+Number of failures: 0
+
+          
+
+
+IPSLA operation id: 51
+Type of operation: tcp-connect
+Start Time Index: 00:12:47 UTC Mon Nov 22 2021
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 01:12:47 UTC Mon Nov 22 2021
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 02:12:47 UTC Mon Nov 22 2021
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Number of successes: 120
+Number of failures: 0
+
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Number of successes: 67
+Number of failures: 0
+
+
+
+
+IPSLA operation id: 52
+Type of operation: tcp-connect
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Number of successes: 34
+Number of failures: 0
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Number of successes: 60
+Number of failures: 0
+
+
+
+
+IPSLA operation id: 53
+Type of operation: tcp-connect
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Number of successes: 0
+Number of failures: 33
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Number of successes: 0
+Number of failures: 60
+
+          
+
+
+IPSLA operation id: 54
+Type of operation: tcp-connect
+Start Time Index: 04:12:47 UTC Mon Nov 22 2021
+Number of successes: 0
+Number of failures: 34
+
+Start Time Index: 03:12:47 UTC Mon Nov 22 2021
+Number of successes: 0
+Number of failures: 60
+
+
+
+
+IPSLA operation id: 100
+Type of operation: dns
+Start Time Index: 23:13:24 UTC Sun Nov 21 2021
+Number of successes: 59
+Number of failures: 0
+
+Start Time Index: 00:13:23 UTC Mon Nov 22 2021
+Number of successes: 59
+Number of failures: 0
+
+Start Time Index: 01:13:22 UTC Mon Nov 22 2021
+Number of successes: 59
+Number of failures: 0
+
+Start Time Index: 02:13:21 UTC Mon Nov 22 2021
+Number of successes: 59
+Number of failures: 0
+
+Start Time Index: 03:13:20 UTC Mon Nov 22 2021
+Number of successes: 59
+Number of failures: 0
+
+Start Time Index: 04:13:19 UTC Mon Nov 22 2021
+Number of successes: 33
+Number of failures: 0
+
+Start Time Index: 22:13:25 UTC Sun Nov 21 2021
+Number of successes: 59
+Number of failures: 0

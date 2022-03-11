@@ -1,0 +1,10 @@
+Platform Security DHCP Snooping Vlan Information
+
+
+DHCP Snooping disabled on vlan: 100
+
+Valid Snooping DI handle:none
+
+                                                            Port        Trust Mode  
+----------------------------------------------------------------------------------
+                                         TwoGigabitEthernet2/0/3             trust  

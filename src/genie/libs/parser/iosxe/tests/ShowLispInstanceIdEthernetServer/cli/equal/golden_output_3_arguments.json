@@ -1,3 +1,4 @@
 {
-    "instance_id": "*"
+    "locator_table":"default",
+    "instance_id": "101"
 }

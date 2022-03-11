@@ -1,0 +1,9 @@
+show platform software fed switch 1 security-fed dhcp-snoop vlan vlan-id 100
+Platform Security DHCP Snooping Vlan Information
+
+
+DHCP Snooping disabled on vlan: 100
+
+Valid Snooping DI handle:none
+
+No trust ports for this vlan

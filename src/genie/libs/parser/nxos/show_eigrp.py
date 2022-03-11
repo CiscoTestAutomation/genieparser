@@ -426,7 +426,7 @@ class ShowEigrpTopologySchema(MetaParser):
         }
     }
 
-class ShowEigrpTopology(ShowEigrpTopologySchema):
+class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
     '''Super parser for:
         * 'show ip eigrp topology'
         * 'show ipv6 eigrp topology'
@@ -434,19 +434,7 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
         * 'show ipv6 eigrp topology vrf <vrf>'
     '''
 
-    cli_command = [
-        'show {af} eigrp topology',
-        'show {af} eigrp topology vrf {vrf}'
-    ]
-
-    def cli(self, af:str, vrf:str='', output:str=None) -> dict:
-        if output is None :
-            if (vrf == '') :
-                cmd:str = self.cli_command[0].format(af=af)
-            else :
-                cmd:str = self.cli_command[1].format(af=af, vrf=vrf)
-            output = self.device.execute(cmd)
-
+    def cli(self, output=None):
         # IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
         # IPv6-EIGRP Topology Table for AS(0)/ID(0.0.0.0) VRF vrf1
         r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
@@ -540,3 +528,45 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
                     nexthop_dict['interface'] = group['interface']
 
         return parsed_dict
+
+class ShowIpEigrpTopology(ShowEigrpTopologySuperParser, ShowEigrpTopologySchema):
+    '''Parser for:
+        * 'show ip eigrp topology'
+        * 'show ip eigrp topology vrf <vrf>'
+    '''
+
+    cli_command = [
+        'show ip eigrp topology'
+        'show ip eigrp topology {vrf}'
+    ]
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf is None:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            output = self.device.execute(cmd)
+
+        return super().cli(output=output)
+
+class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowEigrpTopologySchema):
+    '''Parser for:
+        * 'show ipv6 eigrp topology'
+        * 'show ipv6 eigrp topology vrf <vrf>'
+    '''
+
+    cli_command = [
+        'show ipv6 eigrp topology'
+        'show ipv6 eigrp topology {vrf}'
+    ]
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf is None:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            output = self.device.execute(cmd)
+
+        return super().cli(output=output)

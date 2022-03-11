@@ -1,0 +1,4 @@
+{
+    "address_family": "l2vpn evpn",
+    "neighbor": "1.1.1.1"
+}

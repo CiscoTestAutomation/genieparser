@@ -99,11 +99,12 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
 
         # Matching patterns
         #259            00a7.42ce.d57f/0074 1                Secured           10
+        #2              40f0.78b9.2a81/0002 1                Secured           FA5132C4F968EED9A1B0C2AFD5608288
         p5 = re.compile(r'(?P<port_id>\d+) +'
                         '(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
                         '(?P<macsec_peers>\w+) +'
                         '(?P<status>.*) '
-                        '(?P<ckn>\d+)')
+                        '(?P<ckn>\S+)')
 
         session_count = 0
         for line in out.splitlines():

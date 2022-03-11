@@ -102,6 +102,7 @@ IOSXE parsers for the following show commands:
     * show bgp vrf {vrf} all summary
     * show bgp vrf {vrf} {route}
     * show bgp {address_family} vrf {vrf} {route}
+    * show bgp {address_family} {route}
     * show ip bgp {address_family} rd {rd} {route}
     * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
 '''
@@ -238,7 +239,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                           r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
-                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
+                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-\*]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
         #     Network          Next Hop            Metric LocPrf Weight Path
@@ -1889,11 +1890,13 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
         * 'show bgp all detail'
         * 'show bgp vrf {vrf} {route}'
         * 'show bgp {address_family} vrf {vrf} {route}'
+        * 'show bgp {address_family} {route}'
     '''
 
     cli_command = ['show bgp all detail',
                     'show bgp vrf {vrf} {route}',
-                    'show bgp {address_family} vrf {vrf} {route}'
+                    'show bgp {address_family} vrf {vrf} {route}',
+                    'show bgp {address_family} {route}'
                    ]
     exclude = ['table_version', 'refresh_epoch', 'best_path', 'status_codes', 'transfer_pathid', 'paths']
 
@@ -1909,6 +1912,8 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                     address_family = 'vpnv4 unicast'
                     cmd = self.cli_command[1].format(vrf=vrf,
                         route=route)
+            # elif address_family and route:
+            #     cmd = self.cli_command[3].format(address_family=address_family, route=route) 
             else:
                 cmd = self.cli_command[0]
             # Execute command
@@ -4831,26 +4836,25 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
         vrf = 'default'
-        if output is None:
-            # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
-            out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
-            bgp_neighbor_re = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                                '(, +vrf +(?P<vrf>\S+))?, +remote AS '
-                                '+(?P<remote_as_id>[0-9]+), '
-                                '+(?P<internal_external_link>[a-z\s]+)$')
-            for line in out_vrf.splitlines():
-                line = line.strip()
-                # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
-                # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
-                # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
-                m = bgp_neighbor_re.match(line)
-                if m:
-                    if m['bgp_neighbor'] == neighbor:
-                        if m['vrf']:
-                            vrf = str(m['vrf'])
-                            break
-                    else:
-                        continue
+        # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
+        out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
+        bgp_neighbor_re = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
+                            '(, +vrf +(?P<vrf>\S+))?, +remote AS '
+                            '+(?P<remote_as_id>[0-9]+), '
+                            '+(?P<internal_external_link>[a-z\s]+)$')
+        for line in out_vrf.splitlines():
+            line = line.strip()
+            # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
+            # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+            # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
+            m = bgp_neighbor_re.match(line)
+            if m:
+                if m.groupdict()['bgp_neighbor'] == neighbor:
+                    if m.groupdict()['vrf']:
+                        vrf = m.groupdict()['vrf']
+                        break
+                else:
+                    continue
 
         # Init vars
         route_dict = {}
@@ -6027,7 +6031,8 @@ class ShowBgpAllNeighborsRoutesSchema(MetaParser):
     '''
 
     schema = {
-        'vrf':
+        Optional('total_num_of_prefixes'): int,
+        Optional('vrf'):
             {Any():
                 {'neighbor':
                     {Any():
@@ -6180,6 +6185,9 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          '+(?P<route_distinguisher>(\S+))'
                          '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                          '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
+
+        # Total number of prefixes 32
+        p8 = re.compile(r'^Total number of prefixes (?P<total_num_of_prefixes>\d+)$')
 
         for line in output.splitlines():
             line = line.rstrip()
@@ -6495,6 +6503,17 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 if 'routes' not in af_dict:
                     af_dict['routes'] = {}
                     continue
+
+            # Total number of prefixes 32
+            m = p8.match(line.strip())
+            if m:
+                if 'total_num_of_prefixes' in route_dict:
+                    # key already exists, add to it
+                    route_dict['total_num_of_prefixes'] += int(m.groupdict()['total_num_of_prefixes'])
+                else:
+                    # key doesnt exist, create it
+                    route_dict['total_num_of_prefixes'] = int(m.groupdict()['total_num_of_prefixes'])
+                continue
 
         return route_dict
 

@@ -7,6 +7,8 @@ expected_output = {
         "returned_to_rom_by": "reload",
         "compiled_by": "mcpre",
         "compiled_date": "Mon 10-Apr-17 13:02",
+        "copyright_years": "1986-2017",
+        "location": "Everest",
         "image_id": "CAT3K_CAA-UNIVERSALK9-M",
         "rom": "IOS-XE ROMMON",
         "bootldr": "CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)",

@@ -1,21 +1,15 @@
-LISP ETR MAC Mapping Database for EID-table Vlan 210 (IID 8188), LSBs: 0x1
-Entries total 3, no-route 0, inactive 0, do-not-register 1
+LISP ETR MAC Mapping Database for LISP 0 EID-table Vlan 101 (IID 101), LSBs: 0x1
+Entries total 2, no-route 0, inactive 0, do-not-register 1
 
-0000.0c9f.f98b/48, dynamic-eid Auto-L2-group-8188, do not register, inherited from default locator-set rloc_71d5dfee-bf02-4e45-9e5e-079ef3c09407
-  Uptime: 6w5d, Last-change: 6w5d
-  Domain-ID: unset
+aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC
+  Uptime: 3d01h, Last-change: 3d01h
+  Domain-ID: local
   Service-Insertion: N/A (0)
-  Locator   Pri/Wgt  Source     State
-  1.1.1.10   10/10   cfg-intf   site-self, reachable
-0017.0100.0001/48, dynamic-eid Auto-L2-group-8188, inherited from default locator-set rloc_71d5dfee-bf02-4e45-9e5e-079ef3c09407
-  Uptime: 1d21h, Last-change: 1d21h
-  Domain-ID: unset
+  Locator      Pri/Wgt  Source     State
+  11.11.11.11   10/10   cfg-intf   site-self, reachable
+aabb.cc80.ca00/48, dynamic-eid Auto-L2-group-101, do not register, inherited from default locator-set RLOC
+  Uptime: 3d01h, Last-change: 3d01h
+  Domain-ID: local
   Service-Insertion: N/A (0)
-  Locator   Pri/Wgt  Source     State
-  1.1.1.10   10/10   cfg-intf   site-self, reachable
-0017.0100.0002/48, dynamic-eid Auto-L2-group-8188, inherited from default locator-set rloc_71d5dfee-bf02-4e45-9e5e-079ef3c09407
-  Uptime: 1d21h, Last-change: 1d21h
-  Domain-ID: unset
-  Service-Insertion: N/A (0)
-  Locator   Pri/Wgt  Source     State
-  1.1.1.10   10/10   cfg-intf   site-self, reachable
+  Locator      Pri/Wgt  Source     State
+  11.11.11.11   10/10   cfg-intf   site-self, reachable

@@ -1,0 +1,15 @@
+9500-HA#show stackwise-virtual switch 1 link
+Stackwise Virtual Link(SVL) Information:
+----------------------------------------
+Flags:
+------
+Link Status
+-----------
+U-Up D-Down
+Protocol Status
+---------------
+S-Suspended P-Pending E-Error T-Timeout R-Ready
+-----------------------------------------------
+Switch SVL Ports Link-Status Protocol-Status
+------ --- ----- ----------- ---------------
+1 1 HundredGigE1/0/26 U R

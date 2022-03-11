@@ -29,6 +29,8 @@ IOSXE parsers for the following show commands:
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
     * show ip ospf database opaque-area adv-router {address}
+    * show ipv6 ospf neighbor
+    * show ipv6 ospf neighbor {interface}
 '''
 
 # Python
@@ -10296,3 +10298,86 @@ class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter(ShowIpOspfDatabaseOpaqueA
             output = self.device.execute(self.cli_command.format(address=address))
 
         return super().cli(db_type='opaque', out=output)
+
+# ===========================
+# Schema for:
+#   * 'show ipv6 ospf neighbor'
+#   * 'show ipv6 ospf neighbor {interface}'
+# ===========================
+class ShowIpv6OspfNeighborSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ipv6 ospf neighbor'
+        * 'show ipv6 ospf neighbor {interface}'
+    '''
+
+    schema = {
+        'interfaces':
+            {Any():
+                {'neighbors':
+                    {Any():
+                        {'priority': int,
+                        'state': str,
+                        'dead_time': str,
+                        'interface_id': int,
+                        },
+                    },
+                },
+            },
+        }
+
+# ===========================
+# Parser for:
+#   * 'show ipv6 ospf neighbor'
+#   * 'show ipv6 ospf neighbor {interface}'
+# ===========================
+class ShowIpv6OspfNeighbor(ShowIpv6OspfNeighborSchema):
+    ''' Parser for:
+        * 'show ipv6 ospf neighbor'
+        * 'show ipv6 ospf neighbor {interface}'
+    '''
+    cli_command = [
+        'show ipv6 ospf neighbor {interface}',
+        'show ipv6 ospf neighbor']
+    exclude = ['dead_time']
+
+    def cli(self, interface='', output=None):
+
+        if output is None:
+            # Execute command on device
+            if interface:
+                output = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        # Init vars
+        ret_dict = {}
+
+        # Neighbor ID     Pri   State           Dead Time   Interface ID   Interface
+        # 172.16.197.253 128   FULL/DR         00:00:30          21       GigabitEthernet0/0/1
+        # 10.169.197.252   0   FULL/  -        00:00:36          23       GigabitEthernet2
+
+        p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
+                        ' +(?P<dead_time>\S+) +(?P<interface_id>\S+) +(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                neighbor = m.groupdict()['neighbor']
+                interface = m.groupdict()['interface']
+
+                # Build Dict
+
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                nbr_dict = intf_dict.setdefault('neighbors', {}).setdefault(neighbor, {})
+
+                # Set values
+                nbr_dict['priority'] = int(m.groupdict()['pri'])
+                nbr_dict['state'] = str(m.groupdict()['state'])
+                nbr_dict['dead_time'] = str(m.groupdict()['dead_time'])
+                nbr_dict['interface_id'] = int(m.groupdict()['interface_id'])
+                continue
+
+        return ret_dict

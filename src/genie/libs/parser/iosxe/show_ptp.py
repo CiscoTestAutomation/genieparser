@@ -105,8 +105,9 @@ class ShowPtpClockSchema(MetaParser):
             },
             Optional('offset_from_master'): int,
             Optional('mean_path_delay_ns'): int,
-            Optional('steps_removed'): int
-
+            Optional('steps_removed'): int,
+            Optional('local_clock_priority'): int,
+            Optional('holdover_timer'): str
         },
     }
 
@@ -126,53 +127,59 @@ class ShowPtpClock(ShowPtpClockSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        #PTP Device Type: Boundary clock
+        # PTP Device Type: Boundary clock
         p1 = re.compile(r'^PTP\sDevice\sType\:\s(?P<device_type>.*)$')
 
-        #PTP Device Profile: Default Profile
+        # PTP Device Profile: Default Profile
         p2 = re.compile(r'^PTP\sDevice\sProfile\:\s(?P<device_profile>.*)$')
 
-        #Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+        # Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
         p3 = re.compile(r'^Clock\sIdentity\:\s(?P<clock_identity>(0x(?:[\da-fA-F]:?).*))$')
 
-        #Clock Domain: 0
+        # Clock Domain: 0
         p4 = re.compile(r'^Clock\sDomain\:\s(?P<clock_domain>\d+)$')
 
-        #Network Transport Protocol: 802.3
+        # Network Transport Protocol: 802.3
         p5 = re.compile(r'^Network\sTransport\sProtocol\:\s(?P<network_transport_protocol>\S+)$')
 
-        #Message general ip dscp  : 47
+        # Message general ip dscp  : 47
         p6 = re.compile(r'^Message\sgeneral\sip\sdscp\s+\:\s(?P<message_general_ip_dscp>\d+)$')
 
-        #Message event  ip dscp   : 59
+        # Message event  ip dscp   : 59
         p7 = re.compile(r'^Message\sevent\s+ip\sdscp\s+\:\s(?P<message_event_ip_dscp>\d+)$')
 
-        #Number of PTP ports: 75
+        # Number of PTP ports: 75
         p8 = re.compile(r'^Number\sof\sPTP\sports\:\s(?P<number_of_ptp_ports>\d+)$')
 
-        #Priority1: 128
+        # Priority1: 128
         p9 = re.compile(r'^Priority1\:\s(?P<priority1>\d+)$')
 
-        #Priority2: 128
+        # Priority2: 128
         p10 = re.compile(r'^Priority2\:\s(?P<priority2>\d+)$')
 
-        #Class: 248
+        # Class: 248
         p11 = re.compile(r'^Class\:\s(?P<class>\d+)$')
 
-        #Accuracy: Unknown
+        # Accuracy: Unknown
         p12 = re.compile(r'^Accuracy\:\s(?P<accuracy>\S+)$')
 
-        #Offset (log variance): 17258
+        # Offset (log variance): 17258
         p13 = re.compile(r'^Offset\s\(log\svariance\)\:\s(?P<offset>\d+)$')
 
-        #Offset From Master(ns): -19
+        # Offset From Master(ns): -19
         p14 = re.compile(r'^Offset\sFrom\sMaster\(ns\)\:\s(?P<offset_from_master>\S+)$')
 
-        #Mean Path Delay(ns): 83
+        # Mean Path Delay(ns): 83
         p15 = re.compile(r'^Mean\sPath\sDelay\(ns\)\:\s(?P<mean_path_delay_ns>\d+)$')
 
-        #Steps Removed: 2
+        # Steps Removed: 2
         p16 = re.compile(r'^Steps\sRemoved\:\s(?P<steps_removed>\d+)$')
+
+        # Local clock priority: 128
+        p17 = re.compile(r'^Local\sclock\spriority\:\s(?P<local_clock_priority>\d+)$')
+
+        # Holdover Timer : Not Configured
+        p18 = re.compile(r'^Holdover\sTimer\s\:\s(?P<holdover_timer>.*)$')
 
         # initial return dictionary
         ret_dict ={}
@@ -180,115 +187,129 @@ class ShowPtpClock(ShowPtpClockSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            #PTP Device Type: Boundary clock
+            # PTP Device Type: Boundary clock
             m = p1.match(line)
             if m:
                 ptp_clock_info = ret_dict.setdefault('ptp_clock_info',{})
                 ptp_clock_info['device_type'] = m.groupdict()['device_type']
                 continue
 
-            #PTP Device Profile: Default Profile
+            # PTP Device Profile: Default Profile
             m = p2.match(line)
             if m:
                 ptp_clock_info['device_profile'] = m.groupdict()['device_profile']
                 continue
             
-            #Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
+            # Clock Identity: 0x34:ED:1B:FF:FE:7D:F2:80
             m = p3.match(line)
             if m:
                 clock_identity = m.groupdict()['clock_identity']
                 ptp_clock_info['clock_identity'] = clock_identity
                 continue
             
-            #Clock Domain: 0
+            # Clock Domain: 0
             m = p4.match(line)
             if m:
                 clock_domain = m.groupdict()['clock_domain']
                 ptp_clock_info['clock_domain'] = int(clock_domain)
                 continue
 
-            #Network Transport Protocol: 802.3
+            # Network Transport Protocol: 802.3
             m = p5.match(line)
             if m:
                 network_transport_protocol = m.groupdict()['network_transport_protocol']
                 ptp_clock_info['network_transport_protocol'] = network_transport_protocol
                 continue
 
-            #Message general ip dscp  : 47
+            # Message general ip dscp  : 47
             m = p6.match(line)
             if m:
                 message_general_ip_dscp = m.groupdict()['message_general_ip_dscp']
                 ptp_clock_info['message_general_ip_dscp'] = int(message_general_ip_dscp)
                 continue
 
-            #Message event  ip dscp   : 59
+            # Message event  ip dscp   : 59
             m = p7.match(line)
             if m:
                 message_event_ip_dscp = m.groupdict()['message_event_ip_dscp']
                 ptp_clock_info['message_event_ip_dscp'] = int(message_event_ip_dscp)
                 continue
 
-            #Number of PTP ports: 75
+            # Number of PTP ports: 75
             m = p8.match(line)
             if m:
                 number_of_ptp_ports = m.groupdict()['number_of_ptp_ports']
                 ptp_clock_info['number_of_ptp_ports'] = int(number_of_ptp_ports)
                 continue
 
-            #Priority1: 128
+            # Priority1: 128
             m = p9.match(line)
             if m:
                 priority1 = m.groupdict()['priority1']
                 ptp_clock_info['priority1'] = int(priority1)
                 continue
 
-            #Priority2: 128
+            # Priority2: 128
             m = p10.match(line)
             if m:
                 priority2 = m.groupdict()['priority2']
                 ptp_clock_info['priority2'] = int(priority2)
                 continue
 
-            #Class: 248
+            # Class: 248
             m = p11.match(line)
             if m:
                 clock_quality = ptp_clock_info.setdefault('clock_quality', {})
                 clock_quality['class'] = int(m.groupdict()['class'])
                 continue
 
-            #Accuracy: Unknown
+            # Accuracy: Unknown
             m = p12.match(line)
             if m:
                 accuracy = m.groupdict()['accuracy']
                 clock_quality['accuracy'] = accuracy
                 continue
 
-            #Offset (log variance): 17258
+            # Offset (log variance): 17258
             m = p13.match(line)
             if m:
                 offset = m.groupdict()['offset']
                 clock_quality['offset'] = int(offset)
                 continue
 
-            #Offset From Master(ns): 0
+            # Offset From Master(ns): 0
             m = p14.match(line)
             if m:
                 offset_from_master = m.groupdict()['offset_from_master']
                 ptp_clock_info['offset_from_master'] = int(offset_from_master)
                 continue
 
-            #Mean Path Delay(ns): 52
+            # Mean Path Delay(ns): 52
             m = p15.match(line)
             if m:
                 mean_path_delay_ns = m.groupdict()['mean_path_delay_ns']
                 ptp_clock_info['mean_path_delay_ns'] = int(mean_path_delay_ns)
                 continue
 
-            #Steps Removed: 0
+            # Steps Removed: 0
             m = p16.match(line)
             if m:
                 steps_removed = m.groupdict()['steps_removed']
                 ptp_clock_info['steps_removed'] = int(steps_removed)
+                continue
+
+            # Local clock priority: 128
+            m = p17.match(line)
+            if m:
+                local_clock_priority = m.groupdict()['local_clock_priority']
+                ptp_clock_info['local_clock_priority'] = int(local_clock_priority)
+                continue
+
+            # Holdover Timer : Not Configured
+            m = p18.match(line)
+            if m:
+                holdover_timer = m.groupdict()['holdover_timer']
+                ptp_clock_info['holdover_timer'] = holdover_timer
                 continue
         return ret_dict
 
@@ -444,7 +465,6 @@ class ShowPtpParent(ShowPtpParentSchema):
                 continue
         return ret_dict    
 
-
 # =======================================
 #  Schema for 'show ptp port {interface}'
 # =======================================
@@ -471,7 +491,8 @@ class ShowPtpPortInterfaceSchema(MetaParser):
             Optional('peer_delay_request_interval'): int,                       
             Optional('sync_fault_limit'): int,                                  
         },
-        Optional('ptp_role_primary'): str		
+        Optional('ptp_role_primary'): str,
+        Optional('local_port_priority'): int
     }
 
 # =======================================
@@ -533,6 +554,9 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
         #ptp role primary : Disabled
         p15 = re.compile(r'^ptp\srole\sprimary\s\:\s(?P<ptp_role_primary>\S+)$')
         
+        #Local port priority : 128
+        p16 = re.compile(r'^Local\sport\spriority\s\:\s(?P<local_port_priority>\d+)$')
+
         # initial return dictionary
         ret_dict ={}
 
@@ -645,5 +669,12 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
             if m:
                 ptp_role_primary = m.groupdict()['ptp_role_primary']
                 ret_dict['ptp_role_primary'] = ptp_role_primary
+                continue
+
+            #Local port priority : 128
+            m = p16.match(line)
+            if m:
+                local_port_priority = m.groupdict()['local_port_priority']
+                ret_dict['local_port_priority'] = int(local_port_priority)
                 continue
         return ret_dict

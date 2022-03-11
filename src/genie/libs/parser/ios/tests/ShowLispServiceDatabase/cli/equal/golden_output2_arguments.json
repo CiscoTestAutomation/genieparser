@@ -1,4 +1,5 @@
 {
-    "service": "ipv6",
-    "instance_id": "101"
+    "service": "ipv4",
+    "instance_id": "4100",
+    "locator_table":"default"
 }

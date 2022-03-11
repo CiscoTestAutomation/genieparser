@@ -3,6 +3,16 @@
 IOSXE parsers for the following show commands:
    * show crypto pki certificates <WORD>
    * show crypto entropy status
+   * show crypto ipsec sa count
+   * show crypto ikev2 sa detail
+   * show crypto ikev2 sa local {} detail
+   * show crypto ikev2 sa local {}
+   * show crypto session
+   * show crypto session detail
+   * show crypto session local {} detail
+   * show crypto session local {}
+   * show crypto ikev2 stats timeout
+   * show crypto ikev2 stats reconnect
 """
 
 # Python
@@ -10,7 +20,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 # Genie Libs
 from genie.libs.parser.utils.common import Common
@@ -1267,6 +1277,397 @@ class ShowCryptoSessionDetail(ShowCryptoSessionSuperParser,ShowCryptoSessionSche
             out = output
         return super().cli(output=out)
 
+class ShowCryptoSessionLocalDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session local {} detail'
+    '''
+
+    cli_command = "show crypto session local {ip_address} detail"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+class ShowCryptoSessionLocal(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session local {}'
+    '''
+
+    cli_command = "show crypto session local {ip_address}"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+# =================================================
+#  Schema for 'show crypto ipsec sa count'
+# =================================================
+class ShowCryptoIpsecSaCountSchema(MetaParser):
+    """Schema for show crypto ipsec sa count"""
+    schema = {
+        "active":int,
+        "rekeying":int,
+        "ipsec_sa_total":int,
+        "unused":int,
+        "invalid":int,
+    }
+
+
+# =================================================
+#  Parser for 'show crypto ipsec sa count'
+# =================================================
+class ShowCryptoIpsecSaCount(ShowCryptoIpsecSaCountSchema):
+
+    """Parser for show crypto ipsec sa count"""
+
+    cli_command = 'show crypto ipsec sa count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return_dict = {}
+        # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
+        r1 = "^IPsec SA total: +(?P<ipsec_sa_total>[\d]+), +active: +(?P<active>[\d]+), +rekeying: +(?P<rekeying>[\d]+), +unused: +(?P<unused>[\d]+), +invalid: +(?P<invalid>[\d]+)$"
+        p1 = re.compile(r1)
+        for line in output.splitlines():
+            # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict.update({k: int(v) for k, v in group.items()})
+        return return_dict
+
+
+# =================================================
+#  Schema for 'show crypto ikev2 sa detail'
+# =================================================
+class ShowCryptoIkev2SaDetailSchema(MetaParser):
+    """Schema for show crypto ikev2 sa detail"""
+    schema = {
+            "tunnel_id":{
+                Any():{
+                    "local": str,
+                    "remote": str,
+                    "fvrf": str,
+                    "ivrf": str,
+                    "status": str,
+                    "encryption": str,
+                    "keysize": int,
+                    "prf": str,
+                    "hash": str,
+                    "dh_grp": int,
+                    "auth_sign": str,
+                    "auth_verify": str,
+                    "life_time": int,
+                    "active_time": int,
+                    "ce_id": int,
+                    "session_id": int,
+                    "local_spi": str,
+                    "remote_spi": str,
+                    Optional("status_description"): str,
+                    Optional("local_id"): str,
+                    Optional("remote_id"): str,
+                    Optional("local_reg_msg_id"): int,
+                    Optional("remote_req_msg_id"): int,
+                    Optional("local_next_msg_id"): int,
+                    Optional("remote_next_msg_id"): int,
+                    Optional("local_req_queued"): int,
+                    Optional("remote_req_queued"): int,
+                    Optional("local_window"): int,
+                    Optional("remote_window"): int,
+                    Optional("dpd_configured_time"): int,
+                    Optional("retry"): int,
+                    Optional("fragmentation"): str,
+                    Optional("dynamic_route_update"): str,
+                    Optional("extended_authentication"): str,
+                    Optional("nat_t"): str,
+                    Optional("cisco_trust_security_sgt"): str,
+                    Optional("initiator_of_sa"): str,
+                    Optional("pushed_ip"): str,
+                    Optional("remote_subnets"): list
+                }
+            }
+        }
+
+# =================================================
+#  Parser for 'show crypto ikev2 sa detail'
+# =================================================
+class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
+
+    """Parser for show crypto ikev2 sa detail"""
+
+    cli_command = 'show crypto ikev2 sa detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
+        r1 = "^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
+        p1 = re.compile(r1)
+
+        # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+        r2 = "^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)$"
+        p2 = re.compile(r2)
+
+        # Life/Active Time: 86400/12689 sec
+        r3 = "^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
+        p3 = re.compile(r3)
+
+        # CE id: 76468, Session-id: 17155
+        r4 = "^CE id:+ (?P<ce_id>[\d]+), +Session-id: +(?P<session_id>[\d]+)$"
+        p4 = re.compile(r4)
+
+        # Status Description: Negotiation done
+        r5 = "^Status Description:+ (?P<status_description>[\w\d\s]+)$"
+        p5 = re.compile(r5)
+
+        # Local spi: 000D3669857A0F82       Remote spi: E0419B1DB02DE6AE
+        r6 = "^Local spi: +(?P<local_spi>[\w\d]+) +Remote spi: +(?P<remote_spi>[\w\d]+)$"
+        p6 = re.compile(r6)
+
+        # Local id: user2621@cisco.com
+        r7 = "^Local id: +(?P<local_id>[\w\d\S]+)$"
+        p7 = re.compile(r7)
+
+        # Remote id: 22.1.1.2
+        r8 = "^Remote id: +(?P<remote_id>[\d\.]+)$"
+        p8 = re.compile(r8)
+
+        # Local req msg id:  214            Remote req msg id:  6
+        r9 = "^Local req msg id:  +(?P<local_reg_msg_id>[\d]+) +Remote req msg id:  +(?P<remote_req_msg_id>[\d]+)$"
+        p9 = re.compile(r9)
+
+        # Local next msg id: 214            Remote next msg id: 6
+        r10 = "^Local next msg id: +(?P<local_next_msg_id>[\d]+) +Remote next msg id: +(?P<remote_next_msg_id>[\d]+)$"
+        p10 = re.compile(r10)
+
+        # Local req queued:  214            Remote req queued:  6
+        r11 = "^Local req queued:  +(?P<local_req_queued>[\d]+) +Remote req queued:  +(?P<remote_req_queued>[\d]+)$"
+        p11 = re.compile(r11)
+
+        # Local window:      5              Remote window:      5
+        r12 = "^Local window: +(?P<local_window>[\d]+) +Remote window: +(?P<remote_window>[\d]+)$"
+        p12 = re.compile(r12)
+
+        # DPD configured for 60 seconds, retry 3
+        r13 = "^DPD configured for +(?P<dpd_configured_time>[\d]+) +seconds, retry +(?P<retry>[\d]+)$"
+        p13 = re.compile(r13)
+
+        # Fragmentation not  configured.
+        r14 = "^Fragmentation +(?P<fragmentation>[\d\s\S]+)$"
+        p14 = re.compile(r14)
+
+        # Dynamic Route Update: enabled
+        r15 = "^Dynamic Route Update: +(?P<dynamic_route_update>[\d\s\S]+)$"
+        p15 = re.compile(r15)
+
+        # Extended Authentication not configured.
+        r16 = "^Extended Authentication +(?P<extended_authentication>[\d\s\S]+)$"
+        p16 = re.compile(r16)
+
+        # NAT-T is not detected
+        r17 = "^NAT-T is +(?P<nat_t>[\d\s\S]+)$"
+        p17 = re.compile(r17)
+
+        # Cisco Trust Security SGT is disabled
+        r18 = "^Cisco Trust Security SGT is +(?P<cisco_trust_security_sgt>[\d\s\S]+)$"
+        p18 = re.compile(r18)
+
+        # Initiator of SA : Yes
+        r19 = "^Initiator of SA :+(?P<initiator_of_sa>[\d\s\S]+)$"
+        p19 = re.compile(r19)
+
+        # Pushed IP address: 8.1.9.4
+        r20 = "^Pushed IP address: +(?P<pushed_ip>[0-9\.]+)$"
+        p20 = re.compile(r20)
+
+        # 10.0.0.0 255.0.0.0
+        r21 = "^(?P<remote_subnets>[0-9\.\s]+)$"
+        p21 = re.compile(r21)
+
+        ret_dict={}
+        for line in output.splitlines():
+            line=line.strip()
+            # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group['status'] = group['status'].lower()
+                tunnel_id = int(group.pop('tunnel_id'))
+                master_dict = ret_dict.setdefault('tunnel_id', {}).setdefault(tunnel_id, {})
+                master_dict.update(group)
+                remote_subnets_dict = master_dict.setdefault('remote_subnets', [])
+                continue
+            # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v.lower() for k, v in group.items()}
+                group['dh_grp'] = int(group['dh_grp'])
+                group['keysize'] = int(group['keysize'])
+                master_dict.update(group)
+                continue
+            # Life/Active Time: 86400/12689 sec
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                group['life_time'] = int(group['life_time'])
+                group['active_time'] = int(group['active_time'])
+                master_dict.update(group)
+                continue
+            # CE id: 76468, Session-id: 17155
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group['session_id'] = int(group['session_id'])
+                group['ce_id'] = int(group['ce_id'])
+                master_dict.update(group)
+                continue
+            # Status Description: Negotiation done
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group['status_description'] = group['status_description'].lower()
+                master_dict.update(group)
+                continue
+            # Local spi: 000D3669857A0F82       Remote spi: E0419B1DB02DE6AE
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Local id: user2621@cisco.com
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Remote id: 22.1.1.2
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Local req msg id:  214            Remote req msg id:  6
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                group['remote_req_msg_id'] = int(group['remote_req_msg_id'])
+                group['local_reg_msg_id'] = int(group['local_reg_msg_id'])
+                master_dict.update(group)
+                continue
+            # Local next msg id: 214            Remote next msg id: 6
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                group['remote_next_msg_id'] = int(group['remote_next_msg_id'])
+                group['local_next_msg_id'] = int(group['local_next_msg_id'])
+                master_dict.update(group)
+                continue
+            # Local req queued:  214            Remote req queued:  6
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                group['remote_req_queued'] = int(group['remote_req_queued'])
+                group['local_req_queued'] = int(group['local_req_queued'])
+                master_dict.update(group)
+                continue
+            # Local window:      5              Remote window:      5
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                group['remote_window'] = int(group['remote_window'])
+                group['local_window'] = int(group['local_window'])
+                master_dict.update(group)
+                continue
+            # DPD configured for 60 seconds, retry 3
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group['retry'] = int(group['retry'])
+                group['dpd_configured_time'] = int(group['dpd_configured_time'])
+                master_dict.update(group)
+                continue
+            # Fragmentation not  configured.
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                group['fragmentation'] = group['fragmentation'].replace('.','')
+                master_dict.update(group)
+                continue
+            # Dynamic Route Update: enabled
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Extended Authentication not configured.
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                group['extended_authentication'] = group['extended_authentication'].replace('.','')
+                master_dict.update(group)
+                continue
+            # NAT-T is not detected
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Cisco Trust Security SGT is disabled
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # Initiator of SA : Yes
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group['initiator_of_sa']=group['initiator_of_sa'].strip().lower()
+                master_dict.update(group)
+                continue
+            # Pushed IP address: 8.1.9.4
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # 10.0.0.0 255.0.0.0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                remote_subnets_dict.append(group['remote_subnets'])
+        return ret_dict
+
+
+class ShowCryptoIkev2SaLocalDetail(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSchema):
+    '''Parser for:
+        * 'show crypto ikev2 sa local {} detail'
+    '''
+
+    cli_command = "show crypto ikev2 sa local {ip_address} detail"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+
+class ShowCryptoIkev2SaLocal(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSchema):
+    '''Parser for:
+        * 'show crypto ikev2 sa local {}'
+    '''
+
+    cli_command = "show crypto ikev2 sa local {ip_address}"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
 # =====================================
 # Schema for:
 #  * 'show crypto entropy status' 
@@ -1542,7 +1943,7 @@ class ShowCryptoPkiServer(ShowCryptoPkiServerSchema):
                 ser_dict['ca_type'] = m.groupdict()['type']
                 continue
 
-        return ret_dict 
+        return ret_dict
 
 # =================================================
 #  Schema for 'show crypto pki timer detail'
@@ -2532,3 +2933,1488 @@ class ShowCryptoIkev2StatsExt(ShowCryptoIkev2StatsExtSchema):
                 continue
             
         return ret_dict
+
+
+
+
+# ======================================
+#  Schema for 'show crypto ikev2 stats timeout'
+# ======================================
+class ShowCryptoIkev2StatsTimeoutSchema(MetaParser):
+
+    """Schema for show crypto ikev2 stats timeout"""
+
+    schema = {
+         'ext_service_timer': int,
+         'auth_timer': int,
+         'packet_max_retrans_timer': int,
+         'dpd_max_retrans_timer': int,
+        }
+
+# ======================================
+#  Parser for 'show crypto ikev2 stats timeout'
+# ======================================
+class ShowCryptoIkev2StatsTimeout(ShowCryptoIkev2StatsTimeoutSchema):
+
+    """Parser for show crypto ikev2 stats timeout"""
+
+    cli_command = ['show crypto ikev2 stats timeout']
+
+    def cli(self,output=None):
+
+        if output is None:
+            # Execute command to get output from device
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        #EXT SERVICE TIMER    0
+        p1 = re.compile(r'^EXT\s+SERVICE\s+TIMER\s+(?P<ext_service_timer>\d+)$')
+
+
+        #AUTH TIMER     0
+        p2 = re.compile(r'^AUTH\s+TIMER\s+(?P<auth_timer>\d+)$')
+
+
+        #PACKET MAXIMUM RETRANS TIMER     7736
+        p3 = re.compile(r'^PACKET\s+MAXIMUM\s+RETRANS\s+TIMER\s+(?P<packet_max_retrans_timer>\d+)$')
+
+
+        #DPD MAX RETRANS TIMER         0
+        p4 = re.compile(r'^DPD\s+MAX\s+RETRANS\s+TIMER\s+(?P<dpd_max_retrans_timer>\d+)$')        
+
+        # Parse all lines
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ext_service_timer'] = int(group['ext_service_timer'])
+                continue
+
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['auth_timer'] = int(group['auth_timer'])
+                continue
+
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['packet_max_retrans_timer'] = int(group['packet_max_retrans_timer'])                
+                continue
+            
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['dpd_max_retrans_timer'] = int(group['dpd_max_retrans_timer'])                
+                continue
+                
+
+        return ret_dict
+
+
+
+
+# ====================================================
+#  Schema for 'show crypto ikev2 stats reconnect'
+# ====================================================
+class ShowCryptoIkev2StatsReconnectSchema(MetaParser):
+    """Schema for:
+        show crypto ikev2 stats reconnect"""
+
+    schema = {
+
+                 'incoming_reconnect': int,
+                 'success_reconnect': int,
+                 'failed_reconnect': int,
+                 'active_session_count': int,
+                 'inactive_session_count': int,
+
+    }
+
+# =================================================
+#  Parser for 'show crypto ikev2 stats reconnect'
+# =================================================	
+
+class ShowCryptoIkev2StatsReconnect(ShowCryptoIkev2StatsReconnectSchema):
+    """Parser for show crypto ikev2 stats reconnect"""
+
+    cli_command = 'show crypto ikev2 stats reconnect'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        inventory_dict = {}
+        
+        #Total incoming reconnect connection: 10        
+        p1 = re.compile(r'^Total\s+incoming\s+reconnect\s+connection:\s+(?P<incoming_reconnect>\d+)$')
+
+
+        #Success reconnect connection: 10
+        p2 = re.compile(r'^Success\s+reconnect\s+connection:\s+(?P<success_reconnect>\d+)$') 
+
+
+        #Failed reconnect connection: 0        
+        p3 = re.compile(r'^Failed\s+reconnect\s+connection:\s+(?P<failed_reconnect>\d+)$')
+
+
+        #Reconnect capable active session count: 4        
+        p4 = re.compile(r'^Reconnect\s+capable\s+active\s+session\s+count:\s(?P<active_session_count>\d+)$')  
+
+
+        #Reconnect capable inactive session count: 6
+        p5 = re.compile(r'^Reconnect\s+capable\s+inactive\s+session\s+count:\s(?P<inactive_session_count>\d+)$')  
+        
+
+        # Parse all lines
+        for line in out.splitlines():
+            line = line.strip()
+
+            result = p1.match(line)
+            if result:
+                group = result.groupdict()
+                inventory_dict['incoming_reconnect'] = int(group['incoming_reconnect'])
+                continue
+
+            
+            result = p2.match(line)
+            if result:
+                group = result.groupdict()
+                inventory_dict['success_reconnect'] = int(group['success_reconnect'])
+                continue
+            
+                
+            result = p3.match(line)                                             
+            if result:
+                group = result.groupdict()
+                inventory_dict['failed_reconnect'] = int(group['failed_reconnect'])
+                continue    
+                
+                
+            result = p4.match(line)                                            
+            if result:
+                group = result.groupdict()
+                inventory_dict['active_session_count'] = int(group['active_session_count'])
+                continue                   
+             
+  
+            result = p5.match(line)     
+            if result:
+                group = result.groupdict()
+                inventory_dict['inactive_session_count'] = int(group['inactive_session_count'])
+                continue                   
+   
+                
+                
+
+        return inventory_dict        
+
+# ==============================
+# Schema for
+#   'show crypto isakmp sa'
+# ==============================
+class ShowCryptoIsakmpSaSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto isakmp sa'
+    """
+    
+    schema = {
+        'isakmp_stats': {
+            Or('IPv4', 'IPv6'):{
+                int:{
+                    'destination': str,
+                    'source': str,
+                    'session_state': str,
+                    'conn_id': int,
+                    'status': str,
+                    Optional('current_status'): str,
+                },
+            },
+        },
+    } 
+
+class ShowCryptoIsakmpSa(ShowCryptoIsakmpSaSchema):
+    
+    # Defines a function to run the cli_command
+    cli_command = 'show crypto isakmp sa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # initial return dictionary
+        ret_dict = {}
+
+        # IPv4 Crypto ISAKMP SA
+        # IPv6 Crypto ISAKMP SA
+        p1 = re.compile(r'^(?P<version>\S+) Crypto ISAKMP SA$')
+    
+        # 9.45.9.7        9.45.9.8        QM_IDLE           1064 ACTIVE
+        # 9.45.9.8        9.45.9.7        MM_NO_STATE       1063 ACTIVE (deleted)
+        # 2001::1         3001::1         QM_IDLE           1064 ACTIVE
+        p2 = re.compile(r'^(?P<dst>\S+)\s+(?P<src>\S+)\s+(?P<state>\S+)\s+'
+                        r'(?P<id>\d+)\s+(?P<stats>\S+)(\s+\((?P<stats_now>\S+)\))?$')
+
+        count = 0
+        for line in output.splitlines():
+            line = line.strip()
+            # IPv4 Crypto ISAKMP SA
+            # IPv6 Crypto ISAKMP SA
+            m = p1.match(line)
+            if m:
+                ser_dict = ret_dict.setdefault('isakmp_stats', {})
+                if m.groupdict()['version'] == "IPv4":
+                    sub_dict = ser_dict.setdefault('IPv4', {})
+                
+                if m.groupdict()['version'] == "IPv6":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('IPv6', {})
+                continue
+
+            # 9.45.9.7        9.45.9.8        QM_IDLE           1064 ACTIVE
+            # 9.45.9.8        9.45.9.7        MM_NO_STATE       1063 ACTIVE (deleted)
+            # 2001::1         3001::1         QM_IDLE           1064 ACTIVE
+            m = p2.match(line)
+            if m:
+                count += 1
+                isakmp_dict = sub_dict.setdefault(count, {})
+                isakmp_dict['destination'] = m.groupdict()['dst']
+                isakmp_dict['source'] = m.groupdict()['src']
+                isakmp_dict['session_state'] = m.groupdict()['state']
+                isakmp_dict['conn_id'] = int(m.groupdict()['id'])
+                isakmp_dict['status'] = m.groupdict()['stats']
+                if  m.groupdict()['stats_now'] is not None:
+                    isakmp_dict['current_status'] = m.groupdict()['stats_now']
+                continue
+
+        if ret_dict['isakmp_stats']['IPv4'] == {}:
+            del ret_dict['isakmp_stats']['IPv4']
+
+        if ret_dict['isakmp_stats']['IPv6'] == {}:
+            del ret_dict['isakmp_stats']['IPv6']     
+
+        return ret_dict
+
+# ==============================
+# Schema for
+#   'show crypto isakmp sa detail'
+# ==============================
+class ShowCryptoIsakmpSaDetailSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto isakmp sa detail'
+    """
+    
+    schema = {
+        'isakmp_stats': {
+            Or('IPv4', 'IPv6'):{
+                int:{
+                    'c_id': int,
+                    'local_ip': str,
+                    'remote_ip': str,
+                    Optional('ivrf'): str,
+                    Optional('status'): str,
+                    Optional('encr_algo'): str,
+                    Optional('hash_algo'): str,
+                    Optional('auth_type'): str,
+                    Optional('dh_group'): int,
+                    Optional('lifetime'): str,
+                    Optional('capabilities'): str,
+                    Optional('engine_id'): str,
+                    Optional('conn_id'): int,
+                },
+            },
+        },
+    } 
+
+class ShowCryptoIsakmpSaDetail(ShowCryptoIsakmpSaDetailSchema):
+    
+    # Defines a function to run the cli_command
+    cli_command = 'show crypto isakmp sa detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # IPv4 Crypto ISAKMP SA
+        # IPv6 Crypto ISAKMP SA
+        p1 = re.compile(r'^(?P<version>\S+) Crypto ISAKMP SA$')
+    
+        # 29609 100.0.10.2      100.13.220.2           ACTIVE aes  sha    psk  16 00:01:47 D
+        # 29610 100.0.10.2      100.13.220.2     RED      ACTIVE aes  sha    psk  16 00:01:47 D
+        # 29611 100.0.10::2      100.13.220::2     RED      ACTIVE aes  sha    psk  16 00:01:47 D
+        p2 = re.compile(r'^(?P<conn_id>\d+)\s+(?P<local>\S+)\s+(?P<remote>\S+)\s+(?P<vrf>\S+)?\s+'
+                        r'(?P<stats>\w+)\s+(?P<encr>\S+)\s+(?P<hash>\S+)\s+(?P<auth>\S+)\s+'
+                        r'(?P<dh>\d+)\s+(?P<life>\S+)\s+(?P<cap>\S+)$')
+ 
+        # Engine-id:Conn-id =  SW:12609
+        # Engine-id:Conn-id =  ????
+        p3 = re.compile(r'^Engine-id:Conn-id\s+=\s+(?P<engine>\S+):(?P<id>\d+)$')
+
+        count = 0
+        for line in output.splitlines():
+            line = line.strip()
+            # IPv4 Crypto ISAKMP SA
+            # IPv6 Crypto ISAKMP SA
+            m = p1.match(line)
+            if m:
+                ser_dict = ret_dict.setdefault('isakmp_stats', {})
+                if m.groupdict()['version'] == "IPv4":
+                    sub_dict = ser_dict.setdefault('IPv4', {})
+                
+                if m.groupdict()['version'] == "IPv6":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('IPv6', {})
+                continue
+
+            # 29609 100.0.10.2      100.13.220.2           ACTIVE aes  sha    psk  16 00:01:47 D
+            # 29610 100.0.10.2      100.13.220.2     RED      ACTIVE aes  sha    psk  16 00:01:47 D
+            # 29611 100.0.10::2      100.13.220::2     RED      ACTIVE aes  sha    psk  16 00:01:47 D
+            m = p2.match(line)
+            if m:
+                count += 1
+                isakmp_dict = sub_dict.setdefault(count, {})
+                isakmp_dict['c_id'] = int(m.groupdict()['conn_id'])
+                isakmp_dict['local_ip'] = m.groupdict()['local']
+                isakmp_dict['remote_ip'] = m.groupdict()['remote']
+                if m.groupdict()['vrf'] is not None:
+                     isakmp_dict['ivrf'] = m.groupdict()['vrf']
+                isakmp_dict['status'] = m.groupdict()['stats']
+                isakmp_dict['encr_algo'] = m.groupdict()['encr']
+                isakmp_dict['hash_algo'] = m.groupdict()['hash']
+                isakmp_dict['auth_type'] = m.groupdict()['auth']
+                isakmp_dict['dh_group'] = int(m.groupdict()['dh'])
+                isakmp_dict['lifetime'] = m.groupdict()['life']
+                isakmp_dict['capabilities'] = m.groupdict()['cap']
+                continue
+            # Engine-id:Conn-id =  SW:12609
+            # Engine-id:Conn-id =  ????
+            m = p3.match(line)
+            if m:
+                if  m.groupdict()['engine'] is not None:
+                    isakmp_dict['engine_id'] = m.groupdict()['engine']
+                
+                if  m.groupdict()['id'] is not None:
+                    isakmp_dict['conn_id'] = int(m.groupdict()['id'])
+                continue
+
+        if ret_dict['isakmp_stats']['IPv4'] == {}:
+            del ret_dict['isakmp_stats']['IPv4']
+
+        if ret_dict['isakmp_stats']['IPv6'] == {}:
+            del ret_dict['isakmp_stats']['IPv6']     
+
+        return ret_dict
+
+# ====================================================
+#  Schema for 'show crypto mib ipsec flowmib endpoint'
+# ====================================================
+class ShowCryptoMibIpsecFlowmibEndpointSchema(MetaParser):
+    """Schema for show crypto mib ipsec flowmib endpoint"""
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    'index': str,
+                    'local_type': str,
+                    'local_address': str,
+                    'protocol': int,
+                    'local_port': int,
+                    'remote_type': str,
+                    'remote_address': str,
+                    'remote_port': int
+                    },
+                },
+            'total_vrf': int,
+        }
+    }
+
+# ====================================================
+#  Parser for 'show crypto mib ipsec flowmib endpoint'
+# ====================================================  
+class ShowCryptoMibIpsecFlowmibEndpoint(ShowCryptoMibIpsecFlowmibEndpointSchema):
+    """Parser for 
+        * show crypto mib ipsec flowmib endpoint
+    """
+
+    cli_command = 'show crypto mib ipsec flowmib endpoint'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        end_points_dict = {}
+
+        # vrf CC-INTERNET
+        p1 = re.compile(r'^vrf\s+(?P<vrf_name>[\S\s]+)$')
+
+        # Index:                       17
+        p2 = re.compile(r'^Index:\s+(?P<index>\d+)$')
+
+        # Local type:                  Single IP address
+        p3 = re.compile(r'^Local\s+type:\s+(?P<local_type>[\S\s]+)$')
+
+        # Local address:               1.1.0.100
+        p4 = re.compile(r'^Local\s+address:\s+(?P<local_address>[\S\s]+)$')
+
+        # Protocol:                    47
+        p5 = re.compile(r'^Protocol:\s+(?P<protocol>\d+)$')
+
+        # Local port:                  0
+        p6 = re.compile(r'^Local\s+port:\s+(?P<local_port>\d+)$')
+ 
+        # Remote type:                 Single IP address
+        p7 = re.compile(r'^Remote\s+type:\s+(?P<remote_type>[\S\s]+)$')
+
+        # Remote address:              1.1.0.101
+        p8 = re.compile(r'^Remote\s+address:\s+(?P<remote_address>[\S\s]+)$')
+
+        # Remote port:                 0
+        p9 = re.compile(r'^Remote\s+port:\s+(?P<remote_port>\d+)$')
+ 
+        vrf_count = 0
+        result_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf CC-INTERNET
+            m = p1.match(line)
+            if m:
+                vrf_count += 1
+                if 'total_vrf' not in end_points_dict:
+                    result_dict = end_points_dict.setdefault('ipsec_flowmib_endpoints', {})
+                result_dict['total_vrf'] = vrf_count
+                vrf_name = m.groupdict()['vrf_name']
+                vrf_name_dict = result_dict.setdefault(vrf_name, {})
+                index_count = 0
+                continue
+
+            # Index:                       17
+            m = p2.match(line)
+            if m:
+                index_count += 1
+                index_count_dict = vrf_name_dict.setdefault(str(index_count), {})
+                index_count_dict['index'] = m.groupdict()['index']
+                continue
+
+            # Local type:                  Single IP address
+            m = p3.match(line)
+            if m:
+                index_count_dict['local_type'] = m.groupdict()['local_type']
+                continue
+
+            # Local address:               1.1.0.100
+            m = p4.match(line)
+            if m:
+                index_count_dict['local_address'] = m.groupdict()['local_address']
+                continue
+
+            # Protocol:                    47
+            m = p5.match(line)
+            if m:
+                index_count_dict['protocol'] = int(m.groupdict()['protocol'])
+                continue
+
+            # Local port:                  0
+            m = p6.match(line)
+            if m:
+                index_count_dict['local_port'] = int(m.groupdict()['local_port'])
+                continue
+
+            # Remote type:                 Single IP address
+            m = p7.match(line)
+            if m:
+                index_count_dict['remote_type'] = m.groupdict()['remote_type']
+                continue
+
+            # Remote address:              1.1.0.101
+            m = p8.match(line)
+            if m:
+                index_count_dict['remote_address'] = m.groupdict()['remote_address']
+                continue
+ 
+            # Remote port:                 0
+            m = p9.match(line)
+            if m:
+                index_count_dict['remote_port'] = int(m.groupdict()['remote_port'])
+                continue
+
+        return end_points_dict
+
+# ====================================================
+#  Schema for 'show crypto mib ipsec flowmib tunnel'
+# ====================================================
+class ShowCryptoMibIpsecFlowmibTunnelSchema(MetaParser):
+    """Schema for show crypto mib ipsec flowmib tunnel"""
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    'index': str,
+                    'local_address': str,
+                    'remote_address': str,
+                    'ipsec_keying': str,
+                    'encap_mode': int,
+                    'lifetime_kb': int,
+                    'lifetime_sec': int,
+                    'active_time': str,
+                    'lifetime_threshold_kb': int,
+                    'lifetime_threshold_sec': int,
+                    'no_of_refresh': int,
+                    'expired_sa': int,
+                    'current_sa': int,
+                    'in_sa_dh_group': str,
+                    'in_sa_encrypt_algorithm': str,
+                    'in_sa_ah_auth_algorithm': str,
+                    'in_sa_esp_auth_algorithm': str,
+                    'in_sa_uncompress_algorithm': str,
+                    'out_sa_dh_group': str,
+                    'out_sa_encrypt_algorithm': str,
+                    'out_sa_ah_auth_algorithm': str,
+                    'out_sa_esp_auth_algorithm': str,
+                    'out_sa_uncompress_algorithm': str,
+                    'in_octets': int,
+                    'decompressed_octets': int,
+                    'in_packets': int,
+                    'in_drops': int,
+                    'in_replay_drops': int,
+                    'in_authentications': int,
+                    'in_auth_failures': int,
+                    'in_decrypts': int,
+                    'in_decrypt_failures': int,
+                    'out_octets': int,
+                    'out_uncompressed_octets': int,
+                    'out_packets': int,
+                    'out_drops': int,
+                    'out_authentications': int,
+                    'out_auth_failures': int,
+                    'out_encryptions': int,
+                    'out_encryption_failures': int,
+                    'compressed_octets': int,
+                    'decompressed_octets_1': int,
+                    'out_uncompressed_octets_1': int,
+                    },
+                },
+            'total_vrf': int,
+        }
+    }
+# ====================================================
+#  Parser for 'show crypto mib ipsec flowmib tunnel'
+# ====================================================
+class ShowCryptoMibIpsecFlowmibTunnel(ShowCryptoMibIpsecFlowmibTunnelSchema):
+    """Parser for
+        * show crypto mib ipsec flowmib tunnel
+    """
+
+    cli_command = 'show crypto mib ipsec flowmib tunnel'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        flowmib_tunnel_dict = {}
+
+        # vrf CC-INTERNET
+        p1 = re.compile(r'^vrf\s+(?P<vrf_name>[\S\s]+)$')
+        
+        # Index:                       17
+        p2 = re.compile(r'^Index:\s+(?P<index>\d+)$')
+
+        # Local address:               1.1.0.100
+        p3 = re.compile(r'^Local\s+address:\s+(?P<local_address>[\S\s]+)$')
+
+        # Remote address:              1.1.0.101
+        p4 = re.compile(r'^Remote\s+address:\s+(?P<remote_address>[\S\s]+)$')
+
+        # IPSEC keying:                IKE
+        p5 = re.compile(r'^IPSEC\s+keying:\s+(?P<ipsec_keying>[\S\s]+)$')
+
+        # Encapsulation mode:          2
+        p6 = re.compile(r'^Encapsulation\s+mode:\s+(?P<encap_mode>\d+)$')
+
+        # Lifetime (KB):               4608000
+        p7 = re.compile(r'^Lifetime\s+\(KB\):\s+(?P<lifetime_kb>\d+)$')
+
+        # Lifetime (Sec):              3600
+        p8 = re.compile(r'^Lifetime\s+\(Sec\):\s+(?P<lifetime_sec>\d+)$')
+ 
+        # Active time:                 00:05:50
+        p9 = re.compile(r'^Active\s+time:\s+(?P<active_time>[\S\s]+)$')
+
+        # Lifetime threshold (KB):     64
+        p10 = re.compile(r'^Lifetime\s+threshold\s+\(KB\):\s+(?P<lifetime_threshold_kb>\d+)$')
+
+        # Lifetime threshold (Sec):    10
+        p11 = re.compile(r'^Lifetime\s+threshold\s+\(Sec\):\s+(?P<lifetime_threshold_sec>\d+)$')
+
+        # Total number of refreshes:   0
+        p12 = re.compile(r'^Total\s+number\s+of\s+refreshes:\s+(?P<no_of_refresh>\d+)$')
+
+        # Expired SA instances:        0
+        p13 = re.compile(r'^Expired\s+SA\s+instances:\s+(?P<expired_sa>\d+)$')
+
+        # Current SA instances:        2
+        p14 = re.compile(r'^Current\s+SA\s+instances:\s+(?P<current_sa>\d+)$')
+
+        # In SA DH group:              None
+        p15 = re.compile(r'^In\s+SA\s+DH\s+group:\s+(?P<in_sa_dh_group>[\S\s]+)$')
+
+        # In sa encrypt algorithm:     aes
+        p16 = re.compile(r'^In\s+sa\s+encrypt\s+algorithm:\s+(?P<in_sa_encrypt_algorithm>[\S\s]+)$')
+
+        # In SA AH auth algorithm:     None
+        p17 = re.compile(r'^In\s+SA\s+AH\s+auth\s+algorithm:\s+(?P<in_sa_ah_auth_algorithm>[\S\s]+)$')
+
+        # In SA ESP auth algo:         None
+        p18 = re.compile(r'^In\s+SA\s+ESP\s+auth\s+algo:\s+(?P<in_sa_esp_auth_algorithm>[\S\s]+)$')
+
+        # In SA uncompress algorithm:  None
+        p19 = re.compile(r'^In\s+SA\s+uncompress\s+algorithm:\s+(?P<in_sa_uncompress_algorithm>[\S\s]+)$')
+
+        # Out SA DH group:             None
+        p20 = re.compile(r'^Out\s+SA\s+DH\s+group:\s+(?P<out_sa_dh_group>[\S\s]+)$')
+
+        # Out SA encryption algorithm: aes
+        p21 = re.compile(r'^Out\s+SA\s+encryption\s+algorithm:\s+(?P<out_sa_encrypt_algorithm>[\S\s]+)$')
+
+        # Out SA auth algorithm:       None
+        p22 = re.compile(r'^Out\s+SA\s+auth\s+algorithm:\s+(?P<out_sa_ah_auth_algorithm>[\S\s]+)$')
+
+        # Out SA ESP auth algorithm:   None
+        p23 = re.compile(r'^Out\s+SA\s+ESP\s+auth\s+algorithm:\s+(?P<out_sa_esp_auth_algorithm>[\S\s]+)$')
+
+        # Out SA uncompress algorithm: None
+        p24 = re.compile(r'^Out\s+SA\s+uncompress\s+algorithm:\s+(?P<out_sa_uncompress_algorithm>[\S\s]+)$')
+
+        # In octets:                   386160
+        p25 = re.compile(r'^In\s+octets:\s+(?P<in_octets>\d+)$')
+
+        # Decompressed octets:         386160
+        p26 = re.compile(r'^Decompressed\s+octets:\s+(?P<decompressed_octets>\d+)$')
+
+        # In packets:                  3210
+        p27 = re.compile(r'^In\s+packets:\s+(?P<in_packets>\d+)$')
+ 
+        # In drops:                    0
+        p28 = re.compile(r'^In\s+drops:\s+(?P<in_drops>\d+)$')
+ 
+        # In replay drops:             0
+        p29 = re.compile(r'^In\s+replay\s+drops:\s+(?P<in_replay_drops>\d+)$')
+ 
+        # In authentications:          3210
+        p30 = re.compile(r'^In\s+authentications:\s+(?P<in_authentications>\d+)$')
+ 
+        # In authentication failures:  0
+        p31 = re.compile(r'^In\s+authentication\s+failures:\s+(?P<in_auth_failures>\d+)$')
+
+        # In decrypts:                 3210
+        p32 = re.compile(r'^In\s+decrypts:\s+(?P<in_decrypts>\d+)$')
+ 
+        # In decrypt failures:         0
+        p33 = re.compile(r'^In\s+decrypt\s+failures:\s+(?P<in_decrypt_failures>\d+)$')
+ 
+        # Out octets:                  194700
+        p34 = re.compile(r'^Out\s+octets:\s+(?P<out_octets>\d+)$')
+
+        # Out uncompressed octets:     194700
+        p35 = re.compile(r'^Out\s+uncompressed\s+octets:\s+(?P<out_uncompressed_octets>\d+)$')
+
+        # Out packets:                 3222
+        p36 = re.compile(r'^Out\s+packets:\s+(?P<out_packets>\d+)$')
+ 
+        # Out drops:                   0
+        p37 = re.compile(r'^Out\s+drops:\s+(?P<out_drops>\d+)$')
+ 
+        # Out authentications:         3222
+        p38 = re.compile(r'^Out\s+authentications:\s+(?P<out_authentications>\d+)$')
+ 
+        # Out authentication failures: 0
+        p39 = re.compile(r'^Out\s+authentication\s+failures:\s+(?P<out_auth_failures>\d+)$')
+ 
+        # Out encryptions:             3222
+        p40 = re.compile(r'^Out\s+encryptions:\s+(?P<out_encryptions>\d+)$')
+ 
+        # Out encryption failures:     0
+        p41 = re.compile(r'^Out\s+encryption\s+failures:\s+(?P<out_encryption_failures>\d+)$')
+ 
+        # Compressed octets:           0
+        p42 = re.compile(r'^Compressed\s+octets:\s+(?P<compressed_octets>\d+)$')
+
+        # Decompressed octets:         0
+        p43 = re.compile(r'^Decompressed\s+octets:\s+(?P<decompressed_octets_1>\d+)$')
+
+        # Out uncompressed octets:     0
+        p44 = re.compile(r'^Out\s+uncompressed\s+octets:\s+(?P<out_uncompressed_octets_1>\d+)$')
+
+        vrf_count = 0
+        result_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf CC-INTERNET
+            m = p1.match(line)
+            if m:
+                vrf_count += 1
+                if 'total_vrf' not in flowmib_tunnel_dict:
+                    result_dict = flowmib_tunnel_dict.setdefault('ipsec_flowmib_tunnel', {})
+                result_dict['total_vrf'] = vrf_count
+                vrf_name = m.groupdict()['vrf_name']
+                vrf_name_dict = result_dict.setdefault(vrf_name, {})
+                index_count = 0
+                continue
+
+            # Index:                       17
+            m = p2.match(line)
+            if m:
+                index_count += 1
+                index_count_dict = vrf_name_dict.setdefault(str(index_count), {})
+                index_count_dict['index'] = m.groupdict()['index']
+                # There are duplicate entries in the output of this show command
+                # CSCwa72431 is used to track IPSec Mib issues
+                # Until the issue is fixed, we will check with flags below
+                # and handle duplicate entries
+                decompressed_octets_seen = False
+                out_uncompressed_octets_seen = False
+                continue
+
+            # Local address:               1.1.0.100
+            m = p3.match(line)
+            if m:
+                index_count_dict['local_address'] = m.groupdict()['local_address']
+                continue
+
+            # Remote address:              1.1.0.101
+            m = p4.match(line)
+            if m:
+                index_count_dict['remote_address'] = m.groupdict()['remote_address']
+                continue
+            
+            # IPSEC keying:                IKE
+            m = p5.match(line)
+            if m:
+                index_count_dict['ipsec_keying'] = m.groupdict()['ipsec_keying']
+                continue
+
+            # Encapsulation mode:          2
+            m = p6.match(line)
+            if m:
+                index_count_dict['encap_mode'] = int(m.groupdict()['encap_mode'])
+                continue
+
+            # Lifetime (KB):               4608000
+            m = p7.match(line)
+            if m:
+                index_count_dict['lifetime_kb'] = int(m.groupdict()['lifetime_kb'])
+                continue
+
+            # Lifetime (Sec):              3600
+            m = p8.match(line)
+            if m:
+                index_count_dict['lifetime_sec'] = int(m.groupdict()['lifetime_sec'])
+                continue
+
+            # Active time:                 00:05:50
+            m = p9.match(line)
+            if m:
+                index_count_dict['active_time'] = m.groupdict()['active_time']
+                continue
+
+            # Lifetime threshold (KB):     64
+            m = p10.match(line)
+            if m:
+                index_count_dict['lifetime_threshold_kb'] = int(m.groupdict()['lifetime_threshold_kb'])
+                continue
+
+            # Lifetime threshold (Sec):    10
+            m = p11.match(line)
+            if m:
+                index_count_dict['lifetime_threshold_sec'] = int(m.groupdict()['lifetime_threshold_sec'])
+                continue
+
+            # Total number of refreshes:   0
+            m = p12.match(line)
+            if m:
+                index_count_dict['no_of_refresh'] = int(m.groupdict()['no_of_refresh'])
+                continue
+
+            # Expired SA instances:        0
+            m = p13.match(line)
+            if m:
+                index_count_dict['expired_sa'] = int(m.groupdict()['expired_sa'])
+                continue
+
+            # Current SA instances:        2
+            m = p14.match(line)
+            if m:
+                index_count_dict['current_sa'] = int(m.groupdict()['current_sa'])
+                continue
+
+            # In SA DH group:              None
+            m = p15.match(line)
+            if m:
+                index_count_dict['in_sa_dh_group'] = m.groupdict()['in_sa_dh_group']
+                continue
+
+            # In sa encrypt algorithm:     aes
+            m = p16.match(line)
+            if m:
+                index_count_dict['in_sa_encrypt_algorithm'] = m.groupdict()['in_sa_encrypt_algorithm']
+                continue
+
+            # In SA AH auth algorithm:     None
+            m = p17.match(line)
+            if m:
+                index_count_dict['in_sa_ah_auth_algorithm'] = m.groupdict()['in_sa_ah_auth_algorithm']
+                continue
+
+            # In SA ESP auth algo:         None
+            m = p18.match(line)
+            if m:
+                index_count_dict['in_sa_esp_auth_algorithm'] = m.groupdict()['in_sa_esp_auth_algorithm']
+                continue
+
+            # In SA uncompress algorithm:  None
+            m = p19.match(line)
+            if m:
+                index_count_dict['in_sa_uncompress_algorithm'] = m.groupdict()['in_sa_uncompress_algorithm']
+                continue
+
+            # Out SA DH group:             None
+            m = p20.match(line)
+            if m:
+                index_count_dict['out_sa_dh_group'] = m.groupdict()['out_sa_dh_group']
+                continue
+
+            # Out SA encryption algorithm: aes
+            m = p21.match(line)
+            if m:
+                index_count_dict['out_sa_encrypt_algorithm'] = m.groupdict()['out_sa_encrypt_algorithm']
+                continue
+
+            # Out SA auth algorithm:       None
+            m = p22.match(line)
+            if m:
+                index_count_dict['out_sa_ah_auth_algorithm'] = m.groupdict()['out_sa_ah_auth_algorithm']
+                continue
+
+            # Out SA ESP auth algorithm:   None
+            m = p23.match(line)
+            if m:
+                index_count_dict['out_sa_esp_auth_algorithm'] = m.groupdict()['out_sa_esp_auth_algorithm']
+                continue
+
+            # Out SA uncompress algorithm: None
+            m = p24.match(line)
+            if m:
+                index_count_dict['out_sa_uncompress_algorithm'] = m.groupdict()['out_sa_uncompress_algorithm']
+                continue
+
+            # In octets:                   386160
+            m = p25.match(line)
+            if m:
+                index_count_dict['in_octets'] = int(m.groupdict()['in_octets'])
+                continue
+
+            # Decompressed octets:         386160
+            if not decompressed_octets_seen:
+                m = p26.match(line)
+                if m:
+                    index_count_dict['decompressed_octets'] = int(m.groupdict()['decompressed_octets'])
+                    decompressed_octets_seen = True
+                    continue
+
+            # In packets:                  3210
+            m = p27.match(line)
+            if m:
+                index_count_dict['in_packets'] = int(m.groupdict()['in_packets'])
+                continue
+
+            # In drops:                    0
+            m = p28.match(line)
+            if m:
+                index_count_dict['in_drops'] = int(m.groupdict()['in_drops'])
+                continue
+
+            # In replay drops:             0
+            m = p29.match(line)
+            if m:
+                index_count_dict['in_replay_drops'] = int(m.groupdict()['in_replay_drops'])
+                continue
+
+            # In authentications:          3210
+            m = p30.match(line)
+            if m:
+                index_count_dict['in_authentications'] = int(m.groupdict()['in_authentications'])
+                continue
+
+            # In authentication failures:  0
+            m = p31.match(line)
+            if m:
+                index_count_dict['in_auth_failures'] = int(m.groupdict()['in_auth_failures'])
+                continue
+
+            # In decrypts:                 3210
+            m = p32.match(line)
+            if m:
+                index_count_dict['in_decrypts'] = int(m.groupdict()['in_decrypts'])
+                continue
+
+            # In decrypt failures:         0
+            m = p33.match(line)
+            if m:
+                index_count_dict['in_decrypt_failures'] = int(m.groupdict()['in_decrypt_failures'])
+                continue
+
+            # Out octets:                  194700
+            m = p34.match(line)
+            if m:
+                index_count_dict['out_octets'] = int(m.groupdict()['out_octets'])
+                continue
+
+            # Out uncompressed octets:     194700
+            if not out_uncompressed_octets_seen:
+                m = p35.match(line)
+                if m:
+                    index_count_dict['out_uncompressed_octets'] = int(m.groupdict()['out_uncompressed_octets'])
+                    out_uncompressed_octets_seen = True
+                    continue
+
+            # Out packets:                 3222
+            m = p36.match(line)
+            if m:
+                index_count_dict['out_packets'] = int(m.groupdict()['out_packets'])
+                continue
+
+            # Out drops:                   0
+            m = p37.match(line)
+            if m:
+                index_count_dict['out_drops'] = int(m.groupdict()['out_drops'])
+                continue
+
+            # Out authentications:         3222
+            m = p38.match(line)
+            if m:
+                index_count_dict['out_authentications'] = int(m.groupdict()['out_authentications'])
+                continue
+
+            # Out authentication failures: 0
+            m = p39.match(line)
+            if m:
+                index_count_dict['out_auth_failures'] = int(m.groupdict()['out_auth_failures'])
+                continue
+
+            # Out encryptions:             3222
+            m = p40.match(line)
+            if m:
+                index_count_dict['out_encryptions'] = int(m.groupdict()['out_encryptions'])
+                continue
+
+            # Out encryption failures:     0
+            m = p41.match(line)
+            if m:
+                index_count_dict['out_encryption_failures'] = int(m.groupdict()['out_encryption_failures'])
+                continue
+
+            # Compressed octets:           0
+            m = p42.match(line)
+            if m:
+                index_count_dict['compressed_octets'] = int(m.groupdict()['compressed_octets'])
+                continue
+
+            # Decompressed octets:         0
+            if decompressed_octets_seen:
+                m = p43.match(line)
+                if m:
+                    index_count_dict['decompressed_octets_1'] = int(m.groupdict()['decompressed_octets_1'])
+                    continue
+
+            # Out uncompressed octets:     0
+            if out_uncompressed_octets_seen:
+                m = p44.match(line)
+                if m:
+                    index_count_dict['out_uncompressed_octets_1'] = int(m.groupdict()['out_uncompressed_octets_1'])
+                    continue
+
+        return flowmib_tunnel_dict
+
+# ==============================
+# Schema for
+#   'show crypto ikev2 session'
+#   'show crypto ikev2 session detailed'
+# ==============================
+class ShowCryptoIkev2SessionSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto ikev2 session'
+        * 'show crypto ikev2 session detailed'
+    """
+    
+    schema = {
+        'ikev2_session': {
+            Or('IPv4', 'IPv6'):{
+                int:{
+                    'session_id': int,
+                    'status': str,
+                    'ike_count': int,
+                    'child_count': int,
+                    'tunnel_id': int,
+                    'local_ip': str,
+                    'local_port': int,
+                    'remote_ip': str,
+                    'remote_port': int,
+                    'fvrf': str,
+                    'ivrf': str,
+                    'session_status': str,
+                    Optional('encryption'): str,
+                    Optional('key_length'): int,
+                    Optional('prf'): str,
+                    Optional('hash_algo'): str,
+                    Optional('dh_group'): int,
+                    Optional('auth_sign'): str,
+                    Optional('auth_verify'): str,
+                    Optional('lifetime'): int,
+                    Optional('activetime'): int,
+                    Optional('ce_id'): int,
+                    Optional('id'): int,
+                    Optional('mib_id'): int,
+                    Optional('local_spi'): str,
+                    Optional('remote_spi'): str,
+                    Optional('local_id'): str,
+                    Optional('remote_id'): str,
+                    Optional('remote_eap_id'): str,
+                    Optional('local_mesg_id'): int,
+                    Optional('remote_mesg_id'): int,
+                    Optional('local_next_id'): int,
+                    Optional('remote_next_id'): int,
+                    Optional('local_queued'): int,
+                    Optional('remote_queued'): int,
+                    Optional('local_window'): int,
+                    Optional('remote_window'): int,
+                    Optional('dpd_time'): int,
+                    Optional('dpd_retry'): int,
+                    Optional('fragmentation'): str,
+                    Optional('dynamic_route'): str,
+                    Optional('nat_detected'): str,
+                    Optional('cts_sgt'): str,
+                    Optional('initiator_of_sa'): str,
+                    Optional('child_sa'):{
+                        int:{
+                            'local_selectors': list,
+                            'remote_selectors': list,
+                            Optional('esp_spi_in'): str,
+                            Optional('esp_spi_out'): str,
+                            Optional('ah_spi_in'): str,
+                            Optional('ah_spi_out'): str,
+                            Optional('cpi_in'): str,
+                            Optional('cpi_out'): str,
+                            Optional('child_encr'): str,
+                            Optional('keysize'): int,
+                            Optional('esp_hmac'): str,
+                            Optional('ah_hmac'): str,
+                            Optional('compression'): str,
+                            Optional('mode'): str,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):   
+    # Defines a function to run the cli_command
+    cli_command = ['show crypto ikev2 session',
+                'show crypto ikev2 session detailed']
+
+    def cli(self, detail=False, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[int(detail)]) 
+
+        # initial return dictionary
+        ret_dict = {}
+ 
+        # IPv4 Crypto IKEv2 Session
+        # IPv6 Crypto IKEv2 Session
+        p1 = re.compile(r'^(?P<version>\S+) Crypto IKEv2 Session$')
+   
+        # Session-id:3, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+        p2 = re.compile(r'^Session-id:(?P<s_id>\d+),\s+Status:(?P<stats>\S+),\s+'
+                        r'IKE count:(?P<ike>\d+),\s+CHILD count:(?P<child>\d+)$')
+       
+        # 1         1.1.1.1/500           1.1.1.2/500           none/none            READY
+        # 2         1.1.1.1/4500          17.27.1.12/45711      none/10              READY
+        p3 = re.compile(r'^(?P<t_id>\d+)\s+(?P<loc_ip>\S+)\/(?P<loc_port>\d+)\s+'
+                        r'(?P<rem_ip>\S+)\/(?P<rem_port>\d+)\s+'
+                        r'(?P<f_vrf>\S+)\/(?P<i_vrf>\S+)\s+(?P<sess_stats>\S+)$')
+ 
+        # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: RSA, Auth verify: AnyConnect-EAP
+        # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+        p4 = re.compile(r'^Encr:\s+(?P<encr>\S+),\s+keysize:\s+(?P<key_len>\d+),\s+'
+                        r'PRF:\s+(?P<random>\S+),\s+Hash:\s+(?P<hash>\S+),\s+DH Grp:(?P<dh>\d+),\s+'
+                        r'Auth sign:\s+(?P<auth>\S+),\s+Auth verify:\s+(?P<auth_ver>\S+)$')
+ 
+        # Life/Active Time: 86400/38157 sec
+        p5 = re.compile(r'^Life\/Active\s+Time:\s+(?P<life>\d+)\/(?P<active>\d+)\s+sec$')
+ 
+        # CE id: 1008, Session-id: 3
+        # CE id: 0, Session-id: 1, MIB-id: 1
+        p6 = re.compile(r'^CE\s+id:\s+(?P<c_id>\d+),\s+Session-id:\s+(?P<se_id>\d+)(,\s+MIB-id:\s+(?P<m_id>\d+))?$')
+ 
+        # Local spi: 12A1648D1789A9F9       Remote spi: 0408D9A1AFA334B4
+        p7 = re.compile(r'^Local spi:\s+(?P<l_spi>\S+)\s+Remote spi:\s+(?P<r_spi>\S+)$')
+ 
+        # Local id: 1.1.1.1
+        p8 = re.compile(r'^Local id:\s+(?P<l_id>\S+)$')
+ 
+        # Remote id: 1.1.1.2
+        # Remote id: Scale
+        p9 = re.compile(r'^Remote id:\s+(?P<r_id>\S+)$')
+ 
+        # Remote EAP id: docker9_69
+        p10 = re.compile(r'^Remote EAP id:\s+(?P<r_eap_id>\S+)$')
+ 
+        # Local req msg id:  2              Remote req msg id:  0
+        p11 = re.compile(r'^Local req msg id:\s+(?P<l_req_id>\d+)\s+'
+                         r'Remote req msg id:\s+(?P<r_req_id>\d+)$')
+ 
+        # Local next msg id: 2              Remote next msg id: 0
+        p12 = re.compile(r'^Local next msg id:\s+(?P<l_next_id>\d+)\s+'
+                         r'Remote next msg id:\s+(?P<r_next_id>\d+)$')
+ 
+        # Local req queued:  2              Remote req queued:  0
+        p13 = re.compile(r'^Local req queued:\s+(?P<l_queued>\d+)\s+'
+                         r'Remote req queued:\s+(?P<r_queued>\d+)$')
+ 
+        # Local window:      5              Remote window:      5
+        p14 = re.compile(r'^Local window:\s+(?P<l_window>\d+)\s+'
+                         r'Remote window:\s+(?P<r_window>\d+)$')
+ 
+        # DPD configured for 45 seconds, retry 2
+        p15 = re.compile(r'^DPD\s+configured\s+for\s+(?P<dpd_in>\d+)\s+seconds,\s+retry\s+(?P<retry>\d+)$')
+ 
+        # Fragmentation not  configured.
+        p16 = re.compile(r'^Fragmentation\s+not\s+configured\.$')
+ 
+        # IETF Std Fragmentation  configured.
+        p17 = re.compile(r'^IETF\s+Std\s+Fragmentation\s+configured\.$')
+ 
+        # Dynamic Route Update: enabled
+        p18 = re.compile(r'^Dynamic\s+Route\s+Update:\s+(?P<dyn_route>\S+)$')
+ 
+        # NAT-T is not detected
+        p19 = re.compile(r'^NAT-T\s+is\s+not\s+detected$')
+ 
+        # NAT-T is detected  outside
+        # NAT-T is detected  inside
+        p20 = re.compile(r'^NAT-T\s+is\s+detected\s+(?P<nat>\w+)$')
+ 
+        # Cisco Trust Security SGT is enabled
+        # Cisco Trust Security SGT is disabled
+        p21 = re.compile(r'^Cisco\s+Trust\s+Security\s+SGT\s+is\s+(?P<sgt>\w+)$')
+ 
+        # Initiator of SA : Yes
+        p22 = re.compile(r'^Initiator\s+of\s+SA\s+:\s+(?P<initiator>\w+)$')
+ 
+        # Child sa: local selector  10.10.10.0/0 - 10.10.10.255/65535
+        # local selector  10.10.10.0/0 - 10.10.10.255/65535
+        p23 = re.compile(r'^((?P<child_sa>[\S\s]+):\s+)?local\s+selector\s+(?P<child_l>[\S\s]+)$')
+
+        # remote selector 20.20.20.0/0 - 20.20.20.255/65535
+        p24 = re.compile(r'^remote\s+selector\s+(?P<child_r>[\S\s]+)$')
+
+        # ESP spi in/out: 0x232CB82D/0x30767B6E
+        p25 = re.compile(r'^ESP\s+spi\s+in\/out:\s+(?P<esp_i>\S+)\/(?P<esp_o>\S+)$')
+
+        # AH spi in/out: 0x0/0x0
+        p26 = re.compile(r'^AH\s+spi\s+in\/out:\s+(?P<ah_i>\S+)\/(?P<ah_o>\S+)$')
+
+        # CPI in/out: 0x0/0x0
+        p27 = re.compile(r'^CPI\s+in\/out:\s+(?P<cpi_i>\S+)\/(?P<cpi_o>\S+)$')
+
+        # Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+        p28 = re.compile(r'^Encr:\s+(?P<encr_algo>\S+),\s+keysize:\s+(?P<key_s>\d+),\s+'
+                         r'esp_hmac:\s+(?P<hmac>\S+)$')
+
+        # ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+        p29 = re.compile(r'^ah_hmac:\s+(?P<ahhmac>[\S\s]*),\s+comp:\s+(?P<comp>\S+),\s+'
+                         r'mode\s+(?P<tunnel_type>\S+)$')
+
+        child_count = count = 0
+        for line in output.splitlines():
+            line = line.strip()
+            # IPv4 Crypto IKEv2 Session
+            # IPv6 Crypto IKEv2 Session
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ser_dict = ret_dict.setdefault('ikev2_session', {})
+                if group['version'] == "IPv4":
+                    sub_dict = ser_dict.setdefault('IPv4', {})
+               
+                if group['version'] == "IPv6":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('IPv6', {})
+                continue
+ 
+            # Session-id:3, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+            m = p2.match(line)
+            if m:
+                count += 1
+                child_count = 0 
+                ikev2_dict = sub_dict.setdefault(count, {})
+                group = m.groupdict()
+                ikev2_dict['session_id'] = int(group['s_id'])
+                ikev2_dict['status'] = group['stats']
+                ikev2_dict['ike_count'] = int(group['ike'])
+                ikev2_dict['child_count'] = int(group['child'])
+                continue
+            # 1         1.1.1.1/500           1.1.1.2/500           none/none            READY
+            # 2         1.1.1.1/4500          17.27.1.12/45711      none/10              READY
+            m = p3.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['tunnel_id'] = int(group['t_id'])
+                ikev2_dict['local_ip'] = group['loc_ip']
+                ikev2_dict['local_port'] = int(group['loc_port'])
+                ikev2_dict['remote_ip'] = group['rem_ip']
+                ikev2_dict['remote_port'] = int(group['rem_port'])
+                ikev2_dict['fvrf'] = group['f_vrf']
+                ikev2_dict['ivrf'] = group['i_vrf']
+                ikev2_dict['session_status'] = group['sess_stats']
+                continue
+
+            # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: RSA, Auth verify: AnyConnect-EAP
+            # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+            m = p4.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['encryption'] = group['encr']
+                ikev2_dict['key_length'] = int(group['key_len'])
+                ikev2_dict['prf'] = group['random']
+                ikev2_dict['hash_algo'] = group['hash']
+                ikev2_dict['dh_group'] = int(group['dh'])
+                ikev2_dict['auth_sign'] = group['auth']
+                ikev2_dict['auth_verify'] = group['auth_ver']
+                continue
+
+            # Life/Active Time: 86400/38157 sec
+            m = p5.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['lifetime'] = int(group['life'])
+                ikev2_dict['activetime'] = int(group['active'])
+                continue
+
+            # CE id: 1008, Session-id: 3
+            # CE id: 0, Session-id: 1, MIB-id: 1
+            m = p6.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['ce_id'] = int(group['c_id'])
+                ikev2_dict['id'] = int(group['se_id'])
+                if group['m_id'] is not None:
+                    ikev2_dict['mib_id'] = int(group['m_id'])
+                continue
+
+            # Local spi: 12A1648D1789A9F9       Remote spi: 0408D9A1AFA334B4
+            m = p7.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_spi'] = group['l_spi']
+                ikev2_dict['remote_spi'] = group['r_spi']
+                continue
+            # Local id: 1.1.1.1
+            m = p8.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_id'] = group['l_id']
+                continue
+            
+            # Remote id: 1.1.1.2
+            # Remote id: Scale
+            m = p9.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['remote_id'] = group['r_id']
+                continue
+            
+            # Remote EAP id: docker9_69
+            m = p10.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['remote_eap_id'] = group['r_eap_id']
+                continue
+            
+            # Local req msg id:  2              Remote req msg id:  0
+            m = p11.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_mesg_id'] = int(group['l_req_id'])
+                ikev2_dict['remote_mesg_id'] = int(group['r_req_id'])
+                continue
+            
+            # Local next msg id: 2              Remote next msg id: 0
+            m = p12.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_next_id'] = int(group['l_next_id'])
+                ikev2_dict['remote_next_id'] = int(group['r_next_id'])
+                continue
+
+            # Local req queued:  2              Remote req queued:  0
+            m = p13.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_queued'] = int(group['l_queued'])
+                ikev2_dict['remote_queued'] = int(group['r_queued'])
+                continue
+
+            # Local window:      5              Remote window:      5
+            m = p14.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['local_window'] = int(group['l_window'])
+                ikev2_dict['remote_window'] = int(group['r_window'])
+                continue
+
+            # DPD configured for 45 seconds, retry 2
+            m = p15.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['dpd_time'] = int(group['dpd_in'])
+                ikev2_dict['dpd_retry'] = int(group['retry'])
+                continue
+
+            # Fragmentation not  configured.
+            m = p16.match(line)
+            if m:    
+                ikev2_dict['fragmentation'] = "no"
+                continue
+
+            # IETF Std Fragmentation  configured.
+            m = p17.match(line)
+            if m:    
+                ikev2_dict['fragmentation'] = "yes"
+                continue
+            
+            # Dynamic Route Update: enabled
+            m = p18.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['dynamic_route'] = group['dyn_route']
+                continue
+
+            # NAT-T is not detected
+            m = p19.match(line)
+            if m:    
+                ikev2_dict['nat_detected'] = "no"
+                continue
+
+            # NAT-T is detected  outside
+            # NAT-T is detected  inside
+            m = p20.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['nat_t'] = group['nat']
+                continue
+            
+            # Cisco Trust Security SGT is enabled
+            # Cisco Trust Security SGT is disabled
+            m = p21.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['cts_sgt'] = group['sgt']
+                continue
+
+            # Initiator of SA : Yes
+            m = p22.match(line)
+            if m:    
+                group = m.groupdict()
+                ikev2_dict['initiator_of_sa'] = group['initiator']
+                continue
+            
+            # Child sa: local selector  10.10.10.0/0 - 10.10.10.255/65535
+            # local selector  10.10.10.0/0 - 10.10.10.255/65535
+            m = p23.match(line)
+            if m:    
+                group = m.groupdict()
+                if group['child_sa'] == "Child sa":
+                    child_dict = ikev2_dict.setdefault('child_sa', {})
+                    child_count += 1 
+                    child_entry_dict = child_dict.setdefault(child_count, {})
+                    child_entry_dict.update({'local_selectors':  []})
+                    child_entry_dict.update({'remote_selectors':  []})
+
+                child_entry_dict['local_selectors'].append(group['child_l'])
+                continue
+            
+            # remote selector 20.20.20.0/0 - 20.20.20.255/65535
+            m = p24.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['remote_selectors'].append(group['child_r'])
+                continue
+
+            # ESP spi in/out: 0x232CB82D/0x30767B6E
+            m = p25.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['esp_spi_in'] = group['esp_i']
+                child_entry_dict['esp_spi_out'] = group['esp_o']
+                continue
+
+            # AH spi in/out: 0x0/0x0
+            m = p26.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['ah_spi_in'] = group['ah_i']
+                child_entry_dict['ah_spi_out'] = group['ah_o']
+                continue
+
+            # CPI in/out: 0x0/0x0
+            m = p27.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['cpi_in'] = group['cpi_i']
+                child_entry_dict['cpi_out'] = group['cpi_o']
+
+            # Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
+            m = p28.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['child_encr'] = group['encr_algo']
+                child_entry_dict['keysize'] = int(group['key_s'])
+                child_entry_dict['esp_hmac'] = group['hmac']
+                
+            # ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
+            m = p29.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['ah_hmac'] = group['ahhmac']
+                child_entry_dict['compression'] = group['comp']
+                child_entry_dict['mode'] = group['tunnel_type']
+
+        if ret_dict['ikev2_session']['IPv4'] == {}:
+            del ret_dict['ikev2_session']['IPv4']
+ 
+        if ret_dict['ikev2_session']['IPv6'] == {}:
+            del ret_dict['ikev2_session']['IPv6']    
+ 
+        return ret_dict
+

@@ -1,0 +1,32 @@
+RP/0/RP0/CPU0:IOS-XRv#sh run ipsla operation    
+Mon Feb  7 19:28:00.243 UTC
+ipsla
+ operation 100
+  type udp jitter
+   vrf VRF-1
+   source address 1.1.1.1
+   destination address 2.2.2.2
+   packet count 1000
+   packet interval 20
+   timeout 3000
+   datasize request 500
+   destination port 15000
+   frequency 60
+   verify-data
+  !
+ !
+ operation 200
+  type udp jitter
+   vrf VRF-2
+   source address 3.3.3.3
+   destination address 4.4.4.4
+   packet count 1500
+   packet interval 20
+   timeout 4000
+   datasize request 500
+   destination port 10000
+   frequency 60
+   verify-data
+  !
+ !
+!

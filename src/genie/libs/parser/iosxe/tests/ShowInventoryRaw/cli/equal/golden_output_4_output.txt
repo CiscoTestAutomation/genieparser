@@ -1,0 +1,26 @@
+NAME: "Switch 2 FRU Uplink Module 1", DESCR: "2x25G Uplink Module"
+PID: C9300-NM-2Y       , VID: V01  , SN: FOC2244676L
+
+NAME: "Twe2/1/1 Container", DESCR: "Twe2/1/1 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Twe2/1/1", DESCR: "SFP-25GBase-AOC1M"
+PID: SFP-25G-AOC1M       , VID: V01  , SN: FOF22150011-A
+
+NAME: "Twe2/1/2 Container", DESCR: "Twe2/1/2 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Twe2/1/2", DESCR: "SFP-25GBase-AOC1M"
+PID: SFP-25G-AOC1M       , VID: V01  , SN: FOF22150011-B
+
+NAME: "Switch 2 - Inlet Temp Sensor", DESCR: "Switch 2 - C9300-24U - Temp Inlet Sensor 0"
+PID:                   , VID:      , SN:
+
+NAME: "Switch 2 - Outlet Temp Sensor", DESCR: "Switch 2 - C9300-24U - Temp Outlet Sensor 1"
+PID:                   , VID:      , SN:
+
+NAME: "Switch 2 - HotSpot Temp Sensor", DESCR: "Switch 2 - C9300-24U - Temp Hotspot Sensor 2"
+PID:                   , VID:      , SN:
+
+NAME: "usbflash1", DESCR: "usbflash1-2"
+PID: SSD-120G          , VID: 3.10 , SN: STP23080N36

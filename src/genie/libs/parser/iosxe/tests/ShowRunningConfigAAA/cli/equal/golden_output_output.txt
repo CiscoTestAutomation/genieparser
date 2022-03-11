@@ -1,0 +1,65 @@
+show running-config aaa
+!
+aaa authentication login default group radius group radius group radius group radius
+aaa authentication enable default enable group radius group tacacs+
+aaa authorization exec default local 
+username lab privilege 15 password 0 lab
+username testuser password 0 testuser
+username abc password 0 abc
+!
+!
+!
+!
+!
+!
+radius server RADIUS_1
+ address ipv4 11.15.24.213 auth-port 1812 acct-port 1813
+ key Cisco123
+!
+radius server r1
+ address ipv4 1.1.1.1 auth-port 1812 acct-port 1813
+ key Cisco123
+!
+radius server RADIUS_GROUP
+!
+tacacs server tacas_1
+ address ipv6 AAAA::BBBB
+ key cisco345
+!
+aaa group server radius RADIUS_GROUP
+ server name RADIUS_1
+ ip vrf forwarding newVRF2
+ ip radius source-interface TenGigabitEthernet1/0/13
+!
+aaa group server radius sr1
+ server name r1
+ ip vrf forwarding Mgmt-vrf
+ ip radius source-interface GigabitEthernet0/0
+!
+!
+!
+!
+!
+aaa group server tacacs+ tacacs_1
+ server name tacas_1
+ ip vrf forwarding Mgmt-vrf
+ ip tacacs source-interface GigabitEthernet0/0
+!
+aaa group server tacacs+ tacas_1
+ ip tacacs source-interface GigabitEthernet0/0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+aaa new-model
+aaa session-id common
+!
+!
+ip radius source-interface GigabitEthernet0/0 
+ip tacacs source-interface GigabitEthernet0/0 
+
