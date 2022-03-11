@@ -1,3 +1,6 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
 * IOS-XR
     * Modified ShowBgpInstanceNeighborsReceivedRoutes:
         * Updated regex pattern <p13> and <p13_1> to accommodate for BGP confederations in AS_PATH.
