@@ -3994,6 +3994,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 if group_num:
                     # metric   locprf  weight path
                     # 2219      211       0 200 33299 51178 47751 {27016}
+                    # 0         120     500  (64630 64601) 39935
+
                     m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
                                  '(?P<locprf>[0-9]+)  +'
                                  '(?P<weight>[0-9]+) '
@@ -4003,6 +4005,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     # 2219                0 200 33299 51178 47751 {27016}
                     # locprf   weight path
                     # 211         0 200 33299 51178 47751 {27016} 65000.65000
+                    # 100         0 (64630 64609) 6762 4445 3209 21334
     
                     m2 = re.compile(r'^(?P<value>[0-9]+)'
                                  '(?P<space>\s{2,20})'
@@ -4011,6 +4014,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
     
                     # weight path
                     # 0 200 33299 51178 47751 {27016} 65000.65000
+                    # 0 (64629 64601 64630 64609) 6762 4445 3209 21334
                     m3 = re.compile(r'^(?P<weight>[0-9]+) '
                                  '(?P<path>(([()\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
                                .match(group_num)
@@ -5093,6 +5097,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # 2219             0 200 33299 51178 47751 {27016} e
         # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
+        # 0                500 (64630 64601) 39935 i
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
                            r' +(?P<path>[()0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
@@ -5111,6 +5116,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # *> 195.95.138.0/24    213.140.196.60           0      120    500 (64630 64601) 39935 i
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                          r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
                          r' +(?P<next_hop>\S+) +(?P<number>[()\d\.\s\{\}]+)'
