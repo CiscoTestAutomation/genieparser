@@ -1,0 +1,11 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Modified ShowRadiusStatistics:
+        * renamed cmd to cli_command and moved it to inside the class definition 
+        instead of the cli function 
+    * Modified ShowRadiusServerGroupAll
+        * renamed cmd to cli_command and moved it to inside the class definition
+        instead of the cli function
+
