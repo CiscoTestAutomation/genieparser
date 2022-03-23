@@ -1,0 +1,15 @@
+user@juniper-01> ping 10.198.152.9 routing-instance EBGP-Test count 10 
+PING 10.198.152.9 (10.198.152.9): 56 data bytes
+64 bytes from 10.198.152.9: icmp_seq=0 ttl=64 time=1.772 ms
+64 bytes from 10.198.152.9: icmp_seq=1 ttl=64 time=0.890 ms
+64 bytes from 10.198.152.9: icmp_seq=2 ttl=64 time=0.856 ms
+64 bytes from 10.198.152.9: icmp_seq=3 ttl=64 time=0.872 ms
+64 bytes from 10.198.152.9: icmp_seq=4 ttl=64 time=0.875 ms
+64 bytes from 10.198.152.9: icmp_seq=5 ttl=64 time=0.815 ms
+64 bytes from 10.198.152.9: icmp_seq=6 ttl=64 time=0.772 ms
+64 bytes from 10.198.152.9: icmp_seq=7 ttl=64 time=1.022 ms
+64 bytes from 10.198.152.9: icmp_seq=8 ttl=64 time=0.910 ms
+64 bytes from 10.198.152.9: icmp_seq=9 ttl=64 time=0.927 ms
+
+--- 10.198.152.9 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet los
