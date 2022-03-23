@@ -433,6 +433,7 @@ class ShowSnmp(ShowSnmpSchema):
                     snmp_dict["snmp_logging"].update({"inform_statistics": {} })
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_sent": informs_sent})
+                continue
 
             # Number of Informs retries: 0
             m = p26.match(line)
@@ -441,6 +442,7 @@ class ShowSnmp(ShowSnmpSchema):
                 informs_retries = int(group["informs_retries"])
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_retries": informs_retries})
+                continue
 
             # Number of Informs pending: 0
             m = p27.match(line)
@@ -449,6 +451,7 @@ class ShowSnmp(ShowSnmpSchema):
                 informs_pending = int(group["informs_pending"])
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_pending": informs_pending})
+                continue
 
             # Number of Informs dropped: 0 
             m = p28.match(line)
@@ -457,6 +460,7 @@ class ShowSnmp(ShowSnmpSchema):
                 informs_dropped = int(group["informs_dropped"])
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_dropped": informs_dropped})
+                continue
 
         return snmp_dict
 
