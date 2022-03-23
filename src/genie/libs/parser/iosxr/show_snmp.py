@@ -180,6 +180,7 @@ class ShowSnmp(ShowSnmpSchema):
             else:
                 continue
 
+            # Chassis: ABC0123A19Z
             m = p0.match(line)
             if m:
                 group = m.groupdict()
@@ -188,6 +189,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["chassis"] = chassis
                 continue
 
+            # 34854563 SNMP packets input
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -199,6 +201,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"packet_count": input_pkts})
                 continue
 
+            # 0 Bad SNMP version errors
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -207,6 +210,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"bad_snmp_version_errors": bad_version})
                 continue
 
+            # 105 Unknown community name
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -215,6 +219,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"unknown_community_name": unknown_community})
                 continue
 
+            # 45 Illegal operation for community name supplied
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -223,6 +228,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"illegal_operation_for_community": illegal_oper})
                 continue
 
+            # 0 Encoding errors
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -231,6 +237,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"encoding_errors": encoding_errors})
                 continue
 
+            # 2415368 Number of requested variables
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -239,6 +246,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"number_of_requested_variables": requested_variables})
                 continue
 
+            # 68954 Number of altered variables
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -247,6 +255,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"number_of_altered_variables": altered_variables})
                 continue
 
+            # 22102104 Get-request PDUs
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -255,6 +264,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"get_request_pdus": get_request_pdus})
                 continue
 
+            # 972411 Get-next PDUs
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -263,6 +273,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"get_next_pdus": get_next_pdus})
                 continue
 
+            # 3878 Set-request PDUs
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -271,6 +282,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_input"].update({"set_request_pdus": set_request_pdus})
                 continue
 
+            # 42531179 SNMP packets output
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -282,6 +294,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"packet_count": output_pkts})
                 continue
 
+            # 0 Too big errors (Maximum packet size 1500)
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -292,6 +305,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"maximum_packet_size": max_pkt_size})
                 continue
 
+            # 160671 No such name errors
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -300,6 +314,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"no_such_name_errors": name_errors})
                 continue
 
+            # 0 Bad values errors
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -308,6 +323,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"bad_value_errors": value_errors})
                 continue
 
+            # 0 General errors
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -316,6 +332,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"general_errors": general_errors})
                 continue
 
+            # 34854547 Response PDUs
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -324,6 +341,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"response_pdus": response_pdus})
                 continue
 
+            # 7676632 Trap PDUs
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -332,6 +350,7 @@ class ShowSnmp(ShowSnmpSchema):
                 snmp_dict["snmp_packets_output"].update({"trap_pdus": trap_pdus})
                 continue
 
+            # SNMP logging: Enabled
             m = p18.match(line)
             if m:
                 group = m.groupdict()
@@ -343,6 +362,7 @@ class ShowSnmp(ShowSnmpSchema):
                     snmp_dict.setdefault("snmp_logging", {}).update({"status": "disabled"})
                 continue
 
+            # Logging to Notification host: 10.0.0.1, udp-port: 162
             m = p19.match(line)
             if m:
                 group = m.groupdict()
@@ -356,38 +376,27 @@ class ShowSnmp(ShowSnmpSchema):
 
                 continue
 
+            # Trap Host Statistics
             m = p20.match(line)
             if m:
                 group = m.groupdict()
                 notification_type = group["notification_type"]
 
-                # snmp_dict["snmp_logging"]["logging_hosts"][logging_host].update({"host_statistics": {"notification_type": notification_type}})
                 snmp_dict["snmp_logging"]["logging_hosts"][logging_host].update({"host_statistics": {}})
-
                 host_statistics_dict = snmp_dict["snmp_logging"]["logging_hosts"][logging_host]["host_statistics"]
-
                 host_statistics_dict["notification_type"] = notification_type
                 continue
 
+            # Number of pkts in Trap Queue: 0
             m = p21.match(line)
             if m:
                 group = m.groupdict()
                 pkts_in_trap_queue = int(group["pkts_in_trap_queue"])
 
-                # host_statistics_dict["pkts_in_trap_queue"] = pkts_in_trap_queue
                 host_statistics_dict.update({"pkts_in_trap_queue": pkts_in_trap_queue})
                 continue
 
-            m = p21.match(line)
-            if m:
-                group = m.groupdict()
-                pkts_in_trap_queue = int(group["pkts_in_trap_queue"])
-
-                # host_statistics_dict["pkts_in_trap_queue"] = pkts_in_trap_queue
-                host_statistics_dict.update({"pkts_in_trap_queue": pkts_in_trap_queue})
-                continue
-
-
+            # Maximum length of Trap Queue: 100
             m = p22.match(line)
             if m:
                 group = m.groupdict()
@@ -396,6 +405,7 @@ class ShowSnmp(ShowSnmpSchema):
                 host_statistics_dict.update({"max_len_trap_queue": max_len_trap_queue})
                 continue
 
+            # Number of pkts sent: 0
             m = p23.match(line)
             if m:
                 group = m.groupdict()
@@ -404,6 +414,7 @@ class ShowSnmp(ShowSnmpSchema):
                 host_statistics_dict.update({"pkts_sent": pkts_sent})
                 continue
 
+            # Number of pkts dropped: 0
             m = p24.match(line)
             if m:
                 group = m.groupdict()
@@ -412,7 +423,7 @@ class ShowSnmp(ShowSnmpSchema):
                 host_statistics_dict.update({"pkts_dropped": pkts_dropped})
                 continue
 
-
+            # Number of Informs sent: 0
             m = p25.match(line)
             if m:
                 group = m.groupdict()
@@ -423,6 +434,7 @@ class ShowSnmp(ShowSnmpSchema):
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_sent": informs_sent})
 
+            # Number of Informs retries: 0
             m = p26.match(line)
             if m:
                 group = m.groupdict()
@@ -430,6 +442,7 @@ class ShowSnmp(ShowSnmpSchema):
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_retries": informs_retries})
 
+            # Number of Informs pending: 0
             m = p27.match(line)
             if m:
                 group = m.groupdict()
@@ -437,6 +450,7 @@ class ShowSnmp(ShowSnmpSchema):
 
                 snmp_dict["snmp_logging"]["inform_statistics"].update({"informs_pending": informs_pending})
 
+            # Number of Informs dropped: 0 
             m = p28.match(line)
             if m:
                 group = m.groupdict()
@@ -491,18 +505,40 @@ class ShowSnmpHost(ShowSnmpHostSchema):
         snmp_host_dict = {}
 
         '''
-        Notification host: 10.240.56.76 udp-port: 162  type: trap
-        user: public      security model: v1 
+        Notification host: 10.0.0.2 udp-port: 162  type: trap
+        user: priv_comm      security model: v3 auth
 
-        Notification host: 2001:db8::1 udp-port: 162  type: inform
-        user: public      security model: v2c
+        Notification host: 10.0.0.4 udp-port: 162-VRFA  type: trap
+        user: priv_comm      security model: v3 noauth
+
+        Notification host: 10.0.0.1 udp-port: 162  type: trap
+        user: public      security model: v2c 
+
+        Notification host: 10.0.0.3 udp-port: 162-VRF-A  type: trap
+        user: public      security model: v2c 
+
+        Notification host: 10.0.0.3 udp-port: 162  type: inform
+        user: public2      security model: v2c 
+
+        Notification host: 2001:ab8::1 udp-port: 162  type: trap
+        user: public3      security model: v3 priv
+
+        Notification host: 2001:0:ab00:1234:0:2552:7777:1313 udp-port: 162  type: trap
+        user: public4      security model: v3 priv
         '''
+
+        # Notification host: 10.0.0.2 udp-port: 162  type: trap
+        # Notification host: 2001:ab8::1 udp-port: 162  type: trap
+        # Notification host: 2001:0:ab00:1234:0:2552:7777:1313 udp-port: 162  type: trap
         p0 = re.compile(r"^Notification\shost:\s(?P<host>[a-fA-F\d.:]+)\sudp-port:\s(?P<udp_port>\d+)\s+type:\s(?P<type>\S+)$")
 
+        # Notification host: 10.0.0.4 udp-port: 162-VRFA  type: trap
         p1 = re.compile(r"^Notification\shost:\s(?P<host>[a-fA-F\d.:]+)\sudp-port:\s(?P<udp_port>\d+)-(?P<vrf>\S+)\s*type:\s(?P<type>\S+)$")
 
+        # user: public      security model: v2c
         p2 = re.compile(r"^user:\s(?P<user>\S+)\s+security\smodel:\s(?P<version>\S+)$")
 
+        # user: public3      security model: v3 priv
         p3 = re.compile(r"^user:\s(?P<user>\S+)\s+security\smodel:\s(?P<version>\S+)\s(?P<v3_sec_level>\S+)$")
 
 
@@ -512,6 +548,9 @@ class ShowSnmpHost(ShowSnmpHostSchema):
             else:
                 continue
 
+            # Notification host: 10.0.0.2 udp-port: 162  type: trap
+            # Notification host: 2001:ab8::1 udp-port: 162  type: trap
+            # Notification host: 2001:0:ab00:1234:0:2552:7777:1313 udp-port: 162  type: trap
             if p0.match(line):
                 m = p0.match(line)
                 logging_host = m.group("host")
@@ -521,6 +560,7 @@ class ShowSnmpHost(ShowSnmpHostSchema):
                 logging_host_dict["type"] = m.group("type")
                 continue
 
+            # Notification host: 10.0.0.4 udp-port: 162-VRFA  type: trap
             elif p1.match(line):
                 m = p1.match(line)
                 logging_host = m.group("host")
@@ -531,12 +571,14 @@ class ShowSnmpHost(ShowSnmpHostSchema):
                 logging_host_dict["type"] = m.group("type")
                 continue
 
+            # user: public      security model: v2c
             if p2.match(line):
                 m = p2.match(line)
                 logging_host_dict["user"] = m.group("user")
                 logging_host_dict["version"] = m.group("version")
                 continue
 
+            # user: public3      security model: v3 priv
             elif p3.match(line):
                 m = p3.match(line)
                 logging_host_dict["user"] = m.group("user")
