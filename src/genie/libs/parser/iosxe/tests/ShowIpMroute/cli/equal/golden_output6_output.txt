@@ -1,0 +1,44 @@
+IP Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, C - Connected,
+       L - Local, P - Pruned, R - RP-bit set, F - Register flag,
+       T - SPT-bit set, J - Join SPT, M - MSDP created entry, E - Extranet,
+       X - Proxy Join Timer Running, A - Candidate for MSDP Advertisement,
+       U - URD, I - Received Source Specific Host Report,
+       Z - Multicast Tunnel, z - MDT-data group sender,
+       Y - Joined MDT-data group, y - Sending to MDT-data group,
+       G - Received BGP C-Mroute, g - Sent BGP C-Mroute,
+       N - Received BGP Shared-Tree Prune, n - BGP C-Mroute suppressed,
+       Q - Received BGP S-A Route, q - Sent BGP S-A Route,
+       V - RD & Vector, v - Vector, p - PIM Joins on route,
+       x - VxLAN group, c - PFP-SA cache created entry,
+       * - determined by Assert, # - iif-starg configured on rpf intf,
+       e - encap-helper tunnel flag, l - LISP decap ref count contributor
+Outgoing interface flags: H - Hardware switched, A - Assert winner, p - PIM Join
+                          t - LISP transit group
+ Timers: Uptime/Expires
+ Interface state: Interface, Next-Hop or VCD, State/Mode
+
+(30.0.0.2, 232.1.1.1), 1d05h/stopped, flags: sTyGx
+  Incoming interface: Vlan100, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    Vlan500, VXLAN v4 Encap: (50000, 239.1.1.0), Forward/Sparse, 1d05h/stopped, flags:
+
+(20.0.0.5, 232.1.1.2), 1d05h/00:02:42, flags: sTI
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    Vlan100, Forward/Sparse, 1d05h/00:02:42, flags:
+
+(20.0.0.4, 232.1.1.2), 1d05h/00:02:42, flags: sTI
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    Vlan100, Forward/Sparse, 1d05h/00:02:42, flags:
+
+(20.0.0.2, 232.1.1.2), 1d05h/00:02:42, flags: sTIYg
+  Incoming interface: Vlan500, RPF nbr 2.2.2.2
+  Outgoing interface list:
+    Vlan100, Forward/Sparse, 1d05h/00:02:42, flags:
+
+(*, 224.0.1.40), 1d05h/00:02:40, RP 10.10.10.10, flags: SJCL
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    Vlan100, Forward/Sparse, 1d05h/00:02:40, flags:

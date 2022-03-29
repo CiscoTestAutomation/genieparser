@@ -1,0 +1,134 @@
+Mon Mar 21 06:00:50.670 UTC
+Capability codes:
+        (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+        (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/3
+Chassis id: 0026.51bd.8bbe
+Port id: GigabitEthernet0/0/0/7
+Port Description - not advertised
+System Name: 2050_asr9k_lab_Cisc0123
+
+System Description: 
+ 7.7.1.12I, ASR9K
+
+Time remaining: 102 seconds
+Hold Time: 120 seconds
+Age: 148026 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.132
+
+Peer MAC Address: 6c:6c:d3:14:67:bb
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/4
+Chassis id: 0026.51bd.8bbe
+Port id: GigabitEthernet0/0/0/12
+Port Description - not advertised
+System Name: 2050_asr9k_lab_Cisc0123
+
+System Description: 
+ 7.7.1.12I, ASR9K
+
+Time remaining: 110 seconds
+Hold Time: 120 seconds
+Age: 255360 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.132
+
+Peer MAC Address: 6c:6c:d3:14:67:c0
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/5
+Chassis id: 0026.51bd.8bbe
+Port id: GigabitEthernet0/0/0/13
+Port Description - not advertised
+System Name: 2050_asr9k_lab_Cisc0123
+
+System Description: 
+ 7.7.1.12I, ASR9K
+
+Time remaining: 96 seconds
+Hold Time: 120 seconds
+Age: 255345 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.132
+
+Peer MAC Address: 6c:6c:d3:14:67:c1
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/16
+Chassis id: 008a.96f6.00d9
+Port id: GigabitEthernet0/0/0/29
+Port Description - not advertised
+System Name: ncs5501_root_Cisc0123
+
+System Description: 
+ 7.5.1.11I, NCS-5500
+
+Time remaining: 97 seconds
+Hold Time: 120 seconds
+Age: 255358 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 193.1.1.1
+  IPv6 address: 40::2
+
+Peer MAC Address: 00:8a:96:f6:00:74
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/17
+Parent Interface: Bundle-Ether3
+Chassis id: 008a.96f6.00d9
+Port id: GigabitEthernet0/0/0/30
+Port Description - not advertised
+System Name: ncs5501_root_Cisc0123
+
+System Description: 
+ 7.5.1.11I, NCS-5500
+
+Time remaining: 101 seconds
+Hold Time: 120 seconds
+Age: 255360 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.94
+
+Peer MAC Address: 00:8a:96:f6:00:78
+
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/19
+Chassis id: 0032.177e.b8d9
+Port id: GigabitEthernet0/0/0/1
+Port Description - not advertised
+System Name: ncs540-ce2
+
+System Description: 
+ 7.0.2, NCS-540
+
+Time remaining: 287 seconds
+Hold Time: 300 seconds
+Age: 1122392 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.80
+
+Peer MAC Address: 00:32:17:7e:b8:04
+
+
+Total entries displayed: 6

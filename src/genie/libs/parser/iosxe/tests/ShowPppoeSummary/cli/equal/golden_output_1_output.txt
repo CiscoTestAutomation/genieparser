@@ -1,0 +1,9 @@
+show pppoe summary
+    PTA  : Locally terminated sessions
+    FWDED: Forwarded sessions
+    TRANS: All other sessions (in transient state)
+
+                                TOTAL     PTA   FWDED   TRANS
+TOTAL                               2       2       0       0
+GigabitEthernet0/1/0                1       1       0       0
+GigabitEthernet0/1/1                1       1       0       0

@@ -13,7 +13,7 @@ class ShowRomvarSchema(MetaParser):
 
     schema = {
         "rommon_variables" : {
-            "ps1": str,
+            Optional("ps1"): str,
             Optional("switch_number"): int,
             Optional("mcp_startup_traceflags"): str,
             Optional("license_active_level"): str,
@@ -52,7 +52,8 @@ class ShowRomvarSchema(MetaParser):
             Optional("default_gateway"): str,
             Optional("ip_address"): str,
             Optional("crashinfo"): str,
-            Optional("subnet_mask"): str
+            Optional("subnet_mask"): str,
+            Optional("abnormal_reset_count"): int
         }
     }
 
@@ -73,83 +74,84 @@ class ShowRomvar(ShowRomvarSchema):
             output=output
 
         # ROMMON variables:
-        # 
-        # PS1 = rommon ! > 
-        # 
+        #
+        # PS1 = rommon ! >
+        #
         # ? = 0
-        # 
+        #
         # SWITCH_NUMBER = 1
-        # 
-        # THRPUT = 
-        # 
+        #
+        # THRPUT =
+        #
         # MCP_STARTUP_TRACEFLAGS = 00000000:00000000
-        # 
+        #
         # LICENSE_ACTIVE_LEVEL = adventerprise,all:c980080k9;
-        # 
+        #
         # LICENSE_BOOT_LEVEL = adventerprise,all:c980080k9;
-        # 
-        # CONFIG_FILE = 
-        # 
-        # BOOTLDR = 
-        # 
+        #
+        # CONFIG_FILE =
+        #
+        # BOOTLDR =
+        #
         # STACK_1_1 = 0_0
-        # 
+        #
         # BOOT = bootflash:packages.conf,12;
-        # 
+        #
         # SWITCH_PRIORITY = 2
-        # 
+        #
         # CHASSIS_HA_LOCAL_IP = 10.10.30.6
-        # 
+        #
         # CHASSIS_HA_REMOTE_IP = 10.10.30.7
-        # 
+        #
         # CHASSIS_HA_LOCAL_MASK = 255.255.255.0
-        # 
+        #
         # RET_2_RTS = 15:45:35 UTC Wed Jul 29 2020
-        # 
+        #
         # RMI_INTERFACE_NAME = Vlan10
-        # 
+        #
         # RMI_CHASSIS_LOCAL_IP = 10.10.30.6
-        # 
+        #
         # RMI_CHASSIS_REMOTE_IP = 10.10.30.7
-        # 
+        #
         # BSI = 0
-        # 
-        # RET_2_RCALTS = 
-        # 
+        #
+        # RET_2_RCALTS =
+        #
         # RANDOM_NUM = 2143851718
         #
-        # NO_CONSOLE=1 
+        # NO_CONSOLE=1
         #
         # BOOT_DEVICE_MODE=meraki
         #
-        # BOARDID=28755 
+        # BOARDID=28755
         #
-        # MAC_ADDR=6C:13:D5:1B:5C:80 
+        # MAC_ADDR=6C:13:D5:1B:5C:80
         #
-        # MANUAL_BOOT=no 
+        # MANUAL_BOOT=no
         #
-        # MODEL_NUM=C9300-48U 
+        # MODEL_NUM=C9300-48U
         #
-        # MODEL_REVISION_NUM=A0 
+        # MODEL_REVISION_NUM=A0
         #
-        # MOTHERBOARD_ASSEMBLY_NUM=73-19919-04 
+        # MOTHERBOARD_ASSEMBLY_NUM=73-19919-04
         #
-        # MOTHERBOARD_REVISION_NUM=A0 
+        # MOTHERBOARD_REVISION_NUM=A0
         #
-        # MOTHERBOARD_SERIAL_NUM=FOC25124Q2U 
+        # MOTHERBOARD_SERIAL_NUM=FOC25124Q2U
         #
-        # ROMMON_AUTOBOOT_ATTEMPT=0 
+        # ROMMON_AUTOBOOT_ATTEMPT=0
         #
-        # SYSTEM_SERIAL_NUM=FOC2514L1HE 
+        # SYSTEM_SERIAL_NUM=FOC2514L1HE
         #
-        # VERSION_ID=V05 
-
+        # VERSION_ID=V05
+        #
+        # ABNORMAL_RESET_COUNT=0
 
 
         # ROMMON variables:
-        p_variables = re.compile(r"^ROMMON\s+variables:$")
+        p_variables = re.compile(r"^ROMMON\s+variables.*$")
 
-        # PS1 = rommon ! > 
+        # PS1 = rommon ! >
         p_ps1 = re.compile(r"^PS1\s*=\s*(?P<ps1>.*)$")
 
         # THRPUT =
@@ -224,19 +226,19 @@ class ShowRomvar(ShowRomvarSchema):
         # LICENSE_BOOT_LEVEL = adventerprise,all:c980080k9;
         p_lic_boot = re.compile(r"^LICENSE_BOOT_LEVEL\s*=\s*(?P<lic_boot>.*)$")
 
-        # CONFIG_FILE = 
+        # CONFIG_FILE =
         p_config_file = re.compile(r"^CONFIG_FILE\s*=\s*(?P<config_file>.*)$")
 
-        # BOOTLDR = 
+        # BOOTLDR =
         p_bootldr = re.compile(r"^BOOTLDR\s*=\s*(?P<bootldr>.*)$")
 
-        # BOOT = bootflash:packages.conf,12;bootflash:C9800-L-universalk9_wlc.BLD_V173_THROTTLE_LATEST_20200707_003212_2.SSA.bin,12; 
+        # BOOT = bootflash:packages.conf,12;bootflash:C9800-L-universalk9_wlc.BLD_V173_THROTTLE_LATEST_20200707_003212_2.SSA.bin,12;
         p_boot = re.compile(r"^BOOT\s*=\s*(?P<boot>.*)$")
 
         # BSI = 0
         p_bsi = re.compile(r"^BSI\s*=\s*(?P<bsi>\d+)$")
 
-        # RET_2_RCALTS = 
+        # RET_2_RCALTS =
         p_rcalts = re.compile(r"^RET_2_RCALTS\s*=\s*(?P<rcalts>.*)")
 
         # RANDOM_NUM = 25654861
@@ -260,44 +262,47 @@ class ShowRomvar(ShowRomvarSchema):
         # NO_CONSOLE = 1
         p_no_console = re.compile(r"^NO_CONSOLE\s*=\s*(?P<number>\d*)$")
 
-        # BOOT_DEVICE_MODE = meraki 
-        p_boot_device_mode= re.compile(r"^BOOT_DEVICE_MODE\s*=\s*(?P<boot_device_mode>.*)$")  
+        # BOOT_DEVICE_MODE = meraki
+        p_boot_device_mode= re.compile(r"^BOOT_DEVICE_MODE\s*=\s*(?P<boot_device_mode>.*)$")
 
-        # BOARDID = 28755 
-        p_boardid = re.compile(r"^BOARDID\s*=\s*(?P<boardid>\d*)$")    
+        # BOARDID = 28755
+        p_boardid = re.compile(r"^BOARDID\s*=\s*(?P<boardid>\d*)$")
 
-        # MAC_ADDR = 6C:13:D5:1B:5C:80 
+        # MAC_ADDR = 6C:13:D5:1B:5C:80
         p_mac_addr = re.compile(r"^MAC_ADDR\s*=\s*(?P<mac_addr>\S+)$")
 
-        # MANUAL_BOOT = no 
+        # MANUAL_BOOT = no
         p_manual_boot = re.compile(r"^MANUAL_BOOT\s*=\s*(?P<manual_boot>\S+)$")
 
-        # MODEL_NUM = C9300-48U 
-        p_model_num = re.compile(r"^MODEL_NUM\s*=\s*(?P<model_num>\S+)$") 
+        # MODEL_NUM = C9300-48U
+        p_model_num = re.compile(r"^MODEL_NUM\s*=\s*(?P<model_num>\S+)$")
 
-        # MODEL_REVISION_NUM = A0 
+        # MODEL_REVISION_NUM = A0
         p_model_revision_num = re.compile(r"^MODEL_REVISION_NUM\s*=\s*(?P<model_revision_num>\S+)$")
 
-        # MOTHERBOARD_ASSEMBLY_NUM = 73-19919-04 
-        p_motherboard_assembly_num = re.compile(r"^MOTHERBOARD_ASSEMBLY_NUM\s*=\s*(?P<motherboard_assembly_num>\S+)$") 
+        # MOTHERBOARD_ASSEMBLY_NUM = 73-19919-04
+        p_motherboard_assembly_num = re.compile(r"^MOTHERBOARD_ASSEMBLY_NUM\s*=\s*(?P<motherboard_assembly_num>\S+)$")
 
-        # MOTHERBOARD_REVISION_NUM = A0 
+        # MOTHERBOARD_REVISION_NUM = A0
         p_motherboard_revision_num = re.compile(r"^MOTHERBOARD_REVISION_NUM\s*=\s*(?P<motherboard_revision_num>\S+)$")
 
-        # MOTHERBOARD_SERIAL_NUM = FOC25124Q2U 
+        # MOTHERBOARD_SERIAL_NUM = FOC25124Q2U
         p_motherboard_serial_num = re.compile(r"^MOTHERBOARD_SERIAL_NUM\s*=\s*(?P<motherboard_serial_num>\S+)$")
 
-        # ROMMON_AUTOBOOT_ATTEMPT = 0 
+        # ROMMON_AUTOBOOT_ATTEMPT = 0
         p_rommon_autoboot_attempt = re.compile(r"^ROMMON_AUTOBOOT_ATTEMPT\s*=\s*(?P<rommon_autoboot_attempt>\S+)$")
 
-        # SYSTEM_SERIAL_NUM = FOC2514L1HE 
-        p_system_serial_num = re.compile(r"^SYSTEM_SERIAL_NUM\s*=\s*(?P<system_serial_num>\S+)$")   
+        # SYSTEM_SERIAL_NUM = FOC2514L1HE
+        p_system_serial_num = re.compile(r"^SYSTEM_SERIAL_NUM\s*=\s*(?P<system_serial_num>\S+)$")
 
-        # VERSION_ID = V05 
+        # VERSION_ID = V05
         p_version_id = re.compile(r"^VERSION_ID\s*=\s*(?P<version_id>\S+)$")
 
         # DEVICE_MANAGED_MODE = controller
         p_device_managed_mode = re.compile(r"^\s*DEVICE_MANAGED_MODE\s*=\s+(?P<mode>\S+)$")
+
+        # ABNORMAL_RESET_COUNT=0
+        p_abnormal_reset_count = re.compile(r"^ABNORMAL_RESET_COUNT\s*=\s*(?P<abnormal_reset_count>\d+)$")
 
         romvar_dict = {}
 
@@ -314,7 +319,7 @@ class ShowRomvar(ShowRomvarSchema):
             if p_ps1.match(line):
                 match = p_ps1.match(line)
                 romvar_dict["rommon_variables"]["ps1"] = match.group("ps1")
-            # THRPUT = 
+            # THRPUT =
             if p_thrput.match(line):
                 match = p_thrput.match(line)
                 if len(match.group("thrput")):
@@ -429,13 +434,13 @@ class ShowRomvar(ShowRomvarSchema):
                 match = p_lic_active.match(line)
                 romvar_dict["rommon_variables"]["license_active_level"] = match.group("lic_active")
                 continue
-            # CONFIG_FILE = 
+            # CONFIG_FILE =
             if p_config_file.match(line):
                 match = p_config_file.match(line)
                 if len(match.group("config_file")):
                     romvar_dict["rommon_variables"]["config_file"] = match.group("config_file")
                 continue
-            # BOOTLDR = 
+            # BOOTLDR =
             if p_bootldr.match(line):
                 match = p_bootldr.match(line)
                 if len(match.group("bootldr")):
@@ -460,7 +465,7 @@ class ShowRomvar(ShowRomvarSchema):
                 match = p_bsi.match(line)
                 romvar_dict["rommon_variables"]["bsi"] = int(match.group("bsi"))
                 continue
-            # RET_2_RCALTS = 
+            # RET_2_RCALTS =
             if p_rcalts.match(line):
                 match = p_rcalts.match(line)
                 if len(match.group("rcalts")):
@@ -501,62 +506,62 @@ class ShowRomvar(ShowRomvarSchema):
                 match = p_no_console.match(line)
                 romvar_dict["rommon_variables"]["no_console"] = int(match.group("number"))
                 continue
-            # BOOT_DEVICE_MODE = meraki 
+            # BOOT_DEVICE_MODE = meraki
             if p_boot_device_mode.match(line):
                 match = p_boot_device_mode.match(line)
                 romvar_dict["rommon_variables"]["boot_device_mode"] = match.group("boot_device_mode")
                 continue
-            # BOARDID = 28755 
+            # BOARDID = 28755
             if p_boardid.match(line):
                 match = p_boardid.match(line)
                 romvar_dict["rommon_variables"]["boardid"] = int(match.group("boardid"))
                 continue
-            # MAC_ADDR = 6C:13:D5:1B:5C:80  
+            # MAC_ADDR = 6C:13:D5:1B:5C:80
             if p_mac_addr.match(line):
                 match = p_mac_addr.match(line)
                 romvar_dict["rommon_variables"]["mac_addr"] = match.group("mac_addr")
                 continue
-            # MANUAL_BOOT = no 
+            # MANUAL_BOOT = no
             if p_manual_boot.match(line):
                 match = p_manual_boot.match(line)
                 romvar_dict["rommon_variables"]["manual_boot"] = match.group("manual_boot")
                 continue
-           # MODEL_NUM = C9300-48U 
+           # MODEL_NUM = C9300-48U
             if p_model_num.match(line):
                 match = p_model_num.match(line)
                 romvar_dict["rommon_variables"]["model_num"] = match.group("model_num")
                 continue
-            # MODEL_REVISION_NUM = A0  
+            # MODEL_REVISION_NUM = A0
             if p_model_revision_num.match(line):
                 match = p_model_revision_num.match(line)
                 romvar_dict["rommon_variables"]["model_revision_num"] = match.group("model_revision_num")
                 continue
-           # MOTHERBOARD_ASSEMBLY_NUM = 73-19919-04  
+           # MOTHERBOARD_ASSEMBLY_NUM = 73-19919-04
             if p_motherboard_assembly_num.match(line):
                 match = p_motherboard_assembly_num.match(line)
                 romvar_dict["rommon_variables"]["motherboard_assembly_num"] = match.group("motherboard_assembly_num")
                 continue
-            # MOTHERBOARD_REVISION_NUM = A0 
+            # MOTHERBOARD_REVISION_NUM = A0
             if p_motherboard_revision_num.match(line):
                 match = p_motherboard_revision_num.match(line)
                 romvar_dict["rommon_variables"]["motherboard_revision_num"] = match.group("motherboard_revision_num")
                 continue
-            # MOTHERBOARD_SERIAL_NUM = FOC25124Q2U 
+            # MOTHERBOARD_SERIAL_NUM = FOC25124Q2U
             if p_motherboard_serial_num.match(line):
                 match = p_motherboard_serial_num.match(line)
                 romvar_dict["rommon_variables"]["motherboard_serial_num"] = match.group("motherboard_serial_num")
                 continue
-           # ROMMON_AUTOBOOT_ATTEMPT = 0  
+           # ROMMON_AUTOBOOT_ATTEMPT = 0
             if p_rommon_autoboot_attempt.match(line):
                 match = p_rommon_autoboot_attempt.match(line)
                 romvar_dict["rommon_variables"]["rommon_autoboot_attempt"] = int(match.group("rommon_autoboot_attempt"))
                 continue
-            # SYSTEM_SERIAL_NUM = FOC2514L1HE 
+            # SYSTEM_SERIAL_NUM = FOC2514L1HE
             if p_system_serial_num.match(line):
                 match = p_system_serial_num.match(line)
                 romvar_dict["rommon_variables"]["system_serial_num"] = match.group("system_serial_num")
                 continue
-            # VERSION_ID = V05 
+            # VERSION_ID = V05
             if p_version_id.match(line):
                 match = p_version_id.match(line)
                 romvar_dict["rommon_variables"]["version_id"] = match.group("version_id")
@@ -565,5 +570,11 @@ class ShowRomvar(ShowRomvarSchema):
             if p_device_managed_mode.match(line):
                 match = p_device_managed_mode.match(line)
                 romvar_dict["rommon_variables"]["device_managed_mode"] = match.group("mode")
+                continue
+
+            if p_abnormal_reset_count.match(line):
+                match = p_abnormal_reset_count.match(line)
+                romvar_dict["rommon_variables"]["abnormal_reset_count"] = int(match.group("abnormal_reset_count"))
+                continue
 
         return romvar_dict

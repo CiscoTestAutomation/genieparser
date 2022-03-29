@@ -29,7 +29,7 @@ class ShowVrfSchema(MetaParser):
         'vrf': {
             Any(): {
                 Optional('route_distinguisher'): str,
-                'protocols': list,
+                Optional('protocols'): list,
                 Optional('interfaces'): list
             }
         }
@@ -62,8 +62,8 @@ class ShowVrf(ShowVrfSchema):
         # vpn4                             100:2                 ipv4,ipv6
         # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
-        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)\s+'
-                        r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
+        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)'
+                        r'(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -92,8 +92,9 @@ class ShowVrf(ShowVrfSchema):
                 if 'not set' not in rd:
                     vrf_dict.update({'route_distinguisher': rd})
 
-                protocols = groups['protocols'].split(',')
-                vrf_dict.update({'protocols': protocols})
+                if groups['protocols']:
+                    protocols = groups['protocols'].split(',')
+                    vrf_dict.update({'protocols': protocols})
 
                 if groups['intf']:
                     intfs = groups['intf'].split()
@@ -272,10 +273,10 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)'
                          r'(?:\s*\(Label\s*(?P<label>\d+)\))?$')
-        
+
         # Description: desc
         p12 = re.compile(r'^Description: +(?P<desc>[\S\s]+)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -513,7 +514,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
 
 
 class ShowVrfDetail(ShowVrfDetailSuperParser):
-    """Parser for 
+    """Parser for
         * 'show vrf detail'
         * 'show vrf detail <vrf>'"""
     cli_command = ['show vrf detail' , 'show vrf detail {vrf}']

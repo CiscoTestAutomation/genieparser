@@ -1,0 +1,11 @@
+Messages received                0
+Messages sent                    48
+Messages discarded               0
+Messages could not be sent       6
+
+Messages                         Sent
+SOLICIT                          48
+
+Send message failed due to:
+Reason                                                   Count
+IPv6 protocol on outgoing interface not ready            6

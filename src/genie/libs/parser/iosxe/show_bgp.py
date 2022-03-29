@@ -237,6 +237,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         #     Network          Next Hop            Metric LocPrf Weight Path
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
+        #  *>   [3][3001:1][*][*][1.1.1.1]/14
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                           r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-\*]+)'
@@ -7722,3 +7723,22 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
 
 
 #-------------------------------------------------------------------------------
+
+# ===============================================
+# Parser for:
+#   * 'show ip bgp {address_family} mdt vrf {vrf}'
+# ===============================================
+
+class ShowIpBgpMdtVrf(ShowBgpSuperParser, ShowBgpSchema):
+    ''' Parser for
+        show ip bgp {address_family} mdt vrf {vrf}
+    '''
+
+    cli_command = 'show ip bgp {address_family} mdt vrf {vrf}'
+
+    def cli(self, output=None, address_family='', vrf=''):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(address_family=address_family, vrf=vrf))
+
+        # Call Super
+        return super().cli(output=output, address_family=address_family, vrf=vrf)

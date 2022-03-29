@@ -1,0 +1,10 @@
+Pagp dual-active detection enabled: Yes
+In dual-active recovery mode: No
+Recovery Reload: Enabled
+
+
+Channel group 1
+			Dual-Active     Partner              Partner       Partner
+Port        Detect Capable  Name                 Port          Version
+Hu1/0/11    Yes             Nyquist-Peer-1       Fo1/1/1       1.1
+Hu2/0/11    Yes             Nyquist-Peer-1       Fo1/1/2       1.1

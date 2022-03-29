@@ -1,0 +1,14 @@
+
+RP/0/RP0/CPU0:R2_xrv9000#show lldp traffic 
+Mon Mar 19 18:24:54.528 UTC
+
+LLDP traffic statistics:
+    Total frames out: 588
+    Total entries aged: 0
+    Total frames in: 399
+    Total frames received in error: 0
+    Total frames discarded: 0
+    Total TLVs discarded: 119
+    Total TLVs unrecognized: 119
+    Total TLVs accepted: 0
+    Last Clear: 3 seconds

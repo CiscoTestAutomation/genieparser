@@ -1,0 +1,64 @@
+Cisco Adaptive Security Appliance Software Version 9.14(2)15 <context>
+SSP Operating System Version 2.8(1.164)
+Device Manager Version 7.7(1)150
+
+Compiled on Fri 16-Apr-21 04:55 GMT by builders
+
+LAB-ASA up 31 days 2 hours
+
+SSP Slot Number: 1
+
+Hardware:   FPR9K-SM-24, 230696 MB RAM, CPU Xeon E5 series 2200 MHz, 2 CPUs (48 cores)
+
+Encryption hardware device : Cisco FP Crypto on-board accelerator (revision 0x1)
+                             Boot microcode        : CN35x-MC-Boot-0001
+                             SSL/IKE microcode     : CNN35x-MC-SSL-0014
+                             IPSec microcode       : CNN35x-MC-IPSEC-0005
+                             Number of accelerators: 2
+
+4099: Int: Internal-Data0/0    : address is 0015.a500.01bf, irq 11
+4101: Int: Internal-Data0/1    : address is 0015.a500.01ff, irq 5
+4102: Int: Internal-Data0/2    : address is 1200.0200.1600, irq 0
+
+License mode: Smart Licensing
+
+Licensed features for this platform:
+Maximum Physical Interfaces       : Unlimited
+Maximum VLANs                     : 1024
+Inside Hosts                      : Unlimited
+Failover                          : Active/Active
+Encryption-DES                    : Enabled
+Encryption-3DES-AES               : Enabled
+Security Contexts                 : 40
+Carrier                           : Disabled
+AnyConnect Premium Peers          : 20000
+AnyConnect Essentials             : Disabled
+Other VPN Peers                   : 20000
+Total VPN Peers                   : 20000
+AnyConnect for Mobile             : Enabled
+AnyConnect for Cisco VPN Phone    : Enabled
+Advanced Endpoint Assessment      : Enabled
+Shared License                    : Disabled
+Total TLS Proxy Sessions          : 15000
+Cluster                           : Enabled
+
+
+Failover cluster licensed features for this platform:
+Maximum Physical Interfaces       : Unlimited
+Maximum VLANs                     : 1024
+Inside Hosts                      : Unlimited
+Failover                          : Active/Active
+Encryption-DES                    : Enabled
+Encryption-3DES-AES               : Enabled
+Security Contexts                 : 50
+Carrier                           : Disabled
+AnyConnect Premium Peers          : 20000
+AnyConnect Essentials             : Disabled
+Other VPN Peers                   : 20000
+Total VPN Peers                   : 20000
+AnyConnect for Mobile             : Enabled
+AnyConnect for Cisco VPN Phone    : Enabled
+Advanced Endpoint Assessment      : Enabled
+Shared License                    : Disabled
+Total TLS Proxy Sessions          : 15000
+Cluster                           : Enabled

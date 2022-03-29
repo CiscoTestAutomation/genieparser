@@ -162,6 +162,11 @@ expected_output = {
     "Tunnel0": {
         "last_input": "never",
         "reliability": "255/255",
+        "tunnel_protocol": "PIM/IPv4",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1472,
+        "tunnel_ttl": 255,
         "type": "Tunnel",
         "enabled": True,
         "queues": {

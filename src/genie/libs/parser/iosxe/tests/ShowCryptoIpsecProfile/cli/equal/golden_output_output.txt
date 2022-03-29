@@ -1,0 +1,19 @@
+IPSEC profile default
+        Security association lifetime: 4608000 kilobytes/3600 seconds
+        Responder-Only (Y/N): N
+        PFS (Y/N): N
+        Mixed-mode : Disabled
+        Transform sets={
+                default:  { esp-aes esp-sha-hmac  } ,
+        }
+
+IPSEC profile nil_ips
+        IKEv2 Profile: nil_ike_prof
+        Security association lifetime: 4608000 kilobytes/3600 seconds
+        Responder-Only (Y/N): N
+        PFS (Y/N): N
+        Mixed-mode : Disabled
+        Transform sets={
+                nil_tfs:  { esp-aes esp-sha-hmac  } ,
+                test:  { esp-aes esp-sha-hmac  } ,
+        }

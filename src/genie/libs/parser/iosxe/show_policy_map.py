@@ -327,7 +327,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             }
                                         },
                                         Optional('violated'): {
-                                            'packets': int,
+                                            Optional('packets'): int,
                                             'bytes': int,
                                             'bps': int,
                                             Optional('actions'): {
@@ -509,6 +509,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # violated 0 packets, 0 bytes; actions:
         p10_1 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
+
+        # violated 0 bytes; actions:
+        p10_2 = re.compile(r'^violated +(?P<bytes>(\d+)) bytes; actions:$')
 
         # conformed 0000 bps, exceeded 0000 bps
         p11 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps, excee(ded|d) (?P<e_bps>(\d+)) bps$')
@@ -957,6 +960,14 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 viol_action_dict = violated_dict.setdefault('actions', {})
                 continue
 
+            #violated 0 bytes; actions:
+            m = p10_2.match(line)
+            if m:
+                violated_dict = police_dict.setdefault('violated', {})
+                violated_dict['bytes'] = int(m.groupdict()['bytes'])
+                viol_action_dict = violated_dict.setdefault('actions', {})
+                continue
+
             # conformed 0000 bps, exceeded 0000 bps
             m = p11.match(line)
             if m:
@@ -1367,7 +1378,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 afd_wred_dict['total_drops_packets'] = int(m.groupdict()['total_drops_packets'])
                 continue
-
         return ret_dict
 
 
@@ -1441,7 +1451,6 @@ class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
         * 'show policy-map interface {interface} input class {class_name}'
         * 'show policy-map interface {interface} input'
     '''
-
     cli_command = ['show policy-map interface {interface} input class {class_name}',
                    'show policy-map interface {interface} input'
                    ]
@@ -2638,7 +2647,6 @@ class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperPar
                    'show policy-map type queueing interface {interface} output'
                    ]
     
-
     def cli(self, interface, class_name='', output=None):
 
         if output is None:

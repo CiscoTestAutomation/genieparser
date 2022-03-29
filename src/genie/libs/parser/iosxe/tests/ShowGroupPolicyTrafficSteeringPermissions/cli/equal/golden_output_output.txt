@@ -1,0 +1,7 @@
+Group Policy traffic-steering permissions
+
+Source SGT      Destination SGT      Steering Policy 
+-----------------------------------------------------
+    2057              3003            Contract1-01 
+    3053              4003            Contract2-01 
+

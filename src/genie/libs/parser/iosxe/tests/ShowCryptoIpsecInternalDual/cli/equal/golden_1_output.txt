@@ -1,0 +1,17 @@
+  ==== IPSEC Dual Stack Statistics ====
+
+SUCCESS Statistics
+
+  Apply traffic filter success   : 154
+  Remove traffic filter success  : 154
+
+ERROR Statistics
+
+  No IPv6 enabled                : 0
+  Apply traffic filter failed    : 6
+  IPv4 ace create failed         : 70
+  IPv4 ACL insert failed         : 8
+  IPv6 ace create failed         : 9
+  IPv6 ACL insert failed         : 100
+  Invalid parameters             : 11
+  ACL retrieval failed           : 4

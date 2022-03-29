@@ -43,6 +43,7 @@ IOSXE parsers for the following show commands:
     * show ip sla statistics {probe_id} details
     * show ip sla statistics aggregated
     * show ip sla statistics aggregated {probe_id}
+    * show ip sla responder
     '''
 
 # Python
@@ -1785,53 +1786,53 @@ class ShowIpMfibSchema(MetaParser):
       show ip mfib vrf {vrf} {group} verbose
       show ip mfib vrf {vrf} {group} {source} verbose"""
 
-    schema = {'vrf':         
-                {Any():
-                    {'address_family':
-                        {Any(): 
-                            {'multicast_group': 
-                                {Any(): 
-                                    {'source_address': 
-                                        {Any():
-                                            {                            
-                                             Optional('oif_ic_count'): str,
-                                             Optional('oif_a_count'): str,
-                                             Optional('flags'): str,
-                                             Optional('sw_packet_count'): str,                                             
-                                             Optional('sw_packets_per_second'): str,                                             
-                                             Optional('sw_average_packet_size'): str,                                             
-                                             Optional('sw_kbits_per_second'): str,  
-                                             Optional('sw_total'): str,                                             
-                                             Optional('sw_rpf_failed'): str,                                             
-                                             Optional('sw_other_drops'): str,                                             
-                                             Optional('hw_packet_count'): str,                                             
-                                             Optional('hw_packets_per_second'): str,                                             
-                                             Optional('hw_average_packet_size'): str,                                             
-                                             Optional('hw_kbits_per_second'): str,                                             
-                                             Optional('hw_total'): str,                                             
-                                             Optional('hw_rpf_failed'): str,                                             
-                                             Optional('hw_other_drops'): str,                                             
-                                             
-                                             Optional('incoming_interface_list'): 
-                                                {Any(): 
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'multicast_group':
+                            {Any():
+                                {'source_address':
+                                    {Any():
+                                       {
+                                            Optional('oif_ic_count'): Or(str,int),
+                                            Optional('oif_a_count'): Or(str,int),
+                                            Optional('flags'): str,
+                                            Optional('sw_packet_count'): Or(str,int),
+                                            Optional('sw_packets_per_second'): Or(str,int),
+                                            Optional('sw_average_packet_size'): Or(str,int),
+                                            Optional('sw_kbits_per_second'): Or(str,int),
+                                            Optional('sw_total'): Or(str,int),
+                                            Optional('sw_rpf_failed'): Or(str,int),
+                                            Optional('sw_other_drops'): Or(str,int),
+                                            Optional('hw_packet_count'): Or(str,int),
+                                            Optional('hw_packets_per_second'): Or(str,int),
+                                            Optional('hw_average_packet_size'): Or(str,int),
+                                            Optional('hw_kbits_per_second'): Or(str,int),
+                                            Optional('hw_total'): Or(str,int),
+                                            Optional('hw_rpf_failed'): Or(str,int),
+                                            Optional('hw_other_drops'): Or(str,int),
+                                            'incoming_interfaces':
+                                                {Any():
                                                     {
                                                      'ingress_flags': str,
-                                                    } 
+                                                    }
                                                 },
-                                             Optional('outgoing_interface_list'): 
-                                                {Any(): 
+                                            Optional('outgoing_interfaces'):
+                                                {Any():
                                                     {
-                                                    Optional('egress_flags'): str,
-                                                    Optional('egress_rloc'): str,
-                                                    Optional('egress_underlaymcast'): str,
-                                                    Optional('egress_adj_mac'): str,
-                                                    Optional('egress_HW_pkt_count'): str,
-                                                    Optional('egress_FS_pkt_count'): str,
-                                                    Optional('egress_PS_pkt_count'): str,
-                                                    Optional('egress_pkt_rate'): str,
+                                                     Optional('egress_flags'): str,
+                                                     Optional('egress_rloc'): str,
+                                                     Optional('egress_underlay_mcast'): str,
+                                                     Optional('egress_adj_mac'): str,
+                                                     Optional('egress_hw_pkt_count'): Or(str,int),
+                                                     Optional('egress_fs_pkt_count'): Or(str,int),
+                                                     Optional('egress_ps_pkt_count'): Or(str,int),
+                                                     Optional('egress_pkt_rate'): Or(str,int),
                                                     },
                                                 },
-                                            },    
+                                            },
                                         },
                                     },
                                 },
@@ -1840,6 +1841,7 @@ class ShowIpMfibSchema(MetaParser):
                     }
                 },
             }
+
             
 # =====================================
 # Parser for  show ip mfib
@@ -1882,7 +1884,6 @@ class ShowIpMfib(ShowIpMfibSchema):
                    'show ip mfib vrf {vrf} {verbose}', 
                    'show ip mfib vrf {vrf} {group} {verbose}',
                    'show ip mfib vrf {vrf} {group} {source} {verbose}' ]
-    exclude = ['expire', 'uptime', 'outgoing_interface_list', 'flags']
 
 
     def cli(self, vrf='Default',verbose='',group='',source='', address_family='ipv4',output=None):
@@ -1904,82 +1905,75 @@ class ShowIpMfib(ShowIpMfibSchema):
             out = output
 
         # initial variables
-        
+
         mfib_dict = {}
         sub_dict = {}
         outgoing = False
-        #Default      
-        p1 = re.compile(r'^(?P<vrf>[\w]+)$')  
-        #VRF vrf1    
-        p2 = re.compile(r'^VRF +(?P<vrf>[\w]+)$') 
+        #Default
+        #VRF vrf1
+        p1 = re.compile(r'^(VRF\s+)?(?P<vrf>[\w]+)$')
+
         #  (*,225.1.1.1) Flags: C HW
         # (70.1.1.10,225.1.1.1) Flags: HW
         #  (*,FF05:1:1::1) Flags: C HW
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
                      '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     ' +Flags\: +(?P<mfib_flags>[\w \s]+)$')  
+                     '\s+Flags\:\s+(?P<mfib_flags>[\w\s]+)$')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
-                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)')
+                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
         # SW Forwarding: 0/0/0/0, Other: 0/0/0
-        p5 = re.compile(r'SW Forwarding\: +(?P<sw_packet_count>[\w]+)\/'
-                     '(?P<sw_packets_per_second>[\w]+)\/'  
-                     '(?P<sw_average_packet_size>[\w]+)\/'                     
-                     '(?P<sw_kbits_per_second>[\w]+)\,'
-                     ' +Other\: +(?P<sw_total>[\w]+)\/' 
-                     '(?P<sw_rpf_failed>[\w]+)\/'
-                     '(?P<sw_other_drops>[\w]+)')  
+        p5 = re.compile(r'SW Forwarding\:\s+(?P<sw_packet_count>[\w]+)\/'
+                     r'(?P<sw_packets_per_second>[\w]+)\/'
+                     r'(?P<sw_average_packet_size>[\w]+)\/'
+                     r'(?P<sw_kbits_per_second>[\w]+)\,'
+                     r'\s+Other\: +(?P<sw_total>[\w]+)\/'
+                     r'(?P<sw_rpf_failed>[\w]+)\/'
+                     r'(?P<sw_other_drops>[\w]+)$')
         #HW Forwarding:   222/0/204/0, Other: 0/0/0
-        p6 = re.compile(r'HW Forwarding\: +(?P<hw_packet_count>[\w]+)\/'
-                     '(?P<hw_packets_per_second>[\w]+)\/'  
-                     '(?P<hw_average_packet_size>[\w]+)\/'                     
-                     '(?P<hw_kbits_per_second>[\w]+)\,'
-                     ' +Other\: +(?P<hw_total>[\w]+)\/' 
-                     '(?P<hw_rpf_failed>[\w]+)\/'
-                     '(?P<hw_other_drops>[\w]+)')   
+        p6 = re.compile(r'^HW\s+Forwarding\:\s+(?P<hw_packet_count>[\w]+)\/'
+                     r'(?P<hw_packets_per_second>[\w]+)\/'
+                     r'(?P<hw_average_packet_size>[\w]+)\/'
+                     r'(?P<hw_kbits_per_second>[\w]+)\,'
+                     r'\s+Other\: +(?P<hw_total>[\w]+)\/'
+                     r'(?P<hw_rpf_failed>[\w]+)\/'
+                     r'(?P<hw_other_drops>[\w]+)$')
         # LISP0.1 Flags: A NS
         #  Null0 Flags: A
         #  GigabitEthernet1/0/1 Flags: A NS
-                
+
         p7 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         ' +Flags\: +(?P<ingress_flags>[\w\s]+)')  
+                         ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
-        p8 = re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                               '(\, +\((?P<egress_rloc>[\w\.]+), +(?P<egress_underlaymcast>[\w\.]+)\))?'
-                               ' +Flags\: +(?P<egress_flags>[\w\s]+)')  
+        p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
+                        '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
+
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
-        p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)')
-        #CEF: Special OCE (discard)      
-        p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)')
+        p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)$')
+        #CEF: Special OCE (discard)
+        p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)$')
         #Pkts: 0/0/2    Rate: 0 pps
-        p10 = re.compile(r'^Pkts\: +(?P<egress_HW_pkt_count>[\w]+)\/'
-                         '(?P<egress_FS_pkt_count>[\w]+)\/'  
-                         '(?P<egress_PS_pkt_count>[\w]+)'
-                         ' +Rate\: +(?P<egress_pkt_rate>[\w]+)')         
+        p10 = re.compile(r'^Pkts\:\s+(?P<egress_hw_pkt_count>[\w]+)\/'
+                         '(?P<egress_fs_pkt_count>[\w]+)\/'
+                         '(?P<egress_ps_pkt_count>[\w]+)'
+                         '\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
+
         for line in out.splitlines():
             line = line.strip()
-            try:
-                mfib_dict['vrf']
-            except KeyError:
-                mfib_dict.setdefault('vrf',{})
-                
+
+            mfib_dict.setdefault('vrf',{})
+            #Default   (Would not be displayed in the output)
+            #VRF vrf1
             m = p1.match(line)
             if m:
                 vrf=m.groupdict()['vrf']
                 continue
 
-            m = p2.match(line)
-            if m:
-                vrf=m.groupdict()['vrf']
-                continue
-            
-            try:
-               mfib_dict['vrf'][vrf]['address_family']
-            except KeyError:
-                mfib_data = mfib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
-                
+            mfib_data = mfib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
 
             #  (*,225.1.1.1) Flags: C HW
             # (70.1.1.10,225.1.1.1) Flags: HW
@@ -1992,117 +1986,101 @@ class ShowIpMfib(ShowIpMfibSchema):
                 multicast_group = group['multicast_group']
 
                 mfib_data.setdefault('multicast_group',{})
-                sub_dict = mfib_data['multicast_group'].setdefault(multicast_group,{}).setdefault('source_address',{}).setdefault(source_address,{})
+                sub_dict = mfib_data.setdefault('multicast_group',{}).setdefault(
+                    multicast_group,{}).setdefault('source_address',
+                    {}).setdefault(source_address,{})
 
                 sub_dict['flags'] = group['mfib_flags']
                 continue
-                
+
             sw_data=sub_dict
             #0x1AF0  OIF-IC count: 0, OIF-A count: 1
-            m=p4.match(line) 
+            m=p4.match(line)
             if m:
-                group = m.groupdict()                
-                sw_data['oif_ic_count'] = group['oif_ic_count']
-                sw_data['oif_a_count'] = group['oif_a_count']
+                group = m.groupdict()
+                sw_data['oif_ic_count'] = int(group['oif_ic_count'])
+                sw_data['oif_a_count'] = int(group['oif_a_count'])
                 continue
-            
+
             # SW Forwarding: 0/0/0/0, Other: 0/0/0
             m = p5.match(line)
             if m:
-                group = m.groupdict()            
-                sw_data['sw_packet_count'] = group['sw_packet_count']
-                sw_data['sw_packets_per_second'] = group['sw_packets_per_second']
-                sw_data['sw_average_packet_size'] = group['sw_average_packet_size']
-                sw_data['sw_kbits_per_second'] = group['sw_kbits_per_second']
-                sw_data['sw_total'] = group['sw_total']
-                sw_data['sw_rpf_failed'] = group['sw_total']
-                sw_data['sw_other_drops'] = group['sw_other_drops']
-                
+                changedict={}
+                for key in m.groupdict().keys():
+                  changedict[key] = int(m.groupdict()[key])
+                sw_data.update(changedict)
                 continue
+
             #HW Forwarding:   222/0/204/0, Other: 0/0/0
             m=p6.match(line)
             if m:
-                group = m.groupdict()
-            
-                sw_data['hw_packet_count'] = group['hw_packet_count']
-                sw_data['hw_packets_per_second'] = group['hw_packets_per_second']
-                sw_data['hw_average_packet_size'] = group['hw_average_packet_size']
-                sw_data['hw_kbits_per_second'] = group['hw_kbits_per_second']
-                sw_data['hw_total'] = group['hw_total']
-                sw_data['hw_rpf_failed'] = group['hw_total']
-                sw_data['hw_other_drops'] = group['hw_other_drops']
-                
+                changedict={}
+                for key in m.groupdict().keys():
+                  changedict[key] = int(m.groupdict()[key])
+                sw_data.update(changedict)
                 continue
-           #### adding this code check for ingress and Egress interface differentiation
-            if re.search(' +A',line):
-                # LISP0.1 Flags: A NS
-                #  Null0 Flags: A
-                #  GigabitEthernet1/0/1 Flags: A NS
-                m=p7.match(line)
-                if m:
-                    group = m.groupdict()
-                    ingress_interface = group['ingress_if']
-                    sw_data.setdefault('incoming_interface_list',{}).setdefault(ingress_interface,{})   
-                    sw_data['incoming_interface_list'][ingress_interface]['ingress_flags'] = group['ingress_flags']
-                    continue
-                    
+
+            # LISP0.1 Flags: A NS
+            #  Null0 Flags: A
+            #  GigabitEthernet1/0/1 Flags: A NS
+            m=p7.match(line)
+            if m:
+                group = m.groupdict()
+                ingress_interface = group['ingress_if']
+                ing_intf_dict = sw_data.setdefault('incoming_interfaces',{}).setdefault(ingress_interface,{})
+                ing_intf_dict['ingress_flags'] = group['ingress_flags']
+                continue
+
 
             #Vlan2001 Flags: F NS
             #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
             m=p8.match(line)
+
             if m:
                 group = m.groupdict()
+                outgoing_interface=group['egress_if']
+                egress_data=sw_data.setdefault('outgoing_interfaces',{}).setdefault(outgoing_interface,{})
+                if group['egress_rloc']:
+                    egress_data['egress_rloc'] = group['egress_rloc']
 
-                if re.search('F',group['egress_flags']):
-                    outgoing_interface =group['egress_if']
+                    #### adding this code for lisp and evpn interfaces with have unique
+                    #### egress interface causing the last egress interface alone getting captured
+                    #example below
+                    # LISP0.1, 100.22.22.22 Flags: F
+                    #Pkts: 0/0/1    Rate: 0 pps
+                    #LISP0.1, 100.154.154.154 Flags: F
+                    #Pkts: 0/0/1    Rate: 0 pps
+                    #LISP0.1, 100.88.88.88 Flags: F
+                    #Pkts: 0/0/1    Rate: 0 pps
+                    #LISP0.1, 100.33.33.33 Flags: F
 
-                    if re.search('\,',group['egress_if']):
-                        egress_rloc=group['egress_if'].split(',')[1] 
-                    else:                              
-                        egress_rloc = group['egress_rloc']
+                    outgoing_interface='{},{}'.format(group['egress_if'], group['egress_rloc'])
 
-                    egress_flags = group['egress_flags'] 
-                    egress_underlaymcast = group['egress_underlaymcast']
+                egress_data['egress_flags'] = group['egress_flags']
+                if group['egress_underlay_mcast']:
+                    egress_data['egress_underlay_mcast'] = group['egress_underlay_mcast']
 
-                    
-                    egress_data=sw_data.setdefault('outgoing_interface_list',{}).setdefault(outgoing_interface,{}) 
-                                        
-                    egress_data['egress_flags'] = egress_flags  
-                    if egress_rloc:
-                        egress_data['egress_rloc'] = egress_rloc
-                    if egress_underlaymcast:
-                        egress_data['egress_underlaymcast'] = egress_underlaymcast
-                    
-                continue             
+                continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
             if m:
-                group = m.groupdict()
-                egress_adj_mac = group['egress_adj_mac']                  
-                egress_data['egress_adj_mac'] = egress_adj_mac   
-                continue        
+                group = m.groupdict()                 
+                egress_data['egress_adj_mac'] = group['egress_adj_mac']
+                continue
             #CEF: Special OCE (discard)
             m=p9_2.match(line)
             if m:
                 group = m.groupdict()
-                egress_adj_mac = group['egress_adj_mac']                  
-                egress_data['egress_adj_mac'] = egress_adj_mac   
-                continue                 
+                egress_data['egress_adj_mac'] = group['egress_adj_mac']
+                continue
             #Pkts: 0/0/2    Rate: 0 pps
             m=p10.match(line)
             if m:
-                group = m.groupdict()
-                egress_HW_pkt_count = group['egress_HW_pkt_count']
-                egress_FS_pkt_count = group['egress_FS_pkt_count']
-                egress_PS_pkt_count = group['egress_PS_pkt_count']
-                egress_pkt_rate = group['egress_pkt_rate']
-                    
-                egress_data['egress_HW_pkt_count'] = egress_HW_pkt_count  
-                egress_data['egress_FS_pkt_count'] = egress_FS_pkt_count  
-                egress_data['egress_PS_pkt_count'] = egress_PS_pkt_count  
-                egress_data['egress_pkt_rate'] = egress_pkt_rate  
-
-                continue                         
+                changedict={}
+                for key in m.groupdict().keys():
+                  changedict[key] = int(m.groupdict()[key])
+                egress_data.update(changedict)
+                continue
         return mfib_dict
 
 class ShowIpMribSchema(MetaParser):
@@ -2207,19 +2185,18 @@ class ShowIpMrib(ShowIpMribSchema):
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
                         '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
 
+
         for line in output.splitlines():
             line=(line.strip()).replace('\t',' ')
-
-     
-
+            mrib_dict.setdefault('vrf',{})         
+            mrib_data = mrib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})     
             #  (*,225.1.1.1) Flags: C HW
             # (70.1.1.10,225.1.1.1) Flags: HW
             #  (*,FF05:1:1::1) Flags: C HW
             # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
             m = p1.match(line)
             if m:
-                mrib_dict.setdefault('vrf',{})         
-                mrib_data = mrib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
+
                 group = m.groupdict()
                 source_address = group['source_address']
                 multicast_group = group['multicast_group']
@@ -2801,3 +2778,88 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
                 continue
 
         return parsed_dict
+
+
+# ===============================
+# Schema for 'show ip sla responder'
+# ===============================
+class ShowIpSlaResponderSchema(MetaParser):
+    ''' Schema for "show ip sla responder" '''
+    schema = {
+        'ports': {
+            Any(): {
+                'control_port': int,
+                'control_v2_port': int,
+                'general_responder': str,
+                'permanent_responder': str,
+            },
+        }
+    }
+
+
+# ===============================
+# Parser for 'show ip sla responder'
+# ===============================
+class ShowIpSlaResponder(ShowIpSlaResponderSchema):
+    """Parser for:
+    show ip sla responder
+    """
+    cli_command = 'show ip sla responder'
+
+    def cli(self, output=None):
+
+        parsed_dict = {}
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        #General IP SLA Responder on Control port 1967
+        p1 = re.compile(r'^General\s+IP\s+SLA\s+Responder\s+on\s+Control\s+port\s+(?P<control_port>\d+)$')
+
+        #General IP SLA Responder on Control V2 port 1167
+        p2 = re.compile(r'^General\s+IP\s+SLA\s+Responder\s+on\s+Control\s+V2\s+port\s+(?P<control_v2_port>\d+)$')
+
+        #General IP SLA Responder is: Disabled
+        p3 = re.compile(r'^General\s+IP\s+SLA\s+Responder\s+is:\s+(?P<general_responder>\w+)$')
+
+        #Permanent Port IP SLA Responder is: Disabled
+        p4 = re.compile(r'^Permanent\s+Port\s+IP\s+SLA\s+Responder\s+is:\s+(?P<permanent_responder>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #General IP SLA Responder on Control port 1967
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                control_port = group['control_port']
+                id_dict = parsed_dict.setdefault('ports', {}).setdefault(control_port, {})
+                id_dict.update({'control_port':int(group['control_port'])})
+                continue
+
+
+	        #General IP SLA Responder on Control V2 port 1167
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                control_v2_port = group['control_v2_port']
+                id_dict = parsed_dict.setdefault('ports', {}).setdefault(control_port, {})
+                id_dict.update({'control_v2_port':int(group['control_v2_port'])})
+                continue
+
+            #General IP SLA Responder is: Disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'general_responder':group['general_responder']})
+                continue
+
+
+	        #Permanent Port IP SLA Responder is: Disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict.update({'permanent_responder':group['permanent_responder']})
+                continue
+
+        return parsed_dict 

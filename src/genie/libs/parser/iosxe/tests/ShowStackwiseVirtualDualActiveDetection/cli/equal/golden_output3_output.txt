@@ -1,0 +1,12 @@
+In dual-active recovery mode: Yes
+Recovery mode triggered by: fast-hello
+Triggered Time: 06:07:37.000 UTC Tue Jan 25 2022
+Recovery Reload: Enabled
+
+Dual-Active-Detection Configuration:
+-------------------------------------
+Switch	Dad port			Status
+------	------------			---------
+1 	HundredGigE1/0/7          	up
+        HundredGigE1/0/8          	up
+

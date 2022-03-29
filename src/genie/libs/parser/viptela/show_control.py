@@ -405,3 +405,102 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
                 continue
 
         return parsed_dict
+
+# ==============================================
+# Schema for 'show control connections history'
+# ==============================================
+
+
+class ShowControlConnectionHistorySchema(MetaParser):
+    """Schema for "show sdwan control connection-history" """
+
+    schema = {
+        "peer_type": {
+            Any(): {
+                "downtime": {
+                    Any(): {
+                        "domain_id": str,
+                        "peer_private_ip": str,
+                        "peer_private_port": str,
+                        "peer_protocol": str,
+                        "peer_public_ip": str,
+                        "peer_public_port": str,
+                        "peer_system_ip": str,
+                        Optional("peer_organization"): str,
+                        "site_id": str,
+                        "state": str,
+                        "local_error": str,
+                        "remote_error": str,
+                        "repeat_count": str,
+                        "local_color": str,
+                    },
+                },
+            },
+        },
+    }
+
+
+# =============================================
+# Parser for 'show control connections history'
+# =============================================
+
+
+class ShowControlConnectionHistory(ShowControlConnectionHistorySchema):
+    """ parser for "show control connection-history" """
+
+    cli_command = "show control connection-history"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        keys = ["local_color", "peer_protocol", "site_id", "domain_id", "peer_private_ip", "peer_private_port",
+                "peer_public_ip", "peer_public_port", "state", "local_error", "remote_error", "repeat_count",
+                "peer_system_ip","peer_system_ip"]
+
+        # PEER     PEER     PEER             SITE        DOMAIN PEER             PRIVATE  PEER             #PUBLIC                                   LOCAL      REMOTE     REPEAT
+        # TYPE     PROTOCOL SYSTEM IP        ID          ID     PRIVATE IP       PORT     PUBLIC IP        PORT    LOCAL COLOR      #STATE           ERROR      ERROR      COUNT ORGANIZATION            DOWNTIME
+        # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             connect         DCONFAIL   NOERR      0     2022-01-19T06:18:57+0000
+        # vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      2     2022-01-19T06:18:27+0000
+        # vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      2     2022-01-19T06:18:27+0000
+
+        p1 = re.compile(r"ORGANIZATION{1}")
+        m = p1.search(output)
+        if m:
+            # cEdge starting 17.04 onward
+            p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
+                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<peer_organization>(.*?)[ ]{0,0})\s+(?P<downtime>\w+\S+)')
+            keys.insert(8, "peer_organization")
+        else:
+            # vEdge & cEdge prior to 17.04
+            p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
+                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<downtime>\w+\S+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             connect         DCONFAIL   NOERR      0     2022-01-19T06:18:57+0000
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                peer_type = group.pop("peer_type")
+
+                parsed_dict.setdefault("peer_type", {}). \
+                    setdefault(peer_type, {})
+                connection_dict = parsed_dict["peer_type"][peer_type]. \
+                    setdefault("downtime", {})
+                downtime = group.pop('downtime')
+                color_dict = connection_dict.setdefault(downtime, {})
+
+                color_dict.update(group)
+                continue
+        return parsed_dict

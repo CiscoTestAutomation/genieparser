@@ -1,0 +1,28 @@
+show policy-map interface GigabitEthernet 0/0/0/1
+Wed Mar 23 09:19:10.518 UTC
+
+GigabitEthernet0/0/0/1 input: 4gig
+
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A 
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps) 
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0                  
+
+GigabitEthernet0/0/0/1 output: 4gig
+
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A 
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps) 
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0                  
