@@ -1,0 +1,58 @@
+Chassis: 
+34854563 SNMP packets input
+    0 Bad SNMP version errors
+    234 Unknown community name
+    2 Illegal operation for community name supplied
+    1 Encoding errors
+    6536 Number of requested variables
+    154 Number of altered variables
+    22102104 Get-request PDUs
+    972411 Get-next PDUs
+    856948 Set-request PDUs
+42531179 SNMP packets output
+    0 Too big errors (Maximum packet size 1500)
+    160671 No such name errors
+    5 Bad values errors
+    2 General errors
+    34854547 Response PDUs
+    7676632 Trap PDUs
+
+SNMP logging: Enabled
+    Logging to Notification host: 10.0.0.1, udp-port: 162
+    Trap Host Statistics
+    ----------------------
+    Number of pkts in Trap Queue: 0
+    Maximum length of Trap Queue: 100
+             Number of pkts sent: 0
+          Number of pkts dropped: 0
+
+    Logging to Notification host: 10.0.0.2, udp-port: 162
+    Inform Host Statistics
+    ----------------------
+    Number of pkts in Trap Queue: 0
+    Maximum length of Trap Queue: 100
+             Number of pkts sent: 0
+          Number of pkts dropped: 0
+
+    Logging to Notification host: 2001:ab8::1, udp-port: 162
+    Trap Host Statistics
+    ----------------------
+    Number of pkts in Trap Queue: 0
+    Maximum length of Trap Queue: 100
+             Number of pkts sent: 0
+          Number of pkts dropped: 0
+
+    Logging to Notification host: 2001:0:ab00:1234:0:2552:7777:1313, udp-port: 162
+    Inform Host Statistics
+    ----------------------
+    Number of pkts in Trap Queue: 0
+    Maximum length of Trap Queue: 100
+             Number of pkts sent: 0
+          Number of pkts dropped: 0
+
+    Inform Statistics
+    -----------------
+       Number of Informs sent: 0
+    Number of Informs retries: 0
+    Number of Informs pending: 0
+    Number of Informs dropped: 0 
