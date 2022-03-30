@@ -3230,15 +3230,13 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 finally:
                     if local_policies:
                         local_policies_dict.update({"vlan": vlan})
-                        continue
-                    if server_policies:
+                    elif server_policies:
                         server_policies_dict.update({"vlan": vlan})
-                        continue
-                    if resultant_policies:
+                    elif resultant_policies:
                         resultant_policies_dict.update({"vlan": vlan})
-                        continue
-                    ret_dict.update({"vlan": vlan})
-                    continue
+                    else:
+                        ret_dict.update({"vlan": vlan})
+                continue
 
             # Multicast VLAN : 0
             m = p52.match(line)
