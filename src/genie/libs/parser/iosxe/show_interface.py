@@ -113,7 +113,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('output_hang'): str,
                 Optional('autostate'): bool,
                 Optional('tunnel_source_ip'): str,
-                Optional('tunnel_destnation_ip'): str,
+                Optional('tunnel_destination_ip'): str,
                 Optional('tunnel_protocol'): str,
                 Optional('tunnel_ttl'): int,
                 Optional('tunnel_transport_mtu'): int,
@@ -492,7 +492,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Tunnel source 1.1.10.11, destination 1.1.10.10
         p46 = re.compile(r'^Tunnel +source +(?P<tunnel_source_ip>[0-9\.]+),'
-                        r' +destination +(?P<tunnel_destnation_ip>[0-9\.]+)')
+                        r' +destination +(?P<tunnel_destination_ip>[0-9\.]+)')
 
         # Tunnel protocol/transport AURP
         p47 = re.compile(r'^Tunnel +protocol/transport +(?P<tunnel_protocol>[\w\/]+)')
@@ -1209,7 +1209,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_source_ip': group['tunnel_source_ip']})
-                interface_dict[interface].update({'tunnel_destnation_ip': group['tunnel_destnation_ip']})
+                interface_dict[interface].update({'tunnel_destination_ip': group['tunnel_destination_ip']})
                 continue
 
             # Tunnel protocol/transport AURP

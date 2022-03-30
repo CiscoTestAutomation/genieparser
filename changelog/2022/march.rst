@@ -140,6 +140,13 @@
         * show running-config nve
     * Added ShowRunningConfigNve
         * show running-config nve
+    * Added ShowIpDhcpBinding parser:
+        * show ip dhcp binding
+    * Added ShowIpDhcpServerStatistics parser:
+        * show ip dhcp server statistics
+    * Added ShowFipsStatus
+        * Added 'show fips status'
+
 
 * iosxr
     * Added ShowEvpnEviInclusiveMulticast
@@ -162,7 +169,7 @@
         * show snmp host
 
 * nxos
-    * Added "Show fabric multicast ipv4  mroute parser
+    * Added "Show fabric multicast ipv4  mroute parser"
         * show fabric Multicast ipv4 vrf all
         * show fabric Multicast ipv4  vrf <vrf_name>
 
@@ -249,6 +256,20 @@
         * To support more varied output
     * Modified ShowWirelessProfilePolicyDetailed
         * Added format for policy_name argument
+    * Modified ShowStackwiseVirtualDualActiveDetection:
+        * Modified to take the pre-passed output.
+    * Modified ShowStackwiseVirtualDualActiveDetectionPagp:
+        * Modified to take the pre-passed output & linestip assignment.
+    * Modified ShowApDot115GhzChannel:
+        * Added Optional keys <zero_wait>, <dca_aggressive>, <wlc_leader_ipv4>, and <wlc_leader_ipv6> to schema
+    * Modified ShowInterfaces{interface} parser
+        * Modified key name <tunnel_destination_ip> of the schema.
+    * Modified ShowTelemetryIETFSubscriptionReceiver
+        * Added "name" field to schema to account for named receivers
+        * Added regex pattern <p9> for newly added "name" field
+        * Updated regex pattern <p7> to accommodate for multi-word entries
+    * Modified ShowTelemetryConnectionAll
+        * Strip entry under 'VRF' from letter 'M' that might be present in output
 
 * nxos
     * Fixed Show Fabic Multicast ipv4  sa-ad route parser
@@ -271,6 +292,8 @@
         * Added the "tlv_accepted" feature to the schema
         * Added the "last_clear" feature to the schema
     * Modified ShowPolicyMapInterface Parser, update pattern p2 input direction
+    * Updated showEvpnInternalId
+        * Updated p1 pattern to include hex value for esi in 'show evpn internal-id'
 
 * viptela
     * Modified ShowOmpRoutes
@@ -287,27 +310,3 @@
 * dnac
     * Updated Interface
         * Added additional keys
-
-
---------------------------------------------------------------------------------
-                                    Modified                                    
---------------------------------------------------------------------------------
-
-* iosxr
-    * Updated showEvpnInternalId
-        * Updated p1 pattern to include hex value for esi in 'show evpn internal-id'
-
-
---------------------------------------------------------------------------------
-                                     Update                                     
---------------------------------------------------------------------------------
-
-* iosxe
-    * Modified ShowTelemetryIETFSubscriptionReceiver
-        * Added "name" field to schema to account for named receivers
-        * Added regex pattern <p9> for newly added "name" field
-        * Updated regex pattern <p7> to accommodate for multi-word entries
-    * Modified ShowTelemetryConnectionAll
-        * Strip entry under 'VRF' from letter 'M' that might be present in output
-
-

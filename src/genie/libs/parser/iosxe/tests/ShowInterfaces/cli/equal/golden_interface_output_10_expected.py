@@ -67,7 +67,7 @@ expected_output = {
         },
         "reliability": "255/255",
         "rxload": "1/255",
-        "tunnel_destnation_ip": "1.1.10.11",
+        "tunnel_destination_ip": "1.1.10.11",
         "tunnel_protocol": "AURP",
         "tunnel_receive_bandwidth": 1000000,
         "tunnel_source_ip": "1.1.10.10",
