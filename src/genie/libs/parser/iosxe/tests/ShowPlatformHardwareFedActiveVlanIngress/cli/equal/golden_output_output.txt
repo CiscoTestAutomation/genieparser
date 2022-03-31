@@ -1,0 +1,5 @@
+vlan id is:: 1
+
+Interfaces in forwarding state: : Gi1/0/15(Tagged), Fo5/0/9(Untagged)
+
+flood list: : Gi1/0/15, Fo5/0/9

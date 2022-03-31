@@ -1914,3 +1914,388 @@ class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
                 continue
 
         return ret_dict
+
+
+# =====================================================
+# Schema for:
+#   * 'show evpn evi inclusive-multicast'
+#   * 'show evpn evi inclusive-multicast detail'
+#   * 'show evpn evi vpn-id {vpn-id} inclusive-multicast'
+#   * 'show evpn evi vpn-id {vpn-id} inclusive-multicast detail'
+# =====================================================
+class ShowEvpnEviInclusiveMulticastSchema(MetaParser):
+    schema = {
+        'vpn_id': {
+            Any(): {
+                'originating_ip': {
+                    Any(): {
+                        'encap': str,
+                        'ethertag': int,
+                        Optional('tepid'): str,
+                        Optional('pmsi_type'): int,
+                        Optional('nexthop'): str,
+                        Optional('sr_te_info'): str,
+                        Optional('sid'): str,
+                        Optional('source'): str,
+                        Optional('e_tree'): str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================
+# Parser for:
+#   * 'show evpn evi inclusive-multicast'
+#   * 'show evpn evi inclusive-multicast detail'
+#   * 'show evpn evi vpn-id {vpn_id} inclusive-multicast'
+#   * 'show evpn evi vpn-id {vpn_id} inclusive-multicast detail'
+# =====================================================
+class ShowEvpnEviInclusiveMulticast(ShowEvpnEviInclusiveMulticastSchema):
+
+    cli_command = ['show evpn evi inclusive-multicast',
+                   'show evpn evi vpn-id {vpn_id} inclusive-multicast']
+
+    def cli(self, vpn_id=None, output=None):
+
+        ret_dict = {}
+
+        if output is None:
+            cmd = self.cli_command[1].format(vpn_id=vpn_id) if vpn_id else self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # 1          SRv6   0          1.1.1.1
+        p1 = re.compile(r'^(?P<vpn_id>\d+)\s+(?P<encap>\w+)\s+(?P<ethertag>\d+)'
+                        r'\s+(?P<originating_ip>[\da-fA-F:.]+)$')
+
+        #    TEPid  : 0xffffffff
+        p2 = re.compile(r'^TEPid *: +(?P<tepid>[\da-fA-F:x]+)$')
+
+        #  PMSI Type: 6
+        p3 = re.compile(r'^PMSI +Type *: +(?P<pmsi_type>\d)$')
+
+        #   Nexthop: ::
+        #   Nexthop: 2.2.2.2
+        p4 = re.compile(r'^Nexthop *: +(?P<nexthop>[\da-fA-F:.]+)$')
+
+        #     SR-TE Info: N/A
+        p5 = re.compile(r'^SR-TE +Info *: +(?P<sr_te_info>\S+)$')
+
+        #  SID    : cafe:0:300:e001::
+        p6 = re.compile(r'^SID *: +(?P<sid>[\da-fA-F:]+)$')
+
+        # Source : Remote
+        p7 = re.compile(r'^Source *: +(?P<source>\w+)$')
+
+        # E-Tree : Root
+        p8 = re.compile(r'^E-Tree *: +(?P<e_tree>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 1          SRv6   0          1.1.1.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id = int(group.pop('vpn_id'))
+                vpn_dict = ret_dict.setdefault('vpn_id', {}).setdefault(vpn_id, {})
+                originating_ip = group.pop('originating_ip')
+                originating_ip_dict = vpn_dict.setdefault('originating_ip', {}).setdefault(originating_ip, {})
+                originating_ip_dict['encap'] = group['encap']
+                originating_ip_dict['ethertag'] = int(group['ethertag'])
+                continue
+
+            #    TEPid  : 0xffffffff
+            m = p2.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+            #  PMSI Type: 6
+            m = p3.match(line)
+            if m:
+                originating_ip_dict['pmsi_type'] = int(m.groupdict()['pmsi_type'])
+                continue
+
+            #   Nexthop: ::
+            #   Nexthop: 2.2.2.2
+            m = p4.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+            #     SR-TE Info: N/A
+            m = p5.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+            #  SID    : cafe:0:300:e001::
+            m = p6.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+            # Source : Remote
+            m = p7.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+            # E-Tree : Root
+            m = p8.match(line)
+            if m:
+                originating_ip_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
+
+
+class ShowEvpnEviInclusiveMulticastDetail(ShowEvpnEviInclusiveMulticast):
+    """Parser class for 'show evpn evi mac detail' CLI."""
+
+    cli_command = ['show evpn evi inclusive-multicast detail',
+                   'show evpn evi vpn-id {vpn_id} inclusive-multicast detail']
+
+    def cli(self, vpn_id=None, output=None):
+        """parsing mechanism: cli
+        """
+
+        if output is None:
+            cmd = self.cli_command[1].format(vpn_id=vpn_id) if vpn_id else self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        return super().cli(output=out)
+
+
+# =====================================================
+# Schema for:
+#   * 'show evpn internal-id'
+#   * 'show evpn internal-id detail'
+#   * 'show evpn internal-id vpn-id {vpn-id}'
+#   * 'show evpn internal-id vpn-id {vpn-id} detail'
+# =====================================================
+class ShowEvpnInternalIdSchema(MetaParser):
+    schema = {
+        'vpn_id': {
+            Any(): {
+                'ethernet_segment_id': {
+                    Any(): {
+                        'es_index': {
+                            Any(): {
+                                'ether_tag': str,
+                                'internal_id': str,
+                                'encap': str,
+                                Optional('mp_resolved'): str,
+                                Optional('mp_info'): str,
+                                Optional('reason'): str,
+                                Optional('mp_iid'): str,
+                                Optional('pathlists'): {
+                                    Optional('mac'): {
+                                        'nexthop': {
+                                            Any(): {
+                                                Optional('sid'): str,
+                                                Optional('df_role'): str,
+                                            },
+                                        },
+                                    },
+                                    Optional('ead_es'): {
+                                        'nexthop': {
+                                            Any(): {
+                                                Optional('sid'): str,
+                                                Optional('df_role'): str,
+                                            },
+                                        },
+                                    },
+                                    Optional('ead_evi'): {
+                                        'nexthop': {
+                                            Any(): {
+                                                Optional('sid'): str,
+                                                Optional('df_role'): str,
+                                            },
+                                        },
+                                    },
+                                    Optional('summary'): {
+                                        'nexthop': {
+                                            Any(): {
+                                                Optional('sid'): str,
+                                                Optional('df_role'): str,
+                                                Optional('tep_id'): str,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================
+# Parser for:
+#   * 'show evpn internal-id
+#   * 'show evpn internal-id vpn-id {vpn-id}
+# =====================================================
+class ShowEvpnInternalId(ShowEvpnInternalIdSchema):
+
+    cli_command = ['show evpn internal-id',
+                   'show evpn internal-id vpn-id {vpn_id}']
+
+    def cli(self, vpn_id=None, output=None):
+
+        ret_dict = {}
+        index_dict = {}
+
+        if output is None:
+            if vpn_id:
+                out = self.device.execute(self.cli_command[1].format(vpn_id=vpn_id))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # 2201       SRv6   0044.4444.4444.4444.4444    2201         ::ffff:10.0.7.63
+        # 2201       SRv6   0044.4444.4444.4444.4444    4294967295   None
+        p1 = re.compile(r'^(?P<vpn_id>\d+)\s+(?P<encap>SRv6)\s+(?P<es_id>[\da-fA-F.]+) +'
+                        r'\s+(?P<ether_tag>\d+)\s+(?P<internal_id>[\da-fA-F:.]+|None)$')
+
+        #   Multi-paths resolved: TRUE (Remote single-active)
+        p2 = re.compile(r'^Multi-paths\s+resolved:\s+(?P<mp_resolved>TRUE|FALSE)'
+                        r'(\s+\((?P<mp_info>.*?)\))?$')
+
+        #     Reason: No valid MAC paths
+        p3 = re.compile(r'^Reason:\s+(?P<reason>.*)$')
+
+        #   Multi-paths Internal ID: ::ffff:10.0.7.63
+        p4 = re.compile(r'^Multi-paths\s+Internal\s+ID:\s+(?P<mp_iid>[\da-fA-F:.]+|None)$')
+
+        #     MAC         3.3.3.3                                   cafe:0:300:e000::
+        #     EAD/ES  (P) 3.3.3.3
+        #     EAD/EVI     3.3.3.3                                   cafe:0:300:e000::
+        p5 = re.compile(r'^(?P<type>(?:MAC|EAD\/ES|EAD\/EVI)) +'
+                        r'(?:\s+\((?P<df_role>\w+)\))?\s+(?P<nexthop>[\d\w.:]+)(?:\s+(?P<sid>[\da-fA-F:]+))?$')
+
+        #            (B) 4.4.4.4
+        #                4.4.4.4                                   cafe:0:400:e000::
+        p6 = re.compile(r'^(?:\((?P<df_role>\w+)\)\s+)?(?P<nexthop>[\d\w.:]+)'
+                        r'(?:\s+(?P<sid>[\da-fA-F:]+))?$')
+
+        # Summary pathlist:
+        p7 = re.compile(r'^Summary\s+pathlist:$')
+
+        #  0x05000003 (P) 3.3.3.3                                   cafe:0:300:e000::
+        #  0x00000000 (B) 4.4.4.4                                   cafe:0:400:e000::
+        p8 = re.compile(r'^(?P<tep_id>[\da-fA-Fx]+)(?:\s+\((?P<df_role>\w+)\))?'
+                        r'\s+(?P<nexthop>[\d\w.:]+)\s+(?P<sid>([\da-fA-F:]+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 2201       SRv6   0044.4444.4444.4444.4444    2201         ::ffff:10.0.7.63
+            # 2201       SRv6   0044.4444.4444.4444.4444    4294967295   None
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id = int(group.pop('vpn_id'))
+                vpn_dict = ret_dict.setdefault('vpn_id', {}).setdefault(vpn_id, {})
+                es_id = group.pop('es_id')
+                es_dict = vpn_dict.setdefault('ethernet_segment_id', {}).setdefault(es_id, {})
+                es_index = index_dict.setdefault(vpn_id, {}).setdefault(es_id, 0)
+                es_index += 1
+                index_dict[vpn_id][es_id] = es_index
+                es_index_dict = es_dict.setdefault('es_index', {}).setdefault(es_index, {})
+                es_index_dict.update(group)
+                continue
+
+            #   Multi-paths resolved: TRUE (Remote single-active)
+            m = p2.match(line)
+            if m:
+                es_index_dict.update(m.groupdict())
+                continue
+
+            #     Reason: No valid MAC paths
+            m = p3.match(line)
+            if m:
+                es_index_dict.update(m.groupdict())
+                continue
+
+            #   Multi-paths Internal ID: ::ffff:10.0.7.63
+            m = p4.match(line)
+            if m:
+                es_index_dict.update(m.groupdict())
+                continue
+
+            #     MAC         3.3.3.3                                   cafe:0:300:e000::
+            #     EAD/ES  (P) 3.3.3.3
+            #     EAD/EVI     3.3.3.3                                   cafe:0:300:e000::
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v for k,v in group.items() if v is not None}
+                pathlists_dict = es_index_dict.setdefault('pathlists', {}).\
+                    setdefault(group.pop('type').lower().replace("/", "_"), {})
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                    setdefault(group.pop('nexthop'), {})
+                type_nh_dict.update(group)
+                continue
+
+            #            (B) 4.4.4.4
+            #                4.4.4.4                                   cafe:0:400:e000::
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v for k,v in group.items() if v is not None}
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                    setdefault(group.pop('nexthop'), {})
+                type_nh_dict.update(group)
+                continue
+
+            # Summary pathlist:
+            m = p7.match(line)
+            if m:
+                pathlists_dict = es_index_dict.setdefault('pathlists', {}).\
+                    setdefault('summary', {})
+                continue
+
+            #  0x05000003 (P) 3.3.3.3                                   cafe:0:300:e000::
+            #  0x00000000 (B) 4.4.4.4                                   cafe:0:400:e000::
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v for k,v in group.items() if v is not None}
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                    setdefault(group.pop('nexthop'), {})
+                type_nh_dict.update(group)
+                continue
+
+        return ret_dict
+
+
+# =====================================================
+# Parser for:
+#   * 'show evpn internal-id detail
+#   * 'show evpn internal-id vpn-id {vpn-id} detail
+# =====================================================
+
+class ShowEvpnInternalIdDetail(ShowEvpnInternalId):
+
+    cli_command = ['show evpn internal-id detail',
+                   'show evpn internal-id vpn-id {vpn_id} detail']
+
+    def cli(self, vpn_id=None, output=None):
+        if output is None:
+            if vpn_id:
+                out = self.device.execute(self.cli_command[1].format(vpn_id=vpn_id))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)

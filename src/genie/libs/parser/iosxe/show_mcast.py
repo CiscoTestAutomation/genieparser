@@ -97,6 +97,9 @@ class ShowIpMrouteSchema(MetaParser):
                                                      Optional('vcd'): str,
                                                      Optional('lisp_mcast_source'): str,
                                                      Optional('lisp_mcast_group'): str,
+                                                     Optional('vxlan_version'): str,
+                                                     Optional('vxlan_vni'): str,
+                                                     Optional('vxlan_nxthop'): str,
                                                     },
                                                 },
                                             },
@@ -175,12 +178,15 @@ class ShowIpMroute(ShowIpMrouteSchema):
                             '(?P<expires>[\w\:\.\-]+),'
                             '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
                             ' +flags: *(?P<flags>[a-zA-Z]+)$')  
+                            
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
+        # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
         p3 = re.compile(r'^Incoming +interface:'
                        ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
                        ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
-                       '(, *(?P<status>\w+))?$')  
+                       '(, *(?P<status>.*))?$') 
+                       
         # Incoming interface:Tunnel5
         p3_1 = re.compile(r'^Incoming +interface:'
                          ' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')  
@@ -195,9 +201,11 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
         # POS4/0, Forward, 00:02:06/00:03:27
         # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+        # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
                             '(VCD +(?P<vcd>\d+))?(\,\s+)?'
                             '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[0-9\.]+)?\)?)?)?(\,\s+)?'
                             '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
                             '(?P<uptime>[a-zA-Z0-9\:]+)\/'
                             '(?P<expire>[\w\:]+)(\,\s+)?'
@@ -272,6 +280,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
             # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
             # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
+            # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -346,6 +355,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
             # POS4/0, Forward, 00:02:06/00:03:27
             # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+            # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
             m = p5.match(line)
             if m and outgoing:
                 ### adding below code for multiple outgoing interfaces with same different rloc's example below
@@ -375,6 +385,12 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_source'] = m.groupdict()['lisp_mcast_source']
                 if m.groupdict()['lisp_mcast_group']:
                     sub_dict['outgoing_interface_list'][outgoing_interface]['lisp_mcast_group'] = m.groupdict()['lisp_mcast_group']
+                if m.groupdict()['vxlan_version']:
+                    sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_version'] = m.groupdict()['vxlan_version']
+                    if m.groupdict()['vxlan_vni']:
+                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_vni'] = m.groupdict()['vxlan_vni']
+                    if m.groupdict()['vxlan_nxthop']:
+                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']
                 idx+=1    
                 continue
                 

@@ -1,5 +1,4 @@
 
-N95_1# show vxlan 
 Vlan            VN-Segment
 ====            ==========
 100             8100

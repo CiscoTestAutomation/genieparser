@@ -13,6 +13,10 @@ IOSXE parsers for the following show commands:
    * show crypto session local {}
    * show crypto ikev2 stats timeout
    * show crypto ikev2 stats reconnect
+   * show crypto ipsec sa detail
+   * show crypto ipsec sa
+   * show crypto ipsec sa peer {} detail
+   * show crypto ipsec sa peer {}
 """
 
 # Python
@@ -4418,3 +4422,1871 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
  
         return ret_dict
 
+# =================================================
+#  Schema for 'show crypto ipsec sa detail'
+# =================================================
+class ShowCryptoIpsecSaDetailSchema(MetaParser):
+    """Schema for show crypto ipsec sa Schema"""
+    schema = {
+        'interface': {
+                Any(): {
+                    'crypto_map_tag': str,
+                    'local_addr': str,
+                    'ident': {
+                        Any(): {
+                            'protected_vrf': str,
+                            'local_ident': {
+                                'addr': str,
+                                'mask': str,
+                                'port': str,
+                                'prot': str
+                                },
+                            'remote_ident': {
+                                'addr': str,
+                                'mask': str,
+                                'port': str,
+                                'prot': str
+                                },
+                            'peer_ip': str,
+                            'port': int,
+                            'action': str,
+                            'acl': str,
+                            Optional('pkts_compr_failed'): int,
+                            Optional('pkts_compressed'): int,
+                            Optional('pkts_decaps'): int,
+                            Optional('pkts_decompress_failed'): int,
+                            Optional('pkts_decompressed'): int,
+                            Optional('pkts_decrypt'): int,
+                            Optional('pkts_not_compressed'): int,
+                            Optional('pkts_not_decompressed'): int,
+                            Optional('pkts_verify'): int,
+                            Optional('pkts_internal_err_recv'): int,
+                            Optional('pkts_internal_err_send'): int,
+                            Optional('pkts_invalid_identity_recv'): int,
+                            Optional('pkts_invalid_prot_recv'): int,
+                            Optional('pkts_invalid_sa_rcv'): int,
+                            Optional('pkts_no_sa_send'): int,                      
+                            Optional('pkts_not_tagged_send'): int,
+                            Optional('pkts_not_untagged_rcv'): int,
+                            Optional('pkts_replay_failed_rcv'): int,
+                            Optional('pkts_replay_rollover_rcv'): int,
+                            Optional('pkts_replay_rollover_send'): int,
+                            Optional('pkts_tagged_send'): int,
+                            Optional('pkts_untagged_rcv'): int,
+                            Optional('pkts_verify_failed'): int,
+                            Optional('recv_errors'): int,
+                            Optional('send_errors'): int,
+                            'path_mtu': int,
+                            'ip_mtu':int,
+                            'pfs': str,
+                            'plaintext_mtu': int,
+                            'remote_crypto_endpt': str,
+                            'current_outbound_spi': str,
+                            'dh_group': str,
+                            'ip_mtu_idb': str,
+                            'local_crypto_endpt': str,
+                            Or('inbound_ah_sas',
+                               'inbound_esp_sas',
+                               'inbound_pcp_sas',
+                               'outbound_ah_sas',
+                               'outbound_esp_sas',
+                               'outbound_pcp_sas'): {
+                                    Optional('spi'): {
+                                        Any(): {
+                                            Optional('conn_id'): int,
+                                            Optional('crypto_map'): str,
+                                            Optional('flow_id'): str,
+                                            Optional('flow_id_val'): int,
+                                            Optional('transform'): str,
+                                            Optional('kilobyte_volume_rekey'): str,
+                                            Optional('in_use_settings'): str,
+                                            Optional('iv_size'): str,
+                                            Optional('remaining_key_lifetime'): str,
+                                            Optional('replay_detection_support'): str,
+                                            Optional('sibling_flags'): str,
+                                            Optional('status'): str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+# ===================================================
+#  Parser for 'show crypto ipsec sa detail'
+# ===================================================
+class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
+
+    """Parser for show crypto ipsec sa detail"""
+
+    cli_command = 'show crypto ipsec sa detail'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # interface: GigabitEthernet3
+        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d]+)$')
+
+        # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
+        p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-]+), +local addr +(?P<local_addr>[\d\.]+)$')
+
+        # protected vrf: (none)
+        p3 = re.compile(r'^protected vrf: (?P<protected_vrf>\S+)$')
+
+        # local ident (addr/mask/prot/port): (20.20.20.0/255.255.255.0/0/0)
+        p4 = re.compile(r'^local.*: +\((?P<addr>[0-9\.]+)\/(?P<mask>[0-9\.]+)\/(?P<prot>[\d]+)\/(?P<port>[\d]+)\)$')
+
+        # remote ident (addr/mask/prot/port): (10.10.10.0/255.255.255.0/0/0)
+        p5 = re.compile(r'^remote.*: +\((?P<addr>[0-9\.]+)\/(?P<mask>[0-9\.]+)\/(?P<prot>[\d]+)\/(?P<port>[\d]+)\)$')
+
+        # current_peer 1.1.1.1 port 500
+        p6 = re.compile(r'^current_peer +(?P<peer_ip>[0-9\.]+) +port +(?P<port>[0-9]+)$')
+
+        # PERMIT, flags={origin_is_acl,}
+        p7 = re.compile(r'^(?P<action>\w+), +flags=\{(?P<acl>[\w\_\-\,]+)\}$')
+
+        # #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4
+        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_decaps>\d+).*: +(?P<pkts_decrypt>\d+).*: +(?P<pkts_verify>\d+)$')
+
+        # #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4
+        p9 = re.compile(r'^#pkts decaps: +(?P<pkts_decaps>\d+).*: +(?P<pkts_decrypt>\d+).*: +(?P<pkts_verify>\d+)$')
+
+        # #pkts compressed: 0, #pkts decompressed: 0
+        p10 = re.compile(r'^#pkts compressed: +(?P<pkts_compressed>\d+).*: +(?P<pkts_decompressed>\d+)$')
+
+        # #pkts not compressed: 0, #pkts compr. failed: 0
+        p11 = re.compile(r'^#pkts not compressed: +(?P<pkts_not_compressed>\d+).*: +(?P<pkts_compr_failed>\d+)$')
+
+        # #pkts not decompressed: 0, #pkts decompress failed: 0
+        p12 = re.compile(r'^#pkts not decompressed: +(?P<pkts_not_decompressed>\d+).*: +(?P<pkts_decompress_failed>\d+)$')
+
+        # #send errors 0, #recv errors 0 
+        p13 = re.compile(r'^#send errors +(?P<send_errors>\d+).* +(?P<recv_errors>\d+)$')
+
+        # #pkts no sa (send) 0, #pkts invalid sa (rcv) 0 
+        p14 = re.compile(r'^#pkts no sa.* +(?P<pkts_no_sa_send>\d+).* +(?P<pkts_invalid_sa_rcv>\d+)$')
+
+        # #pkts invalid prot (recv) 0, #pkts verify failed: 0
+        p15 = re.compile(r'^#pkts invalid prot.* +(?P<pkts_invalid_prot_recv>\d+).* +(?P<pkts_verify_failed>\d+)$')
+
+        # #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0 
+        p16 = re.compile(r'^#pkts invalid identity.* +(?P<pkts_invalid_identity_recv>\d+).* +(?P<pkts_verify_failed>\d+)$')
+
+        # #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0 
+        p17 = re.compile(r'^#pkts replay rollover.* +(?P<pkts_replay_rollover_send>\d+).* +(?P<pkts_replay_rollover_rcv>\d+)$')
+
+        # ##pkts replay failed (rcv): 0 
+        p18 = re.compile(r'^##pkts replay failed.* +(?P<pkts_replay_failed_rcv>\d+)$')
+
+        # #pkts tagged (send): 0, #pkts untagged (rcv): 0 
+        p19 = re.compile(r'^#pkts tagged.* +(?P<pkts_tagged_send>\d+).*: +(?P<pkts_untagged_rcv>\d+)$')
+
+        # #pkts not tagged (send): 0, #pkts not untagged (rcv): 0 
+        p20 = re.compile(r'^#pkts not tagged.* +(?P<pkts_not_tagged_send>\d+).*: +(?P<pkts_not_untagged_rcv>\d+)$')
+
+        # #pkts internal err (send): 0, #pkts internal err (recv) 0 
+        p21 = re.compile(r'^#pkts internal err.* +(?P<pkts_internal_err_send>\d+).* +(?P<pkts_internal_err_recv>\d+)$')
+
+        # local crypto endpt.: 1.1.1.2, remote crypto endpt.: 1.1.1.1 
+        p22 = re.compile(r'^local crypto endpt.: +(?P<local_crypto_endpt>[\d\.]+).* +(?P<remote_crypto_endpt>[\d\.]+)$')
+
+        # plaintext mtu 1438, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet3 
+        p23 = re.compile(r'^plaintext mtu +(?P<plaintext_mtu>\d+),.* +(?P<path_mtu>\d+), ip mtu +(?P<ip_mtu>\d+),.*idb +(?P<ip_mtu_idb>\S+)$')
+
+        # current outbound spi: 0x397C36EE(964441838) 
+        p24 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
+
+        # PFS (Y/N): N, DH group: none 
+        p25 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+).*: +(?P<dh_group>\w+)$')
+
+        # inbound esp sas: 
+        p26 = re.compile(r'^inbound esp sas:$')
+
+        # spi: 0x658F7C11(1703902225) 
+        p27 = re.compile(r'^spi: +(?P<spi>[\S]+)$')
+
+        # transform: esp-256-aes esp-sha256-hmac , 
+        p28 = re.compile(r'^transform: +(?P<transform>[\S\s]+).*,$')
+
+        # in use settings ={Tunnel, }
+        p29 = re.compile(r'^in use settings =+\{(?P<in_use_settings>[\w\,\s]+)\}$')
+
+        # conn id: 2076, flow_id: CSR:76, sibling_flags FFFFFFFF80000048, crypto map: vpn-crypto-map
+        p30 = re.compile(r'^conn id: +(?P<conn_id>\d+), +flow_id: +(?P<flow_id>\w+):(?P<flow_id_val>\d+), +sibling_flags +(?P<sibling_flags>[\w\d]+), +crypto map: +(?P<crypto_map>[\w\-\d]+)$')
+
+        # sa timing: remaining key lifetime (k/sec): (4607999/83191) 
+        p31 = re.compile(r'^sa timing.* +(?P<remaining_key_lifetime>[\S\s]+)$')
+
+        # Kilobyte Volume Rekey has been disabled
+        p32 = re.compile(r'^Kilobyte Volume Rekey has been +(?P<kilobyte_volume_rekey>[disabled|enabled]+)$')
+
+        # IV size: 16 bytes
+        p33 = re.compile(r'^IV size: +(?P<iv_size>[\w\s]+)$')
+
+        # replay detection support: Y
+        p34 = re.compile(r'^replay detection support: +(?P<replay_detection_support>\w+)$')
+
+        # Status: ACTIVE(ACTIVE) 
+        p35 = re.compile(r'^Status: +(?P<status>\S+)$')
+
+        # inbound ah sas:
+        p36 = re.compile(r'^inbound ah sas:$')
+
+        # inbound pcp sas:
+        p37 = re.compile(r'^inbound pcp sas:$')
+
+        # outbound esp sas: 
+        p38 = re.compile(r'^outbound esp sas:$')
+
+        # outbound ah sas:
+        p39 = re.compile(r'^outbound ah sas:$')
+
+        # outbound pcp sas:
+        p40 = re.compile(r'^outbound pcp sas:$')
+
+        master_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface: GigabitEthernet3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict = master_dict.setdefault('interface', {}).setdefault(group['interface'],{})
+                count = 1
+                continue
+            
+            # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
+            m = p2.match(line)
+            if m:
+                peer_dict.update(m.groupdict())
+                session_dict = peer_dict.setdefault('ident',{})
+                continue
+
+            # protected vrf: (none)
+            m = p3.match(line)
+            if m:
+                ident_dict = session_dict.setdefault(count,{})
+                count += 1
+                ident_dict.update(m.groupdict())
+                continue
+
+            # local ident (addr/mask/prot/port): (20.20.20.0/255.255.255.0/0/0)
+            m = p4.match(line)
+            if m:
+                local_ident = ident_dict.setdefault('local_ident',{})
+                local_ident.update(m.groupdict())
+                continue
+
+            # remote ident (addr/mask/prot/port): (10.10.10.0/255.255.255.0/0/0)
+            m = p5.match(line)
+            if m:
+                remote_ident = ident_dict.setdefault('remote_ident',{})
+                remote_ident.update(m.groupdict())
+                continue
+
+            # current_peer 1.1.1.1 port 500
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group['port'] = int(group['port'])
+                ident_dict.update(group)
+                continue
+
+            # PERMIT, flags={origin_is_acl,}
+            m = p7.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts compressed: 0, #pkts decompressed: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts not compressed: 0, #pkts compr. failed: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts not decompressed: 0, #pkts decompress failed: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #send errors 0, #recv errors 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts invalid prot (recv) 0, #pkts verify failed: 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0 
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0 
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # ##pkts replay failed (rcv): 0 
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts tagged (send): 0, #pkts untagged (rcv): 0 
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts not tagged (send): 0, #pkts not untagged (rcv): 0 
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts internal err (send): 0, #pkts internal err (recv) 0 
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # local crypto endpt.: 1.1.1.2, remote crypto endpt.: 1.1.1.1
+            m = p22.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # plaintext mtu 1438, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet3 
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                group['plaintext_mtu'] = int(group['plaintext_mtu'])
+                group['path_mtu'] = int(group['path_mtu'])
+                group['ip_mtu'] = int(group['ip_mtu'])
+                ident_dict.update(group)
+                continue
+
+            # current outbound spi: 0x397C36EE(964441838)
+            m = p24.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # PFS (Y/N): N, DH group: none
+            m = p25.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # inbound esp sas:
+            m = p26.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_esp_sas',{})
+                continue
+            
+            # inbound ah sas:
+            m = p36.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_ah_sas',{})
+                continue
+
+            # inbound pcp sas:
+            m=p37.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_pcp_sas',{})
+                continue
+
+            # outbound esp sas:
+            m = p38.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_esp_sas',{})
+                continue
+
+            # outbound ah sas:
+            m = p39.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_ah_sas',{})
+                continue
+
+            # outbound pcp sas:
+            m = p40.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_pcp_sas',{})
+                continue
+
+            # spi: 0x658F7C11(1703902225)
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                spi_dict = sas_dict.setdefault('spi',{}).setdefault(group['spi'],{})
+                continue
+
+            # transform: esp-256-aes esp-sha256-hmac ,
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v.strip() for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+
+            # in use settings ={Tunnel, } 
+            m = p29.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # conn id: 2076, flow_id: CSR:76, sibling_flags FFFFFFFF80000048, crypto map: vpn-crypto-map 
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                group['conn_id'] = int(group['conn_id'])
+                group['flow_id_val'] = int(group['flow_id_val'])
+                spi_dict.update(group)
+                continue
+
+            # sa timing: remaining key lifetime (k/sec): (4607999/83191)
+            m = p31.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # Kilobyte Volume Rekey has been disabled
+            m = p32.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # IV size: 16 bytes 
+            m = p33.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # replay detection support: Y 
+            m = p34.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # Status: ACTIVE(ACTIVE)
+            m = p35.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+        return master_dict
+
+# =================================================
+#  Parser for 'show crypto ipsec sa'
+# =================================================
+class ShowCryptoIpsecSa(ShowCryptoIpsecSaDetail):
+    '''Parser for:
+        * 'show crypto ikev2 sa local {} detail'
+    '''
+
+    cli_command = "show crypto ipsec sa"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+# =================================================
+#  Parser for 'show crypto ipsec sa peer {peer_address} detail'
+# =================================================
+class ShowCryptoIpsecSaPeerDetail(ShowCryptoIpsecSaDetail):
+    '''Parser for:
+        * 'show crypto ipsec sa peer {peer_address} detail'
+    '''
+
+    cli_command = "show crypto ipsec sa peer {peer_address} detail"
+
+    def cli(self, peer_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+# =================================================
+#  Parser for 'show crypto ipsec sa peer {peer_address}'
+# =================================================
+class ShowCryptoIpsecSaPeer(ShowCryptoIpsecSaDetail):
+    '''Parser for:
+        * 'show crypto ipsec sa peer {peer_address}'
+    '''
+
+    cli_command = "show crypto ipsec sa peer {peer_address}"
+
+    def cli(self, peer_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+# ====================================================
+#  Schema for show crypto sockets'
+# ====================================================
+class ShowCryptoSocketsSchema(MetaParser):
+    """Schema for show crypto sockets"""
+    schema = {
+    'socket_connections': { 
+        'sockets_in_listen_state': list,
+        'total_socket_connections': int,
+        Any(): {
+            'peers': {
+                'local_ip': str,
+                'remote_ip': str
+            },
+            'local_ident': {
+                'address': str,
+                'mask': str,
+                'port': int,
+                'protocol': int
+            },
+            'remote_ident': {
+                'address': str,
+                'mask': str,
+                'port': int,
+                'protocol': int
+            },
+            'client_name': str,
+            'client_state': str, 
+            'socket_state': str,  
+            'ipsec_profile': str,
+            Optional('true_ident'): list
+        }    
+    }
+}
+
+# ==================================
+#  Parser for 'show crypto sockets'
+# ==================================
+class ShowCryptoSockets(ShowCryptoSocketsSchema):
+    """Parser for 
+        * show crypto socket
+    """
+
+    cli_command = 'show crypto sockets'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # initial return dictionary
+        crypto_sockets_dict = {}
+
+        # Number of Crypto Socket connections 4
+        p1 = re.compile(r'^Number\s+of\s+Crypto\s+Socket\s+connections\s+(?P<socket_connections>(\d+))')
+
+        # Tu1 Peers (local/remote): 85.45.1.1/10.0.0.2
+        p2 = re.compile(r'^(?P<tunnel_name>[\S\s]+)\s+Peers\s+\(local\/remote\):\s+(?P<local_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\/(?P<remote_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))')
+
+        # Local Ident  (addr/mask/port/prot): (85.45.3.1/255.255.255.255/0/47)
+        p3 = re.compile(r'^Local\s+Ident\s+\(addr\/mask\/port\/prot\):\s+\((?P<local_ident_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\/(?P<local_ident_mask>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\/(?P<local_ident_port>(\d+))\/(?P<local_ident_protocol>(\d+))')
+
+        # Remote Ident (addr/mask/port/prot): (10.0.0.2/255.255.255.255/0/47)
+        p4 = re.compile(r'^Remote\s+Ident\s+\(addr\/mask\/port\/prot\):\s+\((?P<remote_ident_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\/(?P<remote_ident_mask>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\/(?P<remote_ident_port>(\d+))\/(?P<remote_ident_protocol>(\d+))')
+
+        # IPSec Profile: "IPSEC_PROFILE"
+        p5 = re.compile(r'^IPSec\s+Profile:\s+\"(?P<ipsec_profile>[\S\s]+)\"')
+        
+        # Socket State: Open
+        p6 = re.compile(r'^Socket\s+State:\s+(?P<socket_state>[\S\s]+)')
+        
+        # Client: "TUNNEL SEC" (Client State: Active)
+        p7 = re.compile(r'^Client:\s+\"(?P<client_name>[\S\s]+)\"\s+\(Client\s+State:\s+(?P<client_state>[\S\s]+)\)')
+
+        # TRUE  ident (addr/mask/prot/port): {LOCAL -> REMOTE}
+        p8 = re.compile(r'^TRUE\s+ident\s+\(addr\/mask\/prot\/port\):\s+', re.IGNORECASE)
+        
+        # Crypto Sockets in Listen state:
+        p9 = re.compile(r'^Crypto\s+Sockets\s+in\s+Listen\s+state:')
+
+        # Client: "TUNNEL SEC" Profile: "IPSEC_PROFILE" Map-name: "Tunnel20-head-0"
+        p10 = re.compile(r'^Client:\s+\"(?P<name>[\S\s]+)\"\s+Profile:\s+\"(?P<client_state>[\S\s]+)\"\s+Map-name:\s+\"(?P<map_name>[\S\s]+)\"')
+ 
+        true_ident = False
+        sockets_in_listen_state = False
+
+        result_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of Crypto Socket connections 4
+            m = p1.match(line)
+            if m:
+                if 'total_socket_connections' not in crypto_sockets_dict:
+                    result_dict = crypto_sockets_dict.setdefault('socket_connections', {})
+                result_dict['total_socket_connections'] = int(m.groupdict()['socket_connections'])
+                continue
+
+            # Tu1 Peers (local/remote): 85.45.1.1/10.0.0.2
+            m = p2.match(line)
+            if m:
+                true_ident = False
+                tunnel_name = m.groupdict()['tunnel_name']
+                socket_dict = result_dict.setdefault(tunnel_name, {}) 
+                peers_dict = socket_dict.setdefault('peers', {})
+                peers_dict['local_ip'] = m.groupdict()['local_ip']
+                peers_dict['remote_ip'] = m.groupdict()['remote_ip']
+                continue
+
+            # Local Ident  (addr/mask/port/prot): (85.45.3.1/255.255.255.255/0/47)
+            m = p3.match(line)
+            if m:
+                local_ident_dict = socket_dict.setdefault('local_ident', {})
+                local_ident_dict['address'] = m.groupdict()['local_ident_ip']
+                local_ident_dict['mask'] = m.groupdict()['local_ident_mask']
+                local_ident_dict['port'] = int(m.groupdict()['local_ident_port'])
+                local_ident_dict['protocol'] = int(m.groupdict()['local_ident_protocol'])
+                continue 
+
+            # Remote Ident (addr/mask/port/prot): (10.0.0.2/255.255.255.255/0/47)
+            m = p4.match(line)
+            if m:
+                remote_ident_dict = socket_dict.setdefault('remote_ident', {})
+                remote_ident_dict['address'] = m.groupdict()['remote_ident_ip']
+                remote_ident_dict['mask'] = m.groupdict()['remote_ident_mask']
+                remote_ident_dict['port'] = int(m.groupdict()['remote_ident_port'])
+                remote_ident_dict['protocol'] = int(m.groupdict()['remote_ident_protocol'])
+                continue
+
+            # TRUE  ident (addr/mask/prot/port): {LOCAL -> REMOTE}
+            m = p8.match(line)
+            if m:
+                true_ident = True
+                socket_dict['true_ident'] = []
+                continue
+
+            # IPSec Profile: "IPSEC_PROFILE"
+            m = p5.match(line)
+            if m:
+                true_ident = False
+                socket_dict['ipsec_profile'] = m.groupdict()['ipsec_profile']
+                continue
+
+            # Socket State: Open 
+            m = p6.match(line)
+            if m:
+                socket_dict['socket_state'] = m.groupdict()['socket_state']
+                continue
+            
+            # Client: "TUNNEL SEC" (Client State: Active)
+            m = p7.match(line)
+            if m:
+                socket_dict['client_name'] = m.groupdict()['client_name']
+                socket_dict['client_state'] = m.groupdict()['client_state']
+                continue
+
+            if true_ident:
+                socket_dict['true_ident'].append(line)
+                continue
+
+            # Crypto Sockets in Listen state:
+            m = p9.match(line)
+            if m:
+                sockets_in_listen_state = True
+                result_dict['sockets_in_listen_state'] = []
+                continue
+
+            # Client: "TUNNEL SEC" Profile: "IPSEC_PROFILE" Map-name: "Tunnel20-head-0"
+            m = p10.match(line)
+            if m and sockets_in_listen_state:
+                result_dict['sockets_in_listen_state'].append(m.groupdict()['map_name'])
+                continue
+
+        return crypto_sockets_dict
+
+# ====================================================
+#  Schema for 'show crypto mib ipsec flowmib global'
+# ====================================================
+class ShowCryptoMibIpsecFlowmibGlobalSchema(MetaParser):
+    """Schema for show crypto mib ipsec flowmib global"""
+    schema = {
+        'ipsec_flowmib_global': {
+            'total_vrf': int,
+            Any(): {
+                'active_tunnels': int,
+                'previous_tunnels': int,
+                'in_octets': int,
+                'out_octets': int,
+                'in_packets': int,
+                'out_packets': int,
+                'uncompressed_encrypted_bytes': int,
+                'in_packet_drops': int,
+                'out_packet_drops': int,
+                'in_replay_drops': int,
+                'in_authentications': int,
+                'out_authentications': int,
+                'in_decrypts': int,
+                'out_encrypts': int,
+                'compressed_bytes': int,
+                'uncompressed_bytes': int,
+                'in_uncompressed_bytes': int,
+                'out_uncompressed_bytes': int,
+                'in_decrypt_failures': int,
+                'out_encrypt_failures': int,
+                'no_sa_failures': int,
+                'protocol_use_failures': int,
+                'system_capacity_failures': int,
+                'in_auth_failures': int,
+                'out_auth_failures': int
+            }  
+        }
+    }
+    
+# ====================================================
+#  Parser for 'show crypto mib ipsec flowmib global'
+# ====================================================  
+class ShowCryptoMibIpsecFlowmibGlobal(ShowCryptoMibIpsecFlowmibGlobalSchema):
+    """Parser for 
+        * show crypto mib ipsec flowmib global
+    """
+
+    cli_command = 'show crypto mib ipsec flowmib global'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        flowmib_global_dict = {}
+
+        # vrf CC-INTERNET
+        p1 = re.compile(r'^vrf\s+(?P<vrf_name>[\S\s]+)$')
+
+        # Active Tunnels:                   2
+        p2 = re.compile(r'^Active\s+Tunnels:\s+(?P<active_tunnels>\d+)$')
+
+        # Previous Tunnels:                 16
+        p3 = re.compile(r'^Previous\s+Tunnels:\s+(?P<previous_tunnels>\d+)$')
+
+        # In octets:                        3551184
+        p4 = re.compile(r'^In\s+octets:\s+(?P<in_octets>\d+)$')
+
+        # Out octets:                       1817806
+        p5 = re.compile(r'^Out\s+octets:\s+(?P<out_octets>\d+)$')
+
+        # In packets:                       29214 
+        p6 = re.compile(r'^In\s+packets:\s+(?P<in_packets>\d+)$')
+
+        # Out packets:                      29208  
+        p7 = re.compile(r'^Out\s+packets:\s+(?P<out_packets>\d+)$')
+
+        # Uncompressed encrypted bytes:     1817806
+        p8 = re.compile(r'^Uncompressed\s+encrypted\s+bytes:\s+(?P<uncompressed_encrypted_bytes>\d+)$')
+
+        # In packets drops:                 0 
+        p9 = re.compile(r'^In\s+packets\s+drops:\s+(?P<in_packet_drops>\d+)$')
+
+        # Out packets drops:                0 
+        p10 = re.compile(r'^Out\s+packets\s+drops:\s+(?P<out_packet_drops>\d+)$')
+                    
+        # In replay drops:                  0  
+        p11 = re.compile(r'^In\s+replay\s+drops:\s+(?P<in_replay_drops>\d+)$')
+                
+        # In authentications:               29214    
+        p12 = re.compile(r'^In\s+authentications:\s+(?P<in_authentications>\d+)$')
+
+        # Out authentications:              29208        
+        p13 = re.compile(r'^Out\s+authentications:\s+(?P<out_authentications>\d+)$')
+
+        # In decrypts:                      29214        
+        p14 = re.compile(r'^In\s+decrypts:\s+(?P<in_decrypts>\d+)$')
+
+        # Out encrypts:                     29208     
+        p15 = re.compile(r'^Out\s+encrypts:\s+(?P<out_encrypts>\d+)$')   
+
+        # Compressed bytes:                 0
+        p16 = re.compile(r'^Compressed\s+bytes:\s+(?P<compressed_bytes>\d+)$')
+
+        # Uncompressed bytes:               0
+        p17 = re.compile(r'^Uncompressed\s+bytes:\s+(?P<uncompressed_bytes>\d+)$')
+
+        # In uncompressed bytes:            0
+        p18 = re.compile(r'^In\s+uncompressed\s+bytes:\s+(?P<in_uncompressed_bytes>\d+)$')
+
+        # Out uncompressed bytes:           0
+        p19 = re.compile(r'^Out\s+uncompressed\s+bytes:\s+(?P<out_uncompressed_bytes>\d+)$')
+
+        # In decrypt failures:              0            
+        p20 = re.compile(r'^In\s+decrypt\s+failures:\s+(?P<in_decrypt_failures>\d+)$')
+
+        # Out encrypt failures:             0            
+        p21 = re.compile(r'^Out\s+encrypt\s+failures:\s+(?P<out_encrypt_failures>\d+)$')
+
+        # No SA failures:                   0   
+        p22 = re.compile(r'^No\s+SA\s+failures:\s+(?P<no_sa_failures>\d+)$')
+
+        # Protocol use failures:            0   
+        p23 = re.compile(r'^Protocol\s+use\s+failures:\s+(?P<protocol_use_failures>\d+)$')
+
+        # System capacity failures:         0   
+        p24 = re.compile(r'^System\s+capacity\s+failures:\s+(?P<system_capacity_failures>\d+)$')
+
+        # In authentication failures:       0        
+        p25 = re.compile(r'^In\s+authentication\s+failures:\s+(?P<in_auth_failures>\d+)$')
+
+        # Out authentication failures:      0
+        p26 = re.compile(r'^Out\s+authentication\s+failures:\s+(?P<out_auth_failures>\d+)$')
+ 
+        vrf_count = 0
+        result_dict = {}
+        include_vrf = True
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf CC-INTERNET
+            m = p1.match(line)
+            if m:
+                if 'total_vrf' not in flowmib_global_dict:
+                    result_dict = flowmib_global_dict.setdefault('ipsec_flowmib_global', {})
+                vrf_name = m.groupdict()['vrf_name']
+                # Bug ID: CSCwa72431 - show crypto mib ipsec flowmib issues 
+                # Ignore vrf names with ??? in the output
+                if vrf_name == '???':
+                    include_vrf = False
+                    continue
+                else:
+                    include_vrf = True
+                    vrf_count += 1
+                result_dict['total_vrf'] = vrf_count
+                vrf_name_dict = result_dict.setdefault(vrf_name, {})
+                continue
+            
+            if include_vrf:
+                # Active Tunnels:                   2
+                m = p2.match(line)
+                if m:
+                    vrf_name_dict['active_tunnels'] = int(m.groupdict()['active_tunnels'])
+                    continue
+
+                # Previous Tunnels:                 16
+                m = p3.match(line)
+                if m:
+                    vrf_name_dict['previous_tunnels'] = int(m.groupdict()['previous_tunnels'])
+                    continue
+
+                # In octets:                        3551184
+                m = p4.match(line)
+                if m:
+                    vrf_name_dict['in_octets'] = int(m.groupdict()['in_octets'])
+                    continue
+
+                # Out octets:                       1817806
+                m = p5.match(line)
+                if m:
+                    vrf_name_dict['out_octets'] = int(m.groupdict()['out_octets'])
+                    continue
+
+                # In packets:                       29214
+                m = p6.match(line)
+                if m:
+                    vrf_name_dict['in_packets'] = int(m.groupdict()['in_packets'])
+                    continue
+
+                # Out packets:                      29208
+                m = p7.match(line)
+                if m:
+                    vrf_name_dict['out_packets'] = int(m.groupdict()['out_packets'])
+                    continue
+
+                # Uncompressed encrypted bytes:     1817806
+                m = p8.match(line)
+                if m:
+                    vrf_name_dict['uncompressed_encrypted_bytes'] = int(m.groupdict()['uncompressed_encrypted_bytes'])
+                    continue
+
+                # In packets drops:                 0
+                m = p9.match(line)
+                if m:
+                    vrf_name_dict['in_packet_drops'] = int(m.groupdict()['in_packet_drops'])
+                    continue
+
+                # Out packets drops:                0
+                m = p10.match(line)
+                if m:
+                    vrf_name_dict['out_packet_drops'] = int(m.groupdict()['out_packet_drops'])
+                    continue
+
+                # In replay drops:                  0
+                m = p11.match(line)
+                if m:
+                    vrf_name_dict['in_replay_drops'] = int(m.groupdict()['in_replay_drops'])
+                    continue
+
+                # In authentications:               29214
+                m = p12.match(line)
+                if m:
+                    vrf_name_dict['in_authentications'] = int(m.groupdict()['in_authentications'])
+                    continue
+                
+                # Out authentications:              29208
+                m = p13.match(line)
+                if m:
+                    vrf_name_dict['out_authentications'] = int(m.groupdict()['out_authentications'])
+                    continue
+
+                # In decrypts:                      29214
+                m = p14.match(line)
+                if m:
+                    vrf_name_dict['in_decrypts'] = int(m.groupdict()['in_decrypts'])
+                    continue
+
+                # Out encrypts:                     29208
+                m = p15.match(line)
+                if m:
+                    vrf_name_dict['out_encrypts'] = int(m.groupdict()['out_encrypts'])
+                    continue
+
+                # Compressed bytes:                 0
+                m = p16.match(line)
+                if m:
+                    vrf_name_dict['compressed_bytes'] = int(m.groupdict()['compressed_bytes'])
+                    continue
+
+                # Uncompressed bytes:               0
+                m = p17.match(line)
+                if m:
+                    vrf_name_dict['uncompressed_bytes'] = int(m.groupdict()['uncompressed_bytes'])
+                    continue
+
+                # In uncompressed bytes:            0
+                m = p18.match(line)
+                if m:
+                    vrf_name_dict['in_uncompressed_bytes'] = int(m.groupdict()['in_uncompressed_bytes'])
+                    continue
+
+                # Out uncompressed bytes:           0
+                m = p19.match(line)
+                if m:
+                    vrf_name_dict['out_uncompressed_bytes'] = int(m.groupdict()['out_uncompressed_bytes'])
+                    continue
+
+                # In decrypt failures:              0
+                m = p20.match(line)
+                if m:
+                    vrf_name_dict['in_decrypt_failures'] = int(m.groupdict()['in_decrypt_failures'])
+                    continue
+
+                # Out encrypt failures:             0
+                m = p21.match(line)
+                if m:
+                    vrf_name_dict['out_encrypt_failures'] = int(m.groupdict()['out_encrypt_failures'])
+                    continue
+
+                # No SA failures:                   0
+                m = p22.match(line)
+                if m:
+                    vrf_name_dict['no_sa_failures'] = int(m.groupdict()['no_sa_failures'])
+                    continue
+
+                # Protocol use failures:            0
+                m = p23.match(line)
+                if m:
+                    vrf_name_dict['protocol_use_failures'] = int(m.groupdict()['protocol_use_failures'])
+                    continue
+
+                # System capacity failures:         0
+                m = p24.match(line)
+                if m:
+                    vrf_name_dict['system_capacity_failures'] = int(m.groupdict()['system_capacity_failures'])
+                    continue
+
+                # In authentication failures:       0
+                m = p25.match(line)
+                if m:
+                    vrf_name_dict['in_auth_failures'] = int(m.groupdict()['in_auth_failures'])
+                    continue
+
+                # Out authentication failures:      0
+                m = p26.match(line)
+                if m:
+                    vrf_name_dict['out_auth_failures'] = int(m.groupdict()['out_auth_failures'])
+                    continue
+
+        return flowmib_global_dict
+
+# ====================================================
+#  Schema for 'show crypto ipsec internal dual'
+# ====================================================
+class ShowCryptoIpsecInternalDualSchema(MetaParser):
+    """Schema for show crypto ipsec internal dual"""
+    schema = {
+        'ipsec_internal_dual_statistics': {
+            'success_stats': {
+                'remove_traffic_filter': int, 
+                'apply_traffic_filter': int
+            },
+            'error_stats': {
+                'acl_retrieval': int,
+                'ipv6_acl_insert': int,
+                'invalid_parameters': int,
+                'ipv6_ace_create': int,
+                'ipv4_acl_insert': int,
+                'no_ipv6_enabled': int,
+                'apply_traffic_filter': int,
+                'ipv4_ace_create': int
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for 'show crypto ipsec internal dual'
+# ====================================================  
+class ShowCryptoIpsecInternalDual(ShowCryptoIpsecInternalDualSchema):
+    """Parser for 
+        * show crypto ipsec internal dual
+    """
+
+    cli_command = 'show crypto ipsec internal dual'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ipsec_dualstack_stats_dict = {}
+
+        #  ==== IPSEC Dual Stack Statistics ====
+        p1 = re.compile(r'^====\s+IPSEC\s+Dual\s+Stack\s+Statistics\s+====')
+
+        # SUCCESS Statistics
+        p2 = re.compile(r'^SUCCESS\s+Statistics')
+
+        #   Apply traffic filter success   : 134
+        p3 = re.compile(r'^Apply\s+traffic\s+filter\s+success\s+:\s+(?P<apply_traffic_filter>\d+)$')
+
+        #   Remove traffic filter success  : 134
+        p4 = re.compile(r'^Remove\s+traffic\s+filter\s+success\s+:\s+(?P<remove_traffic_filter>\d+)$')
+
+        # ERROR Statistics
+        p5 = re.compile(r'^ERROR\s+Statistics')
+
+        #   No IPv6 enabled                : 0
+        p6 = re.compile(r'^No\s+IPv6\s+enabled\s+:\s+(?P<no_ipv6_enabled>\d+)$')
+
+        #   Apply traffic filter failed    : 0
+        p7 = re.compile(r'^Apply\s+traffic\s+filter\s+failed\s+:\s+(?P<apply_traffic_filter>\d+)$')
+
+        #   IPv4 ace create failed         : 0
+        p8 = re.compile(r'^IPv4\s+ace\s+create\s+failed\s+:\s+(?P<ipv4_ace_create>\d+)$')
+
+        #   IPv4 ACL insert failed         : 0
+        p9 = re.compile(r'^IPv4\s+ACL\s+insert\s+failed\s+:\s+(?P<ipv4_acl_insert>\d+)$')
+
+        #   IPv6 ace create failed         : 0
+        p10 = re.compile(r'^IPv6\s+ace\s+create\s+failed\s+:\s+(?P<ipv6_ace_create>\d+)$')
+
+        #   IPv6 ACL insert failed         : 0
+        p11 = re.compile(r'^IPv6\s+ACL\s+insert\s+failed\s+:\s+(?P<ipv6_acl_insert>\d+)$')
+
+        #   Invalid parameters             : 0
+        p12 = re.compile(r'^Invalid\s+parameters\s+:\s+(?P<invalid_parameters>\d+)$')
+
+        #   ACL retrieval failed           : 0
+        p13 = re.compile(r'^ACL\s+retrieval\s+failed\s+:\s+(?P<acl_retrieval>\d+)$')
+
+        ipsec_dualstack_stats = False
+        result_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  ==== IPSEC Dual Stack Statistics ====
+            m = p1.match(line)
+            if m:
+                #if 'ipsec_internal_dual_statistics' not in ipsec_dualstack_stats_dict:
+                result_dict = ipsec_dualstack_stats_dict.setdefault('ipsec_internal_dual_statistics', {})
+                ipsec_dualstack_stats = True
+                continue
+
+            # SUCCESS Statistics
+            m = p2.match(line)
+            if m and ipsec_dualstack_stats:
+                stats_dict = result_dict.setdefault('success_stats', {}) 
+                continue
+
+            #   Apply traffic filter success   : 134
+            m = p3.match(line)
+            if m:
+                stats_dict['apply_traffic_filter'] = int(m.groupdict()['apply_traffic_filter'])
+                continue 
+
+            #   Remove traffic filter success  : 134
+            m = p4.match(line)
+            if m:
+                stats_dict['remove_traffic_filter'] = int(m.groupdict()['remove_traffic_filter'])
+                continue
+
+            # ERROR Statistics
+            m = p5.match(line)
+            if m and ipsec_dualstack_stats:
+                stats_dict = result_dict.setdefault('error_stats', {}) 
+                continue
+
+            #   No IPv6 enabled                : 0
+            m = p6.match(line)
+            if m:
+                stats_dict['no_ipv6_enabled'] = int(m.groupdict()['no_ipv6_enabled'])
+                continue
+
+            #   Apply traffic filter failed    : 0
+            m = p7.match(line)
+            if m:
+                stats_dict['apply_traffic_filter'] = int(m.groupdict()['apply_traffic_filter'])
+                continue
+
+            #   IPv4 ace create failed         : 0
+            m = p8.match(line)
+            if m:
+                stats_dict['ipv4_ace_create'] = int(m.groupdict()['ipv4_ace_create'])
+                continue
+
+            #   IPv4 ACL insert failed         : 0
+            m = p9.match(line)
+            if m:
+                stats_dict['ipv4_acl_insert'] = int(m.groupdict()['ipv4_acl_insert'])
+                continue
+
+            #   IPv6 ace create failed         : 0
+            m = p10.match(line)
+            if m:
+                stats_dict['ipv6_ace_create'] = int(m.groupdict()['ipv6_ace_create'])
+                continue
+
+            #   IPv6 ACL insert failed         : 0
+            m = p11.match(line)
+            if m:
+                stats_dict['ipv6_acl_insert'] = int(m.groupdict()['ipv6_acl_insert'])
+                continue
+
+            #   Invalid parameters             : 0
+            m = p12.match(line)
+            if m:
+                stats_dict['invalid_parameters'] = int(m.groupdict()['invalid_parameters'])
+                continue
+
+            #   ACL retrieval failed           : 0
+            m = p13.match(line)
+            if m:
+                stats_dict['acl_retrieval'] = int(m.groupdict()['acl_retrieval'])
+                ipsec_dualstack_stats = False
+                continue
+
+        return ipsec_dualstack_stats_dict
+
+
+# =================================================
+#  Schema for 'show crypto ipsec profile '
+# =================================================
+class ShowCryptoIpsecProfileSchema(MetaParser):
+    """Schema for show crypto ipsec profile"""
+    schema = {
+        'ipsec_profile_name': {
+            Any(): {
+                    Optional('ikev2_profile_name'): str,
+                    'security_association_lifetime': str,
+                    'responder_only': str,
+                    'psf': str,
+                    'mixed_mode': str,
+                    'tranform_sets': {
+                        Any(): {
+                            'transform_set_name': str,
+                            'transform_set_method': str,
+                        }
+                    }
+                }
+        },
+    }
+
+# =================================================
+#  Parser for 'show crypto ipsec profile'
+# =================================================
+class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
+    """Parser for show crypto ipsec profile"""
+
+    cli_command = ['show crypto ipsec profile']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # IPSEC profile nil_ips
+        p1 = re.compile(r'^IPSEC profile\s*(?P<profile_name>\w+)$')
+
+        # IKEv2 Profile: nil_ike_prof
+        p2 = re.compile(r'^IKEv2 Profile\s*:\s*(?P<ikev2_profile_name>\w+)$')
+
+        # Security association lifetime: 4608000 kilobytes/3600 seconds
+        p3 = re.compile(r'^Security association lifetime\s*:\s*(?P<security_association_lifetime>[\d a-z\/]+)$')
+
+        # Responder-Only (Y/N): N
+        p4 = re.compile(r'^Responder-Only \(Y/N\)\s*:\s*(?P<responder_only>(Y|N))$')
+
+        # PFS (Y/N): N
+        p5 = re.compile(r'^PFS \(Y/N\):\s*(?P<psf>(Y|N))$')
+
+        # Mixed-mode : Disabled
+        p6 = re.compile(r'^Mixed-mode\s*:\s*(?P<mixed_mode>\w+)$')
+
+        # Transform sets={
+        p7 = re.compile(r'^Transform sets={$')
+
+        # nil_tfs:  { esp-aes esp-sha-hmac  } ,
+        p8 = re.compile(r'^(?P<transforset>\w+)\s*:\s*{\s*(?P<transform_set_name>[\w-]+)\s+(?P<transform_set_method>[\w-]+)\s*}\s*,$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                profile_name = groups['profile_name']
+                profile_name_dict = ret_dict.setdefault('ipsec_profile_name',{}).setdefault(profile_name,{})
+                continue
+
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ikev2_profile_name = groups['ikev2_profile_name']
+                profile_name_dict['ikev2_profile_name'] = ikev2_profile_name
+                continue
+
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                security_association_lifetime = groups['security_association_lifetime']
+                profile_name_dict['security_association_lifetime'] = security_association_lifetime
+                continue
+
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                responder_only = groups['responder_only']
+                profile_name_dict['responder_only'] = responder_only
+                continue
+
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                psf = groups['psf']
+                profile_name_dict['psf'] = psf
+                continue
+
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                mixed_mode = groups['mixed_mode']
+                profile_name_dict['mixed_mode'] = mixed_mode
+                continue
+
+            m = p7.match(line)
+            if m:
+                transform_set_dict = profile_name_dict.setdefault('tranform_sets',{})
+                continue
+
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                transforset = groups['transforset']
+                transform_set_name = groups['transform_set_name']
+                transform_set_method = groups['transform_set_method']
+                transform_dict = transform_set_dict.setdefault(transforset,{})
+                transform_dict['transform_set_name'] = transform_set_name
+                transform_dict['transform_set_method'] = transform_set_method
+                continue
+
+        return ret_dict
+
+# =================================================
+# Schema for
+#  Schema for 'show crypto ikev2 proposal'
+# =================================================
+class ShowCryptoIkev2ProposalSchema(MetaParser):
+    """Schema for show crypto ikev2 proposal"""
+    schema = {
+        'proposal_name':{
+            Any(): {
+                    'encryption': str,
+                    'integrity': str,
+                    'prf': str,
+                    'dh_group': list,
+                }
+        },
+    }
+
+# =================================================
+# Parser for
+#  Parser for 'show crypto ikev2 proposal'
+# =================================================
+class ShowCryptoIkev2Proposal(ShowCryptoIkev2ProposalSchema):
+    """Parser for show crypto ikev2 proposal"""
+
+    cli_command = ['show crypto ikev2 proposal']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # IKEv2 proposal: default
+        p1 = re.compile(r'^IKEv2 proposal\s*:\s*(?P<proposal_name>.*)$')
+
+        # Encryption : AES-CBC-256
+        p2 = re.compile(r'^Encryption\s*:\s*(?P<encryption>[\w-]+)$')
+
+        # Integrity  : SHA512 SHA384
+        p3 = re.compile(r'^Integrity\s*:\s*(?P<integrity>.*)$')
+
+        # PRF        : SHA512 SHA384
+        p4 = re.compile(r'^PRF\s*:\s*(?P<prf>.*)$')
+
+        # DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21 DH_GROUP_1536_MODP/Group 5
+        p5 = re.compile(r'^DH Group\s*:\s*(?P<dh_group>.*)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IKEv2 proposal: default
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                proposal_name = groups['proposal_name']
+                proposal_name_dict = ret_dict.setdefault('proposal_name',{}).setdefault(proposal_name,{})
+                continue
+
+            # Encryption : AES-CBC-256
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                encryption = groups['encryption']
+                proposal_name_dict['encryption'] = encryption
+                continue
+
+            # Integrity  : SHA512 SHA384
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                integrity = groups['integrity']
+                proposal_name_dict['integrity'] = integrity
+                continue
+
+            # PRF        : SHA512 SHA384
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                prf = groups['prf']
+                proposal_name_dict['prf'] = prf
+                continue
+
+            # DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21 DH_GROUP_1536_MODP/Group 5
+            m = p5.match(line)
+            if m:
+                l2 = ''
+                groups = m.groupdict()
+                dh_group = groups['dh_group']
+                dh_group = dh_group.split()
+                dh_group_list = []
+                for i in range(len(dh_group)):
+                    if i==0 or i%2==0:
+                        l2 = l2+dh_group[i]
+                    else:
+                        l2 = l2+' '+dh_group[i]
+                        dh_group_list.append(l2)
+                        l2 = ''
+                proposal_name_dict['dh_group'] = dh_group_list
+                continue
+
+        return ret_dict
+
+# =================================================
+# Schema for
+#  Schema for 'show crypto ikev2 policy'
+# =================================================
+class ShowCryptoIkev2PolicySchema(MetaParser):
+    """Schema for show crypto ikev2 policy"""
+    schema = {
+        'policy_name':{
+            Any(): {
+                    'match_fvrf': str,
+                    'match_address_local': str,
+                    'proposal': str,
+                }
+        },
+    }
+
+# =================================================
+# Parser for
+#  Parser for 'show crypto ikev2 policy'
+# =================================================
+class ShowCryptoIkev2Policy(ShowCryptoIkev2PolicySchema):
+    """Parser for show crypto ikev2 policy"""
+
+    cli_command = ['show crypto ikev2 policy']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # IKEv2 policy : ikev2policy
+        p1 = re.compile(r'^IKEv2 policy\s*:\s*(?P<policy_name>.*)$')
+
+        # Match fvrf : global
+        p2 = re.compile(r'^Match fvrf\s*:\s*(?P<match_fvrf>\w+)$')
+
+        # Match address local : any
+        p3 = re.compile(r'^Match address local\s*:\s*(?P<match_address_local>\w+)$')
+
+        # Proposal    : ikev2proposal
+        p4 = re.compile(r'^Proposal\s*:\s*(?P<proposal>.*)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IKEv2 policy : ikev2policy
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                policy_name = groups['policy_name']
+                policy_name_dict = ret_dict.setdefault('policy_name',{}).setdefault(policy_name,{})
+                continue
+
+            # Match fvrf : global
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                match_fvrf = groups['match_fvrf']
+                policy_name_dict['match_fvrf'] = match_fvrf
+                continue
+
+            # Match address local : any
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                match_address_local = groups['match_address_local']
+                policy_name_dict['match_address_local'] = match_address_local
+                continue
+
+            # Proposal    : ikev2proposal
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                proposal = groups['proposal']
+                policy_name_dict['proposal'] = proposal
+                continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto ikev2 sa '
+# =================================================
+class ShowCryptoIkev2SaSchema(MetaParser):
+    """Schema for show crypto ikev2 sa"""
+    schema = {
+        'ipv4': {
+            Any(): {
+                    'tunnel_id': int,
+                    'local_ip': str,
+                    'local_port': int,
+                    'remote_ip': str,
+                    'remote_port': int,
+                    'fvrf': str,
+                    'ivrf': str,
+                    'status': str,
+                    'encryption': str,
+                    'keysize': int,
+                    'prf': str,
+                    'hash': str,
+                    'dh_group': int,
+                    'auth_sign': str,
+                    'auth_verify': str,
+                    'life_time': int,
+                    'active_time': int,
+                    Optional('ce_id'): int,
+                    Optional('session_id'): int,
+                    Optional('local_spi'): str,
+                    Optional('remote_spi'): str,
+                    }
+                },
+        'ipv6': {}
+    }
+
+# =================================================
+#  Parser for 'show crypto ikev2 sa '
+# =================================================
+class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
+    """Parser for show crypto ikev2 sa"""
+
+    cli_command = ['show crypto ikev2 sa']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # IPv4 Crypto IKEv2  SA  
+        p1 = re.compile(r'^IPv4 Crypto IKEv2 SA$')
+
+        # IPv6 Crypto IKEv2  SA 
+        p2 = re.compile(r'^IPv6 Crypto IKEv2 SA$')
+
+        # 1         66.66.66.1/500        66.66.66.2/500        none/none            READY
+        p3 = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<local_ip>[\w.]+)/(?P<local_port>\d+)\s+(?P<remote_ip>[\w.]+)/(?P<remote_port>\d+)\s+(?P<fvrf>\w+)/(?P<ivrf>\w+)\s+(?P<status>[\w]+)$')
+
+        # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
+        p4 = re.compile(r'^Encr:\s*(?P<encryption>[\w-]+),\s*keysize:\s*(?P<keysize>\d+),\s*PRF:\s*(?P<prf>\w+),\s*Hash:\s*(?P<hash>\w+),\s*DH Grp:(?P<dh_group>\d+),\s*Auth sign:\s*(?P<auth_sign>\w+),\s*Auth verify:\s*(?P<auth_verify>\w+)')
+
+        # Life/Active Time: 86400/735 sec
+        p5 = re.compile(r'^Life/Active Time:\s*(?P<life_time>\d+)/(?P<active_time>\d+)\s*sec$')
+
+        # CE id: 0, Session-id: 5206
+        p6 = re.compile(r'^CE id:\s*(?P<ce_id>\d+),\s*Session-id:\s*(?P<session_id>\d+)$')
+
+        # Local spi: 1F7B76961C3A77ED Remote spi: 1298FDE074BD724C
+        p7 = re.compile(r'^Local spi:\s*(?P<local_spi>[A-F\d]+)\s*Remote spi:\s*(?P<remote_spi>[A-F\d]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPv4 Crypto IKEv2  SA 
+            m = p1.match(line)
+            if m:
+                ipv4_ikev2_dict = ret_dict.setdefault('ipv4',{})
+
+            # IPv6 Crypto IKEv2  SA 
+            m = p2.match(line)
+            if m:
+                ipv6_ikev2_dict = ret_dict.setdefault('ipv6',{})
+
+            # 1         66.66.66.1/500        66.66.66.2/500        none/none            READY
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                tunnel_id = int(groups['tunnel_id'])
+                local_ip = groups['local_ip']
+                local_port = int(groups['local_port'])
+                remote_ip = groups['remote_ip']
+                remote_port = int(groups['remote_port'])
+                fvrf = groups['fvrf']
+                ivrf = groups['ivrf']
+                status = groups['status']
+                tunnel_dict = ipv4_ikev2_dict.setdefault(tunnel_id,{})
+
+                tunnel_dict['tunnel_id'] = tunnel_id
+                tunnel_dict['local_ip'] = local_ip
+                tunnel_dict['local_port'] = local_port
+                tunnel_dict['remote_ip'] = remote_ip
+                tunnel_dict['remote_port'] = remote_port
+                tunnel_dict['fvrf'] = fvrf
+                tunnel_dict['ivrf'] = ivrf
+                tunnel_dict['status'] = status
+
+            # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                encryption = groups['encryption']
+                keysize = int(groups['keysize'])
+                prf = groups['prf']
+                hash = groups['hash']
+                dh_group = int(groups['dh_group'])
+                auth_sign = groups['auth_sign']
+                auth_verify = groups['auth_verify']
+
+                tunnel_dict['encryption'] = encryption
+                tunnel_dict['keysize'] = keysize
+                tunnel_dict['prf'] = prf
+                tunnel_dict['hash'] = hash
+                tunnel_dict['dh_group'] = dh_group
+                tunnel_dict['auth_sign'] = auth_sign
+                tunnel_dict['auth_verify'] = auth_verify
+
+            # Life/Active Time: 86400/735 sec
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                life_time = int(groups['life_time'])
+                active_time = int(groups['active_time'])
+
+                tunnel_dict['life_time'] = life_time
+                tunnel_dict['active_time'] = active_time
+
+            # CE id: 0, Session-id: 5206
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ce_id = int(groups['ce_id'])
+                session_id = int(groups['session_id'])
+
+                tunnel_dict['ce_id'] = ce_id
+                tunnel_dict['session_id'] = session_id
+
+            # Local spi: 1F7B76961C3A77ED Remote spi: 1298FDE074BD724C
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                local_spi = groups['local_spi']
+                remote_spi = groups['remote_spi']
+
+                tunnel_dict['local_spi'] = local_spi
+                tunnel_dict['remote_spi'] = remote_spi
+
+        return ret_dict
+
+# =================================================
+# Schema for
+#  Schema for 'show crypto ikev2 stats exchange'
+# =================================================
+class ShowCryptoIkev2StatsExchangeSchema(MetaParser):
+    """Schema for show crypto ikev2 stats exchange"""
+    schema = {
+        'exchanges':{
+            Any(): {
+                    'transmit_request': int,
+                    'transmit_response': int,
+                    'received_request': int,
+                    'received_response': int
+                }
+        },
+        'error_notify': {
+            Any(): {
+                    'transmit_request': int,
+                    'transmit_response': int,
+                    'received_request': int,
+                    'received_response': int
+            }
+        },
+        'other_notify': {
+            Any(): {
+                    'transmit_request': int,
+                    'transmit_response': int,
+                    'received_request': int,
+                    'received_response': int
+            }
+        },
+        'config_request': {
+            Any(): {
+                    'transmit': int,
+                    'received': int
+            }
+        },
+        'other_counters': {
+            'nat_inside': int,
+            'no_nat': int
+
+        }
+    }
+
+# =================================================
+# Parser for
+#  Parser for 'show crypto ikev2 stats exchange'
+# =================================================
+class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
+    """Parser for show crypto ikev2 stats exchange"""
+
+    cli_command = ['show crypto ikev2 stats exchange']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # EXCHANGES
+        p1 = re.compile(r'^EXCHANGES$')
+        p1_a = re.compile(r'^ERROR NOTIFY$')
+        p1_b = re.compile(r'^OTHER NOTIFY$')
+        p1_c = re.compile(r'^CONFIG PAYLOAD TYPE TX RX$')
+        p1_d = re.compile(r'^OTHER COUNTERS$')
+
+        # IKE_SA_INIT 8618 0 0 5206
+        p2 = re.compile(r'^(?P<message>\w+)\s+(?P<tx_req>\d+)\s+(?P<tx_res>\d+)\s+(?P<rx_req>\d+)\s+(?P<rx_res>\d+)$')
+
+        # CFG_REQUEST 5206 0
+        p3 = re.compile(r'^(?P<message>\w+)\s+(?P<tx>\d+)\s+(?P<rx>\d+)$')
+
+        # NAT_INSIDE 3
+        p4 = re.compile(r'^(?P<message>\w+)\s+(?P<count>\d+)$')
+
+        ret_dict = {}
+
+        exchnge_flag = 0
+        error_notify_flag = 0
+        other_notify_flag = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EXCHANGES
+            m = p1.match(line)
+            if m:
+                exchnge_flag = 1
+                exchange_dict = ret_dict.setdefault('exchanges',{})
+                continue
+
+            # ERROR NOTIFY
+            m = p1_a.match(line)
+            if m:
+                exchnge_flag = 0
+                error_notify_flag = 1
+                other_notify_flag = 0
+                error_dict = ret_dict.setdefault('error_notify',{})
+                continue
+
+            # OTHER NOTIFY
+            m = p1_b.match(line)
+            if m:
+                exchnge_flag = 0
+                error_notify_flag = 0
+                other_notify_flag = 1
+                notify_dict = ret_dict.setdefault('other_notify',{})
+                continue
+
+            # CONFIG PAYLOAD TYPE TX RX
+            m = p1_c.match(line)
+            if m:
+                exchnge_flag = 0
+                error_notify_flag = 0
+                other_notify_flag = 0
+                config_dict = ret_dict.setdefault('config_request',{})
+                continue
+
+            # OTHER COUNTERS
+            m = p1_d.match(line)
+            if m:
+                exchnge_flag = 0
+                error_notify_flag = 0
+                other_notify_flag = 0
+                other_dict = ret_dict.setdefault('other_counters',{})
+                continue
+
+            # IKE_SA_INIT 8618 0 0 5206
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                tx_req = int(groups['tx_req'])
+                tx_res = int(groups['tx_res'])
+                rx_req = int(groups['rx_req'])
+                rx_res = int(groups['rx_res'])
+                if exchnge_flag:
+                    exchange_counter_dict = exchange_dict.setdefault(groups['message'].lower(),{})
+                    exchange_counter_dict['transmit_request'] = tx_req
+                    exchange_counter_dict['transmit_response'] = tx_res
+                    exchange_counter_dict['received_request'] = rx_req
+                    exchange_counter_dict['received_response'] = rx_res
+                if error_notify_flag:
+                    error_counter_dict = error_dict.setdefault(groups['message'].lower(),{})
+                    error_counter_dict['transmit_request'] = tx_req
+                    error_counter_dict['transmit_response'] = tx_res
+                    error_counter_dict['received_request'] = rx_req
+                    error_counter_dict['received_response'] = rx_res
+                if other_notify_flag:
+                    notify_counter_dict = notify_dict.setdefault(groups['message'].lower(),{})
+                    notify_counter_dict['transmit_request'] = tx_req
+                    notify_counter_dict['transmit_response'] = tx_res
+                    notify_counter_dict['received_request'] = rx_req
+                    notify_counter_dict['received_response'] = rx_res
+                continue
+            # CFG_REQUEST 5206 0
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                tx = int(groups['tx'])
+                rx = int(groups['rx'])
+                config_counter_dict = config_dict.setdefault(groups['message'].lower(),{})
+                config_counter_dict['transmit'] = tx
+                config_counter_dict['received'] = rx
+                continue
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                other_message = groups['message'].lower()
+                counter = int(groups['count'])
+                other_dict[other_message] = counter
+                continue
+
+        return ret_dict

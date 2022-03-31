@@ -5,7 +5,8 @@ expected_output = {
       'connection': 11,
       'port': 45128,
       'protocol': 'netconf',
-      'state': 'Connected'
+      'state': 'Connected',
+      'explanation': ''
     }
   }
 }

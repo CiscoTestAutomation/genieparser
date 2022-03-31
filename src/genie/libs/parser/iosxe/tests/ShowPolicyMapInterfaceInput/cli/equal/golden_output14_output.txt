@@ -1,0 +1,20 @@
+show policy-map interface HundredGigE1/0/3 input class cm-dscp6
+ HundredGigE1/0/3
+
+  Service-policy input: 2r3c
+
+    Class-map: cm-dscp6 (match-all)
+      66561970 packets
+      Match:  dscp 6
+      police:
+          cir 5 %
+          cir 2000000000 bps, bc 62500000 bytes
+          pir 10 %
+          pir 4000000000 bps, be 125000000 bytes
+        conformed 22027975000 bytes; actions:
+          transmit
+        exceeded 22025930000 bytes; actions:
+          set-dscp-transmit dscp table tb1
+        violated 288755945000 bytes; actions:
+          set-dscp-transmit dscp table tb2
+        conformed 472689000 bps, exceeded 472651000 bps, violated 6196321000 bps

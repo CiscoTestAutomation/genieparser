@@ -1,0 +1,15 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+6.6.6.6/32 
+  [115/L2/40] via 12.1.1.2(Ethernet0/1), from 6.6.6.6, tag 0 
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+  [115/L2/40] via 13.1.1.2(Ethernet0/2), from 6.6.6.6, tag 0 
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed) 
+  [115/L2/20] via 10.1.6.4(Ethernet0/3) r604.00-00, from 4.4.4.4, tag 0 
+     prefix attr: X:0 R:0 N:1
+      Prefix-SID index: 1004, R:0 N:0 P:0 E:0 V:0 L:0, from SRAPP
+     label: implicit-null 
