@@ -21,16 +21,16 @@ from genie.libs.parser.utils.common import Common
 class ShowCableTdrIntSchema(MetaParser):
     schema = {
         Any(): {
-            ('interface'): str,
-            ('speed'): str,
-            ('date'): str,
-            ('time'): str,
+            'interface': str,
+            'speed': str,
+            'date': str,
+            'time': str,
             'pairs': {
                 Any() : {
-                    ('length'): int,
-                    ('tolerance'): int,
-                    ('remote_pair'): str,
-                    ('status'): str,
+                    'length': int,
+                    'tolerance': int,
+                    'remote_pair': str,
+                    'status': str,
                }
            }
         }
@@ -50,15 +50,6 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
 
         # initial return dictionary
         tdr_dict = {}
-
-        # TDR test last run on: January 09 16:19:29
-        #
-        # Interface Speed Local pair Pair length        Remote pair Pair status
-        # --------- ----- ---------- ------------------ ----------- --------------------
-        # Gi1/0/1   auto  Pair A     0    +/- 1  meters N/A         Open
-        #                 Pair B     1    +/- 1  meters N/A         Open
-        #                 Pair C     0    +/- 1  meters N/A         Open
-        #                 Pair D     1    +/- 1  meters N/A         Open
 
         # TDR test last run on: January 09 16:19:29
         p1 = re.compile(r'^TDR +test +last +run +on: +(?P<date>\w+ \d+) +(?P<time>\d+:\d+:\d+)$')
