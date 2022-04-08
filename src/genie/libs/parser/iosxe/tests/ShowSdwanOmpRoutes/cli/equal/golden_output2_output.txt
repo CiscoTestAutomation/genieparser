@@ -1,0 +1,44 @@
+cEdge#show sdwan omp routes 10.114.254.3/32
+Code:
+C   -> chosen
+I   -> installed
+Red -> redistributed
+Rej -> rejected
+L   -> looped
+R   -> resolved
+S   -> stale
+Ext -> extranet
+Inv -> invalid
+Stg -> staged
+IA  -> On-demand inactive
+U   -> TLOC unresolved
+                                            PATH                      ATTRIBUTE
+VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE
+--------------------------------------------------------------------------------------------------------------------------------------
+1      10.114.254.3/32     0.0.0.0          69     1002     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1002     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1002     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+2      10.114.254.3/32     0.0.0.0          69     1003     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1003     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1003     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+3      10.114.254.3/32     0.0.0.0          69     1010     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1010     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1010     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+21     10.114.254.3/32     0.0.0.0          69     1004     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1004     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1004     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+22     10.114.254.3/32     0.0.0.0          69     1005     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1005     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1005     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+23     10.114.254.3/32     0.0.0.0          69     1006     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1006     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1006     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+24     10.114.254.3/32     0.0.0.0          69     1007     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1007     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1007     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+25     10.114.254.3/32     0.0.0.0          69     1008     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1008     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1008     C,Red,R   installed  10.114.254.3     custom2          ipsec  -
+26     10.114.254.3/32     0.0.0.0          69     1009     C,Red,R   installed  10.114.254.3     public-internet  ipsec  -
+                           0.0.0.0          78     1009     C,Red,R   installed  10.114.254.3     custom1          ipsec  -
+                           0.0.0.0          79     1009     C,Red,R   installed  10.114.254.3     custom2          ipsec  -

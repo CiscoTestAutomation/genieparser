@@ -2369,21 +2369,25 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
                         ' +VNI: +(?P<vnid>[\d]+)$')
 
-        # Src Active AD Route: (10.111.1.3/32, 238.8.4.101/32) uptime: 00:01:01
-        p2 = re.compile(r'^\s*Src +Active +AD +Route: +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
+        # Src Active AD route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
+        # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
+        p2 = re.compile(r'((^\s*SA\-AD +Route:)|(^\s*Src +Active +AD +route:)) +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
                         ' +uptime: +(?P<uptime>[\w\.\:]+)$')
+
         #  Interested Fabric Nodes:
         p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
 
+
         #    This node, uptime: 00:01:01
+        #    100.100.100.4, uptime: 00:01:01
         p4 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+), +uptime: +(?P<interest_uptime>[\w\.\:]+)$')
 
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
+            if not line:
                 continue
+            line = line.strip()
 
+            # VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2392,6 +2396,7 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 vrf_dict.update({'vnid': group['vnid']})
                 continue
 
+            # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2407,6 +2412,8 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 saddr_dict.update({'uptime': group['uptime']})
                 continue
 
+            #    This node, uptime: 00:01:01
+            #    100.100.100.4, uptime: 00:01:01
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -2416,6 +2423,150 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 interested_dict.update({'uptime': group['interest_uptime']})
                 continue
 
+        return result_dict
+
+# ==========================================================
+#  schema for show fabric multicast ipv4 mroute vrf all
+# ==========================================================
+class ShowFabricMulticastIpMrouteSchema(MetaParser):
+    """Schema for:
+        show fabric multicast ipv4 mroute
+        show fabric multicast ipv4 mroute vrf <vrf>
+        show fabric multicast ipv4 mroute vrf all"""
+
+    schema ={
+        "multicast": {
+            "vrf": {
+                Any(): {
+                    "vnid": str,
+                    Optional("address_family"): {
+                        Any(): {
+                            "fabric_mroutes": {
+                                "gaddr": {
+                                    Any(): {
+                                        "grp_len": int,
+                                        "saddr": {
+                                            Any(): {
+                                                Optional("src_len"): int,
+                                                "uptime": str,
+                                                Optional("rd_rt_ext_vri"): str,
+                                                Optional("interested_fabric_nodes"): {
+                                                    Any(): {
+                                                        "uptime": str,
+                                                        "rpfneighbor": str,
+                                                        Optional("loc"): str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ===========================================================
+#  Parser for show fabric multicast ipv4 mroute vrf all
+# ==========================================================
+class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
+    """parser for:
+        show fabric multicast ipv4 mroute
+        show fabric multicast ipv4 mroute vrf <vrf>
+        show fabric multicast ipv4 mroute vrf all"""
+
+    cli_command = ['show fabric multicast ipv4 mroute vrf {vrf}','show fabric multicast ipv4 mroute']
+    exclude = [
+        'uptime']
+
+    def cli(self,vrf="",output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            vrf = "default"
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
+
+        p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +Fabric +mroute +Database'\
+                        ' +VNI: +(?P<vnid>[\d]+)$')
+
+
+        # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
+
+        p2 = re.compile(r'^\s*Fabric +Mroute: +\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\) +ptr: +0[xX][0-9a-'\
+                        'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
+
+        # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
+        p3 = re.compile(r'^\s*RD-RT ext comm Route-Import: +(?P<vri>[\w\s]+)$')
+        #  Interested Fabric Nodes:
+        p4 = re.compile(r'^\s*Interested Fabric Nodes:$')
+
+        #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+        #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+        p5 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+) *(\((?P<loc>[\w]+)\))? *, +uptime: +'\
+                         '(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
+
+        for line in out.splitlines():
+            if not line:
+                continue
+            line = line.strip()
+
+            # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = result_dict.setdefault('multicast', {}).setdefault('vrf', {}).\
+                    setdefault(group['vrf_name'], {})
+                vrf_dict.update({'vnid': group['vnid']})
+                continue
+
+            # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict = vrf_dict.setdefault('address_family', {}).setdefault('ipv4', {})
+                saddr = group['saddr']
+                gaddr = group['gaddr']
+                gaddr_dict = address_family_dict.setdefault('fabric_mroutes', {}).\
+                    setdefault('gaddr', {}).setdefault(gaddr ,{})
+                gaddr_dict.update({'grp_len': int(gaddr.split('/')[1])})
+                saddr_dict = gaddr_dict.setdefault('saddr', {}).setdefault(saddr, {})
+                if saddr != "*":
+                    saddr_dict.update({'src_len': int(saddr.split('/')[1])})
+                saddr_dict.update({'uptime': group['uptime']})
+                continue
+            # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                group["rd_rt_ext_vri"] = group['vri'].strip()
+                saddr_dict.update({'rd_rt_ext_vri': group['rd_rt_ext_vri']})
+
+            #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+            #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group['interested_fabric_nodes'] = group['interested_fabric_nodes'].strip()
+                group['loc'] = group['loc']
+                interested_dict = saddr_dict.setdefault('interested_fabric_nodes', {}).\
+                    setdefault(group['interested_fabric_nodes'], {})
+                interested_dict.update({'uptime': group['interest_uptime']})
+                interested_dict.update({'rpfneighbor': group['rpfneighbor']})
+                if group.get('loc',None):
+                    interested_dict.update({'loc': group['loc']})
+                continue
         return result_dict
 
 

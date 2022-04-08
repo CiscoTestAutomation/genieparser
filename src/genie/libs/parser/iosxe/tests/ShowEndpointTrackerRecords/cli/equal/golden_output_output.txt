@@ -1,0 +1,11 @@
+show endpoint-tracker records
+
+Record Name                      Endpoint                              EndPoint Type Threshold(ms) Multiplier Interval(s) Tracker-Type
+group-udp-tcp-10001              tcp-10002 OR udp-10002                N/A           N/A           N/A        N/A         tracker-group
+nat-dia-tracker-4351             151.151.151.1                         IP            300           3          60          interface
+tcp-10001                        10.157.10.2                           TCP           100           1          20          static-route
+tcp-10002                        10.160.10.2                           UDP           100           1          20          static-route
+udp-10001                        10.157.10.2                           UDP           100           1          20          static-route
+udp-10002                        10.160.10.2                           UDP           100           1          20          static-route
+track1                           198.168.20.2                          IP            300           3          60          interface
+track3                           www.diatracker.com                    DNS_NAME      300           3          60          interface

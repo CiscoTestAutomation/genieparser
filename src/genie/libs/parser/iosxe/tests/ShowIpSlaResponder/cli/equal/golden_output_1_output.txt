@@ -1,0 +1,5 @@
+General IP SLA Responder on Control port 1967
+General IP SLA Responder on Control V2 port 1167
+General IP SLA Responder is: Disabled
+Permanent Port IP SLA Responder
+Permanent Port IP SLA Responder is: Disabled

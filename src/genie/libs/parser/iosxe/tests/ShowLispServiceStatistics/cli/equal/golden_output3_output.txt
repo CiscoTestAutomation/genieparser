@@ -1,96 +1,7 @@
-
-OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet statistics
-
-=================================================
-Output for router lisp 0 instance-id 0
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 1
-=================================================
-LISP EID Statistics for instance ID 1 - last cleared: never
-Control Packets:
-  Map-Requests in/out:                              8/40
-    Encapsulated Map-Requests in/out:               8/36
-    RLOC-probe Map-Requests in/out:                 0/4
-    SMR-based Map-Requests in/out:                  0/4
-    Extranet SMR cross-IID Map-Requests in:         0
-    Map-Requests expired on-queue/no-reply          0/13
-    Map-Resolver Map-Requests forwarded:            0
-    Map-Server Map-Requests forwarded:              0
-  Map-Reply records in/out:                         0/0
-    Authoritative records in/out:                   0/0
-    Non-authoritative records in/out:               0/0
-    Negative records in/out:                        0/0
-    RLOC-probe records in/out:                      0/0
-    Map-Server Proxy-Reply records out:             0
-  WLC Map-Subscribe records in/out:                 0/15
-    Map-Subscribe failures in/out:                  0/0
-  WLC Map-Unsubscribe records in/out:               0/0
-    Map-Unsubscribe failures in/out:                0/0
-  Map-Register records in/out:                      0/15516
-    Map-Server AF disabled:                         0
-    Authentication failures:                        0
-  WLC Map-Register records in/out:                  0/0
-    WLC AP Map-Register in/out:                     0/0
-    WLC Client Map-Register in/out:                 0/0
-    WLC Map-Register failures in/out:               0/0
-  Map-Notify records in/out:                        2014/0
-    Authentication failures:                        0
-  WLC Map-Notify records in/out:                    453/0
-    WLC AP Map-Notify in/out:                       12/0
-    WLC Client Map-Notify in/out:                   441/0
-    WLC Map-Notify failures in/out:                 0/0
-Errors:
-  Map-Request invalid source rloc drops:            0
-  Map-Register invalid source rloc drops:           0
-  DDT ITR Map-Requests dropped:                     0 (nonce-collision: 0, bad-xTR-nonce: 0)
-Cache Related:
-  Cache entries created/deleted:                    166/162
-  NSF CEF replay entry count                        0
-  Number of EID-prefixes in map-cache:              4
-  Number of rejected EID-prefixes due to limit :    0
-  Number of negative entries in map-cache:          0
-  Total number of RLOCs in map-cache:               4
-  Average RLOCs per EID-prefix:                     1
-Forwarding:
-  Number of data signals processed:                 0 (+ dropped 40)
-  Number of reachability reports:                   0 (+ dropped 0)
-  Number of SMR signals dropped:                    0
-ITR Map-Resolvers:
-  Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-  10.94.44.44          never           1      306       18        0       66
-  10.84.66.66          never     Unreach        0        0        0        0
-LISP RLOC Statistics - last cleared: never
-Control Packets:
-    RTR Map-Requests forwarded:                     0
-    RTR Map-Notifies forwarded:                     0
-  DDT-Map-Requests in/out:                          0/0
-  DDT-Map-Referrals in/out:                         0/0
-Errors:
-  Map-Request format errors:                        0
-  Map-Reply format errors:                          0
-  Map-Referral format errors:                       0
-  Mapping record TTL alerts:                        0
-  DDT Requests failed:                              0
-LISP Miscellaneous Statistics - last cleared: never
-Errors:
-  Invalid IP version drops:                         0
-  Invalid IP header drops:                          0
-  Invalid IP proto field drops:                     0
-  Invalid packet size dropss:                       0
-  Invalid LISP control port drops:                  0
-  Invalid LISP checksum drops:                      0
-  Unsupported LISP packet type drops:               0
-  Unknown packet drops:                             0
-
-=================================================
-Output for router lisp 0 instance-id 2
-=================================================
-LISP EID Statistics for instance ID 2 - last cleared: never
+LISP EID Statistics for all EID instances - last cleared: never
 Control Packets:
   Map-Requests in/out:                              0/0
+    Map-Requests in (5 sec/1 min/5 min):            0/0/0
     Encapsulated Map-Requests in/out:               0/0
     RLOC-probe Map-Requests in/out:                 0/0
     SMR-based Map-Requests in/out:                  0/0
@@ -104,393 +15,73 @@ Control Packets:
     Negative records in/out:                        0/0
     RLOC-probe records in/out:                      0/0
     Map-Server Proxy-Reply records out:             0
-  WLC Map-Subscribe records in/out:                 0/15
+  WLC Map-Subscribe records in/out:                 0/6
     Map-Subscribe failures in/out:                  0/0
   WLC Map-Unsubscribe records in/out:               0/0
     Map-Unsubscribe failures in/out:                0/0
-  Map-Register records in/out:                      0/6460
+  Map-Register records in/out:                      0/10
+    Map-Registers in (5 sec/1 min/5 min):           0/0/0
     Map-Server AF disabled:                         0
+    Not valid site eid prefix:                      0
     Authentication failures:                        0
+    Disallowed locators:                            0
+    Miscellaneous:                                  0
   WLC Map-Register records in/out:                  0/0
     WLC AP Map-Register in/out:                     0/0
     WLC Client Map-Register in/out:                 0/0
     WLC Map-Register failures in/out:               0/0
-  Map-Notify records in/out:                        372/0
+  Map-Notify records in/out:                        20/0
     Authentication failures:                        0
-  WLC Map-Notify records in/out:                    30/0
+  WLC Map-Notify records in/out:                    0/0
     WLC AP Map-Notify in/out:                       0/0
-    WLC Client Map-Notify in/out:                   30/0
+    WLC Client Map-Notify in/out:                   0/0
     WLC Map-Notify failures in/out:                 0/0
+  Publish-Subscribe in/out:
+    Subscription Request records in/out:            0/0
+      IID subscription requests in/out:             0/0
+      Pub-refresh subscription requests in/out:     0/0
+      Policy subscription requests in/out:          0/0
+    Subscription Request failures in/out:           0/0
+    Subscription Status records in/out:             0/0
+      End of Publication records in/out:            0/0
+      Subscription rejected records in/out:         0/0
+      Subscription removed records in/out:          0/0
+    Subscription Status failures in/out:            0/0
+    Solicit Subscription records in/out:            8/0
+    Solicit Subscription failures in/out:           0/0
+    Publication records in/out:                     0/0
+    Publication failures in/out:                    0/0
 Errors:
+  Mapping record TTL alerts:                        0
   Map-Request invalid source rloc drops:            0
   Map-Register invalid source rloc drops:           0
+  DDT Requests failed:                              0
   DDT ITR Map-Requests dropped:                     0 (nonce-collision: 0, bad-xTR-nonce: 0)
 Cache Related:
-  Cache entries created/deleted:                    2/2
+  Cache entries created/deleted:                    6/2
   NSF CEF replay entry count                        0
-  Number of EID-prefixes in map-cache:              0
-  Number of rejected EID-prefixes due to limit :    0
-  Number of negative entries in map-cache:          0
-  Total number of RLOCs in map-cache:               0
-  Average RLOCs per EID-prefix:                     0
+  Number of rejected EID-prefixes due to limit:     0
 Forwarding:
   Number of data signals processed:                 0 (+ dropped 0)
   Number of reachability reports:                   0 (+ dropped 0)
   Number of SMR signals dropped:                    0
-ITR Map-Resolvers:
-  Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-  10.94.44.44          never           1        6        1        0        1
-  10.84.66.66          never     Unreach        0        0        0        0
 LISP RLOC Statistics - last cleared: never
 Control Packets:
-    RTR Map-Requests forwarded:                     0
-    RTR Map-Notifies forwarded:                     0
+  RTR Map-Requests forwarded:                       0
+  RTR Map-Notifies forwarded:                       0
   DDT-Map-Requests in/out:                          0/0
   DDT-Map-Referrals in/out:                         0/0
 Errors:
   Map-Request format errors:                        0
   Map-Reply format errors:                          0
   Map-Referral format errors:                       0
-  Mapping record TTL alerts:                        0
-  DDT Requests failed:                              0
 LISP Miscellaneous Statistics - last cleared: never
 Errors:
   Invalid IP version drops:                         0
   Invalid IP header drops:                          0
   Invalid IP proto field drops:                     0
-  Invalid packet size dropss:                       0
+  Invalid packet size drops:                        0
   Invalid LISP control port drops:                  0
   Invalid LISP checksum drops:                      0
   Unsupported LISP packet type drops:               0
   Unknown packet drops:                             0
-
-=================================================
-Output for router lisp 0 instance-id 102
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 131
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 132
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 133
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 134
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 135
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 136
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 137
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 138
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 139
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 140
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 141
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 142
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 143
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 144
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 145
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 146
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 147
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 148
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 149
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 150
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 151
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 152
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 153
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 154
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 155
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 156
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 157
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 158
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 159
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 160
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 161
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 162
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 163
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 164
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 165
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 166
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 167
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 168
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 169
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 170
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 171
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 172
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 173
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 174
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 175
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 176
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 177
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 178
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 179
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 180
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 181
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 182
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 183
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 184
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 185
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 186
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 187
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 188
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 189
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 190
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 191
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 192
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 193
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 194
-=================================================
-% EID table not enabled for MAC.
-
-=================================================
-Output for router lisp 0 instance-id 195
-=================================================
-% EID table not enabled for MAC.
-        

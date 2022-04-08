@@ -1,0 +1,61 @@
+Cisco IOS XE Software, Version 17.07.01prd16
+Cisco IOS Software [Cupertino], C9800-CL Software (C9800-CL-K9_IOSXE), Version 17.7.1prd16, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2021 by Cisco Systems, Inc.
+Compiled Mon 15-Nov-21 08:46 by mcpre
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2021 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+ROM: IOS-XE ROMMON
+
+vidya-ewlc-5 uptime is 4 weeks, 6 days, 21 hours, 48 minutes
+Uptime for this control processor is 4 weeks, 6 days, 21 hours, 52 minutes
+System returned to ROM by reload
+System restarted at 08:02:28 UTC Wed Jan 12 2022
+System image file is "bootflash:C9800-CL-universalk9.17.07.01prd16.SPA.bin"
+Last reload reason: Reload Command
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+AIR License Level: AIR DNA Advantage
+Next reload AIR license Level: AIR DNA Advantage
+
+Smart Licensing Status: Registration Not Applicable/Not Applicable
+
+cisco C9800-CL (VXE) processor (revision VXE) with 12293240K/3075K bytes of memory.
+Processor board ID 9SV9FR9MWP9
+Router operating mode: Autonomous
+5 Virtual Ethernet interfaces
+3 Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+16332124K bytes of physical memory.
+6201343K bytes of virtual hard disk at bootflash:.
+Installation mode is BUNDLE 
+
+
+Configuration register is 0x102

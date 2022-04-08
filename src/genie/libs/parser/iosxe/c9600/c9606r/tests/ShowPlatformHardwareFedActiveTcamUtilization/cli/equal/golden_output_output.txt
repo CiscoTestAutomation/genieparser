@@ -1,0 +1,107 @@
+Codes: EM - Exact_Match, I - Input, O - Output, IO - Input & Output, NA - Not 
+
+CAM Utilization for ASIC  [0]
+Table                  Subtype      Dir      Max     Used    %Used       V4       V6     MPLS    Other
+------------------------------------------------------------------------------------------------------
+Mac Address Table      EM           I       32768      128    0.39%        0        0        0      128
+Mac Address Table      TCAM         I         768       22    2.86%        0        0        0       22
+L3 Multicast           EM           I       32768        0    0.00%        0        0        0        0
+L3 Multicast           TCAM         I         768        6    0.78%        3        3        0        0
+L2 Multicast           TCAM         I        2304        7    0.30%        3        4        0        0
+IP Route Table         EM/LPM       I      212992       14    0.01%       13        0        1        0
+IP Route Table         TCAM         I        1536       11    0.72%        6        3        2        0
+QOS ACL Ipv4           TCAM         I        2560       15    0.59%       15        0        0        0
+QOS ACL Non Ipv4       TCAM         I        1536       30    1.95%        0       20        0       10
+QOS ACL Ipv4           TCAM         O        3072       13    0.42%       13        0        0        0
+QOS ACL Non Ipv4       TCAM         O        1024       27    2.64%        0       18        0        9
+Security ACL Ipv4      TCAM         I        7168       12    0.17%       12        0        0        0
+Security ACL Non Ipv4  TCAM         I        5120       76    1.48%        0       36        0       40
+Security ACL Ipv4      TCAM         O        3072       14    0.46%       14        0        0        0
+Security ACL Non Ipv4  TCAM         O        5120       29    0.57%        0       24        0        5
+Netflow ACL            TCAM         I        1024        6    0.59%        2        2        0        2
+PBR ACL                TCAM         I       15872       32    0.20%       26        6        0        0
+Netflow ACL            TCAM         O        1024        7    0.68%        3        2        0        2
+Flow SPAN ACL          TCAM         I         512        4    0.78%        1        2        0        1
+Flow SPAN ACL          TCAM         O         512        4    0.78%        1        2        0        1
+Control Plane          TCAM         I        1024      281   27.44%      130      106        0       45
+Tunnel Termination     TCAM         I        1792       29    1.62%       11       18        0        0
+Lisp Inst Mapping      TCAM         I        1024        1    0.10%        0        0        0        1
+CTS Cell Matrix/VPN
+Label                  EM           O       32768        0    0.00%        0        0        0        0
+CTS Cell Matrix/VPN
+Label                  TCAM         O         768        1    0.13%        0        0        0        1
+Client Table           EM           I        8192        0    0.00%        0        0        0        0
+Client Table           TCAM         I         512        0    0.00%        0        0        0        0
+Input Group LE         TCAM         I        1024        0    0.00%        0        0        0        0
+Output Group LE        TCAM         O        1024        0    0.00%        0        0        0        0
+Macsec SPD             TCAM         I         256        2    0.78%        0        0        0        2
+CAM Utilization for ASIC  [1]
+Table                  Subtype      Dir      Max     Used    %Used       V4       V6     MPLS    Other
+------------------------------------------------------------------------------------------------------
+Mac Address Table      EM           I       32768      128    0.39%        0        0        0      128
+Mac Address Table      TCAM         I         768       22    2.86%        0        0        0       22
+L3 Multicast           EM           I       32768        0    0.00%        0        0        0        0
+L3 Multicast           TCAM         I         768        6    0.78%        3        3        0        0
+L2 Multicast           TCAM         I        2304        7    0.30%        3        4        0        0
+IP Route Table         EM/LPM       I      212992       14    0.01%       13        0        1        0
+IP Route Table         TCAM         I        1536       11    0.72%        6        3        2        0
+QOS ACL Ipv4           TCAM         I        2560       15    0.59%       15        0        0        0
+QOS ACL Non Ipv4       TCAM         I        1536       30    1.95%        0       20        0       10
+QOS ACL Ipv4           TCAM         O        3072       12    0.39%       12        0        0        0
+QOS ACL Non Ipv4       TCAM         O        1024       24    2.34%        0       16        0        8
+Security ACL Ipv4      TCAM         I        7168       12    0.17%       12        0        0        0
+Security ACL Non Ipv4  TCAM         I        5120       76    1.48%        0       36        0       40
+Security ACL Ipv4      TCAM         O        3072       14    0.46%       14        0        0        0
+Security ACL Non Ipv4  TCAM         O        5120       29    0.57%        0       24        0        5
+Netflow ACL            TCAM         I        1024        6    0.59%        2        2        0        2
+PBR ACL                TCAM         I       15872       32    0.20%       26        6        0        0
+Netflow ACL            TCAM         O        1024        7    0.68%        3        2        0        2
+Flow SPAN ACL          TCAM         I         512        4    0.78%        1        2        0        1
+Flow SPAN ACL          TCAM         O         512        4    0.78%        1        2        0        1
+Control Plane          TCAM         I        1024      281   27.44%      130      106        0       45
+Tunnel Termination     TCAM         I        1792       29    1.62%       11       18        0        0
+Lisp Inst Mapping      TCAM         I        1024        1    0.10%        0        0        0        1
+CTS Cell Matrix/VPN
+Label                  EM           O       32768        0    0.00%        0        0        0        0
+CTS Cell Matrix/VPN
+Label                  TCAM         O         768        1    0.13%        0        0        0        1
+Client Table           EM           I        8192        0    0.00%        0        0        0        0
+Client Table           TCAM         I         512        0    0.00%        0        0        0        0
+Input Group LE         TCAM         I        1024        0    0.00%        0        0        0        0
+Output Group LE        TCAM         O        1024        0    0.00%        0        0        0        0
+Macsec SPD             TCAM         I         256        2    0.78%        0        0        0        2
+CAM Utilization for ASIC  [2]
+Table                  Subtype      Dir      Max     Used    %Used       V4       V6     MPLS    Other
+------------------------------------------------------------------------------------------------------
+Mac Address Table      EM           I       32768      128    0.39%        0        0        0      128
+Mac Address Table      TCAM         I         768       22    2.86%        0        0        0       22
+L3 Multicast           EM           I       32768        0    0.00%        0        0        0        0
+L3 Multicast           TCAM         I         768        6    0.78%        3        3        0        0
+L2 Multicast           TCAM         I        2304        7    0.30%        3        4        0        0
+IP Route Table         EM/LPM       I      212992       14    0.01%       13        0        1        0
+IP Route Table         TCAM         I        1536       11    0.72%        6        3        2        0
+QOS ACL Ipv4           TCAM         I        2560       15    0.59%       15        0        0        0
+QOS ACL Non Ipv4       TCAM         I        1536       30    1.95%        0       20        0       10
+QOS ACL Ipv4           TCAM         O        3072       12    0.39%       12        0        0        0
+QOS ACL Non Ipv4       TCAM         O        1024       24    2.34%        0       16        0        8
+Security ACL Ipv4      TCAM         I        7168       12    0.17%       12        0        0        0
+Security ACL Non Ipv4  TCAM         I        5120       76    1.48%        0       36        0       40
+Security ACL Ipv4      TCAM         O        3072       14    0.46%       14        0        0        0
+Security ACL Non Ipv4  TCAM         O        5120       29    0.57%        0       24        0        5
+Netflow ACL            TCAM         I        1024        6    0.59%        2        2        0        2
+PBR ACL                TCAM         I       15872       32    0.20%       26        6        0        0
+Netflow ACL            TCAM         O        1024        7    0.68%        3        2        0        2
+Flow SPAN ACL          TCAM         I         512        4    0.78%        1        2        0        1
+Flow SPAN ACL          TCAM         O         512        4    0.78%        1        2        0        1
+Control Plane          TCAM         I        1024      281   27.44%      130      106        0       45
+Tunnel Termination     TCAM         I        1792       29    1.62%       11       18        0        0
+Lisp Inst Mapping      TCAM         I        1024        1    0.10%        0        0        0        1
+CTS Cell Matrix/VPN
+Label                  EM           O       32768        0    0.00%        0        0        0        0
+CTS Cell Matrix/VPN
+Label                  TCAM         O         768        1    0.13%        0        0        0        1
+Client Table           EM           I        8192        0    0.00%        0        0        0        0
+Client Table           TCAM         I         512        0    0.00%        0        0        0        0
+Input Group LE         TCAM         I        1024        0    0.00%        0        0        0        0
+Output Group LE        TCAM         O        1024        0    0.00%        0        0        0        0
+Macsec SPD             TCAM         I         256        2    0.78%        0        0        0        2

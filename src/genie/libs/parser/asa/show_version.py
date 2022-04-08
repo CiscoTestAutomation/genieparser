@@ -11,6 +11,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 
+
 # =============================================
 # Schema for 'show version'
 # =============================================
@@ -23,18 +24,22 @@ class ShowVersionSchema(MetaParser):
         'version': {
             'hostname': str,
             'uptime': str,
+            Optional('ssp_slot_number'): int,
             'asa_version': str,
+            Optional('context'): bool,
             Optional('firepower_version'): str,
             'asdm_version': str,
             'compiled_date': str,
             'compiled_by': str,
-            'system_image': str,
-            'boot_config_file': str,
+            Optional('system_image'): str,
+            Optional('boot_config_file'): str,
             'platform': str,
             'mem_size': str,
             'processor_type': str,
+            Optional('cpu_count'): int,
+            Optional('core_count'): int,
             Optional('asa_model'): str,
-            'bios_flash': str,
+            Optional('bios_flash'): str,
             Optional('disks'): {
                 Any(): {
                     Optional('disk_size'): str,
@@ -64,13 +69,14 @@ class ShowVersionSchema(MetaParser):
                     Optional('time_remaining'): str
                 }
             },
-            'serial_number': str,
+            Optional('serial_number'): str,
             Optional('image_type'): str,
             Optional('key_version'): str,
-            'last_modified_by': str,
-            'last_modified_date': str
+            Optional('last_modified_by'): str,
+            Optional('last_modified_date'): str
         }
     }
+
 
 # =============================================
 # Parser for 'show version'
@@ -92,43 +98,48 @@ class ShowVersion(ShowVersionSchema):
         version_dict = {}
 
         # Cisco Adaptive Security Appliance Software Version 9.8(4)10
-        p0 = re.compile(r'^.+ Software Version (?P<asa_version>\S+)')
+        # Cisco Adaptive Security Appliance Software Version 9.14(2)15 <context>
+        p0 = re.compile(r'^.+ Software Version (?P<asa_version>\S+)( +(?P<context>\S+))?$')
 
         # Firepower Extensible Operating System Version 2.2(2.121)
-        p1 = re.compile(r'^.+System Version (?P<firepower_version>\S+)')
+        p1 = re.compile(r'^.+System Version (?P<firepower_version>\S+)$')
 
         # Device Manager Version 7.8(2)
-        p2 = re.compile(r'^.+Manager Version (?P<asdm_version>\S+)')
+        p2 = re.compile(r'^.+Manager Version (?P<asdm_version>\S+)$')
 
         # Compiled on Tue 20-Aug-19 12:46 PDT by builders
         # Compiled on Thu 20-Jan-12 04:05 by builders
-        p3 = re.compile(r'^Compiled on (?P<compiled_date>.+) by (?P<compiled_by>\w+)')
+        p3 = re.compile(r'^Compiled on (?P<compiled_date>.+) by (?P<compiled_by>\w+)$')
 
         # System image file is "boot:/asa984-10-smp-k8.bin"
-        p4 = re.compile(r'^System image.+"(?P<system_image>\S+)"')
+        p4 = re.compile(r'^System image.+"(?P<system_image>\S+)"$')
 
         # Config file at boot was "startup-config"
-        p5 = re.compile(r'^Config file.+"(?P<boot_config_file>\S+)"')
+        p5 = re.compile(r'^Config file.+"(?P<boot_config_file>\S+)"$')
 
         # ciscoasa up 1 day 12 hours
-        p6 = re.compile(r'^(?P<hostname>\S+) up (?P<uptime>.+)')
+        p6 = re.compile(r'^(?P<hostname>\S+) up (?P<uptime>.+)$')
 
         # Hardware:   ASAv, 2048 MB RAM, CPU Xeon E5 series 3491 MHz
-        p7 = re.compile(r'^Hardware:\s+(?P<platform>\S+),'
-                        r'\s+(?P<mem_size>[\w\s]+) RAM,'
-                        r'\s+CPU (?P<processor_type>[\w\s]+)')
+        # Hardware:   FPR9K-SM-24, 230696 MB RAM, CPU Xeon E5 series 2200 MHz, 2 CPUs (48 cores)
+        p7 = re.compile(r'^Hardware:\s+(?P<platform>\S+),\s+(?P<mem_size>[\w\s]+) RAM,'
+                        r'\s+CPU (?P<processor_type>[\w\s]+),? ?((?P<cpu_count>\d+)'
+                        r' +CPUs +\((?P<core_count>\d+) cores\))?$')
+
+        # SSP Slot Number: 1
+        p7_1 = re.compile(r'^SSP Slot Number: (?P<ssp_slot_number>\d+)$')
 
         # Model Id:   ASAv10
-        p8 = re.compile(r'^Model Id:\s*(?P<asa_model>\S+)')
+        p8 = re.compile(r'^Model Id:\s*(?P<asa_model>\S+)$')
 
         # Internal ATA Compact Flash, 8192MB
         # Slot 1: ATA Compact Flash, 8192MB
         p9 = re.compile(r'^(?P<disk_name>\S+|Slot \d+):? '
                         r'(?P<type_of_disk>[\w\s]+), '
-                        r'(?P<disk_size>\S+)')
+                        r'(?P<disk_size>\S+)$')
 
         # BIOS Flash Firmware Hub @ 0x0, 0KB
-        p10 = re.compile(r'^BIOS Flash (?P<bios_flash>.+)')
+        p10 = re.compile(r'^BIOS Flash (?P<bios_flash>.+)$')
 
         # 0: Ext: Management0/0       : address is 5001.0003.0000, irq 11
         # 1: Ext: GigabitEthernet0/0  : address is 5001.0003.0001, irq 11
@@ -141,135 +152,140 @@ class ShowVersion(ShowVersionSchema):
         p11 = re.compile(r'^(?P<intf_number>\d+): '
                          r'Ext: (?P<interface>[\w\/\.\-]+)\s*: address is '
                          r'(?P<mac_addr>[\w\.]+), '
-                         r'irq (?P<intf_irq>\d+)')
+                         r'irq (?P<intf_irq>\d+)$')
 
         # 5: Int: Not used            : irq 11
         # 6: Int: Not used            : irq 5
         p11_1 = re.compile(r'^(?P<intf_number>\d+): Int: (?P<interface>[\w ]+)\s*: '
-                           r'irq (?P<intf_irq>\d{1,2})')
+                           r'irq (?P<intf_irq>\d{1,2})$')
 
         # License mode: Smart Licensing
-        p12 = re.compile(r'^License mode: (?P<license_mode>.+)')
+        p12 = re.compile(r'^License mode: (?P<license_mode>.+)$')
 
         # ASAv Platform License State: Unlicensed
-        p13 = re.compile(r'^.+License State: (?P<license_state>.+)')
+        p13 = re.compile(r'^.+License State: (?P<license_state>.+)$')
 
         # No active entitlement: no feature tier and no throughput level configured
-        p14 = re.compile(r'^.+entitlement: (?P<entitlement>.+)')
+        p14 = re.compile(r'^.+entitlement: (?P<entitlement>.+)$')
 
         # *Memory resource allocation is more than the permitted limit.
-        p15 = re.compile(r'^(?P<mem_allocation>\*Memory.+)')
+        p15 = re.compile(r'^(?P<mem_allocation>\*Memory.+)$')
 
         # Maximum VLANs                     : 50
         # Maximum VLANs                     : 150       perpetual
-        p16 = re.compile(r'^Maximum [Vv][Ll][Aa][Nn][Ss]\s*: (?P<max_vlans>\d+)(\s+(?P<time_remaining>\S+))?')
+        p16 = re.compile(r'^Maximum [Vv][Ll][Aa][Nn][Ss]\s*: (?P<max_vlans>\d+)(\s+(?P<time_remaining>\S+))?$')
 
         # Inside Hosts                      : Unlimited
         # Inside Hosts                      : Unlimited      perpetual
-        p17 = re.compile(r'^Inside [Hh]osts\s*: (?P<inside_hosts>\S+)(\s+(?P<time_remaining>\S+))?')
+        p17 = re.compile(r'^Inside [Hh]osts\s*: (?P<inside_hosts>\S+)(\s+(?P<time_remaining>\S+))?$')
 
         # Failover                          : Active/Standby
         # Failover                          : Active/Active     perpetual
-        p18 = re.compile(r'^Failover\s*: (?P<failover>\S+)(\s+(?P<time_remaining>\S+))?')
+        p18 = re.compile(r'^Failover\s*: (?P<failover>\S+)(\s+(?P<time_remaining>\S+))?$')
 
         # Encryption-DES                    : Enabled
         # VPN-DES                           : Enabled        perpetual
-        p19 = re.compile(r'^(Encryption|VPN)-DES\s*: (?P<crypto_des>\S+)(\s+(?P<time_remaining>\S+))?')
+        p19 = re.compile(r'^(Encryption|VPN)-DES\s*: (?P<crypto_des>\S+)(\s+(?P<time_remaining>\S+))?$')
 
         # Encryption-3DES-AES                    : Enabled
         # VPN-3DES-AES                           : Enabled        perpetual
-        p20 = re.compile(r'^(Encryption|VPN)-3DES-AES\s*: (?P<crypto_3des_aes>\S+)(\s+(?P<time_remaining>\S+))?')
+        p20 = re.compile(r'^(Encryption|VPN)-3DES-AES\s*: (?P<crypto_3des_aes>\S+)(\s+(?P<time_remaining>\S+))?$')
 
         # Security Contexts                 : 10        perpetual
-        p21 = re.compile(r'^Security Contexts\s*: (?P<security_contexts>\d+)(\s+(?P<time_remaining>\S+))?')
+        p21 = re.compile(r'^Security Contexts\s*: (?P<security_contexts>\d+)(\s+(?P<time_remaining>\S+))?$')
 
         # Carrier                           : Disabled
-        p22 = re.compile(r'^Carrier\s*: (?P<carrier>\S+)')
+        p22 = re.compile(r'^Carrier\s*: (?P<carrier>\S+)$')
 
         # AnyConnect Premium Peers          : 2
         # AnyConnect Premium Peers          : 2              perpetual
-        p23 = re.compile(r'^Any[Cc]onnect Premium Peers\s*: (?P<anyconnect_premium_peers>\d+)(\s+(?P<time_remaining>\S+))?')
+        p23 = re.compile(
+            r'^Any[Cc]onnect Premium Peers\s*: (?P<anyconnect_premium_peers>\d+)(\s+(?P<time_remaining>\S+))?$')
 
         # AnyConnect Essentials             : Disabled
         # AnyConnect Essentials             : Disabled       perpetual
-        p24 = re.compile(r'^Any[Cc]onnect Essentials\s*: (?P<anyconnect_essentials>\S+)(\s+(?P<time_remaining>\S+))?')
+        p24 = re.compile(r'^Any[Cc]onnect Essentials\s*: (?P<anyconnect_essentials>\S+)(\s+(?P<time_remaining>\S+))?$')
 
         # Other VPN Peers                   : 250
         # Other VPN Peers                   : 750            perpetual
-        p25 = re.compile(r'^Other VPN Peers\s*: (?P<other_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?')
+        p25 = re.compile(r'^Other VPN Peers\s*: (?P<other_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?$')
 
         # Total VPN Peers                   : 250
         # Total VPN Peers                   : 750            perpetual
-        p26 = re.compile(r'^Total VPN Peers\s*: (?P<total_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?')
+        p26 = re.compile(r'^Total VPN Peers\s*: (?P<total_vpn_peers>\d+)(\s+(?P<time_remaining>\S+))?$')
 
         # AnyConnect for Mobile             : Disabled
-        p27 = re.compile(r'^Any[Cc]onnect for Mobile\s*: (?P<anyconnect_for_mobile>\S+)(\s+(?P<time_remaining>.+))?')
+        p27 = re.compile(r'^Any[Cc]onnect for Mobile\s*: (?P<anyconnect_for_mobile>\S+)(\s+(?P<time_remaining>.+))?$')
 
         # AnyConnect for Cisco VPN Phone    : Disabled
-        p28 = re.compile(r'^Any[Cc]onnect for Cisco VPN Phone\s*: (?P<anyconnect_for_cisco_vpn_phone>\S+)(\s+(?P<time_remaining>.+))?')
+        p28 = re.compile(
+            r'^Any[Cc]onnect for Cisco VPN Phone\s*: (?P<anyconnect_for_cisco_vpn_phone>\S+)'
+            r'(\s+(?P<time_remaining>.+))?$')
 
         # Advanced Endpoint Assessment      : Disabled
         # Advanced Endpoint Assessment      : Disabled       perpetual
-        p29 = re.compile(r'^Advanced Endpoint Assessment\s*: (?P<advanced_endpoint_assessment>\S+)(\s+(?P<time_remaining>.+))?')
+        p29 = re.compile(
+            r'^Advanced Endpoint Assessment\s*: (?P<advanced_endpoint_assessment>\S+)(\s+(?P<time_remaining>.+))?$')
 
         # Shared License                    : Disabled
-        p30 = re.compile(r'^Shared License\s*: (?P<shared_license>\S+)(\s+(?P<time_remaining>.+))?')
+        p30 = re.compile(r'^Shared License\s*: (?P<shared_license>\S+)(\s+(?P<time_remaining>.+))?$')
 
         # Total TLS Proxy Sessions          : 2 
-        p31 = re.compile(r'^Total TLS Proxy Sessions\s*: (?P<total_tls_proxy_sessions>\d+)')
+        p31 = re.compile(r'^Total TLS Proxy Sessions\s*: (?P<total_tls_proxy_sessions>\d+)$')
 
         # Botnet Traffic Filter             : Enabled
-        p32 = re.compile(r'^Botnet Traffic Filter\s*: (?P<botnet_traffic_filter>\S+)(\s+(?P<time_remaining>.+))?')
+        p32 = re.compile(r'^Botnet Traffic Filter\s*: (?P<botnet_traffic_filter>\S+)(\s+(?P<time_remaining>.+))?$')
 
         # Cluster                           : Disabled
-        p33 = re.compile(r'^Cluster\s*: (?P<cluster>\S+)')
+        p33 = re.compile(r'^Cluster\s*: (?P<cluster>\S+)$')
 
         # Serial Number: 9A5BHB00D2D
-        p34 = re.compile(r'^Serial.+: (?P<serial_number>\S+)')
+        p34 = re.compile(r'^Serial.+: (?P<serial_number>\S+)$')
 
         # Image type          : Release
-        p35 = re.compile(r'^Image type\s*: (?P<image_type>\S+)')
+        p35 = re.compile(r'^Image type\s*: (?P<image_type>\S+)$')
 
         # Key version         : A
-        p36 = re.compile(r'^Key version\s*: (?P<key_version>\S+)')
+        p36 = re.compile(r'^Key version\s*: (?P<key_version>\S+)$')
 
         # Configuration last modified by enable_15 at 20:39:39.869 UTC Mon Jun 7 2021
         p37 = re.compile(r'^Configuration last.+by (?P<last_modified_by>\S+) at '
-                         r'(?P<last_modified_date>[\d:\.]+.+)')
+                         r'(?P<last_modified_date>[\d:\.]+.+)$')
 
         # Configuration has not been modified since last system restart.
-        p37_1 = re.compile(r'^(?P<last_modified_date>Configuration has not been modified since last system restart.+)')
+        p37_1 = re.compile(r'^(?P<last_modified_date>Configuration has not been modified since last system restart.+)$')
 
         # Encryption hardware device : Cisco ASA-55x0 on-board accelerator (revision 0x0)
-        p38 = re.compile(r'^\s*Encryption.+:\s+(?P<encryption_device>.+)')
+        p38 = re.compile(r'^\s*Encryption.+:\s+(?P<encryption_device>.+)$')
 
         # Boot microcode   : CN1000-MC-BOOT-2.00 
-        p39 = re.compile(r'^\s*Boot [Mm]icrocode\s+:\s+(?P<boot_microcode>.+)')
+        p39 = re.compile(r'^\s*Boot [Mm]icrocode\s+:\s+(?P<boot_microcode>.+)$')
 
         # SSL/IKE microcode: CNLite-MC-SSLm-PLUS-2.03
-        p40 = re.compile(r'^\s*SSL.+\s*:\s*(?P<ssl_ike_microcode>.+)')
+        p40 = re.compile(r'^\s*SSL.+\s*:\s*(?P<ssl_ike_microcode>.+)$')
 
         # IPsec microcode  : CNlite-MC-IPSECm-MAIN-2.06
-        p41 = re.compile(r'^\s*[Ii][Pp][Ss][Ee][Cc].+\s*:\s+(?P<ipsec_microcode>.+)')
+        p41 = re.compile(r'^\s*[Ii][Pp][Ss][Ee][Cc].+\s*:\s+(?P<ipsec_microcode>.+)$')
 
         # GTP/GPRS                          : Enabled        perpetual
-        p42 = re.compile(r'^\s*GTP.+: (?P<gtp_gprs>\S+)\s+(?P<time_remaining>\S+)')
+        p42 = re.compile(r'^\s*GTP.+: (?P<gtp_gprs>\S+)\s+(?P<time_remaining>\S+)$')
 
         # Maximum Physical Interfaces       : Unlimited      perpetual
-        p43 = re.compile(r'^[Mm]aximum [Pp]hysical [Ii]nterfaces\s*: (?P<max_physical_interfaces>\S+)\s+(?P<time_remaining>\S+)')
+        p43 = re.compile(
+            r'^[Mm]aximum [Pp]hysical [Ii]nterfaces\s*: (?P<max_physical_interfaces>\S+)\s+(?P<time_remaining>\S+)$')
 
         # Shared AnyConnect Premium Peers : 12000          perpetual
-        p44 = re.compile(r'^\s*Shared [Aa]ny[Cc]onnect.+: (?P<shared_anyconnect_premium_peers>\d+)\s+(?P<time_remaining>\S+)')
+        p44 = re.compile(
+            r'^\s*Shared [Aa]ny[Cc]onnect.+: (?P<shared_anyconnect_premium_peers>\d+)\s+(?P<time_remaining>\S+)$')
 
         # UC Phone Proxy Sessions           : 12             62 days
-        p45 = re.compile(r'^UC Phone.+: (?P<uc_phone_proxy_sessions>\d+)\s+(?P<time_remaining>.+)')
+        p45 = re.compile(r'^UC Phone.+: (?P<uc_phone_proxy_sessions>\d+)\s+(?P<time_remaining>.+)$')
 
         # Total UC Proxy Sessions           : 12             62 days
-        p46 = re.compile(r'^Total UC Proxy.+: (?P<total_uc_proxy_sessions>\d+)\s+(?P<time_remaining>.+)')
+        p46 = re.compile(r'^Total UC Proxy.+: (?P<total_uc_proxy_sessions>\d+)\s+(?P<time_remaining>.+)$')
 
         # Intercompany Media Engine         : Disabled       perpetual
-        p47 = re.compile(r'^Intercompany.+: (?P<intercompany_media_engine>\S+)\s+(?P<time_remaining>.+)')
-
+        p47 = re.compile(r'^Intercompany.+: (?P<intercompany_media_engine>\S+)\s+(?P<time_remaining>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -282,6 +298,8 @@ class ShowVersion(ShowVersionSchema):
                 asa_version = m.groupdict()['asa_version']
                 # 9.8(4)10
                 version_dict['version']['asa_version'] = asa_version
+                if m.groupdict()['context']:
+                    version_dict['version']['context'] = True
                 continue
 
             # Firepower Extensible Operating System Version 2.2(2.121)
@@ -340,6 +358,16 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['platform'] = platform
                 version_dict['version']['mem_size'] = mem_size
                 version_dict['version']['processor_type'] = processor_type
+                if m.groupdict()['cpu_count']:
+                    version_dict['version']['cpu_count'] = int(m.groupdict()['cpu_count'])
+                if m.groupdict()['core_count']:
+                    version_dict['version']['core_count'] = int(m.groupdict()['core_count'])
+                continue
+
+            # SSP Slot Number: 1
+            m = p7_1.match(line)
+            if m:
+                version_dict['version']['ssp_slot_number'] = int(m.groupdict()['ssp_slot_number'])
                 continue
 
             # Model Id:   ASAv10
@@ -359,9 +387,9 @@ class ShowVersion(ShowVersionSchema):
                 if disk_name not in version_dict['version']['disks']:
                     version_dict['version']['disks'][disk_name] = {}
                 version_dict['version']['disks'][disk_name]['disk_size'] = \
-                        m.groupdict()['disk_size']
+                    m.groupdict()['disk_size']
                 version_dict['version']['disks'][disk_name]['type_of_disk'] = \
-                        m.groupdict()['type_of_disk']
+                    m.groupdict()['type_of_disk']
                 continue
 
             # BIOS Flash Firmware Hub @ 0x0, 0KB
@@ -369,7 +397,6 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 bios_flash = m.groupdict()['bios_flash']
                 version_dict['version']['bios_flash'] = bios_flash
-
 
             # 0: Ext: Management0/0       : address is 5001.0003.0000, irq 11
             # 1: Ext: GigabitEthernet0/0  : address is 5001.0003.0001, irq 11
@@ -387,13 +414,13 @@ class ShowVersion(ShowVersionSchema):
                 if intf_number not in version_dict['version']['interfaces']:
                     version_dict['version']['interfaces'][intf_number] = {}
                 version_dict['version']['interfaces'][intf_number]['interface'] = \
-                        m.groupdict()['interface']
+                    m.groupdict()['interface']
                 version_dict['version']['interfaces'][intf_number]['mac_addr'] = \
-                        m.groupdict()['mac_addr']
+                    m.groupdict()['mac_addr']
                 version_dict['version']['interfaces'][intf_number]['intf_irq'] = \
-                        int(m.groupdict()['intf_irq'])
+                    int(m.groupdict()['intf_irq'])
                 continue
-            
+
             # 5: Int: Not used            : irq 11
             # 6: Int: Not used            : irq 5
             m = p11_1.match(line)
@@ -408,7 +435,7 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['interfaces'][intf_number]['intf_irq'] = \
                     int(m.groupdict()['intf_irq'])
                 continue
-            
+
             # License mode: Smart Licensing
             m = p12.match(line)
             if m:
@@ -446,7 +473,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'max_vlans' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['max_vlans'] = {}
                 version_dict['version']['licensed_features']['max_vlans']['status'] = \
-                        m.groupdict()['max_vlans']
+                    m.groupdict()['max_vlans']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['max_vlans']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -461,7 +488,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'inside_hosts' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['inside_hosts'] = {}
                 version_dict['version']['licensed_features']['inside_hosts']['status'] = \
-                        m.groupdict()['inside_hosts']
+                    m.groupdict()['inside_hosts']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['inside_hosts']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -475,7 +502,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'failover' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['failover'] = {}
                 version_dict['version']['licensed_features']['failover']['status'] = \
-                        m.groupdict()['failover']
+                    m.groupdict()['failover']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['failover']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -490,7 +517,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'crypto_des' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['crypto_des'] = {}
                 version_dict['version']['licensed_features']['crypto_des']['status'] = \
-                        m.groupdict()['crypto_des']
+                    m.groupdict()['crypto_des']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['crypto_des']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -505,7 +532,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'crypto_3des_aes' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['crypto_3des_aes'] = {}
                 version_dict['version']['licensed_features']['crypto_3des_aes']['status'] = \
-                        m.groupdict()['crypto_3des_aes']
+                    m.groupdict()['crypto_3des_aes']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['crypto_3des_aes']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -519,7 +546,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'security_contexts' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['security_contexts'] = {}
                 version_dict['version']['licensed_features']['security_contexts']['status'] = \
-                        m.groupdict()['security_contexts']
+                    m.groupdict()['security_contexts']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['security_contexts']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -533,7 +560,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'carrier' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['carrier'] = {}
                 version_dict['version']['licensed_features']['carrier']['status'] = \
-                        m.groupdict()['carrier']
+                    m.groupdict()['carrier']
                 continue
 
             # AnyConnect Premium Peers          : 2
@@ -545,7 +572,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'anyconnect_premium_peers' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['anyconnect_premium_peers'] = {}
                 version_dict['version']['licensed_features']['anyconnect_premium_peers']['status'] = \
-                        m.groupdict()['anyconnect_premium_peers']
+                    m.groupdict()['anyconnect_premium_peers']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['anyconnect_premium_peers']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -560,7 +587,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'anyconnect_essentials' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['anyconnect_essentials'] = {}
                 version_dict['version']['licensed_features']['anyconnect_essentials']['status'] = \
-                        m.groupdict()['anyconnect_essentials']
+                    m.groupdict()['anyconnect_essentials']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['anyconnect_essentials']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -575,7 +602,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'other_vpn_peers' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['other_vpn_peers'] = {}
                 version_dict['version']['licensed_features']['other_vpn_peers']['status'] = \
-                        m.groupdict()['other_vpn_peers']
+                    m.groupdict()['other_vpn_peers']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['other_vpn_peers']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -590,7 +617,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'total_vpn_peers' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['total_vpn_peers'] = {}
                 version_dict['version']['licensed_features']['total_vpn_peers']['status'] = \
-                        m.groupdict()['total_vpn_peers']
+                    m.groupdict()['total_vpn_peers']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['total_vpn_peers']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -605,7 +632,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'anyconnect_for_mobile' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['anyconnect_for_mobile'] = {}
                 version_dict['version']['licensed_features']['anyconnect_for_mobile']['status'] = \
-                        m.groupdict()['anyconnect_for_mobile']
+                    m.groupdict()['anyconnect_for_mobile']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['anyconnect_for_mobile']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -620,7 +647,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'anyconnect_for_cisco_vpn_phone' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone'] = {}
                 version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone']['status'] = \
-                        m.groupdict()['anyconnect_for_cisco_vpn_phone']
+                    m.groupdict()['anyconnect_for_cisco_vpn_phone']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['anyconnect_for_cisco_vpn_phone']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -635,7 +662,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'advanced_endpoint_assessment' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['advanced_endpoint_assessment'] = {}
                 version_dict['version']['licensed_features']['advanced_endpoint_assessment']['status'] = \
-                        m.groupdict()['advanced_endpoint_assessment']
+                    m.groupdict()['advanced_endpoint_assessment']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['advanced_endpoint_assessment']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -650,7 +677,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'shared_license' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['shared_license'] = {}
                 version_dict['version']['licensed_features']['shared_license']['status'] = \
-                        m.groupdict()['shared_license']
+                    m.groupdict()['shared_license']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['shared_license']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -664,7 +691,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'total_tls_proxy_sessions' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['total_tls_proxy_sessions'] = {}
                 version_dict['version']['licensed_features']['total_tls_proxy_sessions']['status'] = \
-                        m.groupdict()['total_tls_proxy_sessions']
+                    m.groupdict()['total_tls_proxy_sessions']
                 continue
 
             # Botnet Traffic Filter             : Enabled
@@ -676,7 +703,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'botnet_traffic_filter' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['botnet_traffic_filter'] = {}
                 version_dict['version']['licensed_features']['botnet_traffic_filter']['status'] = \
-                        m.groupdict()['botnet_traffic_filter']
+                    m.groupdict()['botnet_traffic_filter']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['botnet_traffic_filter']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -690,7 +717,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'cluster' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['cluster'] = {}
                 version_dict['version']['licensed_features']['cluster']['status'] = \
-                        m.groupdict()['cluster']
+                    m.groupdict()['cluster']
                 continue
 
             # Serial Number: 9A5BHB00D2D
@@ -738,7 +765,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'encryption_hardware' not in version_dict['version']:
                     version_dict['version']['encryption_hardware'] = {}
                 version_dict['version']['encryption_hardware']['encryption_device'] = \
-                        m.groupdict()['encryption_device']
+                    m.groupdict()['encryption_device']
                 continue
 
             # Boot microcode   : CN1000-MC-BOOT-2.00 
@@ -747,7 +774,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'encryption_hardware' not in version_dict['version']:
                     version_dict['version']['encryption_hardware'] = {}
                 version_dict['version']['encryption_hardware']['boot_microcode'] = \
-                        m.groupdict()['boot_microcode']
+                    m.groupdict()['boot_microcode']
                 continue
 
             # SSL/IKE microcode: CNLite-MC-SSLm-PLUS-2.03
@@ -756,7 +783,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'encryption_hardware' not in version_dict['version']:
                     version_dict['version']['encryption_hardware'] = {}
                 version_dict['version']['encryption_hardware']['ssl_ike_microcode'] = \
-                        m.groupdict()['ssl_ike_microcode']
+                    m.groupdict()['ssl_ike_microcode']
                 continue
 
             # IPsec microcode  : CNlite-MC-IPSECm-MAIN-2.06
@@ -765,7 +792,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'encryption_hardware' not in version_dict['version']:
                     version_dict['version']['encryption_hardware'] = {}
                 version_dict['version']['encryption_hardware']['ipsec_microcode'] = \
-                        m.groupdict()['ipsec_microcode']
+                    m.groupdict()['ipsec_microcode']
                 continue
 
             # GTP/GPRS                          : Enabled       perpetual
@@ -776,12 +803,11 @@ class ShowVersion(ShowVersionSchema):
                 if 'gtp_gprs' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['gtp_gprs'] = {}
                 version_dict['version']['licensed_features']['gtp_gprs']['status'] = \
-                        m.groupdict()['gtp_gprs']
+                    m.groupdict()['gtp_gprs']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['gtp_gprs']['time_remaining'] = \
                         m.groupdict()['time_remaining']
                 continue
-
 
             # Maximum Physical Interfaces
             m = p43.match(line)
@@ -791,7 +817,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'max_physical_interfaces' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['max_physical_interfaces'] = {}
                 version_dict['version']['licensed_features']['max_physical_interfaces']['status'] = \
-                        m.groupdict()['max_physical_interfaces']
+                    m.groupdict()['max_physical_interfaces']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['max_physical_interfaces']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -805,7 +831,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'shared_anyconnect_premium_peers' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['shared_anyconnect_premium_peers'] = {}
                 version_dict['version']['licensed_features']['shared_anyconnect_premium_peers']['status'] = \
-                        m.groupdict()['shared_anyconnect_premium_peers']
+                    m.groupdict()['shared_anyconnect_premium_peers']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['shared_anyconnect_premium_peers']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -819,12 +845,12 @@ class ShowVersion(ShowVersionSchema):
                 if 'uc_phone_proxy_sessions' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['uc_phone_proxy_sessions'] = {}
                 version_dict['version']['licensed_features']['uc_phone_proxy_sessions']['status'] = \
-                        m.groupdict()['uc_phone_proxy_sessions']
+                    m.groupdict()['uc_phone_proxy_sessions']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['uc_phone_proxy_sessions']['time_remaining'] = \
                         m.groupdict()['time_remaining']
                 continue
-                
+
             # Total UC Proxy Sessions           : 12             62 days
             m = p46.match(line)
             if m:
@@ -833,7 +859,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'total_uc_proxy_sessions' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['total_uc_proxy_sessions'] = {}
                 version_dict['version']['licensed_features']['total_uc_proxy_sessions']['status'] = \
-                        m.groupdict()['total_uc_proxy_sessions']
+                    m.groupdict()['total_uc_proxy_sessions']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['total_uc_proxy_sessions']['time_remaining'] = \
                         m.groupdict()['time_remaining']
@@ -847,7 +873,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'total_phone_proxy_sessions' not in version_dict['version']['licensed_features']:
                     version_dict['version']['licensed_features']['intercompany_media_engine'] = {}
                 version_dict['version']['licensed_features']['intercompany_media_engine']['status'] = \
-                        m.groupdict()['intercompany_media_engine']
+                    m.groupdict()['intercompany_media_engine']
                 if m.groupdict()['time_remaining'] is not None:
                     version_dict['version']['licensed_features']['intercompany_media_engine']['time_remaining'] = \
                         m.groupdict()['time_remaining']

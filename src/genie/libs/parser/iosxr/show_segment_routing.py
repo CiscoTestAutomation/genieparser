@@ -1375,3 +1375,81 @@ class ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail(
                 prefix_dict['flags'] = m.groupdict()['flags']
 
         return ret_dict
+
+
+################################################################################
+
+"""Schema for 'show segment-routing srv6 sid'"""
+class ShowSegmentRoutingSrv6LocatorSidSchema(MetaParser):
+    schema = {
+        'locator': {
+            Any(): {
+                'sid': {
+                    Any(): {
+                        'behavior': str,
+                        'context': str,
+                        'owner': str,
+                        'state': str,
+                        'rw': str
+                    }
+                }
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show segment-routing srv6 sid'
+# ==============================================
+
+class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
+    """Parser for:
+    * show segment-routing srv6 sid
+    * show segment-routing srv6 locator {locator} sid"""
+
+    cli_command = ['show segment-routing srv6 sid',
+                   'show segment-routing srv6 locator {locator} sid']
+
+    def cli(self, locator=None, output=None):
+
+        if output is None:
+            if locator:
+                output = self.device.execute(self.cli_command[1].format(locator=locator))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        ret_dict = {}
+        locator_dict = ret_dict.setdefault('locator',{})
+
+        # SID    Behavior    Context    Owner    State    RW
+        p = re.compile(r'SID\s+Behavior\s+Context\s+Owner\s+State\s+RW')
+        
+        # *** Locator: 'ALGO_0' ***
+        p1 = re.compile(r'^\*+\s+Locator:\s+\'(?P<locator>\S+)\'\s+\*+$')
+        
+        # cafe:0:200::                uN (PSP/USD)      'default':512                     sidmgr              InUse  Y
+        # cafe:0:200:e000::           uDT2U             1:0                               l2vpn_srv6          InUse  Y
+        p2 = re.compile(r'^(?P<sid>[\w+:]+)\s+(?P<behavior>\S+\s?\S+) +'
+                        r'\s+(?P<context>\S+\s?\S+)\s+(?P<owner>\S+)\s+(?P<state>\S+)\s+(?P<rw>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # SID    Behavior    Context    Owner    State    RW
+            if p.match(line):
+                continue
+            # *** Locator: 'ALGO_0' ***
+            m = p1.match(line)
+            if m:
+                locator = m.groupdict()['locator']
+                continue
+
+            # cafe:0:200::                uN (PSP/USD)      'default':512                     sidmgr              InUse  Y
+            # cafe:0:200:e000::           uDT2U             1:0                               l2vpn_srv6          InUse  Y
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sid = group.pop('sid')
+                sid_dict = locator_dict.setdefault(locator, {}).setdefault('sid',{}).setdefault(sid,{})
+                sid_dict.update(group)
+                continue
+
+        return ret_dict

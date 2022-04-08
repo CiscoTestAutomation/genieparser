@@ -116,7 +116,9 @@ class ShowMplsMldpRoot(ShowMplsMldpRootSchema):
             return ret_dict
             
         ##Path(s)     : 26.1.1.2         LDP nbr: 3.3.3.3:0         Port-channel30
-        p1 = re.compile(r"^Path\(s\)\s+\:\s+(?P<path>\S+)\s+[a-zA-z ]+:\s+(?P<ldp_neigh>\S+)\s+(?P<interface>[a-zA-Z0-9\- ]+)$")
+        ##Path(s)     : 191.1.1.2        LDP nbr: 2.2.2.2:0         Port-channel20.1
+        ##Path(s)     : 191.1.1.2        LDP nbr: 2.2.2.2:0         HundredGigE1/0/52.1
+        p1 = re.compile(r"^Path\(s\)\s+\:\s+(?P<path>\S+)\s+[a-zA-z ]+:\s+(?P<ldp_neigh>\S+)\s+(?P<interface>\S+)$")
         
         ##Interface   : Port-channel30 (via unicast RT)
         p2 = re.compile(r"^Interface\s+\:\s+(?P<interface>\S+)\s+\(via\s+(?P<learnet_via>[a-zA-Z ]+)\)$")
@@ -206,7 +208,8 @@ class ShowMplsMldpNeighbors(ShowMplsMldpNeighborsSchema):
         p1 =re.compile(r"^MLDP peer ID\s+\:\s+(?P<mldp_peer>\S+)\,\s+uptime\s+(?P<uptime>\S+)\s+(?P<peer_state>\w+)\,$")
         
         ##LDP GR         : Enabled
-        p2 = re.compile(r"^LDP GR\s+\:\s+(?P<ldp_gr_state>\S+)$")
+        ##LDP GR         :  Enabled (we are in restart mode)
+        p2 = re.compile(r"^LDP GR\s+\:\s+(?P<ldp_gr_state>.*)$")
         
         ##: Reconnect time: 120 Seconds
         ##: Instance: 2

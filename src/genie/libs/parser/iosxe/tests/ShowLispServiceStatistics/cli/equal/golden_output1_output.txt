@@ -1,92 +1,90 @@
-
-202-XTR#show lisp all instance-id 101 ipv4 statistics 
-=====================================================
+=================================================
 Output for router lisp 0
-=====================================================
-LISP EID Statistics for instance ID 101 - last cleared: never
+=================================================
+LISP EID Statistics for all EID instances - last cleared: never
 Control Packets:
-  Map-Requests in/out:                      0/4
-    Encapsulated Map-Requests in/out:       0/3
-    RLOC-probe Map-Requests in/out:         0/1
-    SMR-based Map-Requests in/out:          0/0
-    Map-Requests expired on-queue/no-reply:  0/0
-    Map-Resolver Map-Requests forwarded:    0
-    Map-Server Map-Requests forwarded:      0
-  Map-Reply records in/out:                 2/1
-    Authoritative records in/out:           1/1
-    Non-authoritative records in/out:       1/0
-    Negative records in/out:                0/0
-    RLOC-probe records in/out:              1/1
-    Map-Server Proxy-Reply records out:     0
-  WLC Map-Subscribe records in/out:         0/1
-    Map-Subscribe failures in/out:          0/0
-  WLC Map-Unsubscribe records in/out:       0/0
-    Map-Unsubscribe failures in/out:        0/0
-  Map-Register records in/out:              0/2857
-    Map-Server AF disabled:                 0
-    Authentication failures:                0
-  WLC Map-Register records in/out:          0/0
-    WLC AP Map-Register in/out:             0/0
-    WLC Client Map-Register in/out:         0/0
-    WLC Map-Register failures in/out:       0/0
-  Map-Notify records in/out:                4/0
-    Authentication failures:                0
-  WLC Map-Notify records in/out:            0/0
-    WLC AP Map-Notify in/out:               0/0
-    WLC Client Map-Notify in/out:           0/0
-    WLC Map-Notify failures in/out:         0/0
-  Dropped control packets in input queue:   0
-  Deferred packet transmission:             0/0
-    DDT referral deferred/dropped:          0/0
-    DDT request deferred/dropped:           0/0
-    Map-Reply deferred/dropped:             0/0
-    MR negative Map-Reply deferred/dropped: 0/0
-    MR Map-Request fwd deferred/dropped:    0/0
-    MS Map-Request fwd deferred/dropped:    0/0
-    MS proxy Map-Reply deferred/dropped:    0/0
-    xTR mcast Map-Notify deferred/dropped:  0/0
-    MS Info-Reply deferred/dropped:         0/0
-    RTR Map-Register fwd deferred/dropped:  0/0
-    RTR Map-Notify fwd deferred/dropped:    0/0
-    ETR Info-Request deferred/dropped:      0/0
+  Map-Requests in/out:                              0/0
+    Map-Requests in (5 sec/1 min/5 min):            0/0/0
+    Encapsulated Map-Requests in/out:               0/0
+    RLOC-probe Map-Requests in/out:                 0/0
+    SMR-based Map-Requests in/out:                  0/0
+    Extranet SMR cross-IID Map-Requests in:         0
+    Map-Requests expired on-queue/no-reply          0/0
+    Map-Resolver Map-Requests forwarded:            0
+    Map-Server Map-Requests forwarded:              0
+  Map-Reply records in/out:                         0/0
+    Authoritative records in/out:                   0/0
+    Non-authoritative records in/out:               0/0
+    Negative records in/out:                        0/0
+    RLOC-probe records in/out:                      0/0
+    Map-Server Proxy-Reply records out:             0
+  WLC Map-Subscribe records in/out:                 0/6
+    Map-Subscribe failures in/out:                  0/0
+  WLC Map-Unsubscribe records in/out:               0/0
+    Map-Unsubscribe failures in/out:                0/0
+  Map-Register records in/out:                      0/10
+    Map-Registers in (5 sec/1 min/5 min):           0/0/0
+    Map-Server AF disabled:                         0
+    Not valid site eid prefix:                      0
+    Authentication failures:                        0
+    Disallowed locators:                            0
+    Miscellaneous:                                  0
+  WLC Map-Register records in/out:                  0/0
+    WLC AP Map-Register in/out:                     0/0
+    WLC Client Map-Register in/out:                 0/0
+    WLC Map-Register failures in/out:               0/0
+  Map-Notify records in/out:                        20/0
+    Authentication failures:                        0
+  WLC Map-Notify records in/out:                    0/0
+    WLC AP Map-Notify in/out:                       0/0
+    WLC Client Map-Notify in/out:                   0/0
+    WLC Map-Notify failures in/out:                 0/0
+  Publish-Subscribe in/out:
+    Subscription Request records in/out:            0/0
+      IID subscription requests in/out:             0/0
+      Pub-refresh subscription requests in/out:     0/0
+      Policy subscription requests in/out:          0/0
+    Subscription Request failures in/out:           0/0
+    Subscription Status records in/out:             0/0
+      End of Publication records in/out:            0/0
+      Subscription rejected records in/out:         0/0
+      Subscription removed records in/out:          0/0
+    Subscription Status failures in/out:            0/0
+    Solicit Subscription records in/out:            8/0
+    Solicit Subscription failures in/out:           0/0
+    Publication records in/out:                     0/0
+    Publication failures in/out:                    0/0
 Errors:
-  Map-Request invalid source rloc drops:    0
-  Map-Register invalid source rloc drops:   0
-  DDT ITR Map-Requests dropped:             0 (nonce-collision: 0, bad-xTR-nonce: 0)
+  Mapping record TTL alerts:                        0
+  Map-Request invalid source rloc drops:            0
+  Map-Register invalid source rloc drops:           0
+  DDT Requests failed:                              0
+  DDT ITR Map-Requests dropped:                     0 (nonce-collision: 0, bad-xTR-nonce: 0)
 Cache Related:
-  Cache entries created/deleted:            3/1
-  NSF CEF replay entry count                0
-  Number of EID-prefixes in map-cache:      2
-  Number of negative entries in map-cache:  1
-  Total number of RLOCs in map-cache:       1
-  Average RLOCs per EID-prefix:             1
+  Cache entries created/deleted:                    6/2
+  NSF CEF replay entry count                        0
+  Number of rejected EID-prefixes due to limit:     0
 Forwarding:
-  Number of data signals processed:         1 (+ dropped 0)
-  Number of reachability reports:           0 (+ dropped 0)
-ITR Map-Resolvers:
-  Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-  10.64.4.4            03:13:58        4        1        1        0        0
-  10.166.13.13         03:13:58       26        2        0        0        1
+  Number of data signals processed:                 0 (+ dropped 0)
+  Number of reachability reports:                   0 (+ dropped 0)
+  Number of SMR signals dropped:                    0
 LISP RLOC Statistics - last cleared: never
 Control Packets:
-    RTR Map-Requests forwarded:             0
-    RTR Map-Notifies forwarded:             0
-  DDT-Map-Requests in/out:                  0/0
-  DDT-Map-Referrals in/out:                 0/0
+  RTR Map-Requests forwarded:                       0
+  RTR Map-Notifies forwarded:                       0
+  DDT-Map-Requests in/out:                          0/0
+  DDT-Map-Referrals in/out:                         0/0
 Errors:
-  Map-Request format errors:                0
-  Map-Reply format errors:                  0
-  Map-Referral format errors:               0
-  Mapping record TTL alerts:                0
-  DDT Requests failed:                      0
+  Map-Request format errors:                        0
+  Map-Reply format errors:                          0
+  Map-Referral format errors:                       0
 LISP Miscellaneous Statistics - last cleared: never
 Errors:
-  Invalid IP version drops:                 0
-  Invalid IP header drops:                  0
-  Invalid IP proto field drops:             0
-  Invalid packet size dropss:               0
-  Invalid LISP control port drops:          0
-  Invalid LISP checksum drops:              0
-  Unsupported LISP packet type drops:       0
-  Unknown packet drops:                     0
-        
+  Invalid IP version drops:                         0
+  Invalid IP header drops:                          0
+  Invalid IP proto field drops:                     0
+  Invalid packet size drops:                        0
+  Invalid LISP control port drops:                  0
+  Invalid LISP checksum drops:                      0
+  Unsupported LISP packet type drops:               0
+  Unknown packet drops:                             0

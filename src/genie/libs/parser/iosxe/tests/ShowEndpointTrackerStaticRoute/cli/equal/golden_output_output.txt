@@ -1,0 +1,5 @@
+show endpoint-tracker static-route
+
+Tracker Name 				Status 				RTT in msec 				Probe ID
+tcp-10001 		                UP 				    2 					   2
+udp-10001 				UP 				    1 					   3

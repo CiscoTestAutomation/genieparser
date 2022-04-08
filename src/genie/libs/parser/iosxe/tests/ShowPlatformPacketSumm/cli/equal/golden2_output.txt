@@ -1,0 +1,16 @@
+0     Vl120                     internal0/0/rp:0          PUNT   130 (wls CAPWAP Packets to LFTS
+1     Vl120                     internal0/0/rp:0          PUNT   97  (Packets to LFTS)
+2     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+3     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+4     Vl120                     internal0/0/rp:0          PUNT   97  (Packets to LFTS)
+5     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+6     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+7     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+8     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+9     Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+10    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+11    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+12    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+13    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+14    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS
+15    Vl120                     internal0/0/rp:0          PUNT   129 (wls 802.11 Packets to LFTS

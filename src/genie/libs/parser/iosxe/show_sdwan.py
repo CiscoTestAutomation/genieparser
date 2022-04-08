@@ -32,6 +32,8 @@
 * 'show sdwan system on-demand'
 * 'show sdwan system on-demand {remote_system}'
 * 'show sdwan appqoe service-controllers'
+* 'show sdwan app-fwd cflowd flow-count'
+* 'show sdwan app-fwd cflowd statistics'
 * 'show sdwan app-route sla-class'
 * 'show sdwan app-route sla-class name <name>'
 * 'show sdwan app-route stats local-color <color>'
@@ -57,6 +59,7 @@ import genie.parsergen as pg
 from genie.libs.parser.viptela.show_bfd import ShowBfdSessions as ShowBfdSessions_viptela
 from genie.libs.parser.viptela.show_bfd import ShowBfdSummary as ShowBfdSummary_viptela
 from genie.libs.parser.viptela.show_control import ShowControlConnections as ShowControlConnections_viptela
+from genie.libs.parser.viptela.show_control import ShowControlConnectionHistory as ShowControlConnectionHistory_viptela
 from genie.libs.parser.viptela.show_control import ShowControlLocalProperties as ShowControlLocalProperties_viptela
 from collections import OrderedDict
 from genie.libs.parser.viptela.show_omp import ShowOmpSummary as ShowOmpSummary_viptela
@@ -855,7 +858,7 @@ class ShowSdwanControlConnections(ShowControlConnections_viptela):
             show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
-    
+
         return super().cli(output = show_output)
 
 # ===============================================
@@ -1216,7 +1219,7 @@ class ShowSdwanOmpRoutes(ShowOmpRoutes_viptela):
         else:
             show_output = output
 
-        return super().cli(output = show_output)
+        return super().cli(output=show_output, prefix=prefix, vpn=vpn)
 
 
 class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
@@ -2691,3 +2694,248 @@ class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
                 continue
 
         return(ret_dict)
+
+
+# ===========================================
+# Parser for 'show sdwan control connections history'
+# ===========================================
+class ShowSdwanControlConnectionHistory(ShowControlConnectionHistory_viptela):
+    """ Parser for "show sdwan control connections history" """
+    cli_command = 'show sdwan control connection-history'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-fwd dpi summary'
+# =======================================================================
+class ShowSdwanAppFwdDpiSummarySchema(MetaParser):
+    """Schema for:
+        show sdwan app-fwd dpi summary"""
+
+    schema = {
+        "name": {
+            Any(): {
+                "cache_size": int,
+                "current_entries": int,
+                "high_watermark": int,
+                "flows_added": int,
+                "flows_aged": int,
+                "active_flows_timed_out": int,
+                "inactive_flows_timed_out": int
+            },
+        },
+    }
+
+# =============================================
+# Parser for 'show sdwan app-fwd dpi summary'
+# =============================================
+
+class ShowSdwanAppFwdDpiSummary(ShowSdwanAppFwdDpiSummarySchema):
+    """parser for "show sdwan app-fwd dpi summary" """
+
+    cli_command = "show sdwan app-fwd dpi summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        keys = ["cache_size", "current_entries", "high_watermark", "flows_added", "flows_aged",
+                "active_flows_timed_out", "inactive_flows_timed_out"]
+
+        #                                                             ACTIVE   INACTIVE
+        #															  FLOWS    FLOWS
+        #					 CACHE   CURRENT  HIGH       FLOWS  FLOWS  TIMED    TIMED
+        # NAME                SIZE    ENTRIES  WATERMARK  ADDED  AGED   OUT      OUT
+        # --------------------------------------------------------------------------------
+        # sdwan_flow_monitor  512000   0        7          1590   1591   1355    236
+        # sdwan_flow_monitor_2  5120   3        6          1570   1596   1358    2367
+
+        p1 = re.compile(r"(?P<name>[a-z]+\S+)+\s+(?P<cache_size>\d+)+\s+(?P<current_entries>\d+)+\s+"
+                        r"(?P<high_watermark>\d+)+\s+(?P<flows_added>\d+)+\s+(?P<flows_aged>\d+)+\s+"
+                        r"(?P<active_flows_timed_out>\d+)+\s+(?P<inactive_flows_timed_out>\d+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # sdwan_flow_monitor  512000   0        7          1590   1591   1355    236
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group.pop("name")
+
+                name_dict = parsed_dict.setdefault("name", {}). \
+                    setdefault(name, {})
+
+                name_dict.update({k: int(v) for k, v in group.items()})
+        return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-fwd cflowd statistics'
+# =======================================================================
+
+class ShowSdwanAppfwdCflowdStatisticsSchema(MetaParser):
+
+    """Schema for "show sdwan app-fwd cflowd statistics" """
+
+    schema = {
+            'data_packets': int,
+            'template_packets': int,
+            'total_packets': int,
+            'flow_refresh': int,
+            'flow_ageout': int,
+            'flow_end_detected': int,
+            'flow_end_forced': int,
+            'flow_rate_limit_drop': int,
+    }
+
+# ==============================================
+# Parser for 'show sdwan app-fwd cflowd statistics'
+# ==============================================
+
+class ShowSdwanAppfwdCflowdStatistics(ShowSdwanAppfwdCflowdStatisticsSchema):
+    """ parser for "show sdwan app-fwd cflowd statistics" """
+
+    cli_command = "show sdwan app-fwd cflowd statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+            ret_dict = {}
+
+            # data_packets             :      1371257
+            p1 = re.compile(r'^data_packets\s+:+\s+(?P<data_packets>\d+)$')
+
+            # template_packets         :      5345
+            p2 = re.compile(r'^template_packets\s+:+\s+(?P<template_packets>\d+)$')
+
+            # total-packets            :      57938
+            p3 = re.compile(r'^total-packets\s+:+\s+(?P<total_packets>\d+)$')
+
+            # flow-refresh             :      31713
+            p4 = re.compile(r'^flow-refresh\s+:+\s+(?P<flow_refresh>\d+)$')
+
+            # flow-ageout              :      18416
+            p5 = re.compile(r'^flow-ageout\s+:+\s+(?P<flow_ageout>\d+)$')
+
+            # flow-end-detected        :      0
+            p6 = re.compile(r'^flow-end-detected\s+:+\s+(?P<flow_end_detected>\d+)$')
+
+            # flow-end-forced          :      0
+            p7 = re.compile(r'^flow-end-forced\s+:+\s+(?P<flow_end_forced>\d+)$')
+
+            # flow-rate-limit-drop     :      0
+            p8 = re.compile(r'^flow-rate-limit-drop\s+:+\s+(?P<flow_rate_limit_drop>\d+)$')
+
+            for line in output.splitlines():
+                line = line.strip()
+
+                # data_packets             :      1371257
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    data_packets = int(group['data_packets'])
+                    ret_dict['data_packets'] = data_packets
+
+                # template_packets         :      5345
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    template_packets = int(group['template_packets'])
+                    ret_dict['template_packets'] = template_packets
+
+                # total-packets            :      57938
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    total_packets = int(group['total_packets'])
+                    ret_dict['total_packets'] = total_packets
+
+                # flow-refresh             :      31713
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    flow_refresh = int(group['flow_refresh'])
+                    ret_dict['flow_refresh'] = flow_refresh
+
+                # flow-ageout              :      18416
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    flow_ageout = int(group['flow_ageout'])
+                    ret_dict['flow_ageout'] = flow_ageout
+
+                # flow-end-detected        :      0
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    flow_end_detected = int(group['flow_end_detected'])
+                    ret_dict['flow_end_detected'] = flow_end_detected
+
+                # flow-end-forced          :      0
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    flow_end_forced = int(group['flow_end_forced'])
+                    ret_dict['flow_end_forced'] = flow_end_forced
+
+                # flow-rate-limit-drop     :      0
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    flow_rate_limit_drop = int(group['flow_rate_limit_drop'])
+                    ret_dict['flow_rate_limit_drop'] = flow_rate_limit_drop
+
+            return ret_dict
+
+# =============================================
+# Parser Schema for 'show sdwan app-fwd cflowd flow-count'
+# =============================================
+class ShowSdwanAppfwdCflowdFlowCountSchema(MetaParser):
+    """Schema for "show sdwan app-fwd cflowd flow-count" """
+
+    schema = {
+        "vpn": {
+            Any(): {
+                "count": int
+            },
+        },
+    }
+
+# ==============================================
+# Parser for 'show sdwan app-fwd cflowd flow-count'
+# ==============================================
+
+class ShowSdwanAppfwdCflowdFlowCount(ShowSdwanAppfwdCflowdFlowCountSchema):
+    """ parser for "show sdwan app-fwd cflowd flow-count" """
+
+    cli_command = "show sdwan app-fwd cflowd flow-count"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        vpn_dict = {}
+
+        # *    2
+        p1 = re.compile(r'^(?P<vpn>.+?)\s+(?P<count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # *    2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn = group['vpn']
+                count = int(group['count'])
+                name_dict = vpn_dict.setdefault('vpn', {}).setdefault(vpn, {})
+                name_dict.update({'count': count})
+
+        return vpn_dict

@@ -1,4 +1,3 @@
-stack#show stackwise-virtual link 
 Stackwise Virtual Link(SVL) Information:
 ----------------------------------------
 Flags:
@@ -8,8 +7,14 @@ Link Status
 U-Up D-Down
 Protocol Status
 ---------------
-S-Suspended P-Pending E-Error T-Timeout R-Ready
------------------------------------------------
+s-Suspended P-Bundled E-Error D-Down R-RLayer3 I-Indiv
+-------------------------------------------------------
 Switch  SVL     Ports                           Link-Status     Protocol-Status
 ------  ---     -----                           -----------     ---------------
-1       1       HundredGigE1/0/3                U                R          
+1       1       HundredGigE1/0/1                U               P
+                HundredGigE1/0/6                U               P
+2       1       HundredGigE2/0/1                U               P
+                HundredGigE2/0/6                U               P    
+
+
+
