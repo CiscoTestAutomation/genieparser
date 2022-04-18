@@ -22,7 +22,7 @@ class ShowIpRouteDistributor(MetaParser):
                    'show ip route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'omp'}
 
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
@@ -68,7 +68,7 @@ class ShowIpv6RouteDistributor(MetaParser):
                    'show ipv6 route vrf {vrf} interface {interface}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'omp'}
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
         
@@ -220,6 +220,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict['connected'] = ['C', '+', '%', 'p', '&']
         source_protocol_dict['local_connected'] = ['LC']
         source_protocol_dict['bgp'] = ['B', '+', '%', 'p', '&']
+        source_protocol_dict['omp'] = ['m']
 
         result_dict = {}
 
@@ -787,6 +788,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
         source_protocol_dict['nd'] = ['ND','NDp']
         source_protocol_dict['destination'] = ['DCE']
         source_protocol_dict['redirect'] = ['NDr']
+        source_protocol_dict['omp'] = ['m']
 
         result_dict = {}
         # IPv6 Routing Table - default - 23 entries
