@@ -1,0 +1,8 @@
+LLDP Interface statistics: 
+        Total frames out: 1835
+        Total frames in: 1834
+        Total frames received in error: 0
+        Total frames out error: 0
+        Total frames discarded: 9
+        Total TLVs discarded: 0
+        Total TLVs unrecognized: 0

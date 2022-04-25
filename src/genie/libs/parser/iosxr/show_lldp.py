@@ -87,6 +87,7 @@ class ShowLldpEntrySchema(MetaParser):
                                 'chassis_id': str,
                                 'port_description': str,
                                 Optional('system_name'): str,
+                                Optional('age'): int,
                                 Optional('system_description'): str,
                                 'time_remaining': int,
                                 Optional('neighbor_id'): str,
@@ -174,6 +175,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p11 = re.compile(r'Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # Hold Time: 120 seconds
         p12 = re.compile(r'Hold +Time: +(?P<hold_time>\d+) +seconds$')
+        # Age: 142641 seconds
+        p18 = re.compile(r'Age: +(?P<age>\d+) +seconds$')
         # System Capabilities: B,R
         p13 = re.compile(r'System +Capabilities: +(?P<system>[\w+,]+)$')
         # Enabled Capabilities: R
@@ -292,6 +295,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 group = m.groupdict()
                 sub_dict['hold_time'] = int(group['hold_time'])
                 continue
+            
+            # Age: 142641 seconds
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict['age'] = int(group['age'])
+                continue
 
             # System Capabilities: B,R
             m = p13.match(line)
@@ -354,7 +364,9 @@ class ShowLldpTrafficSchema(MetaParser):
             "frame_discard": int,
             "tlv_discard": int,
             'tlv_unknown': int,
-            'entries_aged_out': int
+            'entries_aged_out': int,
+            Optional('tlv_accepted'): int,
+            Optional('last_clear'): int
         }
     }
 
@@ -388,6 +400,12 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         # Total TLVs unrecognized: 119
         p3 = re.compile(r'Total +TLVs +(discarded: +(?P<tlv_discard>\d+))?'
             '(unrecognized: +(?P<tlv_unknown>\d+))?')
+        
+        #Total TLVs accepted: 1183
+        p4 = re.compile(r'^Total TLVs accepted: (?P<tlv_accepted>\d+)$')
+
+        # Last Clear: 245522 seconds
+        p5 = re.compile(r'Last +Clear: +(?P<last_clear>\d+) +seconds$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -416,6 +434,21 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
                 counters = ret_dict.setdefault('counters', {})
                 group = m.groupdict()
                 counters.update({k:int(v) for k, v in group.items() if v is not None})
+            
+            #Total TLVs accepted: 1183
+            m = p4.match(line)
+            if m:
+                counters = ret_dict.setdefault('counters', {})
+                group = m.groupdict()
+                counters.update({k:int(v) for k, v in group.items() if v is not None})
+            
+            # Last Clear: 245522 seconds
+            m = p5.match(line)
+            if m:
+                counters = ret_dict.setdefault('counters', {})
+                group = m.groupdict()
+                counters.update({k:int(v) for k, v in group.items() if v is not None})
+
         
         return ret_dict
 
@@ -478,4 +511,116 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
                 intf_dict.update({k:v.lower() for k, v in group.items() if v is not None})
                 continue
         
+        return ret_dict
+
+class ShowLldpTrafficInterfaceIdSchema(MetaParser):
+    """Schema for show lldp traffic interface {id}"""
+    schema = {
+        'interface_id': {
+            'frame_out': int,
+            'frame_in': int,
+            'frame_error_in': int,
+            'frame_error_out': int,
+            'frame_discard': int,
+            'tlv_discard': int,
+            'tlv_unknown': int,
+        }
+    }
+class ShowLldpTrafficInterfaceId(ShowLldpTrafficInterfaceIdSchema):
+    """Parser for show lldp traffic interface {id}"""
+
+    cli_command = 'show lldp traffic interface {id}'
+
+    def cli(self, id, output=None):
+        
+        if output is None:
+            out = self.device.execute(
+                self.cli_command.format(id=id))
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        # initial regexp pattern
+
+        # Total frames out: 1777
+        p1 = re.compile(r'^Total frames out: (?P<frame_out>\d+)$')
+
+        # Total frames in: 1776
+        p2 = re.compile(r'^Total frames in: (?P<frame_in>\d+)$')
+
+        # Total frames received in error: 0
+        p3 = re.compile(r'^Total frames received in error: (?P<frame_error_in>\d+)$')
+
+        # Total frames out error: 0
+        p4 = re.compile(r'^Total frames out error: (?P<frame_error_out>\d+)$')
+
+        # Total frames discarded: 9
+        p5 = re.compile(r'^Total frames discarded: (?P<frame_discard>\d+)$')
+
+        # Total TLVs discarded: 0
+        p6 = re.compile(r'^Total TLVs discarded: (?P<tlv_discard>\d+)$')
+
+        # Total TLVs unrecognized: 0
+        p7 = re.compile(r'^Total TLVs unrecognized: (?P<tlv_unknown>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total frames out: 1777
+            m = p1.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'frame_out': int(group['frame_out'])})
+                continue
+
+            # Total frames in: 1776
+            m = p2.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'frame_in': int(group['frame_in'])})
+                continue
+
+            # Total frames received in error: 0
+            m = p3.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'frame_error_in': int(group['frame_error_in'])})
+                continue
+
+            # Total frames out error: 0
+            m = p4.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'frame_error_out': int(group['frame_error_out'])})
+                continue
+            
+            # Total frames discarded: 9
+            m = p5.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'frame_discard': int(group['frame_discard'])})
+                continue
+
+            # Total TLVs discarded: 0
+            m = p6.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'tlv_discard': int(group['tlv_discard'])})
+                continue
+            
+            # Total TLVs unrecognized: 0
+            m = p7.match(line)
+            if m:
+                interface_id = ret_dict.setdefault('interface_id', {})
+                group = m.groupdict()
+                interface_id.update({'tlv_unknown': int(group['tlv_unknown'])})
+                continue
+                
         return ret_dict

@@ -1355,3 +1355,90 @@ class ShowArpSummary(ShowArpSummarySchema):
                 maximum_entries.update({key : int(group['maximum_entries'])})
 
         return ret_dict
+
+
+class ShowIpArpInspectionVlanSchema(MetaParser):
+    """Schema for show ip arp inspection vlan {num}"""
+    schema = {
+        'source_mac_validation' : str,
+        'destination_mac_validation' : str,
+        'ip_address_validation' : str,
+        'vlan' : int,
+        'configuration' : str,
+        'operation' : str,
+        'acl_logging' : str,
+        'dhcp_logging' : str,
+        'probe_logging' : str
+    }
+
+class ShowIpArpInspectionVlan(ShowIpArpInspectionVlanSchema):
+    """Parser for show ip arp inspection vlan {num}"""
+    
+    cli_command = 'show ip arp inspection vlan {num}'
+    def cli(self, num, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(num=num))
+        ret_dict = {}
+        
+        #Source Mac Validation : Disabled
+        p1 = re.compile(r'^Source\s+Mac\s+Validation\s+:\s+(?P<src_mac_validation>\S+)')
+        
+        #Destination Mac Validation : Disabled
+        p2 = re.compile(r'^Destination\s+Mac\s+Validation\s+:\s+(?P<dst_mac_validation>\S+)')
+        
+        #IP Address Validation : Disabled
+        p3 = re.compile(r'^IP\s+Address\s+Validation\s+:\s+(?P<ip_address_validation>\S+)')
+        
+        #Vlan Configuration Operation ACL Match Static ACL
+        #10 Enabled Active
+        p4 = re.compile(r'^(?P<vlan_num>\d+) +'
+                r'(?P<configuration>[a-zA-Z]+) +'
+                r'(?P<operation>[a-zA-Z]+$)')
+
+        #Vlan ACL Logging DHCP Logging Probe Logging
+        #10 Deny Deny Off        
+        p5 = re.compile(r'^(?P<vlan>\d+) +'
+                r'(?P<acl_logging>[a-zA-Z]+) +'
+                r'(?P<dhcp_logging>[a-zA-Z]+) +'
+                r'(?P<probe_logging>[a-zA-Z]+$)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Source Mac Validation : Disabled
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["source_mac_validation"] = group["src_mac_validation"]
+            
+            #Destination Mac Validation : Disabled
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict["destination_mac_validation"] = group["dst_mac_validation"]
+
+            #IP Address Validation : Disabled 
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict["ip_address_validation"] = group["ip_address_validation"]
+
+            #Vlan Configuration Operation ACL Match Static ACL
+            #10 Enabled Active
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict["vlan"] = int(group["vlan_num"])
+                ret_dict["configuration"] = group["configuration"]
+                ret_dict["operation"] = group["operation"]
+            
+            #Vlan ACL Logging DHCP Logging Probe Logging
+            #10 Deny Deny Off
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict["acl_logging"] = group["acl_logging"]
+                ret_dict["dhcp_logging"] = group["dhcp_logging"]
+                ret_dict["probe_logging"] = group["probe_logging"]
+        
+        return ret_dict

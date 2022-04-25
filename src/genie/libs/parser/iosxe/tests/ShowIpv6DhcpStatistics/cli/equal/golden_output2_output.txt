@@ -1,0 +1,4 @@
+Messages received                16
+Messages sent                    13
+Messages discarded               3
+Messages could not be sent       0

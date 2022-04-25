@@ -644,6 +644,7 @@ class Common:
                     'For': 'FortyGigabitEthernet',
                     'Hu': 'HundredGigE',
                     'Hun': 'HundredGigE',
+                    'Fou': 'FourHundredGigE',
                     'vl': 'vasileft',
                     'vr': 'vasiright',
                     'BE': 'Bundle-Ether',

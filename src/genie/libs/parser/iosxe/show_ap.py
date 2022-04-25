@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # ====================
 # Schema for:
@@ -320,18 +320,22 @@ class ShowApDot115GhzChannelSchema(MetaParser):
                 "device_aware": str,
             },
             "clean_air": str,
+            Optional("zero_wait"): str,
             "wlc_leader_name": str,
-            "wlc_leader_ip": str,
+            Optional("wlc_leader_ip"): str,
+            Optional("wlc_leader_ipv4"): str,
+            Optional("wlc_leader_ipv6"): str,
             "last_run_seconds": int,
             "dca_level": str,
+            Optional("dca_aggressive"): str,
             "dca_db": int,
-            "chan_width_mhz": int,
-            "max_chan_width_mhz": int,
-            "dca_min_energy_dbm": float,
+            "chan_width_mhz": Or(int, str),
+            "max_chan_width_mhz": Or(int, float),
+            "dca_min_energy_dbm": Or(float, int),
             "channel_energy_levels" : {
-                "min_dbm": float,
-                "average_dbm": float,
-                "max_dbm": float,               
+                "min_dbm": Or(float, int),
+                "average_dbm": Or(float, int),
+                "max_dbm": Or(float, int),
             },
             "channel_dwell_times": {
                 "minimum": str,
@@ -339,11 +343,9 @@ class ShowApDot115GhzChannelSchema(MetaParser):
                 "max": str,
             },
             "allowed_channel_list": str,
-            "unused_channel_list": str
+            "unused_channel_list": str,
         }
     }
-
-
 
 # ===============================
 # Parser for:
@@ -372,7 +374,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #     Load                                     : Disable
         #     Device Aware                             : Disable
         #   CleanAir Event-driven RRM option           : Disabled
-        #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
+        #   Channel Assignment Leader                  : sj-00a-ewlc (9.4.62.51) (2001:9:4:62::51)
         #   Last Run                                   : 15995 seconds ago
         #
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
@@ -384,12 +386,12 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #     Average                                  : -82 dBm
         #     Maximum                                  : -81 dBm
         #   Channel Dwell Times
-        #     Minimum                                  : 4 hours 9 minutes 54 seconds
-        #     Average                                  : 4 hours 24 minutes 54 seconds
-        #     Maximum                                  : 4 hours 26 minutes 35 seconds
+        #     Minimum                                  : 2 days 21 hours 20 minutes 14 seconds 
+        #     Average                                  : 4 days 6 hours 26 minutes 41 seconds 
+        #     Maximum                                  : 4 days 17 hours 41 minutes 1 second  
         #   802.11a 5 GHz Auto-RF Channel List
-        #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
-        #     Unused Channel List                      : 165
+        #     Allowed Channel List                     : 36,40,44,48,149,153,157,161 
+        #     Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
 
         lead_auto_chan_assn_capture = re.compile(r"^Leader\s+Automatic\s+Channel\s+Assignment$")
         #   Channel Assignment Mode                    : AUTO
@@ -413,15 +415,16 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         clean_air_capture = re.compile(
             r"^CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
         #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
-        chan_assn_leader_capture = re.compile(
-            r"^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+(?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))$")
+        #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
+        chan_assn_leader_capture = re.compile('^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
         #   Last Run                                   : 15995 seconds ago
         last_run_capture = re.compile(r"^Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
         dca_sensitivity_capture = re.compile(
             r"^DCA\s+Sensitivity\s+Level\s+:\s+(?P<dca_level>\S+)\s+:\s+(?P<dca_db>\d+)\s+dB$")
         #   DCA 802.11n/ac Channel Width               : 80 MHz
-        dca_chan_width_capture = re.compile(r"^DCA\s+802\.11n\/ac\s+Channel\s+Width\s+:\s+(?P<chan_width>\d+)\s+MHz$")
+        #   DCA 802.11n/ac Channel Width               : best 
+        dca_chan_width_capture = re.compile(r"^DCA\s+802\.11n\/ac\s+Channel\s+Width\s+:\s+((?P<chan_width>(\d+\S+|\S+)))")
         #   DBS Max Channel Width                      : 80 MHz
         dbs_max_chan_width_capture = re.compile(
             r"^DBS\s+Max\s+Channel\s+Width\s+:\s+(?P<max_chan_width>\d+)\s+MHz$")
@@ -439,20 +442,25 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #   Channel Dwell Times
         chan_dwell_times_capture = re.compile(r"^Channel\s+Dwell\s+Times$")
         #     Minimum                                  : 4 hours 9 minutes 54 seconds
-        chan_dwell_minimum_capture = re.compile(
-            r"^Minimum\s+:\s+(?P<chan_dwell_min_hours>\d+)\s+hours\s+(?P<chan_dwell_min_minutes>\d+)\s+minutes\s+(?P<chan_dwell_min_seconds>\d+)\s+seconds$")
+        #     Minimum                                  : 2 days 2 hours 52 minutes 25 seconds 
+        chan_dwell_minimum_capture = re.compile(r"^Minimum\s+:\s+((?P<chan_dwell_min_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_min_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_min_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_min_seconds>\d+)\s+(second|seconds)$")
         #     Average                                  : 4 hours 24 minutes 54 seconds
-        chan_dwell_average_capture = re.compile(
-            r"^Average\s+:\s+(?P<chan_dwell_average_hours>\d+)\s+hours\s+(?P<chan_dwell_average_minutes>\d+)\s+minutes\s+(?P<chan_dwell_average_second>\d+)\s+seconds$")
+        #     Average                                  : 3 days 11 hours 58 minutes 52 seconds 
+        chan_dwell_average_capture = re.compile(  r"^Average\s+:\s+((?P<chan_dwell_average_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_average_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_average_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_average_second>\d+)\s+(second|seconds)$")
         #     Maximum                                  : 4 hours 26 minutes 35 seconds
-        chan_dwell_max_capture = re.compile(
-            r"^Maximum\s+:\s+(?P<chan_dwell_max_hours>\d+)\s+hours\s+(?P<chan_dwell_max_minutes>\d+)\s+minutes\s+(?P<chan_dwell_max_seconds>\d+)\s+seconds$")
-        #   802.11a 5 GHz Auto-RF Channel List
+        #     Maximum                                  : 3 days 23 hours 13 minutes 12 seconds 
+        chan_dwell_max_capture = re.compile(r"^Maximum\s+:\s+((?P<chan_dwell_max_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_max_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_max_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_max_seconds>\d+)\s+(second|seconds)$")
+
+        # 802.11a 5 GHz Auto-RF Channel List
         channel_list_capture = re.compile(r"^802.11a\s+5\s+GHz\s+Auto-RF\s+Channel\s+List$")
-        #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+        # Allowed Channel List             : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
         allowed_channel_list_capture = re.compile(r"^Allowed\s+Channel\s+List\s+:\s+(?P<allowed_channel_list>\S+)$")
-        #     Unused Channel List                      : 165
-        unused_channel_list_capture = re.compile(r"^Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\d+)$")
+        # Unused Channel List              : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
+        unused_channel_list_capture = re.compile(r"^Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\S+)$") 
+        # Zero Wait DFS                    : Disabled 
+        zero_wait_capture = re.compile(r"^Zero\s+Wait\s+DFS\s+:\s+(?P<zero_wait>(Enabled|Disabled))$") 
+        # DCA Aggressive Remaining Cycle   : 6(60 minutes)
+        dca_aggressive_capture = re.compile(r"^DCA\s+Aggressive\s+Remaining\s+Cycle\s+:\s+(?P<dca_aggressive>\S+\s+\w+\S)") 
 
 
         def change_data_type(value):
@@ -541,15 +549,31 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 clean_air = groups['clean_air']
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'clean_air': clean_air})
                 continue
+            #  Zero Wait DFS                              : Disabled 
+            elif zero_wait_capture.match(line):
+                zero_wait_capture_match = zero_wait_capture.match(line)
+                groups = zero_wait_capture_match.groupdict()
+                zero_wait = groups['zero_wait']
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'zero_wait': zero_wait})
+                continue
             #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
+            #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
             elif chan_assn_leader_capture.match(line):
                 chan_assn_leader_capture_match = chan_assn_leader_capture.match(line)
                 groups = chan_assn_leader_capture_match.groupdict()
                 wlc_leader_name = groups['wlc_leader_name']
                 wlc_leader_ip = groups['wlc_leader_ip']
+                wlc_leader_ipv4 = groups['wlc_leader_ipv4']
+                wlc_leader_ipv6 = groups['wlc_leader_ipv6']
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'wlc_leader_name': wlc_leader_name})
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
-                    {'wlc_leader_ip': wlc_leader_ip.replace('(', '').replace(')', '')})
+                if wlc_leader_ipv6:
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ipv4': wlc_leader_ipv4.replace('(', '').replace(')', '')})
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ipv6': wlc_leader_ipv6.replace('(', '').replace(')', '')})
+                else:
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ip': wlc_leader_ip.replace('(', '').replace(')', '')})
                 continue
             #   Last Run                                   : 15995 seconds ago
             elif last_run_capture.match(line):
@@ -567,7 +591,15 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_level': dca_level})
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_db': dca_db})
                 continue
+            #  DCA Aggressive Remaining Cycle             : 6(60 minutes)
+            elif dca_aggressive_capture.match(line):
+                dca_aggressive_capture_match = dca_aggressive_capture.match(line)
+                groups = dca_aggressive_capture_match.groupdict()
+                dca_aggressive = groups['dca_aggressive']
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_aggressive': dca_aggressive})
+                continue
             #   DCA 802.11n/ac Channel Width               : 80 MHz
+            #   DCA 802.11n/ac Channel Width               : best 
             elif dca_chan_width_capture.match(line):
                 dca_chan_width_capture_match = dca_chan_width_capture.match(line)
                 groups = dca_chan_width_capture_match.groupdict()
@@ -627,33 +659,61 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                     show_ap_dot11_5ghz_channel_dict["channel_assignment"].update({ "channel_dwell_times" : {} })
                 continue
             #     Minimum                                  : 4 hours 9 minutes 54 seconds
+            #     Minimum                                  : 2 days 21 hours 20 minutes 14 seconds  
             elif chan_dwell_minimum_capture.match(line):
                 chan_dwell_minimum_capture_match = chan_dwell_minimum_capture.match(line)
                 groups = chan_dwell_minimum_capture_match.groupdict()
+                chan_dwell_min_days = groups['chan_dwell_min_days']
                 chan_dwell_min_hours = groups['chan_dwell_min_hours']
                 chan_dwell_min_minutes = groups['chan_dwell_min_minutes']
                 chan_dwell_min_seconds = groups['chan_dwell_min_seconds']
-                chan_dwell_minimum = chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                if chan_dwell_min_days:
+                    chan_dwell_minimum = chan_dwell_min_days + ' days ' + chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+
+                elif chan_dwell_min_hours:
+                    chan_dwell_minimum = chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                elif chan_dwell_min_minutes:
+                    chan_dwell_minimum = chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                else:
+                    chan_dwell_minimum = chan_dwell_min_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'minimum': chan_dwell_minimum})
                 continue
             #     Average                                  : 4 hours 24 minutes 54 seconds
+            #     Average                                  : 4 days 6 hours 26 minutes 41 seconds 
             elif chan_dwell_average_capture.match(line):
                 chan_dwell_average_capture_match = chan_dwell_average_capture.match(line)
                 groups = chan_dwell_average_capture_match.groupdict()
+                chan_dwell_average_days = groups['chan_dwell_average_days']
                 chan_dwell_average_hours = groups['chan_dwell_average_hours']
                 chan_dwell_average_minutes = groups['chan_dwell_average_minutes']
                 chan_dwell_average_seconds = groups['chan_dwell_average_second']
-                chan_dwell_average = chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                if chan_dwell_average_days:
+                    chan_dwell_average = chan_dwell_average_days + ' days ' + chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                elif chan_dwell_average_hours:
+                    chan_dwell_average = chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                elif chan_dwell_average_minutes:
+                    chan_dwell_average = chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                else:
+                    chan_dwell_average = chan_dwell_average_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'average': chan_dwell_average})
                 continue
             #     Maximum                                  : 4 hours 26 minutes 35 seconds
+            #     Maximum                                  : 4 days 17 hours 41 minutes 1 second  
             elif chan_dwell_max_capture.match(line):
                 chan_dwell_max_capture_match = chan_dwell_max_capture.match(line)
                 groups = chan_dwell_max_capture_match.groupdict()
+                chan_dwell_max_days = groups['chan_dwell_max_days']
                 chan_dwell_max_hours = groups['chan_dwell_max_hours']
                 chan_dwell_max_minutes = groups['chan_dwell_max_minutes']
                 chan_dwell_max_seconds = groups['chan_dwell_max_seconds']
-                chan_dwell_max = chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                if chan_dwell_max_days:
+                    chan_dwell_max = chan_dwell_max_days + ' days ' + chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                elif chan_dwell_max_hours:
+                    chan_dwell_max = chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                elif chan_dwell_max_minutes:
+                    chan_dwell_max = chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                else:
+                    chan_dwell_max = chan_dwell_max_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'max': chan_dwell_max})
                 continue
             #   802.11a 5 GHz Auto-RF Channel List
@@ -661,7 +721,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 channel_list_capture_match = channel_list_capture.match(line)
                 groups = channel_list_capture_match.groupdict()
                 continue
-            #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+            # Allowed Channel List             : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
             elif allowed_channel_list_capture.match(line):
                 allowed_channel_list_capture_match = allowed_channel_list_capture.match(line)
                 groups = allowed_channel_list_capture_match.groupdict()
@@ -669,7 +729,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
                     {'allowed_channel_list': allowed_channel_list})
                 continue
-            #     Unused Channel List                      : 165
+            #     Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
             elif unused_channel_list_capture.match(line):
                 unused_channel_list_capture_match = unused_channel_list_capture.match(line)
                 groups = unused_channel_list_capture_match.groupdict()

@@ -1,0 +1,11 @@
+Service ID               : 3861840337
+VRF ID                   : 0
+IP                       : 172.18.0.2/32
+Redirect Hdl             : 0x7fe0bb341f38
+HTM Hdl                  : 0x7fe0bb2f27d8
+Route Prefix             : 172.18.0.0/30 
+Next Hop                 : 60.60.60.62
+Adj Last Modified        : 2021-10-17,06:43:16
+Adj OCE Type             : ADJ 
+Adj OCE Sub-Type         : NONE 
+

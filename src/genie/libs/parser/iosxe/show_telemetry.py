@@ -319,13 +319,14 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
     schema = {
         'id':{
             int: {
-                'address': str,
-                'port': int,
-                'protocol': str,
+                Optional('address'): str,
+                Optional('port'): int,
+                Optional('protocol'): str,
                 Optional('profile'): str,
                 'connection': int,
-                'state': str,
+                Optional('state'): str,
                 Optional('explanation'): str,
+                Optional('name'): str,
             }
         }
     }
@@ -368,11 +369,15 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
         p6 = re.compile(r'^Connection: +(?P<connection>\S+)$')
 
         # State: Valid
-        p7 = re.compile(r'^State: +(?P<state>\S+)$')
+        # State: Transport Requested
+        # State: Valid
+        p7 = re.compile(r'^State: +(?P<state>.*)$')
 
         # Explanation:
-        p8 = re.compile(r'^Explanation: +(?P<explanation>\S+)$')
+        p8 = re.compile(r'^Explanation: *(?P<explanation>.*)$')
 
+        # Name: grpc-tcp
+        p9 = re.compile(r'^Name: +(?P<name>\S+)$')
 
         ret_dict = dict()
 
@@ -434,6 +439,13 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
             if m:
                 group = m.groupdict()
                 subscription['explanation'] = group['explanation']
+                continue
+
+            # Name
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                subscription['name'] = group['name']
                 continue
 
         return ret_dict
@@ -591,6 +603,10 @@ class ShowTelemetryConnectionAll(ShowTelemetryConnectionSchema):
             #Index Peer Address               Port  VRF Source Address             State      State Description
             #----- -------------------------- ----- --- -------------------------- ---------- --------------------
             #    0 5.40.26.169                49066 0   0.0.0.0                    Active     Connection created for protocol netconf
+            # or
+            #Index Peer Address               Port  VRF Source Address             State      State Description
+            #----- -------------------------- ----- --- -------------------------- ---------- --------------------
+            #    0 5.40.26.169                49066 0 M 0.0.0.0                    Active     Connection created for protocol netconf
             header = ["Index", "Peer Address", "Port", "VRF", "Source Address", "State", "State Description"]
             label_fields = ["index", "peer_address", "port", "vrf", "source_address", "state", "state_description"]
 
@@ -602,7 +618,7 @@ class ShowTelemetryConnectionAll(ShowTelemetryConnectionSchema):
                 ret_dict[int(k)] = tmp_dict[k]
 
                 ret_dict[int(k)]["port"] = int(ret_dict[int(k)]["port"])
-                ret_dict[int(k)]["vrf"] = int(ret_dict[int(k)]["vrf"])
+                ret_dict[int(k)]["vrf"] = int(re.sub('M', '', ret_dict[int(k)]["vrf"]))
 
             ret_dict = {"index": ret_dict}
 

@@ -1,0 +1,6 @@
+Group Policy traffic-steering counters
+Source SGT      Destination SGT      HW-redirect     
+------------------------------------------------
+    2057            3003                 0            
+    3053            4003                 0            
+

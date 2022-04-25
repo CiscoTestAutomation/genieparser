@@ -1520,7 +1520,7 @@ class ShowIpCefSchema(MetaParser):
                     Any(): {
                         'prefix': {
                             Any(): {
-                                'nexthop': {
+                                Optional('nexthop'): {
                                     Any(): {
                                         Optional('outgoing_interface'): {
                                             Any(): {
@@ -1625,6 +1625,7 @@ class ShowIpCef(ShowIpCefSchema):
         # 10.1.2.255/32        receive              GigabitEthernet2.100
         # 10.1.3.0/24          10.1.2.1             GigabitEthernet2.100
         #                      10.2.3.3             GigabitEthernet3.100
+        # ::/0, epoch 0, flags [cover, sc, defrt], RIB[S], refcnt 4, per-destination sharing
         p5 = re.compile(r'^((?P<prefix>[\w\:\.]+[\/]+[\d]+) +)?(?P<nexthop>[\w\.]+)( +(?P<interface>[^a-z][\S]+))?$')
 
         # repair: attached-nexthop 10.0.0.9 GigabitEthernet3

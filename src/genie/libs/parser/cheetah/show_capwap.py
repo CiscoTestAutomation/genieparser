@@ -18,7 +18,7 @@ class ShowCapwapClientRcbSchema(MetaParser):
             "swver": str,
             "hwver": str,
             "mwar_ap_mgr_ip": str,
-            "mwar_name": str,
+            Optional("mwar_name"): str,
             "mwar_hw_ver": str,            
             "location": str,
             "ap_mode": str,
@@ -31,9 +31,10 @@ class ShowCapwapClientRcbSchema(MetaParser):
             "ip_prefer_mode": str,
             "ap_link_dtls_encryption": str,
             "ap_tcp_mss_adjust": str,
-            "ap_tcp_mss_size": str,
+            Optional("ap_tcp_mss_size"): str,
             "linkauditing": str,
-            "ap_group_name": str,            
+            "ap_group_name": str,
+            Optional("flex_group_name"): str,
             "capwap_disconnect_reason":
             {
                 "controller_last_sent": str,
@@ -149,6 +150,9 @@ class ShowCapwapClientRcb(ShowCapwapClientRcbSchema):
         
         # Hyperlocation Admin State          : Disabled
         p29 = re.compile(r"^Hyperlocation\s+Admin\s+State\s+:\s+(?P<hyperlocation_admin_state>.*)$")
+
+        # Flex Group Name                    : FP1
+        p30 =  re.compile(r"^Flex\s+Group\s+Name\s+:\s+(?P<flex_group_name>.*)$")
 
         controller_last = {}
         capwap_disconnect = {"capwap_disconnect_reason":{}}
@@ -391,6 +395,13 @@ class ShowCapwapClientRcb(ShowCapwapClientRcbSchema):
                 groups = m.groupdict()
                 hyperlocation_admin_state = groups['hyperlocation_admin_state']
                 capwap_client_rcb_dict.update({'hyperlocation_admin_state': hyperlocation_admin_state})
+                continue
+
+            m = p30.match(line)
+            if m:
+                groups = m.groupdict()
+                flex_group_name = groups['flex_group_name']
+                capwap_client_rcb_dict.update({'flex_group_name': flex_group_name})
                 continue
         # Return final output in dictionary format        
         return capwap_client_rcb_dict

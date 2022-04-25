@@ -1,0 +1,24 @@
+show run policy-map child
+Building configuration...
+
+Current configuration : 379 bytes
+!
+policy-map type queueing child
+ class tc7
+  shape average 2000000000
+ class tc6
+  shape average 2000000000
+ class tc5
+  shape average 2000000000
+ class tc4
+  shape average 2000000000
+ class tc3
+  shape average 2000000000
+ class tc2
+  shape average 2000000000
+ class tc1
+  shape average 1000000000
+ class class-default
+  shape average 2000000000
+!
+end

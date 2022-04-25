@@ -91,7 +91,7 @@ class ShowSnmpSchema(MetaParser):
 
     schema = {
         "chassis": str,
-        "contact": str,
+        Optional("contact"): str,
         Optional("location"): Optional(str),
         "snmp_input": {
             "packet_count": int,

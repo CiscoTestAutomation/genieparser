@@ -1,0 +1,9 @@
+Telemetry subscription receivers detail:
+
+  Subscription ID: 101
+  Name: grpc-tcp
+  Connection: 0
+  State: Resolving
+  Explanation: Resolution request in progress
+
+

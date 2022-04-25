@@ -540,16 +540,16 @@ class ShowMacsecInterfaceSchema(MetaParser):
     """
     schema = {
         'macsec-data': {
-                 'admin-pt2pt-mac': str,
-                 'cipher': str,
-                 'confidentiality-offset': str,
-                 'include-sci': str,
+                 Optional('admin-pt2pt-mac'): str,
+                 Optional('cipher'): str,
+                 Optional('confidentiality-offset'): str,
+                 Optional('include-sci'): str,
                  'status': str,
-                 'pt2pt-mac-operational': str,
-                 'replay-protect-status': str,
+                 Optional('pt2pt-mac-operational'): str,
+                 Optional('replay-protect-status'): str,
                  Optional('replay-window'): str,
-                 'use-es-enable': str,
-                 'use-scb-enable': str
+                 Optional('use-es-enable'): str,
+                 Optional('use-scb-enable'): str
                        },
         'capabilities': {
                   'data-length-change-supported': str,

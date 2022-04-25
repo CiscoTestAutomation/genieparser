@@ -18,7 +18,8 @@ IOSXE parsers for the following show commands:
     * show mdns-sd summary vlan
     * show mdns-sd service-policy association role
     * show mdns-sd controller summary
-    * Show mdns-sd controller detail
+    * show mdns-sd controller detail
+    * show mdns-sd cache invalid
        
 '''
 
@@ -77,7 +78,6 @@ class ShowMdnsSdServicePeerStatisticsSchema(MetaParser):
             },
         },
     }
-
 
 # =================
 # Parser for:
@@ -178,7 +178,6 @@ class ShowMdnsSdServicePeerStatistics(ShowMdnsSdServicePeerStatisticsSchema):
 
         return ret_dict
 
-
 # =================
 # Schema for:
 #  * 'show mdns-sd statistics interface vlan {vlan}'
@@ -239,8 +238,7 @@ class ShowMdnsSdStatisticsInterfaceVlanSchema(MetaParser):
             },
         },
     }
-    
-    
+        
 # ===============
 # Parser for:
 #  * 'show mdns-sd statistics interface vlan {vlan}'
@@ -489,7 +487,6 @@ class ShowMdnsSdStatisticsInterfaceVlan(ShowMdnsSdStatisticsInterfaceVlanSchema)
             
         return ret_dict
 
-
 # ===============
 # Parser for:
 #  * 'show mdns-sd statistics vlan {vlan}'
@@ -530,7 +527,6 @@ class ShowMdnsSdControllerStatisticsSchema(MetaParser):
             'qry_response_rcvd': int,
         },
     }  
- 
 
 # =================
 # Parser for:
@@ -703,7 +699,6 @@ class ShowMdnsSdControllerStatistics(ShowMdnsSdControllerStatisticsSchema):
           
         return ret_dict
 
-
 # =================
 # Schema for:
 #  * 'show mdns-sd sdg service-peer summary'
@@ -723,7 +718,6 @@ class ShowMdnsSdSdgServicePeerSummarySchema(MetaParser):
         },
     }          
               
-
 # =================
 # Parser for:
 #  * 'show mdns-sd sdg service-peer summary'
@@ -863,10 +857,11 @@ class ShowMdnsSdQueryDbSchema(MetaParser):
     schema = {
        'query_name':{     
             Any(): {
-                'client_mac': str,
-                'vlan_id': int,
-                'location_id': str,
-                'usr_role': str,
+                Optional('client_mac'): str,
+                Optional('ttl'): int,
+                Optional('vlan_id'): int,
+                Optional('location_id'): str,
+                Optional('user_role'): str,
             },
         },
     }
@@ -895,8 +890,12 @@ class ShowMdnsSdQueryDb(ShowMdnsSdQueryDbSchema):
         # PTR Name: _ipp._tcp.local
         p0 = re.compile(r"^PTR Name: +(?P<query_name>[\w.-]+)$")
         
-        # 000c.297d.4ed7      851        Default                       none
-        p1 = re.compile(r"^(?P<client_mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+)\s+(?P<vlan_id>[\d]+)\s+(?P<location_id>([\d]+)|[\w]+)\s+(?P<usr_role>[A-Za-z]+)$")
+        p1 = re.compile(r"^(?P<client_mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+)\s+(?P<vlan_id>[\d]+)\s+(?P<location_id>([\d]+)|[\w]+)\s+(?P<user_role>[A-Za-z]+)$")
+        
+        # 000c.297d.4ed7      120       851        Default                       none
+        p2 = re.compile(r"^(?P<client_mac>([a-zA-Z0-9]+\.\w+\.\w+)+)\s+(?P<ttl>[\d]+)\s+(?P<vlan_id>[\d]+)\s+(?P<location_id>([\d]+)|[\w]+)\s+(?P<user_role>[A-Za-z]+)$")
+        
+        
               
         for line in out.splitlines():
             line = line.strip()
@@ -910,17 +909,25 @@ class ShowMdnsSdQueryDb(ShowMdnsSdQueryDbSchema):
                                      .setdefault(query_name, {})
                 continue
                 
-            # 000c.297d.4ed7      851        Default                       none
             m = p1.match(line)
             if m:
                 query_dict['client_mac']  = m.groupdict()['client_mac']
                 query_dict['vlan_id']  = int(m.groupdict()['vlan_id'])
                 query_dict['location_id']  = m.groupdict()['location_id']
-                query_dict['usr_role']  = m.groupdict()['usr_role']
+                query_dict['user_role']  = m.groupdict()['user_role']
+                continue
+                
+            # 000c.297d.4ed7      851        Default                       none
+            m = p2.match(line)
+            if m:
+                query_dict['client_mac']  = m.groupdict()['client_mac']
+                query_dict['ttl'] = int(m.groupdict()['ttl'])
+                query_dict['vlan_id']  = int(m.groupdict()['vlan_id'])
+                query_dict['location_id']  = m.groupdict()['location_id']
+                query_dict['user_role']  = m.groupdict()['user_role']
                 continue
              
         return ret_dict
-
 
 # =================
 # Schema for:
@@ -1571,6 +1578,13 @@ class ShowMdnsSdSummarySchema(MetaParser):
             Optional('active_query_timer_mode'): str,
             'mdns_query_type': str,
             Optional('service_eumeration_period'): str,
+            Optional('service_record_ttl'): str,
+            Optional('ingress_client_query_suppression'): str,
+            Optional('any_query_forward'): str,
+            Optional('next_advertisement_to_sdg'): str,
+            Optional('next_query_to_sdg'): str,
+            Optional('query_response_mode'): str,
+            Optional('service_receiver_purge_timer'): str,
             'sso': str
         }           
     }
@@ -1641,6 +1655,27 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
         # SSO                        : Active
         p16 = re.compile(r'SSO +: +(?P<sso>\w+)')
         
+        # Service Record TTL               : original
+        p17 = re.compile(r'^Service +Record +TTL +: +(?P<srv_ttl>\w+)$')
+        
+        # Ingress-client query-suppression : Disabled
+        p18 = re.compile(r'^Ingress-client +query-suppression +: +(?P<ingrs_qry_suprs>\w+)$')
+        
+        # ANY Query Forward : Disabled
+        p19 = re.compile(r'^ANY +Query +Forward +: +(?P<any_query_frwrd>\w+)$')
+        
+        # Next Advertisement to SDG : 00:00:06
+        p20 = re.compile(r'^Next +Advertisement +to +SDG +: +(?P<nxt_advt_sdg>[\d:]+)$')
+        
+        # Next Query to SDG : 00:00:06
+        p21 = re.compile(r'^Next +Query +to +SDG +: +(?P<nxt_qry_sdg>[\d:]+)$')
+        
+        # Query Response Mode : Recurring (default)
+        p22 = re.compile(r'^Query +Response +Mode +: +(?P<qry_resp_mode>(.*))$')
+        
+        # Service Receiver Purge Timer: 40sec
+        p23 = re.compile(r'^Service +Receiver +Purge +Timer +: +(?P<servc_purge_timer>\w+)$')
+        
         for line in output.splitlines():
             line = line.strip()
             
@@ -1648,103 +1683,169 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
             m = p0.match(line)
             if m:
                 global_mdns_gateway = ret_dict.setdefault('global_mdns_gateway', {}) 
+                continue
                 
             # mDNS Gateway               : Enabled                     
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["mdns_gateway"] = group["mdns_gty"]
+                continue
                 
             # Rate Limit PPS             : 60
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["rate_limit_pps"] = int(group["rate_lmt"])
+                continue
                 
             # Rate Limit Mode            : (default)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["rate_limit_mode"] = group["rate_lmt_mode"]
+                continue
                 
             # AirPrint Helper            : Disabled
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["airprint_helper"] = group["air_prnt"]
+                continue
                 
             # Mode                       : SDG-Agent
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["mode"] = group["mode"]
+                continue
                 
             # SDG Agent IP               : 40.1.3.1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["sdg_agent_ip"] = group["sdg_ip"]
+                continue
                 
             # Source Interface : Vl1301
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["source_interface"] = group["src_intef"]
+                continue
                 
             # Cache-Sync Periodicity Minutes    : 30
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["cache_sync_periodicity_minutes"] = int(group["cache_sync"])
+                continue
                 
             # Cache-Sync Periodicity Mode    : default
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["cache_sync_periodicity_mode"] = group["cache_sync_mode"]
+                continue
                 
             # Active Response Timer      : Disabled
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["active_response_timer"] = group["act_tmr"]
+                continue
                 
             # Active Query Timer         : Enabled
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["active_query_timer"] = group["act_qtmr"]
+                continue
                 
             # Active Query Timer Minutes         : 30
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["active_query_timer_minutes"] = int(group["act_qtmr_mins"])
+                continue
                 
             # Active Query Timer Mode         : default
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["active_query_timer_mode"] = group["act_qtmr_mode"]
+                continue
                 
             # mDNS Query Type            : PTR only
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["mdns_query_type"] = group["mdns_qry_type"]
+                continue
                 
             # Service Enumeration period : Default
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["service_eumeration_period"] = group["srv_prd"]
+                continue
                 
             # SSO                        : Active
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 global_mdns_gateway["sso"] = group["sso"]   
+                continue
+                
+            # Service Record TTL               : original
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["service_record_ttl"] = group["srv_ttl"] 
+                continue
+                
+            # Ingress-client query-suppression : Disabled
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["ingress_client_query_suppression"] = group["ingrs_qry_suprs"]
+                continue
+                
+            # ANY Query Forward : Disabled
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["any_query_forward"] = group["any_query_frwrd"]
+                continue
                    
+            # Next Advertisement to SDG : 00:00:06
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["next_advertisement_to_sdg"] = group["nxt_advt_sdg"]
+                continue
+                
+            # Next Query to SDG : 00:00:06
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["next_query_to_sdg"] = group["nxt_qry_sdg"]
+                continue
+                
+            # Query Response Mode : Recurring (default)
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["query_response_mode"] = group["qry_resp_mode"]
+                continue
+                
+            # Service Receiver Purge Timer: 40sec
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["service_receiver_purge_timer"] = group["servc_purge_timer"]
+                continue
+                                   
         return ret_dict
 
 class ShowMdnsSdSummaryInterfaceVlanSchema(MetaParser):
@@ -2379,4 +2480,61 @@ class ShowMdnsSdControllerDetail(ShowMdnsSdControllerDetailSchema):
                  service_enum['last_res'] = m.groupdict()['last_res']
                  continue
 
+        return ret_dict
+
+class ShowMdnsSdCacheInvalidSchema(MetaParser):
+    """ Schema for
+    
+        * show mdns-sd cache invalid
+    """
+    schema = {
+        'invalid_mdns_services': {
+            Any(): {
+                'service_name': str, 
+                'mac_address': str,
+                'ptr': str, 
+                'srv':  str,
+                'a_aaaa': str, 
+                'txt':  str
+            }
+        }
+    }
+                        
+class ShowMdnsSdCacheInvalid(ShowMdnsSdCacheInvalidSchema):
+    """ Parser for
+    
+        * show mdns-sd cache invalid
+           
+    """
+    
+    cli_command = 'show mdns-sd cache invalid'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+                
+        #                      SERVICE NAME               Mac Address                 PTR           SRV           A/AAAA           TXT
+        p1 = re.compile(r'^(?P<SERVICE_NAME>[\w.-]+) +(?P<Mac_Address>[\w\.\:]+) +(?P<PTR>\w+) +(?P<SRV>\w+) +(?P<A_AAAA>\w+) +(?P<TXT>\w+)$')
+        
+        
+        for line in output.splitlines():
+            line = line.strip()
+                        
+            #                      SERVICE NAME               Mac Address                 PTR           SRV           A/AAAA           TXT
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                invalid_mdns_services = group['SERVICE_NAME']
+                invalid_mdns_services_dict = ret_dict.setdefault('invalid_mdns_services', {}).setdefault(invalid_mdns_services, {})
+                invalid_mdns_services_dict['mac_address'] = group['Mac_Address']
+                invalid_mdns_services_dict['service_name'] = group['SERVICE_NAME']
+                invalid_mdns_services_dict['ptr'] = group['PTR']
+                invalid_mdns_services_dict['srv'] = group['SRV']
+                invalid_mdns_services_dict['a_aaaa'] = group['A_AAAA']
+                invalid_mdns_services_dict['txt'] = group['TXT']
+                continue    
+                                    
         return ret_dict

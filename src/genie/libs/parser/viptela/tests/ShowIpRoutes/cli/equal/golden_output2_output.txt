@@ -1,0 +1,18 @@
+vedge# sh ip routes vpn 0
+Codes Proto-sub-type:
+  IA -> ospf-intra-area, IE -> ospf-inter-area,
+  E1 -> ospf-external1, E2 -> ospf-external2,
+  N1 -> ospf-nssa-external1, N2 -> ospf-nssa-external2,
+  e -> bgp-external, i -> bgp-internal
+Codes Status flags:
+  F -> fib, S -> selected, I -> inactive,
+  B -> blackhole, R -> recursive
+
+                                            PROTOCOL  NEXTHOP     NEXTHOP          NEXTHOP                                                   
+VPN    PREFIX              PROTOCOL         SUB TYPE  IF NAME     ADDR             VPN      TLOC IP          COLOR            ENCAP  STATUS  
+---------------------------------------------------------------------------------------------------------------------------------------------
+0      0.0.0.0/0           static           -         ge2/3       19.75.2.192      -        -                -                -      F,S     
+0      0.0.0.0/0           static           -         ge2/2       19.75.2.176      -        -                -                -      F,S     
+0      10.139.1.3/32       connected        -         system      -                -        -                -                -      F,S     
+0      19.75.2.176/31      connected        -         ge2/2       -                -        -                -                -      F,S     
+0      19.75.2.192/31      connected        -         ge2/3       -                -        -                -                -      F,S     
