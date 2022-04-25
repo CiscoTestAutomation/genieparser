@@ -1,6 +1,6 @@
 expected_output = {
     "instance": {
-        "default": {
+        "mpls1": {
             "areas": {
                 "0": {
                     "interfaces": {

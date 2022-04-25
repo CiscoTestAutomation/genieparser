@@ -1,0 +1,2 @@
+Interface  VNI        Multicast-group VNI state  Mode  VLAN  cfg vrf
+nve1       20011      N/A             Up         L2CP  11    CLI N/A

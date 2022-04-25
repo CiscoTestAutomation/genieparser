@@ -1,10 +1,13 @@
 ''' show_hw.py
 IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
+    * show hw-module slot {slot} port-group mode
 '''
 
+# Python
 import re
 
+# Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
@@ -300,3 +303,69 @@ class ShowHardwareLedPort(ShowHardwareLedPortSchema):
                 
         return ret_dict
 
+# ==================================================================================
+#  Schema for 'show hw-module slot {slot} port-group mode'
+# ==================================================================================
+class ShowHwModuleSlotPortGroupModeSchema(MetaParser):
+    """Schema for show hw-module slot {slot} port-group mode"""
+    schema = {
+        'slot':{
+                int:{
+                    'port_group':{
+                        int:{
+                            Optional('port'):{
+                                Any():{
+                                    'mode':str,
+                                }
+                            }
+                        }
+                    }    
+                }
+            }
+        }
+
+# ==================================================================================
+#  Parser for 'show hw-module slot {slot} port-group mode'
+# ==================================================================================
+class ShowHwModuleSlotPortGroupMode(ShowHwModuleSlotPortGroupModeSchema):
+    """ Parser for show hw-module slot {slot} port-group mode"""
+
+    cli_command = "show hw-module slot {slot} port-group mode"
+
+    def cli(self, slot=None , output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot=slot))
+            
+        ret_dict = {}
+
+        #   2         1              Hu2/0/25            inactive
+        p1 = re.compile(r'^(?P<slot>\d+) +(?P<port_group>\d+) +(?P<port>\S+) +(?P<mode>(inactive|400G|100G))$')
+        #                             Hu2/0/26            inactive
+        #                             Hu2/0/27            400G
+        #                             Hu2/0/28            inactive
+        p2 = re.compile(r'^(?P<port>\S+) +(?P<mode>(inactive|400G|100G))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+               group = m.groupdict()
+               slot_dict = ret_dict.setdefault('slot',{})  
+               slot_id_dict = slot_dict.setdefault(int(group['slot']),{})
+               port_group_dict = slot_id_dict.setdefault('port_group',{})
+               port_group_id_dict = port_group_dict.setdefault(int(group['port_group']),{})
+               port_dict = port_group_id_dict.setdefault('port',{})
+               port_id_dict = port_dict.setdefault(str(group['port']),{})
+               port_id_dict.update({  
+                    'mode' : str(group['mode']),
+                })
+               continue
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_id_dict = port_dict.setdefault(str(group['port']),{})
+                port_id_dict.update({  
+                    'mode' : str(group['mode']),
+                })
+                continue
+        return ret_dict

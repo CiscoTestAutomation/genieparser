@@ -1,0 +1,10 @@
+Tag nSVL-1:
+ISIS level-1 node information for sw.F87A4137BE0.00
+ISIS level-1 node information for sw.F87A4137BE0.01
+ISIS level-1 node information for sw.40B5C1FFEE0.00
+
+Tag nSVL-1:
+ISIS level-2 node information for sw.F87A4137BE0.00
+ISIS level-2 node information for sw.F87A4137BE0.01
+ISIS level-2 node information for sw.40B5C1FFEE0.00
+

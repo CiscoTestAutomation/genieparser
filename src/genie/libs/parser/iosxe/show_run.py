@@ -24,7 +24,7 @@ from genie.libs.parser.utils.common import Common
 #   * 'show run policy-map {name}'
 # ==================================================
 class ShowRunPolicyMapSchema(MetaParser):
-    
+
     schema = {
         'policy_map': {
             Any(): {
@@ -720,14 +720,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict = config_dict.setdefault('interfaces', {})\
                                        .setdefault(interface, {})
                 continue
-            
+
             # description ISE Controlled Port
             m = p2.match(line)
             if m:
                 description = m.groupdict()['description']
                 intf_dict.update({'description': description})
                 continue
-            
+
             # vrf forwarding Mgmt-intf
             m = p3.match(line)
             if m:
@@ -811,7 +811,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'switchport_mode': group['switchport_mode']})
                 continue
-            
+
             # switchport nonegotiate
             m = p14.match(line)
             if m:
@@ -819,7 +819,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update(
                     {'switchport_nonegotiate': group['nonegotiate']})
                 continue
-            
+
             # ip arp inspection limit rate 1024
             m = p15.match(line)
             if m:
@@ -834,7 +834,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'load_interval': group['load_interval']})
                 continue
-            
+
             # authentication control-direction
             m = p17.match(line)
             if m:
@@ -1064,7 +1064,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                                     'state': group['state']},
                                     })
                 continue
-            
+
             # spanning-tree bpdufilter enable
             m = p44.match(line)
             if m:
@@ -1129,41 +1129,41 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'src_ip':group['src_address']})
                 continue
-                
+
             # tunnel mode mpls traffic-eng
             m = p53.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'tunnel_mode':group['tunnel_mode']})
                 continue
-            
+
             #tunnel destination 2.2.2.2
             m = p54.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'tunnel_dst':group['tunnel_dst']})
                 continue
-                
-            if "autoroute announce" in line:
-                intf_dict.update({'autoroute_announce':'enabled'}) 
-            if "autoroute destination" in line:
-                intf_dict.update({'autoroute_destination':'enabled'}) 
 
-                
+            if "autoroute announce" in line:
+                intf_dict.update({'autoroute_announce':'enabled'})
+            if "autoroute destination" in line:
+                intf_dict.update({'autoroute_destination':'enabled'})
+
+
             #tunnel destination 2.2.2.2
             m = p55.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'tunnel_priority':[group['value']]})
                 continue
-                
+
             #tunnel mpls traffic-eng bandwidth 500
             m = p56.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'tunnel_bandwidth':int(group['value'])})
                 continue
-  
+
             # tunnel mpls traffic-eng path-option 1 dynamic
             m =p57.match(line)
             if m:
@@ -1174,8 +1174,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                     sub_dict.update({'path_type':group['path_type']})
                 else:
                     sub_dict.update({'path_type':'explicit'})
-                    sub_dict.update({'path_name':group['path_type']}) 
-                continue    
+                    sub_dict.update({'path_name':group['path_type']})
+                continue
 
             # mpls ip
             m = p58.match(line)
@@ -1344,7 +1344,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'spanning_tree_portfast_trunk': True})
                 continue
-                
+
             #ipv6 nd raguard attach-policy Univ_IPv6_RA_Policy_Host
             m = p78.match(line)
             if m:
@@ -1358,14 +1358,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'device_tracking_attach_policy': group['device_tracking_attach_policy']})
                 continue
-            
+
             # stackwise-virtual link 1
             m = p80.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update({'stackwise_virtual_link': int(group['stackwise_virtual_link'])})
                 continue
-            
+
             # stackwise-virtual dual-active-detection
             m = p81.match(line)
             if m:
@@ -1555,14 +1555,14 @@ class ShowRunMdnsSd(ShowRunMdnsSdSchema):
 
         # source-interface Vlan4030
         p22 = re.compile(r"^source-interface +Vlan(?P<src_intf>[\d]+)$")
-                
+
         # sdg-agent 4000:1:30::1
         # sdg-agent 40.1.21.1
         p23 = re.compile(r"^sdg-agent +(?P<agent_ip>([\d:.]+))$")
-        
+
         for line in out.splitlines():
             line = line.strip()
-            
+
             # mdns-sd gateway
             m = p0.match(line)
             if m:
@@ -1744,19 +1744,19 @@ class ShowRunMdnsSd(ShowRunMdnsSdSchema):
                 loc_grp_name.setdefault('intf', [])\
                             .append(Common.convert_intf_name(group['intf']))
                 continue
-            
+
             # source-interface Vlan4030
             m = p22.match(line)
             if m:
                 ret_dict['src_intf'] = m.groupdict()['src_intf']
                 continue
-                
+
             # sdg-agent 4000:1:30::1
             m = p23.match(line)
             if m:
                 ret_dict['agent_ip'] = m.groupdict()['agent_ip']
                 continue
-      
+
         return out_dict
 
 # ==================================================
@@ -2663,10 +2663,10 @@ class ShowRunningConfigAAA(ShowRunningConfigAAASchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # radius server RADIUS_1
         p1 = re.compile(r'^(?P<server_type>\S+)\sserver\s(?P<server_name>\S+)$')
-        
+
         # address ipv4 11.15.24.213 auth-port 1812 acct-port 1813
         p2_1 = re.compile(r'^address\s(?P<address_type>\S+)\s(?P<address>\S+)\sauth-port\s(?P<auth_port>\S+)\sacct-port\s(?P<acct_port>\S+)$')
 
@@ -3028,7 +3028,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
         #   interface nve1
         #   interface GigabitEthernet1/0/30
-        #   interface Loopback14 
+        #   interface Loopback14
         #   interface Vlan200
         p3_0 = re.compile(r'^interface +(?P<if_name>.*)$')
 
@@ -3174,7 +3174,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            
             # l2vpn evpn
             m = p1_0.match(line)
             if m:
@@ -3184,7 +3183,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 l2vpn_evi_flag = False
                 l2vpn_global_dict = ret_dict.setdefault('l2vpn_global', {})
                 continue
-            
             if l2vpn:
 
                 # replication-type ingress
@@ -3247,7 +3245,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     l2vpn_evi_dict.update({'encapsulation': m.groupdict()['encapsulation']})
                     continue
-            
                 # default-gateway advertise enable
                 m = p1_9.match(line)
                 if m:
@@ -3284,7 +3281,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
             #   interface nve1
             #   interface GigabitEthernet1/0/30
-            #   interface Loopback14 
+            #   interface Loopback14
             #   interface Vlan200
             m = p3_0.match(line)
             if m:
@@ -3310,7 +3307,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         if_name = m.groupdict().pop('if_name')
                         intf_flag=True
                         if_dict = if_others_dict.setdefault('interfaces', {}).setdefault(if_name, {})
-                
                 else:
                     if_name = m.groupdict().pop('if_name')
                     svis = ''           # shares same key field
@@ -3341,7 +3337,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     current_dict = svi_dict
                 elif overlay:
                     current_dict = overlay_dict
-                    
                 #   no ip address
                 m = p3_1.match(line)
                 if m:
@@ -3359,7 +3354,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     current_dict['shutdown'] = False
                     continue
- 
                 if nve_flag == False:
                     #   vrf forwarding green
                     m = p3_7.match(line)
@@ -3372,7 +3366,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             if_others_dict['interfaces'].pop(if_name)
                             if_name = ''    # tranferred from interfaces to overlay_interfaces
                         continue
-    
                     #   ip address 192.168.1.201 255.255.255.0
                     #   ip address 192.168.1.202 255.255.255.0 secondary
                     m = p3_8.match(line)
@@ -3383,9 +3376,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict.setdefault('secondary_ip_address', []).append(ip_addr)
                         else:
                             current_dict['ipv4'] = ip_addr
-                            
+
                         continue
-    
+
                     #   ipv6 address 2001:DB8:201::201/64
                     m = p3_9.match(line)
                     if m:
@@ -3393,45 +3386,39 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         ipv6_addr = group['ipv6']+group['mask']
                         current_dict.setdefault('ipv6', []).append(ipv6_addr)
                         continue
-    
                     #   ipv6 enable
                     m = p3_10.match(line)
                     if m:
                         current_dict['ipv6_enable'] = True
                         continue
-    
                     #   mac-address aabb.cc01.f100
                     m = p3_11.match(line)
                     if m:
                         current_dict['mac_addr'] = m.groupdict()['mac']
                         continue
-    
                     #   ip unnumbered Loopback0
                     m = p3_12.match(line)
                     if m:
                         current_dict['unnumbered_interface'] = m.groupdict()['if_loopback']
                         continue
-    
                     #   no autostate
                     m = p3_13.match(line)
                     if m:
                         current_dict['autostate'] = False
                         continue
-    
                     #   ip pim sparse-mode
                     m = p3_14.match(line)
                     if m:
                         current_dict['pim_enable'] = True
                         continue
-    
                     #   private-vlan mapping 222-224
                     #   private-vlan mapping add 303-307,309,440
                     m = p3_15.match(line)
                     if m:
                         group = m.groupdict()
-    
+
                         vlan_id = group.pop('vlan_id')
-    
+
                         if '-' in vlan_id:
                             vlan_id = vlan_id.split('-')
                             vlan_list = list(range(int(vlan_id[0]), int(vlan_id[1])+1))
@@ -3442,7 +3429,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
                         if group['action']:
                             current_dict['mapped_private_vlan']['action'] = group['action']
-    
                         continue
 
             if vlan or if_name:
@@ -3473,9 +3459,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict.update({'vlan_type': 'core'})  # vni is must field in this regex
 
                         current_dict.update({'vni': vni})
-                    
+
                     if group['vrf']:
-                        current_dict.update({'vrf': group['vrf']})  
+                        current_dict.update({'vrf': group['vrf']})
 
                     if group['type']:
                         repl_type = group['type'].split(' ')
@@ -3483,7 +3469,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict.update({'replication_type': 'static', 'replication_mcast': repl_type[1]})
                         elif repl_type[0] == 'ingress-replication':
                             current_dict.update({'replication_type': repl_type[0]})
-                    
                     continue
 
             #   router bgp 65535.65535
@@ -3545,7 +3530,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     af_dict.update({'select_additional_paths': True})
                     continue
-                
                 #   bgp additional-paths send receive
                 m = p4_10.match(line)
                 if m:
@@ -3676,8 +3660,8 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict = svi_dict
                         current_dict['description'] = m.groupdict()['descr']
                     continue
-            
-            if l2vpn or vrf_defn:   
+
+            if l2vpn or vrf_defn:
                 # rd 65000:100
                 m = p1_12.match(line)
                 if m:
@@ -3688,7 +3672,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
                     current_dict.update({'route_distinguisher': m.groupdict()['rd']})
                     continue
-            
                 # route-target import 3:201
                 # route-target export 1:201
                 # route-target both 65000:100
@@ -3706,9 +3689,49 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         value = group['rt']+' stitching'
                     else:
                         value = group['rt']
-        
                     current_dict.setdefault('route_target'+'_'+group['type'], []).append(value)
                     continue
 
         return ret_dict
 
+class ShowRunRouteSchema(MetaParser):
+
+    """Schema for show running-config | section route"""
+
+    schema = {
+
+        'routes': list
+    }
+
+class ShowRunRoute(ShowRunRouteSchema):
+
+    ''' 
+        Parser for :-
+         show running-config | section route
+    '''
+
+    cli_command = ['show running-config | section route']
+
+    def cli(self,output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        res_dict = {}
+        
+        # ip route 10.64.67.187 255.255.255.255 9.30.0.1
+        p1 = re.compile(r'(?P<routes>ip\s+route\s+\d+\.\d+\.\d+\.\d+\s+\d+\.\d+\.\d+\.\d+\s+\d+\.\d+\.\d+\.\d+)')
+        
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            #ip route 10.64.67.187 255.255.255.255 9.30.0.1
+            m1 = p1.match(line)
+        
+            if m1:
+                group = m1.groupdict()
+                route_list = res_dict.setdefault("routes", [])
+                route_list.append(str(group['routes']))
+        
+        return res_dict

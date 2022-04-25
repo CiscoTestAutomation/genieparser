@@ -1,0 +1,54 @@
+ROMMONES#show crypto eli all 
+Hardware Encryption : ACTIVE
+ Number of crypto engines = 3
+
+ CryptoEngine IOSXE-ESP(14) details: state = Active
+ Capability    : DES, 3DES, AES, GCM, GMAC, RSA, IPv6, GDOI, FAILCLOSE, ESN
+
+ IPSec-Session :  6004 active, 40958 max, 0 failed, 414018 created
+ SSL support   : Yes
+ SSL versions  : TLSv1.0
+ Max SSL connec: 10000
+
+ SSLv3.0 suites: 
+ TLSv1.0 suites: 
+                TLS_RSA_WITH_3DES_EDE_CBC_SHA
+                TLS_RSA_WITH_AES_128_CBC_SHA
+                TLS_RSA_WITH_AES_256_CBC_SHA
+ DTLSv1.0 suite: 
+
+ CryptoEngine Software Crypto Engine details: state = Active
+ Capability    : IPPCP, DES, 3DES, AES, SEAL, GCM, GMAC, RSA, P-256, P-384, P-521, IPv6, GDOI, FAILCLOSE, HA
+
+ IKE-Session   :     0 active, 41058 max, 0 failed, 319288 created
+ IKEv2-Session :  3002 active, 41058 max, 0 failed, 319288 created
+ DH            :     0 active(0/0), 41008 max, 0 failed, 320010 created
+ IPSec-Session :     0 active,  1000 max, 0 failed, 0 created
+ SSL support   : Yes
+ SSL versions  : SSLv3.0, TLSv1.0, DTLSv1.0, DTLS-pre-rfc
+ Max SSL connec: 1000
+ SSL namespace : 1
+          
+ SSLv3.0 suites: 
+                TLS_RSA_WITH_3DES_EDE_CBC_SHA
+                TLS_RSA_WITH_AES_128_CBC_SHA
+                TLS_RSA_WITH_AES_256_CBC_SHA
+ TLSv1.0 suites: 
+                TLS_RSA_WITH_3DES_EDE_CBC_SHA
+                TLS_RSA_WITH_AES_128_CBC_SHA
+                TLS_RSA_WITH_AES_256_CBC_SHA
+ DTLSv1.0 suite: 
+                TLS_RSA_WITH_3DES_EDE_CBC_SHA
+                TLS_RSA_WITH_AES_128_CBC_SHA
+                TLS_RSA_WITH_AES_256_CBC_SHA
+          
+ CryptoEngine act2 details: state = Active
+ Capability    : RSA
+          
+        
+ Number of DH's pregenerated = 4
+ DH lifetime = 86400 seconds
+ DH calculations: P1 722, SS 319288
+          
+crypto engine 1:Software Crypto Engine
+ DH in use/freeing/free - 0/0/41008

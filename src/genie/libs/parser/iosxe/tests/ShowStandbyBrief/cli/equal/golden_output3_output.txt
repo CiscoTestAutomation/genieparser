@@ -1,0 +1,6 @@
+                     P indicates configured to preempt.
+                     |
+Interface   Grp  Pri P State   Active          Standby         Virtual IP
+BD3328       128   110 P Active  local           10.202.145.253   10.202.145.254
+BD3329       129   90 P Standby  10.198.64.29    local         10.198.64.30
+BD3330       130   90 P Standby  10.198.64.61    local         10.198.64.62

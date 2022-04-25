@@ -2275,11 +2275,15 @@ class ShowDeviceTrackingMessagesSchema(MetaParser):
 #  * 'show device-tracking messages'
 # ==================================
 class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
-    cli_command = "show device-tracking messages"
+    cli_command = ["show device-tracking messages" , "show device-tracking messages | section {message}"]
 
-    def cli(self, output=None):
-        if output == None:
-            out = self.device.execute(self.cli_command)
+    def cli(self, message='', output=None):
+        if output is None:
+            if message:
+               cmd = self.cli_command[1].format(message=message)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2321,7 +2325,7 @@ class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
                 entry_dict = device_tracking_messages_dict.setdefault('entries', {}).setdefault(entry_counter, {})
                 entry_dict['timestamp'] = timestamp
                 entry_dict['vlan'] = vlan
-                entry_dict['interface'] = interface
+                entry_dict['interface'] = Common.convert_intf_name(interface)
                 entry_dict['protocol'] = protocol
                 entry_dict['ip'] = ip
 

@@ -1,0 +1,10 @@
+Service "nxos_dc" ("nxos_dc", 226):
+        UUID = 0x59D, PID = 5418, no SAP
+        State: SRV_STATE_STARTED (entered at time Thu Mar 17 16:48:56 2022).
+        Restart count: 2
+        Time of last restart: Thu Mar 17 16:48:56 2022.
+        Previous PID: 25295
+        Reason of last termination: SYSMGR_DEATH_REASON_PATCHING
+        Tag = N/A
+        Plugin ID: 1
+

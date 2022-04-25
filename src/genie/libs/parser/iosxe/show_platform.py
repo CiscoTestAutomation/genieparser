@@ -76,6 +76,10 @@ IOSXE parsers for the following show commands:
     * 'show call admission statistics detailed'
     * 'show platform hardware fed active qos schedule interface {interface}'
     * 'show platform hardware fed active qos schedule interface {sub_interface}'
+    * 'show platform hardware fed active qos queue stats interface {interface}' 
+    * 'show platform hardware fed switch {state} qos queue stats interface {interface}'
+    * 'show platform hardware fed active qos queue label2qmap qmap-egress-data interface {interface}'
+    * 'show platform hardware fed switch {state} qos queue label2qmap qmap-egress-data interface {interface}'
 '''
 
 # Python
@@ -1426,7 +1430,6 @@ class ShowVersion(ShowVersionSchema):
                         version_dict['version']['switch_num'][switch_no]['active'] = True
                         version_dict['version']['switch_num'][switch_no].\
                             update(active_dict) if active_dict else None
-                        active_dict = {}
                 else:
                     for k, v in res2.entries[key].items():
                         if key not in version_dict['version']['switch_num']:
@@ -1434,11 +1437,19 @@ class ShowVersion(ShowVersionSchema):
                         if 'switch_num' != k:
                             version_dict['version']['switch_num'][key][k] = v
                     version_dict['version']['switch_num'][key]['active'] = False
-        else:
-            if active_dict:
-                active_switch = version_dict.setdefault('version', {}).setdefault('switch_num', {}).setdefault('1', {})
-                active_switch.update(active_dict) 
-                
+
+        elif active_dict:
+            # Insert active switch into first free switch number
+            used_switch_nums = version_dict.get('version', {}).get('switch_num', {}).keys()
+            used_switch_nums = [int(x) for x in used_switch_nums]
+
+            for num in range(1, len(used_switch_nums) + 2):
+                if num not in used_switch_nums:
+                    active_switch = version_dict.setdefault('version', {}).\
+                        setdefault('switch_num', {}).setdefault(str(num), {})
+                    active_switch.update(active_dict)
+                    break
+
         # Backward compatibility for license_level and license_type
         if len(version_dict['version'].get('license_package', '')) == 1:
             k = list(version_dict['version']['license_package'].keys())[0]
@@ -14095,7 +14106,7 @@ class ShowIdpromInterfaceSchema(MetaParser):
 	        'date_code': str,
 	        'connector_type': str, 
 	        'encoding': str,
-	        'nominal_bitrate_per_channel': str,
+	        Optional('nominal_bitrate_per_channel'): str,
 	    },
     }
               
@@ -14116,16 +14127,17 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
         p1 = re.compile('^(?P<idprom_for_transceiver>IDPROM for transceiver)')
         
         # Description         = QSFP28 optics (type 134)
-        p2 = re.compile('^Description\s+=\s+(?P<description>[\w\S\s]+)$')
+        p2 = re.compile('^Description\s+=\s+(?P<description>.*)$')
 
         # Transceiver Ty     = QSFP 100GE CU1M (464)
-        p3 = re.compile('^Transceiver Type:\s+=\s+(?P<transceiver_type>[\w\S\s]+)$')
+        p3 = re.compile('^Transceiver Type:\s+=\s+(?P<transceiver_type>.*)$')
 
         # Product Identifier (PID)   = QSFP-100G-CU1M
-        p4 = re.compile('^Product Identifier\s+\(PID\)\s+=\s+(?P<product_identifier>[\w\S\s]+)$')
+        p4 = re.compile('^Product Identifier\s+\(PID\)\s+=\s+(?P<product_identifier>.*)$')
  
         # Vendor Revision            = A
-        p5 = re.compile('^Vendor Revision\s+=\s+(?P<vendor_revision>[\w]+)$')
+        # Vendor Revision            = 1.0
+        p5 = re.compile('^Vendor Revision\s+=\s+(?P<vendor_revision>[\w.]+)$')
 
         # Serial Number (SN)         = APF22340870-A
         p6 = re.compile('^Serial Number\s+\(SN\)\s+=\s+(?P<serial_number>[\w\S]+)$')
@@ -14134,7 +14146,7 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
         p7 = re.compile('^Vendor Name\s+=\s+(?P<vendor_name>[\w\S]+)$')
 
         # Vendor OUI (IEEE company ID)     = 78.A7.14 (7907092)
-        p8 = re.compile('^Vendor OUI\s+\(IEEE company ID\)\s+=\s+(?P<vendor_oui>[\w\S\s]+)$')
+        p8 = re.compile('^Vendor OUI\s+\(IEEE company ID\)\s+=\s+(?P<vendor_oui>.*)$')
 		
         # CLEI code      = CMPQACECAA
         p9 = re.compile('^CLEI code\s+=\s+(?P<clei_code>[\w]+)$')
@@ -14149,13 +14161,15 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
         p12 = re.compile('^Date code\s+\S+\s+=\s+(?P<date_code>[\d\S]+)$')
 
         # Connector type      = No separable connector
-        p13 = re.compile('^Connector type\s+=\s+(?P<connector_type>[\w\s]+)$')
+        # Connector type      = LC.
+        p13 = re.compile('^Connector type\s+=\s+(?P<connector_type>[\w\s.]+)$')
 
         # Encoding           = 64B66B
-        p14= re.compile('^Encoding\s+=\s+(?P<encoding>[\w]+)$')
+        # Encoding           = 8B10B (1)
+        p14= re.compile('^Encoding\s+=\s+(?P<encoding>.*)$')
 		
         # Nominal bitrate per channel    = 25GE (25500 Mbits/s)
-        p15 = re.compile('^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>[\w\S\s]+)$')
+        p15 = re.compile('^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>.*)$')
 
         for line in output.splitlines():
             line=line.strip()
@@ -17621,4 +17635,347 @@ class ShowPlatformHardwareFedActiveQosScheduleInterface(ShowPlatformHardwareFedA
                  interface_dict1['oq_transmit_pir_burst']=m.groupdict()['oq_transmit_pir_burst']   
 
                  continue
-        return ret_dict         
+        return ret_dict  
+        
+class ShowPlatformSoftwareFedIfmSchema(MetaParser):
+
+    schema = {
+            'interfaces': {
+    		    Any(): {
+    			    'if_id': str,
+    			    'state': str
+    		    }
+    	     }
+    }
+
+class ShowPlatformSoftwareFedIfm(ShowPlatformSoftwareFedIfmSchema):
+
+    cli_command = 'show platform software fed switch active ifm interfaces tunnel'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # Tunnel1 0x0000005d READY
+        p1=re.compile(r'^(?P<interface>(^[a-zA-Z]+[0-9])) +(?P<if_id>\w+) +(?P<state>[\w\s]+)$')
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Tunnel1 0x0000005d READY
+            m=p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface_dict = parsed_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict['if_id'] = group['if_id']
+                interface_dict['state'] = str(group['state'])
+
+                continue
+        return parsed_dict
+
+class ShowSystemMtuSchema(MetaParser):
+    """
+    Schema for show system mtu
+    """
+    schema = {
+            'mtu_in_bytes': int
+    		    }
+
+class ShowSystemMtu(ShowSystemMtuSchema):
+    """ Parser for show system mtu"""
+
+    cli_command = 'show system mtu'
+    
+    def cli(self, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        # initial variables
+        ret_dict = {}
+
+        # Global Ethernet MTU is 1500 bytes
+        p1 = re.compile(r'^Global\s+Ethernet\s+MTU\s+is\s+(?P<mtu_in_bytes>\d+)\s+bytes$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Global Ethernet MTU is 1500 bytes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['mtu_in_bytes'] =int(group['mtu_in_bytes'])
+                continue
+        return ret_dict
+
+class ShowPlatformHardwareQfpIpsecDropSchema(MetaParser):
+    """
+    Schema for show platform hardware qfp active feature ipsec data drop
+    """
+    schema = {
+            'drops': {
+                Any(): {
+                    'drop_type': int,
+                    'packets': int
+                    },
+                }
+            }
+
+class ShowPlatformHardwareQfpIpsecDrop(ShowPlatformHardwareQfpIpsecDropSchema):
+    """ Parser for show platform hardware qfp active feature ipsec data drop"""
+
+    cli_command = 'show platform hardware qfp active feature ipsec data drop'
+    
+    def cli(self, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        # 4  IN_US_V4_PKT_SA_NOT_FOUND_SPI                           67643
+        p1 = re.compile(r"^(?P<drop_type>\d+).* +(?P<drop_name>[\w\_]+).* +(?P<packets>\d+)$")
+
+        master_dict={}
+        for line in output.splitlines():
+            line=line.strip()
+
+            # 4  IN_US_V4_PKT_SA_NOT_FOUND_SPI                           67643
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                drop_dict = master_dict.setdefault("drops", {}).setdefault(group['drop_name'], {})
+                drop_dict.update({'drop_type':int(group['drop_type']), 'packets':int(group['packets'])})
+                continue
+
+        return master_dict
+
+class ShowPlatformHardwareFedActiveQosQueueStatsSchema(MetaParser):
+    """Schema for show platform hardware fed active qos queue stats"""
+    schema = {
+        'enqueue_counters':{
+            int: {
+                'buffers_count': int,
+                'enqueue_th0': int,
+                'enqueue_th1': int,
+                'enqueue_th2': int,
+                'q_policer': int,
+            },
+        },
+        'drop_counters':{
+            int:  {
+                'drop_th0': int,
+                'drop_th1': int,
+                'drop_th2': int,
+                's_buf_drop': int,
+                'q_eb_drop': int,
+                'q_policer_drop': int,
+            },
+        },
+    }
+
+class ShowPlatformHardwareFedActiveQosQueueStats(ShowPlatformHardwareFedActiveQosQueueStatsSchema):
+    """
+    Parser for:
+        * show platform hardware fed active qos queue stats interface 
+        * show platform hardware fed switch 1 qos queue stats interface
+    """
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface}',
+            'show platform hardware fed switch {switch_num} qos queue stats interface {interface}']
+
+    def cli(self, interface,output=None,switch_num=None):
+        if output is None:
+            if switch_num is None:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1].format(switch_num=switch_num,interface=interface)
+
+            output = self.device.execute(cmd)     
+
+        ret_dict = {}
+
+        '''
+        ----------------------------------------------------------------------------------------------
+        Q Buffers          Enqueue-TH0          Enqueue-TH1          Enqueue-TH2             Qpolicer
+        (Count)              (Bytes)              (Bytes)              (Bytes)              (Bytes)
+        -- ------- -------------------- -------------------- -------------------- --------------------
+        0       0                    0                13114            129171972                    0
+        1       0                    0                    0            546062296                    0
+        2       0                    0                    0                    0                    0
+        3       0                    0                    0                    0                    0
+        4       0                    0                    0                    0                    0
+        5       0                    0                    0                    0                    0
+        6       0                    0                    0                    0                    0
+        7       0                    0                    0                    0                    0
+       '''
+
+        p1 = re.compile(r'(?P<Q>\d)\s+(?P<buffers_count>\d+)\s+(?P<enqueue_th0>\d+)\s+(?P<enqueue_th1>\d+)\s+(?P<enqueue_th2>\d+)\s+(?P<qpolicer>\d+)$')
+
+        
+        '''
+        --------------------------------------------------------------------------------------------------------------------------------
+        Q             Drop-TH0             Drop-TH1             Drop-TH2             SBufDrop              QebDrop         QpolicerDrop
+                      (Bytes)              (Bytes)              (Bytes)              (Bytes)              (Bytes)              (Bytes)
+        -- -------------------- -------------------- -------------------- -------------------- -------------------- --------------------
+        0                    0                    0                    0                    0                    0                    0
+        1                    0                    0                    0                    0                    0                    0
+        2                    0                    0                    0                    0                    0                    0
+        3                    0                    0                    0                    0                    0                    0
+        4                    0                    0                    0                    0                    0                    0
+        5                    0                    0                    0                    0                    0                    0
+        6                    0                    0                    0                    0                    0                    0
+        7                    0                    0                    0                    0                    0                    0
+        '''
+       
+        p2 = re.compile(r'(?P<Q>\d)\s+(?P<drop_th0>\d+)\s+(?P<drop_th1>\d+)\s+(?P<drop_th2>\d+)\s+(?P<sbufDrop>\d+)\s+(?P<qebDrop>\d+)\s+(?P<qpolicerDrop>\d+)$')
+        
+        #AQM Global counters
+        p3 = re.compile(r'AQM Global counters') 
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            m=p3.match(line)
+            if m:
+                enqueue_counters=ret_dict.setdefault('enqueue_counters', {})
+                drop_counters=ret_dict.setdefault('drop_counters', {})
+
+            '''
+            ----------------------------------------------------------------------------------------------
+            Q Buffers          Enqueue-TH0          Enqueue-TH1          Enqueue-TH2             Qpolicer
+            (Count)              (Bytes)              (Bytes)              (Bytes)              (Bytes)
+            -- ------- -------------------- -------------------- -------------------- --------------------
+            0       0                    0                13114            129171972                    0
+            1       0                    0                    0            546062296                    0
+            2       0                    0                    0                    0                    0
+            3       0                    0                    0                    0                    0
+            4       0                    0                    0                    0                    0
+            5       0                    0                    0                    0                    0
+            6       0                    0                    0                    0                    0
+            7       0                    0                    0                    0                    0
+            '''
+           
+            #AQM Global counters
+            m=p1.match(line)
+            if m:
+               group = m.groupdict()  
+               q=int(group['Q'])
+               enqueue_dict=enqueue_counters.setdefault(q,{})
+               enqueue_dict.update({
+                   'buffers_count': int(group['buffers_count']),
+                   'enqueue_th0': int(group['enqueue_th0']),
+                   'enqueue_th1': int(group['enqueue_th1']),
+                   'enqueue_th2': int(group['enqueue_th2']),
+                   'q_policer': int(group['qpolicer'])
+               })
+               continue
+
+            '''
+            --------------------------------------------------------------------------------------------------------------------------------
+            Q             Drop-TH0             Drop-TH1             Drop-TH2             SBufDrop              QebDrop         QpolicerDrop
+                      (Bytes)              (Bytes)              (Bytes)              (Bytes)              (Bytes)              (Bytes)
+            -- -------------------- -------------------- -------------------- -------------------- -------------------- --------------------
+            0                    0                    0                    0                    0                    0                    0
+            1                    0                    0                    0                    0                    0                    0
+            2                    0                    0                    0                    0                    0                    0
+            3                    0                    0                    0                    0                    0                    0
+            4                    0                    0                    0                    0                    0                    0
+            5                    0                    0                    0                    0                    0                    0
+            6                    0                    0                    0                    0                    0                    0
+            7                    0                    0                    0                    0                    0                    0
+            '''
+
+            m=p2.match(line)
+            if m:
+               group = m.groupdict() 
+               q=int(group['Q'])
+               drop_dict=drop_counters.setdefault(q,{})
+               drop_dict.update({
+                   'drop_th0':int(group['drop_th0']),
+                   'drop_th1':int(group['drop_th1']),
+                   'drop_th2':int(group['drop_th2']),
+                   's_buf_drop':int(group['sbufDrop']),
+                   'q_eb_drop':int(group['qebDrop']),
+                   'q_policer_drop':int(group['qpolicerDrop'])
+                  })   
+               continue
+        
+        return ret_dict
+
+class ShowPlatformHardwarelabel2qmapQmapegressdataSchema(MetaParser):
+    """Schema for show platform hardware fed active qos queue stats"""
+    schema = {
+        Any(): {
+            'queue': int,
+            'threshold': int,
+            'v_queue': int,
+        },
+    }
+
+class ShowPlatformHardwareFedActiveQosQueuelabel2qmapQmapegressdataInterface(ShowPlatformHardwarelabel2qmapQmapegressdataSchema):
+
+    """
+    Parser for:
+        * show platform hardware fed active qos queue label2qmap qmap-egress-data interface 
+        * show platform hardware fed switch 1 qos queue label2qmap qmap-egress-data interface 
+    """
+
+    cli_command = ['show platform hardware fed active qos queue label2qmap qmap-egress-data interface {interface}',
+            'show platform hardware fed switch {switch_num} qos queue label2qmap qmap-egress-data interface {interface}']
+
+
+    def cli(self, interface,output=None,switch_num=None):
+        if output is None:
+            if switch_num is None:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1].format(switch_num=switch_num,interface=interface)
+            
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        '''
+        Egress DATA Queue Mapping  -  Asic/Core/Port: 0/0/0
+
+        ===============================================================================
+        Label   Q Threshold  VQ  |  Label   Q Threshold  VQ  |  Label   Q Threshold  VQ
+        ===== === ========= ===  |  ===== === ========= ===  |  ===== === ========= ===
+        0   1         2   0         1   1         2   0         2   1         2   0
+        3   1         2   0         4   1         2   0         5   1         2   0
+        '''
+        p1=re.compile(r'(?P<Label>\d+)\s+(?P<Q>\d+)\s+(?P<Threshold>\d+)\s+(?P<VQ>\d+)\s+'+r'(?P<Label1>\d+)\s+(?P<Q1>\d+)\s+(?P<Threshold1>\d+)\s+(?P<VQ1>\d+)\s+'+r'(?P<Label2>\d+)\s+(?P<Q2>\d+)\s+(?P<Threshold2>\d+)\s+(?P<VQ2>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+            '''
+            Egress DATA Queue Mapping  -  Asic/Core/Port: 0/0/0
+            ===============================================================================
+            Label   Q Threshold  VQ  |  Label   Q Threshold  VQ  |  Label   Q Threshold  VQ
+            ===== === ========= ===  |  ===== === ========= ===  |  ===== === ========= ===
+              0   1         2   0         1   1         2   0         2   1         2   0
+              3   1         2   0         4   1         2   0         5   1         2   0
+            '''
+
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                label=int(group['Label'])
+                label_dic=ret_dict.setdefault(label,{})
+                label_dic['queue']=int(group['Q'])
+                label_dic['threshold']=int(group['Threshold'])
+                label_dic['v_queue']=int(group['VQ'])
+                label1=int(group['Label1'])
+                label_dic1=ret_dict.setdefault(label1,{})
+                label_dic1['queue']=int(group['Q1'])
+                label_dic1['threshold']=int(group['Threshold1'])
+                label_dic1['v_queue']=int(group['VQ1'])
+                label2=int(group['Label2'])
+                label_dic2=ret_dict.setdefault(label2,{})
+                label_dic2['queue']=int(group['Q2'])
+                label_dic2['threshold']=int(group['Threshold2'])
+                label_dic2['v_queue']=int(group['VQ2'])
+                continue
+        return ret_dict

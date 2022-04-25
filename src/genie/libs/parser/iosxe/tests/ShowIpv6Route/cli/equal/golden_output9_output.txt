@@ -1,0 +1,21 @@
+IPv6 Routing Table - h11 - 5 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+       NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+       OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+       la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid
+       lA - LISP away, le - LISP extranet-policy, lp - LISP publications
+       ls - LISP destinations-summary
+ND  ::/0 [2/0]
+     via FE80::A8BB:CCFF:FE83:D2FF, Ethernet0/0.103
+     via FE80::A8BB:CCFF:FE03:7500, Ethernet0/0.103
+NDp 2001:103::/64 [2/0]
+     via Ethernet0/0.103, directly connected
+L   2001:103::A8BB:1FF:FE03:11/128 [0/0]
+     via Ethernet0/0.103, receive
+LC  2001:103::D1E7:7861:541D:7E5/128 [0/0]
+     via Ethernet0/0.103, receive
+L   FF00::/8 [0/0]
+     via Null0, receive
