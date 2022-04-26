@@ -36,10 +36,7 @@ class ShowFex(ShowFexSchema):
 
     def cli(self, output=None):
         if output is None:
-            # Get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output 
+            output = self.device.execute(self.cli_command)
         # Initial return dictionary
         parsed_dict = {}
 
