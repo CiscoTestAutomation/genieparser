@@ -37,13 +37,22 @@ class ShowFex(ShowFexSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
+        
         # Initial return dictionary
         parsed_dict = {}
 
+        # 1     FEX-1_Device1             Online   N2K-C2348UPQ-10GE   FOC1234567A
+        # 2     FEX-2_Device2             Online   N2K-C2348UPQ-10GE   FOC1234567B
+        # 3     FEX-3_Device3             Online   N2K-C2348UPQ-10GE   FOC1234567C
+        
         p1 = re.compile(r'(?P<number>(\d+)) +(?P<description>(\S+)) +(?P<state>(\S+)) +(?P<model>(\S+)) +(?P<serial>(\S+))$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
+
+            # 1     FEX-1_Device1             Online   N2K-C2348UPQ-10GE   FOC1234567A
+            # 2     FEX-2_Device2             Online   N2K-C2348UPQ-10GE   FOC1234567B
+            # 3     FEX-3_Device3             Online   N2K-C2348UPQ-10GE   FOC1234567C
             m = p1.match(line)
             if m:
                 group = m.groupdict()
