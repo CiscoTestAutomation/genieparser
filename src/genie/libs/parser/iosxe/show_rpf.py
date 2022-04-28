@@ -38,6 +38,7 @@ class ShowIpRpfSchema(MetaParser):
                              'interface_name': str,
                              'table_type': str,
                              Optional('neighbor_host'): str,
+                             Optional('directly_connected'): bool,
                              Optional('admin_distance'): str,
                              Optional('route_mask'): str,
                              Optional('table_feature'): str,
@@ -102,8 +103,9 @@ class ShowIpRpf(ShowIpRpfSchema):
 
         # RPF neighbor: sj1.cisco.com (172.16.121.10)
         # RPF neighbor: eng-isdn-pri3.cisco.com (172.16.16.10)
+        # RPF neighbor: ? (10.1.101.4) - directly connected
         p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\S]+) +'
-                           '\((?P<neighbor>[\w\.\:]+)\)$')
+                            '\((?P<neighbor>[\w\.\:]+)\)( - (?P<directly_connected>directly connected))?$')
 
         # RPF route/mask: 10.1.1.0/24
         # RPF route/mask: 172.16.0.0/255.255.0.0
@@ -199,6 +201,7 @@ class ShowIpRpf(ShowIpRpfSchema):
                 continue
             
             # RPF neighbor: sj1.cisco.com (172.16.121.10)
+            # RPF neighbor: ? (10.1.101.4) - directly connected
             m = p3_1.match(line)
             if m:
                 nei_host = m.groupdict()['host']
@@ -217,6 +220,9 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['path'][path]['neighbor_host'] = nei_host
                 # rpf_nbr
                 ret_dict['vrf'][vrf]['path'][path]['neighbor_address'] = rpf_nbr
+
+                if m.groupdict()['directly_connected']:
+                    ret_dict['vrf'][vrf]['path'][path]['directly_connected'] = True
                 continue
             
             # RPF route/mask: 10.1.1.0/24

@@ -1,0 +1,17 @@
+Client: FE80::A8BB:1FF:FE03:11 
+  DUID: 00030001AABB01030011
+  Username : unassigned
+  VRF : default
+  IA NA: IA ID 0x00150001, T1 43200, T2 69120
+    Address: 2001:103::FDAF:5C5C:AB4D:180
+            preferred lifetime 86400, valid lifetime 172800
+            expires at Apr 06 2022 01:59 AM (172672 seconds)
+Client: FE80::A8BB:CCFF:FE80:88FF 
+  DUID: 00030001AABBCC008800
+  Username : unassigned
+  VRF : default
+  Interface : Ethernet0/0
+  IA PD: IA ID 0x00100001, T1 302400, T2 483840
+    Prefix: 2001:4::/48
+            preferred lifetime 604800, valid lifetime 2592000
+            expires at May 04 2022 02:00 AM (2591938 seconds)

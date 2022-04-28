@@ -7,7 +7,7 @@ show evpn parser class
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 from genie.libs.parser.utils.common import Common
 
 
@@ -395,11 +395,24 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         return parsed_dict
 
 
+# =====================================================
+# Schema for:
+#    * 'show evpn evi mac'
+#    * 'show evpn evi mac private'
+#    * 'show evpn evi mac detail'
+#    * 'show evpn evi vpn-id {vpn_id} mac'
+#    * 'show evpn evi vpn-id {vpn_id} mac private'
+#    * 'show evpn evi vpn-id {vpn_id} mac detail'
+# =====================================================
+
 class ShowEvpnEviMacSchema(MetaParser):
     ''' Schema for:
         * 'show evpn evi mac'
         * 'show evpn evi mac private'
+        * 'show evpn evi mac detail'
         * 'show evpn evi vpn-id {vpn_id} mac'
+        * 'show evpn evi vpn-id {vpn_id} mac private'
+        * 'show evpn evi vpn-id {vpn_id} mac detail'
     '''
 
     schema = {
@@ -410,7 +423,20 @@ class ShowEvpnEviMacSchema(MetaParser):
                         Optional('encap'): str,
                         'ip_address': str,
                         'next_hop': str,
-                        'label': int,
+                        'label': Or(str, int),
+                        Optional('sid'): str,
+                        Optional('sid_flags'): int,
+                        Optional('endpt_behavior'): int,
+                        Optional('sid_struct'): {
+                            'block': int,
+                            'node': int,
+                            'func': int,
+                            'arg': int,
+                        },
+                        Optional('transposition'): {
+                            'len': int,
+                            'offset': int,
+                        },
                         Optional('ethernet_tag'): int,
                         Optional('multipaths_resolved'): str,
                         Optional('multipaths_internal_label'): int,
@@ -424,6 +450,11 @@ class ShowEvpnEviMacSchema(MetaParser):
                         Optional('remote_sequence_number'): int,
                         Optional('local_encapsulation'): str,
                         Optional('remote_encapsulation'): str,
+                        Optional('local_e_tree'): str,
+                        Optional('remote_e_tree'): str,
+                        Optional('remote_matching_e_tree_rt'): str,
+                        Optional('local_ac_id'): str,
+                        Optional('remote_ac_id'): str,
                         Optional('esi_port_key'): str,
                         Optional('source'): str,
                         Optional('flush_requested'): int,
@@ -432,7 +463,9 @@ class ShowEvpnEviMacSchema(MetaParser):
                         Optional('flush_seq_id'): int,
                         Optional('static'): str,
                         Optional('soo_nexthop'): str,
+                        Optional('ext_flags'): str,
                         Optional('bp_xcid'): str,
+                        Optional('stamped_xcid'): str,
                         Optional('bp_ifh'): str,
                         Optional('mac_state'): str,
                         Optional('mac_producers'): str,
@@ -491,114 +524,148 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         else:
             out = output
 
-        # 65535      N/A    0000.0000.0000 ::                                       Local                             0
-        p1 = re.compile(r'^(?P<vpn_id>\d+)( +(?P<encap>\S+))? +(?P<mac_address>[\w\.]+) +'
-                        r'(?P<ip_address>[\w:\.]+) +(?P<next_hop>[\S ]+) +(?P<label>\d+)$')
+        # 750       SRv6       0011.0002.02ee ::    TenGigE0/1/0/6/0.1750      0        cafe:0:128:eef2::
+        # 1750       SRv6       0044.0002.02ee ::   4.4.4.4                    IMP-NULL cafe:0:400:ebb6::
+        # 65535      N/A        fe1d.1d95.8480 ::   Local                      0
+        p1 = re.compile(r'^(?P<vpn_id>\d+)( +(?P<encap>[\w\/]+))? +(?P<mac_address>[\w\.]+) +'
+                        r'(?P<ip_address>[\w:\.]+) +(?P<next_hop>[\w:\.\d\-\/]+) +(?P<label>(\d+|IMP-NULL))'
+                        r'(?:\s+(?P<sid>[\da-fA-F:]+))?$')
 
         # 001b.01ff.0001 N/A                                     24014    7
-        p1_1 = re.compile(r'^(?P<mac_address>\S+) +(?P<next_hop>\S+) +(?P<label>\d+) +(?P<vpn_id>\d+)$')
+        p1_1 = re.compile(r'^(?P<mac_address>(?:\w+\.){2}\w+) +(?P<next_hop>\S+) +(?P<label>(\d+|IMP-NULL)) +(?P<vpn_id>\d+)$')
 
         # IP Address   : 10.196.7.8
         p1_2 = re.compile(r'^IP +Address +: +(?P<ip_address>\S+)$')
 
+        # SID flags: 0, Endpt behavior: 67
+        p2 = re.compile(r'^SID +flags: +(?P<sid_flags>\d+), +Endpt +behavior: +(?P<endpt_behavior>\d+)$')
+
+        # SID struct: Block  Node  Func  Arg
+        #             32     16    16    0
+        p3 = re.compile(r'^(?P<block>\d+)\s+(?P<node>\d+)\s+(?P<func>\d+)\s+(?P<arg>\d+)$')
+
+        # Transposition (len, offset): 16, 48
+        p4 = re.compile(r'^Transposition\s+\(len,\s+offset\):\s+(?P<len>\d+),\s+(?P<offset>\d+)$')
+
         # Ethernet Tag                            : 0
-        p2 = re.compile(r'^Ethernet +Tag +: +(?P<ethernet_tag>\d+)$')
+        p5 = re.compile(r'^Ethernet +Tag +: +(?P<ethernet_tag>\d+)$')
 
         # Multi-paths Resolved                    : False
-        p3 = re.compile(r'^Multi-paths +Resolved +: +(?P<multipaths_resolved>\S+)$')
+        p6 = re.compile(r'^Multi-paths +Resolved +: +(?P<multipaths_resolved>\S+)$')
 
         # Multi-paths Internal label              : 0
-        p4 = re.compile(r'^Multi-paths +Internal +label +: +(?P<multipaths_internal_label>\d+)$')
+        p7 = re.compile(r'^Multi-paths +Internal +label +: +(?P<multipaths_internal_label>\d+)$')
 
         # Multi-paths Local Label
-        p4_1 = re.compile(r'^Multi-paths +Local +Label +: +(?P<multipaths_local_label>\d+)$')
+        p7_1 = re.compile(r'^Multi-paths +Local +Label +: +(?P<multipaths_local_label>\d+)$')
 
         # Local Static                            : No
-        p5 = re.compile(r'^Local +Static +: +(?P<local_static>\S+)$')
+        p8 = re.compile(r'^Local +Static +: +(?P<local_static>\S+)$')
 
         # Remote Static                           : No
-        p6 = re.compile(r'^Remote +Static +: +(?P<remote_static>\S+)$')
+        p9 = re.compile(r'^Remote +Static +: +(?P<remote_static>\S+)$')
 
         # Local Ethernet Segment                  : 0000.0000.0000.0000.0000
-        p7 = re.compile(r'^Local +Ethernet +Segment +: +(?P<local_ethernet_segment>\S+)$')
+        p10 = re.compile(r'^Local +Ethernet +Segment +: +(?P<local_ethernet_segment>\S+)$')
 
         # Ether.Segment: 0000.0000.0000.0000.0000
-        p7_1 = re.compile(r'^Ether\S+Segment *: +(?P<ethernet_segment>\S+)$')
+        p10_1 = re.compile(r'^Ether\S+Segment *: +(?P<ethernet_segment>\S+)$')
 
         # Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
-        p8 = re.compile(r'^Remote +Ethernet +Segment +: +(?P<remote_ethernet_segment>\S+)$')
+        p11 = re.compile(r'^Remote +Ethernet +Segment +: +(?P<remote_ethernet_segment>\S+)$')
 
         # Local Sequence Number                   : 0
-        p9 = re.compile(r'^Local +Sequence +Number +: +(?P<local_sequence_number>\d+)$')
+        p12 = re.compile(r'^Local +Sequence +Number +: +(?P<local_sequence_number>\d+)$')
 
         # Remote Sequence Number                  : 0
-        p10 = re.compile(r'^Remote +Sequence +Number +: +(?P<remote_sequence_number>\d+)$')
+        p13 = re.compile(r'^Remote +Sequence +Number +: +(?P<remote_sequence_number>\d+)$')
 
         # Local Encapsulation                     : N/A
-        p11 = re.compile(r'^Local +Encapsulation +: +(?P<local_encapsulation>\S+)$')
+        p14 = re.compile(r'^Local +Encapsulation +: +(?P<local_encapsulation>\S+)$')
 
         # Remote Encapsulation                    : N/A
-        p12 = re.compile(r'^Remote +Encapsulation +: +(?P<remote_encapsulation>\S+)$')
+        p15 = re.compile(r'^Remote +Encapsulation +: +(?P<remote_encapsulation>\S+)$')
+
+        # Local E-Tree                            : Root
+        p16 = re.compile(r'^Local +E-Tree +: +(?P<local_e_tree>\S+)$')
+
+        # Remote E-Tree                           : Root
+        p17 = re.compile(r'^Remote +E-Tree +: +(?P<remote_e_tree>\S+)$')
+
+        # Remote matching E-Tree RT               : No
+        p18 = re.compile(r'^Remote +matching +E-Tree +RT +: +(?P<remote_matching_e_tree_rt>\S+)$')
+
+        # Local AC-ID                             : 0x0
+        p19 = re.compile(r'^Local +AC-ID +: +(?P<local_ac_id>\S+)$')
+
+        # Remote AC-ID                            : 0x2
+        p20 = re.compile(r'^Remote +AC-ID +: +(?P<remote_ac_id>\S+)$')
 
         # ESI Port Key                            : 0
         # ESI Port Key                            : bef5
-        p13 = re.compile(r'^ESI +Port +Key +: +(?P<esi_port_key>\w+)$')
+        p21 = re.compile(r'^ESI +Port +Key +: +(?P<esi_port_key>\w+)$')
 
         # Source                                  : Local
-        p14 = re.compile(r'^Source +: +(?P<source>\S+)$')
+        p22 = re.compile(r'^Source +: +(?P<source>\S+)$')
 
         # Flush Requested                         : 0
-        p15 = re.compile(r'^Flush +Requested +: +(?P<flush_requested>\d+)$')
+        p23 = re.compile(r'^Flush +Requested +: +(?P<flush_requested>\d+)$')
 
         # Flush Received                          : 0
-        p16 = re.compile(r'^Flush +Received +: +(?P<flush_received>\d+)$')
+        p24 = re.compile(r'^Flush +Received +: +(?P<flush_received>\d+)$')
 
         # SOO Nexthop                             : ::
-        p17 = re.compile(r'^SOO +Nexthop +: +(?P<soo_nexthop>\S+)$')
+        p25 = re.compile(r'^SOO +Nexthop +: +(?P<soo_nexthop>\S+)$')
+
+        # Ext Flags                               : 0x00000000
+        p26 = re.compile(r'^Ext +Flags +: +(?P<ext_flags>\S+)$')
 
         # BP XCID                                 : 0xffffffff
-        p18 = re.compile(r'^BP +XCID +: +(?P<bp_xcid>\S+)$')
+        p27 = re.compile(r'^BP +XCID +: +(?P<bp_xcid>\S+)$')
+
+        # Stamped XCID                            : 0xffffffff
+        p28 = re.compile(r'^Stamped +XCID +: +(?P<stamped_xcid>\S+)$')
 
         # MAC State                               : Init
-        p19 = re.compile(r'^MAC +State +: +(?P<mac_state>[\S ]+)$')
+        p29 = re.compile(r'^MAC +State +: +(?P<mac_state>[\S ]+)$')
 
         # MAC Producers                           : 0x0 (Best: 0x0)
-        p20 = re.compile(r'^MAC +Producers +: +(?P<mac_producers>[\S ]+)$')
+        p30 = re.compile(r'^MAC +Producers +: +(?P<mac_producers>[\S ]+)$')
 
         # Local Router MAC                        : 0000.0000.0000
-        p21 = re.compile(r'^Local +Router +MAC +: +(?P<local_router_mac>\S+)$')
+        p31 = re.compile(r'^Local +Router +MAC +: +(?P<local_router_mac>\S+)$')
 
         # L3 Label                                : 0
-        p22 = re.compile(r'^L3 +Label +: +(?P<l3_label>\d+)$')
+        p32 = re.compile(r'^L3 +Label +: +(?P<l3_label>\d+)$')
 
         # Object: EVPN MAC
-        p23 = re.compile(r'^Object: +(?P<object_name>[\S ]+)$')
+        p33 = re.compile(r'^Object: +(?P<object_name>[\S ]+)$')
 
         # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
-        p24 = re.compile(r'^Base info: +version=(?P<version>\S+), +flags=(?P<flags>\S+)'
+        p34 = re.compile(r'^Base info: +version=(?P<version>\S+), +flags=(?P<flags>\S+)'
                          r', +type=(?P<type>\d+), +reserved=(?P<reserved>\d+)$')
 
         # EVPN MAC event history  [Num events: 0]
-        p25 = re.compile(r'^EVPN +MAC +event +history +\[Num +events: +(?P<num_events>\d+)\]$')
+        p35 = re.compile(r'^EVPN +MAC +event +history +\[Num +events: +(?P<num_events>\d+)\]$')
 
         # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
         # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
         # Aug 15 22:10:12.736  Create                       00000000 00000001 -  -
         # Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  -
-        p26 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\w+)'
+        p36 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\w+)'
                          r',? +(?P<flag_2>\w+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
 
         # Flush Count  : 0
-        p27 = re.compile(r'^Flush +Count *: +(?P<flush_count>\d+)$')
+        p37 = re.compile(r'^Flush +Count *: +(?P<flush_count>\d+)$')
 
         # BP IFH: 0
-        p28 = re.compile(r'^BP +IFH: +(?P<bp_ifh>\d+)$')
+        p38 = re.compile(r'^BP +IFH: +(?P<bp_ifh>\d+)$')
 
         # Flush Seq ID : 0
-        p29 = re.compile(r'^Flush +Seq +ID +: +(?P<flush_seq_id>\d+)$')
+        p39 = re.compile(r'^Flush +Seq +ID +: +(?P<flush_seq_id>\d+)$')
 
         # Static: No
-        p30 = re.compile(r'^Static *: +(?P<static>\S+)$')
+        p40 = re.compile(r'^Static *: +(?P<static>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -612,7 +679,8 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 mac_address = group['mac_address']
                 ip_address = group['ip_address']
                 next_hop = group['next_hop'].strip()
-                label = int(group['label'])
+                label = int(group['label']) if group['label'].isdigit() else group['label']
+                sid = group['sid']
 
                 vpn_id_dict = ret_dict.setdefault('vpn_id', {}). \
                     setdefault(vpn_id, {}). \
@@ -623,6 +691,8 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({'ip_address': ip_address})
                 vpn_id_dict.update({'next_hop': next_hop})
                 vpn_id_dict.update({'label': label})
+                if sid:
+                    vpn_id_dict.update({'sid': sid})
                 continue
 
             # 001b.01ff.0001 N/A                                     24014    7
@@ -632,7 +702,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id = int(group['vpn_id'])
                 mac_address = group['mac_address']
                 next_hop = group['next_hop'].strip()
-                label = int(group['label'])
+                label = int(group['label']) if group['label'].isdigit() else group['label']
 
                 vpn_id_dict = ret_dict.setdefault('vpn_id', {}). \
                     setdefault(vpn_id, {}). \
@@ -650,92 +720,152 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({'ip_address': ip_address})
                 continue
 
-            # Ethernet Tag                            : 0
+            # SID flags: 0, Endpt behavior: 67
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Multi-paths Resolved                    : False
+            # SID struct: Block  Node  Func  Arg
+            #             32     16    16    0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                sid_struct_dict = vpn_id_dict.setdefault('sid_struct', {})
+                sid_struct_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Multi-paths Internal label              : 0
+            # Transposition (len, offset): 16, 48
             m = p4.match(line)
             if m:
+
                 group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                transposition_dict = vpn_id_dict.setdefault('transposition', {})
+                transposition_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Multi-paths Local Label                 : 0
-            m = p4_1.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # Local Static                            : No
+            # Ethernet Tag                            : 0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Remote Static                           : No
+            # Multi-paths Resolved                    : False
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+            # Multi-paths Internal label              : 0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Ether.Segment: 0000.0000.0000.0000.0000
+            # Multi-paths Local Label                 : 0
             m = p7_1.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
-            # Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+            # Local Static                            : No
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # Local Sequence Number                   : 0
+            # Remote Static                           : No
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # Remote Sequence Number                  : 0
+            # Local Ethernet Segment                  : 0000.0000.0000.0000.0000
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # Local Encapsulation                     : N/A
+            # Ether.Segment: 0000.0000.0000.0000.0000
+            m = p10_1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # Remote Encapsulation                    : N/A
+            # Local Sequence Number                   : 0
             m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Remote Sequence Number                  : 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Local Encapsulation                     : N/A
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Remote Encapsulation                    : N/A
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Local E-Tree                            : Root
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Remote E-Tree                           : Root
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Remote matching E-Tree RT               : No
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Local AC-ID                             : 0x0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Remote AC-ID                            : 0x2
+            m = p20.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
@@ -743,77 +873,91 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 
             # ESI Port Key                            : 0
             # ESI Port Key                            : bef5
-            m = p13.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # Source                                  : Local
-            m = p14.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # Flush Requested                         : 0
-            m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # Flush Received                          : 0
-            m = p16.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # SOO Nexthop                             : ::
-            m = p17.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # BP XCID                                 : 0xffffffff
-            m = p18.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # MAC State                               : Init
-            m = p19.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # MAC Producers                           : 0x0 (Best: 0x0)
-            m = p20.match(line)
-            if m:
-                group = m.groupdict()
-                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
-                continue
-
-            # Local Router MAC                        : 0000.0000.0000
             m = p21.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
-            # L3 Label                                : 0
+            # Source                                  : Local
             m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Flush Requested                         : 0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Flush Received                          : 0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # SOO Nexthop                             : ::
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Ext Flags                               : 0x00000000
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # BP XCID                                 : 0xffffffff
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Stamped XCID                            : 0xffffffff
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # MAC State                               : Init
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # MAC Producers                           : 0x0 (Best: 0x0)
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # Local Router MAC                        : 0000.0000.0000
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+            # L3 Label                                : 0
+            m = p32.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # Object: EVPN MAC
-            m = p23.match(line)
+            m = p33.match(line)
             if m:
                 group = m.groupdict()
                 object_name = group['object_name']
@@ -822,7 +966,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 continue
 
             # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
-            m = p24.match(line)
+            m = p34.match(line)
             if m:
                 group = m.groupdict()
                 version = group['version']
@@ -837,7 +981,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 continue
 
             # EVPN MAC event history  [Num events: 0]
-            m = p25.match(line)
+            m = p35.match(line)
             if m:
                 group = m.groupdict()
                 object_dict.update({k: int(v) for k, v in group.items() if v is not None})
@@ -847,7 +991,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
             # Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  -
             # Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6ab70 M  -
-            m = p26.match(line)
+            m = p36.match(line)
             if m:
                 group = m.groupdict()
                 index = event_history_index.get('event_history', 0) + 1
@@ -858,28 +1002,28 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 continue
 
             # Flush Count  : 0
-            m = p27.match(line)
+            m = p37.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # # BP IFH: 0
-            m = p28.match(line)
+            m = p38.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
                 continue
 
             # Flush Seq ID : 0
-            m = p29.match(line)
+            m = p39.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # Static: No
-            m = p30.match(line)
+            m = p40.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k: v for k, v in group.items() if v is not None})
@@ -891,19 +1035,46 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 # =====================================================
 # Parser for:
 #   * 'show evpn evi mac private'
+#   * 'show evpn evi vpn-id {vpn_id} mac private'
 # =====================================================
 
 class ShowEvpnEviMacPrivate(ShowEvpnEviMac):
-    """Parser class for 'show evpn evi mac private' CLI."""
+    """Parser class for below CLI.
+       * 'show evpn evi mac private'
+       * 'show evpn evi vpn-id {vpn_id} mac private'
+    """
 
-    cli_command = 'show evpn evi mac private'
+    cli_command = ['show evpn evi mac private',
+                   'show evpn evi vpn-id {vpn_id} mac private']
 
-    def cli(self, output=None):
+    def cli(self, vpn_id=None, output=None):
         """parsing mechanism: cli
         """
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command[1].format(vpn_id=vpn_id) if vpn_id else self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        return super().cli(output=out)
+
+
+class ShowEvpnEviMacDetail(ShowEvpnEviMac):
+    """Parser class for below CLI.
+       * 'show evpn evi mac detail'
+       * 'show evpn evi vpn-id {vpn_id} mac detail'
+    """
+
+    cli_command = ['show evpn evi mac detail',
+                   'show evpn evi vpn-id {vpn_id} mac detail']
+
+    def cli(self, vpn_id=None, output=None):
+        """parsing mechanism: cli
+        """
+
+        if output is None:
+            cmd = self.cli_command[1].format(vpn_id=vpn_id) if vpn_id else self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
         return super().cli(output=out)
@@ -2299,3 +2470,104 @@ class ShowEvpnInternalIdDetail(ShowEvpnInternalId):
             out = output
 
         return super().cli(output=out)
+
+
+# =====================================================
+# Schema for:
+#   * 'show evpn group'
+# =====================================================
+class ShowEvpnGroupSchema(MetaParser):
+    schema = {
+        'group': {
+            Any(): {
+                'state': str,
+                'core_interfaces': {
+                    Any(): {
+                        'state': str
+                    }
+                },
+                'access_interfaces': {
+                    Any(): {
+                        'state': str
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================
+# Parser for:
+#   * 'show evpn group'
+#   * 'show evpn group {group_id}'
+# =====================================================
+class ShowEvpnGroup(ShowEvpnGroupSchema):
+
+    cli_command = ['show evpn group',
+                   'show evpn group {group_id}']
+
+    def cli(self, group_id=None, output=None):
+
+        ret_dict = {}
+
+        if output is None:
+            cmd = self.cli_command[1].format(group_id=group_id) if group_id else self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        # EVPN Group: 1
+        p1 = re.compile(r'^EVPN +Group *: +(?P<group_id>\d+)$')
+
+        # state: Ready
+        p2 = re.compile(r'^state *: +(?P<state>[a-zA-Z]+)$')
+
+        #  Core Interfaces:
+        p3 = re.compile(r'^Core +Interfaces *:$')
+
+        #   Access Interfaces:
+        p4 = re.compile(r'^Access +Interfaces *:$')
+
+        # Bundle-Ether2: up
+        # TenGigE0/1/0/6/1: up
+        p5 = re.compile(r'^(?P<intf>[\w\-\/]+) *: +(?P<state>[a-zA-Z]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # EVPN Group: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_id = int(group.pop('group_id'))
+                group_dict = ret_dict.setdefault('group', {}).setdefault(group_id, {})
+                continue
+
+            # state: Ready
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict['state'] = group.pop('state')
+                continue
+
+            #  Core Interfaces:
+            m = p3.match(line)
+            if m:
+                intf_dict = group_dict.setdefault('core_interfaces', {})
+                continue
+
+            #   Access Interfaces:
+            m = p4.match(line)
+            if m:
+                intf_dict = group_dict.setdefault('access_interfaces', {})
+                continue
+
+            # Bundle-Ether2: up
+            # TenGigE0/1/0/6/1: up
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group.pop('intf')
+                intf_dict.setdefault(intf, {}).update(group)
+                continue
+
+        return ret_dict

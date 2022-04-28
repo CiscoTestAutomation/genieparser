@@ -1,0 +1,23 @@
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
+
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPWS name: CAMPUS_E_O1, State: UP
+  pw100011                       10.201.99.82:16(MPLS)           0     UP  UP
+  Gi0/0/0                        Gi0/0/0:8(Ethernet)             0     UP  UP
+VPWS name: EVPL-1900-MPLS-to-ASR-BKB-O1, State: UP
+  pw1900                         10.201.99.82:1900(MPLS)         0     UP  UP
+  Te0/1/3                        Te0/1/3:1900(Eth VLAN)          0     UP  UP
+VPWS name: EVPL-ALLVLANBMEDNAStoASR-BKB-O1, State: UP
+  pw9001                         10.201.99.82:9001(MPLS)         0     UP  UP
+  Gi1/0/0                        Gi1/0/0:1(Ethernet)             0     UP  UP
+VPLS name: RMA-VPLS, State: UP
+  pw100028                       RMA-VPLS(VFI)                   0     UP  UP
+  pw100031           core_pw     5004:5000(MPLS)                 0     UP  UP
+BD name: 5000, State: --
+  -                              5000(BD)                        0     UP  --
+  -                              RMA-VPLS(VFI)                   0     UP  UP

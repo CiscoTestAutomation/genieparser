@@ -1,0 +1,7 @@
+RP/0/RSP0/CPU0:router#show mpls forwarding prefix 1.1.1.1/32
+Fri Mar 11 10:21:28.789 CET
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+30867  Pop         1.1.1.1/32         BE511.897    2.2.2.2         203811629
+RP/0/RSP0/CPU0:router#

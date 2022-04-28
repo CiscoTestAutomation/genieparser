@@ -1,0 +1,17 @@
+expected_output={
+   "data_plane_statistics":{
+      "group":{
+         "getvpn1":{
+            "pkts_decrypt":0,
+            "pkts_encrypt":0,
+            "pkts_invalid_prot":0,
+            "pkts_no_sa":0,
+            "pkts_not_tagged":0,
+            "pkts_not_untagged":0,
+            "pkts_tagged":0,
+            "pkts_untagged":0,
+            "pkts_verify_fail":0
+         }
+      }
+   }
+}

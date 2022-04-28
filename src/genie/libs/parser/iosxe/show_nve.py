@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * 'show nve peers vni {vni}'
     * 'show nve interface nve {nve_num} detail'
     * 'show nve vni'
+    * 'show nve vni {vni}'
 
 '''
 
@@ -16,8 +17,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or, Schema
 from genie.parsergen import oper_fill_tabular
+
 
 # ====================================================
 #  schema for show nve peers
@@ -296,7 +298,8 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 # ====================================================
 class ShowNveVniSchema(MetaParser):
     """Schema for:
-        show nve vni"""
+        show nve vni
+        show nve vni {vni}"""
 
     schema ={
         Any(): {
@@ -319,14 +322,19 @@ class ShowNveVniSchema(MetaParser):
 # ====================================================
 class ShowNveVni(ShowNveVniSchema):
     """parser for:
-        show nve vni"""
+        show nve vni
+        show nve vni {vni}"""
 
-    cli_command = 'show nve vni'
+    cli_command = ['show nve vni',
+                   'show nve vni {vni}']
 
-    def cli(self, output=None):
+    def cli(self, vni=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command[0]
+            if vni:
+                cmd = self.cli_command[1].format(vni=vni)
+            output = self.device.execute(cmd)
 
 
         parsed_dict_vlan = oper_fill_tabular(

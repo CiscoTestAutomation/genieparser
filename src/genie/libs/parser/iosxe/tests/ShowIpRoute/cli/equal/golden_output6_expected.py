@@ -401,7 +401,7 @@ expected_output = {
                             "metric": 1,
                             "route_preference": 10,
                             "source_protocol_codes": "l",
-                            "source_protocol": "local",
+                            "source_protocol": "lisp",
                             "next_hop": {
                                 "next_hop_list": {
                                     1: {

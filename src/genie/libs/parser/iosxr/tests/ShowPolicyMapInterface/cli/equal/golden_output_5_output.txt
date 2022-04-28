@@ -1,0 +1,29 @@
+GigabitEthernet0/0/0/2 direction input: Service Policy not installed
+
+GigabitEthernet0/0/0/2 output: ab-c
+
+Class fb
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A 
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps) 
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0                  
+Class ping
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A 
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps) 
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0                  
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A 
+    Total Dropped       :                   0/0                    0

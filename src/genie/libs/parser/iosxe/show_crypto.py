@@ -1281,6 +1281,20 @@ class ShowCryptoSessionDetail(ShowCryptoSessionSuperParser,ShowCryptoSessionSche
             out = output
         return super().cli(output=out)
 
+class ShowCryptoSessionInterfaceDetail(ShowCryptoSessionSuperParser,ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session interface {interface} detail'
+    '''
+
+    cli_command = "show crypto session interface {interface} detail"
+
+    def cli(self, interface = '', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+        return super().cli(output=out)
+
 class ShowCryptoSessionLocalDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
     '''Parser for:
         * 'show crypto session local {} detail'
@@ -6290,3 +6304,1490 @@ class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
                 continue
 
         return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi'
+# =================================================
+class ShowCryptoGdoiSchema(MetaParser):
+    """Schema for show crypto gdoi"""
+    schema =  {
+                "group_name":{
+                    Any():{
+                        "group_information":{
+                            "crypto_path":str,
+                            "group_identity":str,
+                            "group_member":{
+                                Any():{
+                                    "active_tek_num":int,
+                                    "allowable_rekey_cipher":str,
+                                    "attempted_registration_count":int,
+                                    "dp_error_monitoring":str,
+                                    "fail_close_revert":str,
+                                    "fvrf":str,
+                                    "ipsec_init_reg_executed":int,
+                                    "ipsec_init_reg_postponed":int,
+                                    "ivrf":str,
+                                    "last_rekey_seq_num":int,
+                                    "last_rekey_server":str,
+                                    "local_addr":str,
+                                    "local_addr_port":str,
+                                    "pfs_rekey_received":int,
+                                    "re_register_time_sec":int,
+                                    "registration":str,
+                                    "rekey_acks_sent":int,
+                                    "remote_addr":str,
+                                    "remote_addr_port":int,
+                                    "sa_track":str,
+                                    "server_ip":str,
+                                    "succeeded_registration_count":int,
+                                    "uncicast_rekey_received":int,
+                                    "version":str,
+                                    "vrf":str
+                                    }
+                                },
+                            "group_member_information":{
+                                "acl_download_from_ks":{
+                                    Any():{
+                                        "acl_list":list
+                                        }
+                                    },
+                                "acl_received_from_ks":str,
+                                "rekeys_cumulative":{
+                                    "after_latest_register":int,
+                                    "rekey_acks_sents":int,
+                                    "total_received":int
+                                    }
+                                },
+                            "group_server_list":str,
+                            "group_type":str,
+                            "ipsec_sa_direction":str,
+                            "kek_policy":{
+                                "encrypt_algorithm":str,
+                                "key_size":int,
+                                "lifetime":int,
+                                "rekey_transport_type":str,
+                                "sig_hash_algorithm":str,
+                                "sig_key_length":int
+                            },
+                            "key_management_path":str,
+                            "kgs_policy":{
+                                "reg_gm":{
+                                    "local_addr":str
+                                    }
+                                },
+                            "p2p_policy":{
+                                "reg_gm":{
+                                    "local_addr":str
+                                    }
+                                },
+                            "rekeys_received":int,
+                            "tek_policy":{
+                                "interfaces":{
+                                    Any():{
+                                        "ipsec_sa":{
+                                            "spi":{
+                                                Any():{
+                                                    "alg_key_size_bytes":int,
+                                                    "sig_key_size_bytes":int,
+                                                    "anti_replay_count":int,
+                                                    "encaps":str,
+                                                    "sa_remaining_key_lifetime":int,
+                                                    "tag_method":str,
+                                                    "transform":str
+                                                    },
+                                                Any():{
+                                                    "alg_key_size_bytes":int,
+                                                    "sig_key_size_bytes":int,
+                                                    "anti_replay_count":int,
+                                                    "encaps":str,
+                                                    "sa_remaining_key_lifetime":int,
+                                                    "tag_method":str,
+                                                    "transform":str
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+# =================================================
+#  Parser for 'show crypto gdoi'
+# =================================================
+class ShowCryptoGdoi(ShowCryptoGdoiSchema):
+    """Parser for show crypto gdoi"""
+
+    cli_command = ['show crypto gdoi']
+
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Group Name               : getvpn1
+        p1 = re.compile(r"^Group Name +: +(?P<group_name>\w+)$")
+
+        # Group Identity           : 1223
+        p2 = re.compile(r"^Group Identity +: +(?P<group_identity>\w+)$")
+
+        # Group Type               : GDOI (ISAKMP)
+        p3 = re.compile(r"^Group Type +: +(?P<group_type>[\w\s\S]+)$")
+
+        # Crypto Path              : ipv4
+        p4 = re.compile(r"^Crypto Path +: +(?P<crypto_path>\w+)$")
+
+        # Key Management Path      : ipv4
+        p5 = re.compile(r"^Key Management Path +: +(?P<key_management_path>\w+)$")
+
+        # Rekeys received          : 25
+        p6 = re.compile(r"^Rekeys received +: +(?P<rekeys_received>\w+)$")
+
+        # IPSec SA Direction       : Both
+        p7 = re.compile(r"^IPSec SA Direction +: +(?P<ipsec_sa_direction>\w+)$")
+
+        # Group Server list       : 1.1.1.1
+        p8 = re.compile(r"^Group Server list +: +(?P<group_server_list>[\d\.]+)$")
+
+        # Group Member Information For Group getvpn1:
+        p9 = re.compile(r"^Group Member.* +(?P<group>\w+):$")
+
+        # ACL Received From KS     : gdoi_group_getvpn1_temp_acl
+        p10 = re.compile(r"^ACL Received.* +(?P<acl_received_from_ks>\w+)$")
+
+        # Group member             : 3.3.1.1         vrf: None
+        p11 = re.compile(r"^Group member.* +: +(?P<group_member>[\d\.]+) +vrf: +(?P<vrf>[\w]+)$")
+
+        # Local addr/port       : 3.3.1.1/848
+        p12 = re.compile(r"^Local addr\/port +: +(?P<local_addr>[\d\.]+)\/(?P<local_addr_port>[\d]+)$")
+
+        # Remote addr/port      : 1.1.1.1/848
+        p13 = re.compile(r"^Remote addr\/port +: +(?P<remote_addr>[\d\.]+)\/(?P<remote_addr_port>[\d]+)$")
+
+        # fvrf/ivrf             : None/None
+        p14 = re.compile(r"^fvrf\/ivrf +: +(?P<fvrf>\w+)\/(?P<ivrf>\w+)$")
+
+        # Version               : 1.0.26
+        p15 = re.compile(r"^Version +: +(?P<version>[\d\.]+)$")
+
+        # Registration status   : Registered
+        p16 = re.compile(r"^Registration.* +(?P<registration>\w+)$")
+
+        # Registered with       : 1.1.1.1
+        p17 = re.compile(r"^Registered.* +(?P<server_ip>[\d\.]+)$")
+
+        # Re-registers in       : 449 sec
+        p18 = re.compile(r"^Re.* +(?P<re_register_time_sec>[\d]+) +sec$")
+
+        # Succeeded registration: 1
+        p19 = re.compile(r"^Succeeded.* +(?P<succeeded_registration_count>\d+)$")
+
+        # Attempted registration: 1
+        p20 = re.compile(r"^Attempted.* +(?P<attempted_registration_count>\d+)$")
+
+        # Last rekey from       : 1.1.1.1
+        p21 = re.compile(r"^Last rekey from.* +(?P<last_rekey_server>[\d\.]+)$")
+
+        # Last rekey seq num    : 0
+        p22 = re.compile(r"^Last rekey seq.* +(?P<last_rekey_seq_num>\d+)$")
+
+        # Rekey ACKs sent       : 25
+        p23 = re.compile(r"^Rekey ACKs sent.* +(?P<rekey_acks_sent>\d+)$")
+
+        # Rekey Rcvd(hh:mm:ss)  : 00:01:30
+        p24 = re.compile(r"^Rekey Rcvd.* +(?P<rekey_received_time>[\d\:]+)$")
+
+        # PFS Rekey received    : 0
+        p25 = re.compile(r"^PFS.* +(?P<pfs_rekey_received>\d+)$")
+
+        # DP Error Monitoring   : OFF
+        p26 = re.compile(r"^DP.* +(?P<dp_error_monitoring>\w+)$")
+
+        # IPSEC init reg executed    : 0
+        p27 = re.compile(r"^IPSEC init reg executed.* +(?P<ipsec_init_reg_executed>\d+)$")
+
+        # IPSEC init reg postponed   : 0
+        p28 = re.compile(r"^IPSEC init reg postponed.* +(?P<ipsec_init_reg_postponed>\d+)$")
+
+        # Active TEK Number     : 2
+        p29 = re.compile(r"^Active.* +(?P<active_tek_num>\d+)$")
+
+        # SA Track (OID/status) : disabled
+        p30 = re.compile(r"^SA.* +(?P<sa_track>[disabled|enabled]+)$")
+
+        # Fail-Close Revert : Disabled
+        p31 = re.compile(r"^Fail.* +(?P<fail_close_revert>[Disabled|Enabled]+)$")
+
+        # allowable rekey cipher: any
+        p32 = re.compile(r"^allowable.* +(?P<allowable_rekey_cipher>\w+)$")
+
+        # allowable rekey hash  : any
+        p33 = re.compile(r"^allowable rekey hash.* +(?P<allowable_rekey_hash>\w+)$")
+
+        # allowable transformtag: any ESP
+        p34 = re.compile(r"^allowable transformtag: +(?P<allowable_transformtag>[\w\s]+)$")
+
+        # Total received        : 25
+        p35 = re.compile(r"^Total received.* +(?P<total_received>\d+)$")
+
+        # After latest register : 25
+        p36 = re.compile(r"^After latest register.* +(?P<after_latest_register>\d+)$")
+
+        # Rekey Acks sents      : 25
+        p37 = re.compile(r"^Rekey Acks sents.* +(?P<rekey_acks_sents>\d+)$")
+
+        # ACL Downloaded From KS 1.1.1.1:
+        p38 = re.compile(r"^ACL Downloaded From KS.* +(?P<ks_server>[\d\.]+):$")
+
+        # access-list   deny ip host 11.23.33.33 host 24.54.55.55
+        # access-list   deny ip host 41.23.32.37 host 44.58.59.55
+        # access-list   deny esp any any
+        # access-list   deny udp any any port = 3784
+        # access-list   deny udp any any port = 3785
+        # access-list   deny udp any port = 3785 any
+        # access-list   deny tcp any any port = 179
+        # access-list   deny tcp any port = 179 any
+        # access-list   deny tcp any any port = 22
+        # access-list   deny tcp any port = 22 any
+        # access-list   deny ospf any any
+        # access-list   deny pim any 224.0.0.0 0.0.0.255
+        # access-list   deny udp any any port = 123
+        # access-list   deny udp any any port = 514
+        # access-list   deny udp any port = 500 any port = 500
+        # access-list   deny udp any port = 848 any
+        # access-list   deny udp any any port = 848
+        # access-list   deny ip any 10.90.0.0 0.0.255.255
+        # access-list   deny ip 10.90.0.0 0.0.255.255 any
+        # access-list   permit ip 25.25.0.0 0.0.255.255 15.15.0.0 0.0.255.255
+        # access-list   permit ip 15.15.0.0 0.0.255.255 25.25.0.0 0.0.255.255
+        # access-list   permit ip 16.16.0.0 0.0.255.255 26.26.0.0 0.0.255.255
+        p39 = re.compile(r"^access-list.*$")
+
+        # Rekey Transport Type     : Unicast
+        p40 = re.compile(r"^Rekey Transport Type.*: (?P<rekey_transport_type>\w+)$")
+
+        # Lifetime (secs)          : 1109
+        p41 = re.compile(r"^Lifetime.*: (?P<lifetime>\d+)$")
+
+        # Encrypt Algorithm        : AES
+        p42 = re.compile(r"^Encrypt Algorithm.*: (?P<encrypt_algorithm>\w+)$")
+
+        # Key Size                 : 256
+        p43 = re.compile(r"^Key Size.*: (?P<key_size>\d+)$")
+
+        # Sig Hash Algorithm       : HMAC_AUTH_SHA
+        p44 = re.compile(r"^Sig Hash Algorithm.*: (?P<sig_hash_algorithm>\w+)$")
+
+        # Sig Key Length (bits)    : 4400
+        p45 = re.compile(r"^Sig Key Length.*: (?P<sig_key_length>\w+)$")
+
+        # GigabitEthernet0/0/1:
+        p46 = re.compile(r"^(?P<interface>[\S]+):$")
+
+        # spi: 0x5A69F51E(1516893470)
+        p47 = re.compile(r"^spi.* +(?P<spi>[\w\S]+)$")
+
+        # transform: esp-256-aes esp-sha256-hmac
+        p48 = re.compile(r"^transform.*: +(?P<transform>[\w\S\s]+)$")
+
+        # sa timing:remaining key lifetime (sec): (510)
+        p49 = re.compile(r"^sa timing.*\(+(?P<sa_remaining_key_lifetime>\d+)+\)$")
+
+        # Anti-Replay(Counter Based) : 64
+        p50 = re.compile(r"^Anti-Replay.*: +(?P<anti_replay_count>\d+)$")
+
+        # tag method : disabled
+        p51 = re.compile(r"^tag method.*: +(?P<tag_method>[disabled|enabled]+)$")
+
+        # alg key size: 32 (bytes)
+        p52 = re.compile(r"^alg key.*: +(?P<alg_key_size_bytes>[\d]+) +\(bytes\)$")
+
+        # sig key size: 32 (bytes)
+        p53 = re.compile(r"^sig key.*: +(?P<sig_key_size_bytes>[\d]+) +\(bytes\)$")
+
+        # encaps: ENCAPS_TUNNEL
+        p54 = re.compile(r"^encaps.*: +(?P<encaps>[\w\S]+)$")
+
+        # KGS POLICY:
+        p55 = re.compile(r"^KGS POLICY:$")
+
+        # P2P POLICY:
+        p56 = re.compile(r"^P2P POLICY:$")
+
+        # REG_GM: local_addr 3.3.1.1
+        p57 = re.compile(r"^REG_GM.* +(?P<local_addr>[\d\.]+)$")
+
+        # Unicast rekey received: 25
+        p58 = re.compile(r"^Unicast rekey .* +(?P<uncicast_rekey_received>\d+)$")
+
+        master_dict = {}
+        for line in output.splitlines():
+            line=line.strip()
+            
+            # Group Name               : getvpn1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('group_name', {}).setdefault(group['group_name'],{}).setdefault("group_information",{})
+                continue
+            
+            # Group Identity           : 1223
+            m = p2.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+
+            # Group Type               : GDOI (ISAKMP)
+            m = p3.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+
+            # Crypto Path              : ipv4
+            m = p4.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+            
+            # Key Management Path      : ipv4
+            m = p5.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+            
+            # Rekeys received          : 25
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+            
+            # IPSec SA Direction       : Both
+            m = p7.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+            
+            # Group Server list       : 1.1.1.1
+            m = p8.match(line)
+            if m:
+                group_dict.update(m.groupdict())
+                continue
+            
+            # Group Member Information For Group getvpn1:
+            m = p9.match(line)
+            if m:
+                mem_info_dict = group_dict.setdefault("group_member_information",{})
+                continue
+            
+            # ACL Received From KS     : gdoi_group_getvpn1_temp_acl
+            m = p10.match(line)
+            if m:
+                mem_info_dict.update(m.groupdict())
+                continue
+            
+            # Group member             : 3.3.1.1         vrf: None
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                mem_dict = group_dict.setdefault("group_member",{}).setdefault(group['group_member'], {})
+                mem_dict.update({'vrf' :group['vrf']})
+                continue
+            
+            # Local addr/port       : 3.3.1.1/848
+            m = p12.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Remote addr/port      : 1.1.1.1/848
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group['remote_addr_port'] = int(group['remote_addr_port'])
+                mem_dict.update(group)
+                continue
+            
+            # fvrf/ivrf             : None/None
+            m = p14.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Version               : 1.0.26
+            m = p15.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Registration status   : Registered
+            m = p16.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Registered with       : 1.1.1.1
+            m = p17.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Re-registers in       : 449 sec
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Succeeded registration: 1
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Attempted registration: 1
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+
+            # Last rekey from       : 1.1.1.1
+            m = p21.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Last rekey seq num    : 0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Rekey ACKs sent       : 25
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Unicast rekey received: 25
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Rekey Rcvd(hh:mm:ss)  : 00:01:30
+            m = p24.match(line)
+            if m:
+                mem_dict.update(group)
+                continue
+            
+            # PFS Rekey received    : 0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # DP Error Monitoring   : OFF
+            m = p26.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # IPSEC init reg executed    : 0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # IPSEC init reg postponed   : 0
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+            
+            # Active TEK Number     : 2
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                mem_dict.update(group)
+                continue
+
+            # SA Track (OID/status) : disabled
+            m = p30.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Fail-Close Revert : Disabled
+            m = p31.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # allowable rekey cipher: any
+            m = p32.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+             # allowable rekey hash  : any
+            m = p33.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # allowable transformtag: any ESP
+            m = p34.match(line)
+            if m:
+                mem_dict.update(m.groupdict())
+                continue
+            
+            # Total received        : 25
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                cum_dict=mem_info_dict.setdefault("rekeys_cumulative", {})
+                cum_dict.update(group)
+                continue
+            
+            # After latest register : 25
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                cum_dict.update(group)
+                continue
+            
+            # Rekey Acks sents      : 25
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                cum_dict.update(group)
+                continue
+            
+            # ACL Downloaded From KS 1.1.1.1:
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                acl_list = mem_info_dict.setdefault("acl_download_from_ks",{}).setdefault(group['ks_server'],{}).setdefault('acl_list',[])
+                continue
+            
+            # access-list   permit ip 25.25.0.0 0.0.255.255 15.15.0.0 0.0.255.255
+            # access-list   permit ip 15.15.0.0 0.0.255.255 25.25.0.0 0.0.255.255
+            # access-list   permit ip 16.16.0.0 0.0.255.255 26.26.0.0 0.0.255.255
+            m = p39.match(line)
+            if m:
+                acl_list.append(line)
+                continue
+            
+
+            # Rekey Transport Type     : Unicast
+            m = p40.match(line)
+            if m:
+                kek_policy_dict = group_dict.setdefault("kek_policy",{})
+                kek_policy_dict.update(m.groupdict())
+                continue
+            
+
+            # Lifetime (secs)          : 1109
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                kek_policy_dict.update(group)
+                continue
+            
+            # Encrypt Algorithm        : AES
+            m = p42.match(line)
+            if m:
+                kek_policy_dict.update(m.groupdict())
+                continue
+            
+            # Key Size                 : 256
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                kek_policy_dict.update(group)
+                continue
+            
+            # Sig Hash Algorithm       : HMAC_AUTH_SHA
+            m = p44.match(line)
+            if m:
+                kek_policy_dict.update(m.groupdict())
+                continue
+            
+            # Sig Key Length (bits)    : 4400
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                kek_policy_dict.update(group)
+                continue
+            
+            # GigabitEthernet0/0/1:
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                tek_policy_dict = group_dict.setdefault("tek_policy",{}).setdefault('interfaces',{}).setdefault(group['interface'],{})
+                continue
+            
+            # spi: 0x5A69F51E(1516893470)
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                spi_dict = tek_policy_dict.setdefault('ipsec_sa', {}).setdefault('spi', {}).setdefault(group['spi'], {})
+                continue
+            
+
+            # transform: esp-256-aes esp-sha256-hmac
+            m = p48.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+            
+            # sa timing:remaining key lifetime (sec): (510)
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+            
+            # Anti-Replay(Counter Based) : 64
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+            
+
+            # tag method : disabled
+            m = p51.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+            
+            # alg key size: 32 (bytes)
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+            
+            # sig key size: 32 (bytes)
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+            
+            # encaps: ENCAPS_TUNNEL
+            m = p54.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+            
+            # KGS POLICY:
+            m = p55.match(line)
+            if m:
+                kgs_policy_dict = group_dict.setdefault('kgs_policy', {}).setdefault('reg_gm', {})
+                continue
+            
+            # P2P POLICY:
+            m = p56.match(line)
+            if m:
+                p2p_policy_dict = group_dict.setdefault('p2p_policy', {}).setdefault('reg_gm', {})
+                continue
+            
+            # REG_GM: local_addr 3.3.1.1
+            m = p57.match(line)
+            if m:
+                if 'p2p_policy' not in group_dict:kgs_policy_dict.update(m.groupdict())
+                else:p2p_policy_dict.update(m.groupdict())
+                continue
+        return master_dict
+
+# =================================================
+#  Parser for 'show crypto gdoi detail'
+# =================================================
+class ShowCryptoGdoiDetail(ShowCryptoGdoi):
+    '''Parser for:
+        * 'show crypto gdoi detail'
+    '''
+    cli_command = "show crypto gdoi detail"
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output = output)
+
+# =================================================
+#  Parser for 'show crypto gdoi group {group_name}'
+# =================================================
+class ShowCryptoGdoiGroup(ShowCryptoGdoi):
+    '''Parser for:
+        * 'show crypto gdoi group {group_name}'
+    '''
+    cli_command = "show crypto gdoi group {group_name}"
+
+    def cli(self, group_name = '', output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output = output)
+
+# =================================================
+#  Parser for 'show crypto gkm'
+# =================================================
+class ShowCryptoGkm(ShowCryptoGdoi):
+    '''Parser for:
+        * 'show crypto gkm'
+    '''
+    cli_command = "show crypto gkm"
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output = output)
+
+# =================================================
+#  Schema for 'show crypto gdoi ks policy'
+# =================================================
+
+class ShowCryptoGdoiKsPolicySchema(MetaParser):
+    """Schema for show crypto gdoi ks policy"""
+    schema =  {
+                "key_server_policy":{
+                    "group":{
+                        Any():{
+                            "handle":str,
+                            "server":{
+                                Any():{
+                                    "handle":str,
+                                    "kek_policy":{
+                                        "spi":{
+                                            Any():{
+                                                "acknowledgement":str,
+                                                "crypto_iv_length":int,
+                                                "encrypt_alg":str,
+                                                "key_size":int,
+                                                "management_alg":str,
+                                                "orig_life_secs":int,
+                                                "remaining_life_secs":int,
+                                                "sig_hash_algorithm":str,
+                                                "sig_key_length":int,
+                                                "sig_key_name":str,
+                                                "sig_size":int,
+                                                "time_to_rekey_sec":str
+                                                }
+                                            },
+                                        "transport_type":str
+                                        },
+                                    "seq_num":int,
+                                    "tek_policy":{
+                                        "encaps":str,
+                                        "spi":{
+                                            Any():{
+                                                "access_list":str,
+                                                "alg_key_size":int,
+                                                "antireplay_window_size":int,
+                                                "elapsed_time_sec":int,
+                                                "orig_life_secs":int,
+                                                "override_life_sec":int,
+                                                "remaining_life_secs":int,
+                                                "sig_key_size":int,
+                                                "tek_life_sec":int,
+                                                Optional("time_to_rekey_sec"):str,
+                                                "transform":str
+                                                },
+                                            }
+                                        },
+                                    "teks_num":int
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+# =================================================
+#  Parser for 'show crypto gdoi ks policy'
+# =================================================
+class ShowCryptoGdoiKsPolicy(ShowCryptoGdoiKsPolicySchema):
+    """Parser for show crypto ikev2 policy"""
+
+    cli_command = ['show crypto gdoi ks policy']
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # For group getvpn1 (handle: 0x40000002) server 1.1.1.1 (handle: 0x40000002):
+        p1 = re.compile(r"^For group +(?P<group_name>\w+) +\(handle: +(?P<group_handle>[\w]+)\) +server +(?P<server_ip>[\d\.]+) +\(handle: +(?P<server_handle>\w+)\):$")
+
+        # # of teks : 2  Seq num : 0
+        p2 = re.compile(r"^# of teks : +(?P<teks_num>\d+) + Seq num : +(?P<seq_num>\d+)$")
+
+        # KEK POLICY (transport type : Unicast)
+        p3 = re.compile(r"^KEK POLICY +\(transport type : +(?P<transport_type>\w+)\)$")
+
+        # spi : 0xEEB0E9A2BBD4C71AF1034F6B24EB8022
+        p4 = re.compile(r"^spi : +(?P<spi>\w+)$")
+
+        # management alg     : disabled      encrypt alg           : AES
+        p5 = re.compile(r"^management alg.*: +(?P<management_alg>[\disbaled|enabled]+) +encrypt alg.*: +(?P<encrypt_alg>\w+)$")
+
+        # crypto iv length   : 16            key size              : 32
+        p6 = re.compile(r"^crypto iv length.*: +(?P<crypto_iv_length>\d+) +key size.*: +(?P<key_size>\d+)$")
+
+        # orig life(sec)     : 1200          remaining life(sec)   : 787
+        p7 = re.compile(r"^orig life.*: +(?P<orig_life_secs>\d+) +remaining.*: +(?P<remaining_life_secs>\d+)$")
+
+        # time to rekey (sec): 552
+        p8 = re.compile(r"^time to rekey.* +(?P<time_to_rekey_sec>[\d\S]+)$")
+
+        # sig hash algorithm : enabled       sig key length        : 550
+        p9 = re.compile(r"^sig hash algorithm.* +(?P<sig_hash_algorithm>[enabled|disabled]+) +sig key length.* +(?P<sig_key_length>\d+)$")
+
+        # sig size           : 512
+        p10 = re.compile(r"^sig size.*: +(?P<sig_size>\d+)$")
+
+        # sig key name       : REKEYRSA
+        p11 = re.compile(r"^sig key name.*: +(?P<sig_key_name>\w+)$")
+
+        # acknowledgement    : Cisco
+        p12 = re.compile(r"^acknowledgement.*: +(?P<acknowledgement>\w+)$")
+
+        # TEK POLICY (encaps : ENCAPS_TUNNEL)
+        p13 = re.compile(r"^TEK POLICY +\(encaps : +(?P<encaps>\w+)\)$")
+
+        # spi                : 0xEE021924
+        p14 = re.compile(r"^spi.*: +(?P<spi>\w+)$")
+
+        # access-list        : acl1
+        p15 = re.compile(r"^access-list.*: +(?P<access_list>\w+)$")
+
+        # transform          : esp-256-aes esp-sha256-hmac
+        p16 = re.compile(r"^transform.*: +(?P<transform>[\w\s\S]+)$")
+
+        #  alg key size       : 32            sig key size          : 32
+        p17 = re.compile(r"^alg key size.*: +(?P<alg_key_size>\d+) +sig key size.* +(?P<sig_key_size>\d+)$")
+
+        # tek life(sec)      : 600           elapsed time(sec)     : 412
+        p18 = re.compile(r"^tek life.*: +(?P<tek_life_sec>\d+) +elapsed time.* +(?P<elapsed_time_sec>\d+)$")
+
+        # override life(sec) : 0             antireplay window size: 64
+        p19 = re.compile(r"^override life.*: +(?P<override_life_sec>\d+) +antireplay window size.*: +(?P<antireplay_window_size>\d+)$")
+
+        master_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # For group getvpn1 (handle: 0x40000002) server 1.1.1.1 (handle: 0x40000002):
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('key_server_policy', {}).setdefault('group', {}).setdefault(group['group_name'], {})
+                group_dict.update({'handle':group['group_handle']})
+                server_dict = group_dict.setdefault('server',{}).setdefault(group['server_ip'], {})
+                server_dict.update({'handle':group['server_handle']})
+                continue
+            
+            # # of teks : 2  Seq num : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                server_dict.update(group)
+                continue
+
+            # KEK POLICY (transport type : Unicast)
+            m = p3.match(line)
+            if m:
+                kek_policy_dict = server_dict.setdefault('kek_policy', {})
+                kek_policy_dict.update(m.groupdict())
+                continue
+
+            # spi : 0xEEB0E9A2BBD4C71AF1034F6B24EB8022
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                kek_spi_dict = kek_policy_dict.setdefault('spi',{}).setdefault(group['spi'], {})
+                continue
+
+            # management alg     : disabled      encrypt alg           : AES
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                kek_spi_dict.update(group)
+                continue
+            
+            # crypto iv length   : 16            key size              : 32
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                kek_spi_dict.update(group)
+                continue
+            
+            # sig hash algorithm : enabled       sig key length        : 550
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                group['sig_key_length'] = int(group['sig_key_length']) 
+                kek_spi_dict.update(group)
+                continue
+            
+            # sig size           : 512
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                kek_spi_dict.update(group)
+                continue
+            
+            # sig key name       : REKEYRSA
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                kek_spi_dict.update(group)
+                continue
+            
+            # acknowledgement    : Cisco
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                kek_spi_dict.update(group)
+                continue
+            
+            # TEK POLICY (encaps : ENCAPS_TUNNEL)
+            m = p13.match(line)
+            if m:
+                tek_policy_dict = server_dict.setdefault('tek_policy', {})
+                tek_policy_dict.update(m.groupdict())
+                continue
+            
+            # spi                : 0xEE021924
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                tek_spi_dict = tek_policy_dict.setdefault('spi',{}).setdefault(group['spi'], {})
+                continue
+            
+            # access-list        : acl1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                tek_spi_dict.update(group)
+                continue
+            
+            # transform          : esp-256-aes esp-sha256-hmac
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                tek_spi_dict.update(group)
+                continue
+            
+            # alg key size       : 32            sig key size          : 32
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                tek_spi_dict.update(group)
+                continue
+            
+            # tek life(sec)      : 600           elapsed time(sec)     : 412
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                tek_spi_dict.update(group)
+                continue
+            
+            # override life(sec) : 0             antireplay window size: 64
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                tek_spi_dict.update(group)
+                continue
+            
+            # orig life(sec)     : 1200          remaining life(sec)   : 787
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                if 'tek_policy' not in server_dict: kek_spi_dict.update(group)
+                else: tek_spi_dict.update(group)
+                continue
+            
+            # time to rekey (sec): 552
+            # time to rekey (sec): 62
+            # time to rekey (sec): n/a
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if 'tek_policy' not in server_dict: kek_spi_dict.update(group)
+                else: tek_spi_dict.update(group)
+                continue
+        return master_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi gm dataplan counter'
+# =================================================
+class ShowCryptoGdoiGmDataplanCounterSchema(MetaParser):
+    """Schema for show crypto gdoi gm dataplan counter"""
+    schema =  {
+                "data_plane_statistics":{
+                    "group":{
+                        Any():{
+                            "pkts_decrypt":int,
+                            "pkts_encrypt":int,
+                            "pkts_invalid_prot":int,
+                            "pkts_no_sa":int,
+                            "pkts_not_tagged":int,
+                            "pkts_not_untagged":int,
+                            "pkts_tagged":int,
+                            "pkts_untagged":int,
+                            "pkts_verify_fail":int
+                            }
+                        }
+                    }
+                }
+
+# =================================================
+#  Parser for 'show crypto gdoi gm dataplan counter'
+# =================================================
+class ShowCryptoGdoiGmDataplanCounter(ShowCryptoGdoiGmDataplanCounterSchema):
+    """Parser for show crypto gdoi gm dataplan counter"""
+
+    cli_command = ['show crypto gdoi gm dataplan counter']
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Data-plane statistics for group getvpn1:
+        p1 = re.compile(r"^Data-plane statistics for group +(?P<group_name>[\w\S]+):$")
+
+        # #pkts encrypt            : 21592009    #pkts decrypt            : 0
+        p2 = re.compile(r"^#pkts encrypt.*: +(?P<pkts_encrypt>\d+) +#pkts decrypt.*: +(?P<pkts_decrypt>\d+)$")
+
+        # #pkts tagged (send)      : 0        #pkts untagged (rcv)     : 0
+        p3 = re.compile(r"^#pkts tagged.*: +(?P<pkts_tagged>\d+) +#pkts untagged.*: +(?P<pkts_untagged>\d+)$")
+
+        # #pkts no sa (send)       : 0        #pkts invalid sa (rcv)   : 0
+        p4 = re.compile(r"^#pkts no sa.*: +(?P<pkts_no_sa>\d+) +#pkts invalid sa.*: +(?P<pkts_untagged>\d+)$")
+
+        # #pkts encaps fail (send) : 0        #pkts decap fail (rcv)   : 0
+        p5 = re.compile(r"^#pkts encaps fail.*: +(?P<pkts_tagged>\d+) +#pkts decap fail.*: +(?P<pkts_untagged>\d+)$")
+
+        # #pkts invalid prot (rcv) : 0        #pkts verify fail (rcv)  : 0
+        p6 = re.compile(r"^#pkts invalid prot.*: +(?P<pkts_invalid_prot>\d+) +#pkts verify fail.*: +(?P<pkts_verify_fail>\d+)$")
+
+        # #pkts not tagged (send)  : 0        #pkts not untagged (rcv) : 0
+        p7 = re.compile(r"^#pkts not tagged.*: +(?P<pkts_not_tagged>\d+) +#pkts not untagged.*: +(?P<pkts_not_untagged>\d+)$")
+
+        # #pkts internal err (send): 0        #pkts internal err (rcv) : 0
+        p8 = re.compile(r"^#pkts internal err.*: +(?P<pkts_encrypt>\d+) +#pkts internal err.*: +(?P<pkts_decrypt>\d+)$")
+
+        master_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Data-plane statistics for group getvpn1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('data_plane_statistics', {}).setdefault('group', {}).setdefault(group['group_name'], {})
+                continue
+            
+            # #pkts encrypt            : 21592009    #pkts decrypt            : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+            
+            # #pkts tagged (send)      : 0        #pkts untagged (rcv)     : 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+
+            # #pkts no sa (send)       : 0        #pkts invalid sa (rcv)   : 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+            
+            # #pkts encaps fail (send) : 0        #pkts decap fail (rcv)   : 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+
+            # #pkts invalid prot (rcv) : 0        #pkts verify fail (rcv)  : 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+
+            # #pkts not tagged (send)  : 0        #pkts not untagged (rcv) : 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+
+            # #pkts internal err (send): 0        #pkts internal err (rcv) : 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                group_dict.update(group)
+                continue
+
+        return master_dict
+
+# =================================================
+# Schema for
+#  Schema for 'show crypto eli all'
+# =================================================
+class ShowCryptoEliAllSchema(MetaParser):
+    """Schema for show crypto eli all"""
+    schema = {
+            Optional("hardware_encryption"):str,
+            Optional("crypto_engines_num"):int,
+            "crypto_engine":{
+                Any():{
+                    "state":str,
+                    Optional("capability"):str,
+                    Optional("ikev2_session"):{
+                        Optional("active"):int,
+                        Optional("created"):int,
+                        Optional("failed"):int,
+                        Optional("max"):int
+                    },
+                    Optional("ike_session"):{
+                        Optional("active"):int,
+                        Optional("created"):int,
+                        Optional("failed"):int,
+                        Optional("max"):int
+                    },
+                    Optional("dh"):{
+                        Optional("active"):int,
+                        Optional("created"):int,
+                        Optional("failed"):int,
+                        Optional("max"):int
+                    },
+                    Optional("ipsec_session"):{
+                        Optional("active"):int,
+                        Optional("created"):int,
+                        Optional("failed"):int,
+                        Optional("max"):int
+                    },
+                    Optional("ssl_support"):str,
+                    Optional("ssl_versions"):str,
+                    Optional("max_ssl_connec"):int,
+                    Optional("ssl_namespace"):int,
+                    Optional("sslv3"):list,
+                    Optional("tlsv1"):list,
+                    Optional("dtlsv1"):list,
+                },
+            },
+            Optional("number_dh_pregenerated"):int,
+            Optional("dh_lifetime_seconds"):int,
+            Optional("dh_calculations"):{
+                Optional("p1"):int,
+                Optional("ss"):int
+            },
+            Optional("crypto_eng"):{
+                Optional("crypto_engine"):str,
+                Optional("crypto_engine_num"):int,
+                Optional("dh_in_free"):int,
+                Optional("dh_in_freeing"):int,
+                Optional("dh_in_use"):int,
+            },
+        }
+
+# =================================================
+# Parser for
+#  Parser for 'show crypto eli all'
+# =================================================
+class ShowCryptoEliAll(ShowCryptoEliAllSchema):
+    """Parser for show crypto eli all"""
+
+    cli_command = ['show crypto eli all']
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Hardware Encryption : ACTIVE
+        p1 = re.compile(r"^Hardware Encryption.* +(?P<hardware_encryption>\w+)$")
+
+        # Number of crypto engines = 3
+        p2 = re.compile(r"^Number of crypto engines = +(?P<crypto_engines_num>\d+)$")
+
+        # CryptoEngine IOSXE-ESP(14) details: state = Active
+        # CryptoEngine act2 details: state = Active
+        # CryptoEngine Software Crypto Engine details: state = Active
+        p3 = re.compile(r"^CryptoEngine +(?P<crypto_engine>[\w\S\s]+) details:.*= +(?P<state>\w+)$")
+
+        # Capability    : DES, 3DES, AES, GCM, GMAC, RSA, IPv6, GDOI, FAILCLOSE, ESN
+        p4 = re.compile(r"^Capability.*: +(?P<capability>[\w\S\s]+)$")
+
+        # IPSec-Session :  6004 active, 40958 max, 0 failed, 414018 created
+        p5 = re.compile(r"^IPSec-Session.*: +(?P<active>\d+) +active, +(?P<max>\d+) +max, +(?P<failed>\d+) +failed, +(?P<created>\d+) +created$")
+
+        # SSL support   : Yes
+        p6 = re.compile(r"^SSL support.*: (?P<ssl_support>[Yes|No]+)$")
+
+        # SSL versions  : TLSv1.0
+        p7 = re.compile(r"^SSL versions.*: (?P<ssl_versions>[\w\S]+)$")
+
+        # Max SSL connec: 10000
+        p8 = re.compile(r"^Max SSL connec.*: (?P<max_ssl_connec>\d+)$")
+
+        # SSLv3.0 suites:
+        p9 = re.compile(r"^SSLv3.*$")
+
+        # TLSv1.0 suites:
+        p10 = re.compile(r"^TLSv1.*$")
+
+        # DTLSv1.0 suite:
+        p11 = re.compile(r"^DTLSv1.*$")
+
+        # TLS_RSA_WITH_3DES_EDE_CBC_SHA
+        p12 = re.compile(r"^(?P<suites>\w+)$")
+
+        # IKE-Session   :     0 active, 41058 max, 0 failed, 319288 created
+        p13 = re.compile(r"^IKE-Session.*: +(?P<active>\d+) +active, +(?P<max>\d+) +max, +(?P<failed>\d+) +failed, +(?P<created>\d+) +created$")
+
+        # IKEv2-Session :  3002 active, 41058 max, 0 failed, 319288 created
+        p14 = re.compile(r"^IKEv2-Session.*: +(?P<active>\d+) +active, +(?P<max>\d+) +max, +(?P<failed>\d+) +failed, +(?P<created>\d+) +created$")
+
+        # DH            :     0 active(0/0), 41008 max, 0 failed, 320010 created
+        p15 = re.compile(r"^DH.*: +(?P<active>\d+) +active\S+, +(?P<max>\d+) +max, +(?P<failed>\d+) +failed, +(?P<created>\d+) +created$")
+
+        # SSL namespace : 1
+        p16 = re.compile(r"^SSL namespace.*: +(?P<ssl_namespace>\d+)$")
+
+        # Number of DH's pregenerated = 4
+        p17 = re.compile(r"^Number of DH's pregenerated = +(?P<number_dh_pregenerated>[0-9]+)$")
+
+        # DH lifetime = 86400 seconds
+        p18 = re.compile(r"^DH lifetime.*= +(?P<dh_lifetime_seconds>\d+) +seconds$")
+
+        # DH calculations: P1 722, SS 319288
+        p19 = re.compile(r"^DH calculations.*: +P1 +(?P<p1>\d+), +SS +(?P<ss>\d+)$")
+
+        # crypto engine 1:Software Crypto Engine
+        p20 = re.compile(r"^crypto engine +(?P<crypto_engine_num>\d+):+(?P<crypto_engine>[\w\s]+)$")
+
+        # DH in use/freeing/free - 0/0/41008
+        p21 = re.compile(r"^DH in use\/freeing\/free - +(?P<dh_in_use>\d+)\/(?P<dh_in_freeing>\d+)\/(?P<dh_in_free>\d+)$")
+
+        master_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Hardware Encryption : ACTIVE
+            m = p1.match(line)
+            if m:
+                master_dict.update(m.groupdict())
+                continue
+            
+            # Number of crypto engines = 3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                master_dict.update(group)
+                continue
+            
+            # CryptoEngine IOSXE-ESP(14) details: state = Active
+            # CryptoEngine act2 details: state = Active
+            # CryptoEngine Software Crypto Engine details: state = Active
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_dict = master_dict.setdefault('crypto_engine', {}).setdefault(group['crypto_engine'], {})
+                crypto_dict.update({'state': group['state']})
+                continue
+            
+            # Capability    : DES, 3DES, AES, GCM, GMAC, RSA, IPv6, GDOI, FAILCLOSE, ESN
+            m = p4.match(line)
+            if m:
+                crypto_dict.update(m.groupdict())
+                continue
+            
+            # IPSec-Session :  6004 active, 40958 max, 0 failed, 414018 created
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ipsec_session = crypto_dict.setdefault("ipsec_session", {})
+                ipsec_session.update(group)
+                continue
+
+            # SSL support   : Yes
+            m = p6.match(line)
+            if m:
+                crypto_dict.update(m.groupdict())
+                continue
+            
+            # SSL versions  : TLSv1.0
+            m = p7.match(line)
+            if m:
+                crypto_dict.update(m.groupdict())
+                continue
+            
+            # Max SSL connec: 10000
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                crypto_dict.update(group)
+                continue
+
+            # SSLv3.0 suites:
+            m = p9.match(line)
+            if m:
+                suites = crypto_dict.setdefault("sslv3", [])
+                continue
+            
+            # TLSv1.0 suites:
+            m = p10.match(line)
+            if m:
+                suites = crypto_dict.setdefault("tlsv1", [])
+                continue
+
+            # DTLSv1.0 suite:
+            m = p11.match(line)
+            if m:
+                suites = crypto_dict.setdefault("dtlsv1", [])
+                continue
+
+            # TLS_RSA_WITH_3DES_EDE_CBC_SHA
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                suites.append(group['suites'])
+                continue
+            
+            # IKE-Session   :     0 active, 41058 max, 0 failed, 319288 created
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ike_session = crypto_dict.setdefault("ike_session", {})
+                ike_session.update(group)
+                continue
+            
+            # IKEv2-Session :  3002 active, 41058 max, 0 failed, 319288 created
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ikev2_session = crypto_dict.setdefault("ikev2_session", {})
+                ikev2_session.update(group)
+                continue
+            
+            # DH            :     0 active(0/0), 41008 max, 0 failed, 320010 created
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                dh = crypto_dict.setdefault("dh", {})
+                dh.update(group)
+                continue
+            
+            # SSL namespace : 1
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                crypto_dict.update(group)
+                continue
+            
+            # Number of DH's pregenerated = 4
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                master_dict.update(group)
+                continue
+
+            # DH lifetime = 86400 seconds
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                master_dict.update(group)
+                continue
+            
+            # DH calculations: P1 722, SS 319288
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                dh_calculation = master_dict.setdefault("dh_calculations", {})
+                dh_calculation.update(group)
+                continue
+
+            # crypto engine 1:Software Crypto Engine
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_eng = master_dict.setdefault("crypto_eng", {})
+                group['crypto_engine_num'] = int(group['crypto_engine_num'])
+                crypto_eng.update(group)
+                continue
+
+            # DH in use/freeing/free - 0/0/41008
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                crypto_eng.update(group)
+                continue
+
+        return master_dict

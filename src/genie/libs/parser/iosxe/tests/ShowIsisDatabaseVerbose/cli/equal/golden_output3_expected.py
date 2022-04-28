@@ -360,6 +360,17 @@ expected_output = {
                                             "v_flag": False,
                                             "l_flag": False
                                         }
+                                    },
+                                    128: {
+                                        "flex_algo": 128,
+                                        "flags": {
+                                            "r_flag": False,
+                                            "n_flag": True,
+                                            "p_flag": False,
+                                            "e_flag": False,
+                                            "v_flag": False,
+                                            "l_flag": False
+                                        }
                                     }
                                 },
                                 "source_router_id": "1.1.1.1"
