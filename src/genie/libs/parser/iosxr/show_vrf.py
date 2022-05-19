@@ -68,9 +68,11 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
 
             # VRF VRF1; RD 200:1; VPN ID not set
             # RD 172.16.94.0:1000
-            p1 = re.compile(r'^VRF +(?P<vrf>[\w\-]+); +'
-                             'RD +(?P<rd>[\w\s\:\<\>\.]+); +'
-                             'VPN +ID +(?P<vpn_id>[\w\s\:]+)$')
+            # VRF **nVSatellite; RD not set; VPN ID not set
+            # VRF INET_MASIVO_GPON; RD 11664:125000182; VPN ID not set
+            p1 = re.compile(r'^VRF +(?P<vrf>[\w\-\*_]+?); +'
+                             'RD +(?P<rd>[\w\s\:\<\>\.]+?); +'
+                             'VPN +ID +(?P<vpn_id>[\w\s\:]+?)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -109,9 +111,11 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 continue
             #   GigabitEthernet0/0/0/0.390
             #   Bundle-Ether15.514
+            #   nV-Loopback0
+            #   Loopback0
             p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
                               r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
-                              r'[L|l]o.*))$')
+                              r'(?:nV-)?[L|l]o.*))')
 
             m = p4_1.match(line)
             if m:

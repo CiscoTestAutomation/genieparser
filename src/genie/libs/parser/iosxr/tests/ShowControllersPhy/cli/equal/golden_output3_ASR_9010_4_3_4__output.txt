@@ -1,0 +1,4 @@
+Mon Jan 10 12:36:18.238 ARG
+
+XFP #0 is not present
+

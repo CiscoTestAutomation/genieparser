@@ -1,0 +1,66 @@
+XFP EEPROM  port: 0
+        Xcvr Type: XFP
+        Ext Type: 2.5 W, CDR Supported, No Tx Ref Clk input req., CLEI present,
+        Connector Type: LC
+        Ethernet Xcvr Codes: 10GBASE-LR, 10GE-FC-1200-SM-LL-L,
+        SONET Xcvr Codes:
+        Encoding: 64B/66B, SONET Scrambled, NRZ,
+        Bit Rate Min.: 10000 Mbit/s
+        Bit Rate Max.: 11300 Mbit/s
+        Link Reach 9u SM fiber: 10 Km
+        Device Tech.: 1310 nm DFB, No wavelength ctrl, Uncooled Xmtr, PIN detector, Xmtr not tunable,
+        Vendor Name CISCO-OPNEXT
+        CDR Support: 9.95 Gb/s, 10.3 Gb/s, 10.5 Gb/s, 10.7 Gb/s, 11.1 Gb/s, XFI Loopback Mode,
+        Vendor OUI: 00.0b.40
+        Vendor Part Number TRF5013FN-CB030   (rev.: 00)
+        Wavelength: 1310.000 nm
+        Wavelength Tolerance: 20 nm
+        Vendor Serial Number: ONT152811DQ
+        Date Code  (yy/mm/dd): 11/07/16  lot code:
+        Diagnostic Monitoring: FEC BER not supported, average Rx power measured,
+        Enhanced Options: Soft TX disable, Soft Power-down,
+        Extended Id: XFP (0x00 )
+ MSA Data (Table 01)
+0x0080: 06 58 07 40 40 00 00 40 : 00 00 00 b0 64 71 0a 00
+0x0090: 00 00 00 40 43 49 53 43 : 4f 2d 4f 50 4e 45 58 54
+0x00a0: 20 20 20 20 f9 00 0b 40 : 54 52 46 35 30 31 33 46
+0x00b0: 4e 2d 43 42 30 33 30 20 : 30 30 66 58 0f a0 4b fa
+0x00c0: 64 96 06 00 4f 4e 54 31 : 35 32 38 31 31 44 51 20
+0x00d0: 20 20 20 20 31 31 30 37 : 31 36 20 20 08 60 70 a0
+
+        CLEI Code: WMOTCUXAAA
+        Part Number 10-1989-03  (ver.: V03 )
+        Temp/Alarm/Power Flags: COM, commercial -5C to 70C
+        Product ID: XFP-10GLR-OC192SR
+ Cisco Specific Data (Table 02)
+0x0100: 57 4d 4f 54 43 55 58 41 : 41 41 31 30 2d 31 39 38
+0x0110: 39 2d 30 33 56 30 33 20 : 01 00 00 00 00 00 00 00
+0x0120: 00 cd 00 00 00 00 00 00 : 00 00 58 af 60 61 70 8f 
+0x0130: 92 d5 00 00 18 b7 63 0f : 15 eb 00 6f 00 00 aa aa
+0x0140: 58 46 50 2d 31 30 47 4c : 52 2d 4f 43 31 39 32 53
+0x0150: 52 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 c1
+0x0160: 32 35 35 34 36 36 37 30 : 00 a3 00 00 00 00 00 00
+0x0170: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+
+        Signal Condition Control: Normal Async REFCLK,
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:               90.000                85.000                -5.000               -10.000
+                  Voltage:           0.000 Volt            0.000 Volt            0.000 Volt            0.000 Volt
+                     Bias:        130.000 mAmps         120.000 mAmps          12.000 mAmps          10.000 mAmps
+           Transmit Power:  0.89120 mW (-0.50025 dBm)   0.79430 mW (-1.00015 dBm)   0.25110 mW (-6.00153 dBm)   0.22380 mW (-6.50140 dBm)
+            Receive Power:  1.25890 mW (0.99991 dBm)   1.12200 mW (0.49993 dBm)   0.03630 mW (-14.40093 dBm)   0.03230 mW (-14.90797 dBm)
+        Temperature: 33.074
+        Voltage: 0.000 Volt
+        Tx Bias: 53.036 mAmps
+        Tx Power:  0.56140 mW (-2.50728 dBm)
+        Rx Power:  0.43100 mW (-3.65523 dBm)
+        Control Status:
+ Digital Diagnostics Data (Lower Memory)
+0x0000: 06 00 5a 00 f6 00 55 00 : fb 00 00 00 00 00 00 00
+0x0010: 00 00 fd e8 13 88 ea 60 : 17 70 22 d0 08 be 1f 07
+0x0020: 09 cf 31 2d 01 43 2b d4 : 01 6b 89 ee 77 e2 87 5a 
+0x0030: 7a 76 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0040: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0050: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0060: 21 13 00 00 67 96 15 ee : 10 d6 7f 55 00 00 04 00
+0x0070: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 02

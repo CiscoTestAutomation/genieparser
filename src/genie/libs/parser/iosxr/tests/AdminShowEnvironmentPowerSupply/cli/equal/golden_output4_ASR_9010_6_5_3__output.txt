@@ -1,0 +1,84 @@
+R/S/I   Modules         Capacity        Status
+                        (W)
+0/PS0/M0/*
+        host    PM      4400            Ok
+
+0/PS0/M2/*
+        host    PM      4400            Ok
+
+0/PS1/M0/*
+        host    PM      2200            Ok(Feeder A is missing)
+
+0/PS1/M2/*
+        host    PM      2200            Ok(Feeder A is missing)
+
+
+R/S/I           Power Supply    Voltage         Current
+                (W)             (V)             (A)
+0/PS0/M0/*       922.3          54.9            16.8
+0/PS0/M2/*       880.0          55.0            16.0
+0/PS1/M0/*       473.0          55.0             8.6
+0/PS1/M2/*       434.5          55.0             7.9
+--------------
+Total:  2709.8
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+ 0/FT0/*         142.2          54.7             2.6
+ 0/FT1/*         180.5          54.7             3.3
+--------------
+Total:  322.7
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+0/RSP0/*         223.8          54.6             4.1
+0/RSP1/*         224.6          54.8             4.1
+--------------
+Total:  448.4
+
+
+R/S/I           Power Draw      Voltage         Current
+                (W)             (V)             (A)
+   0/0/*         322.1          54.6             5.9
+   0/1/*         318.4          54.9             5.8
+   0/4/*         545.0          54.5            10.0
+   0/5/*         550.0          55.0            10.0
+   0/6/*         539.0          55.0             9.8
+   0/7/*         550.0          55.0            10.0
+--------------
+Total:  2824.5
+** Indicates worst case power draw (No power measuring sensor)
+
+Chassis Power Draw for rack 0: 2709.8 (W)
+
+Power Budget Summary for Rack 0
+--------------------------------
+
+
+Power Shelves Type: DC
+Power Budget Strict Mode: Disabled
+Power Budget Enforcement: Enabled
+Power Redundancy Mode: N + 1 
+
+Total Power Capacity:                           13200W
+Usable Power Capacity:                          13200W
+N+1 Supply Failure Protected Capacity:          8800W
+Worst Case Power Used:                          5980W
+
+ Slot                                                      Max Watts
+ ----                                                      ---------
+ 0/0/CPU0                                                        475
+ 0/1/CPU0                                                        475
+ 0/RSP0/CPU0                                                     295
+ 0/RSP1/CPU0                                                     295
+ 0/4/CPU0                                                        810
+ 0/5/CPU0                                                        810
+ 0/6/CPU0                                                        810
+ 0/7/CPU0                                                        810
+ 0/FT0/SP                                                        600
+ 0/FT1/SP                                                        600
+
+Worst Case Power Available:             7220W
+N+1 Supply Protected Capacity Available:        2820W

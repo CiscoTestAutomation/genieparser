@@ -334,11 +334,16 @@ class ShowPlatformSchema(MetaParser):
 
 class ShowPlatform(ShowPlatformSchema):
     """Parser for show platform"""
-    cli_command = 'show platform'
+    cli_command = ['show platform', '{admin} show platform']
 
-    def cli(self, output=None):
+    def cli(self, output=None, admin=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if admin is None:
+                out = self.device.execute(self.cli_command[0])
+            elif admin in "admin":
+                out = self.device.execute(self.cli_command[1].format(admin=admin))
+            else:
+                return
         else:
             out = output
 
@@ -353,11 +358,11 @@ class ShowPlatform(ShowPlatformSchema):
         # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
         
         p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                            '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
+                            '\s+(?P<name>[a-zA-Z0-9\-\.\/]+ ?[a-zA-Z0-9\-\.\/]*)'
                             '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                             '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
-                            '\s+(?P<config_state>[a-zA-Z\,]+)$')            
+                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON|READY))'
+                            '\s*?(?P<config_state>[a-zA-Z\,]+)?$')            
 
         # Init vars
         show_platform = {}
@@ -751,11 +756,14 @@ class ShowInventorySchema(MetaParser):
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
 
-    cli_command = 'show inventory'
+    cli_command = ['show inventory', '{admin} show inventory']
 
-    def cli(self, output=None):
+    def cli(self, output=None, admin=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if admin is None:
+                out = self.device.execute(self.cli_command[0])
+            elif admin in 'admin':
+                out = self.device.execute(self.cli_command[1].format(admin=admin))
         else:
             out = output
 

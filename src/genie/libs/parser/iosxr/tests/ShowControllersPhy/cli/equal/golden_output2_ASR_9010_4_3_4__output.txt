@@ -1,0 +1,71 @@
+SFP EEPROM  port:0
+        Xcvr Type: SFP
+        Xcvr Code: 1000BASE-LX
+        Encoding: 8B10B
+        Bit Rate: 1300 Mbps
+        Link Reach 9u fiber (Km): 10000 meter
+        Link Reach 9u fiber (100m): 10000 meter
+        Link Reach 50u fiber: 550 meter
+        Link Reach 62.5u fiber: 550 meter
+        Vendor Name: CISCO-FINISAR
+        Vendor OUI: 00.90.65
+        Vendor Part Number: FTRJ1319P1BTL-C6 (rev.: C   )
+        Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        Optional SFP Signal: Tx_Disable, Tx_Fault, LOS
+        Vendor Serial Number: FNS15411WEH
+        Date Code (yy/mm/dd): 11/10/07  lot code:
+        Diagnostic Monitoring: DOM, Ext. Cal.,
+        Enhanced Options: SW RX LOS Mon., Alarm/Warning Flags
+
+MSA Data
+0x0000: 03 04 07 00 00 00 02 00 : 00 00 00 01 0d 00 0a 64
+0x0010: 37 37 00 00 43 49 53 43 : 4f 2d 46 49 4e 49 53 41
+0x0020: 52 20 20 20 00 00 90 65 : 46 54 52 4a 31 33 31 39
+0x0030: 50 31 42 54 4c 2d 43 36 : 43 20 20 20 05 1e 00 cc
+0x0040: 00 1a 00 00 46 4e 53 31 : 35 34 31 31 57 45 48 20
+0x0050: 20 20 20 20 31 31 31 30 : 30 37 20 20 58 90 01 d4
+
+        Calibration Parameters
+          R4:   0.000000  R3:   0.000000  R2:   0.000000  R1:   1.000000  R0:   0.000000
+          B1:      1.000  B0:          0
+          P1:      1.000  P0:          0
+          T1:      1.000  T0:          0
+          V1:      1.000  V0:          0
+        Thresholds:                    Alarm High         Warning High          Warning Low            Alarm Low
+              Temperature:           +110.000 C             +93.000 C             -30.000 C             -40.000 C
+                  Voltage:           3.900 Volt            3.700 Volt            2.900 Volt            2.700 Volt
+                     Bias:         80.000 mAmps          70.000 mAmps           4.000 mAmps           2.000 mAmps
+           Transmit Power:  1.25890 mW (0.99991 dBm)   0.79430 mW (-1.00015 dBm)   0.07080 mW (-11.49967 dBm)   0.04470 mW (-1
+            Receive Power:  1.17490 mW (0.70001 dBm)   0.79430 mW (-1.00015 dBm)   0.01000 mW (-20.00000 dBm)   0.00400 mW (-2
+        Temperature: 30.145
+        Voltage: 3.314 Volt
+        Tx Bias: 21.370 mAmps
+        Tx Power:  0.20960 mW (-6.78609 dBm)
+        Rx Power:  0.000 mW (<-40.00 dBm)
+        Oper. Status/Control: LOS,
+EEPROM Memory (A2 lower)
+0x0100: 6e 00 d8 00 5d 00 e2 00 : 98 58 69 78 90 88 71 48
+0x0110: 9c 40 03 e8 88 b8 07 d0 : 31 2d 01 bf 1f 07 02 c4
+0x0120: 2d e5 00 28 1f 07 00 64 : 00 00 00 00 00 00 00 00
+0x0130: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x0140: 00 00 00 00 3f 80 00 00 : 00 00 00 00 01 00 00 00
+0x0150: 01 00 00 00 01 00 00 00 : 01 00 00 00 00 00 00 96
+0x0160: 1e 25 81 72 29 bd 08 30 : 00 00 00 00 00 00 02 00
+0x0170: 00 40 00 00 00 40 00 00 : ff ff ff ff ff ff ff 01
+
+        CLEI Code: IPUIALKRAA
+        Part Number: 10-2144-01 (ver.: V01 )
+        Temp/Alarm/Power Flags: EXT, extended -5C to 85, not temp compensated, not RCLR, Max power: 1100 mW
+        Minimum Temperature: -5
+        Maximum Temperature: 85
+        Calibration Constants:
+        Product Id: SFP-GE-L
+EEPROM Memory (A2 upper)
+0x0180: 49 50 55 49 41 4c 4b 52 : 41 41 31 30 2d 32 31 34
+0x0190: 34 2d 30 31 56 30 31 20 : 8b fb 55 00 00 00 00 7c
+0x01a0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01b0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 aa aa
+0x01c0: 53 46 50 2d 47 45 2d 4c : 20 20 20 20 20 20 20 20
+0x01d0: 20 20 20 20 00 00 00 00 : 00 00 00 00 00 00 00 9b
+0x01e0: 00 00 00 00 00 00 00 00 : 00 00 00 00 00 00 00 00
+0x01f0: 00 00 00 00 00 00 00 00 : 00 40 00 40 00 00 00 00

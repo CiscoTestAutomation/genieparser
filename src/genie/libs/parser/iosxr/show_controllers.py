@@ -6,10 +6,12 @@ IOSXR parsers for the following show commands:
     * show controllers coherentDSP {port}
     * show controllers optics {port}
     * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
+    * show controllers {ethernet_interface_name} phy
 '''
 
 # Python
 import re
+from typing import ValuesView
 from genie.libs.parser.utils.common import Common
 
 # Genie
@@ -1051,7 +1053,7 @@ class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiag
     cli_command = 'show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}'
 
     def cli(self, diagshell, location, output=None):
-        if not output:
+        if output is None:
             cmd = self.cli_command.format(diagshell=diagshell,
                     location=location)
             out = self.device.execute(cmd)
@@ -1286,3 +1288,422 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
         return ret_dict
         
 # vim: ft=python ts=8 sw=4 et
+
+# =====================================================================================
+# Schema for:
+#   'show controllers {ethernet_interface_name} phy'
+# =====================================================================================
+class ShowControllersPhySchema(MetaParser):
+    schema = {
+        'interface': {
+            Any(): {
+                'present': bool,
+                Optional('connector_type'): str,
+                Optional('xcvr_type'): str,
+                Optional('eeprom_port'): str,
+                Optional('ethernet_compliance_codes'): str,
+                Optional('encoding'): str,
+                Optional('nominal_bit_rate'): str,
+                Optional('vendor_info'): {
+                    'vendor_name': str,
+                    'vendor_oui': str,
+                    'vendor_part_number': str,
+                    'vendor_serial_number': str
+                },
+                Optional('laser_wavelength'): str,
+                Optional('date_code'): str,
+                Optional('operational_status'): {
+                    "module": {
+                        Optional("current_values"): {
+                            Optional("temperature"): str,
+                            Optional("voltage"): str,
+                        },
+                        Optional("threshold_values"): {
+                                "temperature":{
+                                    "alarm_high": str,
+                                    "warning_high": str,
+                                    "warning_low": str,
+                                    "alarm_low": str,
+                                },
+                            "voltage": {
+                                "alarm_high": str,
+                                "warning_high": str,
+                                "alarm_low": str,
+                                "warning_low": str,
+                            },
+                        },
+                    },
+                    Optional("optical_lanes"): {
+                        Optional("current_values"): {
+                            Any(): {            # Lane ID
+                                'laser_bias_current': str,
+                                'tx_power': str,
+                                'rx_power': str,
+                            },
+                        },
+                        Optional("threshold_values"): {
+                            Optional("laser_bias_current"): {
+                                "alarm_high": str,
+                                "warning_high": str,
+                                "alarm_low": str,
+                                "warning_low": str,
+                            },
+                            Optional("tx_power"): {
+                                "alarm_high": str,
+                                "warning_high": str,
+                                "alarm_low": str,
+                                "warning_low": str,
+                            },
+                            Optional("rx_power"): {
+                                "alarm_high": str,
+                                "warning_high": str,
+                                "alarm_low": str,
+                                "warning_low": str,
+                            },
+                        },
+                    },
+                },
+                Optional('clei_code'): str,
+                Optional('part_number'): str,
+                Optional('product_id'): str,
+            },
+        },
+    }
+
+
+# =====================================================================================
+# Parser for:
+#   'show controllers {ethernet_interface_name} phy'
+# =====================================================================================
+class ShowControllersPhy(ShowControllersPhySchema):
+    cli_command = 'show controllers {ethernet_interface_name} phy'
+
+    def cli(self, ethernet_interface_name='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(ethernet_interface_name=ethernet_interface_name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return_dict = {}
+        return_dict['interface'] = {}
+        return_dict['interface'][ethernet_interface_name] = {}
+        
+        # return simple dict if not out        
+        if not out:
+            return
+
+        lane = "0"
+        #SFP #25 is not present.
+        p1_1 = re.compile(r'^\S+ #(?P<port_number>\d+) is not present\.?')
+        #Command not supported on this interface
+        p1_3 = re.compile(r'Command not supported on this interface')
+        # Xcvr Type: SFP
+        # Xcvr Type: XFP
+        p2 = re.compile(r'^Xcvr Type:?\s+(?P<xcvr_type>\S+)')
+        # Xcvr Code: 1000BASE-LX 
+        p3_1 = re.compile(r'^Xcvr Code: (?P<ethernet_compliance_codes>.*?)$')
+        # Ethernet Compliance Codes: 100G BASE-LR4, 
+        p3_2 = re.compile(r'^Ethernet Compliance Codes: (?P<ethernet_compliance_codes>.*?)$')
+        # Encoding: 8B10B
+        p4 = re.compile(r'^Encoding: (?P<encoding>.*?)$')
+        # Bit Rate: 1300 Mbps
+        p5_1 = re.compile(r'^Bit Rate: (?P<nominal_bit_rate>.*?)$')
+        # BR, nominal: 25500 Mbps
+        p5_2 = re.compile(r'^BR, nominal: (?P<nominal_bit_rate>.*?)$')
+        # Vendor Name: CISCO           
+        p6 = re.compile(r'^Vendor Name:? (?P<vendor_name>.*?)$')
+        # Vendor OUI: 00.90.65
+        p7 = re.compile(r'^Vendor OUI: (?P<vendor_oui>.*?)$')
+        # Vendor Part Number: FTLF1318P3BTL-C1 (rev.: A   )
+        p8 = re.compile(r'^Vendor Part Number:? (?P<vendor_part_number>.*?)$')
+        # Laser wavelength: 1310 nm (fraction: 0.00 nm)
+        p9_1 = re.compile(r'^Laser wavelength: (?P<laser_wavelength>.*?)$')
+        # Wavelength: 1302.037nm
+        p9_2 = re.compile(r'^Wavelength: (?P<laser_wavelength>.*?)$')
+        # Vendor Serial Number: FNS190619BG     
+        p10 = re.compile(r'^Vendor Serial Number: (?P<vendor_serial_number>.*?)$')
+        # Date Code (yy/mm/dd): 15/02/05  lot code:   
+        p11 = re.compile(r'^Date Code \(yy\/mm\/dd\): (?P<date_code>.*?)$')
+        # Temperature:            +90.000 C             +85.000 C              -5.000 C             -10.000 C
+        p13_1 = re.compile(r'^Temperature:?\s+(?P<alarm_high>\S+(?: C)?)'
+            '\s+(?P<warning_high>\S+(?: C)?)\s+(?P<warning_low>\S+(?: C)?)\s+(?P<alarm_low>\S+(?: C)?)$')
+        # Voltage:           3.600 Volt            3.500 Volt            3.100 Volt            3.000 Volt
+        p13_2 = re.compile(r'^Voltage:\s+(?P<alarm_high>\S+ Volt)'
+            '\s+(?P<warning_high>\S+ Volt)\s+(?P<warning_low>\S+ Volt)\s+(?P<alarm_low>\S+ Volt)$')
+        # Bias:         65.000 mAmps          55.000 mAmps           3.000 mAmps           1.000 mAmps
+        p13_3 = re.compile(r'^Bias:\s+(?P<alarm_high>\s+ mAmps)'
+            '\s+(?P<warning_high>\S+ mAmps)\s+(?P<warning_low>\S+ mAmps)\s+(?P<alarm_low>\S+ mAmps)$')
+        # Transmit Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.11220 mW (-9.50007 dBm)   0.04470 mW (-13.49692 dBm)
+        p13_4 = re.compile(r'^Transmit Power:\s+(?P<alarm_high>\S+ mW \(\S+ dBm\))'
+            '\s+(?P<warning_high>\S+ mW \(\S+ dBm\))\s+(?P<warning_low>\S+ mW \(\S+ dBm\))\s+(?P<alarm_low>\S+ mW \(\S+ dBm\))$')
+        # Receive Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.01260 mW (-18.99629 dBm)   0.00500 mW (-23.01030 dBm)
+        p13_5 = re.compile(r'^Receive Power:\s+(?P<alarm_high>\S+ mW \(\S+ dBm\))'
+            '\s+(?P<warning_high>\S+ mW \(\S+ dBm\))\s+(?P<warning_low>\S+ mW \(\S+ dBm\))\s+(?P<alarm_low>\S+ mW \(\S+ dBm\))$')
+        # Temperature: 28.645
+        p14 = re.compile(r'^Temperature: (?P<temperature>\S+(?: C)?)$')
+        # Voltage: 3.311 Volt
+        p15 = re.compile(r'^Voltage: (?P<voltage>\S+(?: Volt)?)$')
+        # Tx Bias: 18.524 mAmps
+        p16 = re.compile(r'^Tx Bias: (?P<laser_bias_current>\S+(?: mAmps)?)$')
+        # Tx Power:  0.28230 mW (-5.49289 dBm)
+        p17 = re.compile(r'^Tx Power:\s+(?P<tx_power>\S+ mW \(\S+ dBm\))$')
+        # Rx Power:  0.10160 mW (-9.93106 dBm)
+        p18 = re.compile(r'^Rx Power:\s+(?P<rx_power>\S+ mW \(\S+ dBm\))$')
+        # CLEI Code: WOTRB9YBAA
+        p20 = re.compile(r'^CLEI Code: (?P<clei_code>\S+)$')
+        # Part Number: 10-2625-01 (ver.: V01 )
+        p21 = re.compile(r'^Part Number: (?P<part_number>.*?)$')
+        # Product Id: GLC-LH-SMD          
+        p22 = re.compile(r'^Product Id: (?P<product_id>.*?)$')
+        # 2             N/A    37.206 mAmps   1.35470 mW (1.31843 dBm)   0.67800 mW (-1.68770 dBm)
+        p23 = re.compile(r'^(?P<lane>\S+)\s+(?P<temperature>\S+)'
+            '\s+(?P<laser_bias_current>\S+ mAmps)\s+(?P<tx_power>\S+ mW \(\S+ dBm\))\s+(?P<rx_power>\S+ mW \(\S+ dBm\))$')
+        # Connector Type: LC
+        p24 = re.compile(r'^Connector Type:?\s+(?P<connector_type>\S+)')
+        # SFP EEPROM  port:19
+        # XFP EEPROM  port: 5
+        p25 = re.compile(r'^\S+\s+EEPROM\s+port:?\s*(?P<eeprom_port>\S+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Command not supported on this interface
+            m = p1_3.match(line)
+            if m:
+                return_dict["interface"].setdefault(ethernet_interface_name, {})
+                return_dict["interface"][ethernet_interface_name]["present"] = False
+                return return_dict
+            # SFP #25 is not present.
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"].setdefault(ethernet_interface_name, {})
+                return_dict["interface"][ethernet_interface_name]["present"] = False
+                return return_dict
+            # Xcvr Type: SFP
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"].setdefault(ethernet_interface_name, {}).setdefault("present", True)
+                return_dict["interface"][ethernet_interface_name].setdefault("xcvr_type", group['xcvr_type'])
+                continue
+            # Xcvr Code: 1000BASE-LX 
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("ethernet_compliance_codes", group['ethernet_compliance_codes'])
+                continue
+            # Ethernet Compliance Codes: 100G BASE-LR4, 
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("ethernet_compliance_codes", group['ethernet_compliance_codes'])
+                continue
+            # Encoding: 8B10B
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("encoding", group['encoding'])
+                continue
+            # Bit Rate: 1300 Mbps
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("nominal_bit_rate", group['nominal_bit_rate'])
+                continue
+            # BR, nominal: 25500 Mbps
+            m = p5_2.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("nominal_bit_rate", group['nominal_bit_rate'])
+                continue
+            # Vendor Name: CISCO           
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault(\
+                    "vendor_info", {}).setdefault("vendor_name", group['vendor_name'])
+                continue
+            # Vendor OUI: 00.90.65
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name]["vendor_info"].setdefault("vendor_oui", group['vendor_oui'])
+                continue
+            # Vendor Part Number: FTLF1318P3BTL-C1 (rev.: A   )
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name]["vendor_info"].setdefault("vendor_part_number", group['vendor_part_number'])
+                continue
+            # Vendor Serial Number: FNS190619BG     
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name]["vendor_info"].setdefault("vendor_serial_number", group['vendor_serial_number'])
+                continue
+            # Laser wavelength: 1310 nm (fraction: 0.00 nm)
+            m = p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("laser_wavelength", group['laser_wavelength'])
+                continue
+            # Wavelength: 1302.037nm
+            m = p9_2.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("laser_wavelength", group['laser_wavelength'])
+                continue
+            # Date Code (yy/mm/dd): 15/02/05  lot code:   
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("date_code", group['date_code'])
+                continue
+            # Temperature:            +90.000 C             +85.000 C              -5.000 C             -10.000 C
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                temperature_threshold_values = {
+                    "alarm_high": group["alarm_high"],
+                    "warning_high": group["warning_high"],
+                    "warning_low": group["warning_low"],
+                    "alarm_low": group["alarm_low"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("module", {})\
+                    .setdefault("threshold_values", {}).setdefault("temperature", temperature_threshold_values)
+                continue
+            # Voltage:           3.600 Volt            3.500 Volt            3.100 Volt            3.000 Volt
+            m = p13_2.match(line)
+            if m:
+                group = m.groupdict()
+                voltage_threshold_values = {
+                    "alarm_high": group["alarm_high"],
+                    "warning_high": group["warning_high"],
+                    "warning_low": group["warning_low"],
+                    "alarm_low": group["alarm_low"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("module", {})\
+                    .setdefault("threshold_values", {}).setdefault("voltage", voltage_threshold_values)
+                continue
+            # Bias:         65.000 mAmps          55.000 mAmps           3.000 mAmps           1.000 mAmps
+            m = p13_3.match(line)
+            if m:
+                group = m.groupdict()
+                laser_bias_current_threshold_values = {
+                    "alarm_high": group["alarm_high"],
+                    "warning_high": group["warning_high"],
+                    "warning_low": group["warning_low"],
+                    "alarm_low": group["alarm_low"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("threshold_values", {}).setdefault("laser_bias_current", laser_bias_current_threshold_values)
+                continue
+            # Transmit Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.11220 mW (-9.50007 dBm)   0.04470 mW (-13.49692 dBm)
+            m = p13_4.match(line)
+            if m:
+                group = m.groupdict()
+                tx_power_threshold_values = {
+                    "alarm_high": group["alarm_high"],
+                    "warning_high": group["warning_high"],
+                    "warning_low": group["warning_low"],
+                    "alarm_low": group["alarm_low"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("threshold_values", {}).setdefault("tx_power", tx_power_threshold_values)
+                continue
+            # Receive Power:  1.25890 mW (0.99991 dBm)   0.50120 mW (-2.99989 dBm)   0.01260 mW (-18.99629 dBm)   0.00500 mW (-23.01030 dBm)
+            m = p13_5.match(line)
+            if m:
+                group = m.groupdict()
+                rx_power_threshold_values = {
+                    "alarm_high": group["alarm_high"],
+                    "warning_high": group["warning_high"],
+                    "warning_low": group["warning_low"],
+                    "alarm_low": group["alarm_low"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("threshold_values", {}).setdefault("rx_power", rx_power_threshold_values)
+                continue
+            # Temperature: 28.645
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("module", {})\
+                    .setdefault("current_values", {}).setdefault("temperature", group["temperature"],)
+                continue
+            # Voltage: 3.311 Volt
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("module", {})\
+                    .setdefault("current_values", {}).setdefault("voltage", group["voltage"],)
+                continue
+            # Tx Bias: 18.524 mAmps
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("current_values", {}).setdefault("lane_"+lane, {})\
+                        .setdefault("laser_bias_current", group["laser_bias_current"],)
+                continue
+            # Tx Power:  0.28230 mW (-5.49289 dBm)
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("current_values", {}).setdefault("lane_"+lane, {})\
+                        .setdefault("tx_power", group["tx_power"],)
+                continue
+            # Rx Power:  0.10160 mW (-9.93106 dBm)
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("current_values", {}).setdefault("lane_"+lane, {})\
+                            .setdefault("rx_power", group["rx_power"],)
+                continue
+            # CLEI Code: WOTRB9YBAA
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("clei_code", group["clei_code"])
+                continue
+            # Part Number: 10-2625-01 (ver.: V01 )
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("part_number", group["part_number"])
+                continue
+            # Product Id: GLC-LH-SMD          
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("product_id", group["product_id"])
+                continue
+            # 0             N/A    40.446 mAmps   1.67980 mW (2.25258 dBm)   0.71070 mW (-1.48314 dBm)    
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                lane_operational_info = {
+                    "laser_bias_current": group["laser_bias_current"],
+                    "tx_power": group["tx_power"],
+                    "rx_power": group["rx_power"],
+                }
+                return_dict["interface"][ethernet_interface_name].setdefault("operational_status", {}).setdefault("optical_lanes", {})\
+                    .setdefault("current_values", {}).setdefault("lane_"+group["lane"], lane_operational_info)
+                continue
+            # Connector Type: LC
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("connector_type", group['connector_type'])
+                continue
+            # SFP EEPROM  port:19
+            # XFP EEPROM  port: 5
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                return_dict["interface"][ethernet_interface_name].setdefault("eeprom_port", group['eeprom_port'])
+                continue
+        return return_dict
