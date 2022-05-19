@@ -2325,7 +2325,7 @@ class ShowLicenseEventlog2(ShowLicenseEventlog2Schema):
     cli_command = 'show license eventlog 2'
 
     def cli(self,output=None):
-        if output is None:
+        if output is None:          
             output = self.device.execute(self.cli_command)
 
         ret_dict={}
@@ -2365,7 +2365,7 @@ class ShowLicenseEventlog2(ShowLicenseEventlog2Schema):
             #No EventLog Found.
             m=p3.match(line)
             if m:
-                ret_dict['no_eventLog_found'] = True
+                ret_dict['no_eventlog_found'] = True
                 continue
 
             #**** Event Log ****
@@ -2416,6 +2416,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'transport':{
                 Optional('type'):str,
                 Optional('cslu_address'):str,
+                Optional('url'):str,
                 Optional('proxy'):{
                     Optional('address'):str,
                     Optional('port'):str,
@@ -2462,8 +2463,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
                     'export_status': str,
                     'feature_name': str,
                     'feature_description': str,
-                    'enforcement_type': str,
-                    'license_type': str,
+                    Optional('enforcement_type'): str,
+                    Optional('license_type'): str,
                     Optional('measurements'):{
                         Optional('entitlement'):{
                               Optional('interval'):str,
@@ -2494,7 +2495,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
         'upcoming_scheduled_jobs':{
             'current_time':str,
             'daily':str,
-            'authorization_renewal':str,
+            Optional('authorization_renewal'):str,
             'init_flag_check':str,
             Optional('register_period_expiration_check'):str,
             Optional('ack_expiration_check'):str,
@@ -2518,7 +2519,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 'attempts':str,
                 'ongoing_failure':str,
                 'last_response':str,
-                'failure_reason':str,
+                Optional('failure_reason'):str,
                 'last_success_time':str,
                 'last_failure_time':str,
             },
@@ -2673,9 +2674,10 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 Optional('trustvalue'):str,
                 Optional('trustid'):int,
                 },
-            },  
+            },
+            Optional('local_device'):str,
             'overall_trust':str,
-            'clock_synced_with_ntp':str,
+            Optional('clock_synced_with_ntp'):str,
         },
         Optional('platform_provided_mapping_table'):{
             Optional('pid'):str,
@@ -2753,7 +2755,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Product Information
         p3 = re.compile(r'^(?P<product_information>Product +Information)$')
         #UDI: PID:C9410R,SN:FXS2202037E  
-		#Added this regexp  to update the data with heading.
+        #Added this regexp  to update the data with heading.
         p3_1 = re.compile(r'^(?P<udi>UDI)\:\s*PID:(?P<pid>\S+),SN:(?P<sn>\S+)$') 
         #HA UDI List:
         p3_2 = re.compile(r'^(?P<ha_udi_list>HA UDI List)\:$')
@@ -2854,7 +2856,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #P:C9300-24UX,S:FCW2134L00C: No Trust Data
         p11_data1_2 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\: +(?P<trustvalue>No +Trust +Data)$')
         #P:C9300-24UX,S:FCW2134L00C: P:C9300-24UX,S:FCW2134L00C, state[2], Trust Data INSTALLED
-        p11_data1_3 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:+.*(?P<trustvalue>Trust +Data +INSTALLED)$')
+        p11_data1_3 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*(?P<trustvalue>Trust +Data +INSTALLED)$')
         
         #C9300-24UX: Total licenses found: 198
         p12_data1 = re.compile(r'^\s*(?P<pid>\S+)\: +Total licenses found\: +(?P<total_licenses_found>\d+)$')

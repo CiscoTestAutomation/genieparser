@@ -1,0 +1,2 @@
+show system mtu
+Global Ethernet MTU is 1500 bytes

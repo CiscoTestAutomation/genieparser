@@ -458,7 +458,7 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
                 output = self.device.execute(self.cli_command[1].format(exporter=exporter))
 
         # Flow Exporter test
-        p1 = re.compile(r"^Flow +Exporter +(?P<exporter>\w+):$")
+        p1 = re.compile(r"^Flow +Exporter +(?P<exporter>\S+):$")
 
         # Packet send statistics (last cleared 00:10:10 ago):
         p2 = re.compile(r"^Packet +send +statistics +\(last +cleared +(?P<last_cleared>[\d:]+) +ago\):$")

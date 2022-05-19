@@ -5,7 +5,9 @@ IOSXE parsers for the following show commands:
     * show isis neighbors
     * show isis hostname
     * show isis lsp-log
+    * show isis database
     * show isis database detail
+    * show isis database verbose
     * show isis node
     * show isis topology
     * show isis topology {flex_algo}
@@ -22,11 +24,13 @@ IOSXE parsers for the following show commands:
 """
 
 # Python
+from ftplib import parse257
 import re
+from aiohttp import TraceConnectionQueuedEndParams
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 from genie.libs.parser.utils.common import Common
 
 class ShowIsisNeighborsSchema(MetaParser):
@@ -270,7 +274,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
 
         return result_dict
 
-class ShowIsisDatabaseDetailSchema(MetaParser):
+class ShowIsisDatabaseSchema(MetaParser):
     """Schema for show isis database detail"""
 
     schema = {
@@ -284,11 +288,15 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             Optional('local_router'): bool,
                             'lsp_holdtime': str,
                             Optional('lsp_rcvd'): str,
+                            Optional('lsp_index'): int,
                             'attach_bit': int,
                             'p_bit': int,
                             'overload_bit': int,
                             Optional('area_address'): str,
                             Optional('router_id'): str,
+                            Optional("router_cap"): str,
+                            Optional("d_flag"): bool,
+                            Optional("s_flag"): bool,
                             Optional('nlpid'): str,
                             Optional('topology'): {
                                 Any(): {
@@ -298,61 +306,138 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             Optional('hostname'): str,
                             Optional('ip_address'): str,
                             Optional('ipv6_address'): str,
-                            Optional('is_neighbor'): {
+                            Optional(Or("is_neighbor", "extended_is_neighbor", "mt_is_neighbor")): {
                                 Any(): {
-                                    'neighbor_id': str,
-                                    'metric': int,
+                                    "neighbor_id": str,
+                                    "metric": int,
+                                    Optional("adjacency_sid"): {
+                                        Any() :{
+                                            "f_flag": bool,
+                                            "b_flag": bool,
+                                            "v_flag": bool,
+                                            "l_flag": bool,
+                                            "s_flag": bool,
+                                            "p_flag": bool,
+                                            "weight": int
+                                        }
+                                    },
+                                    Optional("local_interface_id"): int,
+                                    Optional("remote_interface_id"): int,
+                                    Optional("interface_ip_address"): str,
+                                    Optional("neighbor_ip_address"): str,
+                                    Optional("interface_ipv6_address"): str,
+                                    Optional("neighbor_ipv6_address"): str,
+                                    Optional("physical_link_bw"): int,
+                                    Optional("admin_weight"): int,
+                                    Optional('reservable_global_pool_bw'): int,
+                                    Optional('unreserved_global_pool_bw'): {
+                                         'bw_0': int,
+                                         'bw_1': int,
+                                         'bw_2': int,
+                                         'bw_3': int,
+                                         'bw_4': int,
+                                         'bw_5': int,
+                                         'bw_6': int,
+                                         'bw_7': int,
+                                    },
+                                    Optional('uni_link_delay_avg'): {
+                                        'a_bit': bool,
+                                        'value': int,
+                                    },
+                                    Optional('uni_link_delay_min_max'): {
+                                        'a_bit': bool,
+                                        'min': int,
+                                        'max': int,
+                                    },
+                                    Optional('uni_link_delay_var'): int,
+                                    Optional("affinity"): str,
+                                    Optional("extended_affinity"): list,
+                                    Optional("asla"): {
+                                        "l_flag": bool,
+                                        "sa_length": int,
+                                        "uda_length": int
+                                    },
+                                    Optional("standard_application"): {
+                                        Any(): {
+                                            Optional("bit_mask"): str,
+                                            Optional("appl_spec_ext_admin_group"): list,
+                                            Optional("appl_spec_admin_group"): str,
+                                            Optional("appl_spec_uni_link_delay"): {
+                                                "a_bit": bool,
+                                                "min": int,
+                                                "max": int
+                                            }
+                                        }
+                                    }
                                 },
                             },
-                            Optional('extended_is_neighbor'): {
+                            Optional(Or("ipv4_interarea_reachability", "ipv4_internal_reachability", "mt_ipv6_reachability", "ipv6_reachability")): {
                                 Any(): {
-                                    'neighbor_id': str,
-                                    'metric': int,
+                                    "ip_prefix": str,
+                                    "prefix_len": str,
+                                    "metric": int,
+                                    Optional("source_router_id"): str,
+                                    Optional("route_admin_tag"): int,
+                                    Optional("prefix_attr"): {
+                                        "x_flag": bool,
+                                        "r_flag": bool,
+                                        "n_flag": bool,
+                                    },
+                                    Optional("prefix_sid_index"): {
+                                        Any() : {
+                                            Optional("algorithm"): str,
+                                            Optional("flex_algo"): int,
+                                            Optional("flags"): {
+                                                "r_flag": bool,
+                                                "n_flag": bool,
+                                                "p_flag": bool,
+                                                "e_flag": bool,
+                                                "v_flag": bool,
+                                                "l_flag": bool,
+                                            }
+                                        }
+                                    }
                                 },
                             },
-                            Optional('mt_is_neighbor'): {
-                                Any(): {
-                                    'neighbor_id': str,
-                                    'metric': int,
+                            Optional("flex_algo"): {
+                                Any() : {
+                                    "metric_type": str,
+                                    "alg_type": str,
+                                    "priority": int,
+                                    Optional("m_flag"): bool,
+                                    Optional("segment_routing"): bool,
+                                    Optional("exclude_any"): Any(),
+                                    Optional("include_any"): Any(),
+                                    Optional("include_all"): Any(),
                                 },
                             },
-                            Optional('ipv4_internal_reachability'): {
-                                Any(): {
-                                    'ip_prefix': str,
-                                    'prefix_len': str,
-                                    'metric': int,
-                                },
+                            Optional("segment_routing"): {
+                                "spf": bool,
+                                "strict_spf": bool,
+                                "i_flag": bool,
+                                "v_flag": bool,
+                                "srgb_base": int,
+                                "srgb_range": int,
+                                "srlb_base": int,
+                                "srlb_range": int,
+                                "algorithms": list
                             },
-                            Optional('ipv4_interarea_reachability'): {
-                                Any(): {
-                                    'ip_prefix': str,
-                                    'prefix_len': str,
-                                    'metric': int,
-                                },
-                            },
-                            Optional('mt_ipv6_reachability'): {
-                                Any(): {
-                                    'ip_prefix': str,
-                                    'prefix_len': str,
-                                    'metric': int,
-                                },
-                            },
-                            Optional('ipv6_reachability'): {
-                                Any(): {
-                                    'ip_prefix': str,
-                                    'prefix_len': str,
-                                    'metric': int,
-                                },
-                            },
+                            Optional("node_msd"): int,
                         },
                     }
+
                 }
             }
         }
     }
 
-class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
-    """Parser for show isis database detail"""
+class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
+    """
+        Super Parser for 
+            show isis database
+            show isis database detail
+            show isis database verbose
+    """
 
     cli_command = 'show isis database detail'
     exclude = ['lsp_holdtime' , 'lsp_checksum', 'lsp_sequence_num']
@@ -370,13 +455,17 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\w+):$')
 
         # IS-IS Level-1 Link State Database:
-        p2 = re.compile(r'^IS\-IS +Level\-(?P<level>\d+) +Link +State +Database(:)?$')
+        # IS-IS Level-1 LSP r1.00-00
+        p2 = re.compile(r'^IS\-IS +Level\-(?P<level>\d+)\s+'
+                        r'(Link +State +Database(:)?)?(LSP\s+(?P<host_name>\S+))?$')
 
         # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
         # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
         p3 = re.compile(
-            r'^(?P<lspid>[\w\-\.]+)(\s*(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
-            r' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
+            r'^(?P<lspid>[\w\-\.]+)(\s*(?P<star>\*))?\s+(?P<lsp_seq_num>\w+)\s+'
+            r'(?P<lsp_checksum>\w+)\s+(?P<lsp_holdtime>[\d\*]+)'
+            r'(/(?P<lsp_rcvd>[\d\*]+))?\s+(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)\s*'
+            r'(\((?P<lsp_index>\d+)\))?$')
 
         #   Area Address: 49.0001
         p4 = re.compile(r'^Area +Address: +(?P<area_address>[\w\.]+)$')
@@ -408,8 +497,163 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Router ID:    10.1.77.77
         p11 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
 
+        # Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+        p12 = re.compile(r'^Flex algorithm:\s+(?P<flex_algo>\d+)\s+Metric-Type:\s+'
+                         r'(?P<metric_type>\S+)\s+Alg-type:\s+(?P<alg_type>\S+)\s+'
+                         r'Priority:\s+(?P<priority>\d+)$')
+
+        #   M:1
+        p13 = re.compile(r'^M:\s*(?P<m_flag>0|1)$')
+
+        # Router CAP:   1.1.1.1, D:0, S:0
+        p14 = re.compile(r'^Router CAP:\s+(?P<router_cap>[\d+\.]+),\s+D:\s*(?P<d_flag>0|1)'
+                         r',\s+S:\s*(?P<s_flag>0|1)$')
+
+        # Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+        p15 = re.compile(r'^Segment\s+Routing:\s+I:(?P<i_flag>0|1)\s+'
+                         r'V:(?P<v_flag>0|1),\s+SRGB\s+Base:\s+(?P<srgb_base>\d+)'
+                         r'\s+Range:\s+(?P<srgb_range>\d+)$')
+
+        # Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+        p16 = re.compile(r'^Segment\s+Routing\s+Local\s+Block:\s+SRLB Base:\s+'
+                         r'(?P<srlb_base>\d+)\s+Range:\s+(?P<srlb_range>\d+)$')
+
+        # Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+        p17 = re.compile(r'^Segment\s+Routing\s+Algorithms:\s+((?P<spf>SPF)?)'
+                         r',\s+((?P<strict_spf>Strict-SPF)?),\s+Flex-algo\s+'
+                         r'(?P<flex_id>\d+)$')
+
+        # Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
+        p18 = re.compile(r'^Segment\s+Routing\s+Algorithms:\s+Flex-algo\s+'
+                         r'(?P<flex_id_1>\d+)((,\s+Flex-algo\s+(?P<flex_id_2>\d+))?)'
+                         r'((,\s+Flex-algo\s+(?P<flex_id_3>\d+))?)$')
+
+        # Node-MSD 
+        # MSD: 16
+        p19 = re.compile(r'^MSD:\s+(?P<msd>\d+)$')
+
+        # Prefix-attr: X:0 R:0 N:0
+        p20 = re.compile(r'^Prefix-attr: X:\s*(?P<x_flag>0|1)\s+R:\s*'
+                         r'(?P<r_flag>0|1)\s+N:\s*(?P<n_flag>0|1)$')
+
+        # Adjacency SID Value:16 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+        p21 = re.compile(r'^Adjacency SID Value:\s*(?P<adj_sid>\d+)\s+'
+                         r'F:\s*(?P<f_flag>0|1)\s+B:\s*(?P<b_flag>0|1)\s+'
+                         r'V:\s*(?P<v_flag>0|1)\s+L:\s*(?P<l_flag>0|1)\s+'
+                         r'S:\s*(?P<s_flag>0|1)\s+P:\s*(?P<p_flag>0|1)\s+'
+                         r'Weight:\s*(?P<weight>0|1)$')
+
+        # Local Interface ID: 1, Remote Interface ID: 1
+        p22 = re.compile(r'^Local\s+Interface\s+ID:\s+(?P<local_intrf_id>\d+),\s+'
+                         r'Remote\s+Interface\s+ID:\s+(?P<remote_intrf_id>\d+)$')
+
+        # Neighbor IP Address: 12.12.12.2
+        p23 = re.compile(r'^Neighbor\s+IP\s+Address:(?P<neighbor_ip>[\d\.]+)$')
+
+        # Admin. Weight: 10
+        p24 = re.compile(r'^Admin.\s+Weight:\s+(?P<admin_weight>\d+)$')
+
+        # Physical LINK BW: 10000 kbits/sec
+        p25 = re.compile(r'^Physical\s+LINK\s+BW:\s+(?P<physical_link_bw>\d+)\.+$')
+
+        # Interface IPV6 Address: 12:12::1
+        p26 = re.compile(r'^Interface\s+IPV6\s+Address:(?P<intrf_ipv6>\S+)$')
+
+        # Neighbor IPV6 Address: 12:12::2
+        p27 = re.compile(r'^Neighbor\s+IPV6\s+Address:\s+(?P<neighbor_ipv6>\S+)$')
+
+        # Route Admin Tag: 30
+        p28 = re.compile(r'^Route\s+Admin\s+Tag:\s+(?P<route_admin_tag>\d+)$')
+
+        # Prefix-SID Index: 1, Algorithm: SPF, R:0 N:1 P:0 E:0 V:0 L:0
+        p29 = re.compile(r'^Prefix-SID Index:\s+(?P<prefix_sid_index>\d+),\s+'
+                         r'Algorithm:\s+((?P<algo>SPF|Strict-SPF),)?(Flex-algo'
+                         r'\s+(?P<flex_algo>\d+),)?\s+R:(?P<r_flag>0|1)\s+'
+                         r'N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+'
+                         r'E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+'
+                         r'L:(?P<l_flag>0|1)$')
+
+        # Source Router ID: 1.1.1.1
+        p30 = re.compile(r'^Source\s+Router\s+ID:\s+(?P<source_router_id>[\d\.]+)$')
+
+        # Reservable Global Pool BW: 0 kbits/sec 
+        p31 = re.compile(r'^Reservable Global Pool BW:\s+(?P<reservable_gpbw>\d+)\s+kbits/sec$')
+
+        # Global Pool BW Unreserved:
+        # [0]:        0 kbits/sec, [1]:        0 kbits/sec
+        p32 = re.compile(r'^\[(?P<index_1>\d)\]:\s+(?P<bit_1>\d+)\s+kbits/sec,\s+'
+                         r'\[(?P<index_2>\d)\]:\s+(?P<bit_2>\d+)\s+kbits/sec$')
+
+        # Uni Link Delay(Avg.) A-bit:0 Value:113
+        p33 = re.compile(r'^Uni Link Delay(Avg.)\s+A-bit:\s*(?P<a_bit>0|1)\s+'
+                         r'Value:\s*(?P<value>\d+)$')
+
+        # Uni Link Delay(Min/Max) A-bit:0 Min:93 Max:160
+        p34 = re.compile(r'^Uni Link Delay(Min/Max) A-bit:\s*(?P<a_bit>0|1)\s+'
+                         r'Min:\s*(?P<min>\d+)\s+Max:\s*(?P<max>\d+)$')
+
+        # Uni Link Delay(Var.) Value:12 
+        p35 = re.compile(r'^Uni Link Delay(Var.) Value:\s*(?P<uni_link_delay>\d+)$')
+        
+        # ASLA: L flag: 0, SA-Length 1, UDA-Length 0
+        p36 = re.compile(r'^ASLA: L flag:\s*(?P<l_flag>0|1),\s+SA-Length\s*'
+                         r'(?P<sa_length>\d+),\s+UDA-Length\s*(?P<uda_length>\d+)$')
+
+        # Standard Applications:  FLEX-ALGO
+        p37 = re.compile(r'^Standard Applications:\s+(?P<standard_app>\S+)$')
+
+        #  Bit mask:  0x10
+        p38 = re.compile(r'^Bit mask:\s+(?P<bit_mask>\S+)$')
+
+        #  Appl spec Uni Link Delay(Min/Max) A-bit:0 Min:100 Max:100
+        p39 = re.compile(r'^Appl spec Uni Link Delay(Min/Max) A-bit:\s*'
+                         r'(?P<a_bit>0|1)\s+Min:\s*(?P<min>\d+)\s+Max:\s*(?P<max>\d+)$')
+
+        #  Appl spec Ext Admin Group:
+        #     0x00000000 0x00000000 0x00000000 0x00000000
+        #     0x00000000 0x00000000 0x00000000 0x80000000
+        p40 = re.compile(r'^Appl spec Ext Admin Group:$')
+
+        #  Appl spec Admin Group: 0x00000001
+        p41 = re.compile(r'^Appl spec Admin Group:\s+(?P<appl_spec_ag>\S+)$')
+
+        # Affinity: 0x00000000
+        p42 = re.compile(r'^Affinity:\s+(?P<affinity>\S+)$')
+
+        # Extended Affinity:
+        #    0x00000000 0x00000000 0x00000000 0x00000000
+        #    0x00000000 0x00000000 0x00000200
+        p43 = re.compile(r'^Extended Affinity:$')
+
+        #   Flex-algo Exclude-any Ext Admin Group:
+        #    0x00000000 0x00000000 0x00000000 0x00000000
+        #    0x00000000 0x00000000 0x00000200
+        p44 = re.compile(r'^Flex-algo Exclude-any Ext Admin Group:$')
+
+        #   Flex-algo Include-any Ext Admin Group:
+        #    0x00000000 0x00000000 0x00000000 0x00000000
+        #    0x00000000 0x00000000 0x00000200
+        p45 = re.compile(r'^Flex-algo Include-any Ext Admin Group:$')
+
+        #   Flex-algo Include-all Ext Admin Group:
+        #    0x00000000 0x00000000 0x00000000 0x00000000
+        #    0x00000000 0x00000000 0x00000200
+        p46 = re.compile(r'^Flex-algo Include-all Ext Admin Group:$')
+
+        #    0x00000000
+        #    0x00000000 0x00000000
+        #    0x00000000 0x00000000 0x00000200
+        #    0x00000000 0x00000000 0x00000000 0x00000000
+        p47 = re.compile(r'^(?P<hex>(0x\w{8}\s*){1,4})$')
+
+        in_extended_affinity = False
+        in_include_all = False
+        in_exclude_any = False
+        in_include_any = False
+        in_ext_admin_group = False
+
         for line in out.splitlines():
-            line = line.strip()
+            line = line.strip()    
 
             #  Tag VRF1:
             m = p1.match(line)
@@ -426,7 +670,6 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                                        setdefault(tag, {}). \
                                        setdefault('level', {}). \
                                        setdefault(int(group['level']), {})
-
                 continue
 
             # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
@@ -445,6 +688,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'attach_bit': int(group['att'])})
                 lsp_dict.update({'p_bit': int(group['p'])})
                 lsp_dict.update({'overload_bit': int(group['ol'])})
+                if group['lsp_index']:
+                    lsp_dict.update({'lsp_index': int(group['lsp_index'])})
                 continue
 
             #   Area Address: 49.0001
@@ -518,12 +763,11 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     elif mtype == 'IPv6':
                         is_dict = lsp_dict.setdefault('ipv6_reachability', {}).setdefault(ip, {})
 
-                    ip_prefix = ip.split('/')[0]
-                    prefix_len = ip.split('/')[1]
+                    ip_prefix, prefix_len = ip.split('/')
+
                     is_dict.update({'ip_prefix': ip_prefix,
                                     'prefix_len': prefix_len,
                                     'metric': int(group['metric'])})
-
                 continue
 
             #   IPv6 Address: 2001:DB8:66:66:66::66
@@ -540,7 +784,379 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'router_id': group['router_id']})
                 continue
 
+            # Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                flex_algo_dict = lsp_dict.setdefault("flex_algo", {}).\
+                                          setdefault(int(group["flex_algo"]), {})
+                flex_algo_dict["metric_type"] = group["metric_type"]
+                flex_algo_dict["alg_type"] = group["alg_type"]
+                flex_algo_dict["priority"] = int(group["priority"])
+                continue
+
+            #   M:1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                flex_algo_dict["m_flag"] = group["m_flag"] == "1"
+                continue
+
+            # Router CAP:   1.1.1.1, D:0, S:0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_dict["router_cap"] = group["router_cap"]
+                lsp_dict["d_flag"] = group["d_flag"] == "1"
+                lsp_dict["s_flag"] = group["s_flag"] == "1"
+                continue
+
+            # Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                sr_dict = lsp_dict.setdefault("segment_routing", {})
+                sr_dict["i_flag"] = group["i_flag"] == "1"
+                sr_dict["v_flag"] = group["v_flag"] == "1"
+                sr_dict["srgb_base"] = int(group["srgb_base"])
+                sr_dict["srgb_range"] = int(group["srgb_range"])
+                continue
+
+            # Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                sr_dict["srlb_base"] = int(group["srlb_base"])
+                sr_dict["srlb_range"] = int(group["srlb_range"]) 
+                continue     
+
+            # Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                sr_dict["spf"] = True if group["spf"] else False
+                sr_dict["strict_spf"] = True if group["strict_spf"] else False
+                sr_dict["algorithms"] = []
+                sr_dict["algorithms"].append(int(group["flex_id"]))
+                lsp_dict["flex_algo"][int(group["flex_id"])]["segment_routing"] = True
+                continue
+            
+            # Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                sr_dict["algorithms"].append(int(group["flex_id_1"]))
+                lsp_dict["flex_algo"][int(group["flex_id_1"])]["segment_routing"] = True
+                if group["flex_id_2"]:
+                    sr_dict["algorithms"].append(int(group["flex_id_2"]))
+                    lsp_dict["flex_algo"][int(group["flex_id_2"])]["segment_routing"] = True
+                if group["flex_id_3"]:
+                    sr_dict["algorithms"].append(int(group["flex_id_3"]))
+                    lsp_dict["flex_algo"][int(group["flex_id_3"])]["segment_routing"] = True
+                continue
+
+            # Node-MSD 
+            # MSD: 16
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_dict["node_msd"] = int(group["msd"])
+            
+            # Prefix-attr: X:0 R:0 N:0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_attr = {
+                    "x_flag": (group['x_flag'] == "1"),
+                    "r_flag": (group['r_flag'] == "1"),
+                    "n_flag": (group['n_flag'] == "1")
+                }
+
+                is_dict.setdefault("prefix_attr", prefix_attr)
+                continue
+
+            # Adjacency SID Value:16 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                adj_sid_flags = {
+                    "f_flag": group["f_flag"] == "1",
+                    "b_flag": group["b_flag"] == "1",
+                    "v_flag": group["v_flag"] == "1",
+                    "l_flag": group["l_flag"] == "1",
+                    "s_flag": group["s_flag"] == "1",
+                    "p_flag": group["p_flag"] == "1",
+                    "weight": int(group["weight"])
+                }
+                is_dict.setdefault("adjacency_sid", {}).\
+                        setdefault(int(group["adj_sid"]), adj_sid_flags)
+                continue
+
+            # Local Interface ID: 1, Remote Interface ID: 1
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["local_interface_id"] = int(group["local_intrf_id"])
+                is_dict["remote_interface_id"] = int(group["remote_intrf_id"])
+                continue
+
+            # Neighbor IP Address: 12.12.12.2
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["neighbor_ip_address"] = group["neighbor_ip_address"]
+                continue
+            
+            # Admin. Weight: 10
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["admin_weight"] = int(group["admin_weight"])
+                continue
+
+            # Physical LINK BW: 10000 kbits/sec
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["physical_link_bw"] = group["physical_link_bw"]
+                continue
+            
+            # Interface IPV6 Address: 12:12::1
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["interface_ipv6_address"] = group["intrf_ipv6"]
+                continue
+
+            # Neighbor IPV6 Address: 12:12::2
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["neighbor_ipv6_address"] = group["neighbor_ipv6"]
+                continue
+
+            # Route Admin Tag: 30
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["route_admin_tag"] = int(group["route_admin_tag"])
+                continue
+
+            # Prefix-SID Index: 1, Algorithm: SPF, R:0 N:1 P:0 E:0 V:0 L:0
+            # Prefix-SID Index: 128, Algorithm: Flex-algo 128, R:0 N:1 P:0 E:0 V:0 L:0
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_sid_dict = is_dict.setdefault("prefix_sid_index", {}).\
+                                          setdefault(int(group["prefix_sid_index"]), {})
+                if group["algo"]:
+                    prefix_sid_dict["algorithm"] = group["algo"]
+                if group["flex_algo"]:
+                    prefix_sid_dict["flex_algo"] = int(group["flex_algo"])
+                flags =  {
+                    "r_flag": group["r_flag"] == "1",
+                    "n_flag": group["n_flag"] == "1",
+                    "p_flag": group["p_flag"] == "1",
+                    "e_flag": group["e_flag"] == "1",
+                    "v_flag": group["v_flag"] == "1",
+                    "l_flag": group["l_flag"] == "1",
+                }
+                prefix_sid_dict.setdefault("flags", flags)
+                continue
+
+            # Source Router ID: 1.1.1.1
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["source_router_id"] = group["source_router_id"]
+                continue
+
+            # Reservable Global Pool BW: 0 kbits/sec 
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["reservable_global_pool_bw"] = int(group["reservable_gpbw"])
+                continue
+
+            # [0]:        0 kbits/sec, [1]:        0 kbits/sec
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict.setdefault("unreserved_global_pool_bw", {})
+                is_dict["unreserved_global_pool_bw"]["bw_" + group["index_1"]] = int(group["bit_1"])
+                is_dict["unreserved_global_pool_bw"]["bw_" + group["index_2"]] = int(group["bit_2"])
+                continue
+
+            # Uni Link Delay(Avg.) A-bit:0 Value:113
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["uni_link_delay_avg"] = {
+                    "a_bit": (group["a_bit"] == "1"),
+                    "value": int(group["value"])
+                }
+                continue
+
+            # Uni Link Delay(Min/Max) A-bit:0 Min:93 Max:160
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["uni_link_delay_min_max"] = {
+                    "a_bit": (group["a_bit"] == "1"),
+                    "min": int(group["min"]),
+                    "max": int(group["max"])
+                }
+                continue
+
+            # Uni Link Delay(Var.) Value:12 
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["uni_link_delay_var"] = int(group["uni_link_delay"])
+                continue
+
+            # ASLA: L flag: 0, SA-Length 1, UDA-Length 0
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["asla"] = {
+                    "l_flag": (group["l_flag"] == "1"),
+                    "sa_length": int(group["sa_length"]),
+                    "uda_length": int(group["uda_length"])
+                }
+                continue
+
+            # Standard Applications:  FLEX-ALGO
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                standard_app_dict = is_dict.setdefault("standard_application", {}).\
+                                            setdefault(group["standard_app"], {})
+                continue
+
+            #  Bit mask:  0x10
+            m = p38.match(line)
+            if m:
+                group = m.groupdict() 
+                standard_app_dict["bit_mask"] = group["bit_mask"] 
+                continue
+
+            #  Appl spec Uni Link Delay(Min/Max) A-bit:0 Min:100 Max:100
+            m = p39.match(line)
+            if m:
+                group = m.groupdict() 
+                standard_app_dict["appl_spec_uni_link_delay"] = {
+                    "a_bit": (group["a_bit"] == "1"),
+                    "min": int(group["min"]),
+                    "max": int(group["max"])
+                } 
+                continue
+
+            #  Appl spec Admin Group: 0x00000001
+            m = p41.match(line)
+            if m:
+                group = m.groupdict() 
+                standard_app_dict["appl_spec_admin_group"] = group["appl_spec_ag"]
+                continue
+
+            # Affinity: 0x00000000
+            m = p42.match(line)
+            if m:
+                group = m.groupdict() 
+                is_dict["affinity"] = group["affinity"]
+                continue
+
+#    0x00000000
+            #    0x00000000 0x00000000
+            #    0x00000000 0x00000000 0x00000200
+            #    0x00000000 0x00000000 0x00000000 0x00000000
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                if in_ext_admin_group:
+                    standard_app_dict["appl_spec_ext_admin_group"]. \
+                        append(group["hex"])
+                elif in_extended_affinity:
+                    is_dict["extended_affinity"].append(group["hex"])
+                elif in_exclude_any:
+                    flex_algo_dict["exclude_any"].append(group["hex"])
+                elif in_include_any:
+                    flex_algo_dict["include_any"].append(group["hex"])
+                elif in_include_all:
+                    flex_algo_dict["include_all"].append(group["hex"])
+                continue
+            else:
+                in_extended_affinity = False
+                in_include_all = False
+                in_exclude_any = False
+                in_include_any = False
+                in_ext_admin_group = False
+
+            #  Appl spec Ext Admin Group:
+            m = p40.match(line)
+            if m:
+                in_ext_admin_group = True
+                standard_app_dict["appl_spec_ext_admin_group"] = []
+                continue
+
+            # Extended Affinity:
+            m = p43.match(line)
+            if m:
+                in_extended_affinity = True
+                is_dict["extended_affinity"] = []
+                continue
+                
+            #   Flex-algo Exclude-any Ext Admin Group:
+            m = p44.match(line)
+            if m:
+                in_exclude_any = True
+                flex_algo_dict["exclude_any"] = []
+                continue
+
+            #   Flex-algo Include-any Ext Admin Group:
+            m = p45.match(line)
+            if m:
+                in_include_any = True  
+                flex_algo_dict["include_any"] = []
+                continue    
+
+            #   Flex-algo Include-all Ext Admin Group:
+            m = p46.match(line)
+            if m:
+                in_include_all = True 
+                flex_algo_dict["include_all"] = []
+                continue
+
         return result_dict
+
+class ShowIsisDatabase(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):
+
+    cli_command = 'show isis database'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        return super().cli(output=output)
+        
+class ShowIsisDatabaseVerbose(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):
+
+    cli_command = 'show isis database verbose'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        return super().cli(output=output)
+class ShowIsisDatabaseDetail(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):
+
+    cli_command = 'show isis database detail'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        return super().cli(output=output)
 
 class ShowRunSectionIsisSchema(MetaParser):
     """Schema for show run | sec isis"""
@@ -1559,6 +2175,7 @@ class ShowIsisRibSchema(MetaParser):
                                                                 },
                                                                 Optional("sid_index"): int,
                                                                 Optional("label"): str,
+                                                                Optional("from_srapp"): bool
                                                             }
                                                         },
                                                         Optional("u_loop_enabled"): bool,
@@ -1667,17 +2284,18 @@ class ShowIsisRib(ShowIsisRibSchema):
         # IPv4 local RIB for IS-IS process 1
         p1 = re.compile(r'^IPv4 local RIB for IS-IS process\s+(?P<tag>\S+)$')
 
+        # 6.6.6.6/32
         # 1.1.1.0/24  prefix attr X:0 R:1 N:0
         # 3.3.3.3/32  prefix attr X:0 R:0 N:1  source router id: 3.3.3.3  SID index 3 - Bound
         # 6.6.6.6/32  prefix attr X:0 R:0 N:1  source router id: 6.6.6.6  prefix SID index 61 - Bound (SR_POLICY)
-        p2 = re.compile(r'^(?P<ip>[\d.]+)/(?P<subnet>\d+)\s+((prefix\s+attr\s+'
+        p2 = re.compile(r'^(?P<ip>[\d.]+)/(?P<subnet>\d+)(\s+((prefix\s+attr\s+'
                         r'X:(?P<x_flag>0|1)\s+R:(?P<r_flag>0|1)\s+N:'
                         r'(?P<n_flag>0|1)))?((\((?P<strict_sid_bound_attribute_te1>TE)'
                         r'\)))?((\s*source router id:\s+(?P<src_router_id>[\d.]+))?'
                         r'\s+((((prefix SID index|SID index))\s+(?P<prefix_sid_ind>'
                         r'(\d+|Invalid by SRMS)))\s*)?(((- (?P<bound>Bound)){0,1}'
                         r'\s*(\((?P<sid_bound_attribute>\w+)\)'
-                        r'(\((?P<strict_sid_bound_attribute_te2>\w+)\))?)?)?)?)?$')
+                        r'(\((?P<strict_sid_bound_attribute_te2>\w+)\))?)?)?)?)?)?$')
 
         # [115/L1/70] via 6.6.6.6(MPLS-SR-Tunnel6) R3.00-00, from 4.4.4.4, tag 0
         # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
@@ -1744,11 +2362,12 @@ class ShowIsisRib(ShowIsisRibSchema):
 
         # strict-SPF SID index: 6, R:0 N:1 P:0 E:0 V:0 L:0
         # Prefix-SID index: 4, R:0 N:1 P:0 E:0 V:0 L:0
-        p14 = re.compile(r'^(Prefix-SID index:|strict-SPF SID index:)\s+'
-                         r'(?P<spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)\s+'
-                         r'N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+'
-                         r'E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+'
-                         r'L:(?P<l_flag>0|1)$')
+        # Prefix-SID index: 1004, R:0 N:0 P:0 E:0 V:0 L:0, from SRAPP
+        p14 = re.compile(r'(Prefix-SID index:|strict-SPF SID index:)\s+'
+                             r'(?P<spf_sid_ind>\d+),\s+R:(?P<r_flag>0|1)\s+'
+                             r'N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+'
+                             r'E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+'
+                             r'L:(?P<l_flag>0|1)(,\s+from\s+(?P<srapp>SRAPP))?')
 
         # type: Micro-Loop Avoidance Explicit-Path
         p15 = re.compile(r'^type:\s+'
@@ -2107,6 +2726,7 @@ class ShowIsisRib(ShowIsisRibSchema):
 
             # strict-SPF SID index: 6, R:0 N:1 P:0 E:0 V:0 L:0
             # Prefix-SID index: 4, R:0 N:1 P:0 E:0 V:0 L:0
+            # Prefix-SID index: 1004, R:0 N:0 P:0 E:0 V:0 L:0, from SRAPP
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -2136,6 +2756,8 @@ class ShowIsisRib(ShowIsisRibSchema):
                     else:
                         source_ip_dict["algo"][0]["sid_index"] = int(group["spf_sid_ind"])
                         source_ip_dict["algo"][0]["flags"] = flags
+                        if group["srapp"]:
+                            source_ip_dict["algo"][0]["from_srapp"] = (group["srapp"] == "SRAPP")
                 elif line.startswith("strict"):
                     if in_repair_path:
                         repair_path_dict["algo"][1]["sid_index"] = int(group["spf_sid_ind"])
@@ -2143,6 +2765,10 @@ class ShowIsisRib(ShowIsisRibSchema):
                     else:
                         source_ip_dict["algo"][1]["sid_index"] = int(group["spf_sid_ind"])
                         source_ip_dict["algo"][1]["flags"] = flags
+                        if group["srapp"]:
+                            source_ip_dict["algo"][1]["from_srapp"] = (group["srapp"] == "SRAPP")
+                
+                
 
                 continue
 
@@ -2405,3 +3031,238 @@ class ShowIsisRibRedistribution(ShowIsisRibRedistributionSchema):
                 continue
 
         return ret_dict
+
+
+class ShowIsisNodeLevelSchema(MetaParser):
+    """
+    Schema for show isis node {level}
+    """
+    schema = {
+      'tag' : {
+          Any() : {
+            'level': {
+                Any(): {
+                  'host': {
+                      Any(): {
+                         Optional('ip_interface_address'): str,
+                         Optional('lsp_id'): int,
+                         'lsp_index' : {                   
+                             Any(): {
+                               'sr_capable' :str,
+                               'strict_spf_capable':str,                             
+                                 },
+                              },
+                            },
+                        },
+                     },
+                  },
+               },
+            },
+         } 
+ 
+class ShowIsisNodeLevel(ShowIsisNodeLevelSchema):
+    """ Parser for show isis node {level}"""
+
+    cli_command = 'show isis node {level}'
+    
+    def cli(self,level, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command.format(level=level))
+
+        # initial variables
+        ret_dict = {}
+
+                
+        # Tag nSVL-1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # ISIS level-1 node information for Switch.00
+        p2 = re.compile(r'^ISIS (?P<level>\S+)\s+node information for\s+(?P<host>\S+)$')
+
+        # LSP index: 1
+        p3 = re.compile(r'^LSP index:\s+(?P<lsp_index>\d+)$')
+
+        # SR capable: No, Strict-SPF capable: No
+        p4 =  re.compile('^SR capable: (?P<sr_capable>\w+), Strict-SPF capable: (?P<strict_spf_capable>\w+)$')
+
+        # IP interface address: 1.1.1.1 (LSP #0)
+        p5 =  re.compile(r'^IP interface address: (?P<ip_interface_address>[\d\.]+)\s+\(LSP\s+\#(?P<lsp_id>\d+)\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{},).setdefault((group['tag']),{})
+                continue
+
+            # ISIS level-1 node information for Switch.00
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict = root_dict.setdefault('level',{}).setdefault((group['level']),{})
+                level_dict = level_dict.setdefault('host',{}).setdefault((group['host']),{})
+            
+                continue
+            
+            # LSP index: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_index_dict = level_dict.setdefault('lsp_index',{}).setdefault(int(group['lsp_index']),{})
+                continue
+            
+            # SR capable: No, Strict-SPF capable: No
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_index_dict['sr_capable']= group['sr_capable']
+                lsp_index_dict['strict_spf_capable'] = group['strict_spf_capable']
+                continue
+            
+            # IP interface address: 1.1.1.1 (LSP #0)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict['ip_interface_address'] = group['ip_interface_address']
+                level_dict['lsp_id'] = int(group['lsp_id'])
+                continue
+                
+        return ret_dict
+
+
+class ShowIsisNodeSummarySchema(MetaParser):
+    """
+    Schema for show isis node summary
+    """
+    schema = {
+       'tag' :{
+          Any():{
+            'level': {
+               Any() :{
+                 'switch':list
+               },
+            },
+         },
+      },
+   }
+  
+class ShowIsisNodeSummary(ShowIsisNodeSummarySchema):
+    """ Parser for show isis node summary"""
+
+    cli_command = 'show isis node summary'
+    
+    def cli(self, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # Tag nSVL-1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # ISIS level-1 node information for sw.F87A4137BE0.00
+        # ISIS level-1 node information for sw.F87A4137BE0.01
+        p2 = re.compile(r'^ISIS level-(?P<level>\d+)\s+node information for\s+(?P<switch>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Tag nSVL-1:
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{}).setdefault(groups['tag'],{})
+                continue
+
+            # ISIS level-1 node information for sw.F87A4137BE0.00
+            # ISIS level-1 node information for sw.F87A4137BE0.01
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                switch_list = root_dict.setdefault('level', {}).setdefault(group['level'], {}).setdefault('switch', [])
+                switch_list.append(group['switch'])
+                continue
+                
+        return ret_dict       
+
+
+class ShowIsisTopologyLevelSchema(MetaParser):
+    """
+    Schema for show isis topology {level}
+    """
+    schema = {
+       'tag' :{
+          Any():{
+            'level': {
+                Any() :{
+                   'system_id':{
+                       Any():{
+                         Optional('metric') : int,
+                         Optional('next_hop') :str,
+                         Optional('interface'):str,
+                         Optional('snpa'): str
+                      },
+                  },
+              },
+           },
+        },
+    },
+}  
+
+class ShowIsisTopologyLevel(ShowIsisTopologyLevelSchema):
+    """ Parser for show  isis topology {level}"""
+
+    cli_command = 'show isis topology {level}'
+    
+    def cli(self,level,output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command.format(level=level))
+        
+        # initial variables
+        ret_dict = {}
+
+        # Tag nSVL-1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # IS-IS TID 0 paths to level-2 routers
+        p2 = re.compile('^.+paths to level-(?P<level>\d).+$')
+
+        # System Id            Metric     Next-Hop             Interface   SNPA
+        # sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
+        p3 = re.compile('(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+)\s+(?P<snpa>[\w\d\.]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{},).setdefault((group['tag']),{})
+                continue
+
+            # IS-IS TID 0 paths to level-2 routers
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict1 = root_dict.setdefault('level',{}).setdefault((group['level']),{})
+                continue
+
+            # System Id            Metric     Next-Hop             Interface   SNPA
+            # sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                system_id_dict = root_dict1.setdefault('system_id',{}).setdefault(group['system_id'],{})
+                system_id_dict['metric'] = int(group['metric'])
+                system_id_dict['next_hop'] = (group['next_hop'])
+                system_id_dict['interface']= (group['interface'])
+                system_id_dict['snpa']= (group['snpa'])
+                continue   
+                
+        return ret_dict
+

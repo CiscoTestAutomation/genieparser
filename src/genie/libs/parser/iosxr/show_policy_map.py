@@ -81,7 +81,6 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
         else:
             out = output
 
-
         # Initialize dictionary
         ret_dict = {}
 
@@ -89,13 +88,14 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
         p1 = re.compile(r'^.*direction +input: +Service +Policy +not +installed$')
 
         # TenGigE0/2/0/3 direction input: cap
-        p2 = re.compile(r'^.*direction +input: +(?P<input>\w+)$')
+        # GigabitEthernet0/0/0/1 input: 4gig
+        p2 = re.compile(r'^.*(direction)? +input: +(?P<input>\w+)$')
 
         # TenGigE0/2/0/3 output: Service Policy not installed
         p3 = re.compile(r'^.*output: +Service +Policy +not +installed$')
 
         # TenGigE0/2/0/3 output: cap
-        p4 = re.compile(r'^.*output: +(?P<output>\w+)$')
+        p4 = re.compile(r'^.*output: +(?P<output>[-\w]+)$')
 
         # Class cap
         p5 = re.compile(r'^Class +(?P<class_name>\D+)$')

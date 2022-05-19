@@ -4,6 +4,6 @@ Index Peer Address               Port  VRF Source Address             State     
 ----- -------------------------- ----- --- -------------------------- ---------- --------------------
  7087 5.39.24.105                28103 0   172.16.0.2                 Connecting Reconnecting for protocol cntp-tcp
  7089 5.39.24.105                57500 0   172.16.0.2                 Connecting Connection created for protocol grpc-tcp
- 7091 161.44.208.227               123 0   172.16.0.2                 Connecting Connecting using protocol native
+ 7091 161.44.208.227               123 0 M 172.16.0.2                 Connecting Connecting using protocol native
 41084 5.40.26.169                37718 0   0.0.0.0                    Active     Connection created for protocol netconf
 

@@ -3393,7 +3393,7 @@ class ShowNveInterfaceSchema(MetaParser):
 class ShowNveInterface(ShowNveInterfaceSchema):
     """Parser for show nve interface"""
 
-    cli_command = 'show nve interface {interface} detail'
+    cli_command = 'show nve interface {interface}'
 
     def cli(self, interface, output=None):
         cmd = ""
@@ -5040,3 +5040,88 @@ class ShowInterfaceHardwareMap(ShowInterfaceHardwareMapSchema):
                     'blksrcid': int(vdict['blksrcid'])}
 
         return parsed_hw_map_dict
+
+
+#############################################################################
+# Schema For show interface counters
+#############################################################################
+class ShowInterfaceCountersSchema(MetaParser):
+    """schema for show interface counters
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'in_octets': int,
+                'in_ucast_pkts': int,
+                'in_mcast_pkts': int,
+                'in_bcast_pkts': int,
+                'out_octets': int,
+                'out_ucast_pkts': int,
+                'out_mcast_pkts': int,
+                'out_bcast_pkts': int,
+            }
+        }
+    }
+
+
+#############################################################################
+# Parser For show interface counters
+#############################################################################
+class ShowInterfaceCounters(ShowInterfaceCountersSchema):
+    """parser for
+        * show interface counters
+        * show interfaces {interfaces} counters
+
+    """
+
+    cli_command = ['show interface counters',
+                   'show interface {interface} counters']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        #Port                                     InOctets                      InUcastPkts
+        #Port                                  InMcastPkts                      InBcastPkts
+        #Port                                    OutOctets                     OutUcastPkts
+        #Port                                 OutMcastPkts                     OutBcastPkts
+        p0 = re.compile(r'Port\s+(?:(?P<in_octets>InOctets)|(?P<out_octets>OutOctets)|'
+                        r'(?P<in_mcast_pkts>InMcastPkts)|(?P<out_mcast_pkts>OutMcastPkts))\s+'
+                        r'(?:(?P<in_ucast_pkts>InUcastPkts)|(?P<in_bcast_pkts>InBcastPkts)|'
+                        r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts))')
+
+        #Eth1/46                                  21454282                           199828
+        p1 = re.compile(r'(?P<interface>\S+)\s+(?P<val1>\d+)\s+(?P<val2>\d+)')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p0.match(line)
+            if m:
+                key1, key2 = [key for key in m.groupdict().keys() if m.groupdict()[
+                    key] is not None]
+                continue
+
+            m = p1.match(line)
+            if m:
+                interface = Common.convert_intf_name(
+                    m.groupdict()['interface'])
+
+                intfs_dict = result_dict.setdefault('interfaces', {})
+                if interface not in intfs_dict.keys():
+                    intfs_dict.setdefault(interface, {})
+
+                intfs_dict[interface][key1] = int(m.groupdict()['val1'])
+                intfs_dict[interface][key2] = int(m.groupdict()['val2'])
+                continue
+
+        return result_dict

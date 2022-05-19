@@ -1,0 +1,15 @@
+
+VRF "default" MVPN SA AD Route Database VNI: 0
+
+VRF "vxlan-1001" MVPN SA AD Route Database VNI: 203001
+
+SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
+  Interested Fabric Nodes:
+    This node, uptime: 00:12:32
+    100.100.100.4, uptime: 00:12:32
+
+Src Active AD route: (1.1.11.4/32, 226.1.1.1/32) uptime: 00:12:32
+  Interested Fabric Nodes:
+    This node, uptime: 00:12:32
+    100.100.100.4, uptime: 00:12:32
+

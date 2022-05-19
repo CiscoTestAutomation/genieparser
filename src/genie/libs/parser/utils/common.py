@@ -598,7 +598,7 @@ class Common:
         # takes in the words preceding a digit e.g. the Ge in Ge0/0/1
         m = re.search(r'([-a-zA-Z]+)', intf)
         # takes in everything after the first encountered digit, e.g. the 0/0/1 in Ge0/0/1
-        m1 = re.search(r'([\d\/\.]+)', intf)
+        m1 = re.search(r'(\d[\w./]*)', intf)
 
         # checks if an interface has both Ge and 0/0/1 in the example of Ge0/0/1
         if hasattr(m, 'group') and hasattr(m1, 'group'):
@@ -644,6 +644,7 @@ class Common:
                     'For': 'FortyGigabitEthernet',
                     'Hu': 'HundredGigE',
                     'Hun': 'HundredGigE',
+                    'Fou': 'FourHundredGigE',
                     'vl': 'vasileft',
                     'vr': 'vasiright',
                     'BE': 'Bundle-Ether',

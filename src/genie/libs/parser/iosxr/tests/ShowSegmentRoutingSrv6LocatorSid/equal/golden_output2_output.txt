@@ -1,0 +1,6 @@
+RP/0/RP0/CPU0:tb1-r1#show segment-routing srv6 locator ALGO_0 sid
+Fri Feb 18 22:57:02.410 PST
+SID                         Behavior          Context                           Owner               State  RW
+--------------------------  ----------------  ------------------------------    ------------------  -----  --
+cafe:0:100::                uN (PSP/USD)      'default':256                     sidmgr              InUse  Y
+RP/0/RP0/CPU0:tb1-r1#

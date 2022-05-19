@@ -949,27 +949,28 @@ class ShowStandbyBriefSchema(MetaParser):
 # =================
 class ShowStandbyBrief(ShowStandbyBriefSchema):
     '''Parser for show standby brief'''
-    
+
     cli_command = 'show standby brief'
 
     def cli(self, output=None):
-       
+
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # initial variables
         ret_dict = {}
 
-        #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
-        #Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
-        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>\w+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
-        
-        for line in out.splitlines():
+        # Interface   Grp Prio P State    Active addr     Standby addr    Group addr
+        # Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
+        # Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
+        # Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
+        # BD3329      129  90  P Standby 10.198.64.29    local           100.198.64.30
+        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>[\w:.]+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
+
+        for line in output.splitlines():
             line = line.strip()
-            
+
             #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
             #Vl500       20   100 P Active  local           100.1.50.2      100.1.50.254
             m = p0.match(line)
@@ -987,5 +988,5 @@ class ShowStandbyBrief(ShowStandbyBriefSchema):
                 stby_dict['standby']  = group['standby']
                 stby_dict['virtual_ip']  = group['virtual_ip']
                 continue
-           
+
         return ret_dict

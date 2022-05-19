@@ -75,10 +75,10 @@ class ShowVlan(ShowVlanSchema):
         else:
             out = output
 
-        # This pattern is for when the Name field is so long that it causes the 
+        # This pattern is for when the Name field is so long that it causes the
         # line to wrap around. For example:
         # 1832 blablablablablablablablablablablablablabla
-        #                                       active 
+        #                                       active
         p0 = re.compile(r'^\s*(active|suspended|\w+/lshut|\w+/unsup)+.*$')
 
         # VLAN Name                             Status    Ports
@@ -340,10 +340,10 @@ class ShowVlan(ShowVlanSchema):
                 continue
 
             """
-            Save previous line in case lines like 
+            Save previous line in case lines like
             1832 blablablabla blablablablabla blablablabla bla
-                                                 active 
-            need to be combined into 
+                                                 active
+            need to be combined into
             1832 blablablabla blablablablabla blablablabla bla active
             """
             prev_line = line
@@ -588,7 +588,7 @@ class ShowVlanIdSchema(MetaParser):
               'bridge-no': str,
               'mtu': str,
               'parent': str,
-              'ports': list,
+              Optional('ports'): list,
               'ring-no': str,
               'said': str,
               'status': str,
@@ -621,10 +621,9 @@ class ShowVlanId(ShowVlanIdSchema):
         # initial return dictionary
 
         vlan_dict = {}
-        p1 = re.compile(r'(?P<vlan_id>\d+) +'
-                    '(?P<vlan_name>\S+|\S+.*\S+) +'
-                    '(?P<status>active|suspended|act/lshut|sus/lshut) +'
-                    '(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
+        p1 = re.compile(r'(?P<vlan_id>\d+) +(?P<vlan_name>\S+|\S+.*\S+) +'
+                        r'(?P<status>active|suspended|act/lshut|sus/lshut)'
+                        r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)))?')
         p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
         p3 = re.compile(r'\d+ +'
                     '(?P<type>\w+) +'
@@ -647,8 +646,9 @@ class ShowVlanId(ShowVlanIdSchema):
                 vlan_dict['vlan-id'] = int(group['vlan_id'])
                 vlan_dict['vlan-name'] = group['vlan_name']
                 vlan_dict['status'] = group['status']
-                port_list.extend(group['ports'].replace(' ','').split(','))
-                vlan_dict['ports'] = port_list
+                if group['ports']:
+                    port_list.extend(group['ports'].replace(' ','').split(','))
+                    vlan_dict['ports'] = port_list
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
@@ -666,7 +666,7 @@ class ShowVlanId(ShowVlanIdSchema):
                 vlan_dict['brdg-mode'] = group['brdg_mode']
                 vlan_dict['trans1'] = group['trans1']
                 vlan_dict['trans2'] = group['trans2']
-        return vlan_dict 
+        return vlan_dict
 
 
 class ShowVlanVirtualportSchema(MetaParser):
@@ -730,23 +730,23 @@ class ShowVlanVirtualport(ShowVlanVirtualportSchema):
 
 class ShowVlansDot1qVlanIdSecondDot1qVlanIdSchema(MetaParser):
      """Schema for show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}"""
-     schema = {             
+     schema = {
                 'stat_for_vlan': {
                     str: {
                        'in_pkts': int,         # These counters are incremented for both
-                       'in_octets': int,       # first_vlan_id case and also first_vlan_id  
+                       'in_octets': int,       # first_vlan_id case and also first_vlan_id
                        'out_pkts': int,        # and second_vlan_id case.
                        'out_octets': int
                     }
-                }                
+                }
             }
 
-class ShowVlansDot1qVlanIdSecondDot1qVlanId(ShowVlansDot1qVlanIdSecondDot1qVlanIdSchema): 
-     """Parser for 
+class ShowVlansDot1qVlanIdSecondDot1qVlanId(ShowVlansDot1qVlanIdSecondDot1qVlanIdSchema):
+     """Parser for
          * show vlans dot1q {first_vlan_id} second-dot1q {second_vlan_id}
          * show vlans dot1q {first_vlan_id}
      """
- 
+
      #*************************
      # schema - class variable
      #
@@ -773,25 +773,25 @@ class ShowVlansDot1qVlanIdSecondDot1qVlanId(ShowVlansDot1qVlanIdSecondDot1qVlanI
          #initial return dictionary
          ret_dict = {}
          vlan = None
-         #Total statistics for Outer/Inner VLAN 2/3:        ---> Outer/Inner VLAN case  
+         #Total statistics for Outer/Inner VLAN 2/3:        ---> Outer/Inner VLAN case
          p0 = re.compile(r'^Total statistics for (?P<vlan>[a-zA-Z]+\/[a-zA-Z]+\s+VLAN\s+[0-9]\/[0-9]):$')
          #Total statistics for 802.1Q VLAN 1:               ---> Outer VLAN case
          p0_1 = re.compile(r'^Total statistics for (?P<vlan>[0-9]+.[0-9][A-Z]\s+VLAN\s+[0-9]):$')
          #105331037 packets, 147884775948 bytes input
-         p1 = re.compile(r'^(?P<in_pkts>\d+)\s+packets,\s+(?P<in_octets>\d+)\s+bytes\s+input$') 
+         p1 = re.compile(r'^(?P<in_pkts>\d+)\s+packets,\s+(?P<in_octets>\d+)\s+bytes\s+input$')
          #105334310 packets, 148310655960 bytes output
-         p2 = re.compile(r'^(?P<out_pkts>\d+)\s+packets,\s+(?P<out_octets>\d+)\s+bytes\s+output$') 
+         p2 = re.compile(r'^(?P<out_pkts>\d+)\s+packets,\s+(?P<out_octets>\d+)\s+bytes\s+output$')
 
          #Total statistics for Outer/Inner VLAN 2/3:
          #   105331037 packets, 147884775948 bytes input
          #   105334310 packets, 148310655960 bytes output
- 
+
          for line in out.splitlines():
              line = line.strip()
              #Total statistics for Outer/Inner VLAN 2/3:        ---> Outer/Inner VLAN case
              m0 = p0.match(line)
              #Total statistics for 802.1Q VLAN 2:               ---> Outer VLAN case
-             m0_1 = p0_1.match(line) 
+             m0_1 = p0_1.match(line)
              if m0:
                 ret_dict.setdefault('stat_for_vlan', {})
                 vlan = str(m0.groupdict()['vlan'])

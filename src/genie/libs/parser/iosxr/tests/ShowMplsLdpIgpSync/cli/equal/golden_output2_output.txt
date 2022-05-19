@@ -1,0 +1,11 @@
+Bundle-Ether40051:
+VRF: 'default' (0x60000000)
+Sync delay: 5 sec
+Sync status: Not ready (No peer session)
+
+Bundle-Ether40055:
+VRF: 'default' (0x60000000)
+Sync delay: 5 sec
+Sync status: Ready
+Peers:
+10.120.0.10:0

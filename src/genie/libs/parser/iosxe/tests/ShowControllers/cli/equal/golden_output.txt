@@ -1,0 +1,424 @@
+Driver Configuration Block:
+Admin State Up MTU 1976 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/0 Cumulative Statistics:
+
+Input packet count             7628882
+Input bytes count              1370799013
+Input mcast packets            7193
+Input bcast packets            1
+Input CRC errors               0
+Input overruns                 3
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            4546146635
+Output bytes count             2537511523512
+Output mcast packets           7189
+Output bcast packets           112
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver igb ; Ver 5.3.5.20 ; FW 1.63, 0x800009fb ; bus 0000:0b:00.0
+
+
+E1000 General Register.
+    CTRL:00000000   STATUS:00000000 CTRL_EXT:00000000     MDIC:00000000
+    SCTL:00000000   CONNSW:00000000      VET:00000000   LEDCTL:00000000
+     PBA:00000000      PBS:00000000    FRTMR:00000000   TCPTMR:00000000
+
+
+E1000 interrupt Register.
+   EICS1:00000000    EICS2:00000000     EIMS:00000000     EIMC:00000000
+    EIAC:00000000     EIAM:00000000     ICS1:00000000     ICS2:00000000
+     IMS:00000000      IMC:00000000      IAC:00000000      IAM:00000000
+  IMIRVP:00000000
+
+
+E1000 flow control Register.
+    FCAL:00000000     FCAH:00000000    FCTTV:00000000    FCRTL:00000000
+   FCRTH:00000000    FCRTV:00000000
+
+
+E1000 receive Register.
+    RCTL:00000000   RXCSUM:00000000    RLPML:00000000    RFCTL:00000000
+    MRQC:00000000   VT_CTL:00000000
+
+
+E1000 transmit Register.
+    TCTL:00000000 TCTL_EXT:00000000     TIPG:00000000   DTXCTL:00000000
+
+
+E1000 MAC Register.
+ PCSCFG0:00000000  PCSLCTL:00000000 PCSLSTAT:000007e1 PCSANADV:00000000
+ PCSLPAB:c26c8a40  PCSNPTX:00007fc4 PCSLPABN:c26c8a40
+
+
+E1000 RAL Register.
+   RAL00:55555555    RAL01:55555555    RAL02:55555555    RAL03:55555555
+   RAL04:55555555    RAL05:55555555    RAL06:55555555    RAL07:55555555
+   RAL08:55555555    RAL09:55555555    RAL10:55555555    RAL11:55555555
+   RAL12:55555555    RAL13:55555555    RAL14:55555555    RAL15:55555555
+
+
+E1000 RAH Register.
+   RAH00:55555555    RAH01:55555555    RAH02:55555555    RAH03:55555555
+   RAH04:55555555    RAH05:55555555    RAH06:55555555    RAH07:55555555
+   RAH08:55555555    RAH09:55555555    RAH10:55555555    RAH11:55555555
+   RAH12:55555555    RAH13:55555555    RAH14:55555555    RAH15:55555555
+
+
+Internal PHY Register.
+       0:00001140        1:0000796d        2:00000154        3:000003b1
+       4:000005e1        5:0000c1e1        6:0000000f        7:00002001
+       8:00006801        9:00000600       10:00007800       11:00000000
+      12:00000000       13:00000000       14:00000000       15:00003000
+      16:00000000       17:0000000a       18:0000840a       19:00001041
+      20:00000000       21:0000000c       22:0000ff08       23:00003048
+      24:00000000       25:00000000       26:00001ac4       27:00000003
+      28:0000210a       29:00001f55       30:00000000       31:00004000
+
+
+Driver Configuration Block:
+Admin State Up MTU 1500 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/1 Cumulative Statistics:
+
+Input packet count             379165
+Input bytes count              26344769
+Input mcast packets            224771
+Input bcast packets            116067
+Input CRC errors               0
+Input overruns                 2
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            45531
+Output bytes count             5813688
+Output mcast packets           7201
+Output bcast packets           3
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver igb ; Ver 5.3.5.20 ; FW 1.63, 0x800009fb ; bus 0000:0b:00.1
+
+
+E1000 General Register.
+    CTRL:00000000   STATUS:00000000 CTRL_EXT:00000000     MDIC:00000000
+    SCTL:00000000   CONNSW:00000000      VET:00000000   LEDCTL:00000000
+     PBA:00000000      PBS:00000000    FRTMR:00000000   TCPTMR:00000000
+
+
+E1000 interrupt Register.
+   EICS1:00000000    EICS2:00000000     EIMS:00000000     EIMC:00000000
+    EIAC:00000000     EIAM:00000000     ICS1:00000000     ICS2:00000000
+     IMS:00000000      IMC:00000000      IAC:00000000      IAM:00000000
+  IMIRVP:00000000
+
+
+E1000 flow control Register.
+    FCAL:00000000     FCAH:00000000    FCTTV:00000000    FCRTL:00000000
+   FCRTH:00000000    FCRTV:00000000
+
+
+E1000 receive Register.
+    RCTL:00000000   RXCSUM:00000000    RLPML:00000000    RFCTL:00000000
+    MRQC:00000000   VT_CTL:00000000
+
+
+E1000 transmit Register.
+    TCTL:00000000 TCTL_EXT:00000000     TIPG:00000000   DTXCTL:00000000
+
+
+E1000 MAC Register.
+ PCSCFG0:00000000  PCSLCTL:00000000 PCSLSTAT:000001d1 PCSANADV:00000000
+ PCSLPAB:c26c8a40  PCSNPTX:00007fc4 PCSLPABN:c26c8a40
+
+
+E1000 RAL Register.
+   RAL00:ffffffff    RAL01:ffffffff    RAL02:01d101d1    RAL03:00010000
+   RAL04:00000002    RAL05:b19cbc50    RAL06:d101bea5    RAL07:00000000
+   RAL08:c9010009    RAL09:89038903    RAL10:c1010011    RAL11:02010000
+   RAL12:01000000    RAL13:49ff0303    RAL14:0b080100    RAL15:b1010405
+
+
+E1000 RAH Register.
+   RAH00:01000200    RAH01:010a0000    RAH02:000400a8    RAH03:30a10102
+   RAH04:20203130    RAH05:20202020    RAH06:3a392020    RAH07:30303030
+   RAH08:30303630    RAH09:20202020    RAH10:31202020    RAH11:30303a30
+   RAH12:38333030    RAH13:20203030    RAH14:20202020    RAH15:3a313120
+
+
+Internal PHY Register.
+       0:00001140        1:0000796d        2:00000154        3:000003b1
+       4:000005e1        5:0000c1e1        6:0000000f        7:00002001
+       8:00006801        9:00000600       10:00003800       11:00000000
+      12:00000000       13:00000000       14:00000000       15:00003000
+      16:00000000       17:0000000a       18:0000840a       19:00001041
+      20:00000000       21:0000000c       22:0000ff08       23:00003048
+      24:00000000       25:00000000       26:00001ac4       27:00000003
+      28:0000210a       29:00001f55       30:00000000       31:00004000
+
+
+Driver Configuration Block:
+Admin State Up MTU 1976 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/2 Cumulative Statistics:
+
+Input packet count             5147936508
+Input bytes count              2489067402678
+Input mcast packets            214220
+Input bcast packets            15
+Input CRC errors               0
+Input overruns                 2749987
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            7225
+Output bytes count             3514632
+Output mcast packets           7199
+Output bcast packets           1
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver igb ; Ver 5.3.5.20 ; FW 1.63, 0x800009fb ; bus 0000:0b:00.2
+
+
+E1000 General Register.
+    CTRL:00000000   STATUS:00000000 CTRL_EXT:00000000     MDIC:00000000
+    SCTL:00000000   CONNSW:00000000      VET:00000000   LEDCTL:00000000
+     PBA:00000000      PBS:00000000    FRTMR:00000000   TCPTMR:00000000
+
+
+E1000 interrupt Register.
+   EICS1:00000000    EICS2:00000000     EIMS:00000000     EIMC:00000000
+    EIAC:00000000     EIAM:00000000     ICS1:00000000     ICS2:00000000
+     IMS:00000000      IMC:00000000      IAC:00000000      IAM:00000000
+  IMIRVP:00000000
+
+
+E1000 flow control Register.
+    FCAL:00000000     FCAH:00000000    FCTTV:00000000    FCRTL:00000000
+   FCRTH:00000000    FCRTV:00000000
+
+
+E1000 receive Register.
+    RCTL:00000000   RXCSUM:00000000    RLPML:00000000    RFCTL:00000000
+    MRQC:00000000   VT_CTL:00000000
+
+
+E1000 transmit Register.
+    TCTL:00000000 TCTL_EXT:00000000     TIPG:00000000   DTXCTL:00000000
+
+
+E1000 MAC Register.
+ PCSCFG0:00000000  PCSLCTL:00000000 PCSLSTAT:000000c1 PCSANADV:00000000
+ PCSLPAB:c26c8a40  PCSNPTX:00007fc4 PCSLPABN:c26c8a40
+
+
+E1000 RAL Register.
+   RAL00:30303030    RAL01:35373031    RAL02:2020200a    RAL03:32202020
+   RAL04:30303a30    RAL05:30303030    RAL06:20203030    RAL07:20202020
+   RAL08:3a313220    RAL09:30303030    RAL10:63303030    RAL11:20202020
+   RAL12:32202020    RAL13:30303a32    RAL14:66663030    RAL15:20203830
+
+
+E1000 RAH Register.
+   RAH00:20202020    RAH01:3a333220    RAH02:30303030    RAH03:38343033
+   RAH04:2020200a    RAH05:32202020    RAH06:30303a34    RAH07:30303030
+   RAH08:20203030    RAH09:20202020    RAH10:3a353220    RAH11:30303030
+   RAH12:63343130    RAH13:20202020    RAH14:32202020    RAH15:30303a36
+
+
+Internal PHY Register.
+       0:00001140        1:0000796d        2:00000154        3:000003b1
+       4:000005e1        5:0000c1e1        6:0000000f        7:00002001
+       8:00006801        9:00000600       10:00003800       11:00000000
+      12:00000000       13:00000000       14:00000000       15:00003000
+      16:00000000       17:0000000a       18:0000840a       19:00001041
+      20:00000000       21:0000000c       22:0000ff08       23:00003048
+      24:00000000       25:00000000       26:000012c4       27:00000003
+      28:0000210a       29:00001f55       30:00000000       31:00000000
+
+
+Driver Configuration Block:
+Admin State Up MTU 1500 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/3 Cumulative Statistics:
+
+Input packet count             218609
+Input bytes count              16063633
+Input mcast packets            218448
+Input bcast packets            163
+Input CRC errors               0
+Input overruns                 6
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            7207
+Output bytes count             3517536
+Output mcast packets           7208
+Output bcast packets           0
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver igb ; Ver 5.3.5.20 ; FW 1.63, 0x800009fb ; bus 0000:0b:00.3
+
+
+E1000 General Register.
+    CTRL:00000000   STATUS:00000000 CTRL_EXT:00000000     MDIC:00000000
+    SCTL:00000000   CONNSW:00000000      VET:00000000   LEDCTL:00000000
+     PBA:00000000      PBS:00000000    FRTMR:00000000   TCPTMR:00000000
+
+
+E1000 interrupt Register.
+   EICS1:00000000    EICS2:00000000     EIMS:00000000     EIMC:00000000
+    EIAC:00000000     EIAM:00000000     ICS1:00000000     ICS2:00000000
+     IMS:00000000      IMC:00000000      IAC:00000000      IAM:00000000
+  IMIRVP:00000000
+
+
+E1000 flow control Register.
+    FCAL:00000000     FCAH:00000000    FCTTV:00000000    FCRTL:00000000
+   FCRTH:00000000    FCRTV:00000000
+
+
+E1000 receive Register.
+    RCTL:00000000   RXCSUM:00000000    RLPML:00000000    RFCTL:00000000
+    MRQC:00000000   VT_CTL:00000000
+
+
+E1000 transmit Register.
+    TCTL:00000000 TCTL_EXT:00000000     TIPG:00000000   DTXCTL:00000000
+
+
+E1000 MAC Register.
+ PCSCFG0:00000000  PCSLCTL:00000000 PCSLSTAT:00000021 PCSANADV:00000000
+ PCSLPAB:c26c8a40  PCSNPTX:00007fc4 PCSLPABN:c26c8a40
+
+
+E1000 RAL Register.
+   RAL00:30303a38    RAL01:31323030    RAL02:20206130    RAL03:20202020
+   RAL04:3a393220    RAL05:30303030    RAL06:35356631    RAL07:20202020
+   RAL08:33202020    RAL09:30303a30    RAL10:30303030    RAL11:20203030
+   RAL12:20202020    RAL13:3a313320    RAL14:30303030    RAL15:30303034
+
+
+E1000 RAH Register.
+   RAH00:00000000    RAH01:00000000    RAH02:0000c001    RAH03:00000000
+   RAH04:12fffd60    RAH05:00005631    RAH06:1307e020    RAH07:00005631
+   RAH08:bcc54010    RAH09:00007fc4    RAH10:00000000    RAH11:00000000
+   RAH12:000008b0    RAH13:00000001    RAH14:00000000    RAH15:00000000
+
+
+Internal PHY Register.
+       0:00001140        1:0000796d        2:00000154        3:000003b1
+       4:000005e1        5:0000cde1        6:0000000f        7:00002001
+       8:00006001        9:00000600       10:00003800       11:00000000
+      12:00000000       13:00000000       14:00000000       15:00003000
+      16:00000000       17:0000000a       18:0000840a       19:00001041
+      20:00000000       21:0000000c       22:0000ff08       23:00003048
+      24:00000000       25:00000000       26:00001ac7       27:00000003
+      28:0000210a       29:00001f55       30:00000000       31:00004000
+
+
+Driver Configuration Block:
+Admin State Up MTU 1500 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/4 Cumulative Statistics:
+
+Input packet count             0
+Input bytes count              0
+Input mcast packets            0
+Input bcast packets            0
+Input CRC errors               0
+Input overruns                 0
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            0
+Output bytes count             0
+Output mcast packets           0
+Output bcast packets           0
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver bnxt_en ; Ver 1.10.1-216.1.245.1 ; FW 216.1.245.5/pkg 216.1.245.6 ; bus 0000:01:00.0
+BROADCOM PHY 82752 Registers, Lane 0
+   0:2040       1:0082       2:ae02       3:5250       4:0011       5:008a       6:0000       7:0007
+   8:b7e1       9:0000       a:0000       b:0452       e:0000       f:0000    ffff:0000    ffd0:0000
+ffd1:0000    cd04:6608    cd09:0100    cd0a:0000    cd0c:0000    cd0d:0000    cd0f:0000    cd10:0000
+cd11:0000    cd18:0000    cd61:0808    cd62:0000    cd63:0000    cd64:0000    cd65:0000    d0d3:0000
+c161:522a    ffe0:1140    ffe1:0109    ffe4:00e0    ffe5:0000    ffe6:0000    ffe7:0000    ffe8:0000    ffef:c000
+8309:0010    830a:0820    830c:3808    830d:0000    830e:0000    d0a0:0000    d0a1:0000    d0a5:0000
+d110:0000    d111:0000    d0d1:0000    d0b4:0000    d0b5:0000
+
+
+
+Driver Configuration Block:
+Admin State Up MTU 1500 Speed 1000mbps Duplex full Autoneg On Stats Interval 5
+
+
+
+
+GigabitEthernet 0/0/5 Cumulative Statistics:
+
+Input packet count             0
+Input bytes count              0
+Input mcast packets            0
+Input bcast packets            0
+Input CRC errors               0
+Input overruns                 0
+Runt packets                   0
+Giant packets                  0
+Input pause frames             0
+Output packet count            0
+Output bytes count             0
+Output mcast packets           0
+Output bcast packets           0
+Output underruns               0
+Output pause frames            0
+
+
+
+
+Driver bnxt_en ; Ver 1.10.1-216.1.245.1 ; FW 216.1.245.5/pkg 216.1.245.6 ; bus 0000:01:00.1
+BROADCOM PHY 82752 Registers, Lane 1
+   0:2040       1:0082       2:ae02       3:5250       4:0011       5:008a       6:0000       7:0007
+   8:b7e1       9:0000       a:0000       b:0452       e:0000       f:0000    ffff:0000    ffd0:0000
+ffd1:0000    cd04:6608    cd09:0100    cd0a:0000    cd0c:0000    cd0d:0000    cd0f:0000    cd10:0000
+cd11:0000    cd18:0000    cd61:0808    cd62:0000    cd63:0000    cd64:0000    cd65:0000    d0d3:0001
+c161:522a    ffe0:1140    ffe1:0109    ffe4:00e0    ffe5:0000    ffe6:0000    ffe7:0000    ffe8:0000    ffef:c000
+8309:0010    830a:0820    830c:3808    830d:0000    830e:0000    d0a0:0000    d0a1:0000    d0a5:0000
+d110:0000    d111:0000    d0d1:0000    d0b4:0000    d0b5:0000
+

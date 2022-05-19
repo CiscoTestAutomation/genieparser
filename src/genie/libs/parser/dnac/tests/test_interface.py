@@ -74,6 +74,9 @@ class TestInterfaceRest(unittest.TestCase):
                         'speed': '1000000',
                         'status': 'down',
                         'vlanId': '0',
+                        'mtu': '1500',
+                        'owningEntityId': '315320_315320',
+                        'poweroverethernet': 0,
                     },
                 }
             }
@@ -141,6 +144,9 @@ class TestInterfaceRest(unittest.TestCase):
          'speed': '1000000',
          'status': 'down',
          'vlanId': '0',
+         'mtu': '1500',
+         'owningEntityId': '315320_315320',
+         'poweroverethernet': 0,
          'voiceVlan': None}]
     }
 

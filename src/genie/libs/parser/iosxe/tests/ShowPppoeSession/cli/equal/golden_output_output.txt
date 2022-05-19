@@ -1,0 +1,14 @@
+show pppoe session
+
+     1 client session
+
+Uniq ID  PPPoE  RemMAC          Port                    VT  VA         State
+           SID  LocMAC                                      VA-st      Type
+    N/A      3  f80b.cb77.4409  Gi0/0/3               Di100 Vi3        UP
+                4403.a743.55ed                              UP
+
+    639  17658  80b7.092d.32e6  Gi0/1/0                  4  N/A        LCP
+                bcd2.95c3.80c8
+
+     78  16095  80b7.092d.32e5  Gi0/1/1                  1  Vi2.1      PTA
+                bcd2.95c3.80c9                              UP

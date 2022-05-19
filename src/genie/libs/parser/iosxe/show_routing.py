@@ -207,19 +207,24 @@ class ShowIpRoute(ShowIpRouteSchema):
             vrf = 'default'
 
         source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
+        source_protocol_dict['ospf'] = ['O','OI','OE1','OE2','ON1','ON2','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
         source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i','su','L1','L2','ia', 'I1', 'I2']
+        source_protocol_dict['isis'] = ['i','su','L1','L2','IA', 'I1', 'I2']
         source_protocol_dict['eigrp'] = ['D','EX', '+', '%', 'p', '&']
         source_protocol_dict['static'] = ['S', '+', '%', 'p', '&']
         source_protocol_dict['mobile'] = ['M']
         source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['lisp'] = ['I', 'Ir','Ia','Id']
+        source_protocol_dict['lisp'] = ['l','la','lr','ld','lA','le','lp','ls']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
         source_protocol_dict['connected'] = ['C', '+', '%', 'p', '&']
         source_protocol_dict['local_connected'] = ['LC']
         source_protocol_dict['bgp'] = ['B', '+', '%', 'p', '&']
+        source_protocol_dict['nd'] = ['ND','NDp']
+        source_protocol_dict['Per-user Static route'] = ['U']
+        source_protocol_dict['Destination'] = ['DCE']
+        source_protocol_dict['Redirect'] = ['NDr']
+
 
         result_dict = {}
 
@@ -278,6 +283,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
         # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
+        # ND  ::/0 [2/0]
+        # NDp 2001:103::/64 [2/0]
         if self.IP_VER == 'ipv4':
             p3 = re.compile(
                 r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
@@ -285,7 +292,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         else:
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
                 r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         
@@ -320,6 +327,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
+                results_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 continue
 
             # 10.1.0.0/32 is subnetted, 1 subnets
@@ -353,6 +361,8 @@ class ShowIpRoute(ShowIpRouteSchema):
             # S   &    10.69.0.0 [1/0] via 10.34.0.1
             # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
             # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+            # ND  ::/0 [2/0]
+            # NDp 2001:103::/64 [2/0]
             m = p3.match(line)
             if m:
                 active = True
@@ -1520,7 +1530,7 @@ class ShowIpCefSchema(MetaParser):
                     Any(): {
                         'prefix': {
                             Any(): {
-                                'nexthop': {
+                                Optional('nexthop'): {
                                     Any(): {
                                         Optional('outgoing_interface'): {
                                             Any(): {
@@ -1625,6 +1635,7 @@ class ShowIpCef(ShowIpCefSchema):
         # 10.1.2.255/32        receive              GigabitEthernet2.100
         # 10.1.3.0/24          10.1.2.1             GigabitEthernet2.100
         #                      10.2.3.3             GigabitEthernet3.100
+        # ::/0, epoch 0, flags [cover, sc, defrt], RIB[S], refcnt 4, per-destination sharing
         p5 = re.compile(r'^((?P<prefix>[\w\:\.]+[\/]+[\d]+) +)?(?P<nexthop>[\w\.]+)( +(?P<interface>[^a-z][\S]+))?$')
 
         # repair: attached-nexthop 10.0.0.9 GigabitEthernet3

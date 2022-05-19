@@ -31,6 +31,8 @@
     *  show ipv6 mfib vrf {vrf} {group} {source} verbose
     * show ipv6 dhcp pool
     * show ipv6 dhcp pool {poolname}
+    * show ipv6 dhcp statistics
+    * show ipv6 dhcp binding 
 
 """
 
@@ -1383,3 +1385,303 @@ class ShowIpv6DhcpPool(ShowIpv6DhcpPoolSchema):
 
         return pool_dict
 
+
+# ====================================================
+#  schema for show ipv6 dhcp statistics
+# ====================================================
+class ShowIpv6DhcpStatisticsSchema(MetaParser):
+    """Schema for sh ipv6 dhcp statistics"""
+    schema = {
+        'total_received': int,
+        'total_sent': int,
+        'total_discarded': int,
+        'total_could_not_be_sent': int,
+        Optional('type_received'): {
+            Any(): int
+        },
+        Optional('type_sent'): {
+            Any(): int
+        },
+        Optional('failed_reason'): {
+            Any(): int
+        }
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 dhcp statistics'
+# ================================================================
+class ShowIpv6DhcpStatistics(ShowIpv6DhcpStatisticsSchema):
+    """ Parser for:
+                sh ipv6 dhcp statistics
+    """
+    cli_command = ['show ipv6 dhcp statistics']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Messages received                2
+        # Messages sent                    2
+        # Messages discarded               0
+        # Messages could not be sent       0        
+        p1 = re.compile(r'^Messages +(?P<total_type>[a-zA-Z ]+)\s+(?P<total>\d+)$')
+
+        # Messages                         Received
+        # Messages                         Sent
+        p2 = re.compile(r'^Messages\s+(?P<message_type>Received|Sent)$')
+
+        # Send message failed due to:
+        p3 = re.compile(r'^Send message +failed +due +to:$')
+
+        # SOLICIT                          1
+        # REQUEST                          1
+        # ADVERTISE                        1
+        # REPLY                            1
+        # IPv6 protocol on outgoing interface not ready            6
+        p4 = re.compile(r'^(?P<message_type>[a-zA-Z0-9 ]+)\s+(?P<count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Messages received                2
+            # Messages sent                    2
+            # Messages discarded               0
+            # Messages could not be sent       0  
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                total_type = groups['total_type'].strip().lower().replace(' ','_')
+                key = f"total_{total_type}"
+                ret_dict.update({key: int(groups['total'])})
+                continue
+
+            # Messages                         Received
+            # Messages                         Sent
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                message_type = groups['message_type'].lower()
+                key = f"type_{message_type}"
+                current_dict = ret_dict.setdefault(key, {})
+                continue
+
+            # Send message failed due to:
+            m = p3.match(line)
+            if m:
+                current_dict = ret_dict.setdefault('failed_reason', {})
+                continue
+
+            # SOLICIT                          1
+            # REQUEST                          1
+            # ADVERTISE                        1
+            # REPLY                            1
+            # IPv6 protocol on outgoing interface not ready            6
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['message_type'].strip().lower().replace(' ', '_')
+                current_dict.update({key: int(groups['count'])})
+                continue
+
+        return ret_dict
+
+# ====================================================
+#  schema for show ipv6 dhcp binding
+# ====================================================
+class ShowIpv6DhcpBindingSchema(MetaParser):
+    """Schema for show ipv6 dhcp binding"""
+    schema = {
+        'client': {
+            Any(): { # FE80::210:94FF:FE00:1
+                'duid': str,
+                'username': str,
+                'vrf': str,
+                Optional('interface'): str,
+                Optional('ia_na'): {
+                    Any(): { # 0x00000000
+                        'ia_id': str, 
+                        't1': int,
+                        't2': int,
+                        'address': {
+                            Any(): { # 3001::B151:2E66:32A4:65E9
+                                'preferred_lifetime': int,
+                                'valid_lifetime': int,
+                                'expires': {
+                                    'month': str,
+                                    'day': int,
+                                    'year': int,
+                                    'time': str,
+                                    'remaining_seconds': int # (109686 seconds)
+                                }
+                            }
+                        }
+                    }
+                },
+                Optional('ia_pd'): {
+                    Any(): { # 0x00100001
+                        'ia_id': str,
+                        't1': int,
+                        't2': int,
+                        'prefix': {
+                            Any(): { # 2001:4::/48
+                                'preferred_lifetime': int,
+                                'valid_lifetime': int,
+                                'expires': {
+                                    'month': str,
+                                    'day': int,
+                                    'year': int,
+                                    'time': str,
+                                    'remaining_seconds': int # (109686 seconds)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 dhcp binding'
+# ================================================================
+class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
+    """ Parser for:
+                show ipv6 dhcp binding
+    """
+    cli_command = ['show ipv6 dhcp binding']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        res_dict = {}
+
+        # Client: FE80::210:94FF:FE00:1 
+        p1 = re.compile(r'^(?P<client>Client):\s+(?P<client_address>\S+)$')
+
+        # DUID: 00010001534573D7001094000001
+        p2 = re.compile(r'^DUID:\s+(?P<duid>\S+)$')
+
+        # Username : unassigned
+        p3 = re.compile(r'^Username\s+:\s+(?P<username>\S+)$')
+
+        # Interface : Ethernet0/0
+        p4 = re.compile(r'^Interface\s+:\s+(?P<interface>\S+)$')
+
+        # VRF : default
+        p5 = re.compile(r'^VRF\s+:\s+(?P<vrf>\S+)$')
+
+        # IA NA: IA ID 0x00000000, T1 43200, T2 69120
+        # IA PD: IA ID 0x00100001, T1 302400, T2 483840
+        p6 = re.compile(r'^(?P<ia>[A-Z ]+):\s+IA ID\s+(?P<ia_id>\S+),\s+T1\s+(?P<t1>\d+),\s+T2\s+(?P<t2>\d+)$')
+
+        # Address: 3001::F8AB:B06E:8974:9359
+        p71 = re.compile(r'^Address:\s+(?P<ipv6_address>\S+)$')
+
+        # Prefix: 2001:4::/48
+        p72 = re.compile(r'^Prefix:\s+(?P<ipv6_prefix>\S+)$')
+
+        # preferred lifetime 86400, valid lifetime 172800
+        p8 = re.compile(r'^preferred lifetime\s+(?P<preferred_lifetime>\d+),\s+valid lifetime\s+(?P<valid_lifetime>\S+)$')
+
+        # expires at Feb 17 2022 08:58 AM (172782 seconds)
+        p9 = re.compile(r'^(?P<expires>\w+) +at\s+(?P<month>\S+)\s+(?P<day>\d+)\s+(?P<year>\d+)\s+(?P<time>[0-9A-Z :]+)\s+\((?P<remaining_seconds>\d+) +seconds\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Client: FE80::210:94FF:FE00:1 
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                client = groups['client'].lower()
+                client_address = groups['client_address']
+                client_dict = res_dict.setdefault(client, {}).setdefault(client_address, {})
+                continue
+
+            # DUID: 00010001534573D7001094000001
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({'duid' : groups['duid']})
+                continue
+
+            # Username : unassigned
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({'username' : groups['username']})
+                continue
+
+            # Interface : Ethernet0/0
+            m = p4.match(line)
+            if m:
+                client_dict.update({'interface':  m.groupdict()['interface']})
+                continue
+
+            # VRF : default
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({'vrf' : groups['vrf']})
+                continue
+
+            # IA NA: IA ID 0x00000000, T1 43200, T2 69120
+            # IA PD: IA ID 0x00100001, T1 302400, T2 483840
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ia = groups['ia'].lower().strip().replace(' ','_')
+                ia_id = groups['ia_id']
+                ia_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {})
+                ia_dict.update({
+                    'ia_id' : ia_id,
+                    't1' : int(groups['t1']),
+                    't2' : int(groups['t2'])
+                })
+                continue
+
+            # Address: 3001::F8AB:B06E:8974:9359
+            m = p71.match(line)
+            if m:
+                groups = m.groupdict()
+                address_key = 'address'
+                ipv6_address = groups['ipv6_address']
+                address_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address,{})
+                continue
+
+            # Prefix: 2001:4::/48
+            m = p72.match(line)
+            if m:
+                groups = m.groupdict()
+                address_key = 'prefix'
+                ipv6_address = groups['ipv6_prefix']
+                address_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address,{})
+                continue
+
+            # preferred lifetime 86400, valid lifetime 172800
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                address_dict.update({
+                    'preferred_lifetime' : int(groups['preferred_lifetime']),
+                    'valid_lifetime' : int(groups['valid_lifetime'])})
+                continue
+
+            # expires at Feb 17 2022 08:58 AM (172782 seconds)
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                expires = groups['expires']
+                expires_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address, {}).setdefault(expires, {})
+                expires_dict.update({
+                    'month' : groups['month'],
+                    'day' : int(groups['day']),
+                    'year' : int(groups['year']),
+                    'time' : groups['time'],
+                    'remaining_seconds' : int(groups['remaining_seconds'])
+                })
+                continue
+        return res_dict
