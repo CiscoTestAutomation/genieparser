@@ -1041,7 +1041,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Physical interface: ge-0/0/0, Enabled, Physical link is Up
         p1 = re.compile(r'^Physical +interface: +(?P<name>\S+), +'
-            r'(?P<admin_status>\S+), +Physical +link +is +(?P<oper_status>\S+)$')
+            r'(?P<admin_status>[\S ]+), +Physical +link +is +(?P<oper_status>\S+)$')
 
         # Interface index: 148, SNMP ifIndex: 526
         p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
@@ -1192,9 +1192,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         # Flags: Hardware-Down Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down))'
+        # Flags: Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.222 ]
+        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down|Device-Down))'
                          r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
-                         r' +Encapsulation: +(?P<encapsulation>\S+)$')
+                         r'( +Encapsulation: +(?P<encapsulation>\S+)$)?')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1909,7 +1910,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if_config_flags_dict.update({'iff-snmp-traps': True})
                 if group['internal_flags']:
                     if_config_flags_dict.update({'internal-flags': group['internal_flags']})
-                    logical_interface_dict.update({'encapsulation': group['encapsulation']})
+                    if group['encapsulation']:
+                        logical_interface_dict.update({'encapsulation': group['encapsulation']})
                 continue
 
             # Input packets : 133657033
