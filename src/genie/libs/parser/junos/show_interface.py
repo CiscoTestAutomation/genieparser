@@ -1193,7 +1193,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         # Flags: Hardware-Down Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         # Flags: Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.222 ]
-        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down|Device-Down))'
+        p25 = re.compile(r'^Flags: +(?P<iff_up>(Hardware-Down Device-Down|Device-Down|\S+))'
                          r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
                          r'( +Encapsulation: +(?P<encapsulation>\S+)$)?')
 
