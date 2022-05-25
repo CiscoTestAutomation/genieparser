@@ -33,7 +33,7 @@ IOSXE parsers for the following show commands:
     * show ip mfib vrf {vrf} {group} {source} verbose
     *  show ip mrib route
     * show ip mrib route {group}
-    * show ip mrib route {group} {source} 
+    * show ip mrib route {group} {source}
     * show ip mrib route vrf {vrf}
     * show ip mrib route vrf {vrf} {group}
     * show ip mrib route vrf {vrf} {group} {source}
@@ -44,6 +44,10 @@ IOSXE parsers for the following show commands:
     * show ip sla statistics aggregated
     * show ip sla statistics aggregated {probe_id}
     * show ip sla responder
+    * show ip nhrp traffic
+    * show ip nhrp traffic interface {interface}
+    * show ip nhrp traffic detail
+    * show ip nhrp traffic interface {interface} detail
     '''
 
 # Python
@@ -61,7 +65,7 @@ from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetailS
 # Schema for 'show ip aliases', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAliasSchema(MetaParser):
-    ''' 
+    '''
 	Schema for:
 	show ip aliases
 	show ip aliases vrf {vrf}
@@ -84,12 +88,12 @@ class ShowIPAliasSchema(MetaParser):
 # Parser for 'show ip aliases', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAlias(ShowIPAliasSchema):
-    ''' 
+    '''
     Parser for:
-    show ip aliases 
+    show ip aliases
     show ip aliases vrf {vrf}
     '''
-    cli_command = ['show ip aliases', 
+    cli_command = ['show ip aliases',
         'show ip aliases vrf {vrf}']
 
     def cli(self, vrf = '', output = None):
@@ -129,7 +133,7 @@ class ShowIPAlias(ShowIPAliasSchema):
                 vrf_dict['ip_address'] = group['ip_address']
                 if group['port']:
                     vrf_dict['port'] = int(group['port'])
-                
+
                 index += 1
                 continue
 
@@ -139,7 +143,7 @@ class ShowIPAlias(ShowIPAliasSchema):
 # Parser for show ip aliases default-vrf'
 # ==============================
 class ShowIPAliasDefaultVrf(ShowIPAlias):
-    ''' 
+    '''
     Parser for:
 	show ip aliases default-vrf
 	'''
@@ -150,7 +154,7 @@ class ShowIPAliasDefaultVrf(ShowIPAlias):
             show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
-    
+
         return super().cli(output = show_output)
 
 
@@ -1813,10 +1817,14 @@ class ShowIpMfibSchema(MetaParser):
                                             Optional('hw_total'): Or(str,int),
                                             Optional('hw_rpf_failed'): Or(str,int),
                                             Optional('hw_other_drops'): Or(str,int),
-                                            'incoming_interfaces':
+                                            Optional('incoming_interfaces'):
                                                 {Any():
                                                     {
-                                                     'ingress_flags': str,
+                                                     Optional('ingress_flags'): str,
+                                                     Optional('ingress_vxlan_version'): str,
+                                                     Optional('ingress_vxlan_cap'): str,
+                                                     Optional('ingress_vxlan_vni'): str,
+                                                     Optional('ingress_vxlan_nxthop'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'):
@@ -1830,6 +1838,10 @@ class ShowIpMfibSchema(MetaParser):
                                                      Optional('egress_fs_pkt_count'): Or(str,int),
                                                      Optional('egress_ps_pkt_count'): Or(str,int),
                                                      Optional('egress_pkt_rate'): Or(str,int),
+                                                     Optional('egress_vxlan_version'): str,
+                                                     Optional('egress_vxlan_cap'): str,
+                                                     Optional('egress_vxlan_vni'): str,
+                                                     Optional('egress_vxlan_nxthop'): str,
                                                     },
                                                 },
                                             },
@@ -1842,7 +1854,6 @@ class ShowIpMfibSchema(MetaParser):
                 },
             }
 
-            
 # =====================================
 # Parser for  show ip mfib
 # Parser for  show ip mfib {group}
@@ -1872,16 +1883,16 @@ class ShowIpMfib(ShowIpMfibSchema):
       show ip mfib vrf {vrf} verbose
       show ip mfib vrf {vrf} {group} verbose
       show ip mfib vrf {vrf} {group} {source} verbose"""
-    cli_command = ['show ip mfib',  
+    cli_command = ['show ip mfib',
                    'show ip mfib {group}',
                    'show ip mfib {group} {source}',
                    'show ip mfib {verbose}',
                    'show ip mfib {group} {verbose}',
-                   'show ip mfib {group} {source} {verbose}', 
-                   'show ip mfib vrf {vrf}', 
-                   'show ip mfib vrf {vrf} {group}', 
+                   'show ip mfib {group} {source} {verbose}',
+                   'show ip mfib vrf {vrf}',
+                   'show ip mfib vrf {vrf} {group}',
                    'show ip mfib vrf {vrf} {group} {source}',
-                   'show ip mfib vrf {vrf} {verbose}', 
+                   'show ip mfib vrf {vrf} {verbose}',
                    'show ip mfib vrf {vrf} {group} {verbose}',
                    'show ip mfib vrf {vrf} {group} {source} {verbose}' ]
 
@@ -1889,17 +1900,17 @@ class ShowIpMfib(ShowIpMfibSchema):
     def cli(self, vrf='Default',verbose='',group='',source='', address_family='ipv4',output=None):
         cmd="show ip mfib"
         if output is None:
-            
+
             if vrf != 'Default':
                 cmd += " vrf {vrf}".format(vrf=vrf)
-                
+
             if group:
                 cmd += " {group}".format(group=group)
             if source:
                 cmd += " {source}".format(source=source)
             if verbose:
-                cmd += " {verbose}".format(verbose=verbose)                         
-                   
+                cmd += " {verbose}".format(verbose=verbose)
+
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1919,7 +1930,7 @@ class ShowIpMfib(ShowIpMfibSchema):
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
                      '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:\s+(?P<mfib_flags>[\w\s]+)$')
+                     '\s+Flags\:(?P<mfib_flags>[\s\w\s]+$|$)')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
                    '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
@@ -1942,14 +1953,20 @@ class ShowIpMfib(ShowIpMfibSchema):
         # LISP0.1 Flags: A NS
         #  Null0 Flags: A
         #  GigabitEthernet1/0/1 Flags: A NS
+        #Tunnel0, VXLAN Decap Flags: A
+        #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
 
-        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
+        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
+                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
                          ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+        #Tunnel0, VXLAN Decap Flags: F
+        #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
                         '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
 						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
@@ -1990,7 +2007,7 @@ class ShowIpMfib(ShowIpMfibSchema):
                     multicast_group,{}).setdefault('source_address',
                     {}).setdefault(source_address,{})
 
-                sub_dict['flags'] = group['mfib_flags']
+                sub_dict['flags'] = group['mfib_flags'].strip()
                 continue
 
             sw_data=sub_dict
@@ -2023,17 +2040,27 @@ class ShowIpMfib(ShowIpMfibSchema):
             # LISP0.1 Flags: A NS
             #  Null0 Flags: A
             #  GigabitEthernet1/0/1 Flags: A NS
+            #Tunnel0, VXLAN Decap Flags: A
+            #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
             m=p7.match(line)
             if m:
                 group = m.groupdict()
                 ingress_interface = group['ingress_if']
                 ing_intf_dict = sw_data.setdefault('incoming_interfaces',{}).setdefault(ingress_interface,{})
                 ing_intf_dict['ingress_flags'] = group['ingress_flags']
+                if group['ingress_vxlan_cap']:
+                    ing_intf_dict['ingress_vxlan_cap']=group['ingress_vxlan_cap']
+                if group['ingress_vxlan_version']:
+                    ing_intf_dict['ingress_vxlan_version']=group['ingress_vxlan_version']
+                    ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                    ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 continue
 
 
             #Vlan2001 Flags: F NS
             #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+            #Tunnel0, VXLAN Decap Flags: F
+            #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
             m=p8.match(line)
 
             if m:
@@ -2059,12 +2086,18 @@ class ShowIpMfib(ShowIpMfibSchema):
                 egress_data['egress_flags'] = group['egress_flags']
                 if group['egress_underlay_mcast']:
                     egress_data['egress_underlay_mcast'] = group['egress_underlay_mcast']
+                if group['egress_vxlan_cap']:
+                    egress_data['egress_vxlan_cap']=group['egress_vxlan_cap']
+                if group['egress_vxlan_version']:
+                    egress_data['egress_vxlan_version']=group['egress_vxlan_version']
+                    egress_data['egress_vxlan_vni']=group['egress_vxlan_vni']
+                    egress_data['egress_vxlan_nxthop']=group['egress_vxlan_nxthop']
 
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
             if m:
-                group = m.groupdict()                 
+                group = m.groupdict()
                 egress_data['egress_adj_mac'] = group['egress_adj_mac']
                 continue
             #CEF: Special OCE (discard)
@@ -2087,7 +2120,7 @@ class ShowIpMribSchema(MetaParser):
     """Schema for:
        show ip mrib route
        show ip mrib route {group}
-       show ip mrib route {group} {source} 
+       show ip mrib route {group} {source}
        show ip mrib route vrf {vrf}
        show ip mrib route vrf {vrf} {group}
        show ip mrib route vrf {vrf} {group} {source}
@@ -2101,17 +2134,17 @@ class ShowIpMribSchema(MetaParser):
                         'multicast_group': {
                             Any(): {
                                 'source_address': {
-                                    Any(): {                            
+                                    Any(): {
                                         'rpf_nbr': str,
-                                        Optional('flags'): str,                                  
-                                        'incoming_interface_list': {
+                                        Optional('flags'): str,
+                                        Optional('incoming_interface_list'): {
                                             Any(): {
-                                                'ingress_flags': str,
-                                            } 
+                                                Optional('ingress_flags'): str,
+                                            }
                                         },
-                                        'egress_interface_list': {
+                                        Optional('egress_interface_list'): {
                                             Any(): {
-                                                'egress_flags': str,
+                                                Optional('egress_flags'): str,
                                                 Optional('egress_next_hop'): str,
                                             }
                                         }
@@ -2134,34 +2167,34 @@ class ShowIpMrib(ShowIpMribSchema):
     show ip mrib route vrf {vrf} {group}
     show ip mrib route vrf {vrf} {group} {source}"""
 
-    cli_command = ['show ip mrib route',  
+    cli_command = ['show ip mrib route',
                    'show ip mrib route {group}',
                    'show ip mrib route {group} {source}',
-                   'show ip mrib vrf {vrf} route', 
-                   'show ip mrib vrf {vrf} route {group}', 
+                   'show ip mrib vrf {vrf} route',
+                   'show ip mrib vrf {vrf} route {group}',
                    'show ip mrib vrf {vrf} route {group} {source}']
 
 
     def cli(self, vrf='default', group='',source='',address_family='ipv4',output=None):
         cmd="show ip mrib "
         if output is None:
-            
+
             if vrf != 'default':
-                cmd += " vrf {vrf} ".format(vrf=vrf)            
-            cmd += "route"                        
+                cmd += " vrf {vrf} ".format(vrf=vrf)
+            cmd += "route"
             if group:
                 cmd += " {group}".format(group=group)
             if source:
-                cmd += " {source}".format(source=source)               
-                  
+                cmd += " {source}".format(source=source)
+
             output = self.device.execute(cmd)
 
-        # initial variables        
+        # initial variables
         mrib_dict = {}
         sub_dict = {}
-        outgoing = False				 
-					 
-        # (*,225.1.1.1) RPF nbr: 10.10.10.1 Flags: C          
+        outgoing = False
+
+        # (*,225.1.1.1) RPF nbr: 10.10.10.1 Flags: C
         # (3.3.3.3,225.1.1.1) RPF nbr: 10.10.10.1 Flags:
         # (*,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: C
         #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
@@ -2173,23 +2206,26 @@ class ShowIpMrib(ShowIpMribSchema):
 
         # GigabitEthernet2/0/6 Flags: A NS 
         # Tunnel1 Flags: A NS  		 
+        # Vlan500 Flags: A      VXLAN Encap/Decap       Next-hop: (0.0.0.0, 1.4.0.0)
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         '\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
-						 
+                         '\s+Flags\: +(?P<ingress_flags>A[\sA-UW-Z0-9]+|[\s\w]+ +A[\sA-UW-Z0-9]+|A$)')
+
         #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
         #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
+        #  Vlan500 Flags: F      VXLAN Encap/Decap       Next-hop: (239.1.1.0, 1.4.0.0)
         p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
-                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
+                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+((\s+)?VXLAN Encap\/Decap(\s+)?)?Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))$')
 
         #  Vlan2006 Flags: F LI NS
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
+                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')
+
 
 
         for line in output.splitlines():
             line=(line.strip()).replace('\t',' ')
-            mrib_dict.setdefault('vrf',{})         
-            mrib_data = mrib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})     
+            mrib_dict.setdefault('vrf',{})
+            mrib_data = mrib_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
             #  (*,225.1.1.1) Flags: C HW
             # (70.1.1.10,225.1.1.1) Flags: HW
             #  (*,FF05:1:1::1) Flags: C HW
@@ -2205,33 +2241,33 @@ class ShowIpMrib(ShowIpMribSchema):
                 sub_dict = mrib_data['multicast_group']\
                     .setdefault(multicast_group,{})\
                     .setdefault('source_address',{})\
-                    .setdefault(source_address,{})                
+                    .setdefault(source_address,{})
                 sub_dict['rpf_nbr'] = m.groupdict()['RPF_nbr']
                 sub_dict['flags'] = m.groupdict()['mrib_flags']
-                
+
                 continue
-                
-            # GigabitEthernet2/0/6 Flags: A NS	
-            # Tunnel50 Flags: A            
+
+            # GigabitEthernet2/0/6 Flags: A NS
+            # Tunnel50 Flags: A
             sw_data=sub_dict
             m=p2.match(line)
             if m:
                 group = m.groupdict()
                 ingress_interface = group['ingress_if']
-                ing_intf_dict=sw_data.setdefault('incoming_interface_list',{}).setdefault(ingress_interface,{})   
+                ing_intf_dict=sw_data.setdefault('incoming_interface_list',{}).setdefault(ingress_interface,{})
                 ing_intf_dict['ingress_flags'] = group['ingress_flags']
                 continue
-                    
 
-            #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154 
+
+            #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
             # LISP0.1 Flags: F NS	Next-hop: (100.11.11.11, 235.1.3.167)
             m=p3.match(line)
             if m:
                 group = m.groupdict()
-                egress_interface = group['egress_if']  
+                egress_interface = group['egress_if']
 
                 if group['egress_next_hop']:
-                     
+
                     egress_next_hop = group['egress_next_hop']
                     #Overlay interfaces have multiple egress interfaces with same  ID
                     #appending egress interface with nexthop to get complete data structure
@@ -2241,24 +2277,24 @@ class ShowIpMrib(ShowIpMribSchema):
 
                     egress_interface = group['egress_if']+'-'+egress_next_hop
 
-                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})  
-                egress_data['egress_flags'] = group['egress_flags']                 
+                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})
+                egress_data['egress_flags'] = group['egress_flags']
                 egress_data['egress_next_hop'] =  group['egress_next_hop']
-                   
-                continue    
+
+                continue
 
             # Vlan2001 Flags: F NS
             m=p4.match(line)
             if m:
                 group = m.groupdict()
-                egress_flags = group['egress_flags'] 
+                egress_flags = group['egress_flags']
                 egress_interface = group['egress_if']
-                    
-                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})                                    
-                egress_data['egress_flags'] = egress_flags                  
-                  
-                continue                     
-                       
+
+                egress_data=sw_data.setdefault('egress_interface_list',{}).setdefault(egress_interface,{})
+                egress_data['egress_flags'] = egress_flags
+
+                continue
+
         return mrib_dict
 
 # ===============================
@@ -2269,7 +2305,7 @@ class ShowIpMrib(ShowIpMribSchema):
 class ShowIpSlaStatisticsSchema(MetaParser):
     ''' Schema for:
         * "show ip sla statistics"
-        * "show ip sla statistics {probe_id}" 
+        * "show ip sla statistics {probe_id}"
     '''
     schema = {
         'ids': {
@@ -2280,12 +2316,12 @@ class ShowIpSlaStatisticsSchema(MetaParser):
                 Optional('return_code'): str,
                 Optional('no_of_success'): int,
                 Optional('no_of_failures'): int,
-                Optional('ttl'): int,	
+                Optional('ttl'): int,
                 Optional('return_code'): str,
-                Optional('oper_id'): int,	
+                Optional('oper_id'): int,
                 Optional('no_of_failures'): int,
                 Optional('delay'): str,
-                Optional('destination'): str,		
+                Optional('destination'): str,
             },
         }
     }
@@ -2312,10 +2348,10 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
                 cmd = self.cli_command[0]
 
             output = self.device.execute(cmd)
-        
+
         # Initialize dictionary
         parsed_dict = {}
-        
+
         # IPSLA operation id: 1
         p1 = re.compile(r'^IPSLA operation id: (?P<probe_id>\d+)$')
 
@@ -2337,7 +2373,7 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
         # Operation time to live: 3569 sec
         p7 = re.compile(r'^Operation time to live: (?P<ttl>\d+).*$')
 
-        # oper-id        status               lossSD       delay                  destination                             
+        # oper-id        status               lossSD       delay                  destination
         # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
         p8 = re.compile(r'^(?P<oper_id>^\d+)\s+'
                 r'(?P<return_code>\w+)\s+'
@@ -2347,7 +2383,7 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # IPSLA operation id: 1
             m = p1.match(line)
             if m:
@@ -2399,7 +2435,7 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
                 id_dict.update({'ttl':int(group['ttl'])})
                 continue
 
-            # oper-id        status               lossSD       delay                  destination                             
+            # oper-id        status               lossSD       delay                  destination
             # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
             m = p8.match(line)
             if m:
@@ -2441,7 +2477,7 @@ class ShowIpSlaStatisticsDetailsSchema(MetaParser):
                 Optional('type_of_operation'): str,
                 Optional('delay'): str,
                 Optional('destination'): str,
-                Optional('oper_id'): int,		
+                Optional('oper_id'): int,
             },
         }
     }
@@ -2470,7 +2506,7 @@ class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
             output = self.device.execute(cmd)
         # Initialize dictionary
         parsed_dict = {}
-            
+
         # IPSLA operation id: 50
         p1 = re.compile(r'^IPSLA operation id: (?P<probe_id>\d+)$')
 
@@ -2504,7 +2540,7 @@ class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
         # Type of operation: mcast
         p11 = re.compile(r'^Type of operation: (?P<type_of_operation>.*)$')
 
-        # oper-id        status               lossSD       delay                  destination                             
+        # oper-id        status               lossSD       delay                  destination
         # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
         p12 = re.compile(r'^(?P<oper_id>^\d+)\s+'
                 r'(?P<return_code>\w+)\s+'
@@ -2523,7 +2559,7 @@ class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
                 id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
                 id_dict.update({'probe_id':int(group['probe_id'])})
                 continue
-            
+
             # Latest RTT: 1 milliseconds
             m = p2.match(line)
             if m:
@@ -2594,7 +2630,7 @@ class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
                 id_dict.update({'type_of_operation':group['type_of_operation']})
                 continue
 
-            # oper-id        status               lossSD       delay                  destination                             
+            # oper-id        status               lossSD       delay                  destination
             # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
             m = p12.match(line)
             if m:
@@ -2606,7 +2642,7 @@ class ShowIpSlaStatisticsDetails(ShowIpSlaStatisticsDetailsSchema):
                     'delay': group['delay'],
                     'destination': group['destination']})
                 continue
-                
+
         return parsed_dict
 
 # ===============================
@@ -2628,7 +2664,7 @@ class ShowIpSlaStatisticsAggregatedSchema(MetaParser):
                 Optional('type_of_operation'): str,
                 # Optional('operation_status'): str,
                 Optional('start_time'): {
-                    Any(): { 
+                    Any(): {
                         Optional('no_of_success'): int,
                         Optional('no_of_failures'): int,
                         Optional('oper_id'): int,
@@ -2640,7 +2676,7 @@ class ShowIpSlaStatisticsAggregatedSchema(MetaParser):
                         Optional('tcp_connection_rtt'): int,
                         Optional('http_transaction_rtt'): int,
                     }
-                },	
+                },
             }
         }
     }
@@ -2685,14 +2721,14 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
         # Number of failures: 0
         p5 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
 
-        # oper-id        status               lossSD       delay                  destination                             
+        # oper-id        status               lossSD       delay                  destination
         # 60988531       OK                   0            985992/996505/1057999             10.50.10.100
         p6 = re.compile(r'^(?P<oper_id>^\d+)\s+'
                 r'(?P<status>\w+)\s+'
                 r'(?P<loss_sd>\d+)\s+'
                 r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
                 r'(?P<destination>.*)$')
-        
+
         # DNS RTT: 0
         p7 = re.compile(r'^DNS RTT: (?P<dns_rtt>\d+)$')
 
@@ -2701,11 +2737,11 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
 
         # HTTP Transaction RTT: 360
         p9 = re.compile(r'^HTTP Transaction RTT: (?P<http_transaction_rtt>\d+)$')
-        
+
 
         for line in output.splitlines():
             line = line.strip()
-          
+
             # IPSLA operation id: 50
             m = p1.match(line)
             if m:
@@ -2728,7 +2764,7 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
                 group = m.groupdict()
                 start_time_dict = id_dict.setdefault('start_time', {}).setdefault(group['start_time'], {})
                 continue
-            
+
             # Number of successes: 60
             m = p4.match(line)
             if m:
@@ -2743,7 +2779,7 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
                 start_time_dict.update({'no_of_failures':int(group['no_of_failures'])})
                 continue
 
-            # oper-id        status               lossSD       delay                  destination                             
+            # oper-id        status               lossSD       delay                  destination
             # 60988531       OK                   0            985992/996505/1057999             10.50.10.100
             m = p6.match(line)
             if m:
@@ -2762,7 +2798,7 @@ class ShowIpSlaStatisticsAggregated(ShowIpSlaStatisticsAggregatedSchema):
                 group = m.groupdict()
                 start_time_dict.update({'dns_rtt': int(group['dns_rtt'])})
                 continue
-            
+
             # TCP Connection RTT: 56
             m = p8.match(line)
             if m:
@@ -2862,7 +2898,7 @@ class ShowIpSlaResponder(ShowIpSlaResponderSchema):
                 id_dict.update({'permanent_responder':group['permanent_responder']})
                 continue
 
-        return parsed_dict 
+        return parsed_dict
 
 
 class ShowIpDhcpBindingSchema(MetaParser):
@@ -3294,3 +3330,351 @@ class ShowIpDhcpServerStatistics(ShowIpDhcpServerStatisticsSchema):
                 continue
 
         return parsed_dict
+
+# ====================================================
+# Parser for 'show ip nhrp traffic'
+#            'show ip nhrp traffic interface {tunnel}'
+# ====================================================
+
+class ShowIpNhrpTrafficSchema(MetaParser):
+    """Schema for show ip nhrp traffic
+                  show ip nhrp traffic interface {tunnel}
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'max_send_limit': str,
+                'usage': str,
+                Or('sent', 'rcvd'): {
+                      'total': int,
+                      'resolution_request': int,
+                      'resolution_reply': int,
+                      'registration_request': int,
+                      'registration_reply': int,
+                      'purge_request': int,
+                      'purge_reply': int,
+                      'error_indication': int,
+                      'traffic_indication': int,
+                      'redirect_supress': int
+                },
+            }
+        }
+    }
+
+class ShowIpNhrpTraffic(ShowIpNhrpTrafficSchema):
+    """Parser for 'show ip nhrp traffic'
+                  'show ip nhrp traffic interface {interface}'
+    """
+
+    cli_command = ['show ip nhrp traffic', 'show ip nhrp traffic interface {interface}']
+    def cli(self, interface=None, output=None):
+
+        if interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+):\s+'
+                        'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
+                        'Usage:(?P<usage>\d+%)$')
+
+        # Sent: Total 4527
+        p2 = re.compile(r'^Sent:\s+Total\s+(?P<total>\d+)$')
+
+        # Rcvd: Total 4524
+        p3 = re.compile(r'^Rcvd:\s+Total\s+(?P<total>\d+)$')
+
+        # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
+        p4 = re.compile(r'^(?P<resolution_request>\d+)\s+Resolution\s+Request\s+'
+                        '(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
+                        '(?P<registration_request>\d+)\s+Registration\s+Request$')
+
+        # 0 Registration Reply  41 Purge Request  0 Purge Reply
+        p5 = re.compile(r'^(?P<registration_reply>\d+)\s+Registration\s+Reply\s+'
+                        '(?P<purge_request>\d+)\s+Purge\s+Request\s+'
+                        '(?P<purge_reply>\d+)\s+Purge\s+Reply$')
+
+        # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+        p6 = re.compile(r'^(?P<error_indication>\d+)\s+Error\s+Indication\s+'
+                        '(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
+                        '(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tunnel100
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                interface_dict = ret_dict.setdefault('interface', {})
+                tunnel_int_dict = interface_dict.setdefault(group['interface'], {})
+                tunnel_int_dict.update({
+                    'max_send_limit': group['max_send_limit'],
+                    'usage': group['usage']
+                })
+                continue
+
+            # Sent: Total 4527
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                attr_dict = tunnel_int_dict.setdefault('sent', {})
+                attr_dict.update({
+                    'total': int(group['total']),
+                })
+                continue
+
+            # Rcvd: Total 4524
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                attr_dict = tunnel_int_dict.setdefault('rcvd', {})
+                attr_dict.update({
+                    'total': int(group['total'])
+                })
+                continue
+
+            # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                attr_dict.update({
+                    'resolution_request': int(group['resolution_request']),
+                    'resolution_reply': int(group['resolution_reply']),
+                    'registration_request': int(group['registration_request'])
+                })
+                continue
+
+            # 0 Registration Reply  41 Purge Request  0 Purge Reply
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                attr_dict.update({
+                    'registration_reply': int(group['registration_reply']),
+                    'purge_request': int(group['purge_request']),
+                    'purge_reply': int(group['purge_reply'])
+                })
+                continue
+
+            # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                attr_dict.update({
+                    'error_indication': int(group['error_indication']),
+                    'traffic_indication': int(group['traffic_indication']),
+                    'redirect_supress': int(group['redirect_supress'])
+                })
+                continue
+
+        return ret_dict
+
+# ============================================================
+# Parser for 'show ip nhrp traffic detail'
+#            'show ip nhrp traffic interface {tunnel} detail'
+# ============================================================
+
+class ShowIpNhrpTrafficDetailSchema(MetaParser):
+    """Schema for show ip nhrp traffic detail
+                  show ip nhrp traffic interface {tunnel} detail
+    """
+    schema = {
+        'statistics': {
+            'global_statistics': {
+                'packet': int,
+                'queue': int,
+                'size': int,
+                Or('sent', 'rcvd'): {
+                    'total': int,
+                    'resolution_request': int,
+                    'resolution_reply': int,
+                    'registration_request': int,
+                    'registration_reply': int,
+                    'purge_request': int,
+                    'purge_reply': int,
+                    'error_indication': int,
+                    'traffic_indication': int,
+                    'redirect_supress': int
+                }
+            },
+            Any(): {
+                'max_send_limit': str,
+                'usage': str,
+                Or('sent', 'rcvd', 'fwd'): {
+                    'total': int,
+                    'resolution_request': int,
+                    'resolution_reply': int,
+                    'registration_request': int,
+                    'registration_reply': int,
+                    'purge_request': int,
+                    'purge_reply': int,
+                    'error_indication': int,
+                    'traffic_indication': int,
+                    'redirect_supress': int
+                }
+            }
+        }
+    }
+
+class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
+    """Parser for 'show ip nhrp traffic detail'
+                  'show ip nhrp traffic interface {interface} detail'
+    """
+
+    cli_command = ['show ip nhrp traffic detail',
+                   'show ip nhrp traffic interface {interface} detail']
+    def cli(self, interface=None, output=None):
+
+        if interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Global statistics:
+        p1 = re.compile('^Global statistics:$')
+
+        # Packet Queue size: 0[0](1)
+        p2 = re.compile(r'^Packet\s+Queue\s+size:\s+(?P<packet>\d+)'
+                        '\[(?P<queue>\d+)\]\((?P<size>\d+)\)$')
+
+        # Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
+        p3 = re.compile(r'^(?P<interface>[\w\/\.\-]+):\s+'
+                        'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
+                        'Usage:(?P<usage>\d+%)$')
+
+        # Sent: Total 4527
+        p4 = re.compile(r'^Sent:\s+Total\s+(?P<total>\d+)$')
+
+        # Rcvd: Total 4524
+        p5 = re.compile(r'^Rcvd:\s+Total\s+(?P<total>\d+)$')
+
+        # Fwd: Total 0
+        p6 = re.compile(r'^Fwd:\s+Total\s+(?P<total>\d+)$')
+
+        # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
+        p7 = re.compile(r'^(?P<resolution_request>\d+)\s+Resolution\s+Request\s+'
+                        '(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
+                        '(?P<registration_request>\d+)\s+Registration\s+Request$')
+
+        # 0 Registration Reply  41 Purge Request  0 Purge Reply
+        p8 = re.compile(r'^(?P<registration_reply>\d+)\s+Registration\s+Reply\s+'
+                        '(?P<purge_request>\d+)\s+Purge\s+Request\s+'
+                        '(?P<purge_reply>\d+)\s+Purge\s+Reply$')
+
+        # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+        p9 = re.compile(r'^(?P<error_indication>\d+)\s+Error\s+Indication\s+'
+                        '(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
+                        '(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Global statistics:
+            m1 = p1.match(line)
+            if m1:
+                statistics_dict = ret_dict.setdefault('statistics', {})
+                tunnel_global_dict = statistics_dict.setdefault('global_statistics', {})
+                continue
+
+            # Packet Queue size: 0[0](1)
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                tunnel_global_dict.update({
+                    'packet': int(group['packet']),
+                    'queue': int(group['queue']),
+                    'size': int(group['size'])
+                })
+                continue
+
+            # Tunnel100
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                tunnel_global_dict = statistics_dict.setdefault(group['interface'], {})
+                tunnel_global_dict.update({
+                    'max_send_limit': group['max_send_limit'],
+                    'usage': group['usage']
+                })
+                continue
+
+            # Sent: Total 4527
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                attr_dict = tunnel_global_dict.setdefault('sent', {})
+                attr_dict.update({
+                    'total': int(group['total']),
+                })
+                continue
+
+            # Rcvd: Total 4524
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                attr_dict = tunnel_global_dict.setdefault('rcvd', {})
+                attr_dict.update({
+                    'total': int(group['total'])
+                })
+                continue
+
+            # Fwd: Total 0
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                attr_dict = tunnel_global_dict.setdefault('fwd', {})
+                attr_dict.update({
+                    'total': int(group['total'])
+                })
+                continue
+
+            # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                attr_dict.update({
+                    'resolution_request': int(group['resolution_request']),
+                    'resolution_reply': int(group['resolution_reply']),
+                    'registration_request': int(group['registration_request'])
+                })
+                continue
+
+            # 0 Registration Reply  41 Purge Request  0 Purge Reply
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                attr_dict.update({
+                    'registration_reply': int(group['registration_reply']),
+                    'purge_request': int(group['purge_request']),
+                    'purge_reply': int(group['purge_reply'])
+                })
+                continue
+
+            # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                attr_dict.update({
+                    'error_indication': int(group['error_indication']),
+                    'traffic_indication': int(group['traffic_indication']),
+                    'redirect_supress': int(group['redirect_supress'])
+                })
+                continue
+
+        return ret_dict
+

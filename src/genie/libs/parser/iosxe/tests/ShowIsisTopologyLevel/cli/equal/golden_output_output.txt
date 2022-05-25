@@ -1,0 +1,6 @@
+Tag nSVL-1:
+
+IS-IS TID 0 paths to level-2 routers
+System Id            Metric     Next-Hop             Interface   SNPA
+sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
+sw.40B5C1FFEE00      --

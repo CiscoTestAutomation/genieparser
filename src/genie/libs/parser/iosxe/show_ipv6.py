@@ -1498,13 +1498,34 @@ class ShowIpv6DhcpBindingSchema(MetaParser):
                 'duid': str,
                 'username': str,
                 'vrf': str,
-                'ia_na': {
-                    Any(): { 
+                Optional('interface'): str,
+                Optional('ia_na'): {
+                    Any(): { # 0x00000000
                         'ia_id': str, 
                         't1': int,
                         't2': int,
                         'address': {
                             Any(): { # 3001::B151:2E66:32A4:65E9
+                                'preferred_lifetime': int,
+                                'valid_lifetime': int,
+                                'expires': {
+                                    'month': str,
+                                    'day': int,
+                                    'year': int,
+                                    'time': str,
+                                    'remaining_seconds': int # (109686 seconds)
+                                }
+                            }
+                        }
+                    }
+                },
+                Optional('ia_pd'): {
+                    Any(): { # 0x00100001
+                        'ia_id': str,
+                        't1': int,
+                        't2': int,
+                        'prefix': {
+                            Any(): { # 2001:4::/48
                                 'preferred_lifetime': int,
                                 'valid_lifetime': int,
                                 'expires': {
@@ -1546,20 +1567,27 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
         # Username : unassigned
         p3 = re.compile(r'^Username\s+:\s+(?P<username>\S+)$')
 
+        # Interface : Ethernet0/0
+        p4 = re.compile(r'^Interface\s+:\s+(?P<interface>\S+)$')
+
         # VRF : default
-        p4 = re.compile(r'^VRF\s+:\s+(?P<vrf>\S+)$')
+        p5 = re.compile(r'^VRF\s+:\s+(?P<vrf>\S+)$')
 
         # IA NA: IA ID 0x00000000, T1 43200, T2 69120
-        p5 = re.compile(r'^(?P<ia_na>[A-Z ]+):\s+IA ID\s+(?P<ia_id>\S+),\s+T1\s+(?P<t1>\d+),\s+T2\s+(?P<t2>\d+)$')
+        # IA PD: IA ID 0x00100001, T1 302400, T2 483840
+        p6 = re.compile(r'^(?P<ia>[A-Z ]+):\s+IA ID\s+(?P<ia_id>\S+),\s+T1\s+(?P<t1>\d+),\s+T2\s+(?P<t2>\d+)$')
 
         # Address: 3001::F8AB:B06E:8974:9359
-        p6 = re.compile(r'^(?P<address>Address):\s+(?P<ipv6_address>\S+)$')
+        p71 = re.compile(r'^Address:\s+(?P<ipv6_address>\S+)$')
+
+        # Prefix: 2001:4::/48
+        p72 = re.compile(r'^Prefix:\s+(?P<ipv6_prefix>\S+)$')
 
         # preferred lifetime 86400, valid lifetime 172800
-        p7 = re.compile(r'^preferred lifetime\s+(?P<preferred_lifetime>\d+),\s+valid lifetime\s+(?P<valid_lifetime>\S+)$')
+        p8 = re.compile(r'^preferred lifetime\s+(?P<preferred_lifetime>\d+),\s+valid lifetime\s+(?P<valid_lifetime>\S+)$')
 
         # expires at Feb 17 2022 08:58 AM (172782 seconds)
-        p8 = re.compile(r'^(?P<expires>\w+) +at\s+(?P<month>\S+)\s+(?P<day>\d+)\s+(?P<year>\d+)\s+(?P<time>[0-9A-Z :]+)\s+\((?P<remaining_seconds>\d+) +seconds\)$')
+        p9 = re.compile(r'^(?P<expires>\w+) +at\s+(?P<month>\S+)\s+(?P<day>\d+)\s+(?P<year>\d+)\s+(?P<time>[0-9A-Z :]+)\s+\((?P<remaining_seconds>\d+) +seconds\)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1587,36 +1615,54 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
                 client_dict.update({'username' : groups['username']})
                 continue
 
-            # VRF : default
+            # Interface : Ethernet0/0
             m = p4.match(line)
+            if m:
+                client_dict.update({'interface':  m.groupdict()['interface']})
+                continue
+
+            # VRF : default
+            m = p5.match(line)
             if m:
                 groups = m.groupdict()
                 client_dict.update({'vrf' : groups['vrf']})
                 continue
 
             # IA NA: IA ID 0x00000000, T1 43200, T2 69120
-            m = p5.match(line)
+            # IA PD: IA ID 0x00100001, T1 302400, T2 483840
+            m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                ia_na = groups['ia_na'].lower().strip().replace(' ','_')
-                ia_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia_na, {}).setdefault('iaid', {})
+                ia = groups['ia'].lower().strip().replace(' ','_')
+                ia_id = groups['ia_id']
+                ia_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {})
                 ia_dict.update({
-                    'ia_id' : groups['ia_id'],
+                    'ia_id' : ia_id,
                     't1' : int(groups['t1']),
                     't2' : int(groups['t2'])
                 })
                 continue
+
             # Address: 3001::F8AB:B06E:8974:9359
-            m = p6.match(line)
+            m = p71.match(line)
             if m:
                 groups = m.groupdict()
-                address = groups['address'].lower()
+                address_key = 'address'
                 ipv6_address = groups['ipv6_address']
-                address_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia_na, {}).setdefault('iaid', {}).setdefault(address, {}).setdefault(ipv6_address,{})
+                address_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address,{})
+                continue
+
+            # Prefix: 2001:4::/48
+            m = p72.match(line)
+            if m:
+                groups = m.groupdict()
+                address_key = 'prefix'
+                ipv6_address = groups['ipv6_prefix']
+                address_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address,{})
                 continue
 
             # preferred lifetime 86400, valid lifetime 172800
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 groups = m.groupdict()
                 address_dict.update({
@@ -1625,11 +1671,11 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
                 continue
 
             # expires at Feb 17 2022 08:58 AM (172782 seconds)
-            m = p8.match(line)
+            m = p9.match(line)
             if m:
                 groups = m.groupdict()
                 expires = groups['expires']
-                expires_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia_na, {}).setdefault('iaid', {}).setdefault(address, {}).setdefault(ipv6_address, {}).setdefault(expires, {})
+                expires_dict = res_dict.setdefault(client, {}).setdefault(client_address, {}).setdefault(ia, {}).setdefault(ia_id, {}).setdefault(address_key, {}).setdefault(ipv6_address, {}).setdefault(expires, {})
                 expires_dict.update({
                     'month' : groups['month'],
                     'day' : int(groups['day']),

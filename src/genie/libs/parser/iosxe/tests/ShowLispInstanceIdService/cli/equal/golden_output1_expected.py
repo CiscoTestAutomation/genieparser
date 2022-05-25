@@ -39,8 +39,7 @@ expected_output = {
                     'delegated_database_tree': 'disabled',
                     'mcast_flood_access_tunnel': False,
                     'pub_sub': {
-                        'role': True,
-                        'publishers': []
+                        'role': True
                         },
                     'site_registration_limit': 0,
                     'map_resolvers': {

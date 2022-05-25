@@ -1,0 +1,192 @@
+show evpn evi mac private
+Tue Mar  1 04:29:54.625 PST
+
+VPN-ID     Encap      MAC address    IP address                               Nexthop                                 Label    SID
+---------- ---------- -------------- ---------------------------------------- --------------------------------------- -------- ---------------------------------------
+2          SRv6       0012.0001.0002 ::                                       Bundle-Ether1.2                         0        cafe:0:128:e1ab::
+                                                                                                         SID flags: 0, Endpt behavior: 67
+   Ethernet Tag                            : 0
+   Multi-paths Resolved                    : False
+   Multi-paths Internal label              : 0
+   Local Static                            : Yes
+   Remote Static                           : No
+   Local Ethernet Segment                  : 0012.1212.1212.1212.1212
+   Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+   Local Sequence Number                   : 0
+   Remote Sequence Number                  : 0
+   Local Encapsulation                     : SRv6
+   Remote Encapsulation                    : N/A
+   Local E-Tree                            : Root
+   Remote E-Tree                           : Root
+   Remote matching E-Tree RT               : No
+   Local AC-ID                             : 0x2
+   Remote AC-ID                            : 0x0
+   ESI Port Key                            : 5dc0
+   Source                                  : Local
+   Flush Requested                         : 0
+   Flush Received                          : 0
+   SOO Nexthop                             : ::
+   Ext Flags                               : 0x00000000
+   BP XCID                                 : 0xa0000002
+   BP IFH                                  : 0x2000806e
+   MAC State                               : Local
+   MAC Producers                           : 0x2 (Best: 0x2)
+   Local Router MAC                        : 0000.0000.0000
+   L3 Label                                : 0
+
+   Object: EVPN MAC
+   Base info: version=0xdbdb0008, flags=0x8024100, type=8, reserved=0
+   EVPN MAC event history  [Num events: 5]
+   ----------------------------------------------------------------------------
+     Time                Event                         Flags      Flags
+     ====                =====                         =====      =====
+     Feb 28 01:08:42.112 Create                        00000000 00000000 -  -
+     Feb 28 01:08:42.112 Got L2RIB update              00024000 00000000 -  -
+     Feb 28 01:08:42.112 Advertise to BGP              08226190 00000000 -  -
+     Feb 28 01:08:42.112 FSM Event (event, state)      00000000 00010000 -  -
+     Feb 28 01:08:42.112 Encode NLRI                   08226190 08000000 M  -
+   ----------------------------------------------------------------------------
+2          SRv6       0012.0002.0002 ::                                       Bundle-Ether1.2                         0        cafe:0:128:e1ab::
+                                                                                                         SID flags: 0, Endpt behavior: 67
+   Ethernet Tag                            : 0
+   Multi-paths Resolved                    : False
+   Multi-paths Internal label              : 0
+   Local Static                            : No
+   Remote Static                           : No
+   Local Ethernet Segment                  : 0012.1212.1212.1212.1212
+   Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+   Local Sequence Number                   : 1
+   Remote Sequence Number                  : 0
+   Local Encapsulation                     : SRv6
+   Remote Encapsulation                    : N/A
+   Local E-Tree                            : Root
+   Remote E-Tree                           : Root
+   Remote matching E-Tree RT               : No
+   Local AC-ID                             : 0x2
+   Remote AC-ID                            : 0x2
+   ESI Port Key                            : 5dc0
+   Source                                  : Local
+   Flush Requested                         : 0
+   Flush Received                          : 0
+   SOO Nexthop                             : ::
+   Ext Flags                               : 0x00000000
+   BP XCID                                 : 0xa0000002
+   BP IFH                                  : 0x2000806e
+   MAC State                               : Local
+   MAC Producers                           : 0x1 (Best: 0x1)
+   Local Router MAC                        : 0000.0000.0000
+   L3 Label                                : 0
+
+   Object: EVPN MAC
+   Base info: version=0xdbdb0008, flags=0x8004500, type=8, reserved=0
+   EVPN MAC event history  [Num events: 16]
+   ----------------------------------------------------------------------------
+     Time                Event                         Flags      Flags
+     ====                =====                         =====      =====
+     Feb 28 01:08:59.136 Got BGP upd/del               00ff0102 00000001 -  -
+     Feb 28 01:08:59.136 Modify Redundant              00000000 00000000 -  -
+     Feb 28 01:08:59.136 FSM Event (event, state)      00000002 00030003 -  -
+     Feb 28 01:08:59.136 L2RIB Download                0a000005 01000000 -  -
+     Feb 28 01:08:59.264 Remote MAC become local       00000000 00000000 -  -
+     Feb 28 01:08:59.264 Modify                        00102899 00000000 -  -
+     Feb 28 01:08:59.264 Advertise to BGP              083c6590 40000000 -  -
+     Feb 28 01:08:59.264 Got L2RIB update              083c6590 00000000 -  -
+     Feb 28 01:08:59.264 Advertise to BGP              083c6590 40000000 -  -
+     Feb 28 01:08:59.264 FSM Event (event, state)      00000000 00050003 -  -
+     Feb 28 01:08:59.264 Encode NLRI                   083c6590 08010000 M  -
+     Feb 28 01:08:59.264 Delete                        00000001 00000000 -  -
+     Feb 28 01:08:59.264 Advertise to BGP              09206590 40000000 -  -
+     Feb 28 01:08:59.264 FSM Event (event, state)      00000004 00010005 -  -
+     Feb 28 01:08:59.264 L2RIB Download                00000000 00000000 -  -
+     Feb 28 01:08:59.264 Encode NLRI                   08206590 08010000 M  -
+   ----------------------------------------------------------------------------
+2          SRv6       0034.0001.0002 ::                                       3.3.3.3                                 IMP-NULL cafe:0:300:e002::
+                                                                                                         SID flags: 0, Endpt behavior: 67
+                                                                                                         SID struct: Block  Node  Func  Arg
+                                                                                                                     32     16    16    0
+                                                                                                         Transposition (len, offset): 16, 48
+   Ethernet Tag                            : 0
+   Multi-paths Resolved                    : True
+   Multi-paths Internal label              : None
+   Local Static                            : No
+   Remote Static                           : Yes
+   Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+   Remote Ethernet Segment                 : 0034.3434.3434.3434.3434
+   Local Sequence Number                   : 0
+   Remote Sequence Number                  : 0
+   Local Encapsulation                     : N/A
+   Remote Encapsulation                    : SRv6
+   Local E-Tree                            : Root
+   Remote E-Tree                           : Root
+   Remote matching E-Tree RT               : No
+   Local AC-ID                             : 0x0
+   Remote AC-ID                            : 0x2
+   ESI Port Key                            : 0
+   Source                                  : Remote
+   Flush Requested                         : 0
+   Flush Received                          : 0
+   SOO Nexthop                             : 3.3.3.3
+   Ext Flags                               : 0x00000000
+   BP XCID                                 : 0xffffffff
+   Stamped XCID                            : 0xffffffff
+   BP IFH                                  : 0x0
+   MAC State                               : Remote
+   MAC Producers                           : 0x0 (Best: 0x0)
+   Local Router MAC                        : 0000.0000.0000
+   L3 Label                                : 0
+
+   Object: EVPN MAC
+   Base info: version=0xdbdb0008, flags=0x200c0000, type=8, reserved=0
+   EVPN MAC event history  [Num events: 3]
+   ----------------------------------------------------------------------------
+     Time                Event                         Flags      Flags
+     ====                =====                         =====      =====
+     Feb 28 01:42:30.784 Create                        00000000 00000000 -  -
+     Feb 28 01:42:30.784 FSM Event (event, state)      00000001 00020000 -  -
+     Feb 28 01:42:31.040 L2RIB Download                0a000048 11000000 -  -
+   ----------------------------------------------------------------------------
+2          SRv6       0034.0002.0002 ::                                       3.3.3.3                                 IMP-NULL cafe:0:300:e002::
+                                                                                                         SID flags: 0, Endpt behavior: 67
+                                                                                                         SID struct: Block  Node  Func  Arg
+                                                                                                                     32     16    16    0
+                                                                                                         Transposition (len, offset): 16, 48
+   Ethernet Tag                            : 0
+   Multi-paths Resolved                    : True
+   Multi-paths Internal label              : None
+   Local Static                            : No
+   Remote Static                           : No
+   Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+   Remote Ethernet Segment                 : 0034.3434.3434.3434.3434
+   Local Sequence Number                   : 0
+   Remote Sequence Number                  : 0
+   Local Encapsulation                     : N/A
+   Remote Encapsulation                    : SRv6
+   Local E-Tree                            : Root
+   Remote E-Tree                           : Root
+   Remote matching E-Tree RT               : No
+   Local AC-ID                             : 0x0
+   Remote AC-ID                            : 0x2
+   ESI Port Key                            : 0
+   Source                                  : Remote
+   Flush Requested                         : 0
+   Flush Received                          : 0
+   SOO Nexthop                             : 3.3.3.3
+   Ext Flags                               : 0x00000000
+   BP XCID                                 : 0xffffffff
+   Stamped XCID                            : 0xffffffff
+   BP IFH                                  : 0x0
+   MAC State                               : Remote
+   MAC Producers                           : 0x0 (Best: 0x0)
+   Local Router MAC                        : 0000.0000.0000
+   L3 Label                                : 0
+
+   Object: EVPN MAC
+   Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+   EVPN MAC event history  [Num events: 3]
+   ----------------------------------------------------------------------------
+     Time                Event                         Flags      Flags
+     ====                =====                         =====      =====
+     Feb 28 01:42:30.144 Create                        00000000 00000000 -  -
+     Feb 28 01:42:30.144 FSM Event (event, state)      00000001 00020000 -  -
+     Feb 28 01:42:31.040 L2RIB Download                0a000048 01000000 -  -
+   ----------------------------------------------------------------------------

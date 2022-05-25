@@ -814,7 +814,7 @@ expected_output = {
                     },
                 },
                 '4c96.14ff.df15': {
-                    'ip_address': '::',
+                    'ip_address': '10.246.100.1',
                     'next_hop': '10.154.219.101',
                     'label': 100965,
                     'ethernet_tag': 0,
@@ -878,44 +878,6 @@ expected_output = {
                                     'code_1': '-',
                                     'code_2': '-',
                                 },
-                            },
-                        },
-                    },
-                },
-                '10.246.100.1': {
-                    'encap': '4c96.14ff.df15',
-                    'ip_address': '10.154.219.101',
-                    'next_hop': '',
-                    'label': 100965,
-                    'ethernet_tag': 0,
-                    'multipaths_resolved': 'True',
-                    'static': 'No',
-                    'local_ethernet_segment': '0000.0000.0000.0000.0000',
-                    'remote_ethernet_segment': '0100.23ff.a315.5080.1600',
-                    'local_sequence_number': 0,
-                    'remote_sequence_number': 0,
-                    'local_encapsulation': 'N/A',
-                    'remote_encapsulation': 'MPLS',
-                    'esi_port_key': '0',
-                    'source': 'Remote',
-                    'flush_requested': 0,
-                    'flush_received': 0,
-                    'multipaths_local_label': 100490,
-                    'soo_nexthop': '10.154.219.101',
-                    'bp_xcid': '0x0',
-                    'mac_state': 'Remote (w/ SOO)',
-                    'local_router_mac': '0000.0000.0000',
-                    'l3_label': 0,
-                    'object': {
-                        'EVPN MAC': {
-                            'base_info': {
-                                'version': '0xdbdb0008',
-                                'flags': '0xc0000',
-                                'type': 8,
-                                'reserved': 0,
-                            },
-                            'num_events': 4,
-                            'event_history': {
                                 82: {
                                     'time': 'Sep 24 07:09:11.040',
                                     'event': 'Create',
@@ -1061,4 +1023,3 @@ expected_output = {
         },
     },
 }
-

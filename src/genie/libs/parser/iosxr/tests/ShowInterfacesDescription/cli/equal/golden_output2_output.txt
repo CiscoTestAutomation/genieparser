@@ -1,1 +1,3 @@
-BE12 		up	 up
+Interface          Status      Protocol    Description
+--------------------------------------------------------------------------------
+BE12 		           up	         up

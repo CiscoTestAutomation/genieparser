@@ -1,0 +1,12 @@
+show hw-module slot 2 port-group mode
+-----------------------------------------------------------
+Slot      Port-group     Ports               Mode           
+----------------------------------------------------------
+2         1              Hu2/0/25            inactive       
+                         Hu2/0/26            inactive       
+                         Fou2/0/27           400G           
+                         Hu2/0/28            inactive       
+2         2              Hu2/0/29            inactive       
+                         Hu2/0/30            inactive       
+                         Fou2/0/31           400G           
+                         Hu2/0/32            inactive   

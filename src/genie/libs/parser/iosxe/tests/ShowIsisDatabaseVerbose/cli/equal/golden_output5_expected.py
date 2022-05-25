@@ -129,6 +129,17 @@ expected_output = {
                                             "v_flag": False,
                                             "l_flag": False
                                         }
+                                    },
+                                    101: {
+                                        "flex_algo": 128,
+                                        "flags": {
+                                            "r_flag": False,
+                                            "n_flag": True,
+                                            "p_flag": False,
+                                            "e_flag": False,
+                                            "v_flag": False,
+                                            "l_flag": False
+                                        }
                                     }
                                 }
                             }

@@ -5781,22 +5781,23 @@ class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
             r'(?P<ip_addr>\S+) +(?P<cost>[0-9]+) +(?P<state>\S+) +(?P<nbrs_count>[0-9]+)\/(?P<nbrs_f>[0-9]+).*$')
 
         for line in out.splitlines():
-            
+
             # Lo0                mpls1 0               17.17.17.17/32     1     LOOP  0/0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 area = group['area']
                 interface = group['interface']
+                pid = group['pid']
                 interface_dict = ret_dict.setdefault('instance', {}).\
-                    setdefault('default', {}).\
+                    setdefault(pid, {}).\
                     setdefault('areas', {}).\
                     setdefault(area, {}).\
                     setdefault('interfaces', {}).\
                     setdefault(interface, {})
                 interface_dict.update({
                     'name': interface,
-                    'process_id': group['pid'],
+                    'process_id': pid,
                     'area': group['area'],
                     'ip_address': group['ip_addr'],
                     'state': group['state'],
