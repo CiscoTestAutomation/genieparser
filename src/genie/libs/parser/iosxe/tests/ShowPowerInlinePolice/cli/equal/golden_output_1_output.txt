@@ -1,0 +1,4 @@
+Interface Admin  Oper       Admin      Oper       Cutoff Oper  
+          State  State      Police     Police     Power  Power 
+--------- ------ ---------- ---------- ---------- ------ ----- 
+Te7/0/28  auto   on         log        overdrawn  15.4   16.2 

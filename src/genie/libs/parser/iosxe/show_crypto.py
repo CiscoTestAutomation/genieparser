@@ -7,6 +7,8 @@ IOSXE parsers for the following show commands:
    * show crypto ikev2 sa detail
    * show crypto ikev2 sa local {} detail
    * show crypto ikev2 sa local {}
+   * show crypto ikev2 sa remote {} detail
+   * show crypto ikev2 sa remote {}
    * show crypto session
    * show crypto session detail
    * show crypto session local {} detail
@@ -17,6 +19,10 @@ IOSXE parsers for the following show commands:
    * show crypto ipsec sa
    * show crypto ipsec sa peer {} detail
    * show crypto ipsec sa peer {}
+   * show crypto gdoi ipsec sa
+   * show crypto gkm gm replay
+   * show crypto gdoi feature and sub commands
+   * show crypto gdoi gm
 """
 
 # Python
@@ -1685,6 +1691,33 @@ class ShowCryptoIkev2SaLocal(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSch
         if output is None:
             output = self.device.execute(self.cli_command)
         return super().cli(output=output)
+
+
+class ShowCryptoIkev2SaRemoteDetail(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSchema):
+    '''Parser for:
+        * 'show crypto ikev2 sa remote {} detail'
+    '''
+
+    cli_command = "show crypto ikev2 sa remote {ip_address} detail"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
+        return super().cli(output=output)
+
+
+class ShowCryptoIkev2SaRemote(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSchema):
+    '''Parser for:
+        * 'show crypto ikev2 sa remote {}'
+    '''
+
+    cli_command = "show crypto ikev2 sa remote {ip_address}"
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
+        return super().cli(output=output)
+
 
 # =====================================
 # Schema for:
@@ -4036,6 +4069,7 @@ class ShowCryptoIkev2SessionSchema(MetaParser):
                         int:{
                             'local_selectors': list,
                             'remote_selectors': list,
+                            Optional('traffic_selectors'): list,
                             Optional('esp_spi_in'): str,
                             Optional('esp_spi_out'): str,
                             Optional('ah_spi_in'): str,
@@ -4149,12 +4183,22 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
         # Initiator of SA : Yes
         p22 = re.compile(r'^Initiator\s+of\s+SA\s+:\s+(?P<initiator>\w+)$')
  
+        # Child sa:
+        p23 = re.compile(r'^(?P<child_sa>[\S\s]+):$')
+
+        # local selector       ->      remote selector
+        p23_1 = re.compile(r'^local\s+selector\s+->\s+remote\s+selector$')
+
         # Child sa: local selector  10.10.10.0/0 - 10.10.10.255/65535
         # local selector  10.10.10.0/0 - 10.10.10.255/65535
-        p23 = re.compile(r'^((?P<child_sa>[\S\s]+):\s+)?local\s+selector\s+(?P<child_l>[\S\s]+)$')
+        p23_2 = re.compile(r'^((?P<child_sa>[\S\s]+):\s+)?local\s+selector\s+(?P<child_l>[\S\s]+)$')
 
         # remote selector 20.20.20.0/0 - 20.20.20.255/65535
-        p24 = re.compile(r'^remote\s+selector\s+(?P<child_r>[\S\s]+)$')
+        p23_3 = re.compile(r'^remote\s+selector\s+(?P<child_r>[\S\s]+)$')
+
+        # 89.89.89.0/0 - 89.89.89.255/65535    ->    99.99.99.0/0 - 99.99.99.255/65535
+        # 8001::/0 - 8001::FFFF:FFFF:FFFF:FFFF/65535    ->    9001::/0 - 9001::FFFF:FFFF:FFFF:FFFF/65535
+        p24 = re.compile(r'^(?P<traffic_selector>\S+\s+-\s+\S+\s+->\s+\S+\s+-\s+\S+)$')
 
         # ESP spi in/out: 0x232CB82D/0x30767B6E
         p25 = re.compile(r'^ESP\s+spi\s+in\/out:\s+(?P<esp_i>\S+)\/(?P<esp_o>\S+)$')
@@ -4367,26 +4411,49 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                 ikev2_dict['initiator_of_sa'] = group['initiator']
                 continue
             
-            # Child sa: local selector  10.10.10.0/0 - 10.10.10.255/65535
-            # local selector  10.10.10.0/0 - 10.10.10.255/65535
-            m = p23.match(line)
-            if m:    
-                group = m.groupdict()
+            # Child sa:
+            m1 = p23.match(line)
+            if m1:
+                group = m1.groupdict()
                 if group['child_sa'] == "Child sa":
                     child_dict = ikev2_dict.setdefault('child_sa', {})
                     child_count += 1 
                     child_entry_dict = child_dict.setdefault(child_count, {})
                     child_entry_dict.update({'local_selectors':  []})
                     child_entry_dict.update({'remote_selectors':  []})
-
-                child_entry_dict['local_selectors'].append(group['child_l'])
                 continue
-            
+
+            # Child sa: local selector  10.10.10.0/0 - 10.10.10.255/65535
+            # local selector  10.10.10.0/0 - 10.10.10.255/65535
+            m2 = p23_2.match(line)
+            if m2:
+                group = m2.groupdict()
+                if group['child_sa'] == "Child sa":
+                    child_dict = ikev2_dict.setdefault('child_sa', {})
+                    child_count += 1 
+                    child_entry_dict = child_dict.setdefault(child_count, {})
+                    child_entry_dict.update({'local_selectors':  []})
+                    child_entry_dict.update({'remote_selectors':  []})
+                if 'selector' not in group['child_l']:
+                    child_entry_dict['local_selectors'].append(group['child_l'])
+                    continue
+                else:
+                    child_entry_dict.update({'traffic_selectors':  []})
+                continue
+
             # remote selector 20.20.20.0/0 - 20.20.20.255/65535
-            m = p24.match(line)
+            m = p23_3.match(line)
             if m:    
                 group = m.groupdict()
                 child_entry_dict['remote_selectors'].append(group['child_r'])
+                continue
+
+            # 89.89.89.0/0 - 89.89.89.255/65535    ->    99.99.99.0/0 - 99.99.99.255/65535
+            # 8001::/0 - 8001::FFFF:FFFF:FFFF:FFFF/65535    ->    9001::/0 - 9001::FFFF:FFFF:FFFF:FFFF/65535
+            m = p24.match(line)
+            if m:    
+                group = m.groupdict()
+                child_entry_dict['traffic_selectors'].append(group['traffic_selector'])
                 continue
 
             # ESP spi in/out: 0x232CB82D/0x30767B6E
@@ -4432,7 +4499,7 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
             del ret_dict['ikev2_session']['IPv4']
  
         if ret_dict['ikev2_session']['IPv6'] == {}:
-            del ret_dict['ikev2_session']['IPv6']    
+            del ret_dict['ikev2_session']['IPv6'] 
  
         return ret_dict
 
@@ -6131,7 +6198,6 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         return ret_dict
 
 # =================================================
-# Schema for
 #  Schema for 'show crypto ikev2 stats exchange'
 # =================================================
 class ShowCryptoIkev2StatsExchangeSchema(MetaParser):
@@ -6168,14 +6234,13 @@ class ShowCryptoIkev2StatsExchangeSchema(MetaParser):
             }
         },
         'other_counters': {
-            'nat_inside': int,
-            'no_nat': int
-
+            Any():{
+                   'counter': int
+            }
         }
     }
 
 # =================================================
-# Parser for
 #  Parser for 'show crypto ikev2 stats exchange'
 # =================================================
 class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
@@ -6194,7 +6259,7 @@ class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
         p1 = re.compile(r'^EXCHANGES$')
         p1_a = re.compile(r'^ERROR NOTIFY$')
         p1_b = re.compile(r'^OTHER NOTIFY$')
-        p1_c = re.compile(r'^CONFIG PAYLOAD TYPE TX RX$')
+        p1_c = re.compile(r'^CONFIG PAYLOAD TYPE\s+TX\s+RX$')
         p1_d = re.compile(r'^OTHER COUNTERS$')
 
         # IKE_SA_INIT 8618 0 0 5206
@@ -6298,9 +6363,9 @@ class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
-                other_message = groups['message'].lower()
+                other_counter_dict = other_dict.setdefault(groups['message'].lower(),{})                
                 counter = int(groups['count'])
-                other_dict[other_message] = counter
+                other_counter_dict['counter'] = counter
                 continue
 
         return ret_dict
@@ -7791,3 +7856,1720 @@ class ShowCryptoEliAll(ShowCryptoEliAllSchema):
                 continue
 
         return master_dict
+
+# =================================================
+#  Schema for 'show crypto mib ike flowmib tunnel'
+# =================================================
+class ShowCryptoMibIkeFlowmibTunnelSchema(MetaParser):
+    """Schema for show crypto mib ike flowmib tunnel"""
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    'index': str,
+                    'local_type': str,
+                    'local_address': str,
+                    'remote_type': str,
+                    'remote_address': str,
+                    'negotiation_mode': str,
+                    'diffie_hellman_grp': int,
+                    'encryption_algorithm': str,
+                    'hash_algorithm': str,
+                    'auth_method': str,
+                    'lifetime': int,
+                    'active_time': str,
+                    'policy_priority': int,
+                    'keepalive_enabled': str,
+                    'incoming': 
+                    {
+                        'in_octets': int,
+                        'in_packets': int,
+                        'in_drops': int,
+                        'in_notifys': int,
+                        'in_p2_exchanges': int,
+                        'in_p2_exchg_invalids': int,
+                        'in_p2_exchg_rejected': int,
+                        'in_p2_sa_delete_requests': int
+                        },
+                    'outgoing': 
+                    {
+                        'out_octets': int,
+                        'out_packets': int,
+                        'out_drops': int,
+                        'out_notifys': int,
+                        'out_p2_exchgs': int,
+                        'out_p2_exchgs_invalids': int,
+                        'out_p2_exchgs_rejects': int,
+                        'out_p2_sa_delete_requests': int
+                        },
+                    },
+                },
+            'total_vrf': int,
+        }
+    }
+
+# ====================================================
+#  Parser for 'show crypto mib ike flowmib tunnel'
+# ====================================================
+class ShowCryptoMibIkeFlowmibTunnel(ShowCryptoMibIkeFlowmibTunnelSchema):
+    """Parser for
+        * show crypto mib ike flowmib tunnel
+    """
+
+    cli_command = 'show crypto mib ike flowmib tunnel'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        flowmib_tunnel_dict = {}
+
+        # vrf Global
+        p1 = re.compile(r'^vrf\s+(?P<vrf_name>[\S\s]+)$')
+        
+        # Index:                       32248
+        p2 = re.compile(r'^Index:\s+(?P<index>\d+)$')
+
+        # Local type:                  ID_IPV4_ADDR 
+        p3 = re.compile(r'^Local\s+type:\s+(?P<local_type>[\S\s]+)$')
+
+        # Local address:               50.50.50.2
+        p4 = re.compile(r'^Local\s+address:\s+(?P<local_address>[\S\s]+)$')
+
+        # Remote type:                 ID_IPV4_ADDR
+        p5 = re.compile(r'^Remote\s+type:\s+(?P<remote_type>[\S\s]+)$')
+
+        # Remote address:              100.0.10.2
+        p6 = re.compile(r'^Remote\s+address:\s+(?P<remote_address>[\S\s]+)$')
+
+        # Negotiation mode:            IKEv2 
+        p7 = re.compile(r'^Negotiation\s+mode:\s+(?P<negotiation_mode>[\S\s]+)$')
+
+        # Diffie Hellman Grp:          16 
+        p8 = re.compile(r'^Diffie\s+Hellman\s+Grp:\s+(?P<diffie_hellman_grp>\d+)$')
+ 
+        # Encryption algo:             aes  
+        p9 = re.compile(r'^Encryption\s+algo:\s+(?P<encryption_algorithm>[\S\s]+)$')
+
+        # Hash algo:                   sha512
+        p10 = re.compile(r'^Hash\s+algo:\s+(?P<hash_algorithm>[\S\s]+)$')
+
+        # Auth method:                 localPskRemotePsk
+        p11 = re.compile(r'^Auth\s+method:\s+(?P<auth_method>[\S\s]+)$')
+
+        # Lifetime:                    86400
+        p12 = re.compile(r'^Lifetime:\s+(?P<lifetime>\d+)$')
+
+        # Active time:                 00:02:12
+        p13 = re.compile(r'^Active\s+time:\s+(?P<active_time>[\S\s]+)$')
+
+        # Policy priority:             0 
+        p14 = re.compile(r'^Policy\s+priority:\s+(?P<policy_priority>\d+)$')
+
+        # Keepalive enabled:           No   
+        p15 = re.compile(r'^Keepalive\s+enabled:\s+(?P<keepalive_enabled>[\S\s]+)$')
+
+        # In octets:                   5440    
+        p16 = re.compile(r'^In\s+octets:\s+(?P<in_octets>\d+)$')
+
+        # In packets:                  34
+        p17 = re.compile(r'^In\s+packets:\s+(?P<in_packets>\d+)$')
+
+        # In drops:                    0 
+        p18 = re.compile(r'^In\s+drops:\s+(?P<in_drops>\d+)$')
+
+        # In notifys:                  17 
+        p19 = re.compile(r'^In\s+notifys:\s+(?P<in_notifys>\d+)$')
+
+        # In P2 exchanges:             34 
+        p20 = re.compile(r'^In\s+P2\s+exchanges:\s+(?P<in_P2_exchanges>\d+)$')
+
+        # In P2 exchg invalids:        0
+        p21 = re.compile(r'^In\s+P2\s+exchg\s+invalids:\s+(?P<in_P2_exchg_invalids>\d+)$')
+
+        # In P2 exchg rejected:        0
+        p22 = re.compile(r'^In\s+P2\s+exchg\s+rejected:\s+(?P<in_P2_exchg_rejected>\d+)$')
+
+        # In P2 SA delete reqs:        0 
+        p23 = re.compile(r'^In\s+P2\s+SA\s+delete\s+reqs:\s+(?P<in_P2_SA_delete_reqs>\d+)$')
+
+        # Out octets:                  5712 
+        p24 = re.compile(r'^Out\s+octets:\s+(?P<out_octets>\d+)$')
+
+        # Out packets:                 34  
+        p25 = re.compile(r'^Out\s+packets:\s+(?P<out_packets>\d+)$')
+
+        # Out drops:                   0 
+        p26 = re.compile(r'^Out\s+drops:\s+(?P<out_drops>\d+)$')
+
+        # Out notifys:                 34  
+        p27 = re.compile(r'^Out\s+notifys:\s+(?P<out_notifys>\d+)$')
+ 
+        # Out P2 exchgs:               34 
+        p28 = re.compile(r'^Out\s+P2\s+exchgs:\s+(?P<out_P2_exchgs>\d+)$')
+ 
+        # Out P2 exchg invalids:       0
+        p29 = re.compile(r'^Out\s+P2\s+exchg\s+invalids:\s+(?P<out_P2_exchgs_invalids>\d+)$')
+ 
+        # Out P2 exchg rejects:        0
+        p30 = re.compile(r'^Out\s+P2\s+exchg\s+rejects:\s+(?P<out_P2_exchgs_rejects>\d+)$')
+ 
+        # Out P2 Sa delete requests:   17 
+        p31 = re.compile(r'^Out\s+P2\s+Sa\s+delete\s+requests:\s+(?P<out_P2_Sa_delete_requests>\d+)$')
+
+
+        vrf_count = 0
+        result_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf Global
+            m = p1.match(line)
+            if m:
+                vrf_count += 1
+                if 'total_vrf' not in flowmib_tunnel_dict:
+                    result_dict = flowmib_tunnel_dict.setdefault('ike_flowmib_tunnel', {})
+                result_dict['total_vrf'] = vrf_count
+                vrf_name = m.groupdict()['vrf_name']
+                vrf_name_dict = result_dict.setdefault(vrf_name, {})
+                index_count = 0
+                continue
+
+            # Index:                       32248
+            m = p2.match(line)
+            if m:
+                index_count += 1
+                index_count_dict = vrf_name_dict.setdefault(str(index_count), {})
+                index_count_dict['index'] = m.groupdict()['index']
+                continue
+
+            # Local type:                  ID_IPV4_ADDR
+            m = p3.match(line)
+            if m:
+                index_count_dict['local_type'] = m.groupdict()['local_type']
+                continue
+
+            # Local address:               50.50.50.2
+            m = p4.match(line)
+            if m:
+                index_count_dict['local_address'] = m.groupdict()['local_address']
+                continue
+            
+            # Remote type:                 ID_IPV4_ADDR
+            m = p5.match(line)
+            if m:
+                index_count_dict['remote_type'] = m.groupdict()['remote_type']
+                continue
+
+            # Remote address:              100.0.10.2
+            m = p6.match(line)
+            if m:
+                index_count_dict['remote_address'] = m.groupdict()['remote_address']
+                continue
+
+            # Negotiation mode:            IKEv2 
+            m = p7.match(line)
+            if m:
+                index_count_dict['negotiation_mode'] = m.groupdict()['negotiation_mode']
+                continue
+
+            # Diffie Hellman Grp:          16
+            m = p8.match(line)
+            if m:
+                index_count_dict['diffie_hellman_grp'] = int(m.groupdict()['diffie_hellman_grp'])
+                continue
+
+            # Encryption algo:             aes
+            m = p9.match(line)
+            if m:
+                index_count_dict['encryption_algorithm'] = m.groupdict()['encryption_algorithm']
+                continue
+
+            # Hash algo:                   sha512
+            m = p10.match(line)
+            if m:
+                index_count_dict['hash_algorithm'] = m.groupdict()['hash_algorithm']
+                continue
+
+            # Auth method:                 localPskRemotePsk
+            m = p11.match(line)
+            if m:
+                index_count_dict['auth_method'] = m.groupdict()['auth_method']
+                continue
+
+            # Lifetime:                    86400
+            m = p12.match(line)
+            if m:
+                index_count_dict['lifetime'] = int(m.groupdict()['lifetime'])
+                continue
+
+            # Active time:                 00:02:12
+            m = p13.match(line)
+            if m:
+                index_count_dict['active_time'] = m.groupdict()['active_time']
+                continue
+
+            # Policy priority:             0 
+            m = p14.match(line)
+            if m:
+                index_count_dict['policy_priority'] = int(m.groupdict()['policy_priority'])
+                continue
+
+            # Keepalive enabled:           No
+            m = p15.match(line)
+            if m:
+                index_count_dict['keepalive_enabled'] = m.groupdict()['keepalive_enabled']
+                continue
+
+            # In octets:                   5440   
+            m = p16.match(line)
+            if m:
+                incoming_dict = index_count_dict.setdefault('incoming', {})
+                incoming_dict['in_octets'] = int(m.groupdict()['in_octets'])
+                continue
+
+            # In packets:                  34
+            m = p17.match(line)
+            if m:
+                incoming_dict['in_packets'] = int(m.groupdict()['in_packets'])
+                continue
+
+            # In drops:                    0
+            m = p18.match(line)
+            if m:
+                incoming_dict['in_drops'] = int(m.groupdict()['in_drops'])
+                continue
+
+            # In notifys:                  17
+            m = p19.match(line)
+            if m:
+                incoming_dict['in_notifys'] = int(m.groupdict()['in_notifys'])
+                continue
+
+            # In P2 exchanges:             34 
+            m = p20.match(line)
+            if m:
+                incoming_dict['in_p2_exchanges'] = int(m.groupdict()['in_P2_exchanges'])
+                continue
+
+            # In P2 exchg invalids:        0
+            m = p21.match(line)
+            if m:
+                incoming_dict['in_p2_exchg_invalids'] = int(m.groupdict()['in_P2_exchg_invalids'])
+                continue
+
+            # In P2 exchg rejected:        0
+            m = p22.match(line)
+            if m:
+                incoming_dict['in_p2_exchg_rejected'] = int(m.groupdict()['in_P2_exchg_rejected'])
+                continue
+
+            # In P2 SA delete reqs:        0
+            m = p23.match(line)
+            if m:
+                incoming_dict['in_p2_sa_delete_requests'] = int(m.groupdict()['in_P2_SA_delete_reqs'])
+                continue
+
+            # Out octets:                  5712
+            m = p24.match(line)
+            if m:
+                outgoing_dict = index_count_dict.setdefault('outgoing', {})
+                outgoing_dict['out_octets'] = int(m.groupdict()['out_octets'])
+                continue
+
+            # Out packets:                 34 
+            m = p25.match(line)
+            if m:
+                outgoing_dict['out_packets'] = int(m.groupdict()['out_packets'])
+                continue
+
+            # Out drops:                   0
+            m = p26.match(line)
+            if m:
+                outgoing_dict['out_drops'] = int(m.groupdict()['out_drops'])
+                continue
+
+            # Out notifys:                 34
+            m = p27.match(line)
+            if m:
+                outgoing_dict['out_notifys'] = int(m.groupdict()['out_notifys'])
+                continue
+
+            # Out P2 exchgs:               34 
+            m = p28.match(line)
+            if m:
+                outgoing_dict['out_p2_exchgs'] = int(m.groupdict()['out_P2_exchgs'])
+                continue
+
+            # Out P2 exchg invalids:       0
+            m = p29.match(line)
+            if m:
+                outgoing_dict['out_p2_exchgs_invalids'] = int(m.groupdict()['out_P2_exchgs_invalids'])
+                continue
+
+            # Out P2 exchg rejects:        0 
+            m = p30.match(line)
+            if m:
+                outgoing_dict['out_p2_exchgs_rejects'] = int(m.groupdict()['out_P2_exchgs_rejects'])
+                continue
+
+            # Out P2 Sa delete requests:   17    
+            m = p31.match(line)
+            if m:
+                outgoing_dict['out_p2_sa_delete_requests'] = int(m.groupdict()['out_P2_Sa_delete_requests'])
+                continue
+
+
+
+        return flowmib_tunnel_dict
+
+
+# ==============================
+# Schema for
+#   'show crypto ikev2 stats'
+# ==============================
+class ShowCryptoIkev2StatsSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto ikev2 stats'
+    """
+    
+    schema = {
+        'ikev2_statistics': {
+                'system_resource_limit': int,                                 
+                'max_sa': int,
+                'max_in_nego': int,
+                'max_out_nego': int,
+                'total_incoming_sa': int,
+                'total_incoming_sa_active': int,
+                'total_incoming_sa_negotiating': int,
+                'total_outgoing_sa': int,           
+                'total_outgoing_sa_active': int,
+                'total_outgoing_sa_negotiating': int,
+                'incoming_v2_requests': int,
+                'incoming_requests_accept': int,
+                'incoming_requests_reject': int,
+                'outgoing_v2_requests': int,
+                'outgoing_requests_accept': int,
+                'outgoing_requests_reject': int,
+                'rejected_v2_requests': int,
+                'rejected_requests_rsrclow': int,
+                'rejected_requests_salimit': int,
+                'ikev2_packet_drop': int,
+                'incoming_requests_drop_lowq': int,
+                'incoming_cookie_challenge': {
+                    'incoming_challenge_requests': int,
+                    'incoming_challenge_accept': int,
+                    'incoming_challenge_reject': int,
+                    'incoming_challenge_no_cookie': int                   
+                },
+                'deleted_sessions_cert_revoke': int
+            },
+        }
+    
+
+# =========================================================
+#  Parser for 'show crypto ikev2 stats'
+# =========================================================   
+class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
+    """
+    Parser for
+        * 'show crypto ikev2 stats'
+    """
+    
+    # Defines a function to run the cli_command
+    cli_command = 'show crypto ikev2 stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # System Resource Limit:   0        Max IKEv2 SAs: 0        Max in nego(in/out): 40/400
+        p1 = re.compile(r'^System Resource Limit:\s+(?P<sr_limit>\d+)\s+Max IKEv2 SAs:\s+'
+                        r'(?P<v2_sa>\d+)\s+Max in nego\(in\/out\):\s+'
+                        r'(?P<in_nego>\d+)\/(?P<out_nego>\d+)$')
+    
+        # Total incoming IKEv2 SA Count:    0        active:        0        negotiating: 0
+        p2 = re.compile(r'^Total incoming IKEv2 SA Count:\s+(?P<in_sa>\d+)\s+'
+                        r'active:\s+(?P<in_sa_act>\d+)\s+negotiating:\s+(?P<in_sa_nego>\d+)$')
+ 
+        # Total outgoing IKEv2 SA Count:    0        active:        0        negotiating: 0
+        p3 = re.compile(r'^Total outgoing IKEv2 SA Count:\s+(?P<out_sa>\d+)\s+'
+                        r'active:\s+(?P<out_sa_act>\d+)\s+negotiating:\s+(?P<out_sa_nego>\d+)$')
+
+        # Incoming IKEv2 Requests: 0        accepted:      0        rejected:    0
+        p4 = re.compile(r'^Incoming IKEv2 Requests:\s+(?P<in_req>\d+)\s+accepted:\s+'
+                        r'(?P<in_accept>\d+)\s+rejected:\s+(?P<in_reject>\d+)$')
+
+        # Outgoing IKEv2 Requests: 0        accepted:      0        rejected:    0
+        p5 = re.compile(r'^Outgoing IKEv2 Requests:\s+(?P<out_req>\d+)\s+accepted:\s+'
+                        r'(?P<out_accept>\d+)\s+rejected:\s+(?P<out_reject>\d+)$')
+
+        # Rejected IKEv2 Requests: 0        rsrc low:      0        SA limit:    0 
+        p6 = re.compile(r'^Rejected IKEv2 Requests:\s+(?P<rej_req>\d+)\s+rsrc low:\s+'
+                        r'(?P<low_rsrc>\d+)\s+SA limit:\s+(?P<sa_limit>\d+)$')
+
+        # IKEv2 packets dropped at dispatch: 0 
+        p7 = re.compile(r'^IKEv2 packets dropped at dispatch:\s+(?P<pak_drop>\d+)$')
+
+        # Incoming Requests dropped as LOW Q limit reached : 0
+        p8 = re.compile(r'^Incoming Requests dropped as LOW Q limit reached :\s+(?P<drop_lowq>\d+)$')
+
+        # Incoming IKEV2 Cookie Challenged Requests: 0 
+        p9 = re.compile(r'^Incoming IKEV2 Cookie Challenged Requests:\s+(?P<chall_req>\d+)$')
+
+        #     accepted: 0        rejected: 0        rejected no cookie: 0 
+        p10 = re.compile(r'^accepted:\s+(?P<chall_acc>\d+)\s+rejected:\s+(?P<chall_rej>\d+)\s+'
+                         r'rejected no cookie:\s+(?P<chall_rej_nocook>\d+)$')
+
+        # Total Deleted sessions of Cert Revoked Peers: 0 
+        p11 = re.compile(r'^Total Deleted sessions of Cert Revoked Peers:\s+(?P<del_sess_cert>\d+)$')
+
+
+        # initial return dictionary
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # System Resource Limit:   0        Max IKEv2 SAs: 0        Max in nego(in/out): 40/400                               
+            m = p1.match(line)
+            if m:
+                group = m.groupdict() 
+                v2stat_dict = ret_dict.setdefault('ikev2_statistics', {})
+                v2stat_dict.update({'system_resource_limit': int(group['sr_limit'])})
+                v2stat_dict.update({'max_sa': int(group['v2_sa'])})
+                v2stat_dict.update({'max_in_nego': int(group['in_nego'])})
+                v2stat_dict.update({'max_out_nego': int(group['out_nego'])})
+                continue 
+
+            # Total incoming IKEv2 SA Count:    0        active:        0        negotiating: 0                                 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                 
+                v2stat_dict.update({'total_incoming_sa': int(group['in_sa'])})
+                v2stat_dict.update({'total_incoming_sa_active': int(group['in_sa_act'])})
+                v2stat_dict.update({'total_incoming_sa_negotiating': int(group['in_sa_nego'])})
+                continue
+
+            # Total outgoing IKEv2 SA Count:    0        active:        0        negotiating: 0                                
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()                  
+                v2stat_dict.update({'total_outgoing_sa': int(group['out_sa'])})
+                v2stat_dict.update({'total_outgoing_sa_active': int(group['out_sa_act'])})
+                v2stat_dict.update({'total_outgoing_sa_negotiating': int(group['out_sa_nego'])})
+                continue
+
+            # Incoming IKEv2 Requests: 0        accepted:      0        rejected:    0                                
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()                     
+                v2stat_dict.update({'incoming_v2_requests': int(group['in_req'])})
+                v2stat_dict.update({'incoming_requests_accept': int(group['in_accept'])})
+                v2stat_dict.update({'incoming_requests_reject': int(group['in_reject'])})
+                continue
+
+            # Outgoing IKEv2 Requests: 0        accepted:      0        rejected:    0                               
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()                  
+                v2stat_dict.update({'outgoing_v2_requests': int(group['out_req'])})
+                v2stat_dict.update({'outgoing_requests_accept': int(group['out_accept'])})
+                v2stat_dict.update({'outgoing_requests_reject': int(group['out_reject'])})
+                continue
+
+            # Rejected IKEv2 Requests: 0        rsrc low:      0        SA limit:    0                               
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()                                  
+                v2stat_dict.update({'rejected_v2_requests': int(group['rej_req'])})
+                v2stat_dict.update({'rejected_requests_rsrclow': int(group['low_rsrc'])})
+                v2stat_dict.update({'rejected_requests_salimit': int(group['sa_limit'])})
+                continue
+
+            # IKEv2 packets dropped at dispatch: 0                               
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()                     
+                v2stat_dict.update({'ikev2_packet_drop': int(group['pak_drop'])})
+                continue
+
+            # Incoming Requests dropped as LOW Q limit reached : 0                              
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()                  
+                v2stat_dict.update({'incoming_requests_drop_lowq': int(group['drop_lowq'])})
+                continue
+
+            # Incoming IKEV2 Cookie Challenged Requests: 0                             
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()                    
+                chall_dict = v2stat_dict.setdefault('incoming_cookie_challenge', {})
+                chall_dict.update({'incoming_challenge_requests': int(group['chall_req'])})
+                continue
+
+            #     accepted: 0        rejected: 0        rejected no cookie: 0                           
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()                  
+                chall_dict.update({'incoming_challenge_accept': int(group['chall_acc'])})
+                chall_dict.update({'incoming_challenge_reject': int(group['chall_rej'])})
+                chall_dict.update({'incoming_challenge_no_cookie': int(group['chall_rej_nocook'])})
+                continue
+
+            # Total Deleted sessions of Cert Revoked Peers: 0                               
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()                   
+                v2stat_dict.update({'deleted_sessions_cert_revoke': int(group['del_sess_cert'])})
+                continue
+                
+        return ret_dict
+
+
+# ==============================
+# Schema for
+#   'show crypto call admission statistics'
+# ==============================
+class ShowCryptoCallAdmissionStatisticsSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto call admission statistics'
+    """
+    
+    schema = {
+        'crypto_call_admission_statistics': {
+                'system_resource_limit': int,                               
+                'max_ike_sa': int,
+                'max_in_nego': int,
+                'total_ike_sa': int,
+                'total_ike_sa_active': int,
+                'total_ike_sa_negotiating': int,
+                'incoming_ike_request': int,
+                'incoming_request_accept': int,
+                'incoming_request_reject': int,
+                'outgoing_ike_request': int,
+                'outgoing_request_accept': int,
+                'outgoing_request_reject': int,
+                'rejected_ike_request': int,
+                'rejected_request_rsrc_low': int,
+                'rejected_request_active_salimit': int,
+                'in_neg_salimit': int,
+                'ike_packet_drop_dispatch': int,
+                'max_ipsec_sa': int,
+                'total_ipsec_sa': int,
+                'total_ipsec_sa_active': int,
+                'total_ipsec_sa_negotiating': int,
+                'incoming_ipsec_request': int,
+                'incoming_ipsec_accept': int,
+                'incoming_ipsec_reject': int,
+                'outgoing_ipsec_request': int,
+                'outgoing_ipsec_accept': int,
+                'outgoing_ipsec_reject': int,                
+                'phase_sa_under_negotiation': int
+            },
+        }
+ 
+# =========================================================
+#  Parser for 'show crypto call admission statistics'
+# =========================================================   
+class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema):
+    """
+    Parser for
+        * 'show crypto call admission statistics'
+    """
+    
+    # Defines a function to run the cli_command
+    cli_command = 'show crypto call admission statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # System Resource Limit:        0 Max IKE SAs:     0 Max in nego:    40
+        p1 = re.compile(r'^System Resource Limit:\s+(?P<sr_limit>\d+)\s+Max IKE SAs:\s+'
+                        r'(?P<v1_sa>\d+)\s+Max in nego:\s+(?P<in_nego>\d+)$')
+    
+        # Total IKE SA Count:        1001 active:       1001 negotiating:     0
+        p2 = re.compile(r'^Total IKE SA Count:\s+(?P<ike_sa>\d+)\s+active:\s+'
+                        r'(?P<ike_sa_act>\d+)\s+negotiating:\s+(?P<ike_sa_nego>\d+)$')
+ 
+        # Incoming IKE Requests:  1057639 accepted:  1056101 rejected:     1538
+        p3 = re.compile(r'^Incoming IKE Requests:\s+(?P<in_req>\d+)\s+accepted:\s+'
+                        r'(?P<in_accept>\d+)\s+rejected:\s+(?P<in_reject>\d+)$')
+
+        # Outgoing IKE Requests:        0 accepted:        0 rejected:        0
+        p4 = re.compile(r'^Outgoing IKE Requests:\s+(?P<out_req>\d+)\s+accepted:\s+'
+                        r'(?P<out_accept>\d+)\s+rejected:\s+(?P<out_reject>\d+)$')
+
+        # Rejected IKE Requests:     1538 rsrc low:        0 Active SA limit: 0 
+        p5 = re.compile(r'^Rejected IKE Requests:\s+(?P<rej_req>\d+)\s+rsrc low:\s+'
+                        r'(?P<low_rsrc>\d+)\s+Active SA limit:\s+(?P<sa_limit>\d+)$')
+
+        #      In-neg SA limit: 1538
+        p6 = re.compile(r'^In-neg SA limit:\s+(?P<neg_sa_limit>\d+)$')
+
+        # IKE packets dropped at dispatch:        0
+        p7 = re.compile(r'^IKE packets dropped at dispatch:\s+(?P<pak_drop>\d+)$')
+
+        # Max IPSEC SAs:     0
+        p8 = re.compile(r'^Max IPSEC SAs:\s+(?P<sa_max>\d+)$')
+
+        # Total IPSEC SA Count:        1081 active:       1075 negotiating:     6
+        p9 = re.compile(r'^Total IPSEC SA Count:\s+(?P<ipsec_sa>\d+)\s+active:\s+'
+                        r'(?P<secsa_act>\d+)\s+negotiating:\s+(?P<secsa_nego>\d+)$')
+ 
+        # Incoming IPSEC Requests:   511759 accepted:   511759 rejected:        0
+        p10 = re.compile(r'^Incoming IPSEC Requests:\s+(?P<in_sa_req>\d+)\s+accepted:\s+'
+                        r'(?P<in_sa_accept>\d+)\s+rejected:\s+(?P<in_sa_reject>\d+)$')
+
+        # Outgoing IPSEC Requests:     1214 accepted:     1214 rejected:        0
+        p11 = re.compile(r'^Outgoing IPSEC Requests:\s+(?P<out_sa_req>\d+)\s+accepted:\s+'
+                         r'(?P<out_sa_accept>\d+)\s+rejected:\s+(?P<out_sa_reject>\d+)$')
+
+        # Phase1.5 SAs under negotiation:         0 
+        p12 = re.compile(r'^Phase1.5 SAs under negotiation:\s+(?P<phase1_sa>\d+)$')
+
+        # initial return dictionary
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # System Resource Limit:        0 Max IKE SAs:     0 Max in nego:    40                                 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()  
+                v2stat_dict = ret_dict.setdefault('crypto_call_admission_statistics', {})
+                v2stat_dict.update({'system_resource_limit': int(group['sr_limit'])})
+                v2stat_dict.update({'max_ike_sa': int(group['v1_sa'])})
+                v2stat_dict.update({'max_in_nego': int(group['in_nego'])})
+                continue
+
+            # Total IKE SA Count:        1001 active:       1001 negotiating:     0                                 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                  
+                v2stat_dict.update({'total_ike_sa': int(group['ike_sa'])})
+                v2stat_dict.update({'total_ike_sa_active': int(group['ike_sa_act'])})
+                v2stat_dict.update({'total_ike_sa_negotiating': int(group['ike_sa_nego'])})
+                continue
+
+            # Incoming IKE Requests:  1057639 accepted:  1056101 rejected:     1538                                 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()                   
+                v2stat_dict.update({'incoming_ike_request': int(group['in_req'])})
+                v2stat_dict.update({'incoming_request_accept': int(group['in_accept'])})
+                v2stat_dict.update({'incoming_request_reject': int(group['in_reject'])})
+                continue
+
+            # Outgoing IKE Requests:        0 accepted:        0 rejected:        0                                
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()                   
+                v2stat_dict.update({'outgoing_ike_request': int(group['out_req'])})
+                v2stat_dict.update({'outgoing_request_accept': int(group['out_accept'])})
+                v2stat_dict.update({'outgoing_request_reject': int(group['out_reject'])})
+                continue
+
+            # Rejected IKE Requests:     1538 rsrc low:        0 Active SA limit: 0                                
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()                     
+                v2stat_dict.update({'rejected_ike_request': int(group['rej_req'])})
+                v2stat_dict.update({'rejected_request_rsrc_low': int(group['low_rsrc'])})
+                v2stat_dict.update({'rejected_request_active_salimit': int(group['sa_limit'])})
+                continue
+
+            #      In-neg SA limit: 1538                               
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()                    
+                v2stat_dict.update({'in_neg_salimit': int(group['neg_sa_limit'])})
+                continue
+
+            # IKE packets dropped at dispatch:        0                              
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()                     
+                v2stat_dict.update({'ike_packet_drop_dispatch': int(group['pak_drop'])})
+                continue
+
+            # Max IPSEC SAs:     0                              
+            m = p8.match(line)
+            if m:
+                v2stat_dict.update({'max_ipsec_sa': int(m.groupdict()['sa_max'])})
+                continue
+
+            # Total IPSEC SA Count:        1081 active:       1075 negotiating:     6                               
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()                   
+                v2stat_dict.update({'total_ipsec_sa': int(group['ipsec_sa'])})
+                v2stat_dict.update({'total_ipsec_sa_active': int(group['secsa_act'])})
+                v2stat_dict.update({'total_ipsec_sa_negotiating': int(group['secsa_nego'])})
+                continue
+
+            # Incoming IPSEC Requests:   511759 accepted:   511759 rejected:        0                              
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()                
+                v2stat_dict.update({'incoming_ipsec_request': int(group['in_sa_req'])})
+                v2stat_dict.update({'incoming_ipsec_accept': int(group['in_sa_accept'])})
+                v2stat_dict.update({'incoming_ipsec_reject': int(group['in_sa_reject'])})
+                continue
+
+            # Outgoing IPSEC Requests:     1214 accepted:     1214 rejected:        0                               
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()                     
+                v2stat_dict.update({'outgoing_ipsec_request': int(group['out_sa_req'])})
+                v2stat_dict.update({'outgoing_ipsec_accept': int(group['out_sa_accept'])})
+                v2stat_dict.update({'outgoing_ipsec_reject': int(group['out_sa_reject'])})
+                continue
+
+            # Phase1.5 SAs under negotiation:         0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()                    
+                v2stat_dict.update({'phase_sa_under_negotiation': int(group['phase1_sa'])})
+                continue
+
+        return ret_dict
+
+#===================================================
+# Schema for 'show crypto session | count UP-ACTIVE'
+#===================================================
+
+class ShowCryptoSessionCountUpActiveSchema(MetaParser):
+    schema = {
+        'total_number_of_active_sessions': {
+            'active_crypto_session_count': int
+        }
+    }
+
+#====================================================
+#  Parser for 'show crypto session | count UP-ACTIVE'
+#====================================================
+
+class ShowCryptoSessionCountUpActive(ShowCryptoSessionCountUpActiveSchema):
+
+    cli_command = 'show crypto session | count UP-ACTIVE'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # Total number of groups:   831
+        p1 = re.compile(r'^Number\s+of\s+lines\s+which\s+match\s+regexp\s+=\s+(?P<active_crypto_session_count>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                total_number_of_active_sessions_dict = ret_dict.setdefault('total_number_of_active_sessions', {})
+                total_number_of_active_sessions_dict['active_crypto_session_count'] = int(group['active_crypto_session_count'])
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gkm gm replay'
+# =================================================
+
+class ShowCryptogkmgmreplaySchema(MetaParser):
+    """Schema for 'show crypto gkm gm replay' """
+    
+    schema = {
+        'anti_replay_information': {
+            'group': {
+                Any(): {
+                    'time_based_replay': {
+                        Optional('enable'): str,
+                        Optional('replay_value'): str,
+                        Optional('input_packets'): int,
+                        Optional('output_packets'): int,
+                        Optional('input_error_packets'): int,
+                        Optional('output_error_packets'): int,
+                        Optional('time_sync_error'): int,
+                        Optional('max_time_delta'): str,
+                        Optional('tbar_error_history'): {
+                            'tbar_error': str
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# =================================================
+#  Parser for 'show crypto gkm gm replay'
+# =================================================
+
+class ShowCryptogkmgmreplay(ShowCryptogkmgmreplaySchema):
+    
+    """Parser for 'show crypto gkm gm replay' """
+    
+    cli_command = 'show crypto gkm gm replay'
+	
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Anti-replay Information For Group bw600:
+        p1 = re.compile(r'^Anti-replay Information For Group (?P<group>[\w\d\-]+):$')
+
+        # Timebased Replay:
+        p2 = re.compile(r'^Timebased Replay:$')
+
+        #       is not enabled
+        p3 = re.compile(r'is not enabled$')
+
+        # Replay Value : 3611735.21 secs
+        p4 = re.compile(r'^Replay Value :\s(?P<replay_value>[\w\s\.]+)$')
+
+        # Input Packets : 2753845832 Output Packets : 3668218697
+        p5 = re.compile(r'^Input Packets :\s+(?P<input_packets>[\d]+)\s+Output Packets :\s+(?P<output_packets>[\d]+)$')
+
+        # Input Error Packets : 0 Output Error Packets : 0
+        p6 = re.compile(r'^Input Error Packets :\s+(?P<input_error_packets>\d+)\s+Output Error Packets :\s+(?P<output_error_packets>\d+)$')
+
+        # Time Sync Error : 0 Max time delta : 0.00 secs
+        p7 = re.compile(r'^Time Sync Error :\s+(?P<time_sync_error>\d+)\s+Max time delta :\s+(?P<max_time_delta>[\w\.\s]+)$')
+
+        # TBAR Error History (sampled at 10pak/min):
+        p8 = re.compile(r'^TBAR Error History \(sampled at 10pak\/min\):')
+
+        #               No TBAR errors detected
+        p9 = re.compile(r'No TBAR errors detected$')
+
+        master_dict = {}
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            
+            # Anti-replay Information For Group bw600:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('anti_replay_information', {}).setdefault('group', {}).setdefault(group['group'], {})
+                continue
+
+            # Timebased Replay:
+            m = p2.match(line)
+            if m:
+                time_dict = group_dict.setdefault('time_based_replay', {})
+                continue
+            
+            #       is not enabled
+            m = p3.match(line)
+            if m:
+                time_dict.update({'enable': 'Not enabled'})
+                continue
+
+            # Replay Value : 3611735.21 secs
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                time_dict.update({'replay_value': group['replay_value']})
+                continue
+
+            # Input Packets : 2753845832 Output Packets : 3668218697
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                time_dict.update({'input_packets': int(group['input_packets'])})
+                time_dict.update({'output_packets': int(group['output_packets'])})
+                continue
+
+            # Input Error Packets : 0 Output Error Packets : 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                time_dict.update({'input_error_packets': int(group['input_error_packets'])})
+                time_dict.update({'output_error_packets': int(group['output_error_packets'])})
+                continue
+
+            # Time Sync Error : 0 Max time delta : 0.00 secs
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                time_dict.update({'time_sync_error': int(group['time_sync_error'])})
+                time_dict.update({'max_time_delta': group['max_time_delta']})
+                continue
+
+            # TBAR Error History (sampled at 10pak/min):
+            m = p8.match(line)
+            if m:
+                prv_line = line
+                tbar_dict = time_dict.setdefault('tbar_error_history', {})
+                continue
+
+            #               No TBAR errors detected
+            m = p9.match(line)
+            if m:
+                pvr_line = line
+                tbar_dict.update({'tbar_error':'No errors detected'})
+                continue
+
+        return master_dict
+
+
+
+# ==============================
+# Schema for
+#   'show crypto gdoi feature dp-recovery'
+# ==============================
+class ShowCryptoGdoiFeatureSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto gdoi feature dp-recovery'
+    """
+
+    schema = {
+        'group': {
+            Any():{
+                'key_server':{
+                    Any():{
+                        'key_server_id': str,
+                        'key_version': str,
+                        'key_feature_supported': str
+                    },
+                },
+                'group_member':{
+                    Any():{
+                        'group_member_id': str,
+                        'group_member_version': str,
+                        'group_feature_supported': str
+                    },                   
+                },
+            },
+        },
+    }
+
+
+# =================================================
+#  Parser for 'show crypto gdoi feature'
+# =================================================
+
+class ShowCryptoGdoiFeature(ShowCryptoGdoiFeatureSchema):
+    
+    """Parser for 'show crypto gdoi feature' """
+    
+    cli_command = 'show crypto gdoi feature'
+	
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Group Name: getvpn1
+        p1 = re.compile(r'^Group Name:\s(?P<group>[\S]+)$')
+
+        #     Key Server ID       Version   Feature Supported
+        p2 = re.compile(r'Key Server ID \s+Version\s+Feature\sSupported')
+
+        #         15.15.15.1          1.0.26         Yes
+        p3 = re.compile(r'(?P<key_server_id>\d{1,}\.\d{1,}\.\d{1,}\.\d{1,})\s+(?P<key_version>[\d\.]+)\s+(?P<key_feature_supported>[\w]+)$')
+
+        #    Group Member ID     Version   Feature Supported
+        p4 = re.compile(r'Group Member ID\s+Version\s+Feature\sSupported')
+
+        #         25.25.25.1          1.0.25         Yes
+        p5 = re.compile(r'(?P<group_member_id>\d{1,}\.\d{1,}\.\d{1,}\.\d{1,})\s+(?P<group_member_version>[\d\.]+)\s+(?P<group_feature_supported>[\w]+)$')
+
+        master_dict = {}
+        server_flag = False
+        member_flag = False
+        for line in output.splitlines():
+
+            line = line.strip()
+            
+            # Group Name: getvpn1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('group', {}).setdefault(group['group'], {})
+                continue
+                
+            #     Key Server ID       Version   Feature Supported
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict = group_dict.setdefault('key_server', {})
+                server_flag = True
+                continue
+
+            #         1.1.1.1          1.0.27         Yes
+            if server_flag:
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    ser_count_dict = server_dict.setdefault(len(server_dict)+1, {})
+                    ser_count_dict.update({'key_server_id': group['key_server_id']})
+                    ser_count_dict.update({'key_version': group['key_version']})
+                    ser_count_dict.update({'key_feature_supported': group['key_feature_supported']})                    
+                    continue
+
+            #    Group Member ID     Version   Feature Supported
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group_member_dict = group_dict.setdefault('group_member', {})
+                server_flag = False
+                member_flag = True
+                continue
+
+            #        3.3.1.1          1.0.26         Yes
+            if member_flag:
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    count_dict = group_member_dict.setdefault(len(group_member_dict)+1, {})
+                    count_dict.update({'group_member_id' : group['group_member_id']})
+                    count_dict.update({'group_member_version': group['group_member_version']})
+                    count_dict.update({'group_feature_supported': group['group_feature_supported']})
+                    continue
+                       
+        return master_dict
+
+# =================================================
+#  Parser for 'show crypto gdoi feature dp-recovery'
+# =================================================
+class ShowCryptoGdoiFeatureDpRecovery(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature dp-recovery'
+    '''
+
+    cli_command = "show crypto gdoi feature dp-recovery"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature ckm'
+# =================================================
+class ShowCryptoGdoiFeatureCkm(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature ckm'
+    '''
+
+    cli_command = "show crypto gdoi feature ckm"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature suite-b'
+# =================================================
+class ShowCryptoGdoiFeatureSuiteB(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature suite-b'
+    '''
+
+    cli_command = "show crypto gdoi feature suite-b"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature policy-replace'
+# =================================================
+class ShowCryptoGdoiFeaturePolicyReplace(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature policy-replace'
+    '''
+
+    cli_command = "show crypto gdoi feature policy-replace"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature gm-removal'
+# =================================================
+class ShowCryptoGdoiFeatureGmRemoval(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature gm-removal'
+    '''
+
+    cli_command = "show crypto gdoi feature gm-removal"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature gdoi-mib'
+# =================================================
+class ShowCryptoGdoiFeatureGdoiMib(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature gdoi-mib'
+    '''
+
+    cli_command = "show crypto gdoi feature gdoi-mib"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature gdoi-interop-ack'
+# =================================================
+class ShowCryptoGdoiFeatureGdoiInteropAck(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature gdoi-interop-ack'
+    '''
+
+    cli_command = "show crypto gdoi feature gdoi-interop-ack"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature ip-d3p'
+# =================================================
+class ShowCryptoGdoiFeatureIpD3p(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature ip-d3p'
+    '''
+
+    cli_command = "show crypto gdoi feature ip-d3p"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature long-sa-lifetime'
+# =================================================
+class ShowCryptoGdoiFeatureLongSaLifetime(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature long-sa-lifetime'
+    '''
+
+    cli_command = "show crypto gdoi feature long-sa-lifetime"
+
+# =================================================
+#  Parser for 'show crypto gdoi feature pfs'
+# =================================================
+class ShowCryptoGdoiFeaturePfs(ShowCryptoGdoiFeature):
+    '''Parser for:
+        * 'show crypto gdoi feature pfs'
+    '''
+
+    cli_command = "show crypto gdoi feature pfs"
+
+    
+
+# =================================================
+# Schema for
+#  Schema for 'show crypto gdoi gm'
+# =================================================
+class ShowCryptoGdoiGmSchema(MetaParser):
+    """schema for show crypto gdoi gm"""
+
+    schema = {
+        'group_member': {
+            Any(): {
+                'direction': str, 
+                'acl_recieved': str,
+                'group_member_ip': str,
+                'vrf': str,
+                'local_ip': str,
+                'local_port': int,
+                'remote_ip': str,
+                'remote_port': int,
+                'fvrf': str,
+                'ivrf': str,
+                'version': str,
+                'registration_status': str,
+                'registered_ip': str,
+                Optional('registered_time'): str,
+                Optional('registration_succeded'): int,
+                Optional('registration_attempt'): int,
+                Optional('rekey_ip'): str,
+                Optional('rekey_seq_num'): int,
+                Optional('unicast_rekeys_recieved'): int,
+                Optional('ack_unicast_key'): int,
+                Optional('rekey_recieved_time'): str,
+                Optional('pfs_rekey_recieved'): int,
+                Optional('dp_error_monitoring'): str,
+                Optional('ipsec_init_reg_executed'): int,
+                Optional('ipsec_init_reg_postponed'): int,
+                Optional('active_tek_number'): int,
+                Optional('sa_track_status'): str,
+                Optional('fail_close_revert'): str
+            },
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi gm'
+# ===================================================
+class ShowCryptoGdoiGm(ShowCryptoGdoiGmSchema):
+
+    """Parser for show crypto gdoi gm"""
+
+    cli_command = 'show crypto gdoi gm'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        #Group Member Information For Group getvpn1: 
+        p1 = re.compile(r'^Group +Member +Information +For +Group +(?P<group_member>[\d\w]+)')
+        #    IPSec SA Direction       : Both
+        p2 = re.compile(r'^IPSec +SA +Direction +: +(?P<direction>[\w]+)$')
+        #    ACL Received From KS     : gdoi_group_getvpn1_temp_acl
+        p3 = re.compile(r'^ACL Received From KS     : (?P<acl_recieved>[\w\d_-]+)')
+        #    Group member             : 3.3.1.1         vrf: None
+        p4 = re.compile(r'^Group +member +: +(?P<group_member_ip>[\d.]+) +vrf: +(?P<vrf>[\w\d]+)')        
+        #       Local addr/port       : 3.3.1.1/848
+        p5 = re.compile(r'^Local addr.port +: +(?P<local_ip>[\d.]+).(?P<local_port>[\d]+)')
+        #       Remote addr/port      : 1.1.1.1/848
+        p6 = re.compile(r'^Remote +addr.port +: +(?P<remote_ip>[\d.]+).(?P<remote_port>[\d]+)')
+        #       fvrf/ivrf             : None/None
+        p7 = re.compile(r'^fvrf.ivrf +: +(?P<fvrf>[\d\w]+).(?P<ivrf>[\d\w]+)')
+        #       Version               : 1.0.26
+        p8 = re.compile(r'^Version +: +(?P<version>[\d.]+)')
+        #       Registration status   : Registered
+        p9 = re.compile(r'^Registration +status +: +(?P<registration_status>[\w]+)')
+        #       Registered with       : 1.1.1.1
+        p10 = re.compile(r'^Registered +with +: +(?P<registered_ip>[\d.]+)')
+        #       Re-registers in       : 518 sec
+        p11 = re.compile(r'^Re\-registers +in +: +(?P<registered_time>[\d\w ]+)')
+        #       Succeeded registration: 1
+        p12 = re.compile(r'^Succeeded +registration: +(?P<registration_succeded>[\d]+)')
+        #       Attempted registration: 1
+        p13 = re.compile(r'^Attempted +registration: +(?P<registration_attempt>[\d]+)')
+        #       Last rekey from       : 1.1.1.1
+        p14 = re.compile(r'^Last +rekey +from +: +(?P<rekey_ip>[\d.]+)')
+        #       Last rekey seq num    : 1
+        p15 = re.compile(r'^Last +rekey +seq +num +: +(?P<rekey_seq_num>[\d]+)')
+        #       Unicast rekey received: 26
+        p16 = re.compile(r'^Unicast +rekey +received: +(?P<unicast_rekeys_recieved>[\d]+)')
+        #       Rekey ACKs sent       : 26
+        p17 = re.compile(r'^Rekey +ACKs +sent +: +(?P<ack_unicast_key>[\d]+)')
+        #       Rekey Rcvd(hh:mm:ss)  : 00:00:19
+        p18 = re.compile(r'^Rekey +Rcvd.hh:mm:ss. +: +(?P<rekey_recieved_time>[\d:]+)')
+        #       PFS Rekey received    : 0
+        p19 = re.compile(r'^PFS +Rekey +received +: +(?P<pfs_rekey_recieved>[\d]+)')
+        #       DP Error Monitoring   : OFF
+        p20 = re.compile(r'^DP +Error +Monitoring +: +(?P<dp_error_monitoring>[\w]+)')
+        #       IPSEC init reg executed    : 0
+        p21 = re.compile(r'^IPSEC +init +reg +executed +: +(?P<ipsec_init_reg_executed>[\d]+)')
+        #       IPSEC init reg postponed   : 0
+        p22 = re.compile(r'^IPSEC +init +reg +postponed +: +(?P<ipsec_init_reg_postponed>[\d]+)')
+        #       Active TEK Number     : 2
+        p23 = re.compile(r'^Active +TEK +Number +: +(?P<active_tek_number>[\d]+)')
+        #       SA Track (OID/status) : disabled
+        p24 = re.compile(r'^SA +Track +.OID.status. +: +(?P<sa_track_status>[\w]+)')
+        #       Fail-Close Revert : Disabled
+        p25 = re.compile(r'^Fail.Close +Revert +: +(?P<fail_close_revert>[\w]+)')
+
+        # initial return dictionary
+        ret_dict = {}
+  
+        for line in out.splitlines():
+            line=line.strip()
+            #Group Member Information For Group getvpn1:
+            m = p1.match(line) 
+            if m:
+                group = m.groupdict()
+                group_member = ret_dict.setdefault('group_member', {}).setdefault(group['group_member'], {})           
+                continue
+
+            #    IPSec SA Direction       : Both            
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'direction': group['direction']})
+                continue
+
+            #    ACL Received From KS     : gdoi_group_getvpn1_temp_acl            
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'acl_recieved': group['acl_recieved']})
+                continue
+
+            #    Group member             : 3.3.1.1         vrf: None
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'group_member_ip': group['group_member_ip']})
+                group_member.update({'vrf': group['vrf']})
+                continue                
+
+            #Local addr/port       : 3.3.1.1/848
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'local_ip': group['local_ip']})
+                group_member.update({'local_port': int(group['local_port'])})
+                continue            
+
+            #       Remote addr/port      : 1.1.1.1/848
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'remote_ip': group['remote_ip']})
+                group_member.update({'remote_port': int(group['remote_port'])})
+                continue
+                
+            #       fvrf/ivrf             : None/None
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'fvrf': group['fvrf']})
+                group_member.update({'ivrf': group['ivrf']})
+                continue
+                
+            #       Version               : 1.0.26
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'version': group['version']})
+                continue
+
+            #       Registration status   : Registered
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'registration_status': group['registration_status']})
+                continue
+
+            #       Registered with       : 1.1.1.1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'registered_ip': group['registered_ip']})
+                continue
+
+            #Re-registers in       : 518 sec
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'registered_time': group['registered_time']})
+                continue
+
+            #       Succeeded registration: 1
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'registration_succeded': int(group['registration_succeded'])})
+                continue
+
+            #       Attempted registration: 1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'registration_attempt': int(group['registration_attempt'])})
+                continue
+
+            #       Last rekey from       : 1.1.1.1
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'rekey_ip': group['rekey_ip']})
+                continue
+
+            #       Last rekey seq num    : 1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'rekey_seq_num': int(group['rekey_seq_num'])})
+                continue
+
+            #       Unicast rekey received: 26
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'unicast_rekeys_recieved': int(group['unicast_rekeys_recieved'])})
+                continue
+
+            #       Rekey ACKs sent       : 26
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'ack_unicast_key': int(group['ack_unicast_key'])})
+                continue
+
+            #       Rekey Rcvd(hh:mm:ss)  : 00:00:19
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'rekey_recieved_time': group['rekey_recieved_time']})
+                continue
+
+            #       PFS Rekey received    : 0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'pfs_rekey_recieved': int(group['pfs_rekey_recieved'])})
+                continue
+
+            #       DP Error Monitoring   : OFF
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'dp_error_monitoring': group['dp_error_monitoring']})
+                continue
+
+            #       IPSEC init reg executed    : 0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'ipsec_init_reg_executed': int(group['ipsec_init_reg_executed'])})
+                continue
+
+            #       IPSEC init reg postponed   : 0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'ipsec_init_reg_postponed': int(group['ipsec_init_reg_postponed'])})
+                continue
+
+            #       Active TEK Number     : 2
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'active_tek_number': int(group['active_tek_number'])})
+                continue
+
+            #       SA Track (OID/status) : disabled
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'sa_track_status': group['sa_track_status']})
+                continue
+
+            #       Fail-Close Revert : Disabled
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                group_member.update({'fail_close_revert': group['fail_close_revert']})
+                continue        
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto sockets internal'
+# =================================================
+
+class ShowCryptoSocketsInternalSchema(MetaParser):
+    """Schema for show crypto sockets internal"""
+    schema = {
+        'sockets':{
+            'Socket Messages':{
+                'Open Socket':int,
+                'Close Socket':int,
+                'Listen Start':int,
+                'Listen Stop':int,
+                'SS Connect':int,
+                'SS Connect Socket':int,
+                'SS End Message':int,
+                'unknown':int
+            },
+            'Listen SM Stats':{
+                'Message Stats':{
+                    'Create Listener Map':int,
+                    'Detach Listener Map':int
+                }
+            },
+            'IPSec Events':{
+                'Socket Up':int,
+                'Socket down':int
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show crypto sockets internal'
+# =================================================
+
+class ShowCryptoSocketsInternal(ShowCryptoSocketsInternalSchema):
+    """Parser for show crypto show crypto sockets internal"""
+
+    cli_command = ['show crypto sockets internal']
+
+    def cli(self,output=None):
+        if output is None:
+            cmd = self.cli_command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # Crypto Secure Socket Messages
+        p1 = re.compile(r'(?P<messages_seciton>Crypto Secure Socket Messages)')
+
+        #  Open Socket               : 4994      Close Socket              : 14378  
+        p2 = re.compile(r'Open Socket\s+:\s+(?P<opn_sokt>\d+)\s+Close Socket\s+:\s+(?P<cls_sokt>\d+)')
+
+        #  Listen Start              : 1         Listen Stop               : 0   
+        p3 = re.compile(r'Listen Start\s+:\s+(?P<lstn_strt>\d+)\s+Listen Stop\s+:\s+(?P<lstn_stp>\d+)')
+        
+        #  SS Connect                : 0         SS Connect Socket         : 0  
+        p4 = re.compile(r'SS Connect\s+:\s+(?P<ss_cnct>\d+)\s+SS Connect Socket\s+:\s+(?P<cnct_sokt>\d+)')
+
+        #  SS End Message            : 0         unknown                   : 0  
+        p5 = re.compile(r'SS End Message\s+:\s+(?P<ss_end_msg>\d+)\s+unknown\s+:\s+(?P<unkn>\d+)')
+
+        # Crypto Secure Socket Listen SM Stats
+        p6 = re.compile(r'^(?P<listn_sm_stats_seciton>Crypto Secure Socket Listen SM Stats)$')
+
+        # Message Stats
+        p7 = re.compile(r'^(?P<msg_sts_seciton>Message Stats)$')
+
+        #  Create Listener Map       : 1           Detach Listener Map       : 0    
+        p8 = re.compile(r'Create Listener Map\s+:\s+(?P<listn_map>\d+)\s+Detach Listener Map\s+:\s+(?P<dtch_listn_map>\d+)')
+
+        # Crypto Secure Socket IPSec Events
+        p9 = re.compile(r'^(?P<ipsec_evnt_seciton>Crypto Secure Socket IPSec Events)$')
+        
+        #  Socket Up                 : 21513     Socket down               : 14316  
+        p10 = re.compile(r'Socket Up\s+:\s+(?P<sokt_up>\d+)\s+Socket down\s+:\s+(?P<sokt_down>\d+)')
+        m7=False
+        for line in out.splitlines():
+            line = line.strip()
+            # Crypto Secure Socket Messages
+            m = p1.search(line)
+            if m:
+                ret_dict['Socket Messages'] = {}
+                continue
+            
+            #  Open Socket               : 4994      Close Socket              : 14378
+            m = p2.match(line)
+            if m:
+                ret_dict['Socket Messages']['Open Socket'] = int(m.groupdict()['opn_sokt'])
+                ret_dict['Socket Messages']['Close Socket'] = int(m.groupdict()['cls_sokt'])
+                continue
+            
+            #  Listen Start              : 1         Listen Stop               : 0
+            m = p3.match(line)
+            if m:
+                ret_dict['Socket Messages']['Listen Start'] = int(m.groupdict()['lstn_strt'])
+                ret_dict['Socket Messages']['Listen Stop'] = int(m.groupdict()['lstn_stp'])
+                continue
+
+            #  SS Connect                : 0         SS Connect Socket         : 0
+            m = p4.match(line)
+            if m:
+                ret_dict['Socket Messages']['SS Connect'] = int(m.groupdict()['ss_cnct'])
+                ret_dict['Socket Messages']['SS Connect Socket'] = int(m.groupdict()['cnct_sokt'])
+                continue
+
+            #  SS End Message            : 0         unknown                   : 0
+            m = p5.match(line)
+            if m:
+                ret_dict['Socket Messages']['SS End Message'] = int(m.groupdict()['ss_end_msg'])
+                ret_dict['Socket Messages']['unknown'] = int(m.groupdict()['unkn'])
+                continue
+
+            # Crypto Secure Socket Listen SM Stats
+            m = p6.match(line)
+            if m:
+                ret_dict['Listen SM Stats'] = {}
+                Listen_SM_Stats=True
+                continue
+            
+            # Message Stats
+            m = p7.match(line)
+            if m and Listen_SM_Stats:
+                ret_dict['Listen SM Stats']['Message Stats'] = {}
+                Listen_SM_Stats=False
+                Listen_SM_Stats_Message_Stats = True
+                continue
+            
+            #  Create Listener Map       : 1           Detach Listener Map       : 0
+            m = p8.match(line)
+            if m and Listen_SM_Stats_Message_Stats:
+                ret_dict['Listen SM Stats']['Message Stats']['Create Listener Map'] = int(m.groupdict()['listn_map'])
+                ret_dict['Listen SM Stats']['Message Stats']['Detach Listener Map'] = int(m.groupdict()['dtch_listn_map'])
+                Listen_SM_Stats_Message_Stats = False
+                continue
+
+             # Crypto Secure Socket IPSec Events
+            m = p9.match(line)
+            if m:
+                ret_dict['IPSec Events'] = {}
+                continue
+
+            #  Socket Up                 : 21513     Socket down               : 14316 
+            m = p10.match(line)
+            if m:
+                ret_dict['IPSec Events']['Socket Up'] = int(m.groupdict()['sokt_up'])
+                ret_dict['IPSec Events']['Socket down'] = int(m.groupdict()['sokt_down'])
+                continue
+
+        try:
+            final_dict={'sockets':ret_dict}
+            return final_dict
+        except Exception:
+            return {}
+
+# ============================================================================
+# Schema for 'show crypto ipsec internal | include PALHWcreate_ipsec_sa_by_q'
+# ============================================================================
+
+class ShowCryptoIpsecPALHWcreate_ipsec_sa_by_qSchema(MetaParser):
+    schema = {
+        'total_internal_counters': {
+            'internal_counter_list': int
+        }
+    }
+
+# =============================================================================
+#  Parser for 'show crypto ipsec internal | include PALHWcreate_ipsec_sa_by_q'
+# =============================================================================
+
+class ShowCryptoIpsecPALHWcreate_ipsec_sa_by_q(ShowCryptoIpsecPALHWcreate_ipsec_sa_by_qSchema):
+
+    cli_command = 'show crypto ipsec internal | include PALHWcreate_ipsec_sa_by_q'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # PALHWcreate_ipsec_sa_by_q |913873|12797964|0    |0    |913873|12797964|14   ||0    |0    |0    |0    |0    |0    |0    |0    |0    |0 
+        p1 = re.compile(r'^PALHWcreate_ipsec_sa_by_q[\s\S]+\|\|(?P<counters>\d+)\s[\|\d\s]+$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                total_internal_counters_dict = ret_dict.setdefault('total_internal_counters', {})
+                total_internal_counters_dict['internal_counter_list'] = int(group['counters'])
+
+        return ret_dict
+
+# ===================================================
+# Schema for 'show crypto isakmp sa | count ACTIVE'
+# ===================================================
+
+class ShowCryptoIsakmpSaCountActiveSchema(MetaParser):
+    schema = {
+        'total_number_of_active_sessions': {
+            'active_crypto_isakmpsa_count': int
+        }
+    }
+
+# ====================================================
+#  Parser for 'show crypto isakmp sa | count ACTIVE'
+# ====================================================
+
+class ShowCryptoIsakmpSaCountActive(ShowCryptoIsakmpSaCountActiveSchema):
+
+    cli_command = 'show crypto isakmp sa | count ACTIVE'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # Number of lines which match regexp = 2016
+        p1 = re.compile(r'^Number\s+of\s+lines\s+which\s+match\s+regexp\s+=\s+(?P<active_crypto_isakmpsa_count>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 2016
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                total_number_of_active_sessions_dict = ret_dict.setdefault('total_number_of_active_sessions', {})
+                total_number_of_active_sessions_dict['active_crypto_isakmpsa_count'] = int(group['active_crypto_isakmpsa_count'])
+
+        return ret_dict

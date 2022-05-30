@@ -127,13 +127,16 @@ class ShowPlatformTcamPbrNat(ShowPlatformTcamPbrNatSchema):
     show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region} 
     """
 
-    cli_command = 'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}'
+    cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
     
-    def cli(self, nat_region, output=None):
+    def cli(self, nat_region, switch="", output=None):
         
-        cmd = self.cli_command.format(nat_region=nat_region)
-
         if output is None:
+            if switch:  
+                cmd = self.cli_command[0].format(switch=switch, nat_region=nat_region)
+            else:
+                cmd = self.cli_command[1].format(nat_region=nat_region)
             output = self.device.execute(cmd)
 
         # initial variables
@@ -197,7 +200,7 @@ class ShowPlatformTcamPbrNat(ShowPlatformTcamPbrNatSchema):
                 group = m.groupdict()
                 index_dict['ad'] = group['ad']
                 continue
-      
+    
         return ret_dict
         
 class ShowNatTranslationsSchema(MetaParser):

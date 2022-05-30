@@ -1,0 +1,16 @@
+interface GigabitEthernet0/5/6
+description wan_pyats
+dampening
+mtu 9198
+bandwidth 743000
+ip address 192.168.168.1 255.255.255.252
+no ip redirects
+no ip proxy-arp
+ip ospf network point-to-point
+ip ospf cost 50
+load-interval 30
+negotiation auto
+cdp enable
+mpls ip
+service-policy output PYATS_TEST
+end

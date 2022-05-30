@@ -48,6 +48,18 @@ IOSXE parsers for the following show commands:
     * show ip nhrp traffic interface {interface}
     * show ip nhrp traffic detail
     * show ip nhrp traffic interface {interface} detail
+    * show ip nhrp stats
+    * show ip nhrp stats {tunnel}
+    * show ip nhrp stats detail
+    * show ip nhrp stats {tunnel} detail
+    * show ip nhrp
+    * show ip nhrp detail
+    * show ip nhrp nhs
+    * show ip nhrp nhs {tunnel}
+    * show nhrp stats
+    * show nhrp stats {tunnel}
+    * show nhrp stats detail
+    * show nhrp stats {tunnel} detail
     '''
 
 # Python
@@ -3366,13 +3378,13 @@ class ShowIpNhrpTraffic(ShowIpNhrpTrafficSchema):
                   'show ip nhrp traffic interface {interface}'
     """
 
-    cli_command = ['show ip nhrp traffic', 'show ip nhrp traffic interface {interface}']
-    def cli(self, interface=None, output=None):
+    cli_command = ['show {ip_type} nhrp traffic', 'show {ip_type} nhrp traffic interface {interface}']
+    def cli(self, ip_type= "ip", interface=None, output=None):
 
         if interface:
-            cmd = self.cli_command[1].format(interface=interface)
+            cmd = self.cli_command[1].format(ip_type=ip_type,interface=interface)
         else:
-            cmd = self.cli_command[0]
+            cmd = self.cli_command[0].format(ip_type=ip_type)
 
         if output is None:
             # get output from device
@@ -3529,14 +3541,14 @@ class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
                   'show ip nhrp traffic interface {interface} detail'
     """
 
-    cli_command = ['show ip nhrp traffic detail',
-                   'show ip nhrp traffic interface {interface} detail']
-    def cli(self, interface=None, output=None):
+    cli_command = ['show {ip_type} nhrp traffic detail',
+                   'show {ip_type} nhrp traffic interface {interface} detail']
+    def cli(self, ip_type= "ip",interface=None, output=None):
 
         if interface:
-            cmd = self.cli_command[1].format(interface=interface)
+            cmd = self.cli_command[1].format(ip_type=ip_type,interface=interface)
         else:
-            cmd = self.cli_command[0]
+            cmd = self.cli_command[0].format(ip_type=ip_type)
 
         if output is None:
             # get output from device
@@ -3678,3 +3690,1838 @@ class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
 
         return ret_dict
 
+# ==============================================
+# Parser for 'show ip nhrp stats'
+#            'show ip nhrp stats {tunnel}'
+#            'show nhrp stats {tunnel}', 
+#            'show ipv6 nhrp stats {tunnel}'
+#            'show ipv6 nhrp stats'
+#            'show nhrp stats'   
+# ==============================================
+
+class ShowIpNhrpStatsSchema(MetaParser):
+    """Schema for show ip nhrp stats
+                  show ip nhrp stats {tunnel}
+                  show nhrp stats {tunnel}
+                  show ipv6 nhrp stats {tunnel}
+                  show ipv6 nhrp stats
+                  show nhrp stats
+                                     
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'interface_state_event_stats': {
+                    'r_up': int,
+                    'r_up_error': int,
+                    'r_down': int,
+                    'r_down_error': int,
+                    'r_deleted': int,
+                    'r_deleted_error': int
+                },
+                'tunnel_stats': {
+                    's_endpoint_addition': int,
+                    's_endpoint_addition_error': int,
+                    's_endpoint_deletion': int,
+                    's_endpoint_deletion_error': int
+                },
+                'tunnel_protection_stats': {
+                    's_create_tp_socket': int,
+                    's_create_tp_socket_error': int,
+                    's_del_tp_socket': int,
+                    's_del_tp_socket_error': int,
+                    's_create_va': int,
+                    's_create_va_error': int,
+                    's_del_va': int,
+                    's_del_va_error': int,
+                    'r_up': int,
+                    'r_up_error': int,
+                    'r_down': int,
+                    'r_down_error': int,
+                    's_reset_socket': int,
+                    's_reset_socket_error': int
+                },
+                'tunnel_qos_stats': {
+                    's_qos_apply': int,
+                    's_qos_apply_error': int,
+                    's_qos_remove': int,
+                    's_qos_remove_error': int
+                },
+                'rib_event_stats': {
+                    's_add_route': int,
+                    's_add_route_error': int,
+                    's_del_route': int,
+                    's_del_route_error': int,
+                    's_add_nho': int,
+                    's_add_nho_error': int,
+                    's_del_nho': int,
+                    's_del_nho_error': int,
+                    's_rwatch_wo_route': int,
+                    's_rwatch_wo_route_error': int,
+                    'r_route_evicted': int,
+                    'r_route_evicted_error': int
+                },
+                'mpls_stats': {
+                    's_label_alloc': int,
+                    's_label_alloc_error': int,
+                    's_label_release': int,
+                    's_label_release_error': int,
+                    's_mpls_ip_key_bind': int,
+                    's_mpls_ip_key_bind_error': int,
+                    's_mpls_vpn_key_bind': int,
+                    's_mpls_vpn_key_bind_error': int
+                },
+                'bfd_stats': {
+                    's_client_create': int,
+                    's_client_create_error': int,
+                    's_client_destroy': int,
+                    's_client_destroy_error': int,
+                    'r_session_down': int,
+                    'r_session_down_error': int,
+                    'r_session_up': int,
+                    'r_session_up_error': int
+                },
+                'bgp_stats': {
+                    's_route_export': int,
+                    's_route_export_error': int,
+                    's_route_withdrawal': int,
+                    's_route_withdrawal_error': int,
+                    's_route_import': int,
+                    's_route_import_error': int,
+                    'r_imported_route_changed': int,
+                    'r_imported_route_changed_error': int
+                }
+            }
+        }
+    }
+
+class ShowIpNhrpStats(ShowIpNhrpStatsSchema):
+    """Parser for 'show nhrp stats',
+                  'show ip nhrp stats',
+                  'show ipv6 nhrp stats',
+                  'show nhrp stats {tunnel}', 
+                  'show ip nhrp stats {tunnel}', 
+                  'show ipv6 nhrp stats {tunnel}'                     
+    """
+    cli_command = ['show nhrp stats','show {ip_type} nhrp stats','show nhrp stats {tunnel}','show {ip_type} nhrp stats {tunnel}']
+    def cli(self, tunnel= None, ip_type= None, output=None):
+        if output is None:
+            if tunnel is None and ip_type is None:
+                cmd = self.cli_command[0]
+            elif ip_type and tunnel is None:   
+                cmd = self.cli_command[1].format(ip_type=ip_type)
+            elif ip_type is None and tunnel:                 
+                cmd = self.cli_command[2].format(tunnel=tunnel)
+            elif tunnel and ip_type:
+                cmd = self.cli_command[3].format(ip_type=ip_type,tunnel=tunnel)                            
+           
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Tunnel100
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+)$')
+
+        # Interface State Event Stats:
+        p2 = re.compile('^Interface State Event Stats:$')
+
+        # Tunnel Stats:
+        p3 = re.compile('^Tunnel Stats:$')
+
+        # Tunnel Protection Stats:
+        p4 = re.compile('^Tunnel Protection Stats:$')
+
+        # Tunnel QoS Stats:
+        p5 = re.compile('^Tunnel QoS Stats:$')
+
+        # RIB Events Stats:
+        p6 = re.compile('^RIB Events Stats:$')
+
+        # MPLS Stats:
+        p7 = re.compile('^MPLS Stats:$')
+
+        # BFD Stats:
+        p8 = re.compile('^BFD Stats:$')
+
+        # BGP Stats:
+        p9 = re.compile('^BGP Stats:$')
+
+        # [R]UP                         : 2[0]    [R]Down                       : 0[0]
+        p10 = re.compile(r'^\[R\]UP +: +(?P<r_up>\d+)\[(?P<r_up_error>\d+)\]\s+'
+                         '\[R\]Down +: +(?P<r_down>\d+)\[(?P<r_down_error>\d+)\]$')
+
+        # [R]Deleted                    : 0[0]
+        p11 = re.compile(r'^\[R\]Deleted +: +(?P<r_deleted>\d+)\[(?P<r_deleted_error>\d+)\]$')
+
+        # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
+        p12 = re.compile(r'^\[S\]End +Point +Addition +: +(?P<s_endpoint_addition>\d+)'
+                          '\[(?P<s_endpoint_addition_error>\d+)\]\s+'
+                          '\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
+                          '\[(?P<s_endpoint_deletion_error>\d+)\]$')
+
+        # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        p13 = re.compile(r'^\[S\]Create +TP +socket +: +(?P<s_create_tp_socket>\d+)'
+                         '\[(?P<s_create_tp_socket_error>\d+)\]\s+'
+                         '\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
+                         '\[(?P<s_del_tp_socket_error>\d+)\]$')
+
+        # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        p14 = re.compile(r'^\[S\]Create +VA +: +(?P<s_create_va>\d+)'
+                         '\[(?P<s_create_va_error>\d+)\]\s+'
+                         '\[S\]Del +VA +: +(?P<s_del_va>\d+)'
+                         '\[(?P<s_del_va_error>\d+)\]$')
+
+        # [S]Reset Socket               : 0[0]
+        p15 = re.compile(r'^\[S\]Reset +Socket +: +(?P<s_reset_socket>\d+)'
+                         '\[(?P<s_reset_socket_error>\d+)\]$')
+
+        # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+        p16 = re.compile(r'^\[S\]QoS +APPLY +: +(?P<s_qos_apply>\d+)'
+                         '\[(?P<s_qos_apply_error>\d+)\]\s+'
+                         '\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
+                         '\[(?P<s_qos_remove_error>\d+)\]$')
+
+        # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
+        p17 = re.compile(r'^\[S\]Add +Route +: +(?P<s_add_route>\d+)'
+                         '\[(?P<s_add_route_error>\d+)\]\s+'
+                         '\[S\]Del +Route +: +(?P<s_del_route>\d+)'
+                         '\[(?P<s_del_route_error>\d+)\]$')
+
+        # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        p18 = re.compile(r'^\[S\]Add +NHO +: +(?P<s_add_nho>\d+)'
+                         '\[(?P<s_add_nho_error>\d+)\]\s+'
+                         '\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
+                         '\[(?P<s_del_nho_error>\d+)\]$')
+
+        # [S]Rwatch w/o route           : 0[0]    [R]Route Evicted              : 0[0]
+        p19 = re.compile(r'^\[S\]Rwatch +w\/o +route +: +(?P<s_rwatch_wo_route>\d+)'
+                         '\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
+                         '\[R\]Route +Evicted +: +(?P<r_route_evicted>\d+)'
+                         '\[(?P<r_route_evicted_error>\d+)\]$')
+
+        # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        p20 = re.compile(r'^\[S\]Label +Alloc +: +(?P<s_label_alloc>\d+)'
+                         '\[(?P<s_label_alloc_error>\d+)\]\s+'
+                         '\[S\]Label +Release +: +(?P<s_label_release>\d+)'
+                         '\[(?P<s_label_release_error>\d+)\]$')
+
+        # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+        p21 = re.compile(r'^\[S\]MPLS +IP +Key +Bind +: +(?P<s_mpls_ip_key_bind>\d+)'
+                         '\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
+                         '\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
+                         '\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
+
+        # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        p22 = re.compile(r'^\[S\]Client +Create +: +(?P<s_client_create>\d+)'
+                         '\[(?P<s_client_create_error>\d+)\]\s+'
+                         '\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
+                         '\[(?P<s_client_destroy_error>\d+)\]$')
+
+        # [R]Session Down               : 0[0]    [R]Session Up                 : 0[0]
+        p23 = re.compile(r'^\[R\]Session +Down +: +(?P<r_session_down>\d+)'
+                         '\[(?P<r_session_down_error>\d+)\]\s+'
+                         '\[R\]Session +Up +: +(?P<r_session_up>\d+)'
+                         '\[(?P<r_session_up_error>\d+)\]$')
+
+        # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        p24 = re.compile(r'^\[S\]Route +Export +: +(?P<s_route_export>\d+)'
+                         '\[(?P<s_route_export_error>\d+)\]\s+'
+                         '\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
+                         '\[(?P<s_route_withdrawal_error>\d+)\]$')
+
+        # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+        p25 = re.compile(r'^\[S\]Route +Import +: +(?P<s_route_import>\d+)'
+                         '\[(?P<s_route_import_error>\d+)\]\s+'
+                         '\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
+                         '\[(?P<r_imported_route_changed_error>\d+)\]$')
+
+        for line in output.splitlines():
+            interface_dict = ret_dict.setdefault('interface', {})
+            line = line.strip()
+
+            # Tunnel100
+            if not tunnel :  
+                m1 = p1.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    tunnel_int_dict = interface_dict.setdefault(group['interface'], {})            
+                    continue
+            else:
+                tunnel_int_dict = interface_dict.setdefault(tunnel, {})
+                        
+            # Interface State Event Stats:
+            m2 = p2.match(line)
+            if m2:
+                attr_dict = tunnel_int_dict.setdefault('interface_state_event_stats', {})
+                continue
+
+            # Tunnel Stats:
+            m3 = p3.match(line)
+            if m3:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_stats', {})
+                continue
+
+            # Tunnel Protection Stats:
+            m4 = p4.match(line)
+            if m4:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_protection_stats', {})
+                continue
+
+            # Tunnel QoS Stats:
+            m5 = p5.match(line)
+            if m5:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_qos_stats', {})
+                continue
+
+            # RIB Events Stats:
+            m6 = p6.match(line)
+            if m6:
+                attr_dict = tunnel_int_dict.setdefault('rib_event_stats', {})
+                continue
+
+            # MPLS Stats:
+            m7 = p7.match(line)
+            if m7:
+                attr_dict = tunnel_int_dict.setdefault('mpls_stats', {})
+                continue
+
+            # BFD Stats:
+            m8 = p8.match(line)
+            if m8:
+                attr_dict = tunnel_int_dict.setdefault('bfd_stats', {})
+                continue
+
+            # BGP Stats:
+            m9 = p9.match(line)
+            if m9:
+                attr_dict = tunnel_int_dict.setdefault('bgp_stats', {})
+                continue
+
+            # [R]UP                         : 2[0]    [R]Down                       : 0[0]
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Deleted                    : 0[0]
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Reset Socket               : 0[0]
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Rwatch w/o route           : 0[0]    [R]Route Evicted              : 0[0]
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+            m21 = p21.match(line)
+            if m21:
+                group = m21.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+            m22 = p22.match(line)
+            if m22:
+                group = m22.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Session Down               : 0[0]    [R]Session Up                 : 0[0]
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+            m24 = p24.match(line)
+            if m24:
+                group = m24.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+            m25 = p25.match(line)
+            if m25:
+                group = m25.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+# ==============================================
+# Parser for 'show ip nhrp stats detail'
+#            'show ip nhrp stats {tunnel} detail'
+# ==============================================
+
+class ShowIpNhrpStatsDetailSchema(MetaParser):
+    """Schema for show ip nhrp stats detail
+                  show ip nhrp stats {tunnel} detail
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'interface_state_event_stats': {
+                    'r_up': int,
+                    'r_up_error': int,
+                    'r_down': int,
+                    'r_down_error': int,
+                    'r_admin_down': int,
+                    'r_admin_down_error': int,
+                    'r_deleted': int,
+                    'r_deleted_error': int,
+                    'r_addr_changed': int,
+                    'r_addr_changed_error': int,
+                    'r_vrf_changed': int,
+                    'r_vrf_changed_error': int,
+                    'r_packets_received': int,
+                    'r_packets_received_error': int
+                },
+                'tunnel_stats': {
+                    's_endpoint_addition': int,
+                    's_endpoint_addition_error': int,
+                    's_endpoint_deletion': int,
+                    's_endpoint_deletion_error': int,
+                    'r_o_ep_sb_created': int,
+                    'r_o_ep_sb_created_error': int,
+                    'r_t_ep_sb_created': int,
+                    'r_t_ep_sb_created_error': int,
+                    'r_to_ep_deleted': int,
+                    'r_to_ep_deleted_error': int,
+                    's_pre_delete': int,
+                    's_pre_delete_error': int,
+                    'r_src_change': int,
+                    'r_src_change_error': int,
+                    'r_mode_change': int,
+                    'r_mode_change_error': int,
+                    'r_leave_mode': int,
+                    'r_leave_mode_error': int,
+                    'r_decap_intercept': int,
+                    'r_decap_intercept_error': int,
+                    'r_delayed_event_unlink_ep': int,
+                    'r_delayed_event_unlink_ep_error': int
+                },
+                'tunnel_protection_stats': {
+                    's_create_tp_socket': int,
+                    's_create_tp_socket_error': int,
+                    's_del_tp_socket': int,
+                    's_del_tp_socket_error': int,
+                    's_create_va': int,
+                    's_create_va_error': int,
+                    's_del_va': int,
+                    's_del_va_error': int,
+                    'r_up': int,
+                    'r_up_error': int,
+                    'r_down': int,
+                    'r_down_error': int,
+                    's_reset_socket': int,
+                    's_reset_socket_error': int,
+                    'r_process_delayed_event': int,
+                    'r_process_delayed_event_error': int,
+                    'r_update_delayed_event': int,
+                    'r_update_delayed_event_error': int
+                },
+                'tunnel_qos_stats': {
+                    's_qos_apply': int,
+                    's_qos_apply_error': int,
+                    's_qos_remove': int,
+                    's_qos_remove_error': int,
+                    'r_qos_polocy_removed': int,
+                    'r_qos_polocy_removed_error': int,
+                    'r_cli_policy_map_deleted': int,
+                    'r_cli_policy_map_deleted_error': int,
+                    'r_cli_policy_map_rename': int,
+                    'r_cli_policy_map_rename_error': int
+                },
+                'rib_event_stats': {
+                    's_add_route': int,
+                    's_add_route_error': int,
+                    's_del_route': int,
+                    's_del_route_error': int,
+                    's_add_nho': int,
+                    's_add_nho_error': int,
+                    's_del_nho': int,
+                    's_del_nho_error': int,
+                    's_rwatch_wo_route': int,
+                    's_rwatch_wo_route_error': int,
+                    's_init_ipdb': int,
+                    's_init_ipdb_error': int,
+                    's_add_ipdb': int,
+                    's_add_ipdb_error': int,
+                    's_del_ipdb': int,
+                    's_del_ipdb_error': int,
+                    's_remove_ipdb': int,
+                    's_remove_ipdb_error': int,
+                    's_rt_revise': int,
+                    's_rt_revise_error': int,
+                    'r_redist_callback': int,
+                    'r_redist_callback_error': int,
+                    'r_route_add_callback': int,
+                    'r_route_add_callback_error': int,
+                    'r_route_evicted': int,
+                    'r_route_evicted_error': int,
+                    's_route_query': int,
+                    's_route_query_error': int
+                },
+                'mpls_stats': {
+                    's_label_alloc': int,
+                    's_label_alloc_error': int,
+                    's_label_release': int,
+                    's_label_release_error': int,
+                    's_mpls_ip_key_bind': int,
+                    's_mpls_ip_key_bind_error': int,
+                    's_mpls_vpn_key_bind': int,
+                    's_mpls_vpn_key_bind_error': int,
+                    's_inject_packet': int,
+                    's_inject_packet_error': int,
+                    'r_nhrp_mpls_mgmt_ch_cb': int,
+                    'r_nhrp_mpls_mgmt_ch_cb_error': int,
+                    'r_redirect': int,
+                    'r_redirect_error': int,
+                    's_label_oi_bind': int,
+                    's_label_oi_bind_error': int,
+                    's_register_mpls': int,
+                    's_register_mpls_error': int,
+                    's_unregister_mpls': int,
+                    's_unregister_mpls_error': int
+                },
+                'bfd_stats': {
+                    's_client_create': int,
+                    's_client_create_error': int,
+                    's_client_destroy': int,
+                    's_client_destroy_error': int,
+                    's_session_create': int,
+                    's_session_create_error': int,
+                    's_session_destroy': int,
+                    's_session_destroy_error': int,
+                    'r_callback': int,
+                    'r_callback_error': int,
+                    'r_session_down': int,
+                    'r_session_down_error': int,
+                    'r_session_up': int,
+                    'r_session_up_error': int,
+                    'r_session_default': int,
+                    'r_session_default_error': int
+                },
+                'cef_stats': {
+                    's_adjacency_used': int,
+                    's_adjacency_used_error': int,
+                    's_adjacency_mark_stale': int,
+                    's_adjacency_mark_stale_error': int
+                },
+                'bgp_stats': {
+                    's_route_export': int,
+                    's_route_export_error': int,
+                    's_route_withdrawal': int,
+                    's_route_withdrawal_error': int,
+                    's_route_import': int,
+                    's_route_import_error': int,
+                    'r_imported_route_changed': int,
+                    'r_imported_route_changed_error': int,
+                    's_route_marked': int,
+                    's_route_marked_error': int,
+                    's_route_unmarked': int,
+                    's_route_unmarked_error': int,
+                    'r_route_change_notification': int,
+                    'r_route_change_notification_error': int,
+                    'r_exported_route_deleted': int,
+                    'r_exported_route_deleted_error': int,
+                    'r_withdrawal_all_route': int,
+                    'r_withdrawal_all_route_error': int
+                },
+                'platform_stats': {
+                    'r_state_change': int,
+                    'r_state_change_error': int,
+                    'r_redirect_request': int,
+                    'r_redirect_request_error': int,
+                    's_enable': int,
+                    's_enable_error': int,
+                    's_disable': int,
+                    's_disable_error': int
+                }
+            }
+        }
+    }
+
+class ShowIpNhrpStatsDetail(ShowIpNhrpStatsDetailSchema):
+    """Parser for 'show ip nhrp stats detail'
+                  'show ip nhrp stats {tunnel} detail'
+    """
+
+    cli_command = ['show ip nhrp stats detail', 'show ip nhrp stats {tunnel} detail']
+    def cli(self, tunnel=None, output=None):
+
+        if output is None:
+            if tunnel:
+                cmd = self.cli_command[1].format(tunnel=tunnel)
+            else:
+                cmd = self.cli_command[0]
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Tunnel100
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+)$')
+
+        # Interface State Event Stats:
+        p2 = re.compile('^Interface State Event Stats:$')
+
+        # Tunnel Stats:
+        p3 = re.compile('^Tunnel Stats:$')
+
+        # Tunnel Protection Stats:
+        p4 = re.compile('^Tunnel Protection Stats:$')
+
+        # Tunnel QoS Stats:
+        p5 = re.compile('^Tunnel QoS Stats:$')
+
+        # RIB Events Stats:
+        p6 = re.compile('^RIB Events Stats:$')
+
+        # MPLS Stats:
+        p7 = re.compile('^MPLS Stats:$')
+
+        # BFD Stats:
+        p8 = re.compile('^BFD Stats:$')
+
+        # CEF Stats:
+        p9 = re.compile('^CEF Stats:$')
+
+        # BGP Stats:
+        p10 = re.compile('^BGP Stats:$')
+
+        # Platform Stats:
+        p11 = re.compile('^Platform Stats:$')
+
+        # [R]UP                         : 2[0]    [R]Down                       : 0[0]
+        p12 = re.compile(r'^\[R\]UP +: +(?P<r_up>\d+)\[(?P<r_up_error>\d+)\]\s+'
+                         r'\[R\]Down +: +(?P<r_down>\d+)\[(?P<r_down_error>\d+)\]$')
+
+        # [R]Admin Down                 : 0[0]    [R]Deleted                    : 0[0]
+        p13 = re.compile(r'^\[R\]Admin +Down +: +(?P<r_admin_down>\d+)'
+                         '\[(?P<r_admin_down_error>\d+)\]\s+'
+                         '\[R\]Deleted +: +(?P<r_deleted>\d+)'
+                         '\[(?P<r_deleted_error>\d+)\]$')
+
+        # [R]Addr Changed               : 0[0]    [R]VRF Changed                : 0[0]
+        p14 = re.compile(r'^\[R\]Addr +Changed +: +(?P<r_addr_changed>\d+)'
+                         '\[(?P<r_addr_changed_error>\d+)\]\s+'
+                         '\[R\]VRF +Changed +: +(?P<r_vrf_changed>\d+)'
+                         '\[(?P<r_vrf_changed_error>\d+)\]$')
+
+        # [R]Packets received           : 2996[0]
+        p15 = re.compile(r'^\[R\]Packets +received +: +(?P<r_packets_received>\d+)'
+                         '\[(?P<r_packets_received_error>\d+)\]$')
+
+        # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
+        p16 = re.compile(r'^\[S\]End +Point +Addition +: +(?P<s_endpoint_addition>\d+)'
+                         '\[(?P<s_endpoint_addition_error>\d+)\]\s+'
+                         '\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
+                         '\[(?P<s_endpoint_deletion_error>\d+)\]$')
+
+        # [R]O EP SB Created            : 0[0]    [R]T EP SB Created
+        p17 = re.compile(r'^\[R\]O +EP +SB +Created +: +(?P<r_o_ep_sb_created>\d+)'
+                         '\[(?P<r_o_ep_sb_created_error>\d+)\]\s+'
+                         '\[R\]T +EP +SB +Created +: +(?P<r_t_ep_sb_created>\d+)'
+                         '\[(?P<r_t_ep_sb_created_error>\d+)\]$')
+
+        # [R]T/O EP Deleted             : 0[0]    [S]Pre-Delete
+        p18 = re.compile(r'^\[R\]T\/O +EP +Deleted +: +(?P<r_to_ep_deleted>\d+)'
+                         '\[(?P<r_to_ep_deleted_error>\d+)\]\s+'
+                         '\[S\]Pre-Delete +: +(?P<s_pre_delete>\d+)'
+                         '\[(?P<s_pre_delete_error>\d+)\]$')
+
+        # [R]SRC Change                 : 1[0]    [R]Mode Change
+        p19 = re.compile(r'^\[R\]SRC +Change +: +(?P<r_src_change>\d+)'
+                         '\[(?P<r_src_change_error>\d+)\]\s+'
+                         '\[R\]Mode +Change +: +(?P<r_mode_change>\d+)'
+                         '\[(?P<r_mode_change_error>\d+)\]$')
+
+        # [R]Leave Mode                 : 2[0]    [R]Decap Intercept
+        p20 = re.compile(r'^\[R\]Leave +Mode  +: +(?P<r_leave_mode>\d+)'
+                         '\[(?P<r_leave_mode_error>\d+)\]\s+'
+                         '\[R\]Decap +Intercept +: +(?P<r_decap_intercept>\d+)'
+                         '\[(?P<r_decap_intercept_error>\d+)\]$')
+
+        # [R]Delayed Event Unlink EP
+        p21 = re.compile(r'^\[R\]Delayed +Event +Unlink +EP +: +(?P<r_delayed_event_unlink_ep>\d+)'
+                         '\[(?P<r_delayed_event_unlink_ep_error>\d+)\]$')
+
+        # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        p22 = re.compile(r'^\[S\]Create +TP +socket +: +(?P<s_create_tp_socket>\d+)'
+                         '\[(?P<s_create_tp_socket_error>\d+)\]\s+'
+                         '\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
+                         '\[(?P<s_del_tp_socket_error>\d+)\]$')
+
+        # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        p23 = re.compile(r'^\[S\]Create +VA +: +(?P<s_create_va>\d+)'
+                         '\[(?P<s_create_va_error>\d+)\]\s+'
+                         '\[S\]Del +VA +: +(?P<s_del_va>\d+)'
+                         '\[(?P<s_del_va_error>\d+)\]$')
+
+        # [S]Reset Socket               : 0[0]    [R]Process Delayed Event
+        p24 = re.compile(r'^\[S\]Reset +Socket +: +(?P<s_reset_socket>\d+)'
+                         '\[(?P<s_reset_socket_error>\d+)\]\s+'
+                         '\[R\]Process +Delayed +Event +: +(?P<r_process_delayed_event>\d+)'
+                         '\[(?P<r_process_delayed_event_error>\d+)\]$')
+
+        # [R]Update Delayed Event       : 0[0]
+        p25 = re.compile(r'^\[R\]Update +Delayed +Event +: +(?P<r_update_delayed_event>\d+)'
+                         '\[(?P<r_update_delayed_event_error>\d+)\]$')
+
+        # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+        p26 = re.compile(r'^\[S\]QoS +APPLY +: +(?P<s_qos_apply>\d+)'
+                         '\[(?P<s_qos_apply_error>\d+)\]\s+'
+                         '\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
+                         '\[(?P<s_qos_remove_error>\d+)\]$')
+
+        # [R]QoS Policy Removed         : 0[0]    [R]CLI-Policy Map Deleted     : 0[0]
+        p27 = re.compile(r'^\[R\]QoS +Policy +Removed +: +(?P<r_qos_polocy_removed>\d+)'
+                         '\[(?P<r_qos_polocy_removed_error>\d+)\]\s+'
+                         '\[R\]CLI-Policy +Map +Deleted +: +(?P<r_cli_policy_map_deleted>\d+)'
+                         '\[(?P<r_cli_policy_map_deleted_error>\d+)\]$')
+
+        # [R]CLI-Policy Map Rename
+        p28 = re.compile(r'^\[R\]CLI-Policy +Map +Rename +: +(?P<r_cli_policy_map_rename>\d+)'
+                         '\[(?P<r_cli_policy_map_rename_error>\d+)\]$')
+
+        # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
+        p29 = re.compile(r'^\[S\]Add +Route +: +(?P<s_add_route>\d+)'
+                         '\[(?P<s_add_route_error>\d+)\]\s+'
+                         '\[S\]Del +Route +: +(?P<s_del_route>\d+)'
+                         '\[(?P<s_del_route_error>\d+)\]$')
+
+        # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        p30 = re.compile(r'^\[S\]Add +NHO +: +(?P<s_add_nho>\d+)'
+                         '\[(?P<s_add_nho_error>\d+)\]\s+'
+                         '\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
+                         '\[(?P<s_del_nho_error>\d+)\]$')
+
+        # [S]Rwatch w/o route           : 0[0]    [S]Init IPDB                  : 0[0]
+        p31 = re.compile(r'^\[S\]Rwatch +w\/o +route +: +(?P<s_rwatch_wo_route>\d+)'
+                         '\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
+                         '\[S\]Init +IPDB +: +(?P<s_init_ipdb>\d+)'
+                         '\[(?P<s_init_ipdb_error>\d+)\]$')
+
+        # [S]Add iPDB                   : 0[0]    [S]Del iPDB                   : 0[0]
+        p32 = re.compile(r'^\[S\]Add +iPDB +: +(?P<s_add_ipdb>\d+)'
+                         '\[(?P<s_add_ipdb_error>\d+)\]\s+'
+                         '\[S\]Del +iPDB +: +(?P<s_del_ipdb>\d+)'
+                         '\[(?P<s_del_ipdb_error>\d+)\]$')
+
+        # [S]remove iPDB                : 0[0]    [S]RTrevise                   : 0[0]
+        p33 = re.compile(r'^\[S\]remove +iPDB +: +(?P<s_remove_ipdb>\d+)'
+                         '\[(?P<s_remove_ipdb_error>\d+)\]\s+'
+                         '\[S\]RTrevise +: +(?P<s_rt_revise>\d+)'
+                         '\[(?P<s_rt_revise_error>\d+)\]$')
+
+        # [R]Redist Callback            : 0[0]    [R]Route Add Callback         : 0[0]
+        p34 = re.compile(r'^\[R\]Redist +Callback +: +(?P<r_redist_callback>\d+)'
+                         '\[(?P<r_redist_callback_error>\d+)\]\s+'
+                         '\[R\]Route +Add +Callback +: +(?P<r_route_add_callback>\d+)'
+                         '\[(?P<r_route_add_callback_error>\d+)\]$')
+
+        # [R]Route Evicted              : 0[0]    [S]Route Query                : 0[0]
+        p35 = re.compile(r'^\[R\]Route +Evicted +: +(?P<r_route_evicted>\d+)'
+                         '\[(?P<r_route_evicted_error>\d+)\]\s+'
+                         '\[S\]Route +Query +: +(?P<s_route_query>\d+)'
+                         '\[(?P<s_route_query_error>\d+)\]$')
+
+        # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        p36 = re.compile(r'^\[S\]Label +Alloc +: +(?P<s_label_alloc>\d+)'
+                         '\[(?P<s_label_alloc_error>\d+)\]\s+'
+                         '\[S\]Label +Release +: +(?P<s_label_release>\d+)'
+                         '\[(?P<s_label_release_error>\d+)\]$')
+
+        # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+        p37 = re.compile(r'^\[S\]MPLS +IP +Key +Bind +: +(?P<s_mpls_ip_key_bind>\d+)'
+                         '\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
+                         '\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
+                         '\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
+
+        # [S]Inject Packet              : 0[0]    [R]NHRP MPLS MGMT CH CB       : 0[0]
+        p38 = re.compile(r'^\[S\]Inject +Packet +: +(?P<s_inject_packet>\d+)'
+                         '\[(?P<s_inject_packet_error>\d+)\]\s+'
+                         '\[R\]NHRP +MPLS +MGMT +CH +CB +: +(?P<r_nhrp_mpls_mgmt_ch_cb>\d+)'
+                         '\[(?P<r_nhrp_mpls_mgmt_ch_cb_error>\d+)\]$')
+
+        # [R]Redirect                   : 0[0]    [S]Label-OI Bind              : 0[0]
+        p39 = re.compile(r'^\[R\]Redirect +: +(?P<r_redirect>\d+)'
+                         '\[(?P<r_redirect_error>\d+)\]\s+'
+                         '\[S\]Label-OI Bind +: +(?P<s_label_oi_bind>\d+)'
+                         '\[(?P<s_label_oi_bind_error>\d+)\]$')
+
+        # [S]Register MPLS              : 0[0]    [S]Unregister MPLS            : 0[0]
+        p40 = re.compile(r'^\[S\]Register +MPLS +: +(?P<s_register_mpls>\d+)'
+                         '\[(?P<s_register_mpls_error>\d+)\]\s+'
+                         '\[S\]Unregister +MPLS +: +(?P<s_unregister_mpls>\d+)'
+                         '\[(?P<s_unregister_mpls_error>\d+)\]$')
+
+        # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        p41 = re.compile(r'^\[S\]Client +Create +: +(?P<s_client_create>\d+)'
+                         '\[(?P<s_client_create_error>\d+)\]\s+'
+                         '\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
+                         '\[(?P<s_client_destroy_error>\d+)\]$')
+
+        # [S]Session Create             : 0[0]    [S]Session Destroy            : 0[0]
+        p42 = re.compile(r'^\[S\]Session +Create +: +(?P<s_session_create>\d+)'
+                         '\[(?P<s_session_create_error>\d+)\]\s+'
+                         '\[S\]Session +Destroy +: +(?P<s_session_destroy>\d+)'
+                         '\[(?P<s_session_destroy_error>\d+)\]$')
+
+        # [R]Callback                   : 0[0]    [R]Session Down               : 0[0]
+        p43 = re.compile(r'^\[R\]Callback +: +(?P<r_callback>\d+)'
+                         '\[(?P<r_callback_error>\d+)\]\s+'
+                         '\[R\]Session +Down +: +(?P<r_session_down>\d+)'
+                         '\[(?P<r_session_down_error>\d+)\]$')
+
+        # [R]Session Up                 : 0[0]    [R]Session Default            : 0[0]
+        p44 = re.compile(r'^\[R\]Session +Up +: +(?P<r_session_up>\d+)'
+                         '\[(?P<r_session_up_error>\d+)\]\s+'
+                         '\[R\]Session +Default +: +(?P<r_session_default>\d+)'
+                         '\[(?P<r_session_default_error>\d+)\]$')
+
+        # [S]Adjacency Used             : 0[0]    [S]Adjacency Mark Stale       : 180[0]
+        p45 = re.compile(r'^\[S\]Adjacency +Used +: +(?P<s_adjacency_used>\d+)'
+                         '\[(?P<s_adjacency_used_error>\d+)\]\s+'
+                         '\[S\]Adjacency +Mark +Stale +: +(?P<s_adjacency_mark_stale>\d+)'
+                         '\[(?P<s_adjacency_mark_stale_error>\d+)\]$')
+
+        # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        p46 = re.compile(r'^\[S\]Route +Export +: +(?P<s_route_export>\d+)'
+                         '\[(?P<s_route_export_error>\d+)\]\s+'
+                         '\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
+                         '\[(?P<s_route_withdrawal_error>\d+)\]$')
+
+        # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+        p47 = re.compile(r'^\[S\]Route +Import +: +(?P<s_route_import>\d+)'
+                         '\[(?P<s_route_import_error>\d+)\]\s+'
+                         '\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
+                         '\[(?P<r_imported_route_changed_error>\d+)\]$')
+
+        # [S]Route marked               : 0[0]    [S]Route unmarked             : 0[0]
+        p48 = re.compile(r'^\[S\]Route +marked +: +(?P<s_route_marked>\d+)'
+                         '\[(?P<s_route_marked_error>\d+)\]\s+'
+                         '\[S\]Route +unmarked +: +(?P<s_route_unmarked>\d+)'
+                         '\[(?P<s_route_unmarked_error>\d+)\]$')
+
+        # [R]Route change notification  : 0[0]    [R]Exported Route Deleted     : 0[0]
+        p49 = re.compile(r'^\[R\]Route +change +notification +: +(?P<r_route_change_notification>\d+)'
+                         '\[(?P<r_route_change_notification_error>\d+)\]\s+'
+                         '\[R\]Exported +Route +Deleted +: +(?P<r_exported_route_deleted>\d+)'
+                         '\[(?P<r_exported_route_deleted_error>\d+)\]$')
+
+        # [R]Withdraw All Routes        : 0[0]
+        p50 = re.compile(r'^\[R\]Withdraw +All +Routes +: +(?P<r_withdrawal_all_route>\d+)'
+                         '\[(?P<r_withdrawal_all_route_error>\d+)\]$')
+
+        # [R]State Change               : 0[0]    [R]Redirect Request           : 0[0]
+        p51 = re.compile(r'^\[R\]State +Change +: +(?P<r_state_change>\d+)'
+                         '\[(?P<r_state_change_error>\d+)\]\s+'
+                         '\[R\]Redirect +Request +: +(?P<r_redirect_request>\d+)'
+                         '\[(?P<r_redirect_request_error>\d+)\]$')
+
+        # [S]Enable                     : 0[0]    [S]Disable                    : 0[0]
+        p52 = re.compile(r'^\[S\]Enable +: +(?P<s_enable>\d+)\[(?P<s_enable_error>\d+)\]\s+'
+                         r'\[S\]Disable +: +(?P<s_disable>\d+)\[(?P<s_disable_error>\d+)\]$')
+
+        for line in output.splitlines():
+            interface_dict = ret_dict.setdefault('interface', {})
+            line = line.strip()
+
+            # Tunnel100
+            if not tunnel:
+                m1 = p1.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    tunnel_int_dict = interface_dict.setdefault(group['interface'], {})
+                    continue
+            else:
+                tunnel_int_dict = interface_dict.setdefault(tunnel, {})
+
+            # Interface State Event Stats:
+            m2 = p2.match(line)
+            if m2:
+                attr_dict = tunnel_int_dict.setdefault('interface_state_event_stats', {})
+                continue
+
+            # Tunnel Stats:
+            m3 = p3.match(line)
+            if m3:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_stats', {})
+                continue
+
+            # Tunnel Protection Stats:
+            m4 = p4.match(line)
+            if m4:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_protection_stats', {})
+                continue
+
+            # Tunnel QoS Stats:
+            m5 = p5.match(line)
+            if m5:
+                attr_dict = tunnel_int_dict.setdefault('tunnel_qos_stats', {})
+                continue
+
+            # RIB Events Stats:
+            m6 = p6.match(line)
+            if m6:
+                attr_dict = tunnel_int_dict.setdefault('rib_event_stats', {})
+                continue
+
+            # MPLS Stats:
+            m7 = p7.match(line)
+            if m7:
+                attr_dict = tunnel_int_dict.setdefault('mpls_stats', {})
+                continue
+
+            # BFD Stats:
+            m8 = p8.match(line)
+            if m8:
+                attr_dict = tunnel_int_dict.setdefault('bfd_stats', {})
+                continue
+
+            # CEF Stats:
+            m9 = p9.match(line)
+            if m9:
+                attr_dict = tunnel_int_dict.setdefault('cef_stats', {})
+                continue
+
+            # BGP Stats:
+            m10 = p10.match(line)
+            if m10:
+                attr_dict = tunnel_int_dict.setdefault('bgp_stats', {})
+                continue
+
+            # Platform Stats:
+            m11 = p11.match(line)
+            if m11:
+                attr_dict = tunnel_int_dict.setdefault('platform_stats', {})
+                continue
+
+            # [R]UP                         : 2[0]    [R]Down                       : 0[0]
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Admin Down                 : 0[0]    [R]Deleted                    : 0[0]
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Addr Changed               : 0[0]    [R]VRF Changed                : 0[0]
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Packets received           : 2996[0]
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]O EP SB Created            : 0[0]    [R]T EP SB Created
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]T/O EP Deleted             : 0[0]    [S]Pre-Delete
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]SRC Change                 : 1[0]    [R]Mode Change
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Leave Mode                 : 2[0]    [R]Decap Intercept
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Delayed Event Unlink EP
+            m21 = p21.match(line)
+            if m21:
+                group = m21.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+            m22 = p22.match(line)
+            if m22:
+                group = m22.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Reset Socket               : 0[0]    [R]Process Delayed Event
+            m24 = p24.match(line)
+            if m24:
+                group = m24.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Update Delayed Event       : 0[0]
+            m25 = p25.match(line)
+            if m25:
+                group = m25.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+            m26 = p26.match(line)
+            if m26:
+                group = m26.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]QoS Policy Removed         : 0[0]    [R]CLI-Policy Map Deleted     : 0[0]
+            m27 = p27.match(line)
+            if m27:
+                group = m27.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]CLI-Policy Map Rename
+            m28 = p28.match(line)
+            if m28:
+                group = m28.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
+            m29 = p29.match(line)
+            if m29:
+                group = m29.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+            m30 = p30.match(line)
+            if m30:
+                group = m30.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Rwatch w/o route           : 0[0]    [S]Init IPDB                  : 0[0]
+            m31 = p31.match(line)
+            if m31:
+                group = m31.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Add iPDB                   : 0[0]    [S]Del iPDB                   : 0[0]
+            m32 = p32.match(line)
+            if m32:
+                group = m32.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]remove iPDB                : 0[0]    [S]RTrevise                   : 0[0]
+            m33 = p33.match(line)
+            if m33:
+                group = m33.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Redist Callback            : 0[0]    [R]Route Add Callback         : 0[0]
+            m34 = p34.match(line)
+            if m34:
+                group = m34.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Route Evicted              : 0[0]    [S]Route Query                : 0[0]
+            m35 = p35.match(line)
+            if m35:
+                group = m35.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+            m36 = p36.match(line)
+            if m36:
+                group = m36.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+            m37 = p37.match(line)
+            if m37:
+                group = m37.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Inject Packet              : 0[0]    [R]NHRP MPLS MGMT CH CB       : 0[0]
+            m38 = p38.match(line)
+            if m38:
+                group = m38.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Redirect                   : 0[0]    [S]Label-OI Bind              : 0[0]
+            m39 = p39.match(line)
+            if m39:
+                group = m39.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Register MPLS              : 0[0]    [S]Unregister MPLS            : 0[0]
+            m40 = p40.match(line)
+            if m40:
+                group = m40.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+            m41 = p41.match(line)
+            if m41:
+                group = m41.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Session Create             : 0[0]    [S]Session Destroy            : 0[0]
+            m42 = p42.match(line)
+            if m42:
+                group = m42.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Callback                   : 0[0]    [R]Session Down               : 0[0]
+            m43 = p43.match(line)
+            if m43:
+                group = m43.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Session Up                 : 0[0]    [R]Session Default            : 0[0]
+            m44 = p44.match(line)
+            if m44:
+                group = m44.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Adjacency Used             : 0[0]    [S]Adjacency Mark Stale       : 180[0]
+            m45 = p45.match(line)
+            if m45:
+                group = m45.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+            m46 = p46.match(line)
+            if m46:
+                group = m46.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+            m47 = p47.match(line)
+            if m47:
+                group = m47.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Route marked               : 0[0]    [S]Route unmarked             : 0[0]
+            m48 = p48.match(line)
+            if m48:
+                group = m48.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Route change notification  : 0[0]    [R]Exported Route Deleted     : 0[0]
+            m49 = p49.match(line)
+            if m49:
+                group = m49.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]Withdraw All Routes        : 0[0]
+            m50 = p50.match(line)
+            if m50:
+                group = m50.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [R]State Change               : 0[0]    [R]Redirect Request           : 0[0]
+            m51 = p51.match(line)
+            if m51:
+                group = m51.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # [S]Enable                     : 0[0]    [S]Disable                    : 0[0]
+            m52 = p52.match(line)
+            if m52:
+                group = m52.groupdict()
+                attr_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+# ==============================================
+# Parser for 'show ip nhrp'
+# ==============================================
+
+class ShowIpNhrpSchema(MetaParser):
+    """Schema for show ip nhrp
+    """
+    schema = {
+        Any(): {
+            'via': {
+                Any(): {
+                    'tunnel': {
+                        'tunnel_name': str,
+                        'created': str,
+                        'expire': str,
+                    },
+                    'type': str,
+                    'flags': str,
+                    'nbma_address': str,
+                }
+            }
+        }
+    }
+
+class ShowIpNhrp(ShowIpNhrpSchema):
+    """Parser for 'show ip nhrp'
+    """
+
+    cli_command = ['show ip nhrp']
+    def cli(self, output=None):
+
+        cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Matching patterns
+        # 22.1.1.0/24 via 100.0.0.1
+        p1 = re.compile(r'^(?P<target_network>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}) +'
+                        'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+
+        # Matching patterns
+        # Tunnel100 created 00:00:13, expire 00:02:46
+        p2 = re.compile(r'^(?P<tunnel>\S+) +'
+                        'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
+                        '[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
+
+        # Matching patterns
+        # Type: dynamic, Flags: router rib
+        p3 = re.compile(r'^Type: +(?P<type>\S+), +'
+                        'Flags: *(?P<flags>(.*))$')
+
+        # Matching patterns
+        # NBMA address: 101.1.1.1
+        p4 = re.compile(r'^NBMA address: +(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 22.1.1.0/24 via 100.0.0.1
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                network_dict = ret_dict.setdefault(group['target_network'], {}).\
+                                   setdefault('via', {}).\
+                                   setdefault(group['next_hop'], {})
+                continue
+
+            # Tunnel100 created 00:00:13, expire 00:02:46
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                tunnel_dict = network_dict.setdefault('tunnel', {})
+                tunnel_dict.update({
+                    'tunnel_name': group['tunnel'],
+                    'created': group['created'],
+                    'expire': group['expire']
+                })
+                continue
+
+            # Type: dynamic, Flags: router rib
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                network_dict.update({
+                    'type': group['type'],
+                    'flags': group['flags']
+                })
+                continue
+
+            # NBMA address: 101.1.1.1
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                network_dict.update({
+                    'nbma_address': group['nbma_address'],
+                })
+        return ret_dict
+
+
+# ==============================================
+# Parser for 'show ip nhrp detail'
+# ==============================================
+
+class ShowIpNhrpDetailSchema(MetaParser):
+    """Schema for show ip nhrp detail
+    """
+    schema = {
+        Any(): {
+            'via': {
+                Any(): {
+                    'tunnel': {
+                        'tunnel_name': str,
+                        'created': str,
+                        'expire': str,
+                    },
+                    'type': str,
+                    'flags': str,
+                    'nbma_address': str,
+                    'preference': int,
+                    Optional('requester'): str,
+                    Optional('request_id'): str,
+                }
+            }
+        }
+    }
+
+
+class ShowIpNhrpDetail(ShowIpNhrpDetailSchema):
+    """Parser for 'show ip nhrp detail'
+    """
+
+    cli_command = ['show ip nhrp detail']
+    def cli(self, output=None):
+
+        cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # 22.1.1.0/24 via 100.0.0.1
+        p1 = re.compile(r'^(?P<target_network>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}) +'
+                        'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+
+        # Tunnel100 created 00:00:13, expire 00:02:46
+        p2 = re.compile(r'^(?P<tunnel>\S+) +'
+                        'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
+                        '[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
+
+        # Type: dynamic, Flags: router rib
+        p3 = re.compile(r'^Type: +(?P<type>\S+), +'
+                        'Flags: *(?P<flags>(.*))$')
+
+        # NBMA address: 101.1.1.1
+        p4 = re.compile(r'^NBMA address: +(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+
+        # Preference: 255
+        p5 = re.compile(r'^Preference: +(?P<preference>\d+)$')
+
+        # Requester: 100.0.0.1 Request ID: 9
+        p6 = re.compile(r'^Requester: +(?P<requester>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) +'
+                        'Request +ID: +(?P<request_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 22.1.1.0/24 via 100.0.0.1
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                network_dict = ret_dict.setdefault(group['target_network'], {}).\
+                                   setdefault('via', {}).\
+                                   setdefault(group['next_hop'], {})
+                continue
+
+            # Tunnel100 created 00:00:13, expire 00:02:46
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                tunnel_dict = network_dict.setdefault('tunnel', {})
+                tunnel_dict.update({
+                    'tunnel_name': group['tunnel'],
+                    'created': group['created'],
+                    'expire': group['expire']
+                })
+                continue
+
+            # Type: dynamic, Flags: router rib
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                network_dict.update({
+                    'type': group['type'],
+                    'flags': group['flags']
+                })
+                continue
+
+            # NBMA address: 101.1.1.1
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                network_dict.update({
+                    'nbma_address': group['nbma_address'],
+                })
+                continue
+
+            # Preference: 255
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                network_dict.update({
+                    'preference': int(group['preference'])
+                })
+                continue
+
+            # Requester: 100.0.0.1 Request ID: 9
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                network_dict.update({
+                    'requester': group['requester'],
+                    'request_id': group['request_id']
+                })
+        return ret_dict
+
+# ============================================================
+# Parser for 'show ip nhrp nhs'
+#            'show ip nhrp nhs {tunnel}'
+# ============================================================
+
+class ShowIpNhrpNhsSchema(MetaParser):
+    """Schema for show ip nhrp nhs
+                  show ip nhrp nhs {tunnel}
+    """
+    schema = {
+        Any(): {
+            'nhs_ip': {
+                Any(): {
+                    'nbma_address': str,
+                    'priority': int,
+                    'cluster': int,
+                    'nhs_state': str
+                }
+            }
+        }
+    }
+
+class ShowIpNhrpNhs(ShowIpNhrpNhsSchema):
+    """Schema for show ip nhrp nhs
+                  show ip nhrp nhs {tunnel}
+    """
+
+    cli_command = ['show ip nhrp nhs',
+                   'show ip nhrp nhs {tunnel}']
+    def cli(self, tunnel=None, output=None):
+
+        if tunnel:
+            cmd = self.cli_command[1].format(tunnel=tunnel)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Tunnel100:
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+):$')
+
+        # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0
+        p2 = re.compile(r'^(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<nhs_state>[E|R|W|D]+)\s+'
+                        r'NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'priority\s+=\s+(?P<priority>\d+)\s+cluster\s+=\s+(?P<cluster>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tunnel100:
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                tunnel_dict = ret_dict.setdefault(group['interface'], {})
+                continue
+
+            # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                attr_tunnel_dict = tunnel_dict.setdefault('nhs_ip', {}).\
+                    setdefault(group['nhs_ip'], {})
+                attr_tunnel_dict.update({
+                    'nhs_state': group['nhs_state'],
+                    'nbma_address': group['nbma_address'],
+                    'priority': int(group['priority']),
+                    'cluster': int(group['cluster'])
+                })
+                continue
+
+        return ret_dict
+
+# ============================================================
+# Parser for 'show ip nhrp nhs detail'
+#            'show ip nhrp nhs {tunnel} detail'
+# ============================================================
+
+class ShowIpNhrpNhsDetailSchema(MetaParser):
+    """Schema for show ip nhrp nhs detail
+                  show ip nhrp nhs {tunnel} detail
+    """
+    schema = {
+        Any(): {
+            'nhs_ip': {
+                Any(): {
+                    'nbma_address': str,
+                    'priority': int,
+                    'cluster': int,
+                    'nhs_state': str,
+                    'req_sent': int,
+                    'req_failed': int,
+                    'reply_recv': int,
+                    Optional('receive_time'): str,
+                    Optional('ack'): int,
+                    'current_request_id': int,
+                    Optional('protection_socket_requested'): str
+                }
+            }
+        },
+        Optional('pending_registration_requests'): {
+            Optional('req_id'): {
+                Any(): {
+                    Optional('ret'): int,
+                    Optional('nhs_ip'): str,
+                    Optional('nhs_state'): str,
+                    Optional('tunnel'): str
+                }
+            }
+        }
+    }
+
+class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
+    """Schema for show ip nhrp nhs detail
+                  show ip nhrp nhs {tunnel} detail
+    """
+
+    cli_command = ['show ip nhrp nhs detail',
+                   'show ip nhrp nhs {tunnel} detail']
+    def cli(self, tunnel=None, output=None):
+
+        if tunnel:
+            cmd = self.cli_command[1].format(tunnel=tunnel)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Tunnel100:
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+):$')
+
+        # Pending Registration Requests:
+        p2 = re.compile('^Pending Registration Requests:$')
+
+        # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
+        # req-sent 5685  req-failed 0  repl-recv 5675
+        p3 = re.compile(r'^(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<nhs_state>[E|R|W|D]+)\s+'
+                        r'NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'priority\s+=\s+(?P<priority>\d+)\s+cluster\s+=\s+(?P<cluster>\d+)\s+'
+                        r'req-sent\s+(?P<req_sent>\d+)\s+req-failed\s+(?P<req_failed>\d+)\s+'
+                        r'repl-recv\s+(?P<reply_recv>\d+)$')
+
+        # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
+        # req-sent 5685  req-failed 0  repl-recv 5675 (00:00:21 ago)
+        p4 = re.compile(r'^(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<nhs_state>[E|R|W|D]+)\s+'
+                        r'NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'priority\s+=\s+(?P<priority>\d+)\s+cluster\s+=\s+(?P<cluster>\d+)\s+'
+                        r'req-sent\s+(?P<req_sent>\d+)\s+req-failed\s+(?P<req_failed>\d+)\s+'
+                        r'repl-recv\s+(?P<reply_recv>\d+)\s+'
+                        r'\((?P<receive_time>\d{1,2}:\d{2}:\d{2})\s+\w+\)$')
+
+        # Current Request ID: 11167
+        p5 = re.compile(r'^Current +Request +ID:\s+(?P<current_request_id>\d+)$')
+
+        # Current Request ID: 11167 (Ack: 11167)
+        p6 = re.compile(r'^Current +Request +ID:\s+(?P<current_request_id>\d+)\s+'
+                        r'\(Ack:\s+(?P<ack>\d+)\)$')
+
+        # Protection Socket Requested: FALSE
+        p7 = re.compile(r'^Protection +Socket +Requested:\s+'
+                        r'(?P<protection_socket_requested>\w+)$')
+
+        # Registration Request: Reqid 184, Ret 64  NHS 111.0.0.100 expired (Tu111)
+        p8 = re.compile(r'^Registration +Request:\s+'
+                        r'Reqid +(?P<req_id>\d+), +Ret +(?P<ret>\d+)\s+'
+                        r'NHS +(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<nhs_state>\w+)\s+\((?P<tunnel>[\w\/\.\-]+)\)$')
+
+        # Registration Request: Reqid 184, Ret 64  NHS 111.0.0.100 expired
+        p9 = re.compile(r'^Registration +Request:\s+'
+                        r'Reqid +(?P<req_id>\d+), +Ret +(?P<ret>\d+)\s+'
+                        r'NHS +(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<nhs_state>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tunnel100:
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                tunnel_dict = ret_dict.setdefault(group['interface'], {})
+                continue
+
+            # Pending Registration Requests:
+            m2 = p2.match(line)
+            if m2:
+                pending_dict = ret_dict.setdefault('pending_registration_requests', {})
+
+            # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
+            # req-sent 5685  req-failed 0  repl-recv 5675
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                attr_tunnel_dict = tunnel_dict.setdefault('nhs_ip', {}).\
+                    setdefault(group['nhs_ip'], {})
+                attr_tunnel_dict.update({
+                    'nhs_state': group['nhs_state'],
+                    'nbma_address': group['nbma_address'],
+                    'priority': int(group['priority']),
+                    'cluster': int(group['cluster']),
+                    'req_sent': int(group['req_sent']),
+                    'req_failed': int(group['req_failed']),
+                    'reply_recv': int(group['reply_recv'])
+                })
+                continue
+
+            # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
+            # req-sent 5685  req-failed 0  repl-recv 5675 (00:00:21 ago)
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                attr_tunnel_dict = tunnel_dict.setdefault('nhs_ip', {}).\
+                    setdefault(group['nhs_ip'], {})
+                attr_tunnel_dict.update({
+                    'nhs_state': group['nhs_state'],
+                    'nbma_address': group['nbma_address'],
+                    'priority': int(group['priority']),
+                    'cluster': int(group['cluster']),
+                    'req_sent': int(group['req_sent']),
+                    'req_failed': int(group['req_failed']),
+                    'reply_recv': int(group['reply_recv']),
+                    'receive_time': group['receive_time']
+                })
+                continue
+
+            # Current Request ID: 11167
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                attr_tunnel_dict.update({
+                    'current_request_id': int(group['current_request_id'])
+                })
+                continue
+
+            # Current Request ID: 11167 (Ack: 11167)
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                attr_tunnel_dict.update({
+                    'current_request_id': int(group['current_request_id']),
+                    'ack': int(group['ack'])
+                })
+                continue
+
+            # Protection Socket Requested: FALSE
+            m7= p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                attr_tunnel_dict.update({
+                    'protection_socket_requested': group['protection_socket_requested']
+                })
+                continue
+
+            # Registration Request: Reqid 184, Ret 64  NHS 111.0.0.100 expired (Tu111)
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                attr_dict = pending_dict.setdefault('req_id', {}).\
+                    setdefault(group['req_id'], {})
+                attr_dict.update({
+                    'ret': int(group['ret']),
+                    'nhs_ip': group['nhs_ip'],
+                    'nhs_state': group['nhs_state'],
+                    'tunnel': group['tunnel']
+                })
+                continue
+
+            # Registration Request: Reqid 184, Ret 64  NHS 111.0.0.100 expired
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                attr_dict = pending_dict.setdefault('req_id', {}).\
+                    setdefault(group['req_id'], {})
+                attr_dict.update({
+                    'ret': int(group['ret']),
+                    'nhs_ip': group['nhs_ip'],
+                    'nhs_state': group['nhs_state'],
+                })
+                continue
+
+        return ret_dict
+
+# ==============================================
+# Parser for 'show nhrp stats'
+#            'show nhrp stats {tunnel}'
+# ==============================================
+class ShowNhrpStats(ShowIpNhrpStats, ShowIpNhrpStatsSchema):
+    """Parser for 'show nhrp stats'
+                  'show nhrp stats {tunnel}'
+    """
+
+    cli_command = ['show nhrp stats', 'show nhrp stats {tunnel}']
+    def cli(self, tunnel=None, output=None):
+
+        if tunnel:
+            cmd = self.cli_command[1].format(tunnel=tunnel)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+        return super().cli(tunnel=tunnel, output=output)
+
+# ==============================================
+# Parser for 'show nhrp stats detail'
+#            'show nhrp stats {tunnel} detail'
+# ==============================================
+class ShowNhrpStatsDetail(ShowIpNhrpStatsDetail, ShowIpNhrpStatsDetailSchema):
+    """Parser for 'show nhrp stats detail'
+                  'show nhrp stats {tunnel} detail'
+    """
+
+    cli_command = ['show nhrp stats detail', 'show nhrp stats {tunnel} detail']
+    def cli(self, tunnel=None, output=None):
+
+        if tunnel:
+            cmd = self.cli_command[1].format(tunnel=tunnel)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            # get output from device
+            output = self.device.execute(cmd)
+        return super().cli(tunnel=tunnel, output=output)

@@ -350,6 +350,10 @@ class ShowIsisDatabaseSchema(MetaParser):
                                         'max': int,
                                     },
                                     Optional('uni_link_delay_var'): int,
+                                    Optional('uni_link_loss'): {
+                                        'percent': str,
+                                        'anomalous': bool,
+                                    },
                                     Optional("affinity"): str,
                                     Optional("extended_affinity"): list,
                                     Optional("asla"): {
@@ -362,6 +366,10 @@ class ShowIsisDatabaseSchema(MetaParser):
                                             Optional("bit_mask"): str,
                                             Optional("appl_spec_ext_admin_group"): list,
                                             Optional("appl_spec_admin_group"): str,
+                                            Optional('appl_spec_uni_link_loss'): {
+                                                'percent': str,
+                                                'anomalous': bool,
+                                            },
                                             Optional("appl_spec_uni_link_delay"): {
                                                 "a_bit": bool,
                                                 "min": int,
@@ -405,7 +413,6 @@ class ShowIsisDatabaseSchema(MetaParser):
                                     "alg_type": str,
                                     "priority": int,
                                     Optional("m_flag"): bool,
-                                    Optional("segment_routing"): bool,
                                     Optional("exclude_any"): Any(),
                                     Optional("include_any"): Any(),
                                     Optional("include_all"): Any(),
@@ -420,7 +427,7 @@ class ShowIsisDatabaseSchema(MetaParser):
                                 "srgb_range": int,
                                 "srlb_base": int,
                                 "srlb_range": int,
-                                "algorithms": list
+                                "algorithms": set
                             },
                             Optional("node_msd"): int,
                         },
@@ -646,6 +653,13 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
         #    0x00000000 0x00000000 0x00000000 0x00000000
         p47 = re.compile(r'^(?P<hex>(0x\w{8}\s*){1,4})$')
 
+        # Uni Link Loss 0.799998% 
+        # Uni Link Loss 0.799998% (Anomalous)         
+        p48 = re.compile(r'^Uni Link Loss\s+(?P<loss>\S+)%(\s+\((?P<anomalous>Anomalous)\))?$')
+
+        # Appl spec Uni Link Loss 0.899997% (Anomalous)
+        p49 = re.compile(r'^Appl spec Uni Link Loss\s+(?P<loss>\S+)%(\s+\((?P<anomalous>Anomalous)\))?$')
+
         in_extended_affinity = False
         in_include_all = False
         in_exclude_any = False
@@ -836,23 +850,19 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                 group = m.groupdict()
                 sr_dict["spf"] = True if group["spf"] else False
                 sr_dict["strict_spf"] = True if group["strict_spf"] else False
-                sr_dict["algorithms"] = []
-                sr_dict["algorithms"].append(int(group["flex_id"]))
-                lsp_dict["flex_algo"][int(group["flex_id"])]["segment_routing"] = True
+                sr_dict["algorithms"] = set()
+                sr_dict["algorithms"].add(int(group["flex_id"]))
                 continue
             
             # Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                sr_dict["algorithms"].append(int(group["flex_id_1"]))
-                lsp_dict["flex_algo"][int(group["flex_id_1"])]["segment_routing"] = True
+                sr_dict["algorithms"].add(int(group["flex_id_1"]))
                 if group["flex_id_2"]:
-                    sr_dict["algorithms"].append(int(group["flex_id_2"]))
-                    lsp_dict["flex_algo"][int(group["flex_id_2"])]["segment_routing"] = True
+                    sr_dict["algorithms"].add(int(group["flex_id_2"]))
                 if group["flex_id_3"]:
-                    sr_dict["algorithms"].append(int(group["flex_id_3"]))
-                    lsp_dict["flex_algo"][int(group["flex_id_3"])]["segment_routing"] = True
+                    sr_dict["algorithms"].add(int(group["flex_id_3"]))
                 continue
 
             # Node-MSD 
@@ -1127,6 +1137,32 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                 flex_algo_dict["include_all"] = []
                 continue
 
+            # Uni Link Loss 0.799998% 
+            # Uni Link Loss 0.799998% (Anomalous)    
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["uni_link_loss"] = {
+                    "percent": group["loss"],
+                    "anomalous": False
+                }
+                if group["anomalous"]:
+                    is_dict["uni_link_loss"]["anomalous"] = True
+                continue 
+
+            # Appl spec Uni Link Loss 0.899997% (Anomalous)
+            # Appl spec Uni Link Loss 0.899997%
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                standard_app_dict["appl_spec_uni_link_loss"] = {
+                    "percent": group["loss"],
+                    "anomalous": False
+                }
+                if group["anomalous"]:
+                    standard_app_dict["appl_spec_uni_link_loss"]["anomalous"] = True
+                continue 
+            
         return result_dict
 
 class ShowIsisDatabase(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):

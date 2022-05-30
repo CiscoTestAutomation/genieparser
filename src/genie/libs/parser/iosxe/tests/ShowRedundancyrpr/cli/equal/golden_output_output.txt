@@ -1,0 +1,37 @@
+show redundancy rpr
+My Switch Id = 2
+Peer Switch Id = 1
+Last switchover reason = active unit removed
+Configured Redundancy Mode = sso
+Operating Redundancy Mode = sso
+Switch 2 Slot 3 Processor Information:
+---------------------------------------------
+Current Software State = ACTIVE
+Uptime in current state = 6 days, 20 hours, 57 minutes
+Image Version = Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.8.20220206:163218 [BLD_V178_THROTTLE_LATEST_20220206_153121:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Sun 06-Feb-22 08:32 by mcpre
+BOOT = bootflash:packages.conf;
+
+Switch 2 Slot 4 Processor Information:
+---------------------------------------------
+Current Software State = Not_Reachable
+Uptime in current state = 6 days, 20 hours, 57 minutes
+Image Version =
+BOOT = 
+
+Switch 1 Slot 3 Processor Information:
+---------------------------------------------
+Current Software State = STANDBY HOT
+Uptime in current state = 6 days, 20 hours, 45 minutes
+Image Version = Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.8.20220206:163218 [BLD_V178_THROTTLE_LATEST_20220206_153121:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Sun 06-Feb-22 08:32 by mcpre
+BOOT = bootflash:packages.conf;
+
+Switch 1 Slot 4 Processor Information:
+---------------------------------------------
+Current Software State = Not_Reachable
+Uptime in current state = 6 days, 20 hours, 45 minutes
+Image Version = 
+BOOT = 
