@@ -2939,3 +2939,1040 @@ class ShowSdwanAppfwdCflowdFlowCount(ShowSdwanAppfwdCflowdFlowCountSchema):
                 name_dict.update({'count': count})
 
         return vpn_dict
+
+# =============================================
+# Parser Schema for 'show sdwan app-hosting oper-data'
+# =============================================
+class ShowSdwanAppHostingOperDataSchema(MetaParser):
+    """Schema for "show sdwan app-hosting oper-data" """
+
+    schema = {
+            'app_hosting_oper_data_app': {
+                Any(): {
+                    'state': str,
+                    'pkg_info_name': str,
+                    'pkg_info_path': str,
+                    'app_name': str,
+                    'pkg_version': str,
+                    'pkg_desc_name': str,
+                    'pkg_app_type': str,
+                    'pkg_app_owner': str,
+                    'app_act_allowed': str,
+                    'pkg_app_author': str,
+                    'pkg_info_key_type': str,
+                    'pkg_info_method': str,
+                    'pkg_lic_name': str,
+                    'pkg_lic_version': str,
+                    'processes_name': str,
+                    'processes_status': str,
+                    'processes_pid': str,
+                    'processes_uptime': str,
+                    'processes_memory': str,
+                    'profile_name': str,
+                    'disk': str,
+                    'memory': str,
+                    'cpu': str,
+                    'vcpu': str,
+                    'cpu_percent': str,
+                    'guest_intf': str,
+                    'res_add_state': str,
+                    'res_add_disk_space': str,
+                    'res_add_memory': str,
+                    'res_add_cpu': str,
+                    'res_add_vcpu': str,
+                    'res_doc_run_opts': str,
+                    'details_command': str,
+                    'details_entry_point': str,
+                    'details_health_stats': str,
+                    'details_probe_error': str,
+                    'details_probe_output': str,
+                    'details_pkg_run_opt': str,
+                    'ieobc_mac_address': str,
+                    'utilization_name': str,
+                    'req_app_util': str,
+                    'actual_app_util': str,
+                    'cpu_state': str,
+                    'mem_allocation': str,
+                    'mem_used': str
+                }
+            },
+            'name': {
+                Any(): {
+                    'alias': str,
+                    'rx_packets': str,
+                    'rx_bytes': str,
+                    'rx_errors': str,
+                    'tx_packets': str,
+                    'tx_bytes': str,
+                    'tx_errors': str
+                }
+            },
+            'storage_utils_storage_util_disk': {
+                'alias': str,
+                'rd_bytes': str,
+                'rd_requests': str,
+                'errors': str,
+                'wr_bytes': str,
+                'wr_requests': str,
+                'capacity': str,
+                'available': str,
+                'used': str,
+                'usage': str,
+                'pkg_policy': str
+            },
+            'mac_address': {
+                Any(): {
+                    'attached_intf': str,
+                    'ipv4_address': str,
+                    'network_name': str,
+                    'ipv6_address': str
+                }
+            },
+            'app_hosting_oper_data_app_resources_global': {
+                Any(): {
+                    'quota': str,
+                    'available': str,
+                    Optional('quota_unit'): str,
+                    Optional('available_unit'): str
+                }
+            },
+            'app_notifications_event': {
+                'timestamp': str,
+                'severity_level': str,
+                'host_name': str,
+                'vrf_name': str,
+                'app_id': str,
+                'ev_type': str,
+                'status': str,
+                'app_state': str,
+                'is_enabled': str
+            }
+        }
+
+# ==============================================
+# Parser for 'show sdwan app-hosting oper-data'
+# ==============================================
+
+class ShowSdwanAppHostingOperData(ShowSdwanAppHostingOperDataSchema):
+    """ parser for "show sdwan app-hosting oper-data" """
+
+    cli_command = "show sdwan app-hosting oper-data"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        oper_data_dict = {}
+        # app-hosting-oper-data app utd
+        p1 = re.compile(r'^app-hosting-oper-data\sapp\s(?P<app>\w+)$')
+
+        #  details state            RUNNING
+        p2 = re.compile(r'^details\sstate\s+(?P<state>\w+)$')
+
+        #  details package-information name UTD-Snort-Feature
+        p3 = re.compile(r'^details\spackage-information\sname\s+(?P<pkg_info_name>[A-Za-z-]+)$')
+
+        #  details package-information path /bootflash/.UTD_IMAGES/iox-utd_1.0.4_SV2.9.16.1_XE17.7.tar
+        p4 = re.compile(r'^details\spackage-information\spath\s+(?P<pkg_info_path>[A-Za-z0-9-\/._]+)$')
+
+        # details package-information application name utd
+        p5 = re.compile(r'^details\spackage-information\sapplication\sname\s+(?P<app_name>\w+)$')
+
+        # details package-information application installed-version 1.0.4_SV2.9.16.1_XE17.7
+        p6 = re.compile(
+            r'^details\spackage-information\sapplication\sinstalled-version\s+(?P<pkg_version>[A-Z0-9._]+$)')
+
+        #  details package-information application description "Unified Threat Defense"
+        p7 = re.compile(r'^details\spackage-information\sapplication\sdescription\s+(?P<pkg_desc_name>\"[A-Za-z ]+\")$')
+
+        # details package-information application type LXC
+        p8 = re.compile(r'^details\spackage-information\sapplication\stype\s+(?P<pkg_app_type>\w+)$')
+
+        #  details package-information application owner ioxm
+        p9 = re.compile(r'^details\spackage-information\sapplication\sowner\s+(?P<pkg_app_owner>\w+)$')
+
+        # details package-information application activation-allowed true
+        p10 = re.compile(r'^details\spackage-information\sapplication\sactivation-allowed\s+(?P<app_act_allowed>\w+)$')
+
+        # details package-information application author ""
+        p11 = re.compile(r'^details\spackage-information\sapplication\sauthor\s+(?P<pkg_app_author>\S+)$')
+
+        # details package-information signing key-type ""
+        p12 = re.compile(r'^details\spackage-information\ssigning\skey-type\s+(?P<pkg_info_key_type>\S+)$')
+
+        # details package-information signing method ""
+        p13 = re.compile(r'^details\spackage-information\ssigning\smethod\s+(?P<pkg_info_method>\S+)$')
+
+        # details package-information licensing name ""
+        p14 = re.compile(r'^details\spackage-information\slicensing\sname\s+(?P<pkg_lic_name>\S+)$')
+
+        # details package-information licensing version ""
+        p15 = re.compile(r'^details\spackage-information\slicensing\sversion\s+(?P<pkg_lic_version>\S+)$')
+
+        # details package-information url-path ""
+        p16 = re.compile(r'^details\spackage-information\slurl-path\s+(?P<pkg_url_path>\S+)$')
+
+        # details detailed-guest-status processes name ""
+        p17 = re.compile(r'^details\sdetailed-guest-status\sprocesses\sname\s+(?P<processes_name>\S+)$')
+
+        # details detailed-guest-status processes status ""
+        p18 = re.compile(r'^details\sdetailed-guest-status\sprocesses\sstatus\s+(?P<processes_status>\S+)$')
+
+        # details detailed-guest-status processes pid ""
+        p19 = re.compile(r'^details\sdetailed-guest-status\sprocesses\spid\s+(?P<processes_pid>\S+)$')
+
+        # details detailed-guest-status processes uptime ""
+        p20 = re.compile(r'^details\sdetailed-guest-status\sprocesses\suptime\s+(?P<processes_uptime>\S+)$')
+
+        # details detailed-guest-status processes memory ""
+        p21 = re.compile(r'^details\sdetailed-guest-status\sprocesses\smemory\s+(?P<processes_memory>\S+)$')
+
+        # details activated-profile-name cloud-medium
+        p22 = re.compile(r'^details\sactivated-profile-name\s+(?P<profile_name>[a-z-]+)$')
+
+        # details resource-reservation disk 1111
+        p23 = re.compile(r'^details\sresource-reservation\sdisk\s+(?P<disk>\d+)$')
+
+        # details resource-reservation memory 3072
+        p24 = re.compile(r'^details\sresource-reservation\smemory\s+(?P<memory>\d+)$')
+
+        # details resource-reservation cpu 0
+        p25 = re.compile(r'^details\sresource-reservation\scpu\s+(?P<cpu>\d+)$')
+
+        # details resource-reservation vcpu 0
+        p26 = re.compile(r'^details\sresource-reservation\svcpu\s+(?P<vcpu>\d+)$')
+
+        # details resource-reservation cpu-percent 50
+        p27 = re.compile(r'^details\sresource-reservation\scpu-percent\s+(?P<cpu_percent>\d+)$')
+
+        # details guest-interface  ""
+        p28 = re.compile(r'^details\sguest-interface\s+(?P<guest_intf>\S+)$')
+
+        # details resource-admission state ""
+        p29 = re.compile(r'^details\sresource-admission\sstate\s+(?P<res_add_state>\S+)$')
+
+        # details resource-admission disk-space ""
+        p30 = re.compile(r'^details\sresource-admission\sdisk-space\s+(?P<res_add_disk_space>\S+)$')
+
+        # details resource-admission memory ""
+        p31 = re.compile(r'^details\sresource-admission\smemory\s+(?P<res_add_memory>\S+)$')
+
+        # details resource-admission cpu 0
+        p32 = re.compile(r'^details\sresource-admission\scpu\s+(?P<res_add_cpu>\S+)$')
+
+        # details resource-admission vcpus ""
+        p33 = re.compile(r'^details\sresource-admission\svcpus\s+(?P<res_add_vcpu>\S+)$')
+
+        # details docker-run-opts  ""
+        p34 = re.compile(r'^details\sdocker-run-opts\s+(?P<res_doc_run_opts>\S+)$')
+
+        # details command          ""
+        p35 = re.compile(r'^details\scommand\s+(?P<details_command>\S+)$')
+
+        # details entry-point      ""
+        p36 = re.compile(r'^details\sentry-point\s+(?P<details_entry_point>\S+)$')
+
+        # details health-status    0
+        p37 = re.compile(r'^details\shealth-status\s+(?P<details_health_stats>\S+)$')
+
+        # details last-health-probe-error ""
+        p38 = re.compile(r'^details\slast-health-probe-error\s+(?P<details_probe_error>\S+)$')
+
+        # details last-health-probe-output ""
+        p39 = re.compile(r'^details\slast-health-probe-output\s+(?P<details_probe_output>\S+)$')
+
+        # details pkg-run-opt      ""
+        p40 = re.compile(r'^details\spkg-run-opt\s+(?P<details_pkg_run_opt>\S+)$')
+
+        # details ieobc-mac-addr   33:33:3a:33:33:3a
+        p41 = re.compile(r'^details\sieobc-mac-addr\s+(?P<ieobc_mac_address>([0-9a-fA-F].?){12})$')
+
+        # utilization name utd
+        p42 = re.compile(r'^utilization\sname\s+(?P<utilization_name>\w+)$')
+
+        # utilization cpu-util requested-application-util 0
+        p43 = re.compile(r'^utilization\scpu-util\srequested-application-util\s+(?P<req_app_util>\w+)$')
+
+        # utilization cpu-util actual-application-util 3
+        p44 = re.compile(r'^utilization\scpu-util\sactual-application-util\s+(?P<actual_app_util>\w+)$')
+
+        # utilization cpu-util cpu-state ""
+        p45 = re.compile(r'^utilization\scpu-util\scpu-state\s+(?P<cpu_state>\S+)$')
+
+        # utilization memory-util memory-allocation 3072
+        p46 = re.compile(r'^utilization\smemory-util\smemory-allocation\s+(?P<mem_allocation>\S+)$')
+
+        # utilization memory-util memory-used 335636
+        p47 = re.compile(r'^utilization\smemory-util\smemory-used\s+(?P<mem_used>\S+)$')
+
+        #                     RX       RX     RX      TX       TX     TX
+        #   NAME     ALIAS  PACKETS  BYTES  ERRORS  PACKETS  BYTES  ERRORS
+        #   ----------------------------------------------------------------
+        #   dp_1_0   net2   0        0      0       30       1260   0
+        #   dp_1_1   net3   0        0      0       0        0      0
+        #   ieobc_1  ieobc  190      11175  0       190      12303  0
+
+        p48 = re.compile(
+            r'(?P<name>[a-z0-9_]+)+\s+(?P<alias>\w+)+\s+(?P<rx_packets>\d+)+\s+(?P<rx_bytes>\d+)+\s+(?P<rx_errors>\d+)+\s+(?P<tx_packets>\d+)+\s+(?P<tx_bytes>\d+)+\s+(?P<tx_errors>\d+)')
+
+        # storage-utils storage-util disk
+        p49 = re.compile(r'^storage-utils\sstorage-util\sdisk')
+
+        # alias       ""
+        p50 = re.compile(r'^alias\s+(?P<alias>\S+)$')
+
+        #   rd-bytes    0
+        p51 = re.compile(r'^rd-bytes\s+(?P<rd_bytes>\d+)$')
+
+        #   rd-requests 0
+        p52 = re.compile(r'^rd-requests\s+(?P<rd_requests>\d+)$')
+
+        #   errors      0
+        p53 = re.compile(r'^errors\s+(?P<errors>\d+)$')
+
+        #   wr-bytes    0
+        p54 = re.compile(r'^wr-bytes\s+(?P<wr_bytes>\d+)$')
+
+        #   wr-requests 0
+        p55 = re.compile(r'^wr-requests\s+(?P<wr_requests>\d+)$')
+
+        #   capacity    1137664
+        p56 = re.compile(r'^capacity\s+(?P<capacity>\d+)$')
+
+        #   available   255382
+        p57 = re.compile(r'^available\s+(?P<available>\d+)$')
+
+        #   used        882282
+        p58 = re.compile(r'^used\s+(?P<used>\d+)$')
+
+        #   usage       ""
+        p59 = re.compile(r'^usage\s+(?P<usage>\S+)$')
+
+        #                ATTACHED   IPV4       NETWORK  IPV6
+        # MAC ADDRESS        str     ERFACE  ADDRESS    NAME     ADDRESS
+        # -----------------------------------------------------------
+        # 54:0e:00:0b:0c:02  eth0       0.0.0.0    ieobc_1  ::
+        # f8:6b:d9:c0:cc:5e  eth2       0.0.0.0    dp_1_0   ::
+        # f8:6b:d9:c0:cc:5f  eth1       192.0.2.2  dp_1_1   ::
+
+        p60 = re.compile(
+            r'^(?P<mac_address>([0-9a-fA-F].?){12})+\s+(?P<attached_intf>\w+)+\s+(?P<ipv4_address>[0-9.]+)+\s+(?P<network_name>\w+)+\s+(?P<ipv6_address>\S+)$')
+
+        # pkg-policy iox-pkg-policy-invalid
+        p61 = re.compile(r'^pkg-policy\s+(?P<pkg_policy>\S+)$')
+
+        # app-hosting-oper-data app-resources global
+        p62 = re.compile(r'^app-hosting-oper-data\sapp-resources\sglobal')
+
+        # cpu "system CPU"
+        p63 = re.compile(r'^cpu\s+(?P<cpu>\"[A-Za-z ]+\")$')
+
+        # quota          98
+        p64 = re.compile(r'^quota\s+(?P<quota>\S+)$')
+
+        # available      48
+        p65 = re.compile(r'^available\s+(?P<available>\d+)$')
+
+        # quota-unit     48608
+        p66 = re.compile(r'^quota-unit\s+(?P<quota_unit>\S+)$')
+
+        # available-unit 23808
+        p67 = re.compile(r'^available-unit\s+(?P<available_unit>\S+)$')
+
+        # memory memory
+        p68 = re.compile(r'^memory\s+(?P<memory>\S+)$')
+
+        # storage-device harddisk
+        p69 = re.compile(r'^storage-device\s+(?P<storage_device>harddisk)$')
+
+        # storage-device bootflash
+        p70 = re.compile(r'^storage-device\s+(?P<storage_device>bootflash)$')
+
+        # storage-device volume-group
+        p71 = re.compile(r'^storage-device\s+(?P<storage_device>volume-group)$')
+
+        # storage-device "CAF persist-disk"
+        p72 = re.compile(r'^storage-device\s+(?P<storage_device>\"[A-Za-z -]+\")$')
+
+        # timestamp      2022-04-25T18:08:36.189866+00:00
+        p73 = re.compile(r'^timestamp\s+(?P<timestamp>\S+)$')
+
+        # severity-level minor
+        p74 = re.compile(r'^severity-level\s+(?P<severity_level>\w+)$')
+
+        # host-name      pm9005
+        p75 = re.compile(r'^host-name\s+(?P<host_name>\w+)$')
+
+        # vrf-name       ""
+        p76 = re.compile(r'^vrf-name\s+(?P<vrf_name>\S+)$')
+
+        # app-id         utd
+        p77 = re.compile(r'^app-id\s+(?P<app_id>\w+)$')
+
+        # ev-type        im-iox-enable
+        p78 = re.compile(r'^ev-type\s+(?P<ev_type>\S+)$')
+
+        # status         im-app-pass
+        p79 = re.compile(r'^status\s+(?P<status>\S+)$')
+
+        # app-state      im-state-running
+        p80 = re.compile(r'^app-state\s+(?P<app_state>[a-z-]+)$')
+
+        # app-hosting-oper-data app-globals iox-enabled true
+        p81 = re.compile(r'^app-hosting-oper-data\sapp-globals+\siox-enabled+\s+(?P<is_enabled>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # app-hosting-oper-data app utd
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                app = group['app']
+                app_dict = oper_data_dict.setdefault('app_hosting_oper_data_app', {}).setdefault(app, {})
+                continue
+
+            # details state            RUNNING
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                state = group['state']
+                app_dict['state'] = state
+                continue
+
+            # details package-information name UTD-Snort-Feature
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_info_name = group['pkg_info_name']
+                app_dict['pkg_info_name'] = pkg_info_name
+                continue
+
+            # details package-information path /bootflash/.UTD_IMAGES/iox-utd_1.0.4_SV2.9.16.1_XE17.7.tar
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_info_path = group['pkg_info_path']
+                app_dict['pkg_info_path'] = pkg_info_path
+                continue
+
+            # details package-information application name utd
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                app_name = group['app_name']
+                app_dict['app_name'] = app_name
+                continue
+
+            # details package-information application installed-version 1.0.4_SV2.9.16.1_XE17.7
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_version = group['pkg_version']
+                app_dict['pkg_version'] = pkg_version
+                continue
+
+            # details package-information application description "Unified Threat Defense"
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_desc_name = group['pkg_desc_name']
+                app_dict['pkg_desc_name'] = pkg_desc_name
+                continue
+
+            # details package-information application type LXC
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_app_type = group['pkg_app_type']
+                app_dict['pkg_app_type'] = pkg_app_type
+                continue
+
+            # details package-information application owner ioxm
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_app_owner = group['pkg_app_owner']
+                app_dict['pkg_app_owner'] = pkg_app_owner
+                continue
+
+            # details package-information application activation-allowed true
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                app_act_allowed = group['app_act_allowed']
+                app_dict['app_act_allowed'] = app_act_allowed
+                continue
+
+            # details package-information application author ""
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_app_author = group['pkg_app_author']
+                app_dict['pkg_app_author'] = pkg_app_author
+                continue
+
+            # details package-information signing key-type ""
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_info_key_type = group['pkg_info_key_type']
+                app_dict['pkg_info_key_type'] = pkg_info_key_type
+                continue
+
+            # details package-information signing method ""
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_info_method = group['pkg_info_method']
+                app_dict['pkg_info_method'] = pkg_info_method
+                continue
+
+            # details package-information licensing name ""
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_lic_name = group['pkg_lic_name']
+                app_dict['pkg_lic_name'] = pkg_lic_name
+                continue
+
+            # details package-information licensing version ""
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_lic_version = group['pkg_lic_version']
+                app_dict['pkg_lic_version'] = pkg_lic_version
+                continue
+
+            # details package-information url-path ""
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_url_path = group['pkg_url_path']
+                app_dict['pkg_url_path'] = pkg_url_path
+                continue
+
+            # details detailed-guest-status processes name ""
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                processes_name = group['processes_name']
+                app_dict['processes_name'] = processes_name
+                continue
+
+            #  details detailed-guest-status processes status ""
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                processes_status = group['processes_status']
+                app_dict['processes_status'] = processes_status
+                continue
+
+            #  details detailed-guest-status processes pid ""
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                processes_pid = group['processes_pid']
+                app_dict['processes_pid'] = processes_pid
+                continue
+
+            #  details detailed-guest-status processes uptime ""
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                processes_uptime = group['processes_uptime']
+                app_dict['processes_uptime'] = processes_uptime
+                continue
+
+            #  details detailed-guest-status processes memory ""
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                processes_memory = group['processes_memory']
+                app_dict['processes_memory'] = processes_memory
+                continue
+
+            #  details activated-profile-name cloud-medium
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                profile_name = group['profile_name']
+                app_dict['profile_name'] = profile_name
+                continue
+
+            #  details resource-reservation disk 1111
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                disk = group['disk']
+                app_dict['disk'] = disk
+                continue
+
+            #  details resource-reservation memory 3072
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                memory = group['memory']
+                app_dict['memory'] = memory
+                continue
+
+            #  details resource-reservation cpu 0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                cpu = group['cpu']
+                app_dict['cpu'] = cpu
+                continue
+
+            #  details resource-reservation vcpu 0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                vcpu = group['vcpu']
+                app_dict['vcpu'] = vcpu
+                continue
+
+            #  details resource-reservation cpu-percent 50
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                cpu_percent = group['cpu_percent']
+                app_dict['cpu_percent'] = cpu_percent
+                continue
+
+            #  details guest-interface  ""
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                guest_intf = group['guest_intf']
+                app_dict['guest_intf'] = guest_intf
+                continue
+
+            # details resource-admission state ""
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                res_add_state = group['res_add_state']
+                app_dict['res_add_state'] = res_add_state
+                continue
+
+            # details resource-admission disk-space ""
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                res_add_disk_space = group['res_add_disk_space']
+                app_dict['res_add_disk_space'] = res_add_disk_space
+                continue
+
+            # details resource-admission memory ""
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                res_add_memory = group['res_add_memory']
+                app_dict['res_add_memory'] = res_add_memory
+                continue
+
+            # details resource-admission cpu 0
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                res_add_cpu = group['res_add_cpu']
+                app_dict['res_add_cpu'] = res_add_cpu
+                continue
+
+            # details resource-admission vcpus ""
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                res_add_vcpu = group['res_add_vcpu']
+                app_dict['res_add_vcpu'] = res_add_vcpu
+                continue
+
+            # details docker-run-opts  ""
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                res_doc_run_opts = group['res_doc_run_opts']
+                app_dict['res_doc_run_opts'] = res_doc_run_opts
+                continue
+
+            # details command  ""
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                details_command = group['details_command']
+                app_dict['details_command'] = details_command
+                continue
+
+            # details entry-postr  ""
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                details_entry_point = group['details_entry_point']
+                app_dict['details_entry_point'] = details_entry_point
+                continue
+
+            # details health-status    0
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                details_health_stats = group['details_health_stats']
+                app_dict['details_health_stats'] = details_health_stats
+                continue
+
+            # details last-health-probe-error ""
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                details_probe_error = group['details_probe_error']
+                app_dict['details_probe_error'] = details_probe_error
+                continue
+
+            # details last-health-probe-output ""
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                details_probe_output = group['details_probe_output']
+                app_dict['details_probe_output'] = details_probe_output
+                continue
+
+            # details pkg-run-opt      ""
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                details_pkg_run_opt = group['details_pkg_run_opt']
+                app_dict['details_pkg_run_opt'] = details_pkg_run_opt
+                continue
+
+            # details ieobc-mac-addr   33:33:3a:33:33:3a
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                ieobc_mac_address = group['ieobc_mac_address']
+                app_dict['ieobc_mac_address'] = ieobc_mac_address
+                continue
+
+            # utilization name utd
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                utilization_name = group['utilization_name']
+                app_dict['utilization_name'] = utilization_name
+                continue
+
+            # utilization cpu-util requested-application-util 0
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                req_app_util = group['req_app_util']
+                app_dict['req_app_util'] = req_app_util
+                continue
+
+            # utilization cpu-util actual-application-util 3
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                actual_app_util = group['actual_app_util']
+                app_dict['actual_app_util'] = actual_app_util
+                continue
+
+            # utilization cpu-util cpu-state ""
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                cpu_state = group['cpu_state']
+                app_dict['cpu_state'] = cpu_state
+                continue
+
+            # utilization memory-util memory-allocation 3072
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                mem_allocation = group['mem_allocation']
+                app_dict['mem_allocation'] = mem_allocation
+                continue
+
+            #  utilization memory-util memory-used 335636
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                mem_used = group['mem_used']
+                app_dict['mem_used'] = mem_used
+                continue
+
+            #                     RX       RX     RX      TX       TX     TX
+            #   NAME     ALIAS  PACKETS  BYTES  ERRORS  PACKETS  BYTES  ERRORS
+            #   ----------------------------------------------------------------
+            #   dp_1_0   net2   0        0      0       30       1260   0
+            #   dp_1_1   net3   0        0      0       0        0      0
+            #   ieobc_1  ieobc  190      11175  0       190      12303  0
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                name = group.pop("name")
+
+                name_dict = oper_data_dict.setdefault("name", {}). \
+                    setdefault(name, {})
+
+                name_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # storage-utils storage-util disk
+            if p49.match(line):
+                resource = "storage_utils_storage_util_disk"
+                storage_utils_storage_util_disk_dict = oper_data_dict.setdefault("storage_utils_storage_util_disk", {})
+                storage_dict = storage_utils_storage_util_disk_dict
+                continue
+
+            # app-hosting-oper-data app-resources global
+            if p62.match(line):
+                resource = "app_hosting_oper_data_app_resources_global"
+                app_resources_global_dict = oper_data_dict.setdefault("app_hosting_oper_data_app_resources_global", {})
+                continue
+                
+            # available   255382
+            if p57.match(line):
+                m = p57.match(line)
+                if m:
+                    group = m.groupdict()
+                    available = group['available']
+                    storage_dict['available'] = available
+                continue
+
+            #  alias       ""
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                alias = group['alias']
+                storage_utils_storage_util_disk_dict.setdefault("alias", alias)
+                continue
+
+            #  rd-bytes    0
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                rd_bytes = group['rd_bytes']
+                storage_utils_storage_util_disk_dict['rd_bytes'] = rd_bytes
+                continue
+
+            #  rd-requests 0
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                rd_requests = group['rd_requests']
+                storage_utils_storage_util_disk_dict['rd_requests'] = rd_requests
+                continue
+
+            #  errors      0
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                errors = group['errors']
+                storage_utils_storage_util_disk_dict['errors'] = errors
+                continue
+
+            #  wr-bytes    0
+            m = p54.match(line)
+            if m:
+                group = m.groupdict()
+                wr_bytes = group['wr_bytes']
+                storage_utils_storage_util_disk_dict['wr_bytes'] = wr_bytes
+                continue
+
+            #  wr-requests 0
+            m = p55.match(line)
+            if m:
+                group = m.groupdict()
+                wr_requests = group['wr_requests']
+                storage_utils_storage_util_disk_dict['wr_requests'] = wr_requests
+                continue
+
+            #  capacity    1137664
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                capacity = group['capacity']
+                storage_utils_storage_util_disk_dict['capacity'] = capacity
+                continue
+
+            #  used        882282
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                used = group['used']
+                storage_utils_storage_util_disk_dict['used'] = used
+                continue
+
+            #   usage       ""
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                usage = group['usage']
+                storage_utils_storage_util_disk_dict['usage'] = usage
+                continue
+
+            #                ATTACHED   IPV4       NETWORK  IPV6
+            # MAC ADDRESS        str     ERFACE  ADDRESS    NAME     ADDRESS
+            # -----------------------------------------------------------
+            # 54:0e:00:0b:0c:02  eth0       0.0.0.0    ieobc_1  ::
+            # f8:6b:d9:c0:cc:5e  eth2       0.0.0.0    dp_1_0   ::
+            # f8:6b:d9:c0:cc:5f  eth1       192.0.2.2  dp_1_1   ::
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                mac_address = group.pop("mac_address")
+
+                mac_add_dict = oper_data_dict.setdefault("mac_address", {}). \
+                    setdefault(mac_address, {})
+
+                mac_add_dict.update({k: v for k, v in group.items()})
+                continue
+
+            #   pkg-policy iox-pkg-policy-invalid
+            m = p61.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_policy = group['pkg_policy']
+                storage_utils_storage_util_disk_dict['pkg_policy'] = pkg_policy
+                continue
+
+            # cpu "system CPU"
+            if p63.match(line):
+                app_resource = "cpu"
+                cpu_dict = app_resources_global_dict.setdefault("cpu_details", {})
+                storage_dict = cpu_dict
+                continue
+
+            # memory memory
+            elif p68.match(line):
+                app_resource = "memory"
+                memory_dict = app_resources_global_dict.setdefault("memory_details", {})
+                storage_dict = memory_dict
+                continue
+
+            # storage-device harddisk
+            elif p69.match(line):
+                app_resource = "storage_device_harddisk"
+                harddisk_dict = app_resources_global_dict.setdefault("storage_device_harddisk", {})
+                storage_dict = harddisk_dict
+                continue
+
+            # storage-device bootflash
+            elif p70.match(line):
+                app_resource = "storage_device_bootflash"
+                bootflash_dict = app_resources_global_dict.setdefault("storage_device_bootflash", {})
+                storage_dict = bootflash_dict
+                continue
+
+            # storage-device volume-group
+            elif p71.match(line):
+                app_resource = "storage_device_volume_group"
+                volume_group_dict = app_resources_global_dict.setdefault("storage_device_volume_group", {})
+                storage_dict = volume_group_dict
+                continue
+
+            #  storage-device "CAF persist-disk"
+            elif p72.match(line):
+                app_resource = "storage_device_caf_persist_disk"
+                caf_persist_disk_dict = app_resources_global_dict.setdefault("storage_device_caf_persist_disk", {})
+                storage_dict = caf_persist_disk_dict
+                continue
+
+            # quota          98
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                quota = group['quota']
+                storage_dict['quota'] = quota
+                continue
+
+            # quota-unit     48608
+            m = p66.match(line)
+            if m:
+                group = m.groupdict()
+                quota_unit = group['quota_unit']
+                cpu_dict['quota_unit'] = quota_unit
+                continue
+
+            # available-unit 23808
+            m = p67.match(line)
+            if m:
+                group = m.groupdict()
+                available_unit = group['available_unit']
+                cpu_dict['available_unit'] = available_unit
+                continue
+
+            # timestamp      2022-04-25T18:08:36.189866+00:00
+            m = p73.match(line)
+            if m:
+                group = m.groupdict()
+                timestamp = group['timestamp']
+                app_notifications_event_dict = oper_data_dict.setdefault("app_notifications_event", {})
+                app_notifications_event_dict['timestamp'] = timestamp
+                continue
+
+            # severity-level minor
+            m = p74.match(line)
+            if m:
+                group = m.groupdict()
+                severity_level = group['severity_level']
+                app_notifications_event_dict['severity_level'] = severity_level
+                continue
+
+            # host-name      pm9005
+            m = p75.match(line)
+            if m:
+                group = m.groupdict()
+                host_name = group['host_name']
+                app_notifications_event_dict['host_name'] = host_name
+                continue
+
+            # vrf-name       ""
+            m = p76.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_name = group['vrf_name']
+                app_notifications_event_dict['vrf_name'] = vrf_name
+                continue
+
+            # app-id         utd
+            m = p77.match(line)
+            if m:
+                group = m.groupdict()
+                app_id = group['app_id']
+                app_notifications_event_dict['app_id'] = app_id
+                continue
+
+            # ev-type        im-iox-enable
+            m = p78.match(line)
+            if m:
+                group = m.groupdict()
+                ev_type = group['ev_type']
+                app_notifications_event_dict['ev_type'] = ev_type
+                continue
+
+            # status         im-app-pass
+            m = p79.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                app_notifications_event_dict['status'] = status
+                continue
+
+            # app-state      im-state-running
+            m = p80.match(line)
+            if m:
+                group = m.groupdict()
+                app_state = group['app_state']
+                app_notifications_event_dict['app_state'] = app_state
+                continue
+
+            # app-hosting-oper-data app-globals iox-enabled true
+            m = p81.match(line)
+            if m:
+                group = m.groupdict()
+                is_enabled = group['is_enabled']
+                app_notifications_event_dict['is_enabled'] = is_enabled
+                continue
+
+        return oper_data_dict

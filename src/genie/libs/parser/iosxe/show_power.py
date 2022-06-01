@@ -330,8 +330,10 @@ class ShowPowerInlinePrioritySchema(MetaParser):
                 'admin_state': str,
                 'oper_state': str,
                 'admin_priority': str,
-            }
-        }
+                Optional('oper_priority'): str,
+            },
+        },
+        Optional('power_inline_auto_shutdown'): str,
     }
 
 
@@ -359,6 +361,15 @@ class ShowPowerInlinePriority(ShowPowerInlinePrioritySchema):
                         r'(?P<admin_state>auto|off|static)\s+'
                         r'(?P<oper_state>\w+)\s+'
                         r'(?P<admin_priority>\w+)$')
+        
+        # Te2/0/48   auto   on         n/a        1
+        p1a = re.compile(r'^(?P<intf>[\w\/]+)\s+'
+                        r'(?P<admin_state>auto|off|static)\s+'
+                        r'(?P<oper_state>\w+)\s+'
+                        r'(?P<admin_priority>[\w\/]+)\s+'
+                        r'(?P<oper_priority>[\w]+)$')
+        
+        p2 = re.compile(r'^Power\s+inline\s+auto\s+shutdown:\s+(?P<power_inline_auto_shutdown>[\w]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -367,9 +378,23 @@ class ShowPowerInlinePriority(ShowPowerInlinePrioritySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf = group.pop('intf')
+                intf = Common.convert_intf_name(group.pop('intf'))
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
                 intf_dict.update(group)
+                continue
+            
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                # intf = group.pop('intf')
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict.update(group)
+                continue
+            
+            m = p2.match(line)
+            if m:
+                ret_dict['power_inline_auto_shutdown'] = m.groupdict()['power_inline_auto_shutdown']
                 continue
 
         return ret_dict
@@ -413,14 +438,16 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # Gi1/0/3     auto   n/a  off           0.0       0.0       n/a             
         # Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
         # Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
         # Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD
-        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>\w+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>.*)$')
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>[\w\/]+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
   
+            # Gi1/0/3     auto   n/a  off           0.0       0.0       n/a             
             # Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
             # Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
             # Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD
@@ -818,8 +845,8 @@ class ShowPowerInlineUpoePlusModuleSchema(MetaParser):
                 'available': float, 
                 'used': float, 
                 'remaining': float, 
-                'ieee_mode': str,
-            }
+                Optional('ieee_mode'): str,
+            },
         },
         'interface': {
             Any(): {
@@ -830,14 +857,14 @@ class ShowPowerInlineUpoePlusModuleSchema(MetaParser):
                 'utilized_power': float,
                 'class': str,
                 'device': str,
-            }
+            },
         },
         'total':{
             'type':int,
             'operating_state':str,
             'allocated_power':float,
             'utilized_power':float,
-        }
+        },
     }
 
 
@@ -855,6 +882,9 @@ class ShowPowerInlineUpoePlusModule(ShowPowerInlineUpoePlusModuleSchema):
 
         # 1           675.0        0.0       675.0
         p1 = re.compile(r'^(?P<module>\d+)\s+(?P<available>[\d\.]+)\s+(?P<used>[\d\.]+)\s+(?P<remaining>[\d\.]+)$')
+        
+        # Available:22565.0(w)  Used:244.7(w)  Remaining:22320.3(w)
+        p1a = re.compile(r'^Available:(?P<available>[\d\.]+).*\s+Used:(?P<used>[\d\.]+).*\s+Remaining:(?P<remaining>[\d\.]+)')
         
         #Device IEEE Mode - BT
         p2 = re.compile(r'^Device IEEE Mode\s+\-\s+(?P<ieee_mode>\w+)$')
@@ -878,6 +908,16 @@ class ShowPowerInlineUpoePlusModule(ShowPowerInlineUpoePlusModuleSchema):
                 root_dict['used'] = float(group['used'])
                 root_dict['remaining'] = float(group['remaining'])
                 continue
+            
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                module = int(mod_num)
+                root_dict = ret_dict.setdefault('module', {}).setdefault(module, {})
+                root_dict['available'] = float(group['available'])
+                root_dict['used'] = float(group['used'])
+                root_dict['remaining'] = float(group['remaining'])
+                continue
                 
             #Device IEEE Mode - BT
             m = p2.match(line)
@@ -890,7 +930,7 @@ class ShowPowerInlineUpoePlusModule(ShowPowerInlineUpoePlusModuleSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                interface = group.pop('intf')
+                interface = Common.convert_intf_name(group.pop('intf'))
                 if group['device']== None:
                     group['device']=""
                 group['allocated_power'] = float(group['allocated_power'])
@@ -910,4 +950,421 @@ class ShowPowerInlineUpoePlusModule(ShowPowerInlineUpoePlusModuleSchema):
                 totals_dict['utilized_power'] = float(group['utilized_power'])
                 continue
                 
+        return ret_dict
+    
+    
+class ShowPowerInlineDetailSchema(MetaParser):
+    """Schema for show power inline {interface} detail"""
+    schema = {
+        'interface': {
+            Any(): {
+                'inline_power_mode': str,
+                'operational_status': str,
+                'device_detected': str,
+                'device_type': str,
+                Optional('connection_check'): str,
+                'ieee_class': str,
+                Optional('physical_assigned_class'): str,
+                'discovery_mechanism': str,
+                'police': str,
+                'admin_value': float,
+                'power_drawn': float,
+                'power_available': float,
+                Optional('allocated_power'): str,
+                'measured_consumption': str,
+                'max_consumption': float,
+                'absent_counter': int,
+                'over_curent_counter': int,
+                'short_curent_counter': int,
+                'invalid_signature_counter': int,
+                'power_denied_counter': int,
+                'power_negotiation_used': str,
+                'power_type_to_pd': str,
+                'power_type_from_pd': str,
+                'power_source_to_pd': str,
+                'power_source_from_pd': str,
+                'power_priority_to_pd': str,
+                'power_priority_from_pd': str,
+                'requested_power_to_pd': str,
+                'requested_power_from_pd': str,
+                'allocated_power_to_pd': str,
+                'allocated_power_from_pd': str,
+                'four_pair_poe_supported': str,
+                'spare_pair_power_enabled': str,
+                'four_pair_pd_architecture': str,
+                Optional('perpetual_poe_enabled'): str,
+                Optional('fast_poe_enabled'): str,
+            },
+        },
+    }
+    
+class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
+    """Parser for show power inline <interface> detail"""
+
+    cli_command = 'show power inline {interface} detail'
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        # Interface: Te2/0/41
+        p1 = re.compile(r'^\s*Interface:\s+(?P<intf>[\w\-\/\.]+)$')
+
+        # Inline Power Mode: auto
+        p2 = re.compile(r'^\s*Inline\sPower\sMode:\s+(?P<inline_power_mode>\w+)$')
+
+        # Operational status (Alt-A,B): on,off
+        p3 = re.compile(r'^\s*Operational\s+status.*:\s+(?P<operational_status>[\w\,]+)$')
+
+        # Device Detected: yes
+        p4 = re.compile(r'^\s*Device\s+Detected:\s+(?P<device_detected>\w+)$')
+
+        # Device Type: cisco AIR-AP1252G-A
+        p5 = re.compile(r'^\s*Device\s+Type:\s+(?P<device_type>[\w\/\-\s]+)$')
+
+        # Connection Check: SS
+        p6 = re.compile(r'^\s*Connection\s+Check:\s+(?P<connection_check>[\w]+)$')
+
+        # IEEE Class (Alt-A,B): 3
+        p7 = re.compile(r'^\s*IEEE\s+Class.*:\s+(?P<ieee_class>[\w\,\/]+)$')
+
+        # Physical Assigned Class (Alt-A,B): 3
+        p8 = re.compile(r'^\s*Physical\s+Assigned\s+Class.*:\s+(?P<physical_assigned_class>[\w\,\/]*)$')
+
+        # Discovery mechanism used/configured: Ieee and Cisco
+        p9 = re.compile(r'^\s*Discovery\s+mechanism\s+used\/configured:\s+(?P<discovery_mechanism>[\w\s]+$)')
+
+        # Police: off
+        p10 = re.compile(r'^\s*Police:\s+(?P<police>[\w]+)$')
+
+        # Power Allocated 
+        # Admin Value: 90.0
+        p11 = re.compile(r'^\s*Admin\s+Value:\s+(?P<admin_value>[\d\.]+)$')
+
+        # Power drawn from the source: 0.0
+        p12 = re.compile(r'^\s*Power\s+drawn\s+from\s+the\s+source:\s+(?P<power_drawn>[\d\.]+)$')
+
+        # Power available to the device: 0.0
+        p13 = re.compile(r'^\s*Power\s+available\s+to\s+the\s+device:\s+(?P<power_available>[\d\.]+)$')
+
+        # Allocated Power (Alt-A,B): 0.0
+        p14 = re.compile(r'^\s*Allocated\s+Power.*:\s+(?P<allocated_power>[\d\.\,]+)$')
+
+        # Measured at the port(watts) (Alt-A,B): 10.0
+        p15 = re.compile(r'^\s*Measured\s+at\s+the\s+port.*:\s+(?P<measured_consumption>[\d\.\,]+)$')
+
+        # Maximum Power drawn by the device since powered on: 5.3
+        p16 = re.compile(r'^\s*Maximum\s+Power\s+drawn.*:\s+(?P<max_consumption>[\d\.]+)$')
+
+        #Absent Counter: 0
+        p17 = re.compile(r'^\s*Absent\s+Counter:\s+(?P<absent_counter>[\d]+)$')
+
+        # Over Current Counter: 0
+        p18 = re.compile(r'^\s*Over\s+Current\s+Counter:\s+(?P<over_curent_counter>[\d]+)$')
+
+        # Short Current Counter: 0
+        p19 = re.compile(r'^\s*Short\s+Current\s+Counter:\s+(?P<short_curent_counter>[\d]+)$')
+
+        # Invalid Signature Counter: 0
+        p20 = re.compile(r'^\s*Invalid\s+Signature\s+Counter:\s+(?P<invalid_signature_counter>[\d]+)$')
+
+        # Power Denied Counter: 0
+        p21 = re.compile(r'^\s*Power\s+Denied\s+Counter:\s+(?P<power_denied_counter>[\d]+)$')
+
+        # Power Negotiation Used: LLDP-MED
+        p22 = re.compile(r'^\s*Power\s+Negotiation\s+Used:\s+(?P<power_negotiation_used>[\w\-\s\.]+)$')
+
+        # Power Type:                  PSE                  PD
+        # Power Type:                  Type 2 PSE           Type 2 PSE
+        p23 = re.compile(r'^\s*Power\s+Type:\s+(?P<power_type_to_pd>[\w\-]+|Type\s\d\s[\w]+)\s{2,}(?P<power_type_from_pd>[\w\-]+|Type\s\d\s[\w]+)$')
+
+        # Power Source:                Primary              PSE
+        p24 = re.compile(r'^\s*Power\s+Source:\s+(?P<power_source_to_pd>[\w\-]+)\s+(?P<power_source_from_pd>[\w\-]+)$')
+
+        # Power Priority:              critical             unknown
+        p25 = re.compile(r'^\s*Power\s+Priority:\s+(?P<power_priority_to_pd>[\w\-]+)\s+(?P<power_priority_from_pd>[\w\-]+)$')
+
+        # Requested Power(W):          -                    8.5
+        p26 = re.compile(r'^\s*Requested\s+Power\(W\):\s+(?P<requested_power_to_pd>[\d\.\-]+)\s+(?P<requested_power_from_pd>[\d\.\-]+)$')
+
+        # Allocated Power(W):          8.5                    -
+        p27 = re.compile(r'^\s*Allocated\s+Power\(W\):\s+(?P<allocated_power_to_pd>[\d\.\-]+)\s+(?P<allocated_power_from_pd>[\d\.\-]+)$')
+
+        # Four-Pair PoE Supported: Yes
+        p28 = re.compile(r'^\s*Four\-Pair\s+PoE\s+Supported:\s+(?P<four_pair_poe_supported>[\w]+)$')
+
+        # Spare Pair Power Enabled: No
+        p29 = re.compile(r'^\s*Spare\s+Pair\s+Power\s+Enabled:\s+(?P<spare_pair_power_enabled>[\w]+)$')
+
+        # Four-Pair PD Architecture: Shared
+        p30 = re.compile(r'^\s*Four\-Pair\s+PD\s+Architecture:\s+(?P<four_pair_pd_architecture>[\w\/]+)$')
+
+        # Perpetual POE Enabled: TRUE
+        p31 = re.compile(r'^\s*Perpetual\s+POE\s+Enabled:\s+(?P<perpetual_poe_enabled>[\w]+)$')
+
+        # Fast POE Enabled: FALSE
+        p32 = re.compile(r'^\s*Fast\s+POE\s+Enabled:\s+(?P<fast_poe_enabled>[\w]+)$')
+                
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Interface: Te2/0/41
+            m = p1.match(line)
+            if m:
+                intf = Common.convert_intf_name(m.groupdict()['intf'])
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                continue
+            
+            # Inline Power Mode: auto
+            m = p2.match(line)
+            if m:
+                intf_dict['inline_power_mode'] = m.groupdict()['inline_power_mode']
+                continue
+            
+            # Operational status (Alt-A,B): on,off
+            m = p3.match(line)
+            if m:
+                intf_dict['operational_status'] = m.groupdict()['operational_status']
+                continue       
+                    
+            # Device Detected: yes
+            m = p4.match(line)
+            if m:
+                intf_dict['device_detected'] = m.groupdict()['device_detected']
+                continue
+            
+            # Device Type: cisco AIR-AP1252G-A
+            m = p5.match(line)
+            if m:
+                intf_dict['device_type'] = m.groupdict()['device_type']
+                continue
+            
+            # Connection Check: SS
+            m = p6.match(line)
+            if m:
+                intf_dict['connection_check'] = m.groupdict()['connection_check']
+                continue
+            
+            # IEEE Class (Alt-A,B): 3
+            m = p7.match(line)
+            if m:
+                intf_dict['ieee_class'] = m.groupdict()['ieee_class']
+                continue
+            
+            # Physical Assigned Class (Alt-A,B): 3
+            m = p8.match(line)
+            if m:
+                intf_dict['physical_assigned_class'] = m.groupdict()['physical_assigned_class']
+                continue
+            
+            # Discovery mechanism used/configured: Ieee and Cisco
+            m = p9.match(line)
+            if m:
+                intf_dict['discovery_mechanism'] = m.groupdict()['discovery_mechanism']
+                continue
+            
+            # Police: off
+            m = p10.match(line)
+            if m:
+                intf_dict['police'] = m.groupdict()['police']
+                continue
+            
+            # Power Allocated 
+            # Admin Value: 90.0
+            m = p11.match(line)
+            if m:
+                intf_dict['admin_value'] = float(m.groupdict()['admin_value'])
+                continue
+            
+            # Power drawn from the source: 0.0
+            m = p12.match(line)
+            if m:
+                intf_dict['power_drawn'] = float(m.groupdict()['power_drawn'])
+                continue
+            
+            # Power available to the device: 0.0
+            m = p13.match(line)
+            if m:
+                intf_dict['power_available'] = float(m.groupdict()['power_available'])
+                continue
+            
+            # Allocated Power (Alt-A,B): 0.0
+            m = p14.match(line)
+            if m:
+                intf_dict['allocated_power'] = m.groupdict()['allocated_power']
+                continue
+            
+            # Measured at the port(watts) (Alt-A,B): 10.0
+            m = p15.match(line)
+            if m:
+                intf_dict['measured_consumption'] = m.groupdict()['measured_consumption']
+                continue
+            
+            # Maximum Power drawn by the device since powered on: 5.3
+            m = p16.match(line)
+            if m:
+                intf_dict['max_consumption'] = float(m.groupdict()['max_consumption'])
+                continue
+            
+            #Absent Counter: 0
+            m = p17.match(line)
+            if m:
+                intf_dict['absent_counter'] = int(m.groupdict()['absent_counter'])
+                continue
+            
+            # Over Current Counter: 0
+            m = p18.match(line)
+            if m:
+                intf_dict['over_curent_counter'] = int(m.groupdict()['over_curent_counter'])
+                continue
+            
+            # Short Current Counter: 0
+            m = p19.match(line)
+            if m:
+                intf_dict['short_curent_counter'] = int(m.groupdict()['short_curent_counter'])
+                continue
+            
+            # Invalid Signature Counter: 0
+            m = p20.match(line)
+            if m:
+                intf_dict['invalid_signature_counter'] = int(m.groupdict()['invalid_signature_counter'])
+                continue
+            
+            # Power Denied Counter: 0
+            m = p21.match(line)
+            if m:
+                intf_dict['power_denied_counter'] = int(m.groupdict()['power_denied_counter'])
+                continue
+            
+            # Power Negotiation Used: LLDP-MED
+            m = p22.match(line)
+            if m:
+                intf_dict['power_negotiation_used'] = m.groupdict()['power_negotiation_used']
+                continue
+            
+            # Power Type:                  PSE                  PD
+            m = p23.match(line)
+            if m:
+                intf_dict['power_type_to_pd'] = m.groupdict()['power_type_to_pd']
+                intf_dict['power_type_from_pd'] = m.groupdict()['power_type_from_pd']
+                continue
+            
+            # Power Source:                Primary              PSE
+            m = p24.match(line)
+            if m:
+                intf_dict['power_source_to_pd'] = m.groupdict()['power_source_to_pd']
+                intf_dict['power_source_from_pd'] = m.groupdict()['power_source_from_pd']
+                continue
+            
+            # Power Priority:              critical             unknown
+            m = p25.match(line)
+            if m:
+                intf_dict['power_priority_to_pd'] = m.groupdict()['power_priority_to_pd']
+                intf_dict['power_priority_from_pd'] = m.groupdict()['power_priority_from_pd']
+                continue
+            
+            # Requested Power(W):          -                    8.5
+            m = p26.match(line)
+            if m:
+                intf_dict['requested_power_to_pd'] = m.groupdict()['requested_power_to_pd']
+                intf_dict['requested_power_from_pd'] = m.groupdict()['requested_power_from_pd']
+                continue
+            
+            # Allocated Power(W):          8.5                    -
+            m = p27.match(line)
+            if m:
+                intf_dict['allocated_power_to_pd'] = m.groupdict()['allocated_power_to_pd']
+                intf_dict['allocated_power_from_pd'] = m.groupdict()['allocated_power_from_pd']
+                continue
+            
+            # Four-Pair PoE Supported: Yes
+            m = p28.match(line)
+            if m:
+                intf_dict['four_pair_poe_supported'] = m.groupdict()['four_pair_poe_supported']
+                continue
+            
+            # Spare Pair Power Enabled: No
+            m = p29.match(line)
+            if m:
+                intf_dict['spare_pair_power_enabled'] = m.groupdict()['spare_pair_power_enabled']
+                continue
+            
+            # Four-Pair PD Architecture: Shared
+            m = p30.match(line)
+            if m:
+                intf_dict['four_pair_pd_architecture'] = m.groupdict()['four_pair_pd_architecture']
+                continue
+            
+            # Perpetual POE Enabled: TRUE
+            m = p31.match(line)
+            if m:
+                intf_dict['perpetual_poe_enabled'] = m.groupdict()['perpetual_poe_enabled']
+                continue
+            
+            # Fast POE Enabled: FALSE
+            m = p32.match(line)
+            if m:
+                intf_dict['fast_poe_enabled'] = m.groupdict()['fast_poe_enabled']
+                continue
+            
+        return ret_dict
+    
+class ShowPowerInlinePoliceSchema(MetaParser):
+    """Schema for show power inline police """
+    schema = {
+        'interface': {
+            Any(): {
+                'admin_state': str,
+                'oper_state': str,
+                'admin_police': str,
+                'oper_police': str,
+                'cutoff_power': str,
+                'oper_power': str,
+            },
+        },
+    }
+
+
+class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
+    """Parser for show power inline police
+                  show power inline police <interface>"""
+
+    cli_command = ['show power inline police', 'show power inline police {interface}']
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Te7/0/28  auto   on         log        overdrawn  15.4   16.0 
+        # Te7/0/29  auto   on         none       n/a        n/a    n/a  
+        p1 = re.compile(r'^(?P<intf>[\w\d\/]+)\s+(?P<admin_state>[\w]+)\s+(?P<oper_state>[\,\w]+)\s+(?P<admin_police>[\w]+)\s+(?P<oper_police>[\w\/]+)\s+(?P<cutoff_power>[\w\d\.\/]+)\s+(?P<oper_power>[\w\d\.\/]+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+  
+            # Te7/0/28  auto   on         log        overdrawn  15.4   16.0 
+            # Te7/0/29  auto   off         none       n/a        n/a    n/a  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                if intf == 'Interface':
+                    continue
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict.update(group)
+                continue
+
         return ret_dict

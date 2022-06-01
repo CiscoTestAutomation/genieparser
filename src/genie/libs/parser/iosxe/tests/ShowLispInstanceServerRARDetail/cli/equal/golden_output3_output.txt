@@ -1,0 +1,93 @@
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 102
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 1031
+=================================================
+
+Reverse-Address-resolution data for router lisp 0 instance-id 1031
+
+Site name: wired
+
+Hardware Address:     aabb.cc00.c900/48
+Host Address:         192.168.3.2
+                      2001:192:168:3::2
+                      FE80::A8BB:CCFF:FE00:C900
+First registered:     05:06:20
+Last registered:      05:06:20
+Registration errors:  
+  Authentication failures:   0
+ ETR (local)127.0.0.1
+  Last registered:       05:06:20
+  TTL:                   00:01:00
+  xTR-ID:                N/A
+  Site-ID:               N/A
+  Registered addr:       192.168.3.2
+                         2001:192:168:3::2
+                         FE80::A8BB:CCFF:FE00:C900
+
+Hardware Address:     aabb.cc00.ca00/48
+Host Address:         192.168.3.3
+                      2001:192:168:3::3
+                      FE80::A8BB:CCFF:FE00:CA00
+First registered:     05:06:20
+Last registered:      05:06:20
+Registration errors:  
+  Authentication failures:   0
+ ETR (local)127.0.0.1
+  Last registered:       05:06:20
+  TTL:                   00:01:00
+  xTR-ID:                N/A
+  Site-ID:               N/A
+  Registered addr:       192.168.3.3
+                         2001:192:168:3::3
+                         FE80::A8BB:CCFF:FE00:CA00
+
+=================================================
+Output for router lisp 0 instance-id 1032
+=================================================
+
+Reverse-Address-resolution data for router lisp 0 instance-id 1032
+
+Site name: wired
+
+Hardware Address:     aabb.cc00.cb00/48
+Host Address:         192.168.4.2
+                      2001:192:168:4::2
+                      FE80::A8BB:CCFF:FE00:CB00
+First registered:     05:15:05
+Last registered:      05:10:29
+Registration errors:  
+  Authentication failures:   0
+ ETR (local)127.0.0.1
+  Last registered:       05:10:29
+  TTL:                   00:01:00
+  xTR-ID:                N/A
+  Site-ID:               N/A
+  Registered addr:       192.168.4.2
+                         2001:192:168:4::2
+                         FE80::A8BB:CCFF:FE00:CB00
+
+Hardware Address:     aabb.cc00.cc00/48
+Host Address:         192.168.4.3
+                      2001:192:168:4::3
+                      FE80::A8BB:CCFF:FE00:CC00
+First registered:     05:08:32
+Last registered:      05:08:32
+Registration errors:  
+  Authentication failures:   0
+ ETR (local)127.0.0.1
+  Last registered:       05:08:32
+  TTL:                   00:01:00
+  xTR-ID:                N/A
+  Site-ID:               N/A
+  Registered addr:       192.168.4.3
+                         2001:192:168:4::3
+                         FE80::A8BB:CCFF:FE00:CC00

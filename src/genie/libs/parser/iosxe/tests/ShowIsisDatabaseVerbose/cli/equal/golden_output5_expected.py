@@ -36,17 +36,16 @@ expected_output = {
                             "srlb_range": 1000,
                             "spf": True,
                             "strict_spf": True,
-                            "algorithms": [
+                            "algorithms": {
                                 128
-                            ]
+                            }
                         },
                         "node_msd": 16,
                         "flex_algo": {
                             128: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             }
                         },
                         "hostname": "r1",

@@ -355,6 +355,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('load_interval'): str,
                 Optional('mab'): bool,
                 Optional('negotiation_auto'): bool,
+                Optional('cdp'): str,
                 Optional('snmp_trap_link_status'): bool,
                 Optional('snmp_trap_mac_notification_change_added'): bool,
                 Optional('snmp_trap_mac_notification_change_removed'): bool,

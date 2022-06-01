@@ -1,0 +1,391 @@
+pm9005#show utd engine standard statistics daq all
+IOS-XE DAQ Counters(Engine #1):
+---------------------------------
+Frames received                         0
+Bytes received                          0
+RX frames released                      0
+Packets after vPath decap               0
+Bytes after vPath decap                 0
+Packets before vPath encap              0
+Bytes before vPath encap                0
+Frames transmitted                      0
+Bytes transmitted                       0
+Frames injected                         0
+Bytes injected                          0
+
+Memory allocation                       388
+Memory free                             0
+Memory free via timer                   0
+Merged packet buffer allocation         0
+Merged packet buffer free               0
+
+VPL buffer allocation                   0
+VPL buffer free                         0
+VPL buffer expand                       0
+VPL buffer merge                        0
+VPL buffer split                        0
+VPL packet incomplete                   0
+
+VPL API error                           0
+Internal error                          0
+External error                          0
+Memory error                            0
+Timer error                             0
+
+SPPI Receive Packet error               0
+SPPI Acquire Transmit Packet error      0
+SPPI Inject Transmit Packet error       0
+SPPI Encap Transmit Packet error        0
+SPPI Internal error                     0
+
+Kernel frames received                  0
+Kernel frames dropped                   0
+
+
+IOS-XE DAQ WCAPI Counters (Engine #1):
+--------------------------------------
+Messages received                       0
+Messages transmitted                    0
+
+Flow create received                    0
+Flow create transmitted                 0
+Flow close received                     0
+Flow close transmitted                  0
+Flow data received                      0
+Flow data bytes received                0
+Flow data transmitted                   0
+Flow data bytes transmitted             0
+Flow delete received                    0
+Unknown type messages received          0
+EBP cleanup received                    0
+EBP cleanup transmitted                 0
+Flow control injected                   0
+Flow data injected                      0
+Flow data bytes injected                0
+
+Verdict allow                           0
+Verdict deny                            0
+Decryption policy verdict no-decrypt    0
+Decryption policy verdict decrypt       0
+Decryption policy verdict passthrough   0
+Decryption policy verdict unknown       0
+
+Flow create                             0
+Flow delete                             0
+Flow duplicate                          0
+Flow data not found                     0
+Flow close not found                    0
+Flow delete not found                   0
+Flow enqueue                            0
+Flow dequeue                            0
+
+Retry enqueue                           0
+Retry dequeue                           0
+Retry hold flow                         0
+Retry release flow                      0
+Retry add flow                          0
+
+Closed enqueue                          0
+Closed dequeue                          0
+
+Socket messages received                0
+
+Socket server ready messages received   0
+Socket sipc open failed msgs received   0
+Socket new sipc msg messages received   0
+Socket unexpected new sipc msg messages received0
+Socket server down messages received    0
+Socket TX socket ready msgs received    0
+Socket TX sock conn failed msgs rcvd    0
+Socket unknown uds msg msgs received    0
+Socket unknown messages received        0
+
+TX socket messages received             0
+
+TX socket resume messages received      0
+TX socket unknown messages received     0
+
+TX paused                               0
+
+Memory allocation                       0
+Memory free                             0
+Memory error                            0
+
+EBP get buffer local                    0
+EBP get buffer local error              0
+EBP return buffer local                 0
+EBP return buffer                       0
+Sleep                                   0
+Sleep set flag                          0
+HTX up                                  0
+HTX down                                0
+
+Internal error                          0
+External error                          0
+WCAPI error                             0
+
+
+VPL Stats(Engine #1):
+------------------------
+vPath 802.3 packets received            0
+vPath IPv4 packets received             0
+vPath packets transmitted               0
+
+vPath IPv4 ping packets received        0
+vPath version 0 packets received        0
+
+non-snap 802.3 packets received         0
+non-Cisco 802.3 packets received        0
+non-IPv4 packets received               0
+non-IPv4 UDP packets received           0
+non-vPath 802.3 packets received        0
+non-vPath dot1q packets received        0
+non-vPath IPv4 packets received         0
+non-vPath IPv4 UDP packets received     0
+non-vPath IPv4 GRE packets received     0
+non-vPath MAC packets received          0
+vPath version mismatch packets received 0
+checksum mismatch packets received      0
+
+IP inst fragments                       0
+IP fragmented packets                   0
+IP aged fragmented packets              0
+IP exceed max fragmented packets        0
+IP overlapping fragments                0
+IP exceed fragments per packet          0
+IP exceed length fragmented packets     0
+IP tiny fragmented packets              0
+IP bad length fragmented packets        0
+
+L2 inst fragments                       0
+L2 fragmented packets                   0
+L2 aged fragmented packets              0
+L2 exceed max fragmented packets        0
+L2 overlapping fragments                0
+L2 exceed fragments per packet          0
+L2 exceed length fragmented packets     0
+L2 tiny fragmented packets              0
+L2 bad length fragmented packets        0
+
+decap packet API calls                  0
+encap gen packet API calls              0
+pm9005#
+encap nw packet API calls               0
+
+decap packet API errors                 0
+encap gen API errors                    0
+encap nw API errors                     0
+
+IOS-XE DAQ CP Counters(Engine #1):
+------------------------------------
+Packets received                        :3488
+Bytes received                          :237156
+Packets transmitted                     :3488
+Bytes transmitted                       :362688
+Memory allocation                       :3490
+Memory free                             :3488
+VPL API error                           :0
+Internal error                          :0
+External error                          :0
+Memory error                            :0
+Timer error                             :0
+RX ring full                            0
+Memory status changed to yellow         :0
+Memory status changed to red            :0
+Process restart notifications           :0
+
+
+IOS-XE DAQ Counters(Engine #2):
+---------------------------------
+Frames received                         0
+Bytes received                          0
+RX frames released                      0
+Packets after vPath decap               0
+Bytes after vPath decap                 0
+Packets before vPath encap              0
+Bytes before vPath encap                0
+Frames transmitted                      0
+Bytes transmitted                       0
+Frames injected                         0
+Bytes injected                          0
+
+Memory allocation                       388
+Memory free                             0
+Memory free via timer                   0
+Merged packet buffer allocation         0
+Merged packet buffer free               0
+
+VPL buffer allocation                   0
+VPL buffer free                         0
+VPL buffer expand                       0
+VPL buffer merge                        0
+VPL buffer split                        0
+VPL packet incomplete                   0
+
+VPL API error                           0
+Internal error                          0
+External error                          0
+Memory error                            0
+Timer error                             0
+
+SPPI Receive Packet error               0
+SPPI Acquire Transmit Packet error      0
+SPPI Inject Transmit Packet error       0
+SPPI Encap Transmit Packet error        0
+SPPI Internal error                     0
+
+Kernel frames received                  0
+Kernel frames dropped                   0
+
+
+IOS-XE DAQ WCAPI Counters (Engine #2):
+--------------------------------------
+Messages received                       0
+Messages transmitted                    0
+
+Flow create received                    0
+Flow create transmitted                 0
+Flow close received                     0
+Flow close transmitted                  0
+Flow data received                      0
+Flow data bytes received                0
+Flow data transmitted                   0
+Flow data bytes transmitted             0
+Flow delete received                    0
+Unknown type messages received          0
+EBP cleanup received                    0
+EBP cleanup transmitted                 0
+Flow control injected                   0
+Flow data injected                      0
+Flow data bytes injected                0
+
+Verdict allow                           0
+Verdict deny                            0
+Decryption policy verdict no-decrypt    0
+Decryption policy verdict decrypt       0
+Decryption policy verdict passthrough   0
+Decryption policy verdict unknown       0
+
+Flow create                             0
+Flow delete                             0
+Flow duplicate                          0
+Flow data not found                     0
+Flow close not found                    0
+Flow delete not found                   0
+Flow enqueue                            0
+Flow dequeue                            0
+
+Retry enqueue                           0
+Retry dequeue                           0
+Retry hold flow                         0
+Retry release flow                      0
+Retry add flow                          0
+
+Closed enqueue                          0
+Closed dequeue                          0
+
+Socket messages received                0
+
+Socket server ready messages received   0
+Socket sipc open failed msgs received   0
+Socket new sipc msg messages received   0
+Socket unexpected new sipc msg messages received0
+Socket server down messages received    0
+Socket TX socket ready msgs received    0
+Socket TX sock conn failed msgs rcvd    0
+Socket unknown uds msg msgs received    0
+Socket unknown messages received        0
+
+TX socket messages received             0
+
+TX socket resume messages received      0
+TX socket unknown messages received     0
+
+TX paused                               0
+
+Memory allocation                       0
+Memory free                             0
+Memory error                            0
+
+EBP get buffer local                    0
+EBP get buffer local error              0
+EBP return buffer local                 0
+EBP return buffer                       0
+Sleep                                   0
+Sleep set flag                          0
+HTX up                                  0
+HTX down                                0
+
+Internal error                          0
+External error                          0
+WCAPI error                             0
+
+
+VPL Stats(Engine #2):
+------------------------
+vPath 802.3 packets received            0
+vPath IPv4 packets received             0
+vPath packets transmitted               0
+
+vPath IPv4 ping packets received        0
+vPath version 0 packets received        0
+
+non-snap 802.3 packets received         0
+non-Cisco 802.3 packets received        0
+non-IPv4 packets received               0
+non-IPv4 UDP packets received           0
+non-vPath 802.3 packets received        0
+non-vPath dot1q packets received        0
+non-vPath IPv4 packets received         0
+non-vPath IPv4 UDP packets received     0
+non-vPath IPv4 GRE packets received     0
+non-vPath MAC packets received          0
+vPath version mismatch packets received 0
+checksum mismatch packets received      0
+
+IP inst fragments                       0
+IP fragmented packets                   0
+IP aged fragmented packets              0
+IP exceed max fragmented packets        0
+IP overlapping fragments                0
+IP exceed fragments per packet          0
+IP exceed length fragmented packets     0
+IP tiny fragmented packets              0
+IP bad length fragmented packets        0
+
+L2 inst fragments                       0
+L2 fragmented packets                   0
+L2 aged fragmented packets              0
+L2 exceed max fragmented packets        0
+L2 overlapping fragments                0
+L2 exceed fragments per packet          0
+L2 exceed length fragmented packets     0
+L2 tiny fragmented packets              0
+L2 bad length fragmented packets        0
+
+decap packet API calls                  0
+encap gen packet API calls              0
+encap nw packet API calls               0
+
+decap packet API errors                 0
+encap gen API errors                    0
+encap nw API errors                     0
+
+IOS-XE DAQ CP Counters(Engine #2):
+------------------------------------
+Packets received                        :3488
+Bytes received                          :237156
+Packets transmitted                     :3488
+Bytes transmitted                       :362688
+Memory allocation                       :3490
+Memory free                             :3488
+VPL API error                           :0
+Internal error                          :0
+External error                          :0
+Memory error                            :0
+Timer error                             :0
+RX ring full                            0
+Memory status changed to yellow         :0
+Memory status changed to red            :0
+Process restart notifications           :0
+

@@ -7,6 +7,7 @@
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
+from genie.libs.parser.utils.common import Common
 
 
 # ==============================
@@ -180,3 +181,40 @@ class ShowDmvpn(ShowDmvpnSchema):
 
         return parsed_dict
 
+
+# =================================================
+# Schema for 'show dmvpn | count Status: {service}'
+# =================================================
+class ShowDmvpnCountStatusSchema(MetaParser):
+    schema = {
+        'count': int
+    }
+    
+# ================================================
+# Parser for:
+# 'show dmvpn | count Status: {service}'
+# ================================================
+class ShowDmvpnCountStatus(ShowDmvpnCountStatusSchema):
+ 
+    cli_command = ['show dmvpn | count Status: {service}', 'show dmvpn | count {service}']
+
+
+    def cli(self, ipv6= False, service='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[int(ipv6)])
+        dict_count = {}
+
+        # Number of lines which match regexp = 2648
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 2648
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

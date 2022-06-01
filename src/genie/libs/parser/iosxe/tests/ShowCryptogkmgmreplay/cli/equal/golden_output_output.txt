@@ -1,0 +1,50 @@
+Anti-replay Information For Group bw600:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group GKM_GROUP_1:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group bw6000_gike:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group bw600-IPV6_gike:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group bw6000:
+Timebased Replay:
+Replay Value : 3611735.21 secs
+Input Packets : 2209247136 Output Packets : 396920861
+Input Error Packets : 0 Output Error Packets : 0
+Time Sync Error : 0 Max time delta : 0.00 secs
+         
+ 
+TBAR Error History (sampled at 10pak/min):
+    No TBAR errors detected
+ 
+Anti-replay Information For Group bw600-IPV6:
+Timebased Replay:
+Replay Value : 3611735.40 secs
+Input Packets : 2753845832 Output Packets : 3668218697
+Input Error Packets : 0 Output Error Packets : 0
+Time Sync Error : 0 Max time delta : 0.00 secs
+ 
+ 
+TBAR Error History (sampled at 10pak/min):
+    No TBAR errors detected
+ 
+Anti-replay Information For Group bw-suiteB:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group bw-suiteB-v6:
+Timebased Replay:
+         is not enabled
+ 
+Anti-replay Information For Group bw6000_eft:
+Timebased Replay:
+         is not enabled
+
