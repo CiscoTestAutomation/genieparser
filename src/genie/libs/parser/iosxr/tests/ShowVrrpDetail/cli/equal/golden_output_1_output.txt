@@ -1,0 +1,43 @@
+show vrrp detail
+Sun Apr 17 14:42:01.266 UTC
+GigabitEthernet0/2/0/1 - IPv4 vrID 2
+  State is Backup
+    1 state changes, last state change 05:41:33
+    State change history:
+    Apr 17 09:00:27.582 UTC  Init     -> Backup   Delay timer expired
+  Last resign sent:     Never
+  Last resign received: Never
+  Virtual IP address is 12.0.0.1
+  Virtual MAC address is 0000.5E00.0102, state is reserved
+  Master router is 12.0.0.2, priority 100
+  Version is 2
+  Advertise time 1 secs
+    Master Down Timer 3.648 (3 x 1 + (166 x 1/256))
+  Minimum delay 1 sec, reload delay 5 sec
+  Current priority 90
+    Configured priority 100, may preempt
+      minimum delay 0 secs
+  BFD enabled: state inactive, interval 15 ms multiplier 3 remote IP 12.0.0.2
+    Tracked items: 0/1 up: 10 decrement
+      Object name                State     Decrement
+      GigabitEthernet0/2/0/0      Down            10
+
+GigabitEthernet0/2/0/1 - IPv6 vrID 50
+  State is Backup
+    1 state changes, last state change 05:41:34
+    State change history:
+    Apr 17 09:00:27.001 UTC  Init     -> Backup   Delay timer expired
+  Last resign sent:     Never
+  Last resign received: Never
+  Virtual IP address is fe80::200:5eff:fe00:232
+    Secondary Virtual IP address is 12::1
+  Virtual MAC address is 0000.5E00.0232, state is reserved
+  Master router is fe80::6e6c:d3ff:fe4d:efe5
+  Version is 3
+  Advertise time 1 secs
+    Master Down Timer 3.609 (3 x 1 + (156 x 1/256))
+  Minimum delay 1 sec, reload delay 5 sec
+  Current priority 100
+    Configured priority 100, may preempt
+      minimum delay 0 secs
+

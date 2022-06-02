@@ -1,0 +1,13 @@
+IPv6 NHRP cache 4 entries, 3072 bytes
+    2 static   2 dynamic    0 incomplete
+4 Remote
+    2 static   2 dynamic    0 incomplete
+    1 nhop     3 bfd
+    0 default  0 temporary
+    2 route
+        2 rib (2 H    0 nho)
+        0 bgp
+    0 lfib
+0 Local
+    0 static   0 dynamic    0 incomplete
+    0 lfib

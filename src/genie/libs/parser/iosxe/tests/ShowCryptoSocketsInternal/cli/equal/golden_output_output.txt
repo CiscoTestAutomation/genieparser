@@ -1,0 +1,99 @@
+Crypto Secure Socket Messages
+ Open Socket               : 4994      Close Socket              : 14378  
+ Listen Start              : 1         Listen Stop               : 0      
+ SS Connect                : 0         SS Connect Socket         : 0      
+ SS End Message            : 0         unknown                   : 0      
+ 
+ 
+Crypto Secure Socket Listen SM Stats
+ 
+Message Stats
+=============
+Create Listener Map       : 1           Detach Listener Map       : 0          
+Are you there check       : 0          
+Message Stats - SM Busy
+-----------------------
+Create Listener Map       : 0           Detach Listener Map       : 0          
+Are you there check       : 0          
+State Transition Stats
+----------------------
+Send listen ready KMI     : 1           Check listen SM Count     : 0          
+Delete Listener map       : 0           Listen SM end             : 0          
+Init                      : 1          
+State Transition Stats - Busy
+-----------------------------
+Send listen ready KMI     : 0           Check listen SM Count     : 0           
+Delete Listener map       : 0           Listen SM end             : 0          
+Init                      : 0          
+ 
+Crypto Secure Socket Conn SM Stats
+ 
+Message Stats
+=============
+Install OSPFv3 SA         : 0           Open Socket               : 15842      
+Close socket              : 14340       Are you there check       : 11         
+ 
+Message Stats - SM Busy
+-----------------------
+Install OSPFv3 SA         : 0           Open Socket               : 0          
+Close socket              : 0           Are you there check       : 0          
+ 
+State Transition Stats
+----------------------
+CRYPTO SS CONN Delete Map : 14340       CM State Change           : 14340      
+Send P1 Delete            : 14340       active open               : 15842      
+Delete Conn Info          : 0           Init                      : 15842      
+ 
+State Transition Stats - Busy
+-----------------------------
+CRYPTO SS CONN Delete Map : 0           CM State Change           : 0          
+Send P1 Delete            : 0           active open               : 0          
+Delete Conn Info          : 0           Init                      : 0          
+ 
+ 
+Crypto Secure Socket SM Stats
+ 
+Message Stats
+=============
+LISTEN START              : 1           LISTEN STOP               : 0          
+SS OPEN                   : 4994        SS CLOSE                  : 14378      
+Destroy Yourself          : 0          
+Message Stats - SM Busy
+-----------------------
+LISTEN START              : 0           LISTEN STOP               : 0          
+SS OPEN                   : 4990        SS CLOSE                  : 32137      
+Destroy Yourself          : 0          
+State Transition Stats
+----------------------
+OSPF Conn Info Found      : 0           Conn Info Found           : 11         
+Create OSPF Conn Info     : 0           Create OSPF Conn Info Fai : 0          
+Create Conn Info          : 4983        Listen State machine foun : 0          
+Listen State machine not  : 1           Conn Info State machine f : 11         
+Conn Info State machine n : 4983        Crypto SS SM End          : 0          
+Init                      : 1          
+State Transition Stats - Busy
+-----------------------------
+OSPF Conn Info Found      : 0           Conn Info Found           : 0          
+Create OSPF Conn Info     : 0           Create OSPF Conn Info Fai : 0          
+Create Conn Info          : 25          Listen State machine foun : 0          
+Listen State machine not  : 0           Conn Info State machine f : 0          
+Conn Info State machine n : 0           Crypto SS SM End          : 0          
+Init                      : 0          
+ 
+Crypto Secure Socket Events
+General Error             : 0         Socket Error              : 3570   
+ Socket Ready              : 15853     Conn Down                 : 0      
+ Primary Conn Up           : 0         Conn Up                   : 0      
+ Socket Up                 : 21513     Socket Down               : 14316  
+ MTU Changed               : 23691     LB Notify                 : 0      
+ X-Auth Request            : 0         X-Auth Status             : 0      
+ Mode Config Reply         : 0         IKE PFS                   : 0      
+ Listen Ready              : 0      
+ 
+Crypto Secure Socket IPSec Events
+ 
+Socket Up                 : 21513     Socket down               : 14316  
+ 
+Crypto Secure Socket IKE Messages
+Crypto SS X-Auth Reply    : 0         Crypto SS Send ModCfg Msg : 0      
+ Crypto SS Send Notify     : 0  

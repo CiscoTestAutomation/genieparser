@@ -2632,6 +2632,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'systeminitbyevent':str,
             'smarttransportserveridcheck':str,
             'smarttransportproxysupport':str,
+            Optional('smartagenttelemetryrumreportmax'):int,
+            Optional('smartagentrumtelemetryrumstoremin'):int,
             Optional('smartagentusagestatisticsenable'):str,
             Optional('smartagentpolicydisplayformat'):int,
             Optional('smartagentreportonupgrade'):str,
@@ -2789,8 +2791,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p7 = re.compile(r'^(?P<license_certificates>License +Certificates)$')
         
         #HA Info
-        p8 = re.compile(r'^(?P<ha_info>HA +Info)$')
-        
+        p8 = re.compile(r'^(?P<ha_info>HA +Info)$')        
         #Reservation Info
         p9 = re.compile(r'^(?P<reservation_info>Reservation +Info)$')
         #Overall status:
@@ -3342,3 +3343,4 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
 
         return ret_dict
         
+

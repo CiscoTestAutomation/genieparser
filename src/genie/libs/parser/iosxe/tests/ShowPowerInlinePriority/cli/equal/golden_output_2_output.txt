@@ -1,0 +1,7 @@
+Power inline auto shutdown: Disabled 
+
+Interface  Admin  Oper       Admin      Oper
+           State  State      Priority   Priority
+---------- ------ ---------- ---------- --------
+
+Te2/0/1    auto   off        n/a        1       

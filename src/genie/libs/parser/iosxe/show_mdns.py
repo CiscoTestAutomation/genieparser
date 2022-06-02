@@ -1608,55 +1608,56 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
         p0 = re.compile(r"Global mDNS Gateway")
 
         # mDNS Gateway               : Enabled
-        p1 = re.compile(r'mDNS +Gateway +: +(?P<mdns_gty>\w+)')
+        p1 = re.compile(r'^mDNS +Gateway +: +(?P<mdns_gty>\w+)$')
     
         # Rate Limit PPS             : 60
-        p2 = re.compile(r'Rate +Limit +PPS +: +(?P<rate_lmt>\d+)')
+        p2 = re.compile(r'^Rate +Limit +PPS +: +(?P<rate_lmt>\d+)$')
         
         # Rate Limit Mode            : default
-        p3 = re.compile(r'Rate +Limit +Mode +: +(?P<rate_lmt_mode>\w+)')
+        p3 = re.compile(r'^Rate +Limit +Mode +: +(?P<rate_lmt_mode>\w+)$')
     
         # AirPrint Helper            : Disabled
-        p4 = re.compile(r'AirPrint +Helper +: +(?P<air_prnt>\w+)')
+        p4 = re.compile(r'^AirPrint +Helper +: +(?P<air_prnt>\w+)$')
     
         # Mode                       : SDG-Agent
-        p5 = re.compile(r'Mode +: +(?P<mode>\S+)')
+        p5 = re.compile(r'^Mode +: +(?P<mode>\S+)$')
     
         # SDG Agent IP               : 40.1.3.1
-        p6 = re.compile(r'SDG +Agent +IP +: +(?P<sdg_ip>\d+.+\d+.+\d+.+\d+)')
+        p6 = re.compile(r'^SDG +Agent +IP +: +(?P<sdg_ip>\d+.+\d+.+\d+.+\d+)$')
     
         # Source Interface : Vl1301
-        p7 = re.compile(r'Source +Interface +\: +(?P<src_intef>(.*))')
+        p7 = re.compile(r'^Source +Interface +\: +(?P<src_intef>(.*))$')
     
         # Cache-Sync Periodicity Minutes   : 30 
-        p8 = re.compile(r'Cache-Sync +Periodicity +Minutes +: +(?P<cache_sync>\d+)')
+        p8 = re.compile(r'^Cache-Sync +Periodicity +Minutes +: +(?P<cache_sync>\d+)$')
         
         # Cache-Sync Periodicity Mode    : default
-        p9 = re.compile(r'Cache-Sync +Periodicity +Mode +: +(?P<cache_sync_mode>\w+)')
+        p9 = re.compile(r'^Cache-Sync +Periodicity +Mode +: +(?P<cache_sync_mode>\w+)$')
     
-        # Active Response Timer      : Disabled
-        p10 = re.compile(r'Active +Response +Timer +: +(?P<act_tmr>\w+)')
+        # Active Response Timer      : 20 Seconds
+        p10 = re.compile(r'^Active +Response +Timer +: +(?P<act_tmr>(.*))$')
     
         # Active Query Timer         : Enabled
-        p11 = re.compile(r'Active +Query +Timer +: +(?P<act_qtmr>\w+)')
+        p11 = re.compile(r'^Active +Query +Timer +: +(?P<act_qtmr>\w+)$')
         
         # Active Query Timer Minutes        : 30
-        p12 = re.compile(r'Active +Query +Timer +Minutes +: +(?P<act_qtmr_mins>\d+)')
+        p12 = re.compile(r'^Active +Query +Timer +Minutes +: +(?P<act_qtmr_mins>\d+)$')
         
         # Active Query Timer Mode        : default
-        p13 = re.compile(r'Active +Query +Timer +Mode +: +(?P<act_qtmr_mode>\w+)')
+        p13 = re.compile(r'^Active +Query +Timer +Mode +: +(?P<act_qtmr_mode>\w+)$')
     
         # mDNS Query Type            : PTR only
-        p14 = re.compile(r'mDNS +Query +Type +: +(?P<mdns_qry_type>\w+ +\w+)')
+        p14 = re.compile(r'^mDNS +Query +Type +: +(?P<mdns_qry_type>\w+ +\w+)$')
     
         # Service Enumeration period : Default
-        p15 = re.compile(r'Service +Enumeration +period +: +(?P<srv_prd>\w+)')
+        p15 = re.compile(r'^Service +Enumeration +period +: +(?P<srv_prd>\w+)$')
     
         # SSO                        : Active
-        p16 = re.compile(r'SSO +: +(?P<sso>\w+)')
+        p16 = re.compile(r'^SSO +: +(?P<sso>\w+)$')
         
-        # Service Record TTL               : original
-        p17 = re.compile(r'^Service +Record +TTL +: +(?P<srv_ttl>\w+)$')
+        # Service Record TTL : original
+        # Service Record TTL               : Enhanced (default)
+        p17 = re.compile(r'^Service +Record +TTL +: +(?P<srv_ttl>(.*))$')
         
         # Ingress-client query-suppression : Disabled
         p18 = re.compile(r'^Ingress-client +query-suppression +: +(?P<ingrs_qry_suprs>\w+)$')
@@ -1673,8 +1674,8 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
         # Query Response Mode : Recurring (default)
         p22 = re.compile(r'^Query +Response +Mode +: +(?P<qry_resp_mode>(.*))$')
         
-        # Service Receiver Purge Timer: 40sec
-        p23 = re.compile(r'^Service +Receiver +Purge +Timer +: +(?P<servc_purge_timer>\w+)$')
+        # Service Receiver Purge Timer: 60 Seconds
+        p23 = re.compile(r'^Service +Receiver +Purge +Timer +: +(?P<servc_purge_timer>(.*))$')
         
         for line in output.splitlines():
             line = line.strip()
@@ -1748,7 +1749,7 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
                 global_mdns_gateway["cache_sync_periodicity_mode"] = group["cache_sync_mode"]
                 continue
                 
-            # Active Response Timer      : Disabled
+            # Active Response Timer      : 20 Seconds
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -1839,7 +1840,7 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
                 global_mdns_gateway["query_response_mode"] = group["qry_resp_mode"]
                 continue
                 
-            # Service Receiver Purge Timer: 40sec
+            # Service Receiver Purge Timer: 60 Seconds
             m = p23.match(line)
             if m:
                 group = m.groupdict()

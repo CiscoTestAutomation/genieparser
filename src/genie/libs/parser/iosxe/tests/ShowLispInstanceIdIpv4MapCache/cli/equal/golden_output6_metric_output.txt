@@ -1,0 +1,7 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table vrf prov (IID 111), 1 entries
+
+0.0.0.0/0, uptime: 00:00:01, expires: 00:14:59, via map-reply, unknown-eid-forward
+ action: send-map-request + Encapsulating to proxy ETR
+  PETR         Uptime    State      Pri/Wgt     Encap-IID  Metric
+  21.21.21.21  00:00:23  admin-down 255/50        -         -
+  24.24.24.24  00:00:23  up          50/50        -         0

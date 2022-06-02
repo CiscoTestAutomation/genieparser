@@ -1,0 +1,22 @@
+show ip nhrp
+100.0.0.2/32 via 100.0.0.2
+   Tunnel100 created 00:00:32, expire 00:02:27
+   Type: dynamic, Flags: router nhop rib
+   NBMA address: 103.1.1.1
+100.0.0.100/32 via 100.0.0.100
+   Tunnel100 created 10w2d, never expire
+   Type: static, Flags:
+   NBMA address: 101.1.1.1
+123.1.1.0/24 via 100.0.0.2
+   Tunnel100 created 00:00:32, expire 00:02:27
+   Type: dynamic, Flags: router rib
+   NBMA address: 103.1.1.1
+100.0.0.1/32 via 100.0.0.1
+   Tunnel100 created 00:00:32, expire 00:02:29
+   Type: dynamic, Flags: router unique local
+   NBMA address: 102.1.1.1
+    (no-socket)
+111.0.0.100/32 via 111.0.0.100
+   Tunnel111 created 10w2d, never expire
+   Type: static, Flags:
+   NBMA address: 111.1.1.1

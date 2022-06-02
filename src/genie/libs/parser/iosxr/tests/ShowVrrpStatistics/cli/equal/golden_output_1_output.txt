@@ -1,0 +1,22 @@
+Tue Apr  5 14:30:43.404 UTC                                                                                             
+Invalid packets:                                                                                                        
+  Invalid checksum:                     0                                                                               
+  Unknown/unsupported versions:         0                                                                               
+  Invalid vrID:                         0                                                                               
+  Too short:                            0                                                                               
+Protocol:                                                                                                               
+  Transitions to Master                 1
+Packets:
+  Total received:                 1671706
+  Adverts sent:                    108482
+  Bad TTL:                              0
+  Short Packets:                        0
+  Failed authentication:                0
+  Unknown authentication:               0
+  Conflicting authentication:           0
+  Unknown Type field:                   0
+  Conflicting Advertise time:           0
+  Conflicting Addresses:                0
+  Received with zero priority:          0
+  Sent with zero priority:              0
+

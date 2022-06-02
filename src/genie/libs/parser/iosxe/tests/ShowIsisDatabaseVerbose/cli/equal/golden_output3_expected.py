@@ -23,123 +23,103 @@ expected_output = {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
                                 "priority": 128,
-                                "m_flag": True,
-                                "segment_routing": True
+                                "m_flag": True
                             },
                             129: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
                                 "priority": 128,
-                                "m_flag": True,
-                                "segment_routing": True
+                                "m_flag": True
                             },
                             130: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             131: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             132: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             133: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             134: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             135: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             136: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             137: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             138: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             139: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             140: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             141: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             142: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             143: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             144: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             145: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             146: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             },
                             147: {
                                 "metric_type": "IGP",
                                 "alg_type": "SPF",
-                                "priority": 128,
-                                "segment_routing": True
+                                "priority": 128
                             }
                         },
                         "segment_routing": {
@@ -149,7 +129,7 @@ expected_output = {
                             "srgb_range": 8000,
                             "spf": True,
                             "strict_spf": True,
-                            "algorithms": [
+                            "algorithms": {
                                 128,
                                 129,
                                 130,
@@ -170,7 +150,7 @@ expected_output = {
                                 145,
                                 146,
                                 147
-                            ],
+                        },
                             "srlb_base": 15000,
                             "srlb_range": 1000
                         },
