@@ -646,8 +646,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # switchport port-security mac-address sticky 1020.4bb1.6f2f
         p61 = re.compile(r"^switchport port-security mac-address sticky (?P<value>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$")
 
-        # source template USER_NoAuth
-        p62 = re.compile(r"^source template (?P<template>\w+)$")
+        # source template USER_No_802.1X_Auth
+        p62 = re.compile(r"^source template (?P<template>[a-zA-Z0-9@#$&()-`.+,/]*)$")
 
         # host-reachability protocol bgp
         p63 = re.compile(r'^host-reachability protocol (?P<protocol>[a-zA-Z]+)$')
