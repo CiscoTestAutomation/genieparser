@@ -73,6 +73,8 @@ class ShowEigrpNeighborsSchema(MetaParser):
 class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
     def cli(self, address_family='', vrf='', output=None):
+        if not self.check_neighbor_output_is_not_empty(output):
+            return {}
 
         # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
         r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s'
@@ -271,6 +273,9 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 continue
 
         return parsed_dict
+
+    def check_neighbor_output_is_not_empty(self, output):
+        return len(output.splitlines()) > 1
 
 
 # ===============================================
