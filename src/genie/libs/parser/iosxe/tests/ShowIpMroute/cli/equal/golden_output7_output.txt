@@ -1,0 +1,5 @@
+(10.1.101.4, 239.1.1.1), 00:00:28/00:02:33, flags: FTGqx
+  Incoming interface: Vlan101, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    Vlan102, Forward/Sparse, 00:00:10/00:02:49, flags:
+    Vlan901, VXLAN v4 Encap: (50901, 239.1.1.1), Forward/Sparse, 00:00:28/00:02:34, flags:

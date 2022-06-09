@@ -179,7 +179,7 @@ class ShowPtpClock(ShowPtpClockSchema):
         p17 = re.compile(r'^Local\sclock\spriority\:\s(?P<local_clock_priority>\d+)$')
 
         # Holdover Timer : Not Configured
-        p18 = re.compile(r'^Holdover\sTimer\s\:\s(?P<holdover_timer>.*)$')
+        p18 = re.compile(r'^Holdover\sTimer\s\:(?P<holdover_timer>.*)$')
 
         # initial return dictionary
         ret_dict ={}
@@ -677,4 +677,50 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
                 local_port_priority = m.groupdict()['local_port_priority']
                 ret_dict['local_port_priority'] = int(local_port_priority)
                 continue
+        return ret_dict
+
+# =====================================
+#  Schema for 
+#  * 'show running-config | include ptp'
+# ======================================
+class ShowRunIncludePtpSchema(MetaParser):
+    """Schema for 'show run | include ptp'
+    """
+    schema = {
+        'ptp': {
+                'ptp_mode': str
+            }
+    }
+
+# ===================================
+#  Parser for 
+#  * 'show running-config | include ptp'
+# =====================================
+class ShowRunIncludePtp(ShowRunIncludePtpSchema):
+    """
+    Parser for :
+        * show run | include {ptp}
+    """
+
+    cli_command = 'show run | include ptp'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # ptp mode boundary delay-req
+        p = re.compile(r'^(?P<ptp_mode>(?:(ptp mode|ptp profile).*))$')        
+        # initial return dictionary
+        ret_dict ={}
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            #ptp mode boundary delay-req
+            m = p.match(line)
+            if m:
+                ptp = ret_dict.setdefault('ptp',{})
+                ptp_mode = m.groupdict()['ptp_mode']
+                ptp['ptp_mode'] = str(ptp_mode)
+                continue
+
         return ret_dict

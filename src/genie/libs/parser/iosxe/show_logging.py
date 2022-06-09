@@ -301,6 +301,8 @@ class ShowLogging(ShowLoggingSchema):
 
         ret_dict = {}
         logging_dict = {}
+        outer_logging_dict = {}
+        
         for line in out.splitlines():
 
             line = line.strip()
@@ -316,7 +318,6 @@ class ShowLogging(ShowLoggingSchema):
                 log_buffer_bytes_entry = ret_dict.setdefault(
                     "log_buffer_bytes", {})
 
-                outer_logging_dict = {}
                 outer_logging_sources_dict = {}
                 outer_tls_profile_dict = {}
                 inner_key = group['enable_disable']

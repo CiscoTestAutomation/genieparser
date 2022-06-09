@@ -1685,3 +1685,210 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
                 })
                 continue
         return res_dict
+
+# =================================================
+#  Schema for 'show ipv6 nhrp summary'
+# =================================================
+class ShowIpv6NhrpSummarySchema(MetaParser):
+    """schema for show ipv6 nhrp summary"""
+    schema = {
+        'ipv6_nhrp': {
+            "total": {
+                'nhrp_entries': int,
+                'size': int,
+                'total_static_entries': int,
+                'total_dynamic_entries': int,
+                'total_incomplete_entries': int
+            },
+            "remote": {
+                'remote_entries': int,
+                'remote_static_entries': int,
+                'remote_dynamic_entries': int,
+                'remote_incomplete_entries': int,
+                'nhop': int,
+                'bfd': int,
+                'default': int,
+                'temporary': int,
+                'route': {
+                    'total': int,
+                    'rib': int,
+                    'h_rib': int,
+                    'nho_rib': int,
+                    'bgp': int
+                },
+                'lfib': int
+            },
+            "local": {
+                'local': int,
+                'local_static': int,
+                'local_dynamic': int,
+                'local_incomplete': int,
+                'lfib': int
+            }
+        }
+    }
+
+# ===================================================
+#  Parser for 'show ipv6 nhrp summary'
+# ===================================================
+class ShowIpv6NhrpSummary(ShowIpv6NhrpSummarySchema):
+    """Parser for show ipv6 nhrp summary"""
+    cli_command = 'show ipv6 nhrp summary'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        #IPv6 NHRP cache 4 entries, 3072 bytes
+        p1 = re.compile(r'^IPv6 +NHRP +cache +(?P<nhrp_entries>[\d]+) +entries, +(?P<size>[\d]+)')
+        #2 static 2 dynamic 0 incomplete
+        p2 = re.compile(r'^(?P<total_static_entries>[\d]+) +static +(?P<total_dynamic_entries>[\d]+) +dynamic +(?P<total_incomplete_entries>[\d]+) +incomplete')
+        #4 Remote
+        p3 = re.compile(r'(?P<remote_entries>[\d]+) Remote')
+        #2 static 2 dynamic 0 incomplete
+        p4 = re.compile(r'^(?P<remote_static_entries>[\d]+) +static +(?P<remote_dynamic_entries>[\d]+) +dynamic +(?P<remote_incomplete_entries>[\d]+) +incomplete')
+        #1 nhop 3 bfd
+        p5 = re.compile(r'^(?P<nhop>[\d]+) +nhop +(?P<bfd>[\d]+) +bfd')
+        #0 default 0 temporary
+        p6 = re.compile(r'^(?P<default>[\d]+) +default +(?P<temporary>[\d]+) +temporary')
+        #2 route
+        p7 = re.compile(r'^(?P<total>[\d]+) +route')
+        #2 rib (2 H 0 nho)
+        p8 = re.compile(r'^(?P<rib>[\d]+) +rib +.(?P<h_rib>[\d]+) +H +(?P<nho_rib>[\d]+) +nho.')
+        #0 bgp
+        p9 = re.compile(r'^(?P<bgp>[\d]+) +bgp')
+        #0 lfib
+        p10 = re.compile(r'(?P<lfib>[\d]+) +lfib')
+        #0 Local
+        p11 = re.compile(r'^(?P<local>[\d]+) +Local')
+        #0 static 0 dynamic 0 incomplete
+        p12 = re.compile(r'^(?P<local_static>[\d]+) +static +(?P<local_dynamic>[\d]+) +dynamic +(?P<local_incomplete>[\d]+) +incomplete')
+        #0 lfib
+        p13 = re.compile(r'(?P<lfib>[\d]+) +lfib')
+
+        # initial return dictionary
+        nhrp = False
+        remote = False
+        local = False
+        ret_dict = {}
+  
+        for line in out.splitlines():
+            line=line.strip()
+            #IPv6 NHRP cache 4 entries, 3072 bytes
+            m = p1.match(line) 
+            if m:
+                group = m.groupdict()
+                ipv6_nhrp = ret_dict.setdefault('ipv6_nhrp', {})
+                total = ipv6_nhrp.setdefault('total',{})
+                total.update({'nhrp_entries': int(group['nhrp_entries'])})
+                total.update({'size': int(group['size'])})
+                nhrp = True
+                continue
+
+            #2 static 2 dynamic 0 incomplete
+            if nhrp:
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()                
+                    total.update({'total_static_entries': int(group['total_static_entries'])})
+                    total.update({'total_dynamic_entries': int(group['total_dynamic_entries'])})
+                    total.update({'total_incomplete_entries': int(group['total_incomplete_entries'])})
+                    continue
+                nhrp = False
+                remote = True
+
+            if remote:
+                #4 Remote
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    remote = ipv6_nhrp.setdefault('remote',{})
+                    remote.update({'remote_entries': int(group['remote_entries'])})
+                    continue                            
+
+                #2 static 2 dynamic 0 incomplete
+                m = p4.match(line)
+                if m:                
+                    group = m.groupdict()
+                    remote.update({'remote_static_entries': int(group['remote_static_entries'])})
+                    remote.update({'remote_dynamic_entries': int(group['remote_dynamic_entries'])})
+                    remote.update({'remote_incomplete_entries': int(group['remote_incomplete_entries'])})
+                    continue
+
+                #1 nhop 3 bfd
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    remote.update({'nhop': int(group['nhop'])})
+                    remote.update({'bfd': int(group['bfd'])})
+                    continue            
+
+                #0 default 0 temporary
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    remote.update({'default': int(group['default'])})
+                    remote.update({'temporary': int(group['temporary'])})
+                    continue
+                
+                #2 route
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    route = remote.setdefault('route',{})
+                    route.update({'total': int(group['total'])})
+                    continue
+                
+                #2 rib (2 H 0 nho)
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    route.update({'rib': int(group['rib'])})
+                    route.update({'h_rib': int(group['h_rib'])})
+                    route.update({'nho_rib': int(group['nho_rib'])})
+                    continue
+
+                #0 bgp
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    route.update({'bgp': int(group['bgp'])})
+                    continue
+
+                #0 lfib
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    remote.update({'lfib': int(group['lfib'])})
+                    continue
+                remote = False
+                local = True
+
+            #0 Local
+            if local:
+                m = p11.match(line)
+                if m:
+                    group = m.groupdict()
+                    local = ipv6_nhrp.setdefault('local',{})
+                    local.update({'local': int(group['local'])})                
+                    continue
+
+                #0 static 0 dynamic 0 incomplete
+                m = p12.match(line)
+                if m:                
+                    group = m.groupdict()
+                    local.update({'local_static': int(group['local_static'])})
+                    local.update({'local_dynamic': int(group['local_dynamic'])})
+                    local.update({'local_incomplete': int(group['local_incomplete'])})
+                    continue
+
+                #0 lfib
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+                    local.update({'lfib': int(group['lfib'])})
+                    continue
+
+        return ret_dict

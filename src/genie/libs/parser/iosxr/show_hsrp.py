@@ -2,7 +2,8 @@
 
 IOSXR parsers for show commands:
     * 'show hsrp summary'
-    * 'show hsrp detail'
+    * 'show hsrp {interface} detail'
+    * 'show hsrp {address_family} {interface} {group_number} detail'
 
 """
 
@@ -12,7 +13,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
-
+from genie.libs.parser.utils.common import Common
 
 # ======================================
 #   Schema for 'show hsrp summary'
@@ -393,16 +394,30 @@ class ShowHsrpDetailSchema(MetaParser):
 # ======================================
 class ShowHsrpDetail(ShowHsrpDetailSchema):
     """Parser for show hsrp detail"""
+    """Parser for show hsrp {interface} {group_number} detail"""
     
-    cli_command = 'show hsrp detail'
-
+    cli_command = [
+            'show hsrp detail', 
+            'show hsrp {interface} detail', 
+            'show hsrp {interface} {group_number} detail', 
+            'show hsrp {address_family} {interface} {group_number} detail'
+    ]    
     exclude = ['last_state_change', 'standby_expire', 'active_expire', 
                'num_state_changes', 'last_coup_received', 'last_coup_sent', 
                'last_resign_received', 'last_resign_sent']
 
-    def cli(self,output=None):
+    def cli(self, output=None, address_family='', interface=None, group_number=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface and not group_number and not address_family:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif interface and group_number and not address_family:
+                cmd = self.cli_command[2].format(interface=interface,group_number=group_number)
+            elif interface and group_number and  address_family:
+                cmd = self.cli_command[3].format(address_family=address_family,\
+                          interface=interface,group_number=group_number)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
         
@@ -876,3 +891,86 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     ['version'][version]['groups'][group_number] = group_key
 
         return hsrp_detail_dict
+
+class ShowHsrpBfdSchema(MetaParser):
+    ''' Schema for commands:
+        * show hsrp bfd
+    '''
+    schema = {
+        'bfd_interface': {
+            Any():{
+                'groups': {
+                    Any(): { 			 
+                        'destination_ip': str,
+                        'state': str,  
+                        'interval': int,
+                        'multiplier': int,
+                        'hsrp_interface': str,
+                        'hsrp_group':int,						
+                    }
+                },  					
+            },
+        },
+    }
+
+class ShowHsrpBfd(ShowHsrpBfdSchema):
+    ''' Parser for commands:
+        * show hsrp bfd
+    '''
+	
+    cli_command = [
+            'show hsrp bfd', 
+            'show hsrp bfd {interface}', 
+            'show hsrp bfd {interface} {destination_ip}' 
+    ] 
+
+    def cli(self, output=None, interface=None, destination_ip=None):
+	
+        if output is None:
+            if interface and not destination_ip:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif interface and destination_ip:
+                cmd = self.cli_command[2].format(interface=interface,destination_ip=destination_ip)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # BFD Interface    Destination IP  State    Intv Mult HSRP Interface   Grp 
+        # -------------    --------------  -----    ---- ---- --------------   ----
+        # Gi0/0/0/5        10.1.1.3          up     15    3 Gi0/0/0/5           1
+        r1 = re.compile(r'(?P<interface>\S+) +(?P<dest_address>\S+)'
+                        r' +(?P<state>\S+) +(?P<interval>\d+)'                    
+                        r' +(?P<multiplier>\d+)'
+                        r' +(?P<hsrp_intf>\S+) +(?P<group>\S+)$')
+     
+        parsed_dict = {} 
+			
+        for line in out.splitlines():                                                
+            line = line.strip()
+     		
+            #Gi0/0/0/5  10.1.1.3   up     15    3  Gi0/0/0/5  1 
+            m = r1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'bfd_interface' not in parsed_dict:
+                    intf_dict = parsed_dict.setdefault('bfd_interface', {})
+                interface = Common.convert_intf_name(group['interface'])
+                if interface not in intf_dict:
+                    intferface_dict =  intf_dict.setdefault(interface, {})
+                if 'groups' not in intferface_dict:
+                    group_dict = intferface_dict.setdefault('groups', {})
+                if group['group'] not in group_dict:
+                    hsrp_dict = group_dict.setdefault(group['group'], {})
+                   
+                hsrp_dict['destination_ip'] = group['dest_address']
+                hsrp_dict['state'] = group['state']
+                hsrp_dict['interval'] = int(group['interval'])
+                hsrp_dict['multiplier'] = int(group['multiplier'])
+                hsrp_interface = Common.convert_intf_name(group['hsrp_intf'])
+                hsrp_dict['hsrp_interface'] = hsrp_interface
+                hsrp_dict['hsrp_group'] = int(group['group'])
+                continue
+				
+        return parsed_dict
