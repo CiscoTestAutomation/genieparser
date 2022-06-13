@@ -6357,7 +6357,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) < 11:
+                    if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
@@ -6450,12 +6450,10 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     if m1.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
                         continue
-                    else:
-                        af_dict['routes'][prefix]['index'][index]['path'] = ''
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 6:
+                    if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
@@ -6463,8 +6461,6 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
                         continue
-                    else:
-                        af_dict['routes'][prefix]['index'][index]['path'] = ''
                 elif m3:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
                     af_dict['routes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
