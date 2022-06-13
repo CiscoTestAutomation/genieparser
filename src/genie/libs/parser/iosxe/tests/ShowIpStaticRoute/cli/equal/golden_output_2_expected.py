@@ -14,6 +14,7 @@ expected_output = {
                                         "next_hop": "10.1.2.2",
                                         "outgoing_interface": "GigabitEthernet0/0",
                                         "preference": 1,
+                                        "owner_code": "M",
                                     },
                                     2: {
                                         "index": 2,
@@ -21,12 +22,14 @@ expected_output = {
                                         "next_hop": "10.186.2.2",
                                         "outgoing_interface": "GigabitEthernet0/1",
                                         "preference": 2,
+                                        "owner_code": "M",
                                     },
                                     3: {
                                         "index": 3,
                                         "active": False,
                                         "next_hop": "10.186.2.2",
                                         "preference": 3,
+                                        "owner_code": "M",
                                     },
                                 }
                             },
@@ -39,11 +42,13 @@ expected_output = {
                                         "active": True,
                                         "outgoing_interface": "GigabitEthernet0/2",
                                         "preference": 1,
+                                        "owner_code": "M",
                                     },
                                     "GigabitEthernet0/3": {
                                         "active": True,
                                         "outgoing_interface": "GigabitEthernet0/3",
                                         "preference": 1,
+                                        "owner_code": "M",
                                     },
                                 }
                             },

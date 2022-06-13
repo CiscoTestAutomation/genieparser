@@ -8,7 +8,14 @@ IOSXE parsers for the following commands
     * 'show telemetry ietf subscription {sub_id} brief'
     * 'show telemetry ietf subscription {sub_id} detail'
     * 'show telemetry ietf subscription dynamic'
+    * 'show telemetry ietf subscription dynamic brief'
     * 'show telemetry ietf subscription dynamic detail'
+    * 'show telemetry ietf subscription configured'
+    * 'show telemetry ietf subscription configured brief'
+    * 'show telemetry ietf subscription configured detail'
+    * 'show telemetry ietf subscription permanent'
+    * 'show telemetry ietf subscription permanent brief'
+    * 'show telemetry ietf subscription permanent detail'
     * 'show telemetry ietf subscription {sub_id} receiver'
     * 'show telemetry ietf subscription receiver'
     * 'show telemetry connection {con_idx} detail'
@@ -34,8 +41,21 @@ from pyats.utils.exceptions import SchemaTypeError
 
 class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     '''schema for:
+        * show telemetry ietf subscription all
+        * show telemetry ietf subscription all brief
+        * show telemetry ietf subscription all detail
         * show telemetry ietf subscription {sub_id}
+        * show telemetry ietf subscription {sub_id} brief
         * show telemetry ietf subscription {sub_id} detail
+        * show telemetry ietf subscription dynamic
+        * show telemetry ietf subscription dynamic brief
+        * show telemetry ietf subscription dynamic detail
+        * show telemetry ietf subscription configured
+        * show telemetry ietf subscription configured brief
+        * show telemetry ietf subscription configured detail
+        * show telemetry ietf subscription permanent
+        * show telemetry ietf subscription permanent brief
+        * show telemetry ietf subscription permanent detail
     '''
 
     schema = {
@@ -75,11 +95,29 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
         * show telemetry ietf subscription {sub_id}
         * show telemetry connection {con_idx} subscription
+        * show telemetry ietf subscription {sub_id} brief
+        * show telemetry ietf subscription all
+        * show telemetry ietf subscription all brief
+        * show telemetry ietf subscription configured
+        * show telemetry ietf subscription configured brief
+        * show telemetry ietf subscription dynamic
+        * show telemetry ietf subscription dynamic brief
+        * show telemetry ietf subscription permanent
+        * show telemetry ietf subscription permanent brief
     '''
 
     cli_command = [
             'show telemetry ietf subscription {sub_id}',
-            'show telemetry connection {con_idx} subscription'
+            'show telemetry connection {con_idx} subscription',
+            'show telemetry ietf subscription {sub_id} brief',
+            'show telemetry ietf subscription all',
+            'show telemetry ietf subscription all brief',
+            'show telemetry ietf subscription configured',
+            'show telemetry ietf subscription configured brief',
+            'show telemetry ietf subscription dynamic',
+            'show telemetry ietf subscription dynamic brief',
+            'show telemetry ietf subscription permanent',
+            'show telemetry ietf subscription permanent brief',
             ]
 
     def cli(self, sub_id=None, con_idx=None, output=None):
@@ -136,13 +174,23 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
 class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
         * show telemetry ietf subscription {sub_id} detail
+        * show telemetry ietf subscription all detail'
+        * show telemetry ietf subscription configured detail'
+        * show telemetry ietf subscription dynamic detail'
+        * show telemetry ietf subscription permanent detail'
     '''
 
-    cli_command = 'show telemetry ietf subscription {sub_id} detail'
+    cli_command = [
+        'show telemetry ietf subscription {sub_id} detail',
+        'show telemetry ietf subscription all detail',
+        'show telemetry ietf subscription configured detail',
+        'show telemetry ietf subscription dynamic detail',
+        'show telemetry ietf subscription permanent detail',
+    ]
 
     def cli(self, sub_id, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(
+            output = self.device.execute(self.cli_command[0].format(
                     sub_id=sub_id
             ))
         

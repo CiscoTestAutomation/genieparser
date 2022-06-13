@@ -161,3 +161,83 @@ class ShowMemoryDebugLeaks(ShowMemoryDebugLeaksSchema):
                 continue
 
         return ret_dict
+
+class ShowMemoryDebugLeaksChunksSchema(MetaParser):
+    '''
+       Schema for 
+           * show memory debug leaks chunks
+    '''
+    schema = {
+        Optional('tracekey'): str,
+        'memory': {
+            str: {
+                Optional(str): {
+                    Optional('size'): int,
+                    Optional('parent'): str,
+                    Optional('name'): str,
+                    Optional('alloc_pc'): str,
+                },
+            }
+        }
+    }
+
+class ShowMemoryDebugLeaksChunks(ShowMemoryDebugLeaksChunksSchema):
+    '''
+       Parser for
+           * show memory debug leaks chunks
+    '''
+
+    cli_command = 'show memory debug leaks chunks'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Tracekey : 1#cc860b27cccff1817bea87604823f7be
+        p1 = re.compile(r'^Tracekey *:\s+(?P<tracekey>\S+)$')
+
+        # Processor memory
+        # reserve Processor memory
+        # lsmpi_io memory
+        p2 = re.compile(r'^(?P<memory>[\w\s]* memory)$')
+
+        # 7F129EC22658    76 7F129EF46108 (MallocLite)     :55D8C0A61000+E0D8F11
+        p3 = re.compile(r'^(?P<address>\S+)\s+(?P<size>\d+)\s+(?P<parent>\S+)\s+\((?P<name>\S+)\)\s+(?P<alloc_pc>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tracekey : 1#cc860b27cccff1817bea87604823f7be
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tracekey'] = group['tracekey']
+                continue
+
+            # Processor memory
+            # reserve Processor memory
+            # lsmpi_io memory
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                memories = ret_dict.setdefault('memory', {})
+                memory = memories.setdefault(group['memory'].lower().replace(' ','_'), {})
+                continue
+
+            # 7F129EC22658    76 7F129EF46108 (MallocLite)     :55D8C0A61000+E0D8F11
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                address = memory.setdefault(group['address'], {})
+                address.update({
+                    'size' : int(group['size']),
+                    'parent' : group['parent'],
+                    'name' : group['name'],
+                    'alloc_pc' : group['alloc_pc'],
+                })
+                continue
+        
+        return ret_dict

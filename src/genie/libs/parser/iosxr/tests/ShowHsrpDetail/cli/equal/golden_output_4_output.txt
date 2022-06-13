@@ -1,0 +1,19 @@
+GigabitEthernet0/2/0/1 - IPv4 Group 1 (version 1)
+  Local state is Standby, priority 100
+  Hellotime 3000 msec holdtime 10000 msec
+  Minimum delay 1 sec, reload delay 5 sec
+  Hot standby IP address is 10.1.1.1 configured
+  Active router is 10.1.1.2, priority 110 expires in 00:00:09
+  Standby router is local
+  Standby virtual mac address is 0000.0c07.ac01, state is reserved
+  4 state changes, last state change 6d05h
+  State change history:
+  Mar 11 07:29:44.907 UTC  Init     -> Init     Recovered from checkpoint
+  Mar 11 07:29:49.519 UTC  Init     -> Listen   Delay timer expired
+  Mar 11 07:29:59.521 UTC  Listen   -> Speak    Standby timer expired
+  Mar 11 07:30:09.522 UTC  Speak    -> Standby  Standby timer expired
+  Last coup sent:       Never
+  Last coup received:   Never
+  Last resign sent:     Never
+  Last resign received: Never
+

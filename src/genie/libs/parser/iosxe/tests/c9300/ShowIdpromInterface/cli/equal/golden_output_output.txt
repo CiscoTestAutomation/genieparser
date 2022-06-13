@@ -1,0 +1,63 @@
+General SFP Information
+-----------------------------------------------
+Identifier            :   SFP/SFP+
+Ext.Identifier        :   SFP function is defined by two-wire interface ID only
+Connector             :   LC connector
+Transceiver
+ 10/40GE Comp code       :   10G BASE-SR
+ SONET Comp code      :   Unknown
+ GE Comp code         :   Unknown
+ Link length          :   Unknown
+ Technology           :   Unknown
+ Media                :   Unknown
+ Speed                :   Unknown
+Encoding              :   64B/66B
+BR_Nominal            :   10300 Mbps
+Length(9um)-km        :   GBIC does not support single mode fibre
+Length(9um)           :   GBIC does not support single mode fibre
+Length(50um)          :   80 m
+Length(62.5um)        :   20 m
+Length(Copper)        :   GBIC does not support 50 micron multi mode OM4 fibre
+Vendor Name           :   QNC
+Vendor Part Number    :   SFP-10G-SR-QNC
+Vendor Revision       :   0x31 0x2E 0x30 0x20
+Vendor Serial Number  :   QNXP96S3636
+Wavelength            :   850.00 nm
+CC_BASE               :   0x18
+-----------------------------------------------
+
+Extended ID Fields
+-----------------------------------------------
+Options               :   0x00 0x1A
+BR, max               :   0x00
+BR, min               :   0x00
+Date code             :   161216
+Diag monitoring       :   Implemented
+Internally calibrated :   Yes
+Exeternally calibrated:   No
+Rx.Power measurement  :   Avg.Power
+Address Change        :   Not Required
+CC_EXT                :   0x61
+-----------------------------------------------
+
+Other Information
+-----------------------------------------------
+Chk for link status   : 00
+Flow control Receive  : ON
+Flow control Send     : Off
+Administrative Speed  : 10000
+Administrative Duplex : full
+Operational Speed     : 10000
+Operational Duplex    : full
+-----------------------------------------------
+
+SEEPROM contents (hex):
+ 0x00: 03 04 07 10 00 00 00 00 00 00 00 06 67 00 00 00
+ 0x10: 08 02 00 1E 51 4E 43 20 20 20 20 20 20 20 20 20
+ 0x20: 20 20 20 20 00 00 00 00 53 46 50 2D 31 30 47 2D
+ 0x30: 53 52 2D 51 4E 43 20 20 31 2E 30 20 03 52 00 18
+ 0x40: 00 1A 00 00 51 4E 58 50 39 36 53 33 36 33 36 20
+ 0x50: 20 20 20 20 31 36 31 32 31 36 20 20 68 F0 03 61
+ 0x60: 00 00 11 1F 11 6E A5 9A 71 D0 42 63 1B 65 23 97
+ 0x70: 4C 97 01 00 00 00 00 00 00 00 00 00 31 64 FA 99
+-----------------------------------------------

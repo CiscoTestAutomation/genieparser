@@ -1,0 +1,7 @@
+RPF information for ? (10.1.101.4)
+  RPF interface: Vlan101
+  RPF neighbor: ? (10.1.101.4) - directly connected
+  RPF route/mask: 10.1.101.4/32
+  RPF type: unicast (static)
+  Doing distance-preferred lookups across tables
+  RPF topology: ipv4 multicast base, originated from ipv4 unicast base

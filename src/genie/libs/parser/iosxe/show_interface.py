@@ -23,6 +23,9 @@
     * show macro auto interface
     * show interfaces summary
     * show interfaces {interface} summary
+    * show interfaces mtu
+    * show interfaces {interface} mtu
+    * show interfaces mtu module {mod}
 """
 
 import os
@@ -113,6 +116,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('output_hang'): str,
                 Optional('autostate'): bool,
                 Optional('tunnel_source_ip'): str,
+                Optional('tunnel_source_interface'): str,
                 Optional('tunnel_destination_ip'): str,
                 Optional('tunnel_protocol'): str,
                 Optional('tunnel_ttl'): int,
@@ -490,9 +494,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         p45 = re.compile(r'^DTR +is +pulsed +for +(?P<dtr_pulsed>\d+) +'
                 r'seconds +on +reset$')
 
+        # Tunnel source 1.1.10.11
+        # Tunnel source 1.1.1.1 (Loopback1)
         # Tunnel source 1.1.10.11, destination 1.1.10.10
-        p46 = re.compile(r'^Tunnel +source +(?P<tunnel_source_ip>[0-9\.]+),'
-                        r' +destination +(?P<tunnel_destination_ip>[0-9\.]+)')
+        # Tunnel source 172.16.121.201 (GigabitEthernet0/0/1.91), destination 172.16.64.36
+        # Tunnel source UNKNOWN, destination 1.2.3.4
+        #
+        p46 = re.compile(r'^Tunnel +source +(?P<tunnel_source_ip>([a-fA-F\d\:UNKNOWN|0-9\.]+)?),?\s?'
+                        r'(?P<tunnel_source_interface>\([\w\d.\/]+\))?,?\s?'
+                        r'(destination +)?(?P<tunnel_destination_ip>([a-fA-F\d\:0-9\.]+)?)')
 
         # Tunnel protocol/transport AURP
         p47 = re.compile(r'^Tunnel +protocol/transport +(?P<tunnel_protocol>[\w\/]+)')
@@ -1204,12 +1214,19 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_dict[interface].update({'dtr_pulsed': group['dtr_pulsed']})
                 continue
 
-            #Tunnel source 1.1.10.11, destination 1.1.10.10
+            # Tunnel source 1.1.10.11
+            # Tunnel source 1.1.1.1 (Loopback1)
+            # Tunnel source 1.1.10.11, destination 1.1.10.10
+            # Tunnel source 172.16.121.201 (GigabitEthernet0/0/1.91), destination 172.16.64.36
+            # Tunnel source UNKNOWN, destination 1.2.3.4
             m = p46.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_source_ip': group['tunnel_source_ip']})
-                interface_dict[interface].update({'tunnel_destination_ip': group['tunnel_destination_ip']})
+                if group['tunnel_source_interface']:
+                    interface_dict[interface].update({'tunnel_source_interface': (group['tunnel_source_interface']).strip('()')})
+                if group['tunnel_destination_ip']:
+                    interface_dict[interface].update({'tunnel_destination_ip': group['tunnel_destination_ip']})
                 continue
 
             # Tunnel protocol/transport AURP
@@ -4207,3 +4224,71 @@ class ShowInterfacesSummary(ShowInterfacesSummarySchema):
                 intf_dict.update({k: int(v) for k, v in group.items()})
                 continue
         return ret_dict
+
+
+# ====================================================
+#  schema for show interfaces mtu
+# ====================================================
+class ShowInterfacesMtuSchema(MetaParser):
+    """Schema for:
+        show interfaces mtu
+        show interfaces {interface} mtu
+        show interfaces mtu module {mod}"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'mtu': int
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for show interfaces mtu
+# ====================================================
+class ShowInterfacesMtu(ShowInterfacesMtuSchema):
+    """parser for
+            * show interfaces mtu
+            * show interfaces {interface} mtu
+            * show interfaces mtu module {mod}
+        """
+
+    cli_command = ['show interfaces mtu',
+                   'show interfaces {interface} mtu',
+                   'show interfaces mtu module {mod}']
+
+    def cli(self, interface=None, mod=None, output=None):
+
+        if output is None:
+            if mod:
+                out = self.device.execute(self.cli_command[2].format(mod=mod))
+            elif interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
+
+        result_dict = {}
+
+        #Port          Name                        MTU
+        #Fo1/0/1       Interface1                  1500
+        #Fo1/0/2       Interface2                  1500
+
+        p1 = re.compile(r'^(?P<interfaces>\S+)\s+(?P<name>.+?)?\s+(?P<mtu>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
+
+                intf_dict.update({k:v for k, v in group.items() if v and k != 'interfaces'})
+                intf_dict['mtu'] = int(intf_dict['mtu'])
+                continue
+
+        return result_dict

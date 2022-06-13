@@ -1,0 +1,1 @@
+Switch is in Fips Not-Configured state and not SESA Ready

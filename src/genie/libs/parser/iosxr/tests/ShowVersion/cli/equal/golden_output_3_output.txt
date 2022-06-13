@@ -5,7 +5,7 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.
 Build Information:
  Built By     : nkhai
  Built On     : Tue Apr 18 04:03:44 PDT 2017
- Build Host   : iox-ucs-012
+ Built Host   : iox-ucs-012
  Workspace    : /auto/iox-ucs-012-san1/nightly_xr-dev/170418A_xrv9k/ws
  Version      : 6.3.1.15I
  Location     : /opt/cisco/XR/packages/

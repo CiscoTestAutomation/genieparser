@@ -1,0 +1,11 @@
+show ip nhrp nhs
+Legend: E=Expecting replies, R=Responding, W=Waiting, D=Dynamic
+Tunnel0:
+111.0.0.100   E NBMA Address: 111.1.1.1 priority = 0 cluster = 0
+
+Tunnel100:
+100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0
+172.16.0.1   E  priority = 0 cluster = 0
+
+Tunnel111:
+111.0.0.100   E  NBMA Address: 111.1.1.1 priority = 0 cluster = 0

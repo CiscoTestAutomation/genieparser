@@ -56,6 +56,9 @@ class ShowVersionSchema(MetaParser):
               Optional('config_register'): str,
               Optional('rp_config_register'): str,
               Optional('main_mem'): str,
+              Optional('built_by'): str,
+              Optional('built_on'): str,
+              Optional('built_host'): str,
              }
 
 class ShowVersion(ShowVersionSchema):
@@ -105,6 +108,15 @@ class ShowVersion(ShowVersionSchema):
 
         # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
         p7 = re.compile(r'\s*.*Chassis.*$')
+
+        # Built By     : xyz
+        p8 = re.compile(r'^Built\s+By\s*:\s+(?P<built_by>\S+)$')
+
+        # Built On     : Fri Dec 13 16:42:11 PST 2019
+        p9 = re.compile(r'^Built\s+On\s*:\s+(?P<built_on>[a-zA-Z0-9\:\/\.\-\s]+)$')
+
+        # Built Host   : iox-abc-123
+        p10 = re.compile(r'^Built\s+Host\s*:\s*(?P<built_host>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -156,6 +168,21 @@ class ShowVersion(ShowVersionSchema):
             m = p7.match(line)
             if m:
                 show_version_dict['chassis_detail'] = str(line.strip())
+                continue
+
+            m = p8.match(line)
+            if m:
+                show_version_dict['built_by'] = m.groupdict()['built_by']
+                continue
+
+            m = p9.match(line)
+            if m:
+                show_version_dict['built_on'] = m.groupdict()['built_on']
+                continue
+
+            m = p10.match(line)
+            if m:
+                show_version_dict['built_host'] = m.groupdict()['built_host']
                 continue
 
         return show_version_dict

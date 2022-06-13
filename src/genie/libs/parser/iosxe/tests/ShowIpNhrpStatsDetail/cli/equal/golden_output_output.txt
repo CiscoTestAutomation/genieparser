@@ -1,0 +1,132 @@
+show ip nhrp stats detail
+Codes: T - Transport, O - Overlay, EP - End Point
+       TP - Tunnel Protection, VA - Virtual Access
+       [S] - Sent from NHRP, [R] - Received by NHRP
+       [number] - Error associated with an event
+Tunnel100
+
+ Interface State Event Stats:
+        [R]UP                         : 2[0]    [R]Down                       : 0[0]
+        [R]Admin Down                 : 0[0]    [R]Deleted                    : 0[0]
+        [R]Addr Changed               : 0[0]    [R]VRF Changed                : 0[0]
+        [R]Packets received           : 3808[0]
+
+ Tunnel Stats:
+        [S]End Point Addition         : 264[0]  [S]End Point Deletion         : 160[0]
+        [R]O EP SB Created            : 0[0]    [R]T EP SB Created            : 0[0]
+        [R]T/O EP Deleted             : 0[0]    [S]Pre-Delete                 : 0[0]
+        [R]SRC Change                 : 1[0]    [R]Mode Change                : 1[0]
+        [R]Leave Mode                 : 1[0]    [R]Decap Intercept            : 0[0]
+        [R]Delayed Event Unlink EP    : 0[0]
+
+ Tunnel Protection Stats:
+        [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        [R]UP                         : 0[0]    [R]Down                       : 0[0]
+        [S]Reset Socket               : 0[0]    [R]Process Delayed Event      : 0[0]
+        [R]Update Delayed Event       : 0[0]
+
+ Tunnel QoS Stats:
+        [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+        [R]QoS Policy Removed         : 0[0]    [R]CLI-Policy Map Deleted     : 0[0]
+        [R]CLI-Policy Map Rename      : 0[0]
+
+ RIB Events Stats:
+        [S]Add Route                  : 80[0]   [S]Del Route                  : 80[0]
+        [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        [S]Rwatch w/o route           : 0[0]    [S]Init IPDB                  : 0[0]
+        [S]Add iPDB                   : 0[0]    [S]Del iPDB                   : 0[0]
+        [S]remove iPDB                : 0[0]    [S]RTrevise                   : 0[0]
+        [R]Redist Callback            : 0[0]    [R]Route Add Callback         : 0[0]
+        [R]Route Evicted              : 0[0]    [S]Route Query                : 0[0]
+
+ MPLS Stats:
+        [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+        [S]Inject Packet              : 0[0]    [R]NHRP MPLS MGMT CH CB       : 0[0]
+        [R]Redirect                   : 0[0]    [S]Label-OI Bind              : 0[0]
+        [S]Register MPLS              : 0[0]    [S]Unregister MPLS            : 0[0]
+
+ BFD Stats:
+        [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        [S]Session Create             : 0[0]    [S]Session Destroy            : 0[0]
+        [R]Callback                   : 0[0]    [R]Session Down               : 0[0]
+        [R]Session Up                 : 0[0]    [R]Session Default            : 0[0]
+
+ CEF Stats:
+        [S]Adjacency Used             : 0[0]    [S]Adjacency Mark Stale       : 194[0]
+
+ BGP Stats:
+        [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+        [S]Route marked               : 0[0]    [S]Route unmarked             : 0[0]
+        [R]Route change notification  : 0[0]    [R]Exported Route Deleted     : 0[0]
+        [R]Withdraw All Routes        : 0[0]
+
+ Platform Stats:
+        [R]State Change               : 0[0]    [R]Redirect Request           : 0[0]
+        [S]Enable                     : 0[0]    [S]Disable                    : 0[0]
+
+Tunnel111
+
+ Interface State Event Stats:
+        [R]UP                         : 3[0]    [R]Down                       : 2[0]
+        [R]Admin Down                 : 1[0]    [R]Deleted                    : 0[0]
+        [R]Addr Changed               : 0[0]    [R]VRF Changed                : 0[0]
+        [R]Packets received           : 0[0]
+
+ Tunnel Stats:
+        [S]End Point Addition         : 8[0]    [S]End Point Deletion         : 2[0]
+        [R]O EP SB Created            : 0[0]    [R]T EP SB Created            : 0[0]
+        [R]T/O EP Deleted             : 0[0]    [S]Pre-Delete                 : 0[0]
+        [R]SRC Change                 : 0[0]    [R]Mode Change                : 1[0]
+        [R]Leave Mode                 : 1[0]    [R]Decap Intercept            : 0[0]
+        [R]Delayed Event Unlink EP    : 0[0]
+
+ Tunnel Protection Stats:
+        [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        [R]UP                         : 0[0]    [R]Down                       : 0[0]
+        [S]Reset Socket               : 0[0]    [R]Process Delayed Event      : 0[0]
+        [R]Update Delayed Event       : 0[0]
+
+ Tunnel QoS Stats:
+        [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+        [R]QoS Policy Removed         : 0[0]    [R]CLI-Policy Map Deleted     : 0[0]
+        [R]CLI-Policy Map Rename      : 0[0]
+
+ RIB Events Stats:
+        [S]Add Route                  : 0[0]    [S]Del Route                  : 0[0]
+        [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        [S]Rwatch w/o route           : 0[0]    [S]Init IPDB                  : 0[0]
+        [S]Add iPDB                   : 0[0]    [S]Del iPDB                   : 0[0]
+        [S]remove iPDB                : 0[0]    [S]RTrevise                   : 0[0]
+        [R]Redist Callback            : 0[0]    [R]Route Add Callback         : 0[0]
+        [R]Route Evicted              : 0[0]    [S]Route Query                : 0[0]
+
+ MPLS Stats:
+        [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+        [S]Inject Packet              : 0[0]    [R]NHRP MPLS MGMT CH CB       : 0[0]
+        [R]Redirect                   : 0[0]    [S]Label-OI Bind              : 0[0]
+        [S]Register MPLS              : 0[0]    [S]Unregister MPLS            : 0[0]
+
+ BFD Stats:
+        [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        [S]Session Create             : 0[0]    [S]Session Destroy            : 0[0]
+        [R]Callback                   : 0[0]    [R]Session Down               : 0[0]
+        [R]Session Up                 : 0[0]    [R]Session Default            : 0[0]
+
+ CEF Stats:
+        [S]Adjacency Used             : 0[0]    [S]Adjacency Mark Stale       : 0[0]
+
+ BGP Stats:
+        [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+        [S]Route marked               : 0[0]    [S]Route unmarked             : 0[0]
+        [R]Route change notification  : 0[0]    [R]Exported Route Deleted     : 0[0]
+        [R]Withdraw All Routes        : 0[0]
+
+ Platform Stats:
+        [R]State Change               : 0[0]    [R]Redirect Request           : 0[0]
+        [S]Enable                     : 0[0]    [S]Disable                    : 0[0]
