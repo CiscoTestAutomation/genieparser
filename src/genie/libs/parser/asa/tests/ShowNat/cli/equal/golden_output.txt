@@ -1,0 +1,11 @@
+1 (if1) to (if2) source static obj_a 2.2.2.2  dns no-proxy-arp
+    translate_hits = 5, untranslate_hits = 18
+    Source - Origin: 1.1.1.1/32, Translated: 2.2.2.2/32
+2 (if3) to (if4) source static obj_b 4.4.4.4  no-proxy-arp
+    translate_hits = 104, untranslate_hits = 203
+    Source - Origin: 3.3.3.3/32, Translated: 4.4.4.4/32
+3 (if5) to (if6) source static obj_c 6.6.6.6  dns 
+    translate_hits = 1000, untranslate_hits = 506
+    Source - Origin: 5.5.5.5/32, Translated: 6.6.6.6/32
+
+
