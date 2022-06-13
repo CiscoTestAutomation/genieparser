@@ -82,7 +82,7 @@ class ShowNat(ShowNatSchema):
         p1 = re.compile(r'(?P<entry_num>\d*)\s+(\((?P<in_if>[^)]*)\)\s+to\s+'
                         r'\((?P<out_if>[^)]*)\))?\s+'
                         r'(source\s+(?P<source>\S*\s+\S+\s+[0-9.]+)\s+)?'
-                        r'(destination\s+(?P<destination>\S*\s+\S+\s+[0-9.]+)?\s+)'
+                        r'(destination\s+(?P<destination>\S*\s+\S+\s+[0-9.]+)\s+)?'
                         r'(?P<dns>dns)?\s+(?P<no_proxy_arp>no-proxy-arp)?')
 
         # for both source and destination
@@ -105,18 +105,21 @@ class ShowNat(ShowNatSchema):
         for line in output.splitlines():
             line = line.strip()
 
+            print('{}'.format(line))
+
             if line == '':
                 continue
 
             # 1 (if1) to (if2) source static obj_name 1.1.1.1  dns no-proxy-arp
             m = p1.match(line)
             if m:
+                print('{} matched p1'.format(line))
                 groups = m.groupdict()
                 entry_num = groups['entry_num']
                 nat_entry = ret_dict.setdefault('nat', {}).setdefault(entry_num, {})
                 nat_entry.update({'internal-interface': groups['in_if'] })
                 nat_entry.update({'external-interface': groups['out_if'] })
-                src_txt = groups.get('source', '')
+                src_txt = str(groups.get('source', ''))
                 m1 = p1_1.match(src_txt)
                 if m1:
                     source = nat_entry.setdefault('source',{})
@@ -124,7 +127,7 @@ class ShowNat(ShowNatSchema):
                     source.update({'type': src_groups['type']})
                     source.update({'object-name': src_groups['obj_name']})
                     source.update({'natted-address': src_groups['natted']})
-                dst_txt = groups.get('destination', '') 
+                dst_txt = str(groups.get('destination', '')) 
                 m1 = p1_1.match(dst_txt)
                 if m1:
                     dest = nat_entry.setdefault('destination',{})
