@@ -1,0 +1,19 @@
+LEAF_6# show ip arp detail vrf all 
+
+Flags: * - Adjacencies learnt on non-active FHRP router
+       + - Adjacencies synced via CFSoE
+       # - Adjacencies Throttled for Glean
+       CP - Added via L2RIB, Control plane Adjacencies
+       PS - Added via L2RIB, Peer Sync
+       RO - Re-Originated Peer Sync Entry
+
+IP ARP Table for all contexts
+Total number of entries: 7
+Address         Age       MAC Address     Interface        Physical Interface  Flags    VRF Name
+10.48.3.254     00:00:05  0000.5e00.0101  mgmt0            mgmt0                        management
+172.20.12.16    00:03:13  10b3.d6dc.0293  Ethernet1/54     Ethernet1/54                 default
+172.20.12.18    00:01:53  7c21.0e12.3627  Vlan3622         port-channel1000             default
+172.24.8.85     00:16:58  7c21.0e12.3627  port-channel1100.3623 port-channel1100.3623         VRFTEST
+172.24.8.89     00:17:00  7c21.0e12.3627  port-channel1100.3624 port-channel1100.3624         VRFBORDER
+192.168.240.59  00:02:40  0cc4.7aee.9c2e  Vlan240          port-channel1000    +        VRFTEST
+192.168.240.62  00:12:56  a2b6.9300.0003  Vlan240          Ethernet163/1/47             VRFTEST
