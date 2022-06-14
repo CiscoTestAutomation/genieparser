@@ -1,0 +1,6 @@
+Wed Feb  2 09:06:41.714 CET
+
+Server: 127.0.0.1/24 vrf=default [private]
+        opens=123543 closes=123543 aborts=592 errors=0
+        packets in=134396 packets out=134421
+        status=up single-connect=false family=IPv4
