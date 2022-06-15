@@ -1,7 +1,12 @@
-''' show_access_list.py
+''' show_nat.py
 
-Parser for the following show commands:
-    * show access-list
+ASA parsers for the following show commands:
+    * show nat
+    * show nat detail
+    * show nat {address}
+    * show nat {address} detail
+    * show nat translated {address}
+    * show nat translated {address} detail
 '''
 
 # Python
@@ -12,17 +17,23 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # =============================================
-# Schema for 'show nat'
+# Schema for:
+#   *'show nat'
+#   * 'show nat detail'
+#   * 'show nat {address}'
+#   * 'show nat {address} detail'
+#   * 'show nat translated {address}'
+#   * 'show nat translated {address} detail'
 # =============================================
 class ShowNatSchema(MetaParser):
-    """Schema for
-        * show nat
-        * show nat details
-        * show nat {address}
-        * show nat translated {address}
-        * show nat {address} details
-        * show nat translated {address} details        
-    """
+    ''''Schema for
+        * 'show nat'
+        * 'show nat detail'
+        * 'show nat {address}'
+        * 'show nat {address} detail'
+        * 'show nat translated {address}'
+        * 'show nat translated {address} detail'
+    '''
 
     schema = {
     	'nat': {
@@ -54,18 +65,30 @@ class ShowNatSchema(MetaParser):
     }
 
 # =============================================
-# Parser for 'show nat'
+# Parser for:
+#    *'show nat'
+#    * 'show nat detail'
+#    * 'show nat {address}'
+#    * 'show nat {address} detail'
+#    * 'show nat translated {address}'
+#    * 'show nat translated {address} detail'
 # =============================================
 class ShowNat(ShowNatSchema):
-    """Parser for
-        * show nat
-        * show nat {address}
-        * show nat translated {address}
-        * show nat {address} details
-        * show nat translated {address} details        
-    """
+    ''''Parser for
+        * 'show nat'
+        * 'show nat detail'
+        * 'show nat {address}'
+        * 'show nat {address} detail'
+        * 'show nat translated {address}'
+        * 'show nat translated {address} detail'
+    '''
 
-    cli_command = 'show nat'
+    cli_command = ['show nat',
+                   'show nat detail',
+                   'show nat {address}',
+                   'show nat {address} detail',
+                   'show nat translated {address}',
+                   'show nat translated {address} detail' ]
 
     def cli(self, output=None):
         if output is None:
