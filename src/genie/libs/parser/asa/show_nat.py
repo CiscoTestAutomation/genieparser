@@ -106,7 +106,7 @@ class ShowNat(ShowNatSchema):
                         r'\((?P<out_if>[^)]*)\))?\s+'
                         r'(source\s+(?P<source>\S*\s+\S+\s+[0-9.]+)\s+)?'
                         r'(destination\s+(?P<destination>\S*\s+\S+\s+[0-9.]+)\s+)?'
-                        r'(?P<dns>dns)?\s+(?P<no_proxy_arp>no-proxy-arp)?')
+                        r'(?P<dns>dns)?\s*(?P<no_proxy_arp>no-proxy-arp)?')
 
         # for both source and destination
         # static obj_name 1.1.1.1
@@ -128,15 +128,12 @@ class ShowNat(ShowNatSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            print('{}'.format(line))
-
             if line == '':
                 continue
 
             # 1 (if1) to (if2) source static obj_name 1.1.1.1  dns no-proxy-arp
             m = p1.match(line)
             if m:
-                print('{} matched p1'.format(line))
                 groups = m.groupdict()
                 entry_num = groups['entry_num']
                 nat_entry = ret_dict.setdefault('nat', {}).setdefault(entry_num, {})
@@ -158,8 +155,8 @@ class ShowNat(ShowNatSchema):
                     dest.update({'type': dst_groups['type']})
                     dest.update({'object-name': dst_groups['obj_name']})
                     dest.update({'natted-address': dst_groups['natted']})
-                nat_entry.update({'dns': bool('dns' in groups)})
-                nat_entry.update({'proxy-arp': not('no-proxy-arp' in groups)})
+                nat_entry.update({'dns':  not(groups['dns'] is None )})
+                nat_entry.update({'proxy-arp': bool(groups['no_proxy_arp'] is None) })
                 continue
             
             # translate_hits = 10, untranslate_hits = 8
