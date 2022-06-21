@@ -255,6 +255,7 @@ expected_output = {
                             },
                         },
                     },
+                    "down_time": "never",
                 }
             }
         }

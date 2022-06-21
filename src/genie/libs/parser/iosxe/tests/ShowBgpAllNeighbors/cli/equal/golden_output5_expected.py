@@ -166,6 +166,9 @@ expected_output = {
                     "router_id": "192.168.0.202",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:37",
+                    "last_write": "00:00:55",
+                    "up_time": "08:59:32",
                 },
                 "10.136.199.57": {
                     "address_family": {"ipv4 unicast": {"session_state": "Idle"}},

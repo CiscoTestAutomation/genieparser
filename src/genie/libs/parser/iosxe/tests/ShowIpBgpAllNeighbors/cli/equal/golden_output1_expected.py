@@ -226,6 +226,9 @@ expected_output = {
                     "router_id": "172.16.1.156",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:18",
+                    "last_write": "00:00:46",
+                    "up_time": "4d22h",
                 }
             }
         },
@@ -451,6 +454,9 @@ expected_output = {
                     "router_id": "172.16.1.156",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:00",
+                    "last_write": "00:00:45",
+                    "up_time": "4d22h",
                 }
             }
         },
@@ -739,6 +745,9 @@ expected_output = {
                     "router_id": "10.1.1.1",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:42",
+                    "last_write": "00:00:20",
+                    "up_time": "4d22h",
                 },
                 "10.2.2.2": {
                     "address_family": {
@@ -1027,6 +1036,9 @@ expected_output = {
                     "router_id": "10.2.2.2",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:16",
+                    "last_write": "00:00:28",
+                    "up_time": "4d22h",
                 },
             }
         },
