@@ -116,6 +116,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 # Parser
 from genie.libs.parser.iosxe.show_vrf import ShowVrf
+from pyats.configuration import setdefault
 
 
 # ============================================
@@ -4809,13 +4810,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def cli(self, neighbor, address_family='', output=None):
 
-        # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
-        # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
-        p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                        '(, +vrf +(?P<vrf>\S+))?, +remote AS '
-                        '+(?P<remote_as_id>[0-9]+), '
-                        '+(?P<internal_external_link>[a-z\s]+)$')
-
         p1 = re.compile(r'^\s*For +address +family:'
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
 
@@ -5350,11 +5344,22 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            if self.check_number_of_prefixes(output) == 0:
+                return {}
             show_output = output
 
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
+
+    def check_number_of_prefixes(self, output):
+        number_of_prefixes = re.compile(r'Total\s+number\s+of\s+prefixes\s+(?P<number_of_prefixes>\d+)\s*')
+        m = number_of_prefixes.search(output)
+        if not m:
+            return 0
+        return int(m["number_of_prefixes"])
+
+
 # =================================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
@@ -6037,7 +6042,8 @@ class ShowBgpAllNeighborsRoutesSchema(MetaParser):
     '''
 
     schema = {
-        'vrf':
+        Optional('total_num_of_prefixes'): int,
+        Optional('vrf'):
             {Any():
                 {'neighbor':
                     {Any():
@@ -6207,6 +6213,9 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
                          '([a-zA-Z0-9\.\:]+)))\s*$')
 
+        # Total number of prefixes 32
+        p9 = re.compile(r'^Total number of prefixes (?P<total_num_of_prefixes>\d+)$')
+
         for line in output.splitlines():
             line = line.rstrip()
 
@@ -6235,14 +6244,14 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 bgp_table_version = int(m.groupdict()['bgp_table_version'])
                 local_router_id = str(m.groupdict()['local_router_id'])
 
-                # Init dict
-                route_dict.setdefault('vrf', {})\
+                # Init af_dict
+                af_dict = route_dict.setdefault('vrf', {})\
                         .setdefault(vrf, {})\
                         .setdefault('neighbor', {})\
-                        .setdefault(neighbor_id, {})
+                        .setdefault(neighbor_id, {})\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, {})
 
-                # Init af dict
-                af_dict = {}
                 af_dict.setdefault('routes', {})
                 af_dict['bgp_table_version'] = bgp_table_version
                 af_dict['local_router_id'] = local_router_id
@@ -6265,11 +6274,6 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 if m.groupdict()['prefix']:
                     prefix = str(m.groupdict()['prefix'])
 
-
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        .setdefault('address_family', {})\
-                        .setdefault(address_family, af_dict)
-                        
                 # Init dict
                 af_dict.setdefault('routes', {})\
                         .setdefault(prefix, {})\
@@ -6289,8 +6293,6 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'].setdefault(address_family, af_dict)
                 af_dict['routes'][prefix]['index'][index]['metric'] = int(group['metric'])
                 af_dict['routes'][prefix]['index'][index]['locprf'] = int(group['locprf'])
                 af_dict['routes'][prefix]['index'][index]['weight'] = int(group['weight'])
@@ -6311,10 +6313,6 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     data_on_nextline =  False
                 else:
                     index += 1
-
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        .setdefault('address_family', {})\
-                        .setdefault(address_family, af_dict)
 
                 # Init dict
                 af_dict.setdefault('routes', {})\
@@ -6368,7 +6366,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) < 11:
+                    if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
@@ -6405,10 +6403,6 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                     next_hop = str(m.groupdict()['next_hop'])
                 if m.groupdict()['origin_codes']:
                     origin_codes = str(m.groupdict()['origin_codes'])
-
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        .setdefault('address_family', {})\
-                        .setdefault(address_family, af_dict)
 
                 # Init dict
                 af_dict.setdefault('routes', {})\
@@ -6464,7 +6458,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 elif m2:
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
                     # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 6:
+                    if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
                         af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
@@ -6486,6 +6480,12 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 # Reset address_family key and af_dict for use in other regex
                 address_family = original_address_family + ' RD ' + route_distinguisher
+                af_dict = route_dict.setdefault('vrf', {})\
+                        .setdefault(vrf, {})\
+                        .setdefault('neighbor', {})\
+                        .setdefault(neighbor_id, {})\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, {})
 
                 # Set keys
                 af_dict.setdefault('routes', {})
@@ -6494,7 +6494,17 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 af_dict['route_distinguisher'] = route_distinguisher
                 if m.groupdict()['default_vrf']:
                     af_dict['default_vrf'] = str(m.groupdict()['default_vrf'])
+                continue
 
+            # Total number of prefixes 32
+            m = p9.match(line.strip())
+            if m:
+                if 'total_num_of_prefixes' in route_dict:
+                    # key already exists, add to it
+                    route_dict['total_num_of_prefixes'] += int(m.groupdict()['total_num_of_prefixes'])
+                else:
+                    # key doesnt exist, create it
+                    route_dict['total_num_of_prefixes'] = int(m.groupdict()['total_num_of_prefixes'])
                 continue
 
         return route_dict
