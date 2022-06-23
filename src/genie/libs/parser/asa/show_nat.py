@@ -102,8 +102,8 @@ class ShowNat(ShowNatSchema):
 
         # 1 (if1) to (if2) source static obj_name 1.1.1.1  dns no-proxy-arp
         
-        p1 = re.compile(r'(?P<entry_num>\d+)\s+(\((?P<in_if>[^)]*)\)\s+to\s+'
-                        r'\((?P<out_if>[^)]*)\))?\s+'
+        p1 = re.compile(r'(?P<entry_num>\d+)\s+\((?P<in_if>[^)]*)\)\s+to\s+'
+                        r'\((?P<out_if>[^)]*)\)\s+'
                         r'(source\s+(?P<source>\S*\s+\S+\s+[0-9.]+)\s+)?'
                         r'(destination\s+(?P<destination>\S*\s+\S+\s+[0-9.]+)\s+)?'
                         r'(?P<dns>dns)?\s*(?P<no_proxy_arp>no-proxy-arp)?')
