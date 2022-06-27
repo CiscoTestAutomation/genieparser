@@ -14,7 +14,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 from pyats.configuration import setdefault
 
 # =============================================
-# Schema for 'show access-list'
+# Schema for 'show perfmon'
 # =============================================
 class ShowPerfmonSchema(MetaParser):
     """Schema for
@@ -121,8 +121,8 @@ class ShowPerfmonSchema(MetaParser):
 
 # =============================================
 # Parser for:
-#     * 'show perfmon'
-#     * 'show perfmon detail'
+#     * show perfmon
+#     * show perfmon detail
 # =============================================
 class ShowPerfmon(ShowPerfmonSchema):
     """Parser for
@@ -270,8 +270,8 @@ class ShowPerfmon(ShowPerfmonSchema):
                 groups = m.groupdict()
                 rate = context.setdefault('tcp_intercept', {})\
                     .setdefault('valid_conns_rate', {})
-                rage['current'] = groups['current']
-                rage['average'] = groups['average']
+                rate['current'] = groups['current']
+                rate['average'] = groups['average']
                 continue
 
 
