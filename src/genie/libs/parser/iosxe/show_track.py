@@ -33,6 +33,8 @@ class ShowTrackSchema(MetaParser):
                 'last_change': str,
                 Optional('threshold_down'): int,
                 Optional('threshold_up'): int,
+                Optional('latest_op_return_code'): str,
+                Optional('latest_rtt_ms'):int
             },
         },
         Optional('delay_up_secs'): float,
@@ -69,6 +71,9 @@ class ShowTrack(ShowTrackSchema):
             r'((?P<address>[\d.]+) +(?P<mask>[\d.]+)|'
             r'(?P<name>[\d\w.]+)) +(?P<parameter>[\w \-]+)')
 
+        # IP SLA 34 state
+        p1_1 = re.compile(r'^(?P<type>.*)state')
+
         # Line protocol is Up
         # Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
         # Metric threshold is Down (no route)
@@ -80,6 +85,9 @@ class ShowTrack(ShowTrackSchema):
         # 1 change, last change 00:00:27
         p3 = re.compile(r'^(?P<change_count>\d+) +change, +last +change'
             r' +(?P<last_change>[\d:]+)')
+
+        # 1 changes, last change 1d16h
+        p3_1 = re.compile(r'^(?P<change_count>\d+) +changes, +last +change+(?P<last_change>.*)')
 
         # Delay up 20 secs, down 10 secs
         p4 = re.compile(r'^Delay +up +(?P<delay_up_secs>\d+)'
@@ -99,6 +107,12 @@ class ShowTrack(ShowTrackSchema):
         # HSRP Ethernet0/1 3
         p7 = re.compile(r'^(?P<name>[a-zA-Z]{3,4}) +'
             r'(?P<interface>[A-Za-z0-9/.]+) +((?P<group_id>\d+)|(\n))')
+        
+        # Latest operation return code: OK
+        p8 = re.compile(r'Latest +operation +return +code: +(?P<latest_op_return_code>\w+)')
+
+        # Latest RTT (millisecs) 16
+        p9 = re.compile(r'Latest RTT +\(?millisecs\)? +(?P<latest_rtt_ms>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -120,6 +134,14 @@ class ShowTrack(ShowTrackSchema):
                 if group['mask']:
                     type_dict['mask'] = group['mask']
                 continue
+            
+            # IP SLA 34 state
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                type_name = group['type'].rstrip().replace(' ','_')
+                type_dict = parsed_dict.setdefault('type', {})\
+                    .setdefault(type_name, {})
 
             # Line protocol is Up
             # Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
@@ -149,6 +171,14 @@ class ShowTrack(ShowTrackSchema):
                 group = m.groupdict()
                 type_dict['change_count'] = int(group['change_count'])
                 type_dict['last_change'] = group['last_change']
+                continue
+
+            # 11 changes, last change 1d16h
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['change_count'] = int(group['change_count'])
+                type_dict['last_change'] = group['last_change'].lstrip()
                 continue
 
             # Delay up 20 secs, down 10 secs
@@ -203,4 +233,18 @@ class ShowTrack(ShowTrackSchema):
                     tracker_dict['group_id'] = group['group_id']
                 continue
 
+            # Latest operation return code: OK
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if group['latest_op_return_code']:
+                    type_dict['latest_op_return_code'] = group['latest_op_return_code']
+            
+            # Latest RTT (millisecs) 16
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if group['latest_rtt_ms']:
+                    type_dict['latest_rtt_ms'] = int(group['latest_rtt_ms'])
+        
         return parsed_dict

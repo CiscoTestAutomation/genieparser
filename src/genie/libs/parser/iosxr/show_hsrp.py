@@ -236,7 +236,7 @@ class ShowHsrpDetailSchema(MetaParser):
                 'minimum_delay': int,
                 'reload_delay': int,
             },
-            'redirects_disable': bool,
+            Optional('redirects_disable'): bool,
             'address_family': {
                 Any(): {
                     'version': {
@@ -262,7 +262,7 @@ class ShowHsrpDetailSchema(MetaParser):
                                             'priority_decrement': int,
                                         }
                                     },
-                                    'timers': {
+                                    Optional('timers'): {
                                         'hello_msec_flag': bool,
                                         'hello_msec': int,
                                         Optional('hello_sec'): int,
@@ -491,8 +491,9 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                          r'[\w\:\.]+)))?$')
 
         # Standby virtual mac address is 0000.0cff.b30c, state is active
+        # Standby virtual mac address is 549f.c66e.9aa3 configured, state is active
         p13 = re.compile(r'Standby +virtual +mac +address +is'
-                         r' +(?P<virtual_mac_address>[\w\.]+),'
+                         r' +(?P<virtual_mac_address>[\w\.]+)( configured)?,'
                          r' +state +is +(?P<standby_state>[a-zA-Z ]+)$')
 
         # Authentication text, string "cisco123"

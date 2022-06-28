@@ -31,33 +31,37 @@ expected_output = {
                                         "bps": 0,
                                     },
                                 },
-                            }
-                        },
-                        "child_policy_name": {
-                            "STD_in_child": {
-                                "class_map": {
-                                    "IPP567": {
-                                        "match_evaluation": "match-all",
-                                        "packets": 0,
-                                        "bytes": 0,
-                                        "rate": {
-                                            "interval": 300,
-                                            "offered_rate_bps": 0,
-                                            "drop_rate_bps": 0,
-                                        },
-                                        "match": ["ip precedence 3  4  5"],
-                                        "qos_set": {
-                                            "ip precedence": {
-                                                "1": {"marker_statistics": "Disabled"}
-                                            },
-                                            "qos-group": {
-                                                "1": {"marker_statistics": "Disabled"}
-                                            },
-                                        },
+                                "child_policy_name": {
+                                    "STD_in_child": {
+                                        "class_map": {
+                                            "IPP567": {
+                                                "match_evaluation": "match-all",
+                                                "packets": 0,
+                                                "bytes": 0,
+                                                "rate": {
+                                                    "interval": 300,
+                                                    "offered_rate_bps": 0,
+                                                    "drop_rate_bps": 0,
+                                                },
+                                                "match": ["ip precedence 3  4  5"],
+                                                "qos_set": {
+                                                    "ip precedence": {
+                                                        "1": {
+                                                            "marker_statistics": "Disabled"
+                                                        }
+                                                    },
+                                                    "qos-group": {
+                                                        "1": {
+                                                            "marker_statistics": "Disabled"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        },
+                        }
                     }
                 }
             },
@@ -87,45 +91,45 @@ expected_output = {
                                 "shape_bc_bps": 2323,
                                 "shape_be_bps": 3434,
                                 "target_shape_rate": 454545,
-                            }
-                        },
-                        "child_policy_name": {
-                            "leeaf": {
-                                "queue_stats_for_all_priority_classes": {
-                                    "priority_level": {
-                                        "1": {
-                                            "queueing": True,
-                                            "queue_limit_packets": "512",
-                                            "queue_depth": 0,
-                                            "total_drops": 0,
-                                            "no_buffer_drops": 0,
-                                            "pkts_output": 123456,
-                                            "bytes_output": 7890123,
+                                "child_policy_name": {
+                                    "leeaf": {
+                                        "class_map": {
+                                            "IPP67": {
+                                                "match_evaluation": "match-all",
+                                                "packets": 123,
+                                                "bytes": 4567,
+                                                "rate": {
+                                                    "interval": 300,
+                                                    "offered_rate_bps": 123123123,
+                                                    "drop_rate_bps": 456456456,
+                                                },
+                                                "match": ["ip precedence 6  7"],
+                                                "queueing": True,
+                                                "queue_limit_packets": "64",
+                                                "queue_depth": 63,
+                                                "total_drops": 2655550,
+                                                "no_buffer_drops": 0,
+                                                "pkts_output": 6612304,
+                                                "bytes_output": 819909328,
+                                                "bandwidth_percent": 50,
+                                                "bandwidth_kbps": 234,
+                                            }
                                         }
                                     }
                                 },
-                                "class_map": {
-                                    "IPP67": {
-                                        "match_evaluation": "match-all",
-                                        "bandwidth_kbps": 234,
-                                        "bandwidth_percent": 50,
-                                        "packets": 123,
-                                        "bytes": 4567,
-                                        "rate": {
-                                            "interval": 300,
-                                            "offered_rate_bps": 123123123,
-                                            "drop_rate_bps": 456456456,
-                                        },
-                                        "match": ["ip precedence 6  7"],
-                                        "queueing": True,
-                                        "queue_limit_packets": "64",
-                                        "queue_depth": 63,
-                                        "total_drops": 2655550,
-                                        "no_buffer_drops": 0,
-                                        "pkts_output": 6612304,
-                                        "bytes_output": 819909328,
-                                    }
-                                },
+                            }
+                        },
+                        "queue_stats_for_all_priority_classes": {
+                            "priority_level": {
+                                "1": {
+                                    "queueing": True,
+                                    "queue_limit_packets": "512",
+                                    "queue_depth": 0,
+                                    "total_drops": 0,
+                                    "no_buffer_drops": 0,
+                                    "pkts_output": 123456,
+                                    "bytes_output": 7890123,
+                                }
                             }
                         },
                     }

@@ -1,66 +1,53 @@
 expected_output = {
-'node': {
-    1: {
-        'priority': 1,
-        'domain': 1, 
-        'mode': 'Aggregation', 
-        'router_id': '0.0.0.0', 
-        'configured_svl_links': {
-            'link_id': 1
-            },
-        'configured_svl_ports': {
-            'FourHundredGigE1/0/19': {
-                'link': 1, 
-                'slot_bay_port': '1:0:19'
+    '1': {
+        'fipskey': '4D56F017FFC920A5FA0EF11397788E917931D1D1AE48F9C0',
+        'interface_details': {
+            'HundredGigE1/0/13': {
+                'link': 1,
+                'slot': '1:0:13'
                 },
-            'FourHundredGigE1/0/20': {
-                'link': 1, 
-                'slot_bay_port': '1:0:20'
-                }, 
-            'FourHundredGigE1/0/22': {
-                'link': 1, 
-                'slot_bay_port': '1:0:22'
+            'HundredGigE1/0/14': {
+                'link': 1,
+                'slot': '1:0:14'
                 }
             },
-        'configured_svl_dual_active_detection_ports': {
-            'FourHundredGigE1/0/15': {
-                'slot_bay_port': '1:0:15'
-                },
-            'FourHundredGigE1/0/17': {
-                'slot_bay_port': '1:0:17'
-                }
-            }
+        'node_details': {
+            'node_number': 1, 'priority': 1
+            },
+        'svl_link': {
+            'link': 1
+            },
+        'svl_ports': {
+            'domain': 1,
+            'mode': 'Aggregation',
+            'node': 1,
+            'router_id': '0.0.0.0'
+            },
         },
-    2: {
-        'priority': 1,
-        'domain': 1,
-        'mode': 'Aggregation', 
-        'router_id': '0.0.0.0', 
-        'configured_svl_links': {
-           'link_id': 1
-           },
-        'configured_svl_ports': {
-            'FourHundredGigE2/0/19': {
+    '2': {
+        'fipskey': '34293A39A7802377DF8783DF687A44FDBDA3984C2AEACCB0',
+        'interface_details': {
+            'HundredGigE2/0/13': {
                 'link': 1,
-                'slot_bay_port': '1:0:19'
+                'slot': '1:0:13'
                 },
-            'FourHundredGigE2/0/20': {
+            'HundredGigE2/0/14': {
                 'link': 1,
-                'slot_bay_port': '1:0:20'
-                },
-            'FourHundredGigE2/0/22': {
-                'link': 1, 
-                'slot_bay_port': '1:0:22'
+                'slot': '1:0:14'
                 }
-            }, 
-        'configured_svl_dual_active_detection_ports': {
-            'FourHundredGigE2/0/16': {
-                'slot_bay_port': '1:0:16'
-                },
-            'FourHundredGigE2/0/18': {
-                'slot_bay_port': '1:0:18'
-                }
-            }
-        }
+            },
+        'node_details': {
+            'node_number': 2, 'priority': 1
+            },
+        'svl_link': {
+            'link': 1
+            },
+        'svl_ports': {
+            'domain': 1,
+            'mode': 'Aggregation',
+            'node': 2,
+            'router_id': '0.0.0.0'
+            },
+        },
     }
-}
+

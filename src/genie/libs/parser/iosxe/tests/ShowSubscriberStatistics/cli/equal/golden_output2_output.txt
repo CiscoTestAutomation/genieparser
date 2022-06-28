@@ -1,0 +1,59 @@
+Current Subscriber Statistics:
+Number of sessions currently up: 13271
+Number of sessions currently pending: 0
+Number of sessions currently authenticated: 13271
+Number of sessions currently unauthenticated: 0
+Highest number of sessions ever up at one time: 13271
+Mean up-time duration of sessions: 00:39:56
+Total number of sessions up so far: 13271
+Mean call rate per minute: 17, per hour: 1105
+Number of calls in last one hour: 11471
+Number of sessions failed to come up: 0
+
+Current Flow Statistics:
+Number of flows currently up: 0
+Highest number of flows ever up at one time: 0
+Mean up-time duration of flows: 00:00:00
+Number of flows failed to come up: 0
+Total number of flows up so far: 0
+
+IP/DHCP session type count:
+DHCPv4 sessions = 13271
+
+Feature Installation Count:
+Direction
+Feature Name None Inbound Outbound
+QoS Policy Map 0 0 13271
+Static Routes 13271 0 0
+Absolute Timeout 13271 0 0
+
+Switch Id Cleanup Statistics:
+Number of sessions having invalid SMGR handle: 0
+Number of sessions having invalid policy handle: 0
+Number of sessions having invalid LTERM handle: 0
+Number of sessions having invalid SIP handle: 0
+
+Lterm Error Statistics:
+
+Lterm session delete errors:
+
+SHDBs in use : 13271
+SHDBs allocated : 13271
+SHDBs freed : 0
+
+SHDB handles associated with each client type
+
+Client Name Count
+=========== =======
+LTerm 13271
+AAA 13271
+CCM 13271
+SSS FM 13271
+IPSUB 13271
+ISG Classifier 13271
+CCM Group 13271
+PM 13271
+PM cluster 0
+DHCP 13271
+DHCP SIP 13271
+

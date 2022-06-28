@@ -23,6 +23,12 @@ IOSXE parsers for the following show commands:
    * show crypto gkm gm replay
    * show crypto gdoi feature and sub commands
    * show crypto gdoi gm
+   * show crypto gdoi ks coop version 
+   * show crypto gdoi ks
+   * show crypto gdoi rekey sa
+   * show crypto gdoi rekey sa detail
+   * show tunnel protection statistics
+   * show crypto gdoi ks detail
 """
 
 # Python
@@ -6370,6 +6376,84 @@ class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
 
         return ret_dict
 
+
+# =================================================
+#  Schema for 'show crypto gdoi ks coop version '
+# =================================================
+class ShowCryptoGdoiKsCoopVersionSchema(MetaParser):
+    """Schema for show crypto gdoi ks coop version"""
+    schema = {
+        "coop_ver": str,
+        "ks_pol_ver": str,
+        "gm_ver": str,
+        "sid_ver": str
+    }   
+
+# ==============================
+# Parser for
+#   'show crypto gdoi ks coop version'
+# ==============================
+
+class ShowCryptoGdoiKsCoopVersion(ShowCryptoGdoiKsCoopVersionSchema):
+    """
+    Parser for
+        * 'show crypto gdoi ks coop version'
+    """
+
+    cli_command = ['show crypto gdoi ks coop version']
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initializes the Python dictionary variable    
+        coop_dict = {}
+
+        # Cooperative key server infra Version : 2.0.0 
+        p1 = re.compile(r'Cooperative key server infra Version\s+:\s+(?P<coop_ver>\S+)$')
+
+        # Client : KS_POLICY_CLIENT        Version : 2.0.0 
+        p2 = re.compile(r'Client\s+:\s+KS_POLICY_CLIENT\s+Version\s+:\s+(?P<ks_pol_ver>\S+)$')
+
+        # Client : GROUP_MEMBER_CLIENT     Version : 2.0.1 
+        p3 = re.compile(r'Client\s+:\s+GROUP_MEMBER_CLIENT\s+Version\s+:\s+(?P<gm_ver>\S+)$')
+
+        # Client : SID_CLIENT              Version : 1.0.1 
+        p4 = re.compile(r'Client\s+:\s+SID_CLIENT\s+Version\s+:\s+(?P<sid_ver>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Cooperative key server infra Version : 2.0.0 
+            m = p1.match(line)
+            if m:
+                coop_dict['coop_ver'] = m.groupdict()['coop_ver']
+                continue
+
+            # Client : KS_POLICY_CLIENT        Version : 2.0.0 
+            m = p2.match(line)
+            if m:
+                coop_dict['ks_pol_ver'] = m.groupdict()['ks_pol_ver']
+                continue
+
+            # Client : GROUP_MEMBER_CLIENT     Version : 2.0.1 
+            m = p3.match(line)
+            if m:
+                coop_dict['gm_ver'] = m.groupdict()['gm_ver']
+                continue
+
+            # Client : SID_CLIENT              Version : 1.0.1 
+            m = p4.match(line)
+            if m:
+                coop_dict['sid_ver'] = m.groupdict()['sid_ver']
+                continue
+
+        return coop_dict  
+
+
 # =================================================
 #  Schema for 'show crypto gdoi'
 # =================================================
@@ -9571,5 +9655,896 @@ class ShowCryptoIsakmpSaCountActive(ShowCryptoIsakmpSaCountActiveSchema):
                 group = m.groupdict()
                 total_number_of_active_sessions_dict = ret_dict.setdefault('total_number_of_active_sessions', {})
                 total_number_of_active_sessions_dict['active_crypto_isakmpsa_count'] = int(group['active_crypto_isakmpsa_count'])
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi ks'
+# =================================================
+class ShowCryptoGdoiKsSchema(MetaParser):
+    """schema for show crypto gdoi ks"""
+    schema = {
+        'crypto_gdoi_ks': {
+            'total_group_members': int,
+            'crypto_gdoi_ks_group': {
+                'key_server_group_name': str,
+                'group_name': str,
+                'reauth_status': str,
+                'group_identity': int,
+                'group_type': str,
+                'group_members': int,
+                'rekey_ack_config': str,
+                'direction': str,
+                'd3p_window_status': str,
+                'sr_factor': int,
+                'ckm_status': str,
+                'acl_configured': {
+                    'acl_name': str
+                },
+            },
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi ks'
+# ===================================================
+class ShowCryptoGdoiKs(ShowCryptoGdoiKsSchema):
+    """Parser for show crypto gdoi ks"""
+    cli_command = 'show crypto gdoi ks'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        #Total group members registered to this box: 2
+        p1 = re.compile(r'^Total +group +members +registered +to +this +box: +(?P<total_group_members>[\d]+)$')
+        #Key Server Information For Group getvpn1:
+        p2 = re.compile(r'^Key +Server +Information +For +Group +(?P<key_server_group_name>[\w\d]+):$')
+        #    Group Name               : getvpn1
+        p3 = re.compile(r'Group +Name +: +(?P<group_name>[\w\d]+)$')
+        #    Re-auth on new CRL       : Disabled
+        p4 = re.compile(r'^Re.auth +on +new +CRL +: +(?P<reauth_status>[\w]+)$')
+        #    Group Identity           : 1223
+        p5 = re.compile(r'^Group +Identity +: +(?P<group_identity>[\d]+)$')
+        #    Group Type               : GDOI (ISAKMP)
+        p6 = re.compile(r'^Group +Type +: +(?P<group_type>[\w \(\)]+)$')
+        #    Group Members            : 2
+        p7 = re.compile(r'^Group +Members +: +(?P<group_members>[\d]+)$')
+        #    Rekey Acknowledgement Cfg: Cisco
+        p8 = re.compile(r'^Rekey +Acknowledgement +Cfg: +(?P<rekey_ack_config>[\w]+)$')
+        #    IPSec SA Direction       : Both
+        p9 = re.compile(r'^IPSec +SA +Direction +: +(?P<direction>[\w]+)$')
+        #    IP D3P Window            : Disabled
+        p10 = re.compile(r'IP +D3P +Window +: +(?P<d3p_window_status>[\w]+)$')
+        #    Split Resiliency Factor  : 0
+        p11 = re.compile(r'^Split +Resiliency +Factor +: +(?P<sr_factor>[\d]+)$')
+        #    CKM status               : Disabled
+        p12 = re.compile(r'^CKM +status +: +(?P<ckm_status>[\w]+)$')
+        #    ACL Configured:
+        #        access-list acl1
+        p13 = re.compile(r'^access.list +(?P<acl_name>[\w\d]+)$')
+
+        ret_dict = {}
+  
+        for line in output.splitlines():
+            line = line.strip()
+            #Total group members registered to this box: 2
+            m = p1.match(line) 
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks = ret_dict.setdefault('crypto_gdoi_ks', {})
+                crypto_gdoi_ks.update({'total_group_members': int(group['total_group_members'])})
+                continue
+
+            #Key Server Information For Group getvpn1:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group = crypto_gdoi_ks.setdefault('crypto_gdoi_ks_group', {})
+                crypto_gdoi_ks_group.update({'key_server_group_name': group['key_server_group_name']})
+                continue
+
+            #    Group Name               : getvpn1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'group_name': group['group_name']})
+                continue
+
+            #    Re-auth on new CRL       : Disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'reauth_status': group['reauth_status']})
+                continue
+
+            #    Group Identity           : 1223
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'group_identity': int(group['group_identity'])})
+                continue
+                
+            #    Group Type               : GDOI (ISAKMP)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'group_type': group['group_type']})
+                continue
+                
+            #    Group Members            : 2
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'group_members': int(group['group_members'])})
+                continue
+
+            #    Rekey Acknowledgement Cfg: Cisco
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'rekey_ack_config': group['rekey_ack_config']})
+                continue
+
+            #    IPSec SA Direction       : Both
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'direction': group['direction']})
+                continue
+
+            #    IP D3P Window            : Disabled
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'d3p_window_status': group['d3p_window_status']})
+                continue
+
+            #    Split Resiliency Factor  : 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'sr_factor': int(group['sr_factor'])})
+                continue
+
+            #    CKM status               : Disabled
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_ks_group.update({'ckm_status': group['ckm_status']})
+                continue
+
+            #    ACL Configured:
+            #        access-list acl1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                acl_configured = crypto_gdoi_ks_group.setdefault('acl_configured', {})
+                acl_configured.update({'acl_name': group['acl_name']})
+                continue
+        
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi rekey sa'
+# =================================================
+class ShowCryptoGdoiRekeySaSchema(MetaParser):
+    """schema for show crypto gdoi rekey sa"""
+    
+    schema = {
+        'getvpn_rekey': {
+            Any(): {
+                'dst_ip': str,
+                'src_ip': str,
+                'connection_id': int,
+                'rekey_status': str
+            },
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi rekey sa'
+# ===================================================
+class ShowCryptoGdoiRekeySa(ShowCryptoGdoiRekeySaSchema):
+    """Parser for show crypto gdoi rekey sa"""
+    
+    cli_command = 'show crypto gdoi rekey sa'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # dst             src             conn-id         status
+        p0 = re.compile(r'dst +src +conn.id +status')
+
+        # 3.3.1.1         1.1.1.1         1712            ACTIVE
+        p1 = re.compile(r'(?P<dst_ip>[\d.]+) +(?P<src_ip>[\d.]+) +(?P<connection_id>[\d]+) +(?P<rekey_status>[\w]+)')
+        
+        ret_dict = {}
+  
+        for line in output.splitlines():
+            line=line.strip()
+            
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                getvpn_rekey = ret_dict.setdefault('getvpn_rekey', {})
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()                
+                count_dict = getvpn_rekey.setdefault(len(getvpn_rekey)+1, {})
+                count_dict.update({'dst_ip': group['dst_ip']})
+                count_dict.update({'src_ip': group['src_ip']})
+                count_dict.update({'connection_id': int(group['connection_id'])})
+                count_dict.update({'rekey_status': group['rekey_status']})                
+                continue
+        
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi rekey sa detail'
+# =================================================
+class ShowCryptoGdoiRekeySaDetailSchema(MetaParser):
+    """schema for show crypto gdoi rekey sa detail"""
+    schema = {
+        'kek_sa_db_stats': {
+            'num_active': int,
+            'num_malloc': int,
+            'num_free': int,
+            'kek_policy': {
+                'transport_type': str,
+                'local_addr': str,
+                'local_port': int,
+                'remote_details': {
+                    'remote_addr': str,
+                    'remote_port': int,
+                    'spi': str,
+                    'mgmt_alg_status': str,
+                    'encrypt_alg': str,
+                    'crypto_iv_length': int,
+                    'key_size': int,
+                    'orig_life': int,
+                    'sig_hash_alg_status': str,
+                    'sig_key_length': int,
+                    'sig_size': int,
+                    'ack': str,
+                    'connection_type': str,
+                    'connection_id': int,
+                    'seq_num': int,
+                    'prev_seq_num': int,
+                    'handle': int,
+                    'interface_type': str,
+                    'group_name': str
+                },
+            },
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi rekey sa detail'
+# ===================================================
+class ShowCryptoGdoiRekeySaDetail(ShowCryptoGdoiRekeySaDetailSchema):
+
+    """Parser for show crypto gdoi rekey sa detail"""
+
+    cli_command = 'show crypto gdoi rekey sa detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # num_active = 1
+        p1 = re.compile(r'num_active += +(?P<num_active>[\d]+)')
+        
+        # num_malloc = 107
+        p2 = re.compile(r'num_malloc += +(?P<num_malloc>[\d]+)')
+        
+        # num_free = 105
+        p3 = re.compile(r'num_free += +(?P<num_free>[\d]+)')
+        
+        #  KEK POLICY (transport type : Unicast)
+        p4 = re.compile(r'KEK +POLICY +.transport +type +: +(?P<transport_type>[\w]+).')
+        
+        #   Local addr/port : 26.26.26.1/848
+        p5 = re.compile(r'Local +addr.port +: +(?P<local_addr>[\d.]+).(?P<local_port>[\d]+)')
+        
+        #   Remote addr/port : 15.15.15.1/848
+        p6 = re.compile(r'Remote +addr.port +: +(?P<remote_addr>[\d.]+).(?P<remote_port>[\d]+)')
+        
+        #    spi : 0x5C78568A11D464C47E9268A1D9A8787D
+        p7 = re.compile(r'spi +: +(?P<spi>[\w\d]+)')
+        
+        #    management alg     : disabled    encrypt alg       : AES       
+        p8 = re.compile(r'management +alg +: +(?P<mgmt_alg_status>[\w]+) +encrypt +alg +: +(?P<encrypt_alg>[\w]+)')
+        
+        #    crypto iv length   : 16          key size          : 32      
+        p9 = re.compile(r'crypto +iv +length +: +(?P<crypto_iv_length>[\d]+)  +key +size +: +(?P<key_size>[\d]+)')
+        
+        #    orig life(sec)     : 0         
+        p10 = re.compile(r'orig +life.sec. +: +(?P<orig_life>[\d]+)')
+        
+        #    sig hash algorithm : enabled     sig key length    : 294     
+        p11 = re.compile(r'sig +hash +algorithm +: +(?P<sig_hash_alg_status>[\w]+) +sig +key +length +: +(?P<sig_key_length>[\d]+)')
+        
+        #    sig size           : 256
+        p12 = re.compile(r'sig +size +: +(?P<sig_size>[\d]+)')
+        
+        #    acknowledgement    : Cisco
+        p13 = re.compile(r'acknowledgement +: +(?P<ack>[\w]+)')
+        
+        #    conn_id (IKEv1)    : 1138
+        p14 = re.compile(r'conn_id +.(?P<connection_type>[\w\d]+). +: +(?P<connection_id>[\d]+)')
+        
+        #    seq num            : 0           prev seq num      : 0       
+        p15 = re.compile(r'seq +num +: +(?P<seq_num>[\d]+) +prev +seq +num +: +(?P<prev_seq_num>[\d]+)')
+        
+        #    handle             : 40000072  
+        p16 = re.compile(r'handle +: +(?P<handle>[\d]+)')
+        
+        #    Interface          : GigabitEthernet
+        p17 = re.compile(r'Interface +: +(?P<interface_type>[\w]+)')
+        
+        #    Group Name         : GV-GROUP1
+        p18 = re.compile(r'Group +Name +: +(?P<group_name>[\d\w._-]+)')
+
+        ret_dict = {}
+  
+        for line in output.splitlines():
+            line=line.strip()
+            m = p1.match(line) 
+            if m:
+                group = m.groupdict()
+                kek_sa_db_stats = ret_dict.setdefault('kek_sa_db_stats', {})
+                kek_sa_db_stats.update({'num_active': int(group['num_active'])})
+                continue
+
+            m = p2.match(line) 
+            if m:
+                group = m.groupdict()
+                kek_sa_db_stats.update({'num_malloc': int(group['num_malloc'])})
+                continue
+
+            m = p3.match(line) 
+            if m:
+                group = m.groupdict()
+                kek_sa_db_stats.update({'num_free': int(group['num_free'])})
+                continue
+
+            m = p4.match(line) 
+            if m:
+                group = m.groupdict()
+                kek_policy = kek_sa_db_stats.setdefault('kek_policy', {})
+                kek_policy.update({'transport_type': group['transport_type']})
+                continue
+
+            m = p5.match(line) 
+            if m:
+                group = m.groupdict()
+                kek_policy.update({'local_addr': group['local_addr']})
+                kek_policy.update({'local_port': int(group['local_port'])})
+                continue
+
+            m = p6.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details = kek_policy.setdefault('remote_details', {})
+                remote_details.update({'remote_addr': group['remote_addr']})
+                remote_details.update({'remote_port': int(group['remote_port'])})
+                continue
+
+            m = p7.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'spi': group['spi']})
+                continue
+
+            m = p8.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'mgmt_alg_status': group['mgmt_alg_status']})
+                remote_details.update({'encrypt_alg': group['encrypt_alg']})
+                continue
+
+            m = p9.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'crypto_iv_length': int(group['crypto_iv_length'])})
+                remote_details.update({'key_size': int(group['key_size'])})
+                continue
+
+            m = p10.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'orig_life': int(group['orig_life'])})
+                continue
+
+            m = p11.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'sig_hash_alg_status': group['sig_hash_alg_status']})
+                remote_details.update({'sig_key_length': int(group['sig_key_length'])})
+                continue
+
+            m = p12.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'sig_size': int(group['sig_size'])})
+                continue
+
+            m = p13.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'ack': group['ack']})
+                continue
+
+            m = p14.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'connection_type': group['connection_type']})
+                remote_details.update({'connection_id': int(group['connection_id'])})
+                continue
+
+            m = p15.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'seq_num': int(group['seq_num'])})
+                remote_details.update({'prev_seq_num': int(group['prev_seq_num'])})
+                continue
+
+            m = p16.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'handle': int(group['handle'])})
+                continue
+
+            m = p17.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'interface_type': group['interface_type']})
+                continue
+
+            m = p18.match(line) 
+            if m:
+                group = m.groupdict()
+                remote_details.update({'group_name': group['group_name']})
+                continue
+            
+        return ret_dict
+
+# =================================================
+#  Schema for 'show tunnel protection statistics'
+# =================================================
+class ShowTunnelProtectionStatisticsSchema(MetaParser):
+    """schema for show tunnel protection statistics"""
+
+    schema = {
+        'tunnel_prot_stats': {
+            'message_stats': {
+                'sent': {
+                    'listen_start': int,
+                    'listen_stop': int,
+                    'socket_open': int,
+                    'socket_close': int
+                },
+                'recieved': {
+                    'general_error': int,
+                    'socket_error': int,
+                    'socket_ready': int,
+                    'socket_up': int,
+                    'socket_down': int,
+                    'mtu_changed': int,
+                    'listen_ready': int,
+                    'other': int
+                },
+            },
+            'error_stats': {
+                'recieved': {
+                    'listen_start': int,
+                    'listen_stop': int,
+                    'socket_open': int,
+                    'socket_close': int,
+                    'connection_timeout': int
+                },
+            },
+            'data_stats': {
+                'sent': {
+                    'cef_packet_drop': int,
+                    'ps_packet_drop': int
+                },
+                'recieved': {
+                    'ps_packet_drop': int,
+                    'clear_packet_drop': int
+                }
+            }
+        }
+    }
+
+# ===================================================
+#  Parser for 'show tunnel protection statistics'
+# ===================================================
+class ShowTunnelProtectionStatistics(ShowTunnelProtectionStatisticsSchema):
+
+    """Parser for show tunnel protection statistics"""
+
+    cli_command = 'show tunnel protection statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        #------------------------- Message Statistics -------------------------
+        p1_0 = re.compile(r'-+ +Message +Statistics +-+')
+        #   Sent:
+        #      Listen Start   : 1    Listen Stop    : 0    Socket Open    : 0    
+        p1 = re.compile(r'Listen +Start +: +(?P<listen_start>[\d]+) +Listen +Stop +: +(?P<listen_stop>[\d]+) +Socket +Open +: +(?P<socket_open>[\d]+)')
+
+        #      Socket Close   : 0    
+        p2 = re.compile(r'Socket +Close +: +(?P<socket_close>[\d+])')
+        #   Rcvd:
+        #      General Error  : 0    Socket Error   : 0    Socket Ready   : 0    
+        p3 = re.compile(r'General +Error +: +(?P<general_error>[\d]+) +Socket +Error +: +(?P<socket_error>[\d]+) +Socket +Ready +: +(?P<socket_ready>[\d]+)')
+        #      Socket Up      : 0    Socket Down    : 0    MTU Changed    : 0    
+        p4 = re.compile(r'Socket Up +: +(?P<socket_up>[\d]+) +Socket +Down +: +(?P<socket_down>[\d]) +MTU +Changed +: +(?P<mtu_changed>[\d]+)')
+        #      Listen Ready   : 1    Other          : 0    
+        p5 = re.compile(r'Listen +Ready +: +(?P<listen_ready>[\d]+) +Other +: +(?P<other>[\d]+)')
+        #-------------------------- Error Statistics --------------------------
+        p6_0 = re.compile(r'-+ +Error +Statistics +-+')
+        #   Rcvd:
+        #      Listen Start   : 0    Listen Stop    : 0    Socket Open    : 0    
+        p6 = re.compile(r'Listen +Start +: +(?P<listen_start>[\d]+) +Listen +Stop +: (?P<listen_stop>[\d]+) +Socket +Open +: +(?P<socket_open>[\d]+)')
+        #      Socket Close   : 0    Conn Timeout   : 0    
+        p7 = re.compile(r'Socket +Close +: +(?P<socket_close>[\d]+) +Conn +Timeout +: +(?P<connection_timeout>[\d]+)')
+        #------------ Data Statistics(Other than IPSec protection) ------------
+        p8_0 = re.compile(r'-+ +Data +Statistics.Other +than +IPSec +protection. +-+')
+        #   Sent:
+        #      cef pkt drops  : 0    ps pkt drops   : 0    
+        p8 = re.compile(r'cef +pkt +drops +: +(?P<cef_packet_drop>[\d]+) +ps +pkt +drops +: +(?P<ps_packet_drop>[\d]+)')
+        #   Rcvd:
+        #      ps pkt drops   : 0    clear pkt drops: 0    
+        p9 = re.compile(r'ps +pkt +drops +: +(?P<ps_packet_drop>[\d]+) +clear +pkt +drops: +(?P<clear_packet_drop>[\d]+)')
+
+        ret_dict = {}
+        message_stats = False
+        error_stats = False
+        data_stats = False
+  
+        for line in output.splitlines():
+            line=line.strip()
+            
+            m = p1_0.match(line)
+            if m:
+                message_stats = True
+                continue
+
+            if message_stats:
+                m = p1.match(line) 
+                if m:
+                    group = m.groupdict()
+                    tunnel_prot_stats = ret_dict.setdefault('tunnel_prot_stats', {})
+                    message_stats = tunnel_prot_stats.setdefault('message_stats', {})
+                    sent = message_stats.setdefault('sent', {})
+                    sent.update({'listen_start': int(group['listen_start'])})
+                    sent.update({'listen_stop': int(group['listen_stop'])})
+                    sent.update({'socket_open': int(group['socket_open'])})
+                    continue
+
+                m = p2.match(line) 
+                if m:
+                    group = m.groupdict()
+                    sent.update({'socket_close': int(group['socket_close'])})
+                    continue
+
+                m = p3.match(line) 
+                if m:
+                    group = m.groupdict()
+                    recieved = message_stats.setdefault('recieved', {})
+                    recieved.update({'general_error': int(group['general_error'])})
+                    recieved.update({'socket_error': int(group['socket_error'])})
+                    recieved.update({'socket_ready': int(group['socket_ready'])})
+                    continue
+
+                m = p4.match(line) 
+                if m:
+                    group = m.groupdict()
+                    recieved.update({'socket_up': int(group['socket_up'])})
+                    recieved.update({'socket_down': int(group['socket_down'])})
+                    recieved.update({'mtu_changed': int(group['mtu_changed'])})                
+                    continue
+
+                m = p5.match(line) 
+                if m:
+                    group = m.groupdict()
+                    recieved.update({'listen_ready': int(group['listen_ready'])})
+                    recieved.update({'other': int(group['other'])})
+                    message_stats = False
+                    continue
+
+            m = p6_0.match(line)
+            if m:
+                error_stats = True
+                continue
+
+            if error_stats:
+                m = p6.match(line) 
+                if m:
+                    group = m.groupdict()
+                    error_stats = tunnel_prot_stats.setdefault('error_stats', {})
+                    recieved = error_stats.setdefault('recieved', {})
+                    recieved.update({'listen_start': int(group['listen_start'])})
+                    recieved.update({'listen_stop': int(group['listen_stop'])})
+                    recieved.update({'socket_open': int(group['socket_open'])})
+                    continue
+
+                m = p7.match(line) 
+                if m:
+                    group = m.groupdict()
+                    recieved.update({'socket_close': int(group['socket_close'])})
+                    recieved.update({'connection_timeout': int(group['connection_timeout'])})                    
+                    error_stats = False
+                    continue
+
+            m = p8_0.match(line)
+            if m:
+                data_stats = True
+                continue
+
+            if data_stats:
+                m = p8.match(line) 
+                if m:
+                    group = m.groupdict()
+                    data_stats = tunnel_prot_stats.setdefault('data_stats', {})
+                    sent = data_stats.setdefault('sent', {})
+                    sent.update({'cef_packet_drop': int(group['cef_packet_drop'])})
+                    sent.update({'ps_packet_drop': int(group['ps_packet_drop'])})
+                    continue
+
+                m = p9.match(line) 
+                if m:
+                    group = m.groupdict()
+                    recieved = data_stats.setdefault('recieved', {})
+                    recieved.update({'ps_packet_drop': int(group['ps_packet_drop'])})
+                    recieved.update({'clear_packet_drop': int(group['clear_packet_drop'])})                    
+                    data_stats = False
+                    continue
+        
+        return ret_dict
+
+# =========================================
+#  Schema for 'show crypto gdoi ks detail'
+# =========================================
+class ShowCryptoGdoiKsDetailSchema(MetaParser):
+    """schema for show crypto gdoi ks detail"""
+
+    schema = {
+        'group_members_registered': int,
+        Any(): {
+            'group_name': str,
+            're_auth_on_new_crl': str,
+            'group_identity': int,
+            'group_type': str,
+            'group_members': int,
+            'rekey_acknowledgement_cfg': str,
+            'ipsec_sa_direction': str,
+            'ip_d3p_window': str,
+            'split_resiliency_factor': int,
+            'ckm_status': str,
+            'acl_configured': {
+                'access_list': str,
+            },
+            'redundancy': {
+                'redundancy_mode': str,
+                'local_address': str,
+                'local_priority': int,
+                'local_ks_status': str,
+                'local_ks_role': str,
+                'local_ks_version': str,
+                'local_coop_version': str
+            }
+        }     
+    }
+
+# ===================================================
+#  Parser for 'show tunnel protection statistics'
+# ===================================================
+class ShowCryptoGdoiKsDetail(ShowCryptoGdoiKsDetailSchema):
+
+    """Parser for 'show crypto gdoi ks detail"""
+
+    cli_command = 'show crypto gdoi ks detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total group members registered to this box: 12
+        p1 = re.compile(r'^Total\s+group\s+members\s+registered\s+to\s+this\s+box:+\s(?P<group_members_registered>\d+)$')
+        # Key Server Information For Group bw6000:
+        p2 = re.compile(r'^Key\s+Server\s+Information\s+For\s+Group\s+(?P<key_server_group>\S+):$')
+        # Group Name               : bw6000
+        p3 = re.compile(r'^Group\s+Name\s+:\s+(?P<group_name>\S+)$')
+        # Re-auth on new CRL       : Disabled
+        p4 = re.compile(r'^Re-auth\s+on\s+new\s+CRL\s+:\s+(?P<re_auth_on_new_crl>\w+)$')
+        # Group Identity           : 6000
+        p5 = re.compile(r'^Group\s+Identity\s+:\s+(?P<group_identity>\d+)$')
+        # Group Type               : GDOI (ISAKMP)
+        p6 = re.compile(r'^Group\s+Type\s+:\s+GDOI\s+\((?P<group_type>\S+)\)$')
+        # Group Members            : 2
+        p7 = re.compile(r'^Group\s+Members\s+:\s+(?P<group_members>\d+)$')
+        # Rekey Acknowledgement Cfg: Cisco
+        p8 = re.compile(r'^Rekey\s+Acknowledgement\s+Cfg:\s+(?P<rekey_acknowledgement_cfg>\w+)$')
+        # IPSec SA Direction       : Both
+        p9 = re.compile(r'^IPSec\s+SA\s+Direction\s+:\s+(?P<ipsec_sa_direction>\w+)$')
+        # IP D3P Window            : Disabled
+        p10 = re.compile(r'^IP\s+D3P\s+Window\s+:\s+(?P<ip_d3p_window>\w+)$')
+        # Split Resiliency Factor  : 0
+        p11 = re.compile(r'^Split\s+Resiliency\s+Factor\s+:\s+(?P<split_resiliency_factor>\d+)$')
+        # CKM status               : Disabled
+        p12 = re.compile(r'^CKM\s+status\s+:\s+(?P<ckm_status>\w+)$')
+        # ACL Configured: 
+        # access-list bw600-crypto-policy
+        p13 = re.compile(r'^access-list\s+(?P<access_list>\S+)$')
+        # Redundancy               : Configured
+        p14 = re.compile(r'^Redundancy\s+:\s+(?P<redundancy_mode>\w+)$')
+        # Local Address        : 15.15.15.1
+        p15 =  re.compile(r'^Local\s+Address\s+:\s+(?P<local_address>\S+)$')
+        # Local Priority       : 245
+        p16 = re.compile(r'^Local\s+Priority\s+:\s+(?P<local_priority>\d+)$')
+        # Local KS Status      : Alive
+        p17 = re.compile(r'^Local\s+KS\s+Status\s+:\s+(?P<local_ks_status>\w+)$')
+        # Local KS Role        : Primary
+        p18 = re.compile(r'^Local\s+KS\s+Role\s+:\s+(?P<local_ks_role>\w+)$')
+        # Local KS Version     : 1.0.27
+        p19 = re.compile(r'^Local\s+KS\s+Version\s+:\s+(?P<local_ks_version>\S+)$')
+        # Local COOP Version   : 1.0.8 
+        p20 = re.compile(r'^Local\s+COOP\s+Version\s+:\s+(?P<local_coop_version>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total group members registered to this box: 12
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'group_members_registered': int(group['group_members_registered'])})
+                continue
+
+            # Key Server Information For Group bw6000:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                group_name = group['key_server_group']
+                server_dict = ret_dict.setdefault(group_name, {})
+                continue
+
+            # Group Name               : bw6000
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'group_name': group['group_name']})
+                continue
+
+            # Re-auth on new CRL       : Disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'re_auth_on_new_crl': group['re_auth_on_new_crl']})
+                continue
+             
+            # Group Identity           : 6000
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'group_identity': int(group['group_identity'])})
+                continue
+
+            # Group Type               : GDOI (ISAKMP)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'group_type': group['group_type']})
+                continue
+
+            # Group Members            : 2
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'group_members': int(group['group_members'])})
+                continue
+
+            # Rekey Acknowledgement Cfg: Cisco
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'rekey_acknowledgement_cfg': group['rekey_acknowledgement_cfg']})
+                continue
+
+            # IPSec SA Direction       : Both
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'ipsec_sa_direction': group['ipsec_sa_direction']})
+                continue
+
+            # IP D3P Window            : Disabled
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'ip_d3p_window': group['ip_d3p_window']})
+                continue
+
+            # Split Resiliency Factor  : 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'split_resiliency_factor': int(group['split_resiliency_factor'])})
+                continue
+
+            # CKM status               : Disabled
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                server_dict.update({'ckm_status': group['ckm_status']})
+                continue
+
+            # access-list bw600-crypto-policy
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                access_list_dict = server_dict.setdefault('acl_configured', {})
+                access_list_dict.update({'access_list': group['access_list']})
+                continue
+
+            # Redundancy               : Configured
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict = server_dict.setdefault('redundancy', {})
+                redundancy_dict.update({'redundancy_mode': group['redundancy_mode']})
+                continue
+
+            # Local Address        : 15.15.15.1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_address': group['local_address']})
+                continue
+
+            # Local Priority       : 245
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_priority': int(group['local_priority'])})
+                continue
+
+            # Local KS Status      : Alive
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_ks_status': group['local_ks_status']})
+                continue
+
+            # Local KS Role        : Primary
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_ks_role': group['local_ks_role']})
+                continue
+
+            # Local KS Version     : 1.0.27
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_ks_version': group['local_ks_version']})
+                continue
+
+            # Local COOP Version   : 1.0.8
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                redundancy_dict.update({'local_coop_version': group['local_coop_version']})
+                continue
 
         return ret_dict

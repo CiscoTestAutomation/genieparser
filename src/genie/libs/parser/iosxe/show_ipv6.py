@@ -662,6 +662,7 @@ class ShowIpv6RoutersSchema(MetaParser):
     schema = {
         'router': {
             Any(): {
+                Optional('status'): str,
                 'interface': str,
                 'last_update': int,
                 'hops': int,
@@ -702,8 +703,12 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        #Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
-        p1 = re.compile(r'^Router +(?P<router_link_local_ip>\S+)\s+\w+\s+(?P<interface>\S+), +last +update +(?P<last_update>\d+) +min, +CONFLICT$')
+        # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
+        # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min
+        p1 = re.compile(r'^Router +(?P<router_link_local_ip>\S+)\s+\w+\s+'
+                        r'(?P<interface>\S+), +last +update +'
+                        r'(?P<last_update>\d+) +min(\,\s|)'
+                        r'(?:(?P<status>\w+))?')
 
         # Hops 64, Lifetime 200 sec, AddrFlag=0, OtherFlag=0, MTU=1500
         p2 = re.compile(r'^Hops +(?P<hops>\d+), +Lifetime +(?P<lifetime>\d{1,4}) +sec, +AddrFlag+\=(?P<addr_flag>\d+), '
@@ -727,14 +732,20 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
 
             # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
+            # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min
             m = p1.match(line)
             if m:
                 router_link_local = m.groupdict()['router_link_local_ip']
-                router_dict = ret_dict.setdefault('router', {}).setdefault(router_link_local, {})
+                router_dict = ret_dict.setdefault('router', {}).setdefault(
+                    router_link_local, {})
                 router_dict.update({
                     'interface': m.groupdict()['interface'],
-                    'last_update':int(m.groupdict()['last_update'])
+                    'last_update': int(m.groupdict()['last_update'])
                 })
+
+                status = m.groupdict().get('status')
+                if status:
+                    router_dict['status'] = status
                 continue
 
 
