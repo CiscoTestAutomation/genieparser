@@ -3599,11 +3599,15 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             ' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
                             ' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
                             ' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')
+        # Neighbor        V             AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        # 10.10.10.10     4 4211111111
         p8_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+) +(?P<as>[0-9]+)$')
+        # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        #                                                  0              0           0      0        0       5w6d   Idle 
         p8_4 = re.compile(r'^\s*(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
-                            ' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
-                            ' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
-                            ' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')                            
+                          r' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
+                          r' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
+                          r' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')                            
 
         for line in out.splitlines():
             line = line.rstrip()
