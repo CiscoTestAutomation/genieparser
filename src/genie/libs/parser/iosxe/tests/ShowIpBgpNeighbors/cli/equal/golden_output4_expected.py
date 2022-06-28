@@ -236,6 +236,8 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:03",
+                    "last_write": "00:00:03",
                 }
             }
         }

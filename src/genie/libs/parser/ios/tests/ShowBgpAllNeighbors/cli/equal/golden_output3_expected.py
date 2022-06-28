@@ -309,6 +309,9 @@ expected_output = {
                     "router_id": "192.168.165.119",
                     "session_state": "Established",
                     "shutdown": False,
+                    "last_read": "00:00:23",
+                    "last_write": "00:00:15",
+                    "up_time": "1d16h",
                 }
             }
         }

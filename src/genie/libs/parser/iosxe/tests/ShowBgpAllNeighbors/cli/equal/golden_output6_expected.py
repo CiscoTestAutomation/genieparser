@@ -179,7 +179,10 @@ expected_output = {
                             "linger": "0x0",
                             "processq": "0x0"
                         }
-                    }
+                    },
+                    "last_read": "00:00:07",
+                    "last_write": "00:00:54",
+                    "up_time": "07:58:19",
                 }
             }
         }

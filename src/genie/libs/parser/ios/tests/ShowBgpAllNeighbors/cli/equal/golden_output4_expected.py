@@ -187,6 +187,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:04",
+                    "last_write": "00:00:09",
+                    "up_time": "01:10:35",
                 },
                 "10.36.3.3": {
                     "remote_as": 100,
@@ -363,6 +366,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:04",
+                    "last_write": "00:00:43",
+                    "up_time": "01:10:41",
                 },
                 "10.64.4.4": {
                     "remote_as": 100,
@@ -540,6 +546,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:07",
+                    "last_write": "00:00:12",
+                    "up_time": "01:10:38",
                 },
                 "10.100.5.5": {
                     "remote_as": 100,
@@ -716,6 +725,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:08",
+                    "last_write": "00:00:47",
+                    "up_time": "01:10:44",
                 },
             }
         },
@@ -890,6 +902,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:33",
+                    "last_write": "00:00:30",
+                    "up_time": "01:01:59",
                 },
                 "2001:DB8:4:6::6": {
                     "remote_as": 300,
@@ -1060,6 +1075,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:32",
+                    "last_write": "00:00:06",
+                    "up_time": "01:01:58",
                 },
             }
         },
@@ -1235,6 +1253,9 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:24",
+                    "last_write": "00:00:21",
+                    "up_time": "01:01:51",
                 },
                 "2001:DB8:20:4:6::6": {
                     "remote_as": 400,
@@ -1410,6 +1431,8 @@ expected_output = {
                             "processq": "0x0",
                         },
                     },
+                    "last_read": "00:00:22",
+                    "last_write": "00:00:01",
                 },
             }
         },

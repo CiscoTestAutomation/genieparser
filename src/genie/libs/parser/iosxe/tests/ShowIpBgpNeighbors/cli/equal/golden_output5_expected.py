@@ -79,6 +79,8 @@ expected_output = {
                             "min_nlri": 0,
                         }
                     },
+                    "last_read": "00:00:00",
+                    "last_write": "00:00:00",
                 }
             }
         }
