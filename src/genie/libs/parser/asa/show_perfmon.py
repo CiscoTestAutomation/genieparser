@@ -26,7 +26,7 @@ class ShowPerfmonSchema(MetaParser):
     	'perfmon': {
             'context': {
                 Any(): {
-                    'perfmon_stats_per_sec': {
+                    'stats_per_sec': {
                         'xlates': {
                             'current': int,
                             'average': int
@@ -165,9 +165,10 @@ class ShowPerfmon(ShowPerfmonSchema):
                         r'AAA Authen|AAA Author|AAA Account)\s+(?P<current>\d+)/s\s+(?P<average>\d+)/s')
         
         # VALID CONNS RATE in TCP INTERCEPT:    Current      Average
+        p3 = re.compile(r'VALID CONNS RATE in TCP INTERCEPT:\s*Current\s*Average')
         #                                        100.00%         97.38%
 
-        p3 = re.compile(r'(?P<current>\S+)\s+(?P<average>\S+)')
+        p3_1 = re.compile(r'(?P<current>\S+)\s+(?P<average>\S+)')
         
         # Connections for 1 minute = 0/s; 5 minutes = 0/s
         # TCP Conns for 1 minute = 0/s; 5 minutes = 0/s
@@ -175,8 +176,9 @@ class ShowPerfmon(ShowPerfmonSchema):
         p4 = re.compile(r'(?P<type>Connections|TCP Conns|UDP Conns) for 1 minute = (?P<conns_1min>\d+)/s; 5 minutes = (?P<conns_5min>\d+)/s')
         
 
-
-        context = {}
+        perfmon = None
+        context = None
+        valid_conns_line_matched = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -189,10 +191,10 @@ class ShowPerfmon(ShowPerfmonSchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                context = groups['context']
-                context = ret_dict.setdefault('perfmon',{})\
-                    .setdefault('context', {})\
-                    .setdefault(context,{})
+                ctx = groups['context']
+                perfmon = ret_dict.setdefault('perfmon', {})
+                context = perfmon.setdefault('context', {})\
+                    .setdefault(ctx,{})
                 continue
             
             # Xlates                                0/s          0/s
@@ -215,7 +217,7 @@ class ShowPerfmon(ShowPerfmonSchema):
             if m:
                 groups = m.groupdict()
                 type = groups['type']
-                stats = context.setdefault('perfmon_stats_per_sec', {})
+                stats = context.setdefault('stats_per_sec', {})
                 if type == 'Xlates':
                     container = stats.setdefault('xlates', {})
                 elif type == 'Connections':
@@ -259,16 +261,22 @@ class ShowPerfmon(ShowPerfmonSchema):
                     container = stats.setdefault('aaa', {})\
                                     .setdefault('account',{})
 
-                container['current'] = groups['current']
-                container['average'] = groups['average']
+                container['current'] = int(groups['current'])
+                container['average'] = int(groups['average'])
                 continue
 
             # VALID CONNS RATE in TCP INTERCEPT:    Current      Average
-            #                                        100.00%         97.38%
             m = p3.match(line)
             if m:
+                 valid_conns_line_matched = True
+                 continue
+
+            #                                        100.00%         97.38%
+            m = p3_1.match(line)
+            if m and valid_conns_line_matched:
+                valid_conns_line_matched = False
                 groups = m.groupdict()
-                rate = context.setdefault('tcp_intercept', {})\
+                rate = perfmon.setdefault('tcp_intercept', {})\
                     .setdefault('valid_conns_rate', {})
                 rate['current'] = groups['current']
                 rate['average'] = groups['average']
@@ -282,17 +290,17 @@ class ShowPerfmon(ShowPerfmonSchema):
             if m:
                 groups = m.groupdict()
                 type = groups['type']
-                setup = context.setdefault('setup_rates_per_sec',{})
-                one_min = setup.setdefault('1_min')
-                five_min = setup.setdefault('5_min')
+                setup = perfmon.setdefault('setup_rates_per_sec',{})
+                one_min = setup.setdefault('1_min', {})
+                five_min = setup.setdefault('5_min', {})
                 if type == 'Connections':
                     field = 'total'
                 elif type == 'TCP Conns':
-                    field = 'tpc'
+                    field = 'tcp'
                 elif type == 'UDP Conns':
-                    field = 'upd'
-                one_min[field] = groups['conns_1min']
-                five_min[field] = groups['conns_5min']
+                    field = 'udp'
+                one_min[field] = int(groups['conns_1min'])
+                five_min[field] = int(groups['conns_5min'])
                 continue
 
         return ret_dict
