@@ -1,0 +1,42 @@
+Ethernet140/1/26 is down (linkFlapErrDisabled, port: error)
+admin state is up
+  Hardware: 100/1000 Ethernet, address: c800.843c.8e5b (bia c800.843c.8e5b)
+  Description: "DESCRIPTION"
+  MTU 9216 bytes, BW 100000 Kbit, DLY 10 usec
+  reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, medium is broadcast
+  Port mode is access
+  full-duplex, 100 Mb/s
+  Beacon is turned off
+  Auto-Negotiation is turned off
+  Input flow-control is off, output flow-control is on
+  Auto-mdix is turned off
+  Switchport monitor is off 
+  EtherType is 0x8100 
+  Last link flapped 41week(s) 4day(s)
+  Last clearing of "show interface" counters 69w4d
+  30 interface resets
+  Load-Interval #1: 30 seconds
+    30 seconds input rate 0 bits/sec, 0 packets/sec
+    30 seconds output rate 0 bits/sec, 0 packets/sec
+    input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+  Load-Interval #2: 5 minute (300 seconds)
+    300 seconds input rate 0 bits/sec, 0 packets/sec
+    300 seconds output rate 0 bits/sec, 0 packets/sec
+    input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+  RX
+    11149381 unicast packets  0 multicast packets  680023 broadcast packets
+    11829405 input packets  1016173459 bytes
+    0 jumbo packets  0 storm suppression packets
+    1 runts  0 giants  0 CRC/FCS  0 no buffer
+    1 input error  0 short frame  0 overrun   0 underrun  0 ignored
+    0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+    0 input with dribble  0 input discard
+    0 Rx pause
+  TX
+    10895256 unicast packets  12225692 multicast packets  12808610 broadcast packets
+    35929558 output packets  10830773101 bytes
+    0 jumbo packets
+    0 output error  0 collision  0 deferred  0 late collision
+    0 lost carrier  0 no carrier  0 babble  0 output discard
+    0 Tx pause

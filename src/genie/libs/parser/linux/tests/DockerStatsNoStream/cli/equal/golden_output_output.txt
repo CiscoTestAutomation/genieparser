@@ -1,0 +1,5 @@
+CONTAINER ID        NAME                  CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+a3f78cb32a8e        foo-bar               0.06%               55.69MiB / 1.025GiB   5.31%               31.1kB / 0B         0B / 0B             1
+22e23asfcde8        hello-world           0.24%               11.19MiB / 131.2MiB   8.53%               116MB / 96.1MB      0B / 0B             4
+293fdak28c05        awesome_brattai       0.34%               37.08MiB / 131.2MiB   28.26%              0B / 0B             0B / 0B             3
+c5a5saddd210        looking_good          0.25%               30.73MiB / 262.4MiB   11.71%              1.16GB / 837MB      0B / 0B             2

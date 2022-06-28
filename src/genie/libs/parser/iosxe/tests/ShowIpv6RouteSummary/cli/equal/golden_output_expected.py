@@ -104,9 +104,9 @@ expected_output = {
                 'memory_bytes':113616
             },
             'number_of_prefixes':{
-                'prefix_8':1,
-                'prefix_64':8,
-                'prefix_128':517
+                '/8':1,
+                '/64': 8,
+                '/128': 517
             }
         }
     }

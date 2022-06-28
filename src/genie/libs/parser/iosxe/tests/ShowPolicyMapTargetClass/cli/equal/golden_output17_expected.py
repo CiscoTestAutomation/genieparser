@@ -1,5 +1,6 @@
 expected_output = {
-    "GigabitEthernet9/5: Service Group 1": {
+    "GigabitEthernet9/5": {
+        "service_group": 1,
         "service_policy": {
             "input": {
                 "policy_name": {
@@ -57,12 +58,12 @@ expected_output = {
                                 "no_buffer_drops": 0,
                                 "pkts_output": 0,
                                 "bytes_output": 0,
-                                "bandwidth": "remaining ratio 2",
+                                "bandwidth_remaining_ratio": 2,
                             }
                         }
                     }
                 }
             },
-        }
+        },
     }
 }

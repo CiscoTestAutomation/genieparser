@@ -25,6 +25,7 @@ expected_output = {
             "rxload": "1/255",
             "encapsulations": {
                 "encapsulation": "arpa"
-            }
+            },
+            'last_clear_counters': 'never',
         }
     }

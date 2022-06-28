@@ -1,0 +1,69 @@
+Current Subscriber Statistics:
+Number of sessions currently up: 4852
+Number of sessions currently pending: 2
+Number of sessions currently authenticated: 4880
+Number of sessions currently unauthenticated: 61
+Highest number of sessions ever up at one time: 5960
+Mean up-time duration of sessions: 00:32:21
+Total number of sessions up so far: 17089112
+Mean call rate per minute: 165, per hour: 9947
+Number of calls in last one hour: 11806
+Number of sessions failed to come up: 15448402
+
+Current Flow Statistics:
+Number of flows currently up: 0
+Highest number of flows ever up at one time: 0
+Mean up-time duration of flows: 00:00:00
+Number of flows failed to come up: 0
+Total number of flows up so far: 0
+
+Access type based session count:
+PPP sessions = 451
+PPPoE sessions = 3682
+VPDN sessions = 1172
+
+IP/DHCP session type count:
+
+Feature Installation Count:
+Direction
+Feature Name None Inbound Outbound
+QoS Policy Map 0 0 2502
+IP Config 4377 0 0
+Interface Config 4377 0 0
+Static Routes 4377 0 0
+
+Switch Id Cleanup Statistics:
+Number of sessions having invalid SMGR handle: 0
+Number of sessions having invalid policy handle: 0
+Number of sessions having invalid LTERM handle: 15474655
+Number of sessions having invalid SIP handle: 0
+
+Lterm Error Statistics:
+
+Lterm session delete errors:
+L2hw Switch: 1575
+
+SHDBs in use : 4864
+SHDBs allocated : 17268338
+SHDBs freed : 17263474
+
+SHDB handles associated with each client type
+
+Client Name Count
+=========== =======
+PPP 4854
+VPDN FSP 59
+PPPoE 3682
+LTerm 4793
+AAA 4864
+CCM 4864
+L2TP CC 10
+SSS FM 2502
+COA 0
+COA cluster 0
+VPDN SIP 1172
+ISG Classifier 3985
+CCM Group 4864
+PM 0
+PM cluster 0
+
