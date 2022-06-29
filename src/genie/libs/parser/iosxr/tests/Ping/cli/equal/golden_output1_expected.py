@@ -10,8 +10,8 @@ expected_output = {
         "statistics": {
             "received": 100,
             "round_trip": {
-                "avg_ms": 14.0,
-                "max_ms": 2.0,
+                "avg_ms": 2.0,
+                "max_ms": 14.0,
                 "min_ms": 1.0
             },
             "send": 100,

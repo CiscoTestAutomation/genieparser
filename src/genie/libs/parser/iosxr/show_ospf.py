@@ -5908,7 +5908,13 @@ class ShowOspfInterfaceSchema(MetaParser):
                                                 Optional('dr_router_id'): str,
                                                 Optional('router_id'): str,
                                             }
-                                        }
+                                        },
+                                        Optional("authentication"): {
+                                            "auth_trailer_key": {
+                                                "crypto_algorithm": str,
+                                                Optional("youngest_key_id"): int,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -5958,6 +5964,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             out = output
 
         ret_dict = {}
+
+        # crypo_algorithm dict
+        crypto_dict = {"message digest": "md5", "clear text": "simple"}        
 
         # initialization of vrf dict
         if out:
@@ -6070,6 +6079,14 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         # Loopback interface is treated as a stub Host
         p28 = re.compile(r'^Loopback +interface +is +treated +as +a +stub +Host$')
 
+        # Clear text authentication enabled
+        # Message digest authentication enabled
+        p29 = re.compile(r"^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$")
+
+        # Youngest key id is 1
+        p30 = re.compile(r"^Youngest +key +id +is +(?P<young>(\d+))$")
+
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -6098,9 +6115,22 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Loopback0 is up, line protocol is up
             m = p3.match(line)
             if m:
+                
                 interface = m.groupdict()['interface']
                 interface_enable = m.groupdict()['interface_enable']
                 line_protocol = m.groupdict()['line_protocol']
+
+                try:
+                    ospf_dict
+                except NameError:
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                    # initialize vrf dict
+                    instance_dict = vrf_dict \
+                        .setdefault('address_family', {}) \
+                        .setdefault('ipv4', {}) \
+                        .setdefault('instance', {})
+                    # just having a default key in the case where there isn't ospf_instance 
+                    ospf_dict = instance_dict.setdefault("process_id", {})
 
                 interfaces_dict = ospf_dict.setdefault('interfaces', {})
                 interface_dict = interfaces_dict.setdefault(interface, {})
@@ -6139,7 +6169,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
             if m:
+
                 process_id = m.groupdict()['process_id']
+                try:
+                    # Updating the default key "process_id" with the actual process_id value
+                    instance_dict[process_id] = instance_dict.pop("process_id")
+                except KeyError:
+                    pass
                 router_id = m.groupdict()['router_id']
                 interface_type = m.groupdict()['interface_type']
                 cost = m.groupdict()['cost']
@@ -6394,5 +6430,21 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:
                 ret_dict['vrf'].pop('default', None)
+            
+            # Clear text authentication enabled
+            # Message digest authentication enabled
+            m = p29.match(line)
+            if m:
+                authentication = interface_dict.setdefault("authentication", {})
+                auth_trailer = authentication.setdefault("auth_trailer_key", {})
+                auth = str(m.groupdict()["auth"]).lower()
+                auth_trailer["crypto_algorithm"] = crypto_dict[auth]
+                continue
+
+            # Youngest key id is 1
+            m = p30.match(line)
+            if m:
+                auth_trailer["youngest_key_id"] = int(m.groupdict()["young"])
+                continue
 
         return ret_dict

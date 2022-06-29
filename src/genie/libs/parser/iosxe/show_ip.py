@@ -60,6 +60,8 @@ IOSXE parsers for the following show commands:
     * show nhrp stats {tunnel}
     * show nhrp stats detail
     * show nhrp stats {tunnel} detail
+    * show ip dhcp binding
+    * show ip dhcp binding | count Active
     '''
 
 # Python
@@ -2949,8 +2951,8 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
         # 		Hardware address/
         # 		User name
         # 100.1.0.3       0100.1094.0000.01       Feb 08 2022 11:11 AM    Automatic  Active     TenGigabitEthernet1/0/2
-
-        p1 = re.compile(r'^\s*(?P<ip_address>(\d+\.\d+\.\d+\.\d+))\s+(?P<client_id>([0-9a-f\.]+))\s+(?P<lease_expiration>([a-zA-Z]{3}\s\d{1,2}\s\d{4}\s\d{1,2}\:\d{1,2}\s[a-zA-Z]{2}|Infinite))\s+(?P<type>\w+)\s+(?P<state>\w+)\s+(?P<interface>[\w\/]+)\s*$')
+        # 100.0.0.12      0010.9400.0004          May 13 2022 04:29 PM    Relay      Active     Port-channel40.2
+        p1 = re.compile(r'^\s*(?P<ip_address>(\d+\.\d+\.\d+\.\d+))\s+(?P<client_id>([0-9a-f\.]+))\s+(?P<lease_expiration>([a-zA-Z]{3}\s\d{1,2}\s\d{4}\s\d{1,2}\:\d{1,2}\s[a-zA-Z]{2}|Infinite))\s+(?P<type>\w+)\s+(?P<state>\w+)\s+(?P<interface>[\w\.\-\/]+)\s*$')
 
         # Defines the "for" loop, to pattern match each line of output
         for line in output.splitlines():
@@ -5525,3 +5527,41 @@ class ShowNhrpStatsDetail(ShowIpNhrpStatsDetail, ShowIpNhrpStatsDetailSchema):
             # get output from device
             output = self.device.execute(cmd)
         return super().cli(tunnel=tunnel, output=output)
+
+# ================================================
+# Schema for 'show ip dhcp binding | count Active'
+# ================================================
+class ShowIpDhcpBindingActiveCountSchema(MetaParser):
+    """
+    Schema for show ip dhcp binding
+    """
+    schema = {
+        Optional('dhcp_binding'): {
+            Optional('active_count'): str
+        }
+    }
+
+class ShowIpDhcpBindingActiveCount(ShowIpDhcpBindingActiveCountSchema):
+
+    ''' Parser for "show ip dhcp binding | count Active"'''
+    cli_command = 'show ip dhcp binding | count Active'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Number of lines which match regexp = 0
+        p1 = re.compile(r'^Number of lines which match regexp = (?P<active_count>(\d+))$')
+
+        # Number of lines which match regexp = 0
+        m = p1.match(output)
+
+        parsed_dict.setdefault('dhcp_binding', {})
+        if m:
+            group = m.groupdict()
+            parsed_dict['dhcp_binding']['active_count'] = str(group['active_count'])
+
+        return parsed_dict
+

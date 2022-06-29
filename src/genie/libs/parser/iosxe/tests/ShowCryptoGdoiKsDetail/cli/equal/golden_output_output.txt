@@ -1,0 +1,43 @@
+Total group members registered to this box: 12
+
+Key Server Information For Group bw6000:
+    Group Name               : bw6000
+    Re-auth on new CRL       : Disabled
+    Group Identity           : 6000
+    Group Type               : GDOI (ISAKMP)
+    Group Members            : 2
+    Rekey Acknowledgement Cfg: Cisco
+    IPSec SA Direction       : Both
+    IP D3P Window            : Disabled
+    Split Resiliency Factor  : 0
+    CKM status               : Disabled
+    ACL Configured: 
+        access-list bw600-crypto-policy
+    Redundancy               : Configured
+        Local Address        : 15.15.15.1
+        Local Priority       : 245
+        Local KS Status      : Alive
+        Local KS Role        : Primary
+        Local KS Version     : 1.0.27
+        Local COOP Version   : 1.0.8 
+
+Key Server Information For Group bw600-IPV6:
+    Group Name               : bw600-IPV6
+    Re-auth on new CRL       : Disabled
+    Group Identity           : 6600
+    Group Type               : GDOI (ISAKMP)
+    Group Members            : 2
+    Rekey Acknowledgement Cfg: Cisco
+    IPSec SA Direction       : Both
+    IP D3P Window            : Disabled
+    Split Resiliency Factor  : 0
+    CKM status               : Disabled
+    ACL Configured: 
+        access-list bw600-v6-crypto-policy
+    Redundancy               : Configured
+        Local Address        : 15.15.15.1
+        Local Priority       : 245
+        Local KS Status      : Alive
+        Local KS Role        : Primary
+        Local KS Version     : 1.0.27
+        Local COOP Version   : 1.0.8 

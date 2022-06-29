@@ -1,0 +1,19 @@
+------------------------- Message Statistics -------------------------
+   Sent:
+      Listen Start   : 1    Listen Stop    : 0    Socket Open    : 0    
+      Socket Close   : 0    
+   Rcvd:
+      General Error  : 0    Socket Error   : 0    Socket Ready   : 0    
+      Socket Up      : 0    Socket Down    : 0    MTU Changed    : 0    
+      Listen Ready   : 1    Other          : 0    
+
+-------------------------- Error Statistics --------------------------
+   Rcvd:
+      Listen Start   : 0    Listen Stop    : 0    Socket Open    : 0    
+      Socket Close   : 0    Conn Timeout   : 0    
+
+------------ Data Statistics(Other than IPSec protection) ------------
+   Sent:
+      cef pkt drops  : 0    ps pkt drops   : 0    
+   Rcvd:
+      ps pkt drops   : 0    clear pkt drops: 0    
