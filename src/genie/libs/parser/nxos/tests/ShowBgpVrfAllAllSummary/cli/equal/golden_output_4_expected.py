@@ -61,6 +61,7 @@ expected_output = {
                                     "memory_usage": 0,
                                     "total_entries": 0
                                },
+                               "prefix_received": "297",
                                "local_as": 100,
                                "msg_sent": 577455,
                                "dampened_paths": 0,
