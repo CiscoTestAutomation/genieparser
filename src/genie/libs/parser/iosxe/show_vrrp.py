@@ -83,6 +83,7 @@ class ShowVrrpSchema(MetaParser):
                         'master_advertisement_interval_secs': Or(float, str),
                         Optional('master_advertisement_expiration_secs'): float,
                         'master_down_interval_secs': Or(float, str),
+                        Optional('master_down_expiration_secs'): float,
                         Optional('flags'): str,
                         Optional('address_family'): {
                             'ipv6': {
@@ -161,7 +162,8 @@ class ShowVrrp(ShowVrrpSchema):
 
         # State is Master
         # State is INIT (No Primary virtual IP address configured)
-        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT)).*$')
+        # State is BACKUP
+        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT|BACKUP)).*$')
 
         # State duration 8 mins 40.214 secs
         p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
@@ -195,7 +197,8 @@ class ShowVrrp(ShowVrrpSchema):
         p10 = re.compile(r'^min +delay +is (?P<delay>[\d,\.]+) +sec$')
 
         # Priority is 115
-        p11 = re.compile(r'^Priority +is +(?P<priority>\d+)$')
+        # Priority is 70 (Configured 90)
+        p11 = re.compile(r'^Priority +is +(?P<priority>(\d+))|(\s+\(\w+\s+\d+\))$')
 
         # Priority 100
         p12 = re.compile(r'^Priority (?P<priority>\d+)$')
@@ -212,13 +215,15 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Master Router is 10.2.0.1 (local), priority is 100
         # Master Router is FE80::2A3:D1FF:FE45:BEC5 (local), priority is 150
+        # Master Router is 173.29.2.6, priority is 85
         p16 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+) \((?P<server>\S+)\), +priority +is (?P<digit>\d+)$')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w\.\:]+)+(,| )( |\((?P<server>\S+)\), )priority +is (?P<digit>\d+)$')
 
         # Master Advertisement interval is 3.000 sec
         # Master Advertisement interval is 1000 msec (expires in 46 msec)
+        # Master Advertisement interval is 1000 msec (learned)
         p17 = re.compile(
-            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +(?P<interval_unit>\w+)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?$')
+            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +(?P<interval_unit>\w+)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?')
 
         # Master Advertisement interval is unknown
         p17_2 = re.compile(
@@ -226,8 +231,9 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Master Down interval is 9.609 sec
         # Master Down interval is unknown
+        # Master Down interval is 3726 msec (expires in 3326 msec) 
         p18 = re.compile(
-            r'^Master +Down +interval +is (?P<mast_down_interval>[\w,\.]+)( +sec)?$')
+            r'^Master +Down +interval +is (?P<mast_down_interval>([\w,\.]+))(?P<interval_unit>( +sec)?$|( +msec)?)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?$')
 
         # Master Router is 192.168.1.233, priority is 120
         # Master Router is FE80::2A3:D1FF:FE45:BEC5, priority is 150
@@ -272,6 +278,8 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
             # State is Master
+            # State is INIT (No layer3 interface address)
+            # State is BACKUP
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -399,18 +407,22 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
             # Master Router is 10.2.0.1 (local), priority is 100
+            # Master Router is FE80::2A3:D1FF:FE45:BEC5 (local), priority is 150
+            # Master Router is 173.29.2.6, priority is 85
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
                     {'master_router_ip': str(group['mast_ip_addr'])})
-                vrrp_dict.update({'master_router': str(group['server'])})
+                if group['server'] is not None:
+                   vrrp_dict.update({'master_router': str(group['server'])})
                 vrrp_dict.update(
                     {'master_router_priority': int(group['digit'])})
                 continue
 
             # Master Advertisement interval is 3.000 sec
             # Master Advertisement interval is 1000 msec (expires in 46 msec)
+            # Master Advertisement interval is 1000 msec (learned)
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -441,15 +453,24 @@ class ShowVrrp(ShowVrrpSchema):
 
             # Master Down interval is 9.609 sec
             # Master Down interval is unknown
+            # Master Down interval is 3726 msec (expires in 3326 msec)
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 try:
-                    vrrp_dict.update({'master_down_interval_secs':
-                                      float(group['mast_down_interval'])})
+                   vrrp_dict.update({'master_down_interval_secs':
+                                   float(group['mast_down_interval'])})
                 except ValueError:
-                    vrrp_dict.update({'master_down_interval_secs':
-                                      group['mast_down_interval']})
+                   vrrp_dict.update({'master_down_interval_secs':
+                                   group['mast_down_interval']})
+                                         
+                if group['expiration_unit']:
+                   if group['expiration_unit'] == 'msec':
+                      seconds = float(group['expiration']) / 1000
+                   else:
+                      seconds = float(group['expiration'])
+                   vrrp_dict.update({'master_down_expiration_secs': 
+                                        seconds})
                 continue
 
             # Master Router is 192.168.1.233, priority is 120
@@ -490,7 +511,6 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
         return result_dict
-
 
 # ==========================
 # Parser for:

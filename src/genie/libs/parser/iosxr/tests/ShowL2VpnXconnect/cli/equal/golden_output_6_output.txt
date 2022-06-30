@@ -1,0 +1,14 @@
+
+show l2vpn xconnect
+
+Fri Sep 27 17:02:50.459 EDT
+Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+        SB = Standby, SR = Standby Ready, (PP) = Partially Programmed,
+        LU = Local Up, RU = Remote Up, CO = Connected
+
+XConnect                   Segment 1                       Segment 2                
+Group      Name       ST   Description            ST       Description            ST    
+------------------------   -----------------------------   -----------------------------
+PW_XG      PW_TEST
+                      UP   Te0/0/0/0.1234         UP       10.60.1.1       12345  UP    
+----------------------------------------------------------------------------------------

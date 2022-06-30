@@ -1,0 +1,3 @@
+Total lite sessions up: 0
+Src-IP       VRF      S-VRF   Up-time(sec) Interface    PBHK
+
