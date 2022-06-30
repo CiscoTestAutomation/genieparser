@@ -420,6 +420,7 @@ class ShowRunInterfaceSchema(MetaParser):
                      },
                 Optional('stackwise_virtual_link'): int,
                 Optional('dual_active_detection'): bool,
+                Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
             }
         }
     }
@@ -710,6 +711,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ip flow monitor monitor_ipv4_out output
         p82 = re.compile(r'^ip\s+flow\s+monitor\s+(?P<flow_monitor_output>\S+)\s+output$')
+        
+        #ip dhcp snooping information option allow-untrusted
+        p83 = re.compile(r'^ip +dhcp +snooping +information +option +allow-untrusted$')
+        
+        #no ip dhcp snooping information option allow-untrusted
+        p84 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1293,23 +1300,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             # ip access-group DELETE_ME in ; ip access-group TEST-OUT out
             m = p72.match(line)
             if m:
-                intf_dict['acl'] = {}
+                acl = intf_dict.setdefault('acl', {})
                 group = m.groupdict()
                 if group['direction'] == 'in':
-                    inbound_dict = {'inbound': {
-                        'acl_name': group['acl_name'],
-                        'direction': group['direction']},
-                    }
+
+                    inbound_dict = acl.setdefault('inbound', {})
+                    inbound_dict['acl_name'] = group['acl_name']
+                    inbound_dict['direction'] = group['direction']
                     continue
 
                 elif group['direction'] == 'out':
-                    outbound_dict = {'outbound': {
-                        'acl_name': group['acl_name'],
-                        'direction': group['direction']},
-                    }
-
-                intf_dict['acl'].update(inbound_dict)
-                intf_dict['acl'].update(outbound_dict)
+                    outbound_dict = acl.setdefault('outbound', {})
+                    outbound_dict['acl_name'] = group['acl_name']
+                    outbound_dict['direction'] = group['direction']
+                    continue
 
             # lisp mobility 20_1_1_0-global-IPV4
             m = p73.match(line)
@@ -1379,6 +1383,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'flow_monitor_output': group['flow_monitor_output']})
+                continue
+                
+            #ip dhcp snooping information option allow-untrusted
+            m = p83.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': True})
+                continue
+                
+            #ip dhcp snooping information option allow-untrusted
+            m = p84.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
                 continue
 
         return config_dict
@@ -1807,6 +1825,7 @@ class ShowRunAllSectionInterfaceSchema(MetaParser):
                 Optional('switchport_block_multicast'): bool,
                 Optional('switchport_vepa_enabled'):bool,
                 Optional('ip_arp_inspection_trust'): bool,
+                Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
             }
         }
     }
@@ -1946,6 +1965,12 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
 
         # no access-session closed
         p38 = re.compile(r'^no +access-session +closed$')
+        
+        #ip dhcp snooping information option allow-untrusted
+        p39 = re.compile(r'^ip +dhcp +snooping +information +option +allow-untrusted$')
+        
+        # no ip dhcp snooping information option allow-untrusted
+        p40 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2214,6 +2239,20 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'access_session_closed': False})
+                continue
+                
+            #ip dhcp snooping information option allow-untrusted
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': True})
+                continue
+                
+            #ip dhcp snooping information option allow-untrusted
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
                 continue
 
         return config_dict

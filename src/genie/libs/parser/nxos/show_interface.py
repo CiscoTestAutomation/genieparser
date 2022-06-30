@@ -70,6 +70,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional("link_state"): str,
             Optional("phys_address"): str,
             Optional("port_speed"): str,
+            Optional("port_speed_unit"): str,
             Optional("mtu"): int,
             "enabled": bool,
             Optional("mac_address"): str,
@@ -81,6 +82,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional("switchport_monitor"): str,
             Optional("efficient_ethernet"): str,
             Optional("last_link_flapped"): str,
+            Optional("last_clear_counters"): str,
             Optional("interface_reset"): int,
             Optional("ethertype"): str,
             Optional("beacon"): str,
@@ -222,9 +224,7 @@ class ShowInterface(ShowInterfaceSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
         # Ethernet2/1.10 is down (Administratively down)
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
@@ -241,6 +241,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/12 is down (Transceiver validation failed)
         # Ethernet1/13 is down (SFP validation failed)
         # Ethernet1/13 is down (Channel admin down)
+        # Ethernet140/1/26 is down (linkFlapErrDisabled, port: error)
         p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*'
                         r'(?P<link_state>(down|up|'
                         r'inactive|Transceiver +validation +failed|'
@@ -263,7 +264,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(No\s+operational\s+members\))?'
                         r'(\(.*ACK.*\))?'
                         r'(\(inactive\))?'
-                        r'(\(Hardware\s+failure\))?$')
+                        r'(\(Hardware\s+failure\))?'
+                        r'(\(linkFlapErrDisabled, +port: +error\))?$')
 
         # admin state is up
         # admin state is up,
@@ -348,31 +350,23 @@ class ShowInterface(ShowInterfaceSchema):
         # auto-duplex, auto-speed
         # full-duplex, 1000 Mb/s, media type is 1G
         # auto-duplex, auto-speed, media type is 10G
-        p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+)(?: '
-                         r'*[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
+        p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+) *'
+                         r'(?P<unit>[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
 
         # Beacon is turned off
         p11 = re.compile(r'^Beacon *is *turned *(?P<beacon>[a-z]+)$')
 
         # Auto-Negotiation is turned off
         # Auto-Negotiation is turned off  FEC mode is Auto
-        p12 = re.compile(r'^Auto-Negotiation *is *turned'
-                         r' *(?P<auto_negotiate>(off))'
-                         r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
-
         # Auto-Negotiation is turned on
         # Auto-Negotiation is turned on  FEC mode is Auto
-        p12_1 = re.compile(r'^Auto-Negotiation *is *turned'
-                           r' *(?P<auto_negotiate>(on))'
-                           r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
+        p12 = re.compile(r'^Auto-Negotiation is turned (?P<auto_negotiate>(off|on))'
+                         r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
 
         # Input flow-control is off, output flow-control is off
-        p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off)+),'
-                         r' *output *flow-control *is *(?P<send>(off)+)$')
-
         # Input flow-control is off, output flow-control is on
-        p13_1 = re.compile(r'^Input *flow-control *is *(?P<receive>(on)+),'
-                           r' *output *flow-control *is *(?P<send>(on)+)$')
+        p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off|on)+),'
+                         r' *output *flow-control *is *(?P<send>(off|on)+)$')
 
         # Auto-mdix is turned off
         p14 = re.compile(r'^Auto-mdix *is *turned *(?P<auto_mdix>[a-z]+)$')
@@ -398,12 +392,10 @@ class ShowInterface(ShowInterfaceSchema):
                          r' *(?P<last_link_flapped>[\S ]+)$')
 
         # Last clearing of "show interface" counters never
-        p19 = re.compile(r'^Last *clearing *of *\"show *interface\"'
-                         r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
-
-        # Last clearing of "" counters 00:15:42
-        p19_1 = re.compile(r'^Last *clearing *of *\" *\"'
-                           r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
+        # Last clearing of "show interface" counters 00:15:42
+        # Last clearing of "show interface" counters 69w4d
+        p19 = re.compile(r'^Last +clearing +of +\"show interface\" '
+                         r'+counters +(?P<last_clear_counters>[a-z0-9\:]+)$')
 
         # 1 interface resets
         p20 = re.compile(r'^(?P<interface_reset>[0-9]+) *interface'
@@ -518,7 +510,7 @@ class ShowInterface(ShowInterfaceSchema):
 
         rx = False
         tx = False
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.replace('\t', '    ')
             line = line.strip()
 
@@ -791,6 +783,8 @@ class ShowInterface(ShowInterfaceSchema):
 
                 interface_dict[interface]['duplex_mode'] = duplex_mode
                 interface_dict[interface]['port_speed'] = port_speed
+                if m.groupdict()['unit']:
+                    interface_dict[interface]['port_speed_unit'] = m.groupdict()['unit']
                 continue
 
             # Beacon is turned off
@@ -804,16 +798,7 @@ class ShowInterface(ShowInterfaceSchema):
             m = p12.match(line)
             if m:
                 auto_negotiation = m.groupdict()['auto_negotiate']
-                interface_dict[interface]['auto_negotiate'] = False
-                if m.groupdict()['fec_mode']:
-                    interface_dict[interface]['fec_mode'] = m.groupdict()['fec_mode']
-                continue
-
-            # Auto-Negotiation is turned on
-            m = p12_1.match(line)
-            if m:
-                auto_negotiation = m.groupdict()['auto_negotiate']
-                interface_dict[interface]['auto_negotiate'] = True
+                interface_dict[interface]['auto_negotiate'] = True if auto_negotiation == 'on' else False
                 if m.groupdict()['fec_mode']:
                     interface_dict[interface]['fec_mode'] = m.groupdict()['fec_mode']
                 continue
@@ -827,20 +812,8 @@ class ShowInterface(ShowInterfaceSchema):
                 if 'flow_control' not in interface_dict[interface]:
                     interface_dict[interface]['flow_control'] = {}
 
-                interface_dict[interface]['flow_control']['receive'] = False
-                interface_dict[interface]['flow_control']['send'] = False
-                continue
-            # Input flow-control is off, output flow-control is on
-            m = p13_1.match(line)
-            if m:
-                receive = m.groupdict()['receive']
-                send = m.groupdict()['send']
-
-                if 'flow_control' not in interface_dict[interface]:
-                    interface_dict[interface]['flow_control'] = {}
-
-                interface_dict[interface]['flow_control']['receive'] = True
-                interface_dict[interface]['flow_control']['send'] = True
+                interface_dict[interface]['flow_control']['receive'] = True if receive == 'on' else False
+                interface_dict[interface]['flow_control']['send'] = True if send  == 'on' else False
                 continue
 
             # Auto-mdix is turned off
@@ -898,13 +871,8 @@ class ShowInterface(ShowInterfaceSchema):
             # Last clearing of "show interface" counters never
             m = p19.match(line)
             if m:
-                last_clear = m.groupdict()['last_clear']
-                continue
-
-            # Last clearing of "" counters 00:15:42
-            m = p19_1.match(line)
-            if m:
-                last_clear = m.groupdict()['last_clear']
+                last_clear = m.groupdict()['last_clear_counters']
+                interface_dict[interface]['last_clear_counters'] = last_clear
                 continue
 
             # 1 interface resets

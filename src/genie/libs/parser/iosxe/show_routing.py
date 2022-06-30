@@ -2874,9 +2874,7 @@ class ShowIpv6RouteSummarySchema(MetaParser):
                     'memory_bytes': int,
                 },
                 'number_of_prefixes': {
-                    'prefix_8': int,
-                    'prefix_64': int,
-                    'prefix_128': int,
+                    Optional(Any()): int,
                 },
                 'route_source': {
                     Any(): {
@@ -2991,8 +2989,7 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
         p10 = re.compile(r'^Static\:\s+(?P<static>\d+)\s+Per\-user\s+static\:\s+(?P<per_user_static>\d+)$')
 
         # /8: 1, /64: 8, /128: 517
-        p11 = re.compile(
-            r'^\/\d+\:\s+(?P<prefix_8>\d+),\s+/\d+\:\s+(?P<prefix_64>\d+),\s+/\d+\:\s+(?P<prefix_128>\d+)$')
+        p11 = re.compile(r'(?P<prefix>\/\d+):\s+(?P<count>\d+)\,?\s?')
 
         ret_dict = {}
 
@@ -3087,9 +3084,9 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
                 continue
 
             # /8: 1, /64: 8, /128: 517
-            m = p11.match(line)
+            m = p11.findall(line)
             if m:
-                group = {k: int(v) for k, v in m.groupdict().items()}
+                group = {k: int(v) for k, v in m}
                 vrf_dict.setdefault('number_of_prefixes', {})
                 vrf_dict['number_of_prefixes'].update(group)
                 continue

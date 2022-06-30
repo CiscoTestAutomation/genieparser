@@ -1,0 +1,8 @@
+Bindings from all pools not associated with VRF:
+IP address      Client-ID/              Lease expiration        Type       State      Interface
+                Hardware address/
+                User name
+100.0.0.14 0010.9400.0005 May 13 2022 04:29 PM Relay Active Port-channel1.234
+100.0.0.15 0010.9400.0006 May 13 2022 04:29 PM Relay Active Port-channel63.4294967295
+100.0.0.16 0010.9400.0007 May 13 2022 04:29 PM Relay Active Port-channel5.42949695
+
