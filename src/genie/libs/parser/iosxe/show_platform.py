@@ -86,7 +86,9 @@ IOSXE parsers for the following show commands:
     * 'show platform software fed {state} ip igmp snooping groups vlan {vlan}'
     * 'show platform software fed {state} ipv6 mld snooping groups vlan {vlan}'
     * 'show platform software fed {state} ipv6 mld snooping vlan {vlan}'
-
+    * 'show platform hardware qfp active infrastructure bqs status | include QOS|QFP'
+    * 'show platform hardware qfp active feature qos interface {interface} hierarchy detail | include subdev'
+    * 'show platform software bp crimson content config'
 '''
 
 # Python
@@ -19024,7 +19026,7 @@ class ShowPlatformHardwareVoltageMarginSwitch(ShowPlatformHardwareVoltageMarginS
 
         # Channel  Rail Name         Voltage(mv)   Nominal Voltage  Min Margin  % Change  Max Margin  Monitor
         # 0        PVCCKRHV              1315.71        1300.00       -3.00        1.21        3.00       0
-        p2 = re.compile('^(?P<channels>\S+)\s+(?P<rail_name>\S+)\s+(?P<voltage_in_mv>[\d+\.]+)\s+(?P<nominal_voltage>[\d+\.]+)\s+(?P<min_margin>\S+)\s+(?P<percentage_change>\S+)\s+(?P<max_margin>\S+)\s+(?P<monitor>\d+)$') 	
+        p2 = re.compile('^(?P<channels>\S+)\s+(?P<rail_name>\S+)\s+(?P<voltage_in_mv>[\d+\.]+)\s+(?P<nominal_voltage>[\d+\.]+)\s+(?P<min_margin>\S+)\s+(?P<percentage_change>\S+)\s+(?P<max_margin>\S+)\s+(?P<monitor>\d+)$')   
 
 
         for line in output.splitlines():
@@ -19051,4 +19053,227 @@ class ShowPlatformHardwareVoltageMarginSwitch(ShowPlatformHardwareVoltageMarginS
                 continue                
         return ret_dict 
 
+class ShowPlatformHardwareQfpActiveInfrastructureBqsStatusSchema(MetaParser):
+
+    """
+    Schema for show platform hardware qfp active infrastructure bqs status | include QOS|QFP
+    """
+    schema = {
+            Any(): {
+                Optional('total_qos_queue'): int,
+                Optional('total_qos_schedule_nodes'): int,
+            }
+    }
+
+class ShowPlatformHardwareQfpActiveInfrastructureBqsStatus(ShowPlatformHardwareQfpActiveInfrastructureBqsStatusSchema):
+
+    """Parser for show platform hardware qfp active infrastructure bqs status | include QOS|QFP """
+
+    cli_command = ['show platform hardware qfp active infrastructure bqs status | include QOS|QFP']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initializes the Python dictionary variable
+        parsed_dict = {}
+
+        # QFP.0:
+        p1 = re.compile(r'(?P<qfp_key>QFP\.\d+)')
+
+        # # of QOS Queue Objects:                   1
+        p2 = re.compile(r'^\#\s+of\s+QOS\s+Queue\s+Objects\:\s+(?P<total_qos_queue>\d+)')
+
+        ## of QOS Schedule Objects :               2
+        p3 = re.compile(r'^\#\s+of\s+QOS\s+Schedule\s+Objects\s+\:\s+(?P<total_qos_schedule_nodes>\d+)')
+
+        key = "global"
+        parsed_dict.setdefault(key, {})
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # match QFP values
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['qfp_key']
+                parsed_dict.setdefault(key, {})
+                continue
+
+            # match queue
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict[key]['total_qos_queue'] = int(group['total_qos_queue'])
+                continue
+
+            # match scheduling nodes
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict[key]['total_qos_schedule_nodes'] = int(group['total_qos_schedule_nodes'])
+                continue
+
+        return parsed_dict
+
+class ShowPlatformHardwareQfpActiveFeatureQosInterfaceHierarchyDetailSchema(MetaParser):
+
+    """
+    Schema for show platform hardware qfp active feature qos interface Te0/1/0 hierarchy detail | include subdev
+    """
+
+    schema = {
+        Optional('subdev'): int
+        }
+
+class ShowPlatformHardwareQfpActiveFeatureQosInterfaceHierarchyDetail(ShowPlatformHardwareQfpActiveFeatureQosInterfaceHierarchyDetailSchema):
+
+    """
+    Parser for show platform hardware qfp active feature qos interface Te0/1/0 hierarchy detail | include subdev
+    """
+
+    cli_command = ['show platform hardware qfp active feature qos interface {interface} hierarchy detail | include subdev']
+
+    def cli(self, interface=None, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(interface=interface))
+
+        parsed_dict = {}
+
+        # subdevice_id  : 1
+        p1 = re.compile(r'subdevice_id\s+\:\s+(?P<subdev>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # subdevice_id  : 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['subdev'] = int(group['subdev'])
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareBPCrimsonContentConfigSchema(MetaParser):
+    """Schema for show platform software bp crimson content config"""
+
+    schema = {
+        Any() : {
+            'fipskey': str,
+            'interface_details': {
+                Any() : {
+                    'link': int,
+                    'slot': str,
+                    }
+                },
+            'node_details': {
+                'node_number': int,
+                'priority': int,
+              },
+            'svl_link': {
+                'link': int,
+                },
+            'svl_ports': {
+                'domain': int,
+                'mode': str,
+                'node': int,
+                'router_id': str,
+                },
+            },
+    }
+
+class ShowPlatformSoftwareBPCrimsonContentConfig(ShowPlatformSoftwareBPCrimsonContentConfigSchema):
+    """ Parser for
+       show platform software bp crimson content config
+    """
+
+    cli_command = 'show platform software bp crimson content config'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        # Node    Domain    Mode          Router-ID
+        # 1       1         Aggregation   0.0.0.0 
+        p1 = re.compile(r'(?P<node>(\d)) +(?P<domain>(\d)) + (?P<mode>(\w+)) +(?P<router_id>(\S+))')
+        
+        # FIPSKEY
+        # 4D56F017FFC920A5FA0EF11397788E917931D1D1AE48F9C0
+        p2 = re.compile(r'^(?P<fipskey>(\w+)$)')
+        
+        # Node    Priority
+        # 1       1
+        p3 = re.compile(r'^(?P<node_number>(\d)) +(?P<priority>(\d))')
+        
+        # Configured SVL Links:
+        # Link ID: 1
+        p4 = re.compile(r'^Link +ID+\: +(?P<link>\d+)')
+        
+        # Interface                     Link    Slot:Bay:Port
+        # HundredGigE1/0/13             1       1:0:13
+        # HundredGigE1/0/14             1       1:0:14
+        p5 = re.compile(r'^(?P<interface>(\S+)) +(?P<link>(\d+)) +(?P<slot>(\S+))$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Node    Domain    Mode          Router-ID
+            # 1       1         Aggregation   0.0.0.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                domain_dict = node_dict.setdefault('svl_ports', {})
+                domain_dict['node'] = int(group['node'])
+                domain_dict['domain'] = int(group['domain'])
+                domain_dict['mode'] = group['mode']
+                domain_dict['router_id'] = group['router_id']
+                continue
+                
+            # FIPSKEY
+            # 4D56F017FFC920A5FA0EF11397788E917931D1D1AE48F9C0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                node_dict['fipskey'] = group['fipskey']
+                continue
+            
+            # Node    Priority
+            # 1       1          
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                node_number = group['node_number']
+                node_dict = ret_dict.setdefault(node_number, {})
+                priority_dict = node_dict.setdefault('node_details', {})
+                priority_dict['node_number'] = int(group['node_number'])
+                priority_dict['priority'] = int(group['priority'])
+                continue
+            
+            # Configured SVL Links:
+            # Link ID: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                link_dict = node_dict.setdefault('svl_link', {})
+                link_dict['link'] = int(group['link'])
+                continue
+            
+            # Interface                     Link    Slot:Bay:Port
+            # HundredGigE1/0/13             1       1:0:13
+            # HundredGigE1/0/14             1       1:0:14
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                stack_ports = node_dict.setdefault('interface_details', {})
+                each_ports = stack_ports.setdefault(group['interface'],{})
+                each_ports['link'] = int(group['link'])
+                each_ports['slot'] = group['slot']
+                continue 
+                
+        return ret_dict
 

@@ -1,0 +1,9 @@
+    # of QOS Queue Objects:                   1
+    # of QOS Schedule Objects :               2
+  QFP.0:
+    # of QOS Queue Objects:                   3
+    # of QOS Schedule Objects :               4
+  QFP.1:
+    # of QOS Queue Objects:                   5
+    # of QOS Schedule Objects :               6
+
