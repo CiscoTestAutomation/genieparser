@@ -105,12 +105,12 @@ class ShowPerfmonSchema(MetaParser):
                 }
             },
             Optional('setup_rates_per_sec'): {
-                '1_min': {
+                'one_min': {
                     'total': int,
                     'tcp': int,
                     'udp': int
                 },
-                '5_min': {
+                'five_min': {
                     'total': int,
                     'tcp': int,
                     'udp': int
@@ -291,8 +291,8 @@ class ShowPerfmon(ShowPerfmonSchema):
                 groups = m.groupdict()
                 type = groups['type']
                 setup = perfmon.setdefault('setup_rates_per_sec',{})
-                one_min = setup.setdefault('1_min', {})
-                five_min = setup.setdefault('5_min', {})
+                one_min = setup.setdefault('one_min', {})
+                five_min = setup.setdefault('five_min', {})
                 if type == 'Connections':
                     field = 'total'
                 elif type == 'TCP Conns':
