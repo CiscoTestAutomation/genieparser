@@ -1,12 +1,12 @@
 expected_output = {
     'perfmon': {
         'setup_rates_per_sec': {
-            '1_min': {
+            'one_min': {
                 'total': 243,
                 'tcp': 140,
                 'udp': 100
             },
-            '5_min': {
+            'five_min': {
                 'total': 1200,
                 'tcp': 1000,
                 'udp': 150
