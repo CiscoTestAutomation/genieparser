@@ -1,0 +1,6 @@
+Router FE80::A653:EFF:FE46:CC5 on Vlan100, last update 0 min
+  Hops 64, Lifetime 1800 sec, AddrFlag=0, OtherFlag=0, MTU=1500
+  HomeAgentFlag=0, Preference=Medium
+  Reachable time 0 (unspecified), Retransmit time 0 (unspecified)
+  Prefix 2020:1::/64 onlink autoconfig
+    Valid lifetime 2592000, preferred lifetime 604800

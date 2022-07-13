@@ -1,0 +1,31 @@
+Current Subscriber Statistics:
+Number of sessions currently up: 0
+Number of sessions currently pending: 0
+Number of sessions currently authenticated: 0
+Number of sessions currently unauthenticated: 0
+Highest number of sessions ever up at one time: 0
+Mean up-time duration of sessions: 00:00:00
+Total number of sessions up so far: 0
+Mean call rate per minute: 0, per hour: 0
+Number of calls in last one hour: 0
+Number of sessions failed to come up: 0
+
+Current Flow Statistics:
+Number of flows currently up: 0
+Highest number of flows ever up at one time: 0
+Mean up-time duration of flows: 00:00:00
+Number of flows failed to come up: 0
+Total number of flows up so far: 0
+
+IP/DHCP session type count:
+
+Switch Id Cleanup Statistics:
+Number of sessions having invalid SMGR handle: 0
+Number of sessions having invalid policy handle: 0
+Number of sessions having invalid LTERM handle: 0
+Number of sessions having invalid SIP handle: 0
+
+Lterm Error Statistics:
+
+Lterm session delete errors:
+

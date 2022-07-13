@@ -22,6 +22,7 @@
 * 'show sdwan policy access-list-associations'
 * 'show sdwan policy access-list-counters'
 * 'show sdwan policy ipv6 access-list-counters'
+* 'show sdwan policy app-route-policy-filter' 
 * 'show sdwan reboot history'
 * 'show sdwan software'
 * 'show sdwan system status'
@@ -3976,3 +3977,128 @@ class ShowSdwanAppHostingOperData(ShowSdwanAppHostingOperDataSchema):
                 continue
 
         return oper_data_dict
+
+
+# ========================================================
+# Schema for "show sdwan policy app-route-policy-filter"
+# ========================================================
+
+class ShowSdwanPolicyAppRoutePolicyFilterSchema(MetaParser):
+    """Schema for 'show sdwan policy app-route-policy-filter' """
+
+    schema = {
+        "policy_name": {
+
+            Any(): {
+                "vpn_list": {
+
+                    Any(): {
+                        "counter_name": {
+
+                            Any(): {
+                                "packets": int,
+                                "bytes": int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowSdwanPolicyAppRoutePolicyFilter(ShowSdwanPolicyAppRoutePolicyFilterSchema):
+    """
+    Parser for 'show sdwan policy app-route-policy-filter' on ios-xe sdwan devices.
+    parser class - implements detail parsing mechanisms for cli output.
+    """
+    cli_command = "show sdwan policy app-route-policy-filter"
+    """
+        # NAME            NAME  COUNTER NAME                      PACKETS       BYTES
+        # ----------------------------------------------------------------------------------------
+        # VPN_AAR_Policy  VPN1  default_action_count              0             0
+        #                       AAR_APP_Email_963617983           0             0
+        #                       AAR_APP_others_963617983          0             0
+        #                       AAR_APP_Facebook_963617983        0             0
+        #                       AAR_APP_Bit_Exchange_963617983    0             0
+    """
+
+    def cli(self, output: str = None) -> dict:
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # VPN_AAR_Policy  VPN1  default_action_count              0             0
+        p1 = re.compile(
+            r"\s*(?P<policy_name>\S+)\s+(?P<vpn_name>\S+)\s+(?P<counter_name>\S+)\s+(?P<packets_counter>\d+)\s+(?P<bytes_counter>\d+)$"
+
+        )
+
+        # VPN1  default_action_count              0             0
+        p2 = re.compile(
+            r"^(?P<vpn_name>\S+)\s+(?P<counter_name>\S+)\s+(?P<packets_counter>\d+)\s+(?P<bytes_counter>\d+)$"
+
+        )
+
+        # AAR_APP_Facebook_963617983        0             0
+        p3 = re.compile(
+            r"^(?P<counter_name>\S+)\s+(?P<packets_counter>\d+)\s+(?P<bytes_counter>\d+)$"
+        )
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # VPN_AAR_Policy  VPN1  default_action_count              0             0
+            m1 = p1.match(line)
+            if m1:
+                groups = m1.groupdict()
+                policy_name = groups["policy_name"]
+                vpn_name = groups["vpn_name"]
+                counter_name = groups["counter_name"]
+                packets_counter = int(groups["packets_counter"])
+                bytes_counter = int(groups["bytes_counter"])
+                policy_class_dict = parsed_dict.setdefault("policy_name", {}).setdefault(
+                    policy_name, {}
+                )
+                vpn_class_dict = policy_class_dict.setdefault(
+                    "vpn_list", {}
+                ).setdefault(vpn_name, {})
+                counter_dict = vpn_class_dict.setdefault("counter_name", {}).setdefault(
+                    counter_name, {}
+                )
+                counter_dict["packets"] = packets_counter
+                counter_dict["bytes"] = bytes_counter
+                continue
+
+            # VPN1  default_action_count              0             0
+            m2 = p2.match(line)
+            if m2:
+                groups = m2.groupdict()
+                vpn_name = groups["vpn_name"]
+                counter_name = groups["counter_name"]
+                packets_counter = int(groups["packets_counter"])
+                bytes_counter = int(groups["bytes_counter"])
+                vpn_class_dict = policy_class_dict.setdefault(
+                    "vpn_list", {}
+                ).setdefault(vpn_name, {})
+                counter_dict = vpn_class_dict.setdefault("counter_name", {}).setdefault(
+                    counter_name, {}
+                )
+                counter_dict["packets"] = packets_counter
+                counter_dict["bytes"] = bytes_counter
+                continue
+
+            # AAR_APP_Facebook_963617983        0             0
+            m3 = p3.match(line)
+            if m3:
+                groups = m3.groupdict()
+                counter_name = groups["counter_name"]
+                packets_counter = int(groups["packets_counter"])
+                bytes_counter = int(groups["bytes_counter"])
+                counter_dict = vpn_class_dict.setdefault("counter_name", {}).setdefault(
+                    counter_name, {}
+                )
+                counter_dict["packets"] = packets_counter
+                counter_dict["bytes"] = bytes_counter
+                continue
+
+        return parsed_dict

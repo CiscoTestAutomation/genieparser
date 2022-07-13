@@ -73,7 +73,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
         # Cache type:                               Normal (Platform cache)
         p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
-        
+
         # Cache size:                                   16
         p2 = re.compile(r'^Cache +size: +(?P<cache_size>\d+)$')
 
@@ -97,21 +97,21 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
         for line in out.splitlines():
 
             line = line.strip()
-            
+
             # Cache type:                               Normal (Platform cache)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'cache_type': group['cache_type']})
                 continue
-            
+
             # Cache size:                                   16
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'cache_size': int(group['cache_size'])})
                 continue
-            
+
             # Current entries:                               1
             m = p3.match(line)
             if m:
@@ -125,28 +125,28 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 group = m.groupdict()
                 ret_dict.update({'high_water_mark': int(group['high_water_mark'])})
                 continue
-            
+
             # Flows added:                                   1
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'flows_added': int(group['flows_added'])})
                 continue
-            
+
             # Flows aged:                                   0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'flows_aged': int(group['flows_aged'])})
                 continue
-            
+
             # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
             m = p7.match(line)
             if m:
                 group = m.groupdict()
 
                 index = dst_addr_index.get(group['ipv4_dst_addr'], 0) + 1
-                
+
                 ipv4_dst_addr_dict = ret_dict.setdefault('ipv4_src_addr', {}).\
                     setdefault(group['ipv4_src_addr'], {}).\
                     setdefault('ipv4_dst_addr', {}).\
@@ -172,8 +172,8 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 # Schema for 'show flow monitor {name} cache'
 # =========================================================
 class ShowFlowMonitorCacheSchema(MetaParser):
-    ''' Schema for 
-        "show flow monitor {name} cache" 
+    ''' Schema for
+        "show flow monitor {name} cache"
         "show flow monitor {name} cache format record"
     '''
 
@@ -195,15 +195,16 @@ class ShowFlowMonitorCacheSchema(MetaParser):
         },
         Optional('entries'): {
             Any(): {
-                'ip_vrf_id_input': str,
+                Optional('ip_vrf_id_input'): str,
                 'ipv4_src_addr': str,
                 'ipv4_dst_addr': str,
                 'intf_input': str,
                 'intf_output': str,
-                'pkts': int,
-            },
+                Optional('pkts'): int,
+            }
         },
     }
+
 
 # =========================================================
 # Parser for 'show flow monitor {name} cache'
@@ -228,7 +229,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
 
         # Cache type:                               Normal (Platform cache)
         p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
-        
+
         # Cache size:                                   16
         p2 = re.compile(r'^Cache +size: +(?P<cache_size>\d+)$')
 
@@ -273,6 +274,11 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # counter packets:           3
         p14 = re.compile(r'^counter packets: +(?P<pkts>\d+)$')
 
+        # entry_dict intializes on p8 or p9 condition
+        # but some output doesn't match these conditions.
+        # this variable checks the entry_dict created
+        entry_dict_created = False
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -289,7 +295,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 group = m.groupdict()
                 ret_dict.update({'cache_size': int(group['cache_size'])})
                 continue
-            
+
             # Current entries:                               1
             m = p3.match(line)
             if m:
@@ -344,8 +350,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 entry_dict.update({'intf_input': Common.convert_intf_name(group['intf_input'])})
                 entry_dict.update({'intf_output': Common.convert_intf_name(group['intf_output'])})
                 entry_dict.update({'pkts': int(group['pkts'])})
+                entry_dict_created = True
                 continue
-            
+
             # IP VRF ID INPUT:           0          (DEFAULT)
             m = p9.match(line)
             if m:
@@ -353,13 +360,21 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 group = m.groupdict()
                 entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'ip_vrf_id_input': group['id']})
+                entry_dict_created = True
                 continue
 
             # IPV4 SOURCE ADDRESS:       192.168.189.254
             m = p10.match(line)
             if m:
                 group = m.groupdict()
+
+                if not entry_dict_created:
+                    index += 1
+                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
+                        index, {})
+
                 entry_dict.update({'ipv4_src_addr': group['src']})
+
                 continue
 
             # IPV4 DESTINATION ADDRESS:  192.168.189.253
@@ -603,7 +618,7 @@ class ShowFlowMonitorSdwanFlowMonitorStatisticsSchema(MetaParser):
 class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorStatisticsSchema):
 
     """ Parser for "show flow monitor sdwan_flow_monitor statistics" """
-    
+
     cli_command = "show flow monitor {flow_monitor_name} statistics"
 
     def cli(self,flow_monitor_name='',output=None):
@@ -1026,51 +1041,51 @@ class ShowFlowRecordSchema(MetaParser):
             }
         }
     }
-    
+
 
 class ShowFlowRecord(ShowFlowRecordSchema):
-    
+
     cli_command= 'show flow record'
-    
+
     def cli(self,output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-            
+
         #flow record wireless avc basic:
         p1 = re.compile(r'^flow\srecord\s(?P<flow_record_name>.*):$')
-        
+
         #Description:        Basic IPv4 Wireless AVC template
         p2 = re.compile(r'^Description:\s+(?P<description>.*)$')
-        
+
         #No. of users:       0
         p3 = re.compile(r'^No\.\sof\susers\:\s+(?P<no_of_users>\d)$')
 
         #Total field space:  78 bytes
         p4 = re.compile(r'^Total\sfield\sspace\:\s+(?P<total_field_space>\d+)\sbytes$')
-        
+
         #Fields:
         p5 = re.compile(r'^(?P<fields>Fields\:)$')
-        
+
         #match ipv4 protocol
         #match ipv4 source address
         #match ipv4 destination address
         #match transport source-port
         #match transport destination-port
         p6 = re.compile(r'^match\s(?P<match_list>.*)$')
-        
+
         #collect counter bytes long
         #collect counter packets long
         #collect wireless ap mac address
         #collect wireless client mac address
         p7 = re.compile(r'^collect\s(?P<collect_list>.*)$')
-        
+
         ret_dict = {}
         match_filed_list = []
         collect_field_list = []
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             #flow record wireless avc basic:
             m = p1.match(line)
             if m:
@@ -1078,14 +1093,14 @@ class ShowFlowRecord(ShowFlowRecordSchema):
                 flow_record_name = group['flow_record_name']
                 flow_dict = ret_dict.setdefault('flow_record_name', {}).setdefault(flow_record_name, {})
                 continue
-                
+
             ##Description:        Basic IPv4 Wireless AVC template
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                flow_dict['description'] = group['description'] 
+                flow_dict['description'] = group['description']
                 continue
-                
+
             ##No. of users:       0
             m = p3.match(line)
             if m:
@@ -1099,14 +1114,14 @@ class ShowFlowRecord(ShowFlowRecordSchema):
                 group = m.groupdict()
                 flow_dict['total_field_space'] = int(group['total_field_space'])
                 continue
-            
+
             ##Fields:
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 fields_dict = flow_dict.setdefault('fields', {})
                 continue
-               
+
             #match ipv4 protocol
             #match ipv4 source address
             #match ipv4 destination address
@@ -1119,7 +1134,7 @@ class ShowFlowRecord(ShowFlowRecordSchema):
                 match_filed_list = fields_dict.setdefault('match_list', [])
                 match_filed_list.append(match_filed)
                 continue
-            
+
             #collect counter bytes long
             #collect counter packets long
             #collect wireless ap mac address
@@ -1131,7 +1146,7 @@ class ShowFlowRecord(ShowFlowRecordSchema):
                 collect_field_list = fields_dict.setdefault('collect_list', [])
                 collect_field_list.append(collect_field)
                 continue
-                
+
         return ret_dict
 
 
@@ -1152,16 +1167,16 @@ class ShowRunningConfigFlowExporterSchema(MetaParser):
             }
         }
     }
-    
+
 
 class ShowRunningConfigFlowExporter(ShowRunningConfigFlowExporterSchema):
-    
+
     cli_command = 'show running-config flow exporter'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         #flow exporter export_prime1_nf10
         p1 = re.compile(r'flow\s+exporter\s+(?P<flow_exporter_name>.*)$')
 
@@ -1208,7 +1223,7 @@ class ShowRunningConfigFlowExporter(ShowRunningConfigFlowExporterSchema):
                 flow_exporter_name = group['flow_exporter_name']
                 flow_dict = ret_dict.setdefault('flow_exporter_name', {}).setdefault(flow_exporter_name, {})
                 continue
-    
+
             #description test_expoter
             m = p2.match(line)
             if m:
