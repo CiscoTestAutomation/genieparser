@@ -3599,6 +3599,15 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             ' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
                             ' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
                             ' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')
+        # Neighbor        V             AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        # 10.10.10.10     4 4211111111
+        p8_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+) +(?P<as>[0-9]+)$')
+        # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        #                                                  0              0           0      0        0       5w6d   Idle 
+        p8_4 = re.compile(r'^\s*(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
+                          r' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
+                          r' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
+                          r' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')                            
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -3834,6 +3843,85 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                     nbr_af_dict['path']['total_entries'] = num_path_entries
                     nbr_af_dict['path']['memory_usage'] = memory_usage
                     continue
+
+            # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            # 10.10.10.10     4 4211111111
+            m = p8_3.match(line)
+            if m:
+                data_on_nextline = True
+                # Add neighbor to dictionary
+                neighbor = str(m.groupdict()['neighbor'])
+                if 'neighbor' not in sum_dict['vrf'][vrf]:
+                    sum_dict['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
+                    sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
+                nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+
+                # Add address family to this neighbor
+                if 'address_family' not in nbr_dict:
+                    nbr_dict['address_family'] = {}
+                if address_family not in nbr_dict['address_family']:
+                    nbr_dict['address_family'][address_family] = {}
+                nbr_af_dict = nbr_dict['address_family'][address_family]
+
+                # Add keys for this address_family
+                nbr_af_dict['neighbor_table_version'] = int(m.groupdict()['v'])
+                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                continue
+
+            # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            #                               0       0        0    0    0     5w6d Idle 
+            m = p8_4.match(line)
+            if m and data_on_nextline:
+                data_on_nextline = False
+                # Add keys for this address_family
+                nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
+                nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                nbr_af_dict['inq'] = int(m.groupdict()['inq'])
+                nbr_af_dict['outq'] = int(m.groupdict()['outq'])
+                nbr_af_dict['up_down'] = str(m.groupdict()['up_down'])
+                nbr_af_dict['state_pfxrcd'] = str(m.groupdict()['state_pfxrcd']).lower().strip()
+                if m.groupdict()['state']:
+                    nbr_af_dict['state'] = m.groupdict()['state_pfxrcd'].lower()
+                if m.groupdict()['prx_rcd']:
+                    nbr_af_dict['prefix_received'] = m.groupdict()['prx_rcd']
+                    nbr_af_dict['state'] = 'established'
+
+                try:
+                    # Assign variables
+                    nbr_af_dict['route_identifier'] = route_identifier
+                    nbr_af_dict['local_as'] = local_as
+                    nbr_af_dict['bgp_table_version'] = bgp_table_version
+                    nbr_af_dict['config_peers'] = config_peers
+                    nbr_af_dict['capable_peers'] = capable_peers
+                    nbr_af_dict['attribute_entries'] = attribute_entries
+                    nbr_af_dict['as_path_entries'] = as_path_entries
+                    nbr_af_dict['community_entries'] = community_entries
+                    nbr_af_dict['clusterlist_entries'] = clusterlist_entries
+                    nbr_af_dict['dampening'] = dampening
+                    nbr_af_dict['history_paths'] = history_paths
+                    nbr_af_dict['dampened_paths'] = dampened_paths
+                except Exception:
+                    pass
+                try:
+                    nbr_af_dict['soft_reconfig_recvd_paths'] = soft_reconfig_recvd_paths
+                    nbr_af_dict['soft_reconfig_identical_paths'] = soft_reconfig_identical_paths
+                    nbr_af_dict['soft_reconfig_combo_paths'] = soft_reconfig_combo_paths
+                    nbr_af_dict['soft_reconfig_filtered_recvd'] = soft_reconfig_filtered_recvd
+                    nbr_af_dict['soft_reconfig_bytes'] = soft_reconfig_bytes
+                except Exception:
+                    pass
+
+                if num_prefix_entries or num_prefix_entries == 0:
+                    nbr_af_dict['prefixes'] = {}
+                    nbr_af_dict['prefixes']['total_entries'] = num_prefix_entries
+                    nbr_af_dict['prefixes']['memory_usage'] = memory_usage
+                if num_path_entries or num_path_entries == 0:
+                    nbr_af_dict['path'] = {}
+                    nbr_af_dict['path']['total_entries'] = num_path_entries
+                    nbr_af_dict['path']['memory_usage'] = memory_usage
+                    continue                    
 
         return sum_dict
 

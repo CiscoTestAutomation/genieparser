@@ -95,7 +95,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
         p3 = re.compile(r'^.*output: +Service +Policy +not +installed$')
 
         # TenGigE0/2/0/3 output: cap
-        p4 = re.compile(r'^.*output: +(?P<output>\w+)$')
+        p4 = re.compile(r'^.*output: +(?P<output>[-\w]+)$')
 
         # Class cap
         p5 = re.compile(r'^Class +(?P<class_name>\D+)$')

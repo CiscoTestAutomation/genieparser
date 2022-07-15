@@ -350,6 +350,10 @@ class ShowIsisDatabaseSchema(MetaParser):
                                         'max': int,
                                     },
                                     Optional('uni_link_delay_var'): int,
+                                    Optional('uni_link_loss'): {
+                                        'percent': str,
+                                        'anomalous': bool,
+                                    },
                                     Optional("affinity"): str,
                                     Optional("extended_affinity"): list,
                                     Optional("asla"): {
@@ -362,6 +366,10 @@ class ShowIsisDatabaseSchema(MetaParser):
                                             Optional("bit_mask"): str,
                                             Optional("appl_spec_ext_admin_group"): list,
                                             Optional("appl_spec_admin_group"): str,
+                                            Optional('appl_spec_uni_link_loss'): {
+                                                'percent': str,
+                                                'anomalous': bool,
+                                            },
                                             Optional("appl_spec_uni_link_delay"): {
                                                 "a_bit": bool,
                                                 "min": int,
@@ -405,7 +413,6 @@ class ShowIsisDatabaseSchema(MetaParser):
                                     "alg_type": str,
                                     "priority": int,
                                     Optional("m_flag"): bool,
-                                    Optional("segment_routing"): bool,
                                     Optional("exclude_any"): Any(),
                                     Optional("include_any"): Any(),
                                     Optional("include_all"): Any(),
@@ -420,7 +427,7 @@ class ShowIsisDatabaseSchema(MetaParser):
                                 "srgb_range": int,
                                 "srlb_base": int,
                                 "srlb_range": int,
-                                "algorithms": list
+                                "algorithms": set
                             },
                             Optional("node_msd"): int,
                         },
@@ -567,11 +574,11 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
 
         # Prefix-SID Index: 1, Algorithm: SPF, R:0 N:1 P:0 E:0 V:0 L:0
         p29 = re.compile(r'^Prefix-SID Index:\s+(?P<prefix_sid_index>\d+),\s+'
-                         r'Algorithm:\s+((?P<algo>SPF|strict-SPF),)?\s+'
-                         r'(Flex-algo(?P<flex_algo>\d+))?'
-                         r'R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+'
-                         r'P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+'
-                         r'V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1)$')
+                         r'Algorithm:\s+((?P<algo>SPF|Strict-SPF),)?(Flex-algo'
+                         r'\s+(?P<flex_algo>\d+),)?\s+R:(?P<r_flag>0|1)\s+'
+                         r'N:(?P<n_flag>0|1)\s+P:(?P<p_flag>0|1)\s+'
+                         r'E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+'
+                         r'L:(?P<l_flag>0|1)$')
 
         # Source Router ID: 1.1.1.1
         p30 = re.compile(r'^Source\s+Router\s+ID:\s+(?P<source_router_id>[\d\.]+)$')
@@ -645,6 +652,13 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
         #    0x00000000 0x00000000 0x00000200
         #    0x00000000 0x00000000 0x00000000 0x00000000
         p47 = re.compile(r'^(?P<hex>(0x\w{8}\s*){1,4})$')
+
+        # Uni Link Loss 0.799998% 
+        # Uni Link Loss 0.799998% (Anomalous)         
+        p48 = re.compile(r'^Uni Link Loss\s+(?P<loss>\S+)%(\s+\((?P<anomalous>Anomalous)\))?$')
+
+        # Appl spec Uni Link Loss 0.899997% (Anomalous)
+        p49 = re.compile(r'^Appl spec Uni Link Loss\s+(?P<loss>\S+)%(\s+\((?P<anomalous>Anomalous)\))?$')
 
         in_extended_affinity = False
         in_include_all = False
@@ -836,23 +850,19 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                 group = m.groupdict()
                 sr_dict["spf"] = True if group["spf"] else False
                 sr_dict["strict_spf"] = True if group["strict_spf"] else False
-                sr_dict["algorithms"] = []
-                sr_dict["algorithms"].append(int(group["flex_id"]))
-                lsp_dict["flex_algo"][int(group["flex_id"])]["segment_routing"] = True
+                sr_dict["algorithms"] = set()
+                sr_dict["algorithms"].add(int(group["flex_id"]))
                 continue
             
             # Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                sr_dict["algorithms"].append(int(group["flex_id_1"]))
-                lsp_dict["flex_algo"][int(group["flex_id_1"])]["segment_routing"] = True
+                sr_dict["algorithms"].add(int(group["flex_id_1"]))
                 if group["flex_id_2"]:
-                    sr_dict["algorithms"].append(int(group["flex_id_2"]))
-                    lsp_dict["flex_algo"][int(group["flex_id_2"])]["segment_routing"] = True
+                    sr_dict["algorithms"].add(int(group["flex_id_2"]))
                 if group["flex_id_3"]:
-                    sr_dict["algorithms"].append(int(group["flex_id_3"]))
-                    lsp_dict["flex_algo"][int(group["flex_id_3"])]["segment_routing"] = True
+                    sr_dict["algorithms"].add(int(group["flex_id_3"]))
                 continue
 
             # Node-MSD 
@@ -952,7 +962,7 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                 if group["algo"]:
                     prefix_sid_dict["algorithm"] = group["algo"]
                 if group["flex_algo"]:
-                    prefix_sid_dict["flex_algo"] = group["flex_algo"]
+                    prefix_sid_dict["flex_algo"] = int(group["flex_algo"])
                 flags =  {
                     "r_flag": group["r_flag"] == "1",
                     "n_flag": group["n_flag"] == "1",
@@ -1127,6 +1137,32 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                 flex_algo_dict["include_all"] = []
                 continue
 
+            # Uni Link Loss 0.799998% 
+            # Uni Link Loss 0.799998% (Anomalous)    
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                is_dict["uni_link_loss"] = {
+                    "percent": group["loss"],
+                    "anomalous": False
+                }
+                if group["anomalous"]:
+                    is_dict["uni_link_loss"]["anomalous"] = True
+                continue 
+
+            # Appl spec Uni Link Loss 0.899997% (Anomalous)
+            # Appl spec Uni Link Loss 0.899997%
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                standard_app_dict["appl_spec_uni_link_loss"] = {
+                    "percent": group["loss"],
+                    "anomalous": False
+                }
+                if group["anomalous"]:
+                    standard_app_dict["appl_spec_uni_link_loss"]["anomalous"] = True
+                continue 
+            
         return result_dict
 
 class ShowIsisDatabase(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):
@@ -3131,3 +3167,138 @@ class ShowIsisNodeLevel(ShowIsisNodeLevelSchema):
                 continue
                 
         return ret_dict
+
+
+class ShowIsisNodeSummarySchema(MetaParser):
+    """
+    Schema for show isis node summary
+    """
+    schema = {
+       'tag' :{
+          Any():{
+            'level': {
+               Any() :{
+                 'switch':list
+               },
+            },
+         },
+      },
+   }
+  
+class ShowIsisNodeSummary(ShowIsisNodeSummarySchema):
+    """ Parser for show isis node summary"""
+
+    cli_command = 'show isis node summary'
+    
+    def cli(self, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # Tag nSVL-1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # ISIS level-1 node information for sw.F87A4137BE0.00
+        # ISIS level-1 node information for sw.F87A4137BE0.01
+        p2 = re.compile(r'^ISIS level-(?P<level>\d+)\s+node information for\s+(?P<switch>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Tag nSVL-1:
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{}).setdefault(groups['tag'],{})
+                continue
+
+            # ISIS level-1 node information for sw.F87A4137BE0.00
+            # ISIS level-1 node information for sw.F87A4137BE0.01
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                switch_list = root_dict.setdefault('level', {}).setdefault(group['level'], {}).setdefault('switch', [])
+                switch_list.append(group['switch'])
+                continue
+                
+        return ret_dict       
+
+
+class ShowIsisTopologyLevelSchema(MetaParser):
+    """
+    Schema for show isis topology {level}
+    """
+    schema = {
+       'tag' :{
+          Any():{
+            'level': {
+                Any() :{
+                   'system_id':{
+                       Any():{
+                         Optional('metric') : int,
+                         Optional('next_hop') :str,
+                         Optional('interface'):str,
+                         Optional('snpa'): str
+                      },
+                  },
+              },
+           },
+        },
+    },
+}  
+
+class ShowIsisTopologyLevel(ShowIsisTopologyLevelSchema):
+    """ Parser for show  isis topology {level}"""
+
+    cli_command = 'show isis topology {level}'
+    
+    def cli(self,level,output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command.format(level=level))
+        
+        # initial variables
+        ret_dict = {}
+
+        # Tag nSVL-1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # IS-IS TID 0 paths to level-2 routers
+        p2 = re.compile('^.+paths to level-(?P<level>\d).+$')
+
+        # System Id            Metric     Next-Hop             Interface   SNPA
+        # sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
+        p3 = re.compile('(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+)\s+(?P<snpa>[\w\d\.]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{},).setdefault((group['tag']),{})
+                continue
+
+            # IS-IS TID 0 paths to level-2 routers
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict1 = root_dict.setdefault('level',{}).setdefault((group['level']),{})
+                continue
+
+            # System Id            Metric     Next-Hop             Interface   SNPA
+            # sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                system_id_dict = root_dict1.setdefault('system_id',{}).setdefault(group['system_id'],{})
+                system_id_dict['metric'] = int(group['metric'])
+                system_id_dict['next_hop'] = (group['next_hop'])
+                system_id_dict['interface']= (group['interface'])
+                system_id_dict['snpa']= (group['snpa'])
+                continue   
+                
+        return ret_dict
+

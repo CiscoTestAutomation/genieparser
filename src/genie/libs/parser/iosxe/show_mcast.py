@@ -85,6 +85,8 @@ class ShowIpMrouteSchema(MetaParser):
                                                     {Optional('rpf_nbr'): str,
                                                      Optional('rpf_info'): str,
                                                      Optional('state'): str,
+                                                     Optional('iif_lisp_rloc'): str,
+                                                     Optional('iif_lisp_group'): str,
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
@@ -100,6 +102,22 @@ class ShowIpMrouteSchema(MetaParser):
                                                      Optional('vxlan_version'): str,
                                                      Optional('vxlan_vni'): str,
                                                      Optional('vxlan_nxthop'): str,
+                                                     Optional('lisp_join_sender_list'):
+                                                        {Any():
+                                                            {'uptime': str,
+                                                             'expire': str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                             Optional('extranet_rx_vrf_list'):
+                                                {Any():
+                                                    {'e_src':str,
+                                                     'e_grp':str,
+                                                     'e_uptime':str,
+                                                     'e_expire':str,
+                                                     'e_oif_count':str,
+                                                     'e_flags':str,
                                                     },
                                                 },
                                             },
@@ -182,9 +200,11 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
         # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
+        # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
         p3 = re.compile(r'^Incoming +interface:'
                        ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
                        ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
+                       '(\s*,\s+LISP:\s\[(?P<iif_lisp_rloc>[\d\.]+)\,\s(?P<iif_lisp_group>[\d\.]+)\])?'
                        '(, *(?P<status>.*))?$') 
                        
         # Incoming interface:Tunnel5
@@ -211,6 +231,18 @@ class ShowIpMroute(ShowIpMrouteSchema):
                             '(?P<expire>[\w\:]+)(\,\s+)?'
                             '(Pkts\:(?P<pkts>\w+))?(\,\s+)?'
                             '(flags\:\s+(?P<flags>\w+)?$|(,\s+flags\:)?$)')
+        # 100.11.11.11, 2d22h/00:02:36
+        p5_1 = re.compile(r'^\s*(?P<lisp_js_addr>[0-9\.]+)\,\s*'
+                            '(?P<lisp_js_uptime>[\w\:]+)\/(?P<lisp_js_expire>[\w\:]+)$')
+        # Extranet receivers in vrf internet:
+        p7 = re.compile(r'^Extranet receivers in vrf (?P<extranet_vrf>[a-zA-Z]+)\:\s*$')
+        # (192.168.1.3, 232.64.64.1), 21:38:05/00:03:25, OIF count: 1, flags: sTpl
+        p8 = re.compile(r'^\((?P<e_src>[\d\.\*]+)\,(\s+)?'
+                              '(?P<e_grp>[\d\.]+)\)\,(\s+)?'
+                              '(?P<e_uptime>[\w\:]+)\/'
+                              '(?P<e_expire>[\w\:]+)\,(\s+)?'
+                              '(OIF count:\s(?P<e_oif_count>\d+))\,(\s+)?'
+                              '(flags: (?P<e_flags>[\w]+))(\s+)?$')
         for line in out.splitlines():
             line = line.strip()
 
@@ -251,6 +283,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 multicast_group = m.groupdict()['multicast_group']
                 ### initiate index value to zero for each S,G pair for multiple OG interfaces
                 idx=0
+                previous_intf = ""
 
 
                 mroute_data.setdefault('multicast_group',{})
@@ -281,6 +314,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
             # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
             # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
+            # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -302,6 +336,9 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 ing_intf_dict['rpf_nbr'] = rpf_nbr
                 if rpf_info:
                     ing_intf_dict['rpf_info'] = rpf_info.lower()
+                if m.groupdict()['iif_lisp_rloc']:
+                    sub_dict['incoming_interface_list'][incoming_interface]['iif_lisp_rloc'] = m.groupdict()['iif_lisp_rloc']
+                    sub_dict['incoming_interface_list'][incoming_interface]['iif_lisp_group'] = m.groupdict()['iif_lisp_group']
                 continue
 
             # Incoming interface:Tunnel5
@@ -350,6 +387,15 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     outgoing = True
                 continue
 
+            # 100.11.11.11, 2d22h/00:02:36
+            m = p5_1.match(line)
+            if m:
+                r = m.groupdict()
+                lisp_join_sender_addr = r['lisp_js_addr']
+                out_intf_dict.setdefault('lisp_join_sender_list',{}).setdefault(lisp_join_sender_addr,{})
+                out_intf_dict['lisp_join_sender_list'][lisp_join_sender_addr]['uptime'] = r['lisp_js_uptime']
+                out_intf_dict['lisp_join_sender_list'][lisp_join_sender_addr]['expire'] = r['lisp_js_expire']
+                continue
             # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
             # Vlan5, Forward/Dense, 00:04:35/00:02:30
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
@@ -366,10 +412,12 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
                 egress_interface = m.groupdict()['outgoing_interface']
                 lisp_mcast_source = m.groupdict()['lisp_mcast_source']
-                if idx:
+                if egress_interface == previous_intf:
+                    idx+=1
                     outgoing_interface='{}-{}'.format(m.groupdict()['outgoing_interface'],idx )
                 else:
                     outgoing_interface=egress_interface
+                    previous_intf = egress_interface
 
                 out_intf_dict = sub_dict.setdefault('outgoing_interface_list',{}).setdefault(outgoing_interface,{})
                 sub_dict['outgoing_interface_list'][outgoing_interface]['uptime'] =  m.groupdict()['uptime']
@@ -390,8 +438,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     if m.groupdict()['vxlan_vni']:
                         sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_vni'] = m.groupdict()['vxlan_vni']
                     if m.groupdict()['vxlan_nxthop']:
-                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']
-                idx+=1    
+                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']   
                 continue
                 
             # Bidir-Upstream: Lspvif52, RPF nbr: 1.1.1.1
@@ -404,6 +451,24 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 sub_dict['upstream_interface'] = {}
                 sub_dict['upstream_interface'][upstream_interface]={}
                 sub_dict['upstream_interface'][upstream_interface]['rpf_nbr']=r['rpf_nbr']
+                continue
+            # Extranet receivers in vrf internet:
+            m = p7.match(line)
+            if m:
+                r = m.groupdict()
+                extranet_vrf = r['extranet_vrf']
+                sub_dict.setdefault('extranet_rx_vrf_list',{}).setdefault(extranet_vrf,{})
+                continue
+            # (192.168.1.3, 232.64.64.1), 21:38:05/00:03:25, OIF count: 1, flags: sTpl
+            m = p8.match(line)
+            if m:
+                r = m.groupdict()
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_src'] = r['e_src']
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_grp'] = r['e_grp']
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_uptime'] = r['e_uptime']
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_expire'] = r['e_expire']
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_oif_count'] = r['e_oif_count']
+                sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_flags'] = r['e_flags']
                 continue
 
         return mroute_dict

@@ -8,7 +8,7 @@ expected_output = {
         }
     }, 
     'interface': {
-        'Gi1/0/4': {
+        'GigabitEthernet1/0/4': {
             'admin_state': 'auto', 
             'type': 'SP', 
             'operating_state': 'on', 
@@ -17,7 +17,7 @@ expected_output = {
             'class': '1', 
             'device': 'Ieee PD'
         }, 
-        'Gi1/0/15': {
+        'GigabitEthernet1/0/15': {
             'admin_state': 'auto', 
             'type': 'SS', 
             'operating_state': 'on,on', 
@@ -26,7 +26,7 @@ expected_output = {
             'class': '6', 
             'device': 'Ieee PD'
         }, 
-        'Gi1/0/23': {
+        'GigabitEthernet1/0/23': {
             'admin_state': 'auto', 
             'type': 'DS', 
             'operating_state': 'on,on', 

@@ -1,0 +1,1 @@
+ptp mode e2etransparent

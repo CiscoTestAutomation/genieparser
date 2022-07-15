@@ -1,0 +1,20 @@
+Vlan 20
+---------
+        IGMPSN Enabled  : On
+        PIMSN Enabled   : Off
+        Flood Mode      : Off
+        Oper State      : Up
+        STP TCN Flood   : Off
+        Routing Enabled : Off
+        PIM Enabled     : Off
+        PVLAN           : No
+        In Retry        : 0x0
+        CCK Epoch       : 0xfe
+        IOSD Flood Mode : Off
+        EVPN Proxy Enabled : On
+        L3mcast Adj      :
+        Mrouter PortQ   :
+        nve1.VNI60020(0x200000071)
+        Flood PortQ     :
+        TwentyFiveGigE1/0/11
+        REP RI handle   : 0x7fe778ecc768

@@ -1,0 +1,37 @@
+Show isis database verbose
+Tag 1:
+
+IS-IS Level-1 LSP r1.00-00
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+r1.00-00            * 0x00000009   0x423A                1194/*         0/0/0  (1)
+  Area Address: 49
+  NLPID:        0xCC 0x8E 
+  Topology:     IPv4 (0x0) 
+                IPv6 (0x2) 
+  Router ID:    11.11.11.11
+  Router CAP:   11.11.11.11, D:0, S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+    Node-MSD 
+      MSD: 16
+    Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+  Hostname: r1
+Metric: 120        IS-Extended SR1.00
+    Adjacency SID Value:16 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Interface IP Address: 44.1.1.2
+    Neighbor IP Address: 44.1.1.1
+    Uni Link Delay(Avg.) A-bit:0 Value:50
+    Uni Link Delay(Min/Max) A-bit:0 Min:50 Max:50
+    Uni Link Delay(Var.) Value:0
+    Uni Link Loss 0.799998% (Anomalous)
+    Admin. Weight: 120
+    Physical LINK BW: 10000 kbits/sec
+    ASLA: L flag: 0, SA-Length 1, UDA-Length 0
+    Standard Applications:  FLEX-ALGO
+             Bit mask:  0x10
+     Appl spec Uni Link Loss 0.899997% 
+     Appl spec Ext Admin Group:
+        0x00000000 0x00000000 0x00000000 0x00000000
+        0x00400000
+     Appl spec Uni Link Delay(Min/Max) A-bit:0 Min:50 Max:50

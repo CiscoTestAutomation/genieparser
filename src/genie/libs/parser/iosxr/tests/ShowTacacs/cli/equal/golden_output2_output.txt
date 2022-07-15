@@ -1,0 +1,5 @@
+Mon Jun 28 09:38:20.706 MEST
+
+Server: 127.0.0.100/24 opens=60 closes=60 aborts=0 errors=0
+        packets in=63 packets out=63
+        status=up single-connect=false family=IPv4

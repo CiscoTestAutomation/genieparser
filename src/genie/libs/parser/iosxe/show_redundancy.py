@@ -3,6 +3,7 @@ IOSXE Parsers for the following show commands:
     * show redundancy switchover history
     * show redundancy application group {group_id}
     * show redundancy application group all
+    * show redundancy rpr
 """
 
 import re
@@ -727,3 +728,93 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                 continue
 
         return ret_dict
+
+
+class ShowRedundancyrprSchema(MetaParser):
+    """Schema for show redundancy rpr """
+    schema = {
+        'switch':{
+            Any():{ 
+                'slot': {
+                    Any(): {
+                        'Current_Software_State' : str,
+                        Optional('Uptime_in_current_state') : str,
+                        Optional('Image_Version') : str,
+                        Optional('BOOT') : str,
+                    },
+                },
+            },
+        },
+    }
+
+    
+class ShowRedundancyrpr(ShowRedundancyrprSchema):
+    """Parser for show redundancy rpr"""
+
+    cli_command = 'show redundancy rpr'
+    
+    #Switch#sh red rpr
+    #My Switch Id = 1
+    #Peer Switch Id = 2
+    #Last switchover reason = user forced
+    #Configured Redundancy Mode = sso
+    #Operating Redundancy Mode = sso
+    #Switch 1 Slot 3 Processor Information:
+    #---------------------------------------------
+    #Current Software State = ACTIVE
+    #Uptime in current state = 1 day, 4 hours, 55 minutes
+    #Image Version = Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.9.20220119:162717 [BLD_POLARIS_DEV_LATEST_20220119_153503:/nobackup/mcpre/s2c-build-ws 101]
+    #Copyright (c) 1986-2022 by Cisco Systems, Inc.
+    #Compiled Wed 19-Jan-22 08:27 by mcpre
+    #BOOT = bootflash:packages.conf;
+    #Switch 1 Slot 4 Processor Information:
+    #---------------------------------------------
+    #Current Software State = Not_Reachable
+    #Uptime in current state = 1 day, 4 hours, 55 minutes
+    #Image Version =
+    #BOOT =
+    #Switch 2 Slot 3 Processor Information:
+    #---------------------------------------------
+    #Current Software State = STANDBY HOT
+    #Uptime in current state = 1 day, 4 hours, 26 minutes
+    #Image Version = Cisco IOS Software [Cupertino], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.9.20220119:162717 [BLD_POLARIS_DEV_LATEST_20220119_153503:/nobackup/mcpre/s2c-build-ws 101]
+    #Copyright (c) 1986-2022 by Cisco Systems, Inc.
+    #Compiled Wed 19-Jan-22 08:27 by mcpre
+    #BOOT = bootflash:packages.conf;
+    #Switch 2 Slot 4 Processor Information:
+    #---------------------------------------------
+    #Current Software State = Not_Reachable
+    #Uptime in current state = 1 day, 4 hours, 26 minutes
+    #Image Version =
+    #BOOT =
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        res={}
+        res['switch']={}
+        
+        #Switch 1 Slot 3 Processor Information:
+        #---------------------------------------------
+    
+        p=re.compile(r'Switch\s+(?P<switch_no>\d+)\s+Slot\s+(?P<slot>\d+)\s')
+        
+        #Current Software State = ACTIVE
+        
+        p2=re.compile(r'Current\sSoftware\sState\s+\S+\s([a-zA-Z _]+)')
+        for line in out.splitlines():
+            line = line.strip()
+            m1=p.match(line)
+            if m1:
+                switch_no=m1.groupdict()['switch_no']
+                slot=m1.groupdict()['slot']
+                if not switch_no in res['switch']:
+                    res['switch'][switch_no]={}
+                    res['switch'][switch_no]['slot']={}
+                res['switch'][switch_no]['slot'][slot]={}
+            m2=p2.match(line)
+            if m2:             
+                res['switch'][switch_no]['slot'][slot]['Current_Software_State']=m2.group(1)
+        return res

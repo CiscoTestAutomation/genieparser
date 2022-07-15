@@ -40,8 +40,7 @@ expected_output = {
                                 ],
                                 "include_all": [
                                     "0x00000000 0x00000000 0x00000002"
-                                ],
-                                "segment_routing": True
+                                ]
                             }
                         },
                         "segment_routing": {
@@ -53,9 +52,9 @@ expected_output = {
                             "srlb_range": 1000,
                             "spf": True,
                             "strict_spf": True,
-                            "algorithms": [
+                            "algorithms": {
                                 128
-                            ]
+                            }
                         },
                         "node_msd": 16,
                         "hostname": "r1",
@@ -141,6 +140,17 @@ expected_output = {
                                 "prefix_sid_index": {
                                     11: {
                                         "algorithm": "SPF",
+                                        "flags": {
+                                            "r_flag": False,
+                                            "n_flag": True,
+                                            "p_flag": False,
+                                            "e_flag": False,
+                                            "v_flag": False,
+                                            "l_flag": False
+                                        }
+                                    },
+                                    101: {
+                                        "flex_algo": 128,
                                         "flags": {
                                             "r_flag": False,
                                             "n_flag": True,
