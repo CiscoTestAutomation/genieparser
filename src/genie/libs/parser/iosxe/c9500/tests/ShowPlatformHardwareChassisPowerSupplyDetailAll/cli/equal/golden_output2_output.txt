@@ -1,0 +1,41 @@
+show platform hardware chassis power-supply detail all
+PS1:
+Input Voltage   :       3.0000 V
+Input Current   :       0.0000 A
+Input Power     :       0.0000 W
+Output Voltage  :       0.0000 V
+Output Current  :       0.0000 A
+Output power    :       0.0000 W
+Temperature1    :      25.7500 C
+Temperature2    :      22.7500 C
+Temperature3    :      25.7500 C
+PS2:
+Input Voltage   :     227.5000 V
+Input Current   :       2.1094 A
+Input Power     :     474.0000 W
+Output Voltage  :      12.0459 V
+Output Current  :      36.0625 A
+Output power    :     434.5000 W
+Temperature1    :      22.7500 C
+Temperature2    :      24.2500 C
+Temperature3    :      22.2500 C
+PS3:
+Input Voltage   :       3.5000 V
+Input Current   :       0.0000 A
+Input Power     :       0.0000 W
+Output Voltage  :       0.0000 V
+Output Current  :       0.0000 A
+Output power    :       0.0000 W
+Temperature1    :      25.0000 C
+Temperature2    :      22.5000 C
+Temperature3    :      25.0000 C
+PS4:
+Input Voltage   :     227.0000 V
+Input Current   :       1.9980 A
+Input Power     :     448.0000 W
+Output Voltage  :      12.0488 V
+Output Current  :      33.8750 A
+Output power    :     408.0000 W
+Temperature1    :      22.7500 C
+Temperature2    :      24.0000 C
+Temperature3    :      22.0000 C

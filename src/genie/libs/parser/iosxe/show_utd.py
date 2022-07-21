@@ -2681,3 +2681,261 @@ class ShowUtdEngineStandardStatisticsDaqAll(ShowUtdEngineStandardStatisticsDaqAl
                 daq_cp_counters_dict['process_restart_notifications']=int(groups['process_restart_notifications'])
                 continue
         return ret_dict
+
+# =========================================================
+#  Schema for 'show utd engine standard statistics url'
+# =========================================================
+class ShowUtdEngineStandardStatisticsUrlSchema(MetaParser):
+    ''' show utd engine standard statistics url'''
+    schema = {
+        'utm_preprocessor_urlf_statistics': {
+            'url_filter_request_sent': str,
+            'url_filter_response_recvd': str,
+            'blacklist_hit_count': str,
+            'whitelist_hit_count': str,
+            'reputation': {
+                'reputation_lookup_count': str,
+                'reputation_act_block': str,
+                'reputation_act_pass': str,
+                'reputation_act_def_pass': str,
+                'reputation_act_def_block': str,
+                'reputation_score_none': str,
+                'reputation_score_out_range': str
+            },
+            'category': {
+                'category_lookup_count': str,
+                'category_act_block': str,
+                'category_act_pass': str,
+                'category_act_def_pass': str,
+                'category_act_def_block': str,
+                'category_none': str,
+                'category_out_range': str
+            }
+        }
+    }
+
+
+# ========================================================
+#  Parser for 'show utd engine standard statistics url'
+# ========================================================
+class ShowUtdEngineStandardStatisticsUrl(ShowUtdEngineStandardStatisticsUrlSchema):
+
+    """ Parser for "show utd engine standard statistics url" """
+
+    cli_command = "show utd engine standard statistics url"
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        utm_data_dict = {}
+
+        # URL Filter Requests Sent: 0 0
+        p1 = re.compile(r'^URL\sFilter\sRequests\sSent:\s+(?P<url_filter_request_sent>\d+\s+\d+)$')
+
+        # URL Filter Response Received: 0 0
+        p2 = re.compile(r'^URL\sFilter\sResponse\sReceived:\s+(?P<url_filter_response_recvd>\d+\s+\d+)$')
+
+        # Blacklist Hit Count: 0 0
+        p3 = re.compile(r'^Blacklist\sHit\sCount:\s+(?P<blacklist_hit_count>\d+\s+\d+)$')
+
+        # Whitelist Hit Count: 0 0
+        p4 = re.compile(r'^Whitelist\sHit\sCount:\s+(?P<whitelist_hit_count>\d+\s+\d+)$')
+
+        # Reputation Lookup Count: 0 0
+        p5 = re.compile(r'^Reputation\sLookup\sCount:\s+(?P<reputation_lookup_count>\d+\s+\d+)$')
+
+        # Reputation Action Block: 0 0
+        p6 = re.compile(r'^Reputation\sAction\sBlock:\s+(?P<reputation_act_block>\d+\s+\d+)$')
+
+        #  Reputation Action Pass: 0 0
+        p7 = re.compile(r'^Reputation\sAction\sPass:\s+(?P<reputation_act_pass>\d+\s+\d+)$')
+
+        # Reputation Action Default Pass: 0 0
+        p8 = re.compile(r'^Reputation\sAction\sDefault\sPass:\s+(?P<reputation_act_def_pass>\d+\s+\d+)$')
+
+        #  Reputation Action Default Block: 0 0
+        p9 = re.compile(r'^Reputation\sAction\sDefault\sBlock:\s+(?P<reputation_act_def_block>\d+\s+\d+)$')
+
+        # Reputation Score None: 0 0
+        p10 = re.compile(r'^Reputation\sScore\sNone:\s+(?P<reputation_score_none>\d+\s+\d+)$')
+
+        # Reputation Score Out of Range: 0 0
+        p11 = re.compile(r'^Reputation\sScore\sOut\sof\sRange:\s+(?P<reputation_score_out_range>\d+\s+\d+)$')
+
+        # Category Lookup Count: 0 0
+        p12 = re.compile(r'^Category\sLookup\sCount:\s+(?P<category_lookup_count>\d+\s+\d+)$')
+
+        # Category Action Block: 0 0
+        p13 = re.compile(r'^Category\sAction\sBlock:\s+(?P<category_act_block>\d+\s+\d+)$')
+
+        # Category Action Pass: 0 0
+        p14 = re.compile(r'^Category\sAction\sPass:\s+(?P<category_act_pass>\d+\s+\d+)$')
+
+        # Category Action Default Pass: 0 0
+        p15 = re.compile(r'^Category\sAction\sDefault\sPass:\s+(?P<category_act_def_pass>\d+\s+\d+)$')
+
+        # Category Action Default Block: 0 0
+        p16 = re.compile(r'^Category\sAction\sDefault\sBlock:\s+(?P<category_act_def_block>\d+\s+\d+)$')
+
+        # Category None: 0 0
+        p17 = re.compile(r'^Category\sNone:\s+(?P<category_none>\d+\s+\d+)$')
+
+        # Category Out of Range: 0 0
+        p18 = re.compile(r'^Category\sOut\sof\sRange:\s+(?P<category_out_range>\d+\s+\d+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # URL Filter Requests Sent: 0 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                url_filter_request_sent = group['url_filter_request_sent']
+                utm_dict = utm_data_dict.setdefault('utm_preprocessor_urlf_statistics', {})
+                utm_dict.setdefault('url_filter_request_sent', url_filter_request_sent)
+                continue
+            
+            # URL Filter Response Received: 0 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                url_filter_response_recvd = group['url_filter_response_recvd']
+                utm_dict['url_filter_response_recvd'] = url_filter_response_recvd
+                continue
+            
+            # Blacklist Hit Count: 0 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                blacklist_hit_count = group['blacklist_hit_count']
+                utm_dict['blacklist_hit_count'] = blacklist_hit_count
+                continue
+            
+            # Whitelist Hit Count: 0 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                whitelist_hit_count = group['whitelist_hit_count']
+                utm_dict['whitelist_hit_count'] = whitelist_hit_count
+                continue
+            
+            # Reputation Lookup Count: 0 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_dict = utm_dict.setdefault('reputation', {})
+                reputation_lookup_count = group['reputation_lookup_count']
+                reputation_dict['reputation_lookup_count'] = reputation_lookup_count
+                continue
+            
+            # Reputation Action Block: 0 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_act_block = group['reputation_act_block']
+                reputation_dict['reputation_act_block'] = reputation_act_block
+                continue
+            
+            # Reputation Action Pass: 0 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_act_pass = group['reputation_act_pass']
+                reputation_dict['reputation_act_pass'] = reputation_act_pass
+                continue
+            
+            # Reputation Action Default Pass: 0 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_act_def_pass = group['reputation_act_def_pass']
+                reputation_dict['reputation_act_def_pass'] = reputation_act_def_pass
+                continue
+            
+            # Reputation Action Default Block: 0 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_act_def_block = group['reputation_act_def_block']
+                reputation_dict['reputation_act_def_block'] = reputation_act_def_block
+                continue
+            
+            # Reputation Score None: 0 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_score_none = group['reputation_score_none']
+                reputation_dict['reputation_score_none'] = reputation_score_none
+                continue
+            
+            # Reputation Score Out of Range: 0 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                reputation_score_out_range = group['reputation_score_out_range']
+                reputation_dict['reputation_score_out_range'] = reputation_score_out_range
+                continue
+            
+            
+            # Category Lookup Count: 0 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                category_lookup_count = group['category_lookup_count']
+                category_dict = utm_dict.setdefault('category', {})
+                category_dict['category_lookup_count'] = category_lookup_count
+                continue
+            
+            # Category Action Block: 0 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                category_act_block = group['category_act_block']
+                category_dict['category_act_block'] = category_act_block
+                continue
+            
+            # Category Action Pass: 0 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                category_act_pass = group['category_act_pass']
+                category_dict['category_act_pass'] = category_act_pass
+                continue
+            
+            # Category Action Default Pass: 0 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                category_act_def_pass = group['category_act_def_pass']
+                category_dict['category_act_def_pass'] = category_act_def_pass
+                continue
+            
+            # Category Action Default Block: 0 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                category_act_def_block = group['category_act_def_block']
+                category_dict['category_act_def_block'] = category_act_def_block
+                continue
+            
+            # Category None: 0 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                category_none = group['category_none']
+                category_dict['category_none'] = category_none
+                continue
+            
+            # Category Out of Range: 0 0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                category_out_range = group['category_out_range']
+                category_dict['category_out_range'] = category_out_range
+                continue
+            
+        return utm_data_dict
+
