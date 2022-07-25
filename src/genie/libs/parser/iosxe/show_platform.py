@@ -479,7 +479,7 @@ class ShowVersion(ShowVersionSchema):
         p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
 
         # entservices   Type: Permanent
-        p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: +(?P<license_type>\S+)$')
+        p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: +(?P<license_type>.+)$')
 
         # AIR License Level: AIR DNA Advantage
         p16_2 = re.compile(r'^\s*AIR [Ll]icense +[Ll]evel\: +(?P<air_license_level>.+)$')
