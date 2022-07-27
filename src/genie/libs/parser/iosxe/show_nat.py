@@ -1,0 +1,964 @@
+'''show_nat.py
+
+IOSXE parser for the following show command:
+   * show nat64 translations
+   
+'''
+# Python
+import re
+
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
+class ShowNat64TranslationsSchema(MetaParser):
+    """Schema for show nat64 translations"""
+
+    schema = {
+        'index':{
+            Any():{
+                'proto': str,
+                'original_ipv4': str,                             
+                'translated_ipv6': str,
+                'translated_ipv4': str,
+                'original_ipv6': str,
+                Optional('created'): str,
+                Optional('last_used'): str,
+                Optional('timeout'): int,
+                Optional('left'): str,
+                Optional('use_count'): int,
+                Optional('id'): int,
+                Optional('parent_id'): str,
+                Optional('config_id'): int                        
+            },  
+        },
+        'total_no_of_translations': int
+    }
+  
+    
+class ShowNat64Translations(ShowNat64TranslationsSchema):
+    """
+    show nat64 translations
+    show nat64 translations entry-type bind {all/static/dynamic}
+    show nat64 translations {protocol/port} {tcp/udp/icmp/port_number}
+    show nat64 translations {v4/v6} {original/translated} {Ipv4 adddress/Ipv6 address}
+    show nat64 translations time created {time_stamp}
+    show nat64 translations entry-type {session}
+    show nat64 translations {verbose}
+    """
+
+    cli_command = [
+                    'show nat64 translations',
+                    'show nat64 translations entry-type bind {bind_type}',
+                    'show nat64 translations {pro_port_type} {pro_port}',
+                    'show nat64 translations {ip_type} {address_type} {address}',
+                    'show nat64 translations time created {time_stamp}',
+                    'show nat64 translations entry-type {session}',
+                    'show nat64 translations {verbose}'                    
+                  ]
+    
+    def cli(self, 
+            bind_type="", 
+            pro_port_type="", 
+            pro_port="", 
+            ip_type="", 
+            address_type="", 
+            address="", 
+            time_stamp="",  
+            session="", 
+            verbose="", 
+            output=None):
+        
+        if output is None:
+            if bind_type:  
+                cmd = self.cli_command[1].format(bind_type=bind_type)
+            elif pro_port_type:
+                cmd = self.cli_command[2].format(pro_port_type=pro_port_type,pro_port=pro_port)
+            elif ip_type:
+                cmd = self.cli_command[3].format(ip_type=ip_type,address_type=address_type,address=address)
+            elif time_stamp:
+                cmd = self.cli_command[4].format(time_stamp=time_stamp)
+            elif session:
+                cmd = self.cli_command[5].format(session=session)
+            elif verbose:
+                cmd = self.cli_command[6].format(verbose=verbose)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        
+        index = 1
+        index_dict = {}
+
+        # Proto Original IPv4   Translated IPv4
+        # icmp  1.1.1.2:0       [1001::101:102]:0
+        p1 = re.compile(r'^(?P<proto>\S+)\s+(?P<original_ipv4>\S+)\s+(?P<translated_ipv4>\S+)$')
+        
+        # Translated IPv6 Original IPv6
+        # 5.5.5.5:0  [2009::2]:0
+        p2 = re.compile(r'^(?P<translated_ipv6>\S+)\s+(?P<original_ipv6>\S+)$')
+        
+        # created: 3 Jun 2022 16:23:45, last-used: 3 Jun 2022 16:23:45,
+        p3 = re.compile(r"^created+: +(?P<created>(.*))\, +last-used+: +(?P<last_used>(.*))$")
+        
+        # timeout: 300000, left 00:00:02,
+        p4 = re.compile(r"^timeout+: +(?P<timeout>\d+)\, +left +(?P<left>(.*))$")
+        
+        #use_count: 0, id: 44, parent-id(src/dst): 18/27
+        p5 = re.compile(r"^use_count+: +(?P<use_count>\d+)\, +id+: +(?P<id>\d+)\,"
+                        r" +parent-id\(src/dst\)+: +(?P<parent_id>\d+/\d+)$")
+        # use_count: 1, config-id: 18
+        p6 = re.compile(r"^use_count+: +(?P<use_count>\d+)\, +config-id+: +(?P<config_id>\d+)$")
+        
+        # Total number of translations: 3
+        p7 = re.compile(r'^Total number of translations+: +(?P<total_no_of_translations>\d+)$')
+      
+        for line in output.splitlines(): 
+            line = line.strip()   
+            
+            # Proto Original IPv4   Translated IPv4
+            # icmp  1.1.1.2:0       [1001::101:102]:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['proto'] = group['proto']
+                index_dict['original_ipv4'] = group['original_ipv4']
+                index_dict['translated_ipv4'] = group['translated_ipv4']
+                continue
+            
+            # Translated IPv6 Original IPv6
+            # 5.5.5.5:0  [2009::2]:0     
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict['translated_ipv6'] = group['translated_ipv6']
+                index_dict['original_ipv6'] = group['original_ipv6']
+                index += 1
+                continue
+                
+            # created: 3 Jun 2022 16:23:45, last-used: 3 Jun 2022 16:23:45,
+            m = p3.match(line)
+            if m:
+                index_dict['created'] = m.groupdict()['created']
+                index_dict['last_used'] = m.groupdict()['last_used']
+                continue
+            
+            # timeout: 300000, left 00:00:02,
+            m = p4.match(line)
+            if m:
+                index_dict['timeout'] = int(m.groupdict()['timeout'])
+                index_dict['left'] = m.groupdict()['left']
+                continue
+            
+            #use_count: 0, id: 44, parent-id(src/dst): 18/27
+            m = p5.match(line)
+            if m:
+                index_dict['use_count'] = int(m.groupdict()['use_count'])
+                index_dict['id'] = int(m.groupdict()['id'])
+                index_dict['parent_id'] = m.groupdict()['parent_id']
+                continue
+            
+            # use_count: 1, config-id: 18
+            m = p6.match(line)
+            if m:
+                index_dict['use_count'] = int(m.groupdict()['use_count'])
+                index_dict['config_id'] = int(m.groupdict()['config_id'])
+                continue
+                            
+            # Total number of translations: 3
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_no_of_translations'] = int(group['total_no_of_translations'])
+                continue
+             
+        return ret_dict
+
+class ShowNat64TimeoutsSchema(MetaParser):
+    """show nat64 timeouts"""
+
+    schema = {
+        'nat64_timeout': {
+            Any(): {
+                'cli_cfg': str,
+                'seconds': int,
+                'uses_all': str
+            },
+        }
+    }
+
+class ShowNat64Timeouts(ShowNat64TimeoutsSchema):
+    """ Parser for
+       show nat64 timeouts
+    """
+
+    cli_command = 'show nat64 timeouts'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        ret_dict = {}
+        
+        # Seconds CLI Cfg Uses 'All'
+        p1 = re.compile(r'^Seconds +CLI +(?P<cfg>(\w+)) +Uses \'All\'$')
+        
+        # all flows 
+        # udp
+        # tcp
+        # tcp-transient
+        # icmp
+        # bind
+        p2 = re.compile(r'^(?P<all_flows>(\D+))$')
+        
+        # 86400 FALSE FALSE
+        # 300 FALSE TRUE
+        # 7200 FALSE TRUE
+        # 240 FALSE FALSE
+        # 60 FALSE TRUE
+        # 3600 FALSE TRUE
+        p3 = re.compile(r'(?P<seconds>(\d+)) +(?P<cli_cfg>(\w+)) +(?P<uses_all>(\w+))')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Seconds CLI Cfg Uses 'All'
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict = ret_dict.setdefault('nat64_timeout', {})
+                continue
+            
+            # all flows 
+            # udp
+            # tcp
+            # tcp-transient
+            # icmp
+            # bind
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                nat_dict = local_dict.setdefault(group['all_flows'], {})
+                continue
+            
+            # 86400 FALSE FALSE
+            # 300 FALSE TRUE
+            # 7200 FALSE TRUE
+            # 240 FALSE FALSE
+            # 60 FALSE TRUE
+            # 3600 FALSE TRUE
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nat_dict['seconds'] = int(group['seconds'])
+                nat_dict['cli_cfg'] = group['cli_cfg']
+                nat_dict['uses_all'] = group['uses_all']
+                continue
+            
+        return ret_dict
+
+class ShowNat64StatisticsSchema(MetaParser):
+    """show nat64 statistics"""
+    
+    schema = {
+        'nat64_stats': {
+            Optional('active_sessions'): int,
+            Optional('active_translations'): {
+                'dynamic': int,
+                'extended': int,
+                'static': int,
+                'total_translations': int
+            },
+            Optional('dynamic_mapping_statistics'): {
+                'access_list': {
+                    Any(): {
+                        'pool': {
+                            Any(): {
+                                'allocated': int,
+                                'end_ip': str,
+                                'nat64_pool_name': str,
+                                'packet_count': int,
+                                'percent': int,
+                                'start_ip': str,
+                                'total_address': int
+                            }
+                        },
+                        'refcount': int
+                    }
+                }
+            },
+            Optional('expired_sessions'): int,
+            Optional('global_statistics'): {
+                'prefix': {
+                    Any(): {
+                        'packets_dropped': int,
+                        'packets_translated': {
+                            'v4_to_v6': int,
+                            'v6_to_v4': int
+                        }
+                    }
+                }
+            },
+            Optional('hits_misses'): {
+                'hit_pkts': int, 
+                'miss_pkts': int
+            },
+            Optional('interface_statistics'): {
+                Any(): {
+                    'stateful_prefix': {
+                        Any(): {
+                            'packets_dropped': int,
+                            'packets_translated': {
+                                'v4_to_v6': int,
+                                'v6_to_v4': int
+                            }
+                    },
+                    'ipv4': str,
+                    'ipv6': str
+                    }
+                }
+            },
+            Optional('nat64_enabled_interfaces'): int,
+            Optional('number_of_packets'): {
+                'cef_punted_pkts': int,
+                'cef_translated_pkts': int,
+                'dropped_pkts': int,
+                Optional('hits_misses'): {
+                    'hit_pkts': int,
+                    'miss_pkts': int
+                }
+            }
+        }
+    }
+       
+class ShowNat64Statistics(ShowNat64StatisticsSchema):
+    """ Parser for
+       show nat64 statistics
+       show nat64 statistics <global>
+       show nat64 statistics mapping <dynamic>
+       show nat64 statistics mapping dynamic acl <acl_name>
+       show nat64 statistics mapping dynamic pool <pool_name>
+    """
+
+    cli_command = [
+                    'show nat64 statistics',
+                    'show nat64 statistics {global_cmd}',
+                    'show nat64 statistics mapping {dynamic}',
+                    'show nat64 statistics mapping dynamic acl {acl_name}',
+                    'show nat64 statistics mapping dynamic pool {pool_name}',
+                  ]
+
+    def cli(self, global_cmd="", dynamic="", acl_name="", pool_name="", output=None):
+
+        if output is None:
+            if global_cmd:
+                cmd = self.cli_command[1].format(global_cmd=global_cmd)
+            elif dynamic:
+                cmd = self.cli_command[2].format(dynamic=dynamic)
+            elif acl_name:
+                cmd = self.cli_command[3].format(acl_name=acl_name)
+            elif pool_name:
+                cmd = self.cli_command[4].format(pool_name=pool_name)         
+            else:
+                cmd = self.cli_command[0]
+                
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        nat64_dict = {}
+        v4v6_dict = {}
+        int_dict = {}
+        pd_dict = {}
+        cef_dict = {}
+        state_dict = {}
+        
+        # Number of NAT64 enabled interfaces: 4
+        p1 = re.compile(r'^Number of NAT64 enabled interfaces\: +(?P<nat64_enabled_interfaces>(\d+))')
+        
+        # Packets translated (IPv4 -> IPv6): 5
+        p2 = re.compile(r'^Packets translated \(IPv4 \-\> IPv6\)\: +(?P<v4_to_v6>(\d+)$)')
+        
+        # Packets translated (IPv6 -> IPv4): 131495
+        p3 = re.compile(r'^Packets translated \(IPv6 \-\> IPv4\)\: +(?P<v6_to_v4>(\d+)$)')
+        
+        # Prefix: 64:FF9B::/96
+        p4 = re.compile(r'^Prefix\: +(?P<prefix>(\S+))')
+        
+        # Packets dropped: 0
+        p5 = re.compile(r'^Packets +dropped+\: +(?P<packets_dropped>\d+)')
+        
+        # TenGigabitEthernet5/0/12 (IPv4 not configured, IPv6 not configured):
+        p6 = re.compile(r'^(?P<interface>(\S+)) +\(IPv4 (?P<ipv4>(\D+)), +IPv6 (?P<ipv6>(\D+))+\)\:')
+        
+        # Stateful Prefix: 2010:1::/96
+        p7 = re.compile(r'^Stateful Prefix\: +(?P<stateful_prefix>(\S+))')
+        
+        # Total active translations: 2(1 static, 1 dynamic,1 extended)
+        p8 = re.compile(
+            r'^Total active translations+\: +(?P<total_translations>(\d))\(+(?P<static>(\d)) +static, +(?P<dynamic>(\d)) +dynamic,+(?P<extended>(\d)) +extended')
+        
+        # Active sessions: 0
+        p9 = re.compile(r'^Active sessions\: +(?P<active_sessions>(\d+))')
+        
+        # Number of expired entries: 0
+        p10 = re.compile(r'^Number of expired entries\: +(?P<expired_sessions>(\d+))')
+        
+        # Hits: 0 Misses: 0
+        p11 = re.compile(r'^Hits+\: +(?P<hit_pkts>(\d+))+\s+Misses+\: +(?P<miss_pkts>(\d+))')
+        
+        # access-list nat64_acl1 pool nat64_v4_pool refcount 0
+        p12 = re.compile(r'access-list +(?P<access_list>(\S+)) +pool +(?P<nat64_pool>(\S+)) +refcount +(?P<refcount>(\d+))')
+        
+        # pool nat64_v4_pool:
+        p13 = re.compile(r'pool +(?P<nat64_pool_name>(\S+))\:')
+        
+        # start 10.0.0.2 end 10.0.0.255
+        p14 = re.compile(r'^start (?P<start_ip>([0-9]{1,3}.){3}([0-9]{1,3})) +end +(?P<end_ip>([0-9]{1,3}.){3}([0-9]{1,3}))')
+        
+        # total addresses 254, allocated 0 (0%)
+        p15 = re.compile(
+            r'^total addresses +(?P<total_address>(\d+)), +allocated +(?P<allocated>(\d+)) +\(+(?P<percent>(\d+))+\%\)')
+        
+        # address exhaustion packet count 0
+        p16 = re.compile(r'address exhaustion packet count +(?P<packet_count>(\d+))')
+        
+        # CEF Translated: 0 CEF Punted packets: 0
+        p17 = re.compile(r'^CEF +Translated+\: +(?P<cef_translated_pkts>\d+) +CEF Punted packets+\: +(?P<cef_punted_pkts>\d+)')
+        
+        # Dropped: 3461156
+        p18 = re.compile(r'^Dropped+\: +(?P<dropped_pkts>\d+)')
+        
+        for line in output.splitlines():
+            line = line.strip()
+        
+            # Number of NAT64 enabled interfaces: 4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
+                hit_miss_dict = nat64_dict.setdefault('hits_misses', {})
+                nat64_dict['nat64_enabled_interfaces'] = int(group['nat64_enabled_interfaces'])
+                continue
+        
+            # Packets translated (IPv4 -> IPv6): 5
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                v4v6_dict['v4_to_v6'] = int(group['v4_to_v6'])
+                continue
+        
+            # Packets translated (IPv6 -> IPv4): 131495
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                v4v6_dict['v6_to_v4'] = int(group['v6_to_v4'])
+                continue
+        
+            # Prefix: 64:FF9B::/96
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
+                global_dict = nat64_dict.setdefault('global_statistics', {})
+                pre_dict = global_dict.setdefault('prefix', {})
+                prefix_dict = pre_dict.setdefault(group['prefix'], {})
+                v4v6_dict = prefix_dict.setdefault('packets_translated', {})
+                continue
+        
+            # Packets dropped: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if 'interface_statistics' not in nat64_dict.keys():
+                    prefix_dict['packets_dropped'] = int(group['packets_dropped'])
+                    continue
+                else:
+                    state_dict['packets_dropped'] = int(group['packets_dropped'])
+                    continue
+        
+            # TenGigabitEthernet5/0/12 (IPv4 not configured, IPv6 not configured):
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = nat64_dict.setdefault('interface_statistics', {})
+                int_dict = interface_dict.setdefault(str(group['interface']), {})
+                stateful_dict = int_dict.setdefault('stateful_prefix', {})
+                stateful_dict['ipv4'] = str(group['ipv4'])
+                stateful_dict['ipv6'] = str(group['ipv6'])
+                continue
+        
+            # Stateful Prefix: 2010:1::/96
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                state_dict = stateful_dict.setdefault(group['stateful_prefix'], {})
+                v4v6_dict = state_dict.setdefault('packets_translated', {})
+                continue
+        
+            # Total active translations: 2(1 static, 1 dynamic,1 extended)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
+                trans_dict = nat64_dict.setdefault('active_translations', {})
+                trans_dict['total_translations'] = int(group['total_translations'])
+                trans_dict['static'] = int(group['static'])
+                trans_dict['dynamic'] = int(group['dynamic'])
+                trans_dict['extended'] = int(group['extended'])
+                continue
+        
+            # Active sessions: 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict['active_sessions'] = int(group['active_sessions'])
+                continue
+        
+            # Number of expired entries: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict['expired_sessions'] = int(group['expired_sessions'])
+                continue
+        
+            # Hits: 0 Misses: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                hit_miss_dict['hit_pkts'] = int(group['hit_pkts'])
+                hit_miss_dict['miss_pkts'] = int(group['miss_pkts'])
+                continue
+        
+            # access-list nat64_acl1 pool nat64_v4_pool refcount 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
+                dyn_dict = nat64_dict.setdefault('dynamic_mapping_statistics', {})
+                dyn_acl_dict = dyn_dict.setdefault('access_list', {})
+                dynamic_dict = dyn_acl_dict.setdefault(group['access_list'], {})
+                dynamic_pool = dynamic_dict.setdefault('pool', {})
+                dyn_pool_dict = dynamic_pool.setdefault(group['nat64_pool'], {})
+                dynamic_dict['refcount'] = int(group['refcount'])
+                continue
+        
+            # pool nat64_v4_pool:
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_pool_dict['nat64_pool_name'] = group['nat64_pool_name']
+                continue
+        
+            # start 10.0.0.2 end 10.0.0.255
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_pool_dict['start_ip'] = group['start_ip']
+                dyn_pool_dict['end_ip'] = group['end_ip']
+                continue
+        
+            # total addresses 254, allocated 0 (0%)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_pool_dict['total_address'] = int(group['total_address'])
+                dyn_pool_dict['allocated'] = int(group['allocated'])
+                dyn_pool_dict['percent'] = int(group['percent'])
+                continue
+        
+            # address exhaustion packet count 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                dyn_pool_dict['packet_count'] = int(group['packet_count'])
+                continue
+        
+            # CEF Translated: 0 CEF Punted packets: 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                cef_dict = nat64_dict.setdefault('number_of_packets', {})
+                cef_dict['cef_translated_pkts'] = int(group['cef_translated_pkts'])
+                cef_dict['cef_punted_pkts'] = int(group['cef_punted_pkts'])
+                hit_miss_dict = cef_dict.setdefault('hits_misses', {})
+                continue
+        
+            # Dropped: 3461156
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                cef_dict['dropped_pkts'] = int(group['dropped_pkts'])
+                continue
+                        
+        return ret_dict
+
+class ShowNat64MappingsStaticAddressesSchema(MetaParser):
+    """show nat64 mappings static addresses"""
+    
+    schema = {
+        'nat64_mappings': {
+            'address': {
+                Any(): {
+                    'direction': str,
+                    'ref_count': int
+                }
+            }
+        }
+    }
+     
+class ShowNat64MappingsStaticAddresses(ShowNat64MappingsStaticAddressesSchema):
+    """ Parser for
+       show nat64 mappings static addresses
+       show nat64 mappings static addresses <ip_address>
+       show nat64 mappings static addresses <ipv6_address>
+    """
+
+    cli_command = [
+                    'show nat64 mappings static addresses',
+                    'show nat64 mappings static addresses {ip_address}',
+                    'show nat64 mappings static addresses {ipv6_address}'
+                  ]
+
+    def cli(self,  ip_address="", ipv6_address="", output=None):
+
+        if output is None:
+            if ip_address:
+                cmd = self.cli_command[1].format(ip_address=ip_address)
+            elif ipv6_address:
+                cmd = self.cli_command[2].format(ipv6_address=ipv6_address) 
+            else:
+                cmd = self.cli_command[0]
+                
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+    
+        # 5.5.5.5
+        p1 = re.compile(r'(?P<address>([[0-9]+[:|.]+.*))')
+    
+        # v6v4      1
+        p2 = re.compile(r'(?P<direction>(\S+)) +(?P<ref_count>(\d))')
+        for line in output.splitlines():
+            line = line.strip()
+    
+            # # 5.5.5.5
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                domain_dict = ret_dict.setdefault('nat64_mappings', {})
+                local_dict = domain_dict.setdefault('address', {})
+                nested_dict = local_dict.setdefault(group['address'], {})
+                continue
+    
+            # v6v4      1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                nested_dict['direction'] = group['direction']
+                nested_dict['ref_count'] = int(group['ref_count'])
+    
+                continue
+    
+        return ret_dict
+
+class ShowNat64MappingsDynamicSchema(MetaParser):
+    """show nat64 mappings dynamic"""
+    
+    schema = {
+        'dynamic_mappings': {
+            'access_list': {
+                Any(): {
+                    'dir_id': int,
+                    'direction': str,
+                    'flags': str,
+                    'mapping_id': int,
+                    'null': str,
+                    'pool': str,
+                    'rg_id': int
+                }
+            },
+            Optional('no_of_mappings'): int
+        }
+    }
+     
+class ShowNat64MappingsDynamic(ShowNat64MappingsDynamicSchema):
+    """ Parser for
+       show nat64 mappings dynamic
+       show nat64 mappings dynamic id <number>
+       show nat64 mappings dynamic list <access_list_name>
+       show nat64 mappings dynamic pool <pool_name>
+    """
+
+    cli_command = [
+                    'show nat64 mappings static addresses',
+                    'show nat64 mappings dynamic id {number}',
+                    'show nat64 mappings dynamic list {access_list_name}',
+                    'show nat64 mappings dynamic pool {pool_name}'
+                  ]
+
+    def cli(self, number="", access_list_name="", pool_name="", output=None):
+
+        if output is None:
+            if number:
+                cmd = self.cli_command[1].format(number=number)
+            elif access_list_name:
+                cmd = self.cli_command[2].format(access_list_name=access_list_name) 
+            elif pool_name:
+                cmd = self.cli_command[3].format(pool_name=pool_name)
+            else:
+                cmd = self.cli_command[0]
+                
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        domain_dict = ret_dict.setdefault('dynamic_mappings', {})
+        pool_dict = {}
+        
+        # Dynamic mappings configured: 2
+        p1 = re.compile(r'^Dynamic mappings configured\: +(?P<no_of_mappings>(\d+))')
+        
+        # Direction ID      ACL
+        # v6v4      1       acl_1                            NULL
+        p2 = re.compile(r'(?P<direction>(\w+)) +(?P<dir_id>(\d)) +(?P<acl>(\w+)) +(?P<null>(\w+))')
+        
+        # Pool                             Flags
+        # n64_pool                         0x00000000 0.0.0.0 (none)
+        p3 = re.compile(r'(?P<pool>(\S+)) .* +(?P<flags>([0-9x0-9]+ .* +\(none\)))')
+        
+        # RG ID Mapping ID
+        # 0     0
+        p4 = re.compile(r'(?P<rg_id>(\d)) +(?P<mapping_id>(\d))')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Dynamic mappings configured: 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                domain_dict = ret_dict.setdefault('dynamic_mappings', {})
+                domain_dict['no_of_mappings'] = int(group['no_of_mappings'])
+                continue
+            
+            # Direction ID      ACL
+            # v6v4      1       acl_1                            NULL
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_dict = domain_dict.setdefault('access_list', {})
+                pool_dict = acl_dict.setdefault(group['acl'], {})
+                pool_dict['direction'] = group['direction']
+                pool_dict['dir_id'] = int(group['dir_id'])
+                pool_dict['null'] = group['null']
+                continue
+            
+            # Pool                             Flags
+            # n64_pool                         0x00000000 0.0.0.0 (none)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict['pool'] = group['pool']
+                pool_dict['flags'] = group['flags']
+                continue
+            
+            # RG ID Mapping ID
+            # 0     0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict['rg_id'] = int(group['rg_id'])
+                pool_dict['mapping_id'] = int(group['mapping_id'])
+                continue
+            
+        return ret_dict
+
+class ShowNat64StatisticsPrefixStatefulSchema(MetaParser):
+    """show nat64 statistics prefix stateful <ipv6>/<prefix_length>"""
+
+    schema = {
+        'nat64_statistics': {
+            'stateful_prefix': {
+                Any(): {
+                    'packets_dropped': int,
+                    'packets_translated': {
+                        'v4_to_v6': int,
+                        'v6_to_v4': int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowNat64StatisticsPrefixStateful(ShowNat64StatisticsPrefixStatefulSchema):
+    """ Parser for
+       show nat64 statistics prefix stateful <ipv6>/<prefix_length>
+    """
+
+    cli_command = [
+                    'show nat64 statistics prefix stateful {ipv6_prefix}',
+                  ]
+
+    def cli(self, ipv6_prefix="", output=None):
+
+        if output is None:
+            if ipv6_prefix:
+                cmd = self.cli_command[0].format(ipv6_prefix=ipv6_prefix)
+                
+        output = self.device.execute(cmd)
+
+    
+        ret_dict = {}
+        
+        # Stateful Prefix: 1001::/96
+        p1 = re.compile(r'^Stateful Prefix\: +(?P<stateful_prefix>(\S+))')
+        
+        # Packets translated (IPv4 -> IPv6): 0
+        p2 = re.compile(r'^Packets translated \(IPv4 \-\> IPv6\)\: +(?P<v4_to_v6>(\d+)$)')
+        
+        # Packets translated (IPv6 -> IPv4): 0
+        p3 = re.compile(r'^Packets translated \(IPv6 \-\> IPv4\)\: +(?P<v6_to_v4>(\d+)$)')
+
+        # Packets dropped: 0
+        p4 = re.compile(r'^Packets +dropped+\: +(?P<packets_dropped>\d+)')
+        
+        for line in output.splitlines():
+            line = line.strip()
+        
+            # Stateful Prefix: 1001::/96
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                nat_dict = ret_dict.setdefault('nat64_statistics', {})
+                stat_dict = nat_dict.setdefault('stateful_prefix', {})
+                prefix_dict = stat_dict.setdefault(group['stateful_prefix'], {})
+                continue
+            
+            # Packets translated (IPv4 -> IPv6): 5
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                trans_dict = prefix_dict.setdefault('packets_translated', {})
+                trans_dict['v4_to_v6'] = int(group['v4_to_v6'])
+                continue
+            
+            # Packets translated (IPv6 -> IPv4): 131495
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                trans_dict['v6_to_v4'] = int(group['v6_to_v4'])
+                continue
+        
+            # Packets dropped: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict['packets_dropped'] = int(group['packets_dropped'])
+                continue
+                
+        return ret_dict
+
+class ShowNat64MappingsStaticSchema(MetaParser):
+    """show nat64 mappings static addresses"""
+    
+    schema = {
+        'static_mappings': {
+            'index': {
+                Any(): {
+                    'address': str,
+                    'direction': str,
+                    'is_valid': str,
+                    'mapping_id': int,
+                    'non_key_address': str,
+                    'protocol': str,
+                    'rg_id': int
+                }
+            },
+            'no_of_mappings': int
+        }
+    }
+     
+class ShowNat64MappingsStatic(ShowNat64MappingsStaticSchema):
+    """ Parser for
+           show nat64 mappings static
+    """
+
+    cli_command = 'show nat64 mappings static'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        pool_dict = {}
+        index = 1
+        index_dict = {}
+        
+        # Static mappings configured: 1
+        p1 = re.compile(r'^Static mappings configured\: +(?P<no_of_mappings>(\d+))')
+        
+        # Direction Protocol Address (Port, if any)
+        # v6v4 --- 2009::2
+        p2 = re.compile(r'(?P<direction>(\w+)) +(?P<protocol>(\S+)) +(?P<address>([0-9:].*).*)')
+        
+        # Non-key Address (Port, if any)
+        # 1.1.1.2 (100)
+        p3 = re.compile(r'(?P<non_key_address>(\d.+ .*\)))')
+        
+        # Non-key Address (Port, if any)
+        # 2.2.2.2
+        p4 = re.compile(r'(?P<non_key_address>([0-9]{1,3}.){3}([0-9]{1,3}))')
+        
+        # RG ID Mapping ID
+        # 0     0
+        p5 = re.compile(r'(?P<rg_id>(\d)) +(?P<mapping_id>(\d)) +(?P<is_valid>(\w+))')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Dynamic mappings configured: 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                domain_dict = ret_dict.setdefault('static_mappings', {})
+                domain_dict['no_of_mappings'] = int(group['no_of_mappings'])
+                continue
+        
+            # Direction Protocol Address (Port, if any)
+            # v6v4 --- 2009::2            
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict = domain_dict.setdefault('index', {}).setdefault(index, {})
+                pool_dict['direction'] = group['direction']
+                pool_dict['protocol'] = group['protocol']
+                pool_dict['address'] = group['address']
+                index = index + 1
+                continue
+            
+            # Non-key Address (Port, if any)
+            # 1.1.1.2 (100)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict['non_key_address'] = group['non_key_address']
+                continue
+
+            # Non-key Address (Port, if any)
+            # 2.2.2.2
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict['non_key_address'] = group['non_key_address']
+                continue
+
+            # RG ID Mapping ID
+            # 0     0            
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict['rg_id'] = int(group['rg_id'])
+                pool_dict['mapping_id'] = int(group['mapping_id'])
+                pool_dict['is_valid'] = group['is_valid']
+                continue
+                
+        return ret_dict

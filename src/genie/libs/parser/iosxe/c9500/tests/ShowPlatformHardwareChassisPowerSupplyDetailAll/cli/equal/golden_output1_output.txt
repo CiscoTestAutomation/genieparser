@@ -1,0 +1,23 @@
+show platform hardware chassis power-supply detail all
+PS1:
+  Input Voltage   :     230.0000 V
+  Output Voltage  :      12.0370 V
+  Input Current   :       0.4410 A
+  Output Current  :       7.2960 A
+  Input Power     :      95.0000 W
+  Output Power    :      87.0000 W
+  Temperature 1   :      32.0000 C
+  Temperature 2   :      37.0000 C
+  Temperature 3   :      38.0000 C
+  Fan Speed 1     :   10208.0000 RPM
+PS2:
+  Input Voltage   :     232.5000 V
+  Output Voltage  :      12.0910 V
+  Input Current   :       0.4380 A
+  Output Current  :       7.4530 A
+  Input Power     :     100.2500 W
+  Output Power    :      90.0000 W
+  Temperature 1   :      28.8120 C
+  Temperature 2   :      37.9370 C
+  Temperature 3   :      34.1250 C
+  Fan Speed 1     :    8096.0000 RPM

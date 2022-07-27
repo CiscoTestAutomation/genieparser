@@ -1,0 +1,16 @@
+KS Sender ID (KSSID) Information for Group bw6000:
+
+    Transform Mode           : Non-Counter (Non-Suite-B)
+    Re-initializing          : No
+    SID Length (Group Size)  : 24 bits (MEDIUM)
+    Current KSSID In-Use     : none
+    Last GMSID Used          : none
+
+
+KS Sender ID (KSSID) Information for Group bw600-IPV6:
+
+    Transform Mode           : Non-Counter (Non-Suite-B)
+    Re-initializing          : No
+    SID Length (Group Size)  : 24 bits (MEDIUM)
+    Current KSSID In-Use     : none
+    Last GMSID Used          : none

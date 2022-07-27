@@ -1,0 +1,12 @@
+show environment status
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     0     1
+------  --------------------  ----  --------  ---------  -----------
+PS0     C9K-PWR-650WAC-R      AC    650 W     ok         good  N/A  
+PS1     Not Present           N/A   N/A       N/A        N/A   N/A  
+
+Fan                 Fan States
+Tray    Status      0     1     2     3
+------  ----------  -----------------------
+FM0     ok          good  good  good  good 
+FM1     ok          good  good  good  good 

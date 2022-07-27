@@ -1,0 +1,49 @@
+pm9005#show memory platform information
+  Virtual memory   : 49030533120
+  Pages resident   : 811621
+  Major page faults: 6958
+  Minor page faults: 80290450
+
+  Architecture     : x86_64
+  Memory (kB)
+    Physical       : 7748808
+    Total          : 7748808
+    Used           : 3087548
+    Free           : 4661260
+    Active         : 2334292
+    Inactive       : 2425116
+    Inact-dirty    : 0
+    Inact-clean    : 0
+    Dirty          : 20
+    AnonPages      : 1192048
+    Bounce         : 0
+    Cached         : 3177472
+    Commit Limit   : 3743332
+    Committed As   : 4204480
+    High Total     : 0
+    High Free      : 0
+    Low Total      : 7748808
+    Low Free       : 4603028
+    Mapped         : 603152
+    NFS Unstable   : 0
+    Page Tables    : 65288
+    Slab           : 447232
+    Writeback      : 0
+    HugePages Total: 128
+    HugePages Free : 0
+    HugePages Rsvd : 0
+    HugePage Size  : 2048
+
+  Swap (kB)
+    Total          : 0
+    Used           : 0
+    Free           : 0
+    Cached         : 0
+
+  Buffers (kB)     : 389964
+
+  Load Average
+    1-Min          : 1.92
+    5-Min          : 2.02
+    15-Min         : 2.07
+    

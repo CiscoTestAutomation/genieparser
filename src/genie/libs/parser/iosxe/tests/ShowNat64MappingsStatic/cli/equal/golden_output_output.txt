@@ -1,0 +1,18 @@
+Static mappings configured: 4
+
+Direction Protocol Address (Port, if any)
+   Non-key Address (Port, if any)
+   RG ID Mapping ID Is Valid
+
+v6v4      ---      2001:1::2
+   1.1.1.2
+   0     0          FALSE
+v6v4      TCP      2001:1::2 (1234)
+   1.1.1.2 (100)
+   0     0          FALSE
+v6v4      ---      2002:1::2
+   2.2.2.1
+   6     1          FALSE
+v6v4      ---      2009:1::2
+   10.10.10.2
+   0     0          FALSE
