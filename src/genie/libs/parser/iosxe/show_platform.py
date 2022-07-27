@@ -2245,9 +2245,43 @@ class ShowInventory(ShowInventorySchema):
                     main_dict['vid'] = vid
                     main_dict['sn'] = sn
 
+                if ('IE' in pid) or ('17' in pid):
+                    if ('Supervisor' in name):
+                        main_dict = ret_dict.setdefault('main', {}).\
+                            setdefault('supervisor', {}).\
+                            setdefault(pid, {})
+                        main_dict['name'] = name
+                        main_dict['descr'] = descr
+                        main_dict['pid'] = pid
+                        main_dict['vid'] = vid
+                        main_dict['sn'] = sn
+
+                if "Expansion Module" in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault('expansion_module', {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+
+                if 'cpu' in name or 'usb' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
                 main_names = [
                     'Switch1', 
                     'Switch2', 
+                    'GigabitEthernet',
+                    'TwoGigabitEthernet',
                     'TenGigabitEthernet', 
                     'HundredGigE', 
                     'FourHundredGigE'
@@ -2381,7 +2415,7 @@ class ShowPlatformSchema(MetaParser):
                 Optional('rp'): {
                     Any(): {
                         Optional('sn'): str,
-                        'state': str,
+                        Optional('state'): str,
                         Optional('num_of_ports'): str,
                         Optional('mac_address'): str,
                         Optional('hw_ver'): str,
@@ -2552,7 +2586,10 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model) or ('C9200' in model):
+              
+                if ('WS-C' in model or 'C9500' in model or 'C9300' in model or 'C9200' in model or 
+                   'IE-32' in model or 'IE-33' in model or 'IE-34' in model or 'IE-93' in model or 
+                   'IE-31' in model or '1783' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -4183,15 +4220,19 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
         ret_dict = {}
 
         # initial regexp pattern
+
+        # CPU utilization for five seconds: 43%, one minute: 44%, five minutes: 44%
         p1 = re.compile(r'^CPU +utilization +for +five +seconds: +(?P<cpu_util_five_secs>[\d\%]+),'
                         ' +one +minute: +(?P<cpu_util_one_min>[\d\%]+),'
                         ' +five +minutes: +(?P<cpu_util_five_min>[\d\%]+)$')
 
+        # Core 0: CPU utilization for five seconds:  6%, one minute: 11%, five minutes: 11%
         p2 = re.compile(r'^(?P<core>[\w\s]+): +CPU +utilization +for'
-                        ' +five +seconds: +(?P<core_cpu_util_five_secs>\d\%+),'
-                        ' +one +minute: +(?P<core_cpu_util_one_min>[\d\%]+),'
-                        ' +five +minutes: +(?P<core_cpu_util_five_min>[\d\%]+)$')
+                        ' +five +seconds: +(?P<core_cpu_util_five_secs>\d+\%+),'
+                        ' +one +minute: +(?P<core_cpu_util_one_min>[\d+\%]+),'
+                        ' +five +minutes: +(?P<core_cpu_util_five_min>[\d+\%]+)$')
 
+        # 21188   21176    599%    600%    599%  R           478632  ucode_pkt_PPE0
         p3 = re.compile(r'^(?P<pid>\d+) +(?P<ppid>\d+)'
                         ' +(?P<five_sec>[\d\%]+) +(?P<one_min>[\d\%]+)'
                         ' +(?P<five_min>[\d\%]+) +(?P<status>[\w]+)'
@@ -7806,7 +7847,7 @@ class ShowPlatformResourcesSchema(MetaParser):
                 },
                 'qfp': {
                     'state': str,
-                    'tcam': {
+                    Optional('tcam'): {
                         'usage_cells': int,
                         'usage_perc': int,
                         'max_cells': int,
@@ -7836,15 +7877,7 @@ class ShowPlatformResourcesSchema(MetaParser):
                         'warning_perc': int,
                         'state': str
                     },
-                    Optional('pkt_buf_mem_0'): {
-                        'usage_kb': int,
-                        'usage_perc': int,
-                        'max_kb': int,
-                        'warning_perc': int,
-                        'critical_perc': int,
-                        'state': str
-                    },
-                    Optional('pkt_buf_mem_1'): {
+                    Optional(Any()): {
                         'usage_kb': int,
                         'usage_perc': int,
                         'max_kb': int,
@@ -12792,7 +12825,7 @@ class ShowEnvironmentStatusSchema(MetaParser):
     Schema for show environment status
     """
     schema = {
-        'power_supply': {
+        Optional('power_supply'): {
             Any(): {
                 'model_num': str,
                 'type': str,
@@ -12811,6 +12844,29 @@ class ShowEnvironmentStatusSchema(MetaParser):
                 },
             },
         },
+        Optional('switch'): {
+            Any(): {
+                Optional('power_supply'): {
+                    Any(): {
+                        'model_num': str,
+                        'type': str,
+                        'capacity': str,
+                        'status': str,
+                        'fan_states' :{
+                            int: str,
+                        },
+                    },
+                },
+                Optional('fan_tray'): {
+                    Any(): {
+                        'status': str,
+                        'fan_states' :{
+                            int: str,
+                        },
+                    },
+                },
+            },
+        },
     }
 
 
@@ -12825,21 +12881,49 @@ class ShowEnvironmentStatus(ShowEnvironmentStatusSchema):
             output = self.device.execute(self.cli_command)
 
         # initial variables
-        ret_dict = {}
+        ret_dict  = switch_id_dict = {}
+        
+        # Switch:1
+        p1 = re.compile(r'^Switch:(?P<switch>\S+)$')
+        
         # PS1     C9K-PWR-1500WAC-R     ac    n.a.      standby    good  good
-        p1= re.compile('^(?P<power_supply>\w+)\s+(?P<model_num>[\w-]+)\s+(?P<type>\w+)\s+(?P<capacity>[\w.]+)[A-Z\s]+(?P<status>[\w-]+)\s+(?P<fan_state0>[\w.]+)\s+(?P<fan_state1>[\w.]+)$')
+        # PS0     C9K-PWR-650WAC-R      AC    650 W     ok         good  N/A
+        p2 = re.compile(r'^(?P<power_supply>\S+) +'
+                        r'(?P<model_num>\S+) +'
+                        r'(?P<type>\S+) +'
+                        r'(?P<capacity>\S+) +W?\s*'
+                        r'(?P<status>\S+) +'
+                        r'(?P<fan_state0>\S+) +'
+                        r'(?P<fan_state1>\S+)$')
 
         # FM6     active      good  good
-        p2= re.compile('^(?P<fan_tray>\w+\d+)\s+(?P<status>\w+)\s+(?P<fan_state0>\w+)\s+(?P<fan_state1>\w+)$')
+        p3= re.compile('^(?P<fan_tray>\w+\d+)\s+(?P<status>\w+)\s+(?P<fan_state0>\w+)\s+(?P<fan_state1>\w+)$')
+
+        # FM0     ok          good  good  good  good
+        p4= re.compile(r'^(?P<fan_tray>\w+\d+) +'
+                        r'(?P<status>\w+) +'
+                        r'(?P<fan_state0>\S+) +'
+                        r'(?P<fan_state1>\S+) +'
+                        r'(?P<fan_state2>\S+) +'
+                        r'(?P<fan_state3>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
-
+            
+            #Switch:1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                switch_dict = ret_dict.setdefault('switch',{})
+                switch_id_dict = switch_dict.setdefault(switch,{})
+                continue
+                
             # PS1     C9K-PWR-1500WAC-R     ac    n.a.      standby    good  good
-            m=p1.match(line)
+            m=p2.match(line)
             if m:
                 group= m.groupdict()
-                root_dict=ret_dict.setdefault('power_supply',{}).setdefault(group['power_supply'],{})
+                root_dict=switch_id_dict.setdefault('power_supply',{}).setdefault(group['power_supply'],{})
                 root_dict.setdefault('model_num',group['model_num'])
                 root_dict.setdefault('type',group['type'])
                 root_dict.setdefault('capacity',group['capacity'])
@@ -12850,15 +12934,27 @@ class ShowEnvironmentStatus(ShowEnvironmentStatusSchema):
                 continue
 
             # FM6     active      good  good
-            m=p2.match(line)
+            m=p3.match(line)
             if m:
                 group=m.groupdict()
-                root_dict = ret_dict.setdefault('fan_tray', {}).setdefault(group['fan_tray'],{})
+                root_dict = switch_id_dict.setdefault('fan_tray', {}).setdefault(group['fan_tray'],{})
                 root_dict.setdefault('status',group['status'])
                 root_dict1=root_dict.setdefault('fan_states',{})
                 root_dict1.setdefault(0,group['fan_state0'])
                 root_dict1.setdefault(1,group['fan_state1'])
                 continue
+
+            # FM0     ok          good  good  good  good
+            m=p4.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = switch_id_dict.setdefault('fan_tray', {}).setdefault(group['fan_tray'],{})
+                root_dict.setdefault('status',group['status'])
+                root_dict1=root_dict.setdefault('fan_states',{})
+                root_dict1.setdefault(0,group['fan_state0'])
+                root_dict1.setdefault(1,group['fan_state1'])
+                root_dict1.setdefault(2,group['fan_state2'])
+                root_dict1.setdefault(3,group['fan_state3'])
 
         return ret_dict
 
@@ -19277,3 +19373,215 @@ class ShowPlatformSoftwareBPCrimsonContentConfig(ShowPlatformSoftwareBPCrimsonCo
                 
         return ret_dict
 
+
+# ====================
+# Schema for:
+#  * 'show platform software process slot sw standby r0 monitor | count <process>'
+# ====================
+
+
+class ShowPlatformSoftCProcessSchema(MetaParser):
+    """Schema for show platform software process slot sw standby r0 monitor | count <process>"""
+
+    schema = {
+        "number_of_matching_lines": int
+    }
+
+
+# ====================
+# Parser for:
+#  * 'show platform software process slot sw standby r0 monitor | count <process>'
+# ====================
+
+
+class ShowPlatformSoftCProcess(ShowPlatformSoftCProcessSchema):
+    """Schema for show platform software process slot sw standby r0 monitor| count <process>"""
+
+    # Number of lines which match regexp = 1
+
+    cli_command = "show platform software process slot sw {chassis} r0 monitor | count {process}"
+
+    def cli(self, process="", chassis="active", output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(process=process, chassis=chassis))
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Number of lines which match regexp = 1
+
+        p1 = re.compile(r"^Number\s+of\s+lines\s+which\s+match\s+regexp\s=\s+(?P<number_of_matching_lines>\d+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 1
+            m1 = p1.match(line)
+            if m1:
+                number_of_matching_lines = p1.match(line)
+                groups = number_of_matching_lines.groupdict()
+                number_of_matching_lines = int(groups['number_of_matching_lines'])
+                ret_dict['number_of_matching_lines'] = number_of_matching_lines
+
+        return ret_dict
+
+
+# ====================
+# Schema for:
+#  * 'show platform software process slot sw standby r0 monitor | include <process>'
+# ====================
+
+
+class ShowPlatformSoftIProcessSchema(MetaParser):
+    """Schema for show platform software process slot sw standby r0 monitor | include <process>"""
+
+    schema = {
+        "pid": {
+            str: {
+                "user": str,
+                "pr": str,
+                "ni": str,
+                "virt": str,
+                "res": str,
+                "shr": str,
+                "s": str,
+                "cpu": str,
+                "mem": str,
+                "time": str,
+                "cmd": str
+            }
+        }
+    }
+
+# ====================
+
+
+# Parser for:
+#  * 'show platform software process slot sw standby r0 monitor | include <process>'
+# ====================
+
+
+class ShowPlatformSoftIProcess(ShowPlatformSoftIProcessSchema):
+    """Schema for show platform software process slot sw standby r0 monitor| include <process>"""
+
+    # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    # 26855 root      20   0 1842228 240864 206380 S   0.0   3.1   0:20.22 wncd_0
+
+    cli_command = "show platform software process slot sw {chassis} r0 monitor | include {process}"
+
+    def cli(self, process="wncd", chassis="active", output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(process=process, chassis=chassis))
+
+        # initial return dictionary
+        platform_software_dict = {}
+        platform_software_ret_dict = {}
+
+        # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+        p1 = re.compile(
+            '^(?P<pid>\S+)\s+(?P<user>\S+)\s+(?P<pr>\S+)\s+(?P<ni>\S+)\s+(?P<virt>\S+)\s+(?P<res>\S+)\s+(?P<shr>\S+)\s+(?P<s>\S+)\s+(?P<cpu>\S+)\s+(?P<mem>\S+)\s+(?P<time>\S+)\s+(?P<cmd>\S+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 26855 root      20   0 1842228 240864 206380 S   0.0   3.1   0:20.22 wncd_0
+            m1 = p1.match(line)
+            if m1:
+                groups = m1.groupdict()
+                platform_software_dict = platform_software_ret_dict.setdefault('pid', {}).setdefault(groups['pid'], {})
+                platform_software_dict.update({
+                    'user': groups['user'],
+                    'pr': groups['pr'],
+                    'ni': groups['ni'],
+                    'virt': groups['virt'],
+                    'res': groups['res'],
+                    'shr': groups['shr'],
+                    's': groups['s'],
+                    'cpu': groups['cpu'],
+                    'mem': groups['mem'],
+                    'time': groups['time'],
+                    'cmd': groups['cmd']
+                })
+        return platform_software_ret_dict
+
+# ======================================================================================
+# Parser for 'show processes cpu platform sorted'
+# ======================================================================================
+
+class ShowProcessesCpuPlatformSorted(ShowProcessesCpuPlatform):
+    """Parser for show processes cpu platform sorted"""
+
+    cli_command = 'show processes cpu platform sorted'
+
+    def cli(self, output=None):
+        return(super().cli(output=output))
+
+# ======================================================================================
+# Parser Schema for 'show platform software punt-policer'
+# ======================================================================================
+
+class ShowPlatformSoftwarePuntPolicerSchema(MetaParser):
+    """Schema for "show platform software punt-policer" """
+
+    schema = {
+        'punt_policer': {
+            Any(): {
+                  'description': str,
+                  'config_rate_normal_pps': int,
+                  'config_rate_high_pps': int,
+                  'conform_pkts_normal': int,
+                  'conform_pkts_high': int,
+                  'dropped_pkts_normal': int,
+                  'dropped_pkts_high': int,
+                  'config_burst_normal_pkts': int,
+                  'config_burst_high_pkts': int,
+                  'config_alert_normal': str,
+                  'config_alert_high': str
+                 }
+            }
+       }
+
+# ================================================================================
+# Parser for 'show platform software punt-policer'
+# ================================================================================
+
+class ShowPlatformSoftwarePuntPolicer(ShowPlatformSoftwarePuntPolicerSchema):
+    """ parser for "show platform software punt-policer" """
+
+    cli_command = "show platform software punt-policer"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+    
+        #   2    IPv4 Options   4000     3000     0        0         0         0           4000     3000     Off      Off
+        p1 = re.compile(r'^(?P<punt_cause>\d+)\s+(?P<description>(([A-Za-z0-9_-]+ ?){5}).*\s+|([A-Za-z0-9_-]+ ?))'
+                       r'\s+(?P<config_rate_normal_pps>\d+)\s+(?P<config_rate_high_pps>\d+)\s+(?P<conform_pkts_normal>\d+)'
+                       r'\s+(?P<conform_pkts_high>\d+)\s+(?P<dropped_pkts_normal>\d+)\s+(?P<dropped_pkts_high>\d+)'
+                       r'\s+(?P<config_burst_normal_pkts>\d+)\s+(?P<config_burst_high_pkts>\d+)\s+(?P<config_alert_normal>\w+)'
+                       r'\s+(?P<config_alert_high>\w+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #   2    IPv4 Options  4000     3000     0       0      0       0        4000     3000     Off      Off
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                punt_cause = int(group.pop('punt_cause'))
+                description = group.pop('description')
+                config_alert_normal = group.pop('config_alert_normal')
+                config_alert_high = group.pop('config_alert_high')
+                punt_policer_dict = parsed_dict.setdefault('punt_policer',{}).setdefault(punt_cause,{})
+                punt_policer_dict['description'] = description.rstrip()
+                punt_policer_dict.update({k:int(v.rstrip().replace(' ','_').lower()) for k,v in group.items()})
+                punt_policer_dict.update([('config_alert_normal', config_alert_normal),
+                                          ('config_alert_high', config_alert_high)])
+                
+                continue
+            
+        return parsed_dict

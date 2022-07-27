@@ -29,6 +29,11 @@ IOSXE parsers for the following show commands:
    * show crypto gdoi rekey sa detail
    * show tunnel protection statistics
    * show crypto gdoi ks detail
+   * show crypto gdoi ks coop detail
+   * show crypto gdoi ks identifier
+   * show crypto gdoi ks identifier detail
+   * show crypto gdoi ks coop identifier detail
+   * show crypto ikev2 psh
 """
 
 # Python
@@ -2553,7 +2558,7 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
     
     schema = {
         'ikev2_stats': {
-                'aaa_operation':{
+                'aaa_operation': {
                     'receive_pskey': {
                         'passed': int,
                         'failed': int
@@ -2584,7 +2589,7 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
                         'passed': int,
                         'failed': int
                     },
-                    'sa_deletion':{
+                    'sa_deletion': {
                         'passed': int,
                         'failed': int
                     }
@@ -2633,7 +2638,7 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
                         'failed': int
                     }
                 },
-                'gkm_operation': {
+                Optional('gkm_operation'): {
                     'get_policy': {
                         'passed': int,
                         'failed': int
@@ -2643,7 +2648,7 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
                         'failed': int
                     }
                 },
-                'ppk_sks_operation': {
+                Optional('ppk_sks_operation'): {
                     'ppk_get_cap': {
                         'passed': int,
                         'failed': int
@@ -2651,17 +2656,17 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
                     'ppk_get_key': {
                         'passed': int,
                         'failed': int
-                    }
+                    },
                 },
-                'ike_preroute': {
+                Optional('ike_preroute'): {
                     'idb_verification': {
                         'passed': int,
                         'failed': int
                     }
                 },
-            },        
+            },
         }
-    
+
 # =========================================================
 #  Parser for 'show crypto ikev2 stats ext-service'
 # =========================================================   
@@ -9604,7 +9609,7 @@ class ShowCryptoIpsecPALHWcreate_ipsec_sa_by_q(ShowCryptoIpsecPALHWcreate_ipsec_
             output = self.device.execute(self.cli_command)
 
         # PALHWcreate_ipsec_sa_by_q |913873|12797964|0    |0    |913873|12797964|14   ||0    |0    |0    |0    |0    |0    |0    |0    |0    |0 
-        p1 = re.compile(r'^PALHWcreate_ipsec_sa_by_q[\s\S]+\|\|(?P<counters>\d+)\s[\|\d\s]+$')
+        p1 = re.compile(r'^PALHWcreate_ipsec_sa_by_q[\s\S]+\|\|(?P<counters>\d+)\s*?[\|\d\s]+$')
 
         ret_dict = {}
         for line in output.splitlines():
@@ -10310,6 +10315,100 @@ class ShowTunnelProtectionStatistics(ShowTunnelProtectionStatisticsSchema):
         
         return ret_dict
 
+# =================================================
+#  Schema for 'show crypto gdoi gm identifier'
+# =================================================
+class ShowCryptoGdoiGmIdentifierSchema(MetaParser):
+    """Schema for show crypto gdoi gm identifier"""
+    schema = {
+        'group':{
+            Any(): {
+                    'group_member': str,
+                    'vrf_name': str,
+                    'transform_mode': str,
+                    'no_of_sid': int,
+                    'current_sid': str
+                }
+        },
+    }
+
+# =================================================
+#  Parser for 'show crypto gdoi gm identifier'
+# =================================================
+class ShowCryptoGdoiGmIdentifier(ShowCryptoGdoiGmIdentifierSchema):
+    """Parser for show crypto gdoi gm identifier"""
+
+    cli_command = ['show crypto gdoi gm identifier']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # GM Sender ID (SID) Information for Group bw6000:
+        p1 = re.compile(r'^GM Sender ID \(SID\) Information for Group\s*(?P<group_name>\S+):$')
+
+        # Group Member: 44.44.44.1       vrf: None
+        p2 = re.compile(r'^Group Member:\s*(?P<group_member>[\S]+)\s*vrf:\s*(?P<vrf_name>[\S]+)$')
+
+        # Transform Mode                  : Non-Counter (Non-Suite-B)
+        p3 = re.compile(r'^Transform Mode\s*:\s*(?P<transform_mode>[\w\s\(\)-]+)$')
+
+        # of SIDs Last Requested        : 0
+        p4 = re.compile(r'^# of SIDs Last Requested\s*:\s*(?P<no_of_sid>[\d]+)$')
+
+        # CURRENT SIDs: None
+        p5 = re.compile(r'^CURRENT SIDs:\s*(?P<current_sid>[\S]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # GM Sender ID (SID) Information for Group bw6000:
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                group_name = groups['group_name']
+                group_name_dict = ret_dict.setdefault('group',{}).setdefault(group_name,{})
+                continue
+
+            # Group Member: 44.44.44.1       vrf: None
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                group_member = groups['group_member']
+                group_name_dict['group_member'] = group_member
+                group_name_dict.update({'vrf_name': groups['vrf_name']})
+                continue
+        
+
+            # Transform Mode                  : Non-Counter (Non-Suite-B)
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                transform_mode = groups['transform_mode']
+                group_name_dict['transform_mode'] = transform_mode
+                continue
+
+            # of SIDs Last Requested        : 0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                no_of_sid = groups['no_of_sid']
+                group_name_dict['no_of_sid'] = int(no_of_sid)
+                continue
+
+            # CURRENT SIDs: None
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                current_sid = groups['current_sid']
+                group_name_dict['current_sid'] = current_sid
+                continue        
+       
+        return ret_dict 
+
 # =========================================
 #  Schema for 'show crypto gdoi ks detail'
 # =========================================
@@ -10345,7 +10444,7 @@ class ShowCryptoGdoiKsDetailSchema(MetaParser):
     }
 
 # ===================================================
-#  Parser for 'show tunnel protection statistics'
+#  Parser for 'show crypto gdoi ks detail'
 # ===================================================
 class ShowCryptoGdoiKsDetail(ShowCryptoGdoiKsDetailSchema):
 
@@ -10548,3 +10647,1170 @@ class ShowCryptoGdoiKsDetail(ShowCryptoGdoiKsDetailSchema):
                 continue
 
         return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi gm pubkey'
+# =================================================
+class ShowCryptoGdoiGmPubkeySchema(MetaParser):
+    """Schema for show crypto gdoi gm pubkey"""
+    schema = {
+        'gdoi_group':{
+            Any(): {
+                    Optional('ks_ipaddress'): str,
+                    Optional('conn_id'): int,
+                    Optional('my_cookie'): str,
+                    Optional('his_cookie'): str,
+                    Optional('key_data'): {
+                        Optional('key_data_info'): list
+                        }
+                }
+        }
+    }
+
+# =================================================
+#  Parser for 'show crypto gdoi gm pubkey'
+# =================================================
+class ShowCryptoGdoiGmPubkey(ShowCryptoGdoiGmPubkeySchema):
+    """Parser for show crypto gdoi gm pubkey"""
+
+    cli_command = ['show crypto gdoi gm pubkey']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # GDOI Group: bw6000
+        p1 = re.compile(r'^GDOI\s*Group:\s*(?P<group_name>\S+)$')
+
+        # KS IP Address: 15.15.15.1
+        p2 = re.compile(r'^KS\s*IP\s*Address:\s*(?P<ks_ipaddress>\S+)$')
+
+        # conn-id: 44334    my-cookie:C5AC6039    his-cookie:A440633E
+        p3 = re.compile(r'^conn-id:\s*(?P<conn_id>\d+)\s*my-cookie:\s*(?P<my_cookie>\S+)\s*his-cookie:\s*(?P<his_cookie>\S+)$')
+
+        # Key Data:
+        p4 = re.compile(r'^(?P<key_data_info>[0-9A-Z\s]+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # GDOI Group: bw6000
+            m = p1.match(line)
+            if m:
+                group_name = m.groupdict()['group_name']
+                group_name_dict = ret_dict.setdefault('gdoi_group', {}).setdefault(group_name, {})
+                continue
+
+            # KS IP Address: 15.15.15.1
+            m = p2.match(line)
+            if m:
+                group_name_dict['ks_ipaddress'] = m.groupdict()['ks_ipaddress']
+                continue
+        
+
+            # conn-id: 44334    my-cookie:C5AC6039    his-cookie:A440633E
+            m = p3.match(line)
+            if m:
+                group_name_dict['conn_id'] = int(m.groupdict()['conn_id'])
+                group_name_dict['my_cookie'] = m.groupdict()['my_cookie']
+                group_name_dict['his_cookie'] = m.groupdict()['his_cookie']                           
+                continue
+        
+            # Key Data:
+            m = p4.match(line)
+            if m:
+                key_data_dict = group_name_dict.setdefault('key_data', {})
+                key_data_dict_full = key_data_dict.setdefault('key_data_info', [])
+                group = m.groupdict()                
+                key_data_dict_full.append(group['key_data_info']) 
+                continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto gdoi gm rekey detail'
+# =================================================
+class ShowCryptoGdoiGmRekeyDetailSchema(MetaParser):
+    """Schema for show crypto gdoi gm rekey detail"""
+    schema = {
+        'gdoi_group':{
+            Any(): {
+                    'rekeys_cumulative': int,
+                    'rekeys_registration': int,
+                    'rekey_acks_sent': int,
+                    'rekey_sa_information': {
+                        Any(): {
+                            'dst': str,
+                            'src': str,
+                            'conn_id': str,
+                            'my_cookie': str,
+                            'his_cookie': str                            
+                        }
+                        }
+                }
+        }
+    }
+
+# =================================================
+#  Parser for 'show crypto gdoi gm rekey detail'
+# =================================================
+class ShowCryptoGdoiGmRekeyDetail(ShowCryptoGdoiGmRekeyDetailSchema):
+    """Parser for show crypto gdoi gm rekey detail"""
+
+    cli_command = ['show crypto gdoi gm rekey detail']
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Group bw6000 (Unicast)
+        p1 = re.compile(r'^Group\s*(?P<group_name>\S+)\s*\(Unicast\)$')
+
+        # Number of Rekeys received (cumulative)       : 0
+        p2 = re.compile(r'^Number\s*of\s*Rekeys\s*received\s*\(cumulative\)\s*:\s*(?P<rekeys_cumulative>\d+)$')
+
+        # Number of Rekeys received after registration : 0
+        p3 = re.compile(r'^Number\s*of\s*Rekeys\s*received\s*after\s*registration\s*:\s*(?P<rekeys_registration>\d+)$')
+
+        # Number of Rekey Acks sent                    : 0
+        p4 = re.compile(r'^Number\s*of\s*Rekey\s*Acks\s*sent\s*:\s*(?P<rekey_acks_sent>\d+)$')
+        
+        # New     : 41.41.41.1      15.15.15.1       44327   14C40DC1   88AD3ACA
+        p5 = re.compile(r'^(?P<state>(New|Current|Previous))\s*:\s*(?P<dst>[\S]+)\s*(?P<src>[\S]+)\s*(?P<conn_id>[\S]+)\s*(?P<my_cookie>[\S]+)\s*(?P<his_cookie>[\S]+)$')
+        
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Group bw6000 (Unicast)
+            m = p1.match(line)
+            if m:
+                group_name = m.groupdict()['group_name']
+                group_name_dict = ret_dict.setdefault('gdoi_group', {}).setdefault(group_name, {})
+                continue
+
+            # Number of Rekeys received (cumulative)       : 0
+            m = p2.match(line)
+            if m:
+                group_name_dict['rekeys_cumulative'] = int(m.groupdict()['rekeys_cumulative'])
+                continue
+        
+            # Number of Rekeys received after registration : 0
+            m = p3.match(line)
+            if m:
+                group_name_dict['rekeys_registration'] = int(m.groupdict()['rekeys_registration'])                       
+                continue
+        
+            # Number of Rekey Acks sent                    : 0
+            m = p4.match(line)
+            if m:
+                group_name_dict['rekey_acks_sent'] = int(m.groupdict()['rekey_acks_sent'])  
+                continue
+
+            # Rekey (KEK) SA information :
+            m = p5.match(line)
+            if m:
+                state = m.groupdict()['state']             
+                rekey_data_dict = group_name_dict.setdefault('rekey_sa_information', {}).setdefault(state, {})
+                rekey_data_dict['dst'] = m.groupdict()['dst']
+                rekey_data_dict['src'] = m.groupdict()['src']
+                rekey_data_dict['conn_id'] = m.groupdict()['conn_id']
+                rekey_data_dict['my_cookie'] = m.groupdict()['my_cookie']
+                rekey_data_dict['his_cookie'] = m.groupdict()['his_cookie']                                              
+                continue
+
+        
+        return ret_dict        
+
+# =================================================
+#  Schema for 'show crypto gdoi ks coop detail'
+# =================================================
+class ShowCryptoGdoiKsCoopDetailSchema(MetaParser):
+    """schema for show crypto gdoi ks coop detail"""
+    schema = {
+        'crypto_gdoi_group_name': {
+            Any(): {
+                'group_handle': int,
+                'local_key_server_handle': int,
+                Optional('redundancy_state'): str,
+                Optional('local_address'): str,
+                Optional('local_priority'): int,
+                Optional('local_ks_role'): str,
+                Optional('local_ks_status'): str,
+                Optional('local_ks_version'): str,
+                Optional('local_coop_version'): str,
+                Optional('primary_timers'): {
+                    Optional('primary_refresh_policy_time'): int,
+                    Optional('remaining_time'): int,
+                    Optional('per_user_timer_remaining_time'): int,
+                    Optional('antireplay_sequence_number'): int,
+                },
+                Optional(Any()): {
+                    Optional('server_handle'): int,
+                    Optional('peer_address'): str,
+                    Optional('peer_version'): str,
+                    Optional('peer_coop_version'): str,
+                    Optional('coop_protocol'): str,
+                    Optional('peer_priority'): int,
+                    Optional('peer_ks_role'): str,
+                    Optional('peer_ks_status'): str,
+                    Optional('antireplay_sequence_number'): int,
+                    Optional('ike_status'): str,
+                    Optional('counters'): {
+                        Optional('ann_msgs_sent'): int,
+                        Optional('ann_msgs_sent_with_reply_request'): int,
+                        Optional('ann_msgs_recv'): int,
+                        Optional('ann_msgs_recv_with_reply_request'): int,
+                        Optional('packet_sent_drops'): int,
+                        Optional('packet_recv_drops'): int,
+                        Optional('total_bytes_sent'): int,
+                        Optional('total_bytes_recv'): int
+                    }
+                }
+            }
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi ks coop detail'
+# ===================================================
+class ShowCryptoGdoiKsCoopDetail(ShowCryptoGdoiKsCoopDetailSchema):
+    """Parser for show crypto gdoi ks coop detail"""
+    cli_command = 'show crypto gdoi ks coop detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Crypto Gdoi Group Name :g1
+        p1 = re.compile(r'^Crypto\s+Gdoi\s+Group\s+Name +:(?P<crypto_gdoi_group_name>\S+)$')
+        # Group handle: 1073741826, Local Key Server handle: 1073741826
+        p2 = re.compile(r'^Group\s+handle:\s+(?P<group_handle>\d+),\s+Local\s+Key\s+Server\s+handle:\s+(?P<local_key_server_handle>\d+)$')
+        # *NO* redundancy configured for this group
+        p3 = re.compile(r'\*(?P<redundancy_state>NO)\*\s+redundancy\s+configured\s+for\s+this\s+group')
+        # Local Address: 10.78.106.116
+        p4 = re.compile(r'^Local\s+Address:\s+(?P<local_address>\S+)$')
+        # Local Priority: 100
+        p5 = re.compile(r'^Local\s+Priority:\s+(?P<local_priority>\d+)$')
+        # Local KS Role: Primary , Local KS Status: Alive
+        p6 = re.compile(r'^Local\s+KS\s+Role:\s+(?P<local_ks_role>\w+)\s+,\s+Local\s+KS\s+Status:\s+(?P<local_ks_status>\w+)$')
+        # Local KS version: 1.0.27
+        p7 = re.compile(r'^Local\s+KS\s+version:\s+(?P<local_ks_version>\S+)$')
+        # Local COOP version: 1.0.8
+        p8 = re.compile(r'^Local\s+COOP\s+version:\s+(?P<local_coop_version>\S+)$')
+        # Primary Refresh Policy Time: 20
+        p9 = re.compile(r'^Primary\s+Refresh\s+Policy\s+Time:\s+(?P<primary_refresh_policy_time>\d+)$')
+        # Remaining Time: 14
+        p10 = re.compile(r'^Remaining\s+Time:\s+(?P<remaining_time>\d+)$')
+        # Per-user timer remaining time: 0
+        p11 = re.compile(r'^Per-user\s+timer\s+remaining\s+time:\s+(?P<per_user_timer_remaining_time>\d+)$')
+        # Antireplay Sequence Number: 79
+        p12 = re.compile(r'^Antireplay\s+Sequence\s+Number:\s+(?P<antireplay_sequence_number>\d+)$')
+        # Session 1:
+        p13 = re.compile(r'^Session\s+(?P<session_id>\d+):$')
+        # Server handle: 1073741827
+        p14 = re.compile(r'^Server\s+handle:\s+(?P<server_handle>\d+)$')
+        # Peer Address: 10.78.106.117
+        p15 = re.compile(r'^Peer\s+Address:\s+(?P<peer_address>\S+)$')
+        # Peer Version: 1.0.27
+        p16 = re.compile(r'^Peer\s+Version:\s+(?P<peer_version>\S+)$')
+        # Peer COOP version: 1.0.8
+        p17 = re.compile(r'^Peer\s+COOP\s+version:\s+(?P<peer_coop_version>\S+)$')
+        # COOP Protocol: base
+        p18 = re.compile(r'^COOP\s+Protocol:\s+(?P<coop_protocol>\S+)$')
+        # Peer Priority: 90
+        p19 = re.compile(r'^Peer\s+Priority:\s+(?P<peer_priority>\d+)$')
+        # Peer KS Role: Secondary , Peer KS Status: Alive
+        p20 = re.compile(r'^Peer\s+KS\s+Role:\s+(?P<peer_ks_role>\w+)\s+,\s+Peer\s+KS\s+Status:\s+(?P<peer_ks_status>\w+)$')
+        # IKE status: Established
+        p21 = re.compile(r'^IKE\s+status:\s+(?P<ike_status>\w+)$')
+        # Ann msgs sent: 122
+        p22 = re.compile(r'^Ann\s+msgs\s+sent:\s+(?P<ann_msgs_sent>\d+)$')
+        # Ann msgs sent with reply request: 1
+        p23 = re.compile(r'^Ann\s+msgs\s+sent\s+with\s+reply\s+request:\s+(?P<ann_msgs_sent_with_reply_request>\d+)$')
+        # Ann msgs recv: 4
+        p24 =  re.compile(r'^Ann\s+msgs\s+recv:\s+(?P<ann_msgs_recv>\d+)$')
+        # Ann msgs recv with reply request: 1
+        p25 = re.compile(r'^Ann\s+msgs\s+recv\s+with\s+reply\s+request:\s+(?P<ann_msgs_recv_with_reply_request>\d+)$')
+        # Packet sent drops: 1
+        p26 = re.compile(r'^Packet\s+sent\s+drops:\s+(?P<packet_sent_drops>\d+)$')
+        # Packet Recv drops: 0
+        p27 = re.compile(r'^Packet\s+Recv\s+drops:\s+(?P<packet_recv_drops>\d)$')
+        # Total bytes sent: 104495
+        p28 = re.compile(r'^Total\s+bytes\s+sent:\s+(?P<total_bytes_sent>\d+)$')
+        # Total bytes recv: 2130
+        p29 = re.compile(r'^Total\s+bytes\s+recv:\s+(?P<total_bytes_recv>\d+)$')
+
+        ret_dict = {}
+        reply_num = 0
+        for line in output.splitlines():
+            line = line.strip()
+            # Crypto Gdoi Group Name :g1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group_id = group['crypto_gdoi_group_name']
+                crypto_gdoi_group = ret_dict.setdefault('crypto_gdoi_group_name', {}).setdefault(crypto_gdoi_group_id, {})
+                continue
+
+            # Group handle: 1073741826, Local Key Server handle: 1073741826
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'group_handle': int(group['group_handle'])})
+                crypto_gdoi_group.update({'local_key_server_handle': int(group['local_key_server_handle'])})
+                continue
+
+            # *NO* redundancy configured for this group
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'redundancy_state': group['redundancy_state']})
+                continue
+
+            # Local Address: 10.78.106.116
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'local_address': group['local_address']})
+                continue
+
+            # Local Priority: 100
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'local_priority': int(group['local_priority'])})
+                continue
+
+            # Local KS Role: Primary , Local KS Status: Alive
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'local_ks_role': group['local_ks_role']})
+                crypto_gdoi_group.update({'local_ks_status': group['local_ks_status']})
+                continue
+
+            # Local KS version: 1.0.27
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'local_ks_version': group['local_ks_version']})
+                continue
+
+            # Local COOP version: 1.0.8
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                crypto_gdoi_group.update({'local_coop_version': group['local_coop_version']})
+                continue
+
+            # Primary Refresh Policy Time: 20
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                primary_timer_dict = ret_dict.setdefault('crypto_gdoi_group_name', {}).setdefault(crypto_gdoi_group_id, {}).setdefault('primary_timers', {})
+                primary_timer_dict.update({'primary_refresh_policy_time': int(group['primary_refresh_policy_time'])})
+                continue
+
+            # Remaining Time: 14
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                primary_timer_dict.update({'remaining_time': int(group['remaining_time'])})
+                continue
+
+            # Per-user timer remaining time: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                primary_timer_dict.update({'per_user_timer_remaining_time': int(group['per_user_timer_remaining_time'])})
+                continue
+
+            # Antireplay Sequence Number: 124
+            m = p12.match(line)
+            if (reply_num == 0):
+                if m:
+                    group = m.groupdict()
+                    primary_timer_dict.update({'antireplay_sequence_number': int(group['antireplay_sequence_number'])})
+                    reply_num += 1
+                    continue
+
+            # Session 1:
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                session_id = group['session_id']
+                session_dict = ret_dict.setdefault('crypto_gdoi_group_name', {}).setdefault(crypto_gdoi_group_id,\
+                        {}).setdefault(session_id, {})
+                continue
+
+            # Server handle: 1073741827
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'server_handle': int(group['server_handle'])})
+                continue
+
+            # Peer Address: 10.78.106.117
+            m = p15.match(line)
+            if m:
+                group =m.groupdict()
+                session_dict.update({'peer_address': group['peer_address']})
+                continue
+
+            # Peer Version: 1.0.27
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'peer_version': group['peer_version']})
+                continue
+
+            # Peer COOP version: 1.0.8
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'peer_coop_version': group['peer_coop_version']})
+                continue
+
+            # COOP Protocol: base
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'coop_protocol': group['coop_protocol']})
+                continue
+
+            # Peer Priority: 90
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'peer_priority': int(group['peer_priority'])})
+                continue
+
+            # Peer KS Role: Secondary , Peer KS Status: Alive
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'peer_ks_role': group['peer_ks_role']})
+                session_dict.update({'peer_ks_status': group['peer_ks_status']})
+                continue
+
+            # Antireplay Sequence Number: 5
+            m = p12.match(line)
+            if (reply_num == 1):
+                if m:
+                    group = m.groupdict()
+                    session_dict.update({'antireplay_sequence_number': int(group['antireplay_sequence_number'])})
+                    continue
+
+            # IKE status: Established
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'ike_status': group['ike_status']})
+                continue
+
+            # Ann msgs sent: 122
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict = session_dict.setdefault('counters', {})
+                counter_dict.update({'ann_msgs_sent': int(group['ann_msgs_sent'])})
+                continue
+
+            # Ann msgs sent with reply request: 1
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'ann_msgs_sent_with_reply_request': int(group['ann_msgs_sent_with_reply_request'])})
+                continue
+
+            # Ann msgs recv: 4
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'ann_msgs_recv': int(group['ann_msgs_recv'])})
+                continue
+
+            #Ann msgs recv with reply request: 1
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'ann_msgs_recv_with_reply_request': int(group['ann_msgs_recv_with_reply_request'])})
+                continue
+
+            # Packet sent drops: 1
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'packet_sent_drops': int(group['packet_sent_drops'])})
+                continue
+
+            # Packet Recv drops: 0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'packet_recv_drops': int(group['packet_recv_drops'])})
+                continue
+
+            # Total bytes sent: 104495
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'total_bytes_sent': int(group['total_bytes_sent'])})
+                continue
+
+            # Total bytes recv: 2130
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict.update({'total_bytes_recv': int(group['total_bytes_recv'])})
+
+        return ret_dict
+
+# ======================================================================================
+#  Schema for 'show crypto gdoi ks identifier' and 'show crypto gdoi ks identifier detail'
+# ======================================================================================
+class ShowCryptoGdoiKsIdentifierSchema(MetaParser):
+    """schema for:
+        show crypto gdoi ks identifier
+        show crypto gdoi ks identifier detail
+    """
+
+    schema = {
+        'ks_sender_info': {
+            Any(): {
+                'transform_mode': str,
+                're_initializing': str,
+                'sid_length': int,
+                'current_kssid_in_use': str,
+                'last_gmsid_used': str,
+                Optional('kssid_assigned'): str,
+                Optional('kssid_used'): str,
+                Optional('kssid_used_old'): str,
+                Optional('available_kssid'): str,
+                Optional('remining_sid'): str
+            }
+        }
+    }
+
+# ======================================================================================
+#  Parser for 'show crypto gdoi ks identifier' and 'show crypto gdoi ks identifier detail'
+# ======================================================================================
+class ShowCryptoGdoiKsIdentifierSuperParser(ShowCryptoGdoiKsIdentifierSchema):
+    ''' Parser for:
+        show crypto gdoi ks identifier
+        show crypto gdoi ks identifier detail
+    '''
+
+    def cli(self, output = None):
+
+        res_dict = {}
+
+        # KS Sender ID (KSSID) Information for Group bw6000:
+        p1 = re.compile(r'^KS\s+Sender\s+ID\s+\(KSSID\)\s+Information\s+for\s+Group\s+(?P<ks_sender_id>\S+):$')
+        # Transform Mode           : Non-Counter (Non-Suite-B)
+        p2 = re.compile(r'^Transform\s+Mode\s+:\s+(?P<transform_mode>\S+)\s+\(\S+\)$')
+        # Re-initializing          : No
+        p3 = re.compile(r'^Re-initializing\s+:\s+(?P<re_initializing>\w+)$')
+        # SID Length (Group Size)  : 24 bits (MEDIUM)
+        p4 = re.compile(r'^SID\s+Length\s+\(Group\s+Size\)\s+:\s+(?P<sid_length>\d+)\s+bits\s+\(\S+\)$')
+        # Current KSSID In-Use     : none
+        p5 = re.compile(r'^Current KSSID\s+In-Use\s+:\s+(?P<current_kssid_in_use>\S+)$')
+        # Last GMSID Used          : none
+        p6 = re.compile(r'^Last\s+GMSID\s+Used\s+:\s+(?P<last_gmsid_used>\S+)$')
+        # KSSID(s) Assigned        : none
+        p7 = re.compile(r'^KSSID\(s\)\s+Assigned\s+:\s+(?P<kssid_assigned>\S+)$')
+        # KSSID(s) Used            : none
+        p8 = re.compile(r'^KSSID\(s\)\s+Used\s+:\s+(?P<kssid_used>\S+)$')
+        # KSSID(s) Used (Old)      : none
+        p9 = re.compile(r'^KSSID\(s\)\s+Used\s+\(Old\)\s+:\s+(?P<kssid_used_old>\S+)$')
+        # Available KSSID(s)       : none
+        p10 = re.compile(r'^Available\s+KSSID\(s\)\s+:\s+(?P<available_kssid>\S+)$')
+        # REMAINING SIDs: none
+        p11 = re.compile(r'^REMAINING\s+SIDs:\s+(?P<remining_sid>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # KS Sender ID (KSSID) Information for Group bw6000:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ks_sender_id = group['ks_sender_id']
+                ks_dict = res_dict.setdefault('ks_sender_info', {}).setdefault(ks_sender_id, {})
+                continue
+
+            # Transform Mode           : Non-Counter (Non-Suite-B)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'transform_mode': group['transform_mode']})
+                continue
+
+            # Re-initializing          : No
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'re_initializing': group['re_initializing']})
+                continue
+
+            # SID Length (Group Size)  : 24 bits (MEDIUM)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'sid_length': int(group['sid_length'])})
+                continue
+
+            # Current KSSID In-Use     : none
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'current_kssid_in_use': group['current_kssid_in_use']})
+                continue
+
+            # Last GMSID Used          : none
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'last_gmsid_used': group['last_gmsid_used']})
+                continue
+
+            # KSSID(s) Assigned        : none
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'kssid_assigned': group['kssid_assigned']})
+                continue
+
+            # KSSID(s) Used            : none
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'kssid_used': group['kssid_used']})
+                continue
+
+            # KSSID(s) Used (Old)      : none
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'kssid_used_old': group['kssid_used_old']})
+                continue
+
+            # Available KSSID(s)       : none
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'available_kssid': group['available_kssid']})
+                continue
+
+            # REMAINING SIDs: none
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ks_dict.update({'remining_sid': group['remining_sid']})
+                continue
+
+        return res_dict
+
+
+class ShowCryptoGdoiKsIdentifier(ShowCryptoGdoiKsIdentifierSuperParser):
+    ''' Parser for:
+        show crypto gdoi ks identifier
+    '''
+    cli_command = 'show crypto gdoi ks identifier'
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+
+class ShowCryptoGdoiKsIdentifierDetail(ShowCryptoGdoiKsIdentifierSuperParser):
+    ''' Parser for:
+        show crypto gdoi ks identifier detail
+    '''
+    cli_command = 'show crypto gdoi ks identifier detail'
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+# ===================================================
+#  Schema for 'show crypto gdoi gm identifier detail'
+# ===================================================
+
+class ShowCryptoGdoiGmIdentifierDetailSchema(MetaParser):
+    """Schema for show crypto gdoi gm identifier detail"""
+
+    schema = {
+    'group':{
+        Any(): {
+            'group_member': str,
+            'vrf_name': str,
+            'transform_mode': str,
+            'transform_name': str,
+            'no_of_sid': int,
+            'current_sid': str,
+            'next_sid_request': {
+                'tek_lifetime_sec': int,
+                'sid_length': int,
+                'sid_group_size': str                    
+                }   
+            }
+        }
+    }
+
+# ===================================================
+#  Parser for 'show crypto gdoi gm identifier detail'
+# ===================================================
+
+class ShowCryptoGdoiGmIdentifierDetail(ShowCryptoGdoiGmIdentifierDetailSchema):
+    """Parser for show crypto gdoi gm identifier detail"""
+
+    cli_command = ['show crypto gdoi gm identifier detail'] 
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # GM Sender ID (SID) Information for Group bw6000:
+        p1 = re.compile(r'^GM Sender ID \(SID\) Information for Group\s*(?P<group_name>\S+):$')
+
+        # Group Member: 44.44.44.1       vrf: None
+        p2 = re.compile(r'^Group Member:\s*(?P<group_member>[\S]+)\s*vrf:\s*(?P<vrf_name>[\S]+)$')
+
+        # Transform Mode                  : Non-Counter (Non-Suite-B)
+        p3 = re.compile(r'^Transform Mode\s*:\s*(?P<transform_mode>[\w-]*)\s*\((?P<transform_name>[\w-]*)\)$')
+
+        # of SIDs Last Requested        : 0
+        p4 = re.compile(r'^# of SIDs Last Requested\s*:\s*(?P<no_of_sid>[\d]+)$')
+
+        # CURRENT SIDs: None
+        p5 = re.compile(r'^CURRENT SIDs:\s*(?P<current_sid>[\S]+)$')
+
+        # TEK Lifetime                  : 4873 sec
+        p6 = re.compile(r'^TEK Lifetime\s*:\s*(?P<tek_lifetime>[\w]+)\s*sec$')
+
+        # SID Length (Group Size)       : 24 bits (MEDIUM)
+        p7 = re.compile(r'^SID Length \(Group Size\)\s*:\s*(?P<sid_length>[\d]+)\s*bits\s*\((?P<group_size>[\w]+)\)$')        
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # GM Sender ID (SID) Information for Group bw6000:
+            m = p1.match(line)
+            if m:
+                group_name = m.groupdict()['group_name']
+                group_name_dict = ret_dict.setdefault('group',{}).setdefault(group_name,{})
+                continue
+
+            # Group Member: 44.44.44.1       vrf: None
+            m = p2.match(line)
+            if m:
+                group_name_dict['group_member'] = m.groupdict()['group_member']
+                group_name_dict['vrf_name'] = m.groupdict()['vrf_name']
+                continue
+        
+
+            # Transform Mode                  : Non-Counter (Non-Suite-B)
+            m = p3.match(line)
+            if m:
+                group_name_dict['transform_mode'] = m.groupdict()['transform_mode']
+                group_name_dict['transform_name'] = m.groupdict()['transform_name']
+                continue
+
+            # of SIDs Last Requested        : 0
+            m = p4.match(line)
+            if m:
+                group_name_dict['no_of_sid'] = int(m.groupdict()['no_of_sid'])
+                continue
+
+            # CURRENT SIDs: None
+            m = p5.match(line)
+            if m:
+                group_name_dict['current_sid'] = m.groupdict()['current_sid']
+                continue        
+        
+            # TEK Lifetime                  : 4873 sec
+            m = p6.match(line)
+            if m:
+                next_sid_request_dict = group_name_dict.setdefault('next_sid_request', {})
+                next_sid_request_dict['tek_lifetime_sec'] = int(m.groupdict()['tek_lifetime'])
+                continue                
+ 
+            # SID Length (Group Size)       : 24 bits (MEDIUM)
+            m = p7.match(line)
+            if m:
+                next_sid_request_dict['sid_length'] = int(m.groupdict()['sid_length'])
+                next_sid_request_dict['sid_group_size'] = m.groupdict()['group_size']
+                continue                
+     
+        return ret_dict
+
+
+# ==============================
+# Schema for
+#   'show crypto gdoi ks coop identifier detail'
+# ==============================
+
+class ShowCryptoGdoiKsCoopIdentifierDetailSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto gdoi ks coop identifier detail'
+    """
+    schema = {
+        'group': {
+            Any():{
+                Or('local', 'peer'): {
+                    'ks_role': str,
+                    'ks_status': str,
+                    'address': str,
+                    'next_sid_client_operation': str,
+                    're_initializing': str,
+                    'kssid_overlap': str,
+                    'sid_length_cfg': str,
+                    'sid_length_used': str,
+                    'current_kssid_inuse': str,
+                    'kssids_assigned': str,
+                    'kssids_used': str,
+                    'old_kssids_used': str
+                }
+            }
+        }
+    }
+
+# ========================================================
+#  Parser for 'show crypto gdoi ks coop identifier detail'
+# ========================================================
+
+class ShowCryptoGdoiKsCoopIdentifierDetail(ShowCryptoGdoiKsCoopIdentifierDetailSchema):
+    
+    """Parser for 'show crypto gdoi ks coop identifier detail'"""
+    
+    cli_command = 'show crypto gdoi ks coop identifier detail'
+	
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # COOP-KS Sender ID (SID) Information for Group g1:
+        p1 = re.compile(r'^COOP-KS Sender ID \(SID\) Information for Group (?P<group>[\w\d\-]+):$')
+
+        # Local KS Role: Primary , Local KS Status: Alive
+        p2 = re.compile(r'Local KS Role: (?P<ks_role>[\w]+)\s\, Local KS Status: (?P<ks_status>[\w]+)$')
+
+        # Local Address : 10.78.106.116
+        p3 = re.compile(r'Local Address : (?P<address>\d+\.\d+\.\d+\.\d+)$')
+
+        # Next SID Client Operation : NOTIFY
+        p4 = re.compile(r'Next SID Client Operation : (?P<next_sid_client_operation>[A-Z]+)$')
+
+        # Re-initializing : No
+        p5 = re.compile(r'Re-initializing : (?P<re_initializing>[\w]+)$')
+
+        # KSSID Overlap : No
+        p6 = re.compile(r'KSSID Overlap : (?P<kssid_overlap>[\w]+)$')
+
+        # SID Length (Group Size) Cfg : 24 bits (MEDIUM)
+        p7 = re.compile(r'^SID Length \(Group Size\) Cfg : (?P<sid_length_cfg>[\s\w\(\)]+)$')
+
+        # SID Length (Group Size) Used : 24 bits (MEDIUM)
+        p8 = re.compile(r'^SID Length \(Group Size\) Used : (?P<sid_length_used>[\s\w\(\)]+)$')
+
+        # Current KSSID In-Use : none
+        p9 = re.compile(r'^Current KSSID In-Use : (?P<current_kssid_inuse>[a-z]+)$')
+
+        # KSSID(s) Assigned : none
+        p10 = re.compile('^KSSID\(s\) Assigned : (?P<kssids_assigned>[a-z]+)$')
+
+        # KSSID(s) Used : none
+        p11 = re.compile('^KSSID\(s\) Used : (?P<kssids_used>[a-z]+)$')
+
+        # Old KSSID(s) Used : none
+        p12 = re.compile('^Old KSSID\(s\) Used : (?P<old_kssids_used>[a-z]+)$')
+
+        # Peer KS Role: Secondary , Peer KS Status: Alive
+        p13 = re.compile('^Peer KS Role: (?P<ks_role>[\w]+)\s\, Peer KS Status: (?P<ks_status>[\w]+)$')
+
+        # Peer Address : 10.78.106.117
+        p14 = re.compile('^Peer Address : (?P<address>\d+\.\d+\.\d+\.\d+)$')
+
+        master_dict = {}
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            
+            # GCOOP-KS Sender ID (SID) Information for Group g1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = master_dict.setdefault('group', {}).setdefault(group['group'], {})
+                local_dict = group_dict.setdefault('local', {})
+                target_dict = local_dict
+                continue
+
+            # Local KS Role: Primary , Local KS Status: Alive
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                    
+                target_dict.update({'ks_role': group['ks_role'], 'ks_status': group['ks_status']})
+                continue
+
+            # Local Address : 10.78.106.116
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'address': group['address']})
+                continue
+
+            # Next SID Client Operation : NOTIFY
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'next_sid_client_operation': group['next_sid_client_operation']})
+                continue
+
+            # Re-initializing : No
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'re_initializing': group['re_initializing']})
+                continue
+
+            # KSSID Overlap : No
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'kssid_overlap': group['kssid_overlap']})
+                continue
+
+            # SID Length (Group Size) Cfg : 24 bits (MEDIUM)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'sid_length_cfg': group['sid_length_cfg']})
+                continue
+
+            # SID Length (Group Size) Used : 24 bits (MEDIUM)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'sid_length_used': group['sid_length_used']})
+                continue
+
+            # Current KSSID In-Use : none
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'current_kssid_inuse': group['current_kssid_inuse']})
+                continue
+                
+            # KSSID(s) Assigned : none
+            m = p10.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict.update({'kssids_assigned': group['kssids_assigned']})
+                continue
+
+            # KSSID(s) Used : none
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'kssids_used': group['kssids_used']})
+                continue
+
+            # Old KSSID(s) Used : none
+            m = p12.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict.update({'old_kssids_used': group['old_kssids_used']})
+                continue
+
+            # Peer KS Role: Secondary , Peer KS Status: Alive
+            m = p13.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict = group_dict.setdefault('peer', {})
+                target_dict.update({'ks_role': group['ks_role'], 'ks_status': group['ks_status']})
+                continue
+
+            # Peer Address : 10.78.106.117
+            m = p14.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict.update({'address': group['address']})
+                continue
+
+            # Next SID Client Operation : NOTIFY
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'next_sid_client_operation': group['next_sid_client_operation']})
+                continue
+                
+            # Re-initializing : No
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'re_initializing': group['re_initializing']})
+                continue
+                
+            # KSSID Overlap : No
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'kssid_overlap': group['kssid_overlap']})
+                continue
+
+            # SID Length (Group Size) Cfg : 24 bits (MEDIUM)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'sid_length_cfg': group['sid_length_cfg']})
+                continue
+
+            # SID Length (Group Size) Used : 24 bits (MEDIUM)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'sid_length_used': group['sid_length_used']})
+                continue
+
+            # Current KSSID In-Use : none
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'current_kssid_inuse': group['current_kssid_inuse']})
+                continue
+
+            # KSSID(s) Assigned : none
+            m = p10.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict.update({'kssids_assigned': group['kssids_assigned']})
+                continue
+
+            # KSSID(s) Used : none
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict.update({'kssids_used': group['kssids_used']})
+                continue
+
+            # Old KSSID(s) Used : none
+            m = p12.match(line)
+            if m:
+                group = m.groupdict(line)
+                target_dict.update({'old_kssids_used': group['old_kssids_used']})
+                continue
+    
+        return master_dict
+
+
+
+# ==============================
+# Schema for 'show crypto ikev2 stats psh'
+# ==============================
+
+class ShowCryptoIkev2StatsPshSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto ikev2 stats psh'
+    """
+    schema = {
+         'ikev2_stats_psh':{
+            'psh_requested': int,
+            'psh_request_success': int,
+            'psh_return_requested': int,
+            'psh_return_success': int
+        }
+    }
+
+
+# ========================================================
+#  Parser for 'show crypto ikev2 stats psh'
+# ========================================================
+
+class ShowCryptoIkev2StatsPsh(ShowCryptoIkev2StatsPshSchema):
+    
+    """Parser for 'show crypto ikev2 stats psh'"""
+    
+    cli_command = 'show crypto ikev2 stats psh'
+	
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # ------------------IKEV2 PSH STATS----------------------
+        p1 = re.compile(r'-+IKEV2 PSH STATS-+')
+
+        # ikev2 psh requested: 99
+        p2 = re.compile(r'^ikev2 psh requested:\s+(?P<psh_requested>\d+)$')
+
+        # ikev2 psh request success: 99
+        p3 = re.compile(r'^ikev2 psh request success:\s+(?P<psh_request_success>\d+)$')
+
+        # ikev2 psh return requested: 92
+        p4 = re.compile(r'^ikev2 psh return requested:\s+(?P<psh_return_requested>\d+)$')
+
+        # ikev2 psh return success: 92
+        p5 = re.compile(r'^ikev2 psh return success:\s+(?P<psh_return_success>\d+)$')
+
+        master_dict = {}
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            
+            #  ------------------IKEV2 PSH STATS----------------------
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ike_dict = master_dict.setdefault('ikev2_stats_psh', {})
+                continue
+
+            # ikev2 psh requested: 99
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ike_dict.update({'psh_requested': int(group['psh_requested'])})
+                continue
+
+            # ikev2 psh request success: 99
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ike_dict.update({'psh_request_success': int(group['psh_request_success'])})
+                continue
+
+            # ikev2 psh return requested: 92
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ike_dict.update({'psh_return_requested': int(group['psh_return_requested'])})
+                continue
+
+            # ikev2 psh return success: 92
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ike_dict.update({'psh_return_success': int(group['psh_return_success'])})
+                continue
+                
+        return master_dict
+
+

@@ -7,6 +7,9 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware fed active fwd-asic resource tcam utilization
    * show platform software fed active acl info summary
    * show platform software fed active acl info summary | include {acl_name}
+   * show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
+   * show platform software fed active fnf record-count asic {asic_num}
+   * show platform software fed {switch} active fnf record-count asic {asic_num}
 '''
 
 # Python
@@ -20,6 +23,11 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, D
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+from genie.libs.parser.iosxe.c9500.show_platform import \
+    ShowPlatformHardwareChassisPowerSupplyDetailAll as ShowPlatformHardwareChassisPowerSupplyDetailAll_c9500, \
+    ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll as ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll_c9500, \
+    ShowPlatformFedTcamPbrNat as ShowPlatformFedTcamPbrNat_c9500
 
 # ========================================
 # Parser for 'show platform software'
@@ -484,3 +492,199 @@ class ShowPlatformSoftwareFedActiveAclInfoSummary(ShowPlatformSoftwareFedActiveA
                 continue
 
         return ret_dict
+        
+
+
+class ShowPlatformHardwareChassisPowerSupplyDetailAll(ShowPlatformHardwareChassisPowerSupplyDetailAll_c9500):
+    """ Parser for show platform hardware chassis power-supply detail all"""
+    pass
+    
+    
+class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll_c9500):
+    """ Parser for show platform hardware chassis power-supply detail switch {mode} all"""
+    pass
+
+class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNat_c9500):
+    """ Parser for show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}"""
+    pass    
+
+# ============================================================
+#  Schema for 'show platform software fed active fnf record-count asic <asic num>'
+# ============================================================
+class ShowPlatformFedActiveFnfRecordCountAsicNumSchema(MetaParser):
+    """Schema for show platform software fed active fnf record-count asic <asic num>
+            show platform software fed switch active fnf record-count asic <asic num>"""
+
+    schema = {
+        "current_flow_count": int,
+        "total_flows_learned": int,
+        "hash_searched_flow_count": int,
+        "overflow_searched_flow_count": int,
+        "hash_unsearched_flow_count": int,
+        "overflow_unsearched_flow_count": int,
+        "total_flow_searched": int,
+        "total_search_failures": int,
+        "total_avc_cpu_copy_disable": int,
+        "total_eta_cpu_copy_disable": int,
+        "total_cpu_copy_disable": int,
+        "total_avc_feature_flows": int,
+        "total_eta_feature_flows": int,
+        "total_eta_and_avc_feature_flows": int,
+        "total_num_eta_flows_agedout": int,
+        Optional("reflexive_claimed_flow"): int,
+        Optional("reflexive_claimed_flow_deleted"): int,
+        Optional("reflexive_stale_flow_aged_out"): int,
+        Optional("reflexive_flow_deleted"): int,
+        "total_flows_deleted": int,
+        "total_delete_failures": int,
+        "total_flow_aged_out": int,
+        "total_stale_flow_deleted": int,
+        "total_stale_flow_del_aborted": int,
+        "total_packets_aged_out": int,
+        "total_bytes_aged_out": int
+        }
+
+# ============================================================================
+#  Parser for
+#  * 'show platform software fed active fnf record-count asic <asic num>'
+#  * 'show platform software fed switch active fnf record-count asic <asic num>'
+# ============================================================================
+class ShowPlatformFedActiveFnfRecordCountAsicNum(ShowPlatformFedActiveFnfRecordCountAsicNumSchema):
+    """
+    Parser for
+    * 'show platform software fed active fnf record-count asic {asic_num}'
+    * 'show platform software fed {switch} active fnf record-count asic {asic_num}'
+    """
+
+    cli_command = ['show platform software fed active fnf record-count asic {asic_num}',
+                   'show platform software fed {switch} active fnf record-count asic {asic_num}']
+
+    def cli(self, asic_num="", switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, asic_num=asic_num)
+            else:
+                cmd = self.cli_command[0].format(asic_num=asic_num)
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<pattern>[\S ]+)= +(?P<value>\d+)$')
+
+        # Current flow count               = 0
+        # Total flows learned              = 0
+        # Hash searched flow count         = 0
+        # Overflow searched flow count     = 0
+        # Hash unsearched flow count       = 0
+        # Overflow unsearched flow count   = 0
+        # Total flow Searched              = 0
+        # Total search failures            = 0
+        # Total AVC cpu copy disable       = 0
+        # Total ETA cpu copy disable       = 0
+        # Total cpu copy disable           = 0
+        # Total AVC feature flows          = 0
+        # Total ETA feature flows          = 0
+        # Total ETA and AVC feature flows  = 0
+        # Total num_eta_flows_agedout      = 0
+        # Reflexive claimed flow           = 0
+        # Reflexive flow deleted           = 0
+        # Reflexive stale flow aged out    = 0
+        # Total flows deleted              = 0
+        # Total delete failures            = 0
+        # Total flow aged out              = 0
+        # Total stale flow deleted         = 0
+        # Total stale flow del aborted     = 0
+        # Total packets aged out           = 0
+        # Total bytes aged out             = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_')
+                ret_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+        return ret_dict 
+
+# ============================================================
+#  Schema for 'show platform software fed switch active ifm mappings'
+# ============================================================
+class ShowPlatformFedSwitchActiveIfmMappingSchema(MetaParser):
+    """Schema for show platform software fed switch active ifm mappings"""
+
+    schema = {'interface':
+                  {Any():
+                       {'IF_ID': str,
+                        'Inst': int,
+                        'Asic': int,
+                        'Core': int,
+                        'Port': int,
+                        'SubPort': int,
+                        'Mac': int,
+                        'Cntx': int,
+                        'LPN': int,
+                        'GPN': int,
+                        'Type': str,
+                        'Active': str,
+                        }
+                   },
+              }
+
+# ============================================================
+#  Parser for 'show platform software fed active ifm mappings'
+# ============================================================
+class ShowPlatformFedSwitchActiveIfmMapping(ShowPlatformFedSwitchActiveIfmMappingSchema):
+    """ Parser for show platform software fed switch active ifm mappings"""
+
+    cli_command = 'show platform software fed switch active ifm mappings'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # initialize variables
+        ret_dict = {}
+
+        # HundredGigE1/0/21       0x4d6    0   0    0      0    0      0     1  0            1            0    1    1    NIF    Y
+        p1 = re.compile(
+            r'^(?P<interface>\S+)\s+(?P<ifId>\S+)\s+(?P<inst>\d+)\s+(?P<asic>\d+)\s+(?P<core>\d+)\s+(?P<ifgId>\d+)?\s+(?P<port>\d+)\s+(?P<sbPort>\d+)\s+(?P<mac>\d+)\s+(?P<first_serdes>\d+)?\s+(?P<last_serdes>\d+)?\s+(?P<cntx>\d+)\s+(?P<lpn>\d+)\s+(?P<gpn>\d+)\s+(?P<type>\w+)\s+(?P<act>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # HundredGigE1/0/21       0x4d6    0   0    0      0    0      0     1   0            1            0    1    1    NIF    Y
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intfId = group['interface']
+                ifId = group['ifId']
+                instance = int(group['inst'])
+                asic = int(group['asic'])
+                core = int(group['core'])
+                port = int(group['port'])
+                subPort = int(group['sbPort'])
+                mac = int(group['mac'])
+                cntx = int(group['cntx'])
+                lpn = int(group['lpn'])
+                gpn = int(group['gpn'])
+                type = group['type']
+                active = group['act']
+                final_dict = ret_dict.setdefault('interface', {}).setdefault(intfId, {})
+                final_dict['IF_ID'] = ifId
+                final_dict['Inst'] = instance
+                final_dict['Asic'] = asic
+                final_dict['Core'] = core
+                final_dict['Port'] = port
+                final_dict['SubPort'] = subPort
+                final_dict['Mac'] = mac
+                final_dict['Cntx'] = cntx
+                final_dict['LPN'] = lpn
+                final_dict['GPN'] = gpn
+                final_dict['Type'] = type
+                final_dict['Active'] = active
+                continue
+        return ret_dict
+

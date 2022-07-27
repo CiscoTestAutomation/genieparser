@@ -1,0 +1,23 @@
+pm9005#show utd engine standard statistics url
+UTM Preprocessor URLF Statistics
+--------------------------------
+URL Filter Requests Sent:               0 0
+URL Filter Response Received:           0 0
+Blacklist Hit Count:                    0 0
+Whitelist Hit Count:                    0 0
+
+Reputation Lookup Count:                0 0
+Reputation Action Block:                0 0
+Reputation Action Pass:                 0 0
+Reputation Action Default Pass:         0 0
+Reputation Action Default Block:        0 0
+Reputation Score None:                  0 0
+Reputation Score Out of Range:          0 0
+
+Category Lookup Count:                  0 0
+Category Action Block:                  0 0
+Category Action Pass:                   0 0
+Category Action Default Pass:           0 0
+Category Action Default Block:          0 0
+Category None:                          0 0
+Category Out of Range:                  0 0
