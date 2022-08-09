@@ -1,0 +1,5 @@
+L2TP Tunnel Information Total tunnels 1 sessions 16
+
+LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
+                                                           Count VPDN Group 
+11367      26859      LAC           est    99.1.1.1        16    airtel 

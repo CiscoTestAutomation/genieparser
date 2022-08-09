@@ -1,0 +1,7 @@
+ Pkt   Input            Output           State  Reason
+ 0     Gi0/0/1          Gi0/0/0          FWD
+ 1     Gi0/0/1          Gi0/0/0          FWD
+ 2     Gi0/0/1          Gi0/0/0          FWD
+ 3     Gi0/0/1          Gi0/0/0          FWD
+ 4     Gi0/0/1          Gi0/0/0          FWD
+

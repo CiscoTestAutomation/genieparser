@@ -1,0 +1,3 @@
+show hardware led port Hu1/0/1
+GREEN
+

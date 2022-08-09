@@ -1,0 +1,12 @@
+Object update: Pending-issue: 7083, Pending-acknowledgement: 14101
+Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
+Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
+Command:       Pending-acknowledgement: 54
+Total-objects: 30105
+Stale-objects: 0
+Resolve-objects: 0
+Childless-delete-objects: 0
+Backplane-objects: 0
+Error-objects: 0
+Number of bundles: 0
+Paused-types: 0

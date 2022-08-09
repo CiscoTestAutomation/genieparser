@@ -301,6 +301,9 @@ class ShowLogging(ShowLoggingSchema):
 
         ret_dict = {}
         logging_dict = {}
+        outer_logging_dict = {}
+        outer_logging_sources_dict = {}
+        
         for line in out.splitlines():
 
             line = line.strip()
@@ -316,8 +319,6 @@ class ShowLogging(ShowLoggingSchema):
                 log_buffer_bytes_entry = ret_dict.setdefault(
                     "log_buffer_bytes", {})
 
-                outer_logging_dict = {}
-                outer_logging_sources_dict = {}
                 outer_tls_profile_dict = {}
                 inner_key = group['enable_disable']
                 parent_dict = {}
@@ -638,13 +639,21 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
     Parser for :
         'show logging onboard Rp active uptime'
     """
-    cli_command = 'show logging onboard rp active uptime'
-    def cli(self, output=None): 
+
+    cli_command = ['show logging onboard rp active uptime',
+                   'show logging onboard switch {switch_num} rp active uptime']
+				   
+    def cli(self,switch_num="", output=None): 
 
         if output is None: 
             # Build the command
-            
-            output = self.device.execute(self.cli_command)
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num)
+            else:           
+                cmd = self.cli_command[0]   
+
+            # Execute the command
+            output = self.device.execute(cmd)
        
         ret_dict ={}
         
@@ -664,7 +673,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
         p5=re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
         
         #Current reset reason    : Reload Command
-        p6=re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+        p6=re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z\S]+)$')
         
         #Current reset timestamp : 10/06/2019 01:28:26
         p7=re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
@@ -769,7 +778,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
                 continue
                 
         return ret_dict
-        
+         
         
         
 class ShowLoggingOnboardRpActiveStatusSchema(MetaParser):
@@ -877,15 +886,22 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
         'show logging onboard rp active voltage continuous'
         'show logging onboard rp active message continuous'
     """
-    
-    cli_command = 'show logging onboard rp active {include} continuous' 
-    
-    def cli(self, include, output=None): 
+   
+    cli_command = ['show logging onboard rp active {include} continuous',
+                   'show logging onboard switch {switch_num} rp active {include} continuous']
+				   
+    def cli(self, include="", switch_num="", output=None): 
 
         if output is None:
-           
-            output = self.device.execute(self.cli_command.format(include=include))
-            
+            # Build the command
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num,include=include)
+            else:           
+                cmd = self.cli_command[0].format(include=include)   
+
+            # Execute the command
+            output = self.device.execute(cmd)
+			
         #TEMPERATURE CONTINUOUS INFORMATION
         p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
 

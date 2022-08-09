@@ -1790,8 +1790,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
                             ' +is +(?P<line_protocol>(up|down))'
                             '(?: +\(\S+\))?$')
- 
-        p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+        # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
+        p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
                             '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
                             ' +Area +(?P<area>(\S+))(?:, +Attached +via'
                             ' +(?P<attach>(.*)))?$')
@@ -2855,11 +2855,11 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
         * 'show ip ospf interface__'
     '''
 
-    cmd = 'show ip ospf interface__'
+    cli_command = 'show ip ospf interface__'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -2875,8 +2875,8 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
                             ' +is +(?P<line_protocol>(up|down))'
                             '(?: +\(\S+\))?$')
- 
-        p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+        # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
+        p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
                             '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
                             ' +Area +(?P<area>(\S+))(?:, +Attached +via'
                             ' +(?P<attach>(.*)))?$')

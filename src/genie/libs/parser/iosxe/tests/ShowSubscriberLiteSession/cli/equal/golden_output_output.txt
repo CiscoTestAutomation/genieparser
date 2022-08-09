@@ -1,0 +1,5 @@
+Total lite sessions up: 1
+Src-IP       VRF      S-VRF   Up-time(sec) Interface    PBHK
+100.0.0.10   Default  Default  34          Te1/0/3.100  0.0.0.0:0
+100.0.0.11   Default  Default  34          Te1/0/3.200  0.0.0.0:0
+

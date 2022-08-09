@@ -1,0 +1,20 @@
+ MACsec is disabled
+
+ Capabilities
+  ICV length : 16
+  Data length change supported: yes
+  Max. Rx SA : 32
+  Max. Tx SA : 32
+  Max. Rx SC : 16
+  Max. Tx SC : 16
+  Validate Frames : disabled
+  PN threshold notification support : Yes
+  Ciphers supported : GCM-AES-128
+                      GCM-AES-256
+                      GCM-AES-XPN-128
+                      GCM-AES-XPN-256
+
+ Access control : must secure
+
+ No Transmit Secure Channels
+ No Receive Secure Channels

@@ -1,15 +1,18 @@
 ''' show_hw.py
 IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
+    * show hw-module slot {slot} port-group mode
 '''
 
+# Python
 import re
 
+# Metaparser
 from genie.metaparser import MetaParser
-# from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional
 
 # parser utils
-# from genie.libs.parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 
 # ==========================
@@ -121,3 +124,248 @@ class ShowHwModuleStatus(ShowHwModuleStatusSchema):
             return transceiver_dict
         else:
             return {}
+
+
+class ShowHardwareLedSchema(MetaParser):
+    """
+    Schema for show hardware led
+    """
+    schema = {
+        'switch': {
+            Any():{
+                'system': str,
+                'beacon': str,
+                'port_led_status':{
+                    str: str
+                    },
+                'rj45_console':str,
+                'fantray_status':{
+                    int : str
+                    },
+                'power_supply_beacon_status':{
+                    int : str
+                    },
+                'system_psu':str,
+                'system_fan':str,
+                },
+            },
+        }     
+                       
+class ShowHardwareLed(ShowHardwareLedSchema):
+    """ Parser for show hardware led"""
+
+    cli_command = 'show hardware led'
+    
+    def cli(self, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # SWITCH: 1
+        p1 = re.compile('^SWITCH:\s+(?P<switch_num>\d+)$')
+
+        # SYSTEM: GREEN
+        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+
+        # BEACON: OFF
+        p3 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+
+        # PORT STATUS: (124) Hu1/0/1:GREEN Hu1/0/2:OFF Hu1/0/3:GREEN Hu1/0/4:OFF Hu1/0/5:OFF Hu1/0/6:GREEN Hu1/0/7:OFF Hu1/0/8:OFF Hu1/0/9:OFF Hu1/0/10:GREEN Hu1/0/11:GREEN Hu1/0/12:GREEN Hu1/0/13:GREEN Hu1/0/14:GREEN Fou1/0/15:GREEN Fou1/0/16:GREEN Fou1/0/17:GREEN Fou1/0/18:GREEN Fou1/0/19:GREEN Fou1/0/20:GREEN Fou1/0/21:GREEN Fou1/0/22:GREEN Hu1/0/23:GREEN Hu1/0/24:GREEN Hu1/0/25:OFF Hu1/0/26:GREEN Hu1/0/27:GREEN Hu1/0/28:GREEN Hu1/0/29:GREEN Hu1/0/30:GREEN Hu1/0/31:OFF Hu1/0/32:GREEN Hu1/0/33:GREEN Hu1/0/34:GREEN Hu1/0/35:GREEN Hu1/0/36:GREEN
+        p4 = re.compile('^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
+
+        # RJ45 CONSOLE: GREEN
+        p5 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+
+        # FANTRAY 1 STATUS: GREEN
+        p6 = re.compile('^FANTRAY\s+(?P<fantray_num>\d+)\s+STATUS:\s+(?P<fantray_status>\w+)$')
+
+        # POWER-SUPPLY 1 BEACON: OFF
+        p7 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+
+        # SYSTEM PSU: AMBER
+        p8 = re.compile('^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
+
+        # SYSTEM FAN: GREEN
+        p9 = re.compile('^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # SWITCH: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('switch',{}).setdefault(int(group['switch_num']),{})
+                continue
+            
+            # SYSTEM: GREEN
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'system' : group['system']})
+                continue
+            
+            # BEACON: OFF
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'beacon' : group['beacon']})
+                continue
+
+            # PORT STATUS: (124) Hu1/0/1:GREEN Hu1/0/2:OFF Hu1/0/3:GREEN Hu1/0/4:OFF Hu1/0/5:OFF Hu1/0/6:GREEN Hu1/0/7:OFF Hu1/0/8:OFF Hu1/0/9:OFF Hu1/0/10:GREEN Hu1/0/11:GREEN Hu1/0/12:GREEN Hu1/0/13:GREEN Hu1/0/14:GREEN Fou1/0/15:GREEN Fou1/0/16:GREEN Fou1/0/17:GREEN Fou1/0/18:GREEN Fou1/0/19:GREEN Fou1/0/20:GREEN Fou1/0/21:GREEN Fou1/0/22:GREEN Hu1/0/23:GREEN Hu1/0/24:GREEN Hu1/0/25:OFF Hu1/0/26:GREEN Hu1/0/27:GREEN Hu1/0/28:GREEN Hu1/0/29:GREEN Hu1/0/30:GREEN Hu1/0/31:OFF Hu1/0/32:GREEN Hu1/0/33:GREEN Hu1/0/34:GREEN Hu1/0/35:GREEN Hu1/0/36:GREEN       
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                for port in group['led_ports'].split():
+                    port = (port.split(':'))
+                    port_led_dict = root_dict.setdefault('port_led_status',{})
+                    port_led_dict.update({port[0]: port[1]})
+                continue
+
+            # RJ45 CONSOLE: GREEN
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'rj45_console' : group['rj45_console']})
+                continue
+
+            # FANTRAY 1 STATUS: GREEN
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                fantray_dict= root_dict.setdefault('fantray_status',{})
+                fantray_dict.setdefault(int(group['fantray_num']),group['fantray_status'])
+                continue
+
+            # POWER-SUPPLY 1 BEACON: OFF
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                power_supply_dict= root_dict.setdefault('power_supply_beacon_status',{})
+                power_supply_dict.setdefault(int(group['power_supply_num']),group['power_supply_status'])
+                continue
+
+            # SYSTEM PSU: AMBER
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'system_psu' : group['system_psu']})
+                continue
+
+            # SYSTEM FAN: GREEN
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'system_fan' : group['system_fan']})
+                continue
+               
+        return ret_dict
+
+
+class ShowHardwareLedPortSchema(MetaParser):
+    """
+    Schema for show hardware led port {port}
+    """
+    schema = {
+        'port_led_status' : {
+            str : str
+           }
+        }
+
+class ShowHardwareLedPort(ShowHardwareLedPortSchema):
+    """ Parser for show hardware led port {port}"""
+
+    cli_command = "show hardware led port {port}"
+    
+    def cli(self,port,output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command.format(port=port))
+
+        # initial variables
+        ret_dict = {}
+        
+        # GREEN
+        p1 = re.compile('^(?P<port_status>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # GREEN
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('port_led_status',{})
+                root_dict.update({port : group['port_status']})
+                continue
+                
+        return ret_dict
+
+# ==================================================================================
+#  Schema for 'show hw-module slot {slot} port-group mode'
+# ==================================================================================
+class ShowHwModuleSlotPortGroupModeSchema(MetaParser):
+    """Schema for show hw-module slot {slot} port-group mode"""
+    schema = {
+        'slot':{
+                int:{
+                    'port_group':{
+                        int:{
+                            Optional('port'):{
+                                Any():{
+                                    'mode':str,
+                                }
+                            }
+                        }
+                    }    
+                }
+            }
+        }
+
+# ==================================================================================
+#  Parser for 'show hw-module slot {slot} port-group mode'
+# ==================================================================================
+class ShowHwModuleSlotPortGroupMode(ShowHwModuleSlotPortGroupModeSchema):
+    """ Parser for show hw-module slot {slot} port-group mode"""
+
+    cli_command = "show hw-module slot {slot} port-group mode"
+
+    def cli(self, slot=None , output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot=slot))
+            
+        ret_dict = {}
+
+        #   2         1              Hu2/0/25            inactive
+        p1 = re.compile(r'^(?P<slot>\d+) +(?P<port_group>\d+) +(?P<port>\S+) +(?P<mode>(inactive|400G|100G))$')
+        #                             Hu2/0/26            inactive
+        #                             Hu2/0/27            400G
+        #                             Hu2/0/28            inactive
+        p2 = re.compile(r'^(?P<port>\S+) +(?P<mode>(inactive|400G|100G))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+               group = m.groupdict()
+               slot_dict = ret_dict.setdefault('slot',{})  
+               slot_id_dict = slot_dict.setdefault(int(group['slot']),{})
+               port_group_dict = slot_id_dict.setdefault('port_group',{})
+               port_group_id_dict = port_group_dict.setdefault(int(group['port_group']),{})
+               port_dict = port_group_id_dict.setdefault('port',{})
+               port_id_dict = port_dict.setdefault(str(group['port']),{})
+               port_id_dict.update({  
+                    'mode' : str(group['mode']),
+                })
+               continue
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_id_dict = port_dict.setdefault(str(group['port']),{})
+                port_id_dict.update({  
+                    'mode' : str(group['mode']),
+                })
+                continue
+        return ret_dict

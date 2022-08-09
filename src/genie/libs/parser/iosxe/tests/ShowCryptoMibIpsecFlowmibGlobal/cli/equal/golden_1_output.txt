@@ -1,0 +1,107 @@
+ vrf CC-INTERNET
+  Active Tunnels:                   2             
+  Previous Tunnels:                 16              
+  In octets:                        3551184
+  Out octets:                       1817806
+  In packets:                       29214             
+  Out packets:                      29208                
+  Uncompressed encrypted bytes:     1817806
+  In packets drops:                 0            
+  Out packets drops:                0               
+  In replay drops:                  0            
+  In authentications:               29214        
+  Out authentications:              29208        
+  In decrypts:                      29214        
+  Out encrypts:                     29208        
+  Compressed bytes:                 0
+  Uncompressed bytes:               0
+  In uncompressed bytes:            0
+  Out uncompressed bytes:           0
+  In decrypt failures:              0            
+  Out encrypt failures:             0            
+  No SA failures:                   0   
+  Protocol use failures:            0   
+  System capacity failures:         0   
+  In authentication failures:       0        
+  Out authentication failures:      0        
+
+ vrf ???
+  Active Tunnels:                   0             
+  Previous Tunnels:                 16              
+  In octets:                        3209584
+  Out octets:                       1798270
+  In packets:                       21774             
+  Out packets:                      21680                
+  Uncompressed encrypted bytes:     1798270
+  In packets drops:                 0            
+  Out packets drops:                0               
+  In replay drops:                  0            
+  In authentications:               21774        
+  Out authentications:              21680        
+  In decrypts:                      21774        
+  Out encrypts:                     21680        
+  Compressed bytes:                 0
+  Uncompressed bytes:               0
+  In uncompressed bytes:            0
+  Out uncompressed bytes:           0
+  In decrypt failures:              0            
+  Out encrypt failures:             0            
+  No SA failures:                   0   
+  Protocol use failures:            0   
+  System capacity failures:         0   
+  In authentication failures:       0        
+  Out authentication failures:      0        
+
+ vrf ???
+  Active Tunnels:                   0             
+  Previous Tunnels:                 38              
+  In octets:                        4516800
+  Out octets:                       2332878
+  In packets:                       36980             
+  Out packets:                      36990                
+  Uncompressed encrypted bytes:     2332878
+  In packets drops:                 0            
+  Out packets drops:                0               
+  In replay drops:                  0            
+  In authentications:               36980        
+  Out authentications:              36990        
+  In decrypts:                      36980        
+  Out encrypts:                     36990        
+  Compressed bytes:                 0
+  Uncompressed bytes:               0
+  In uncompressed bytes:            0
+  Out uncompressed bytes:           0
+  In decrypt failures:              0            
+  Out encrypt failures:             0            
+  No SA failures:                   0   
+  Protocol use failures:            0   
+  System capacity failures:         0   
+  In authentication failures:       0        
+  Out authentication failures:      0        
+
+ vrf Global
+  Active Tunnels:                   0             
+  Previous Tunnels:                 238             
+  In octets:                        9455972
+  Out octets:                       5844351
+  In packets:                       67000             
+  Out packets:                      65579                
+  Uncompressed encrypted bytes:     5844351
+  In packets drops:                 0            
+  Out packets drops:                0               
+  In replay drops:                  0            
+  In authentications:               67000        
+  Out authentications:              65579        
+  In decrypts:                      67000        
+  Out encrypts:                     65579        
+  Compressed bytes:                 0
+  Uncompressed bytes:               0
+  In uncompressed bytes:            0
+  Out uncompressed bytes:           0
+  In decrypt failures:              0            
+  Out encrypt failures:             0            
+  No SA failures:                   0   
+  Protocol use failures:            0   
+  System capacity failures:         0   
+  In authentication failures:       0        
+  Out authentication failures:      0

@@ -1,0 +1,24 @@
+expected_output = {
+   "bfd_interface":{
+      "GigabitEthernet0/2/0/17":{
+         "groups":{
+            "10":{
+               "destination_ip":"12.0.0.2",
+               "hsrp_group":10,
+               "hsrp_interface":"GigabitEthernet0/2/0/17",
+               "interval":15,
+               "multiplier":3,
+               "state":"inactive"
+            },
+            "30":{
+               "destination_ip":"12::2",
+               "hsrp_group":30,
+               "hsrp_interface":"GigabitEthernet0/2/0/17",
+               "interval":15,
+               "multiplier":3,
+               "state":"inactive"
+            }
+         }
+      }
+   }
+}

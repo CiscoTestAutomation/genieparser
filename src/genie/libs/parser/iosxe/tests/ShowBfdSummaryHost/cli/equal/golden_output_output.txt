@@ -1,0 +1,6 @@
+
+Host Session Up Down
+Software 3 3 0
+Hardware 0 0 0
+
+Total 3 3 0

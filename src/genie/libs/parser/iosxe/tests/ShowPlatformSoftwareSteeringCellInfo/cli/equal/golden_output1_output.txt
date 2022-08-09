@@ -1,0 +1,14 @@
+Forwarding Manager FP steering-policy cell Information
+
+SGT: 2057, DGT: 3003
+Template name: V4GRPPLC9000, No.of Policies: 1
+  Policy IDs
+  -----------
+  3861840057
+
+SGT: 3053, DGT: 4003
+Template name: V4GRPPLC9510, No.of Policies: 1
+  Policy IDs
+  -----------
+  3861840217
+

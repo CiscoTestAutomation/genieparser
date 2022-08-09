@@ -552,3 +552,206 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
                 ctrl_dict['xtu_c_us']['us_channel0'][param] = group['u_ch0']
 
         return ctrl_dict
+
+class ShowControllersSchema(MetaParser):
+    """Schema for "show controllers" """
+    schema = {
+        "interfaces": {
+            Any(): {
+                'input_packet_count': int,
+                'input_bytes_count': int,
+                'input_mcast_pkts': int,
+                'input_bcast_pkts': int,
+                'input_crc_errors': int,
+                'input_overruns': int,
+                'runt_packets': int,
+                'giant_packets': int,
+                'input_pause_frames': int,
+                'output_packet_count': int,
+                'output_bytes_count': int,
+                'output_mcast_pkts': int,
+                'output_bcast_pkts': int,
+                'output_underruns': int,
+                'output_pause_frames': int
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show controllers'
+# =============================================
+
+class ShowControllers(ShowControllersSchema):
+    """ parser for "show controllers" """
+
+    cli_command = "show controllers"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        config_dict = {}
+
+        # GigabitEthernet 0/0/0 Cumulative Statistics:
+        p1 = re.compile(r"^(?P<interfaces>[A-Za-z]+\s+\d[/]+\d[/]+\d)")
+
+        # Input packet count             7628882
+        p2 = re.compile(r"^Input\spacket count\s+(?P<input_packet_count>\d+)")
+
+        # Input bytes count              1370799013
+        p3 = re.compile(r"^Input\sbytes count\s+(?P<input_bytes_count>\d+)")
+
+        # Input mcast packets            7193
+        p4 = re.compile(r"^Input\smcast packets\s+(?P<input_mcast_pkts>\d+)")
+
+        # Input bcast packets            1
+        p5 = re.compile(r"^Input\sbcast packets\s+(?P<input_bcast_pkts>\d+)")
+
+        # Input CRC errors               0
+        p6 = re.compile(r"^Input\sCRC errors\s+(?P<input_crc_errors>\d+)")
+
+        # Input overruns                 3
+        p7 = re.compile(r"^Input\soverruns\s+(?P<input_overruns>\d+)")
+
+        # Runt packets                   0
+        p8 = re.compile(r"^Runt\spackets\s+(?P<runt_packets>\d+)")
+
+        # Giant packets                  0
+        p9 = re.compile(r"^Giant\spackets\s+(?P<giant_packets>\d+)")
+
+        # Input pause frames             0
+        p10 = re.compile(r"^Input\spause frames\s+(?P<input_pause_frames>\d+)")
+
+        # Output packet count            4546146635
+        p11 = re.compile(r"^Output\spacket count\s+(?P<output_packet_count>\d+)")
+
+        # Output bytes count             2537511523512
+        p12 = re.compile(r"^Output\sbytes count\s+(?P<output_bytes_count>\d+)")
+
+        # Output mcast packets           7189
+        p13 = re.compile(r"^Output\smcast packets\s+(?P<output_mcast_pkts>\d+)")
+
+        # Output bcast packets           112
+        p14 = re.compile(r"^Output\sbcast packets\s+(?P<output_bcast_pkts>\d+)")
+
+        # Output underruns               0
+        p15 = re.compile(r"^Output\sunderruns\s+(?P<output_underruns>\d+)")
+
+        # Output pause frames            0
+        p16 = re.compile(r"^Output\spause frames\s+(?P<output_pause_frames>\s+\d+)")
+
+        for line in output.splitlines():
+
+            # GigabitEthernet 0/0/0 Cumulative Statistics:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces = group["interfaces"]
+                interfaces_dict = config_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
+
+            # Input packet count             7628882
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                input_packet_count = int(group["input_packet_count"])
+                interfaces_dict['input_packet_count'] = input_packet_count
+
+            # Input bytes count              1370799013
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                input_bytes_count = int(group["input_bytes_count"])
+                interfaces_dict['input_bytes_count'] = input_bytes_count
+
+            # Input mcast packets            7193
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                input_mcast_pkts = int(group["input_mcast_pkts"])
+                interfaces_dict['input_mcast_pkts'] = input_mcast_pkts
+
+            # Input bcast packets            1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                input_bcast_pkts = int(group["input_bcast_pkts"])
+                interfaces_dict['input_bcast_pkts'] = input_bcast_pkts
+
+            # Input CRC errors               0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                input_crc_errors = int(group["input_crc_errors"])
+                interfaces_dict['input_crc_errors'] = input_crc_errors
+
+            # Input overruns                 3
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                input_overruns = int(group["input_overruns"])
+                interfaces_dict['input_overruns'] = input_overruns
+
+            # Runt packets                   0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                runt_packets = int(group["runt_packets"])
+                interfaces_dict['runt_packets'] = runt_packets
+
+            # Giant packets                  0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                giant_packets = int(group["giant_packets"])
+                interfaces_dict['giant_packets'] = giant_packets
+
+            # Input pause frames             0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                input_pause_frames = int(group["input_pause_frames"])
+                interfaces_dict['input_pause_frames'] = input_pause_frames
+
+            # Output packet count            4546146635
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                output_packet_count = int(group["output_packet_count"])
+                interfaces_dict['output_packet_count'] = output_packet_count
+
+            # Output bytes count             2537511523512
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                output_bytes_count = int(group["output_bytes_count"])
+                interfaces_dict['output_bytes_count'] = output_bytes_count
+
+            # Output mcast packets           7189
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                output_mcast_pkts = int(group["output_mcast_pkts"])
+                interfaces_dict['output_mcast_pkts'] = output_mcast_pkts
+
+            # Output bcast packets           112
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                output_bcast_pkts = int(group["output_bcast_pkts"])
+                interfaces_dict['output_bcast_pkts'] = output_bcast_pkts
+
+            # Output underruns               0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                output_underruns = int(group["output_underruns"])
+                interfaces_dict['output_underruns'] = output_underruns
+
+            # Output pause frames            0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                output_pause_frames = int(group["output_pause_frames"])
+                interfaces_dict['output_pause_frames'] = output_pause_frames
+
+        return config_dict

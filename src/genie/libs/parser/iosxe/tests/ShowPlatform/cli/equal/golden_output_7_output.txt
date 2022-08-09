@@ -1,0 +1,3 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       10     IE-3100-8T2C          FDO2604J901  4006.d5e3.0200  03            17.10.01  

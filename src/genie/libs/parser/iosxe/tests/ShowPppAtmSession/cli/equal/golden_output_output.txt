@@ -1,0 +1,6 @@
+show pppatm session
+1 session  in VACCESS_ATTACHED (VA_AT) State
+1 session  total
+
+Uniq ID  ATM-Intf         VPI/VCI   Encap      VT  VA         VA-st  State
+N/A      AT0/2/0.20        10/100   SNAP      Di1  Vi2        UP     VA_AT

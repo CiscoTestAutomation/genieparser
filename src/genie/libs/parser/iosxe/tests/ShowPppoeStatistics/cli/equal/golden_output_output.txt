@@ -1,0 +1,58 @@
+Load for five secs: 3%/1%; one minute: 3%; five minutes: 3%
+Time source is user configuration, 11:09:16.506 IST Thu Feb 17 2022
+
+PPPoE Events                   TOTAL         SINCE CLEARED
+------------------------------ ------------- -------------
+INVALID                        0             0            
+PRE-SERVICE FOUND              0             0            
+PRE-SERVICE NONE               0             0            
+SSS CONNECT LOCAL              12110         12110        
+SSS FORWARDING                 0             0            
+SSS FORWARDED                  0             0            
+SSS MORE KEYS                  146772        146772       
+SSS DISCONNECT                 762           762          
+SSS DISCONNECT ACK             0             0            
+CONFIG UPDATE                  0             0            
+STATIC BIND RESPONSE           12110         12110        
+PPP FORWARDING                 134258        134258       
+PPP FORWARDED                  133843        133843       
+PPP DISCONNECT                 12110         12110        
+PPP RENEGOTIATION              0             0            
+SSM PROVISIONED                146772        146772       
+SSM UPDATED                    12110         12110        
+SSM ACCT STATS UPDATED         0             0            
+SSM DISCONNECT                 0             0            
+                               0             0            
+
+PPPoE Statistics               TOTAL         SINCE CLEARED
+------------------------------ ------------- -------------
+SSS Request                    146772        146772       
+SSS Response Stale             0             0            
+SSS Disconnect                 146010        146010       
+PPPoE Handles Allocated        146772        146772       
+PPPoE Handles Freed            146772        146772       
+Dynamic Bind Request           146772        146772       
+Static Bind Request            12110         12110        
+SSM Async Stats Request        0             0            
+ATM VCD Retrieval Errors       0             0            
+PADX Retrieval Errors (sync)   0             0            
+PADR Processing Errors (sync)  0             0            
+Base VA Create Errors (sync)   0             0            
+Call Admin Drops               0             0            
+Max PADR Size Pkts             0             0            
+Bad MAC Addr                   0             0            
+Bad Cookie                     0             0            
+Bad Service Name               0             0            
+Max Sess Reach                 0             0            
+Dup PADRs Rcvd                 0             0            
+Memory Fails                   0             0            
+Tags Processing Errors         0             0            
+BBA Grp Errors                 0             0            
+MAC Elem Errors                0             0            
+Vlan Cfg Fails                 0             0            
+Vlan Id Mismatchs              0             0            
+Invalid Versions               0             0            
+Null Sess Ids                  0             0            
+Malformed PADX Received        0             0            
+Invalid Tag Ignored            0             0     
+

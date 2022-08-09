@@ -1,0 +1,18 @@
+                                                Invalid mDNS services 
+=================================================================================================================================
+[<SERVICE NAME>]                                    [Mac Address]    [<PTR>] [<SRV>] [<A/AAAA>] [<TXT>]
+
+0mysrv._ipp._tcp.local                              d8eb.97b7.1e7b     Y        Y        N         Y
+_afpovertcp._tcp.local                              0242.6601.0505     Y        Y        N         Y
+_ssh._tcp.local                                     0242.6601.0506     Y        Y        N         Y
+_raop._tcp.local                                    0242.6601.0507     Y        Y        N         Y
+_airplay._tcp.local                                 0242.6601.0508     Y        Y        N         Y                          
+_printer._tcp.local                                 0242.6601.0509     Y        Y        N         Y
+_presence._tcp.local                                0242.6602.0505     Y        Y        N         Y
+_nfs._tcp.local                                     0242.6603.0505     Y        Y        N         Y
+_ipps._tcp.local                                    0242.6604.0505     Y        Y        N         Y
+_ichat._tcp.local                                   0242.6605.0505     Y        Y        N         Y
+_http._tcp.local                                    0242.6606.0505     Y        Y        N         Y
+_ftp._tcp.local                                     0242.6607.0505     Y        Y        N         Y
+_dpap._tcp.local                                    0242.6608.0505     Y        Y        N         Y
+_daap._tcp.local                                    0242.6609.0505     Y        Y        N         Y

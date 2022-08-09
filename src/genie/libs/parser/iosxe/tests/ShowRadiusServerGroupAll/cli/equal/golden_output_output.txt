@@ -1,0 +1,29 @@
+Server group radius
+    Sharecount = 1  sg_unconfigured = FALSE
+    Type = standard  Memlocks = 1
+    Server(10.106.26.213:1812,1813,mgmt-rad) Transactions:
+    Authen: 0   Author: 0       Acct: 0
+    Server_auto_test_enabled: FALSE
+     Keywrap enabled: FALSE
+    Server(121.0.0.1:1812,1813,data-rad) Transactions:
+    Authen: 0   Author: 0       Acct: 0
+    Server_auto_test_enabled: FALSE
+     Keywrap enabled: FALSE
+    Server(44AA::1:1812,1813,ipv6-rad) Transactions:
+    Authen: 0   Author: 0       Acct: 0
+    Server_auto_test_enabled: FALSE
+     Keywrap enabled: FALSE
+Server group radius-1
+    Sharecount = 1  sg_unconfigured = FALSE
+    Type = standard  Memlocks = 1
+    Server(10.106.26.213:1812,1813,mgmt-rad) Transactions:
+    Authen: 0   Author: 0       Acct: 4
+    Server_auto_test_enabled: FALSE
+     Keywrap enabled: FALSE
+Server group radius-2
+    Sharecount = 1  sg_unconfigured = FALSE
+    Type = standard  Memlocks = 1
+    Server(121.0.0.1:1812,1813,data-rad) Transactions:
+    Authen: 0   Author: 0       Acct: 0
+    Server_auto_test_enabled: FALSE
+     Keywrap enabled: FALSE

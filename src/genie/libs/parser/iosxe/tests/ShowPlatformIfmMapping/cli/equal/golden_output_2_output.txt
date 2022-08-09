@@ -1,0 +1,19 @@
+Interface                 IF_ID    Inst Asic Core Port SubPort Mac  Cntx LPN  GPN  Type Active
+GigabitEthernet1/0/1      0x1a       0   0   0    4      0      21   4    1    1    NIF  Y
+GigabitEthernet1/0/2      0x9        0   0   0    5      0      20   5    2    2    NIF  Y
+GigabitEthernet1/0/3      0xa        0   0   0    6      0      23   6    3    3    NIF  Y
+GigabitEthernet1/0/4      0x1f       0   0   0    7      0      22   7    4    4    NIF  Y
+GigabitEthernet1/0/5      0xc        0   0   0    8      0      6    8    5    5    NIF  Y
+GigabitEthernet1/0/6      0xd        0   0   0    9      0      5    9    6    6    NIF  Y
+GigabitEthernet1/0/7      0xe        0   0   0    10     0      49   10   7    7    NIF  Y
+GigabitEthernet1/0/8      0xf        0   0   0    11     0      7    11   8    8    NIF  Y
+GigabitEthernet1/0/9      0x10       0   0   0    12     0      17   12   9    9    NIF  Y
+GigabitEthernet1/0/10     0x11       0   0   0    13     0      16   13   10   10   NIF  Y
+GigabitEthernet1/0/11     0x1c       0   0   0    14     0      19   14   11   11   NIF  Y
+GigabitEthernet1/0/12     0x1b       0   0   0    15     0      18   15   12   12   NIF  Y
+GigabitEthernet1/1/1      0x14       0   0   0    16     0      3    16   13   13   NIF  Y
+GigabitEthernet1/1/2      0x15       0   0   0    17     0      48   17   14   14   NIF  Y
+TenGigabitEthernet1/1/3   0x16       0   0   0    0      0      4    0    15   15   NIF  Y
+TenGigabitEthernet1/1/4   0x17       0   0   0    1      0      0    1    16   16   NIF  Y
+GigabitEthernet1/1/5      0x18       0   0   0    18     0      2    18   17   17   NIF  Y
+

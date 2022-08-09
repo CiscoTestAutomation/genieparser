@@ -1,0 +1,6 @@
+Forwarding Manager policy-defn Redirect action metadata
+
+ Service ID     Service VRF     Firewall mode   Service Selector  Service IP       No. Of RLOCs
+--------------------------------------------------------------------------------------------------
+ 1252352985          2             Routed             255         172.18.0.6       1
+ 1334474089          0             Routed             255         172.18.0.2       1

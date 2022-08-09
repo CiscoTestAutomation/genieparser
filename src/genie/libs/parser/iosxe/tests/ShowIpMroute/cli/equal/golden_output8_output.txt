@@ -1,0 +1,52 @@
+(192.168.1.2, 232.64.64.1), 4d23h/00:03:27, flags: sTEpl
+  Incoming interface: LISP0.4100, RPF nbr 100.11.11.11, LISP: [100.11.11.11, 232.100.100.66]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.132.100.66), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: pt
+      32.1.1.110, 4d23h/00:03:05
+      100.120.120.120, 4d23h/00:03:27
+  Extranet receivers in vrf internet:
+  (192.168.1.2, 232.64.64.1), 4d23h/00:03:02, OIF count: 1, flags: sTpl
+
+(192.168.1.3, 232.64.64.1), 4d23h/00:02:56, flags: sTEpl
+  Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.218]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.132.100.218), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: pt
+      100.120.120.120, 4d23h/00:02:56
+  Extranet receivers in vrf internet:
+  (192.168.1.3, 232.64.64.1), 4d23h/00:02:54, OIF count: 1, flags: sTpl
+
+(172.168.1.2, 232.64.64.1), 4d23h/00:02:47, flags: sTEpl
+  Incoming interface: LISP0.4100, RPF nbr 100.110.110.110, LISP: [100.110.110.110, 232.132.100.165]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.100.100.165), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: p
+      100.11.11.11, 4d23h/00:02:47
+  Extranet receivers in vrf internet:
+  (172.168.1.2, 232.64.64.1), 4d23h/00:03:16, OIF count: 1, flags: sTpl
+
+(182.168.1.2, 232.64.64.1), 4d23h/00:03:13, flags: sTEpl
+  Incoming interface: LISP0.4100, RPF nbr 100.120.120.120, LISP: [100.120.120.120, 232.132.100.202]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.100.100.202), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: p
+      100.22.22.22, 4d23h/00:03:13
+      100.11.11.11, 4d23h/00:03:05
+  Extranet receivers in vrf internet:
+  (182.168.1.2, 232.64.64.1), 4d23h/00:02:54, OIF count: 1, flags: sTpl
+
+(192.168.1.3, 232.114.114.114), 4d23h/00:02:55, flags: sTpl
+  Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.101]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.132.100.101), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: pt
+      32.1.1.110, 4d23h/00:02:55
+
+(192.168.1.3, 232.104.104.1), 4d23h/stopped, flags: sTEl
+  Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.175]
+  Outgoing interface list: Null
+  Extranet receivers in vrf internet:
+  (192.168.1.3, 232.104.104.1), 4d23h/00:03:20, OIF count: 1, flags: sTpl
+
+(192.168.1.3, 232.134.134.134), 4d23h/00:02:55, flags: sTpl
+  Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
+  Outgoing interface list:
+    LISP0.4100, (100.99.99.99, 232.132.100.234), Forward/Sparse, 4d23h/stopped, Pkts:0, flags: pt
+      100.120.120.120, 4d23h/00:02:55
+

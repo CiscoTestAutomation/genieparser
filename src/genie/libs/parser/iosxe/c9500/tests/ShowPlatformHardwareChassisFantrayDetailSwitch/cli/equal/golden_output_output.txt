@@ -1,0 +1,9 @@
+show platform hardware chassis fantray detail switch active
+ Control Mode:   Auto, Monitor Mode:   Auto, Duty Cycle: 50.20%
+ Fan tray-1:
+   FAN1 Inlet:  10804 RPM, Outlet:   9656 RPM
+   FAN2 Inlet:  10734 RPM, Outlet:   9796 RPM
+
+ Fan tray-2:
+   FAN1 Inlet:  10804 RPM, Outlet:   9937 RPM
+   FAN2 Inlet:  10828 RPM, Outlet:  10289 RPM

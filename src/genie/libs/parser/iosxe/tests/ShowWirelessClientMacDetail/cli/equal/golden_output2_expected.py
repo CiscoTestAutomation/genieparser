@@ -99,7 +99,7 @@ expected_output = {
             'url_redirect_acl': 'ACL_WEBAUTH_REDIRECT',
             'url_redirect': 'https://<placeholder>-WLAN-ISE.lab.<placeholder>:8443/portal/gateway?sessionId=445A583B000011D9103562E6&portal=f0ae43f0-7159-11e7-a355-005056aba474&action=cwa&token=5041ffbf4f184469c4db42e2a92ea637',
             'vlan_name': 'WLC-DATA',
-            'vlan': '145',
+            'vlan': 145,
             'absolute_timer': 1800,
         },
     },
@@ -144,8 +144,7 @@ expected_output = {
         ]
     },
     'client_scan_report_time': 'Timer not running',
-    'nearby_ap_statistics': {
-    },
+    'nearby_ap_statistics': {},
     'eogre': 'Pending Classification',
     'max_client_protocol_capability': '802.11ac Wave 2',
     'cellular_capability': 'N/A',

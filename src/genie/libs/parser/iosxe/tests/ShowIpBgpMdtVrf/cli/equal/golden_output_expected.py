@@ -1,0 +1,38 @@
+expected_output = {
+    'vrf':{
+        'vpn144':{
+            'address_family':{
+                'ipv4 RD 144:1':{
+                    'bgp_table_version':1149,
+                    'route_identifier':'6.6.6.6',
+                    'route_distinguisher':'144:1',
+                    'default_vrf':'vpn144',
+                    'routes':{
+                        '6.6.6.6/32':{
+                            'index':{
+                                1:{
+                                    'status_codes':'*>',
+                                    'next_hop':'0.0.0.0',
+                                    'weight':0,
+                                    'origin_codes':'?'
+                                }
+                            }
+                        },
+                        '20.20.20.20/32':{
+                            'index':{
+                                1:{
+                                    'status_codes':'*>i',
+                                    'next_hop':'20.20.20.20',
+                                    'localpref':100,
+                                    'weight':0,
+                                    'metric':0,
+                                    'origin_codes':'?'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

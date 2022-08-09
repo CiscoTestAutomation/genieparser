@@ -1,0 +1,23 @@
+show ip nhrp nhs detail
+Legend: E=Expecting replies, R=Responding, W=Waiting, D=Dynamic
+Tunnel0:
+111.0.0.100   E NBMA Address: 111.1.1.1 priority = 0 cluster = 0  req-sent 0  req-failed 0  repl-recv 0
+ Current Request ID: 94
+ Protection Socket Requested: FALSE
+
+Tunnel100:
+100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0  req-sent 105434  req-failed 0  repl-recv 105434 (00:00:49 ago)
+ Current Request ID: 35914 (Ack: 35914)
+ Protection Socket Requested: FALSE
+172.16.0.1   E  priority = 0 cluster = 0  req-sent 124174  req-failed 0  repl-recv 0
+ Current Request ID: 35915
+ Protection Socket Requested: FALSE
+
+Tunnel111:
+111.0.0.100   E  NBMA Address: 111.1.1.1 priority = 0 cluster = 0  req-sent 184399  req-failed 0  repl-recv 0
+ Current Request ID: 35916
+
+
+Pending Registration Requests:
+Registration Request: Reqid 16248, Ret 64  NHS 111.0.0.100 expired (Tu111)
+Registration Request: Reqid 57, Ret 64  NHS 172.16.0.1 expired (Tu100)

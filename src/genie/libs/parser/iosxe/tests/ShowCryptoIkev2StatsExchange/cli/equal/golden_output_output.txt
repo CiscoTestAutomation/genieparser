@@ -1,0 +1,37 @@
+EXCHANGE/NOTIFY                   TX(REQ)    TX(RES)    RX(REQ)    RX(RES)
+
+EXCHANGES
+
+IKE_SA_INIT                            84      19343      20740         83
+IKE_AUTH                               83      19340      19340         83
+CREATE_CHILD_SA                      2014      32935      33035       1959
+CREATE_CHILD_SA_IPSEC                   0      22570      22589          0
+CREATE_CHILD_SA_IPSEC_REKEY           514      10364      10364        456
+CREATE_CHILD_SA_IKE_REKEY            1500          1          1       1500
+INFORMATIONAL                       27365     188162     188824      11691
+
+ERROR NOTIFY
+
+INVALID_SPI                             0          0        288          0
+NO_PROPOSAL_CHOSEN                      0         53          0          0
+TS_UNACCEPTABLE                         0          1          0          0
+
+OTHER NOTIFY
+
+INITIAL_CONTACT                        82          0      19340          0
+SET_WINDOW_SIZE                      1583      19340      19341       1583
+NAT_DETECTION_SOURCE_IP                84      19343      19343         83
+NAT_DETECTION_DESTINATION_IP           84      19343      19343         83
+HTTP_CERT_LOOKUP_SUPPORTED             83      19343      19340         83
+REKEY_SA                              514          0      10364          0
+DPD                                  5146     177452     177453          0
+          
+          
+CONFIG PAYLOAD TYPE                    TX         RX
+          
+CFG_REQUEST                            83      19340
+          
+          
+OTHER COUNTERS                
+          
+NO_NAT                              19426

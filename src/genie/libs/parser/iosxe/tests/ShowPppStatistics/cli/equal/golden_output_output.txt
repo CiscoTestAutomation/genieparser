@@ -1,0 +1,36 @@
+Type PPP Statistic                              TOTAL      SINCE CLEARED
+---- -----------------------------------------  ---------- -------------
+14   PPP Handles Allocated                       79         79        
+15   PPP Handles Freed                           79         79        
+19   PPP Encapped Interfaces                     4          4         
+
+Type PPP MIB Counters                           PEAK       CURRENT
+---- -----------------------------------------  ---------- -------------
+1    Links at LCP Stage                          1          0         
+2    Links at Unauthenticated Name Stage         1          0         
+3    Links at Authenticated Name Stage           1          0
+6    Links at Forwarded Stage                    2          0         
+7    Links at Local Termination Stage            1          1
+20   Successful LCP neogtiations                 79         79        
+22   Entered Authentication Stage                79         79        
+28   IPCP UP Sessions                            1          1
+48   CHAP authentication attempts                22         22
+50   CHAP authentication failures                22         22
+51   PAP authentication attempts                 79         79        
+52   PAP authentication successes                25         25
+53   PAP authentication failures                 3          3
+95   Total Sessions                              1          1
+96   Non-MLP Sessions                            1          1
+98   Total Links                                 2          0         
+99   Non-MLP Links                               2          0         
+
+Type PPP Disconnect Reason                      TOTAL      SINCE CLEARED
+---- -----------------------------------------  ---------- -------------
+11   Missed too many keepalives                  1          1
+17   Received LCP TERMREQ from peer              16         16
+29   Lower Layer disconnected                    74         74        
+61   User cleared from exec prompt               5          5   
+
+
+
+

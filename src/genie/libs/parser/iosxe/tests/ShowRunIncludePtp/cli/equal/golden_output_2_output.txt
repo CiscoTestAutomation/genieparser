@@ -1,0 +1,1 @@
+ptp mode boundary pdelay-req

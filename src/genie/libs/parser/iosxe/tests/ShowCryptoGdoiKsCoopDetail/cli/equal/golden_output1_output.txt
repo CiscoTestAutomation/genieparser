@@ -1,0 +1,3 @@
+Crypto Gdoi Group Name :bw600-IPV6_eft 
+        Group handle: 1073741871, Local Key Server handle: 1073741919
+        *NO* redundancy configured for this group

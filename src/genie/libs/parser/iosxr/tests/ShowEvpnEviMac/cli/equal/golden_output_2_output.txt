@@ -2,6 +2,6 @@
 show evpn evi vpn-id 65535 mac
 Tue Sep 17 20:04:11.302 UTC
 
-VPN-ID     Encap  MAC address    IP address                               Nexthop                                 Label 
+VPN-ID     Encap  MAC address    IP address                               Nexthop                                 Label
 ---------- ------ -------------- ---------------------------------------- --------------------------------------- --------
-65535      N/A    0000.0000.0000 ::                                       Local                                   0     
+65535      N/A    0000.0000.0000 ::                                       Local                                   0

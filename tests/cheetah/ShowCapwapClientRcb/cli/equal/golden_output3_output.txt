@@ -1,0 +1,33 @@
+AdminState                         : ADMIN_ENABLED
+OperationState                     : DISCOVERY
+Name                               : APCC16.7EDB.4168
+SwVer                              : 17.9.0.38
+HwVer                              : 1.0.0.0
+MwarApMgrIp                        : ::
+MwarName                           :
+MwarHwVer                          : 0.0.0.0
+Location                           : default location
+ApMode                             : Local
+ApSubMode                          : Not Configured
+CAPWAP Path MTU                    : 576
+Software Initiated Reload Reason   : Image Upgrade
+CAPWAP Sliding Window
+Active Window Size                 : 0
+OOB Image Download                 : Enabled
+CAPWAP UDP-Lite                    : Enabled
+IP Prefer-mode                     : IPv4
+AP Link DTLS Encryption            : OFF
+AP TCP MSS Adjust                  : Enabled
+AP TCP MSS size                    : 1250
+LinkAuditing                       : disabled
+AP Group Name                      : default-group
+Flex Group Name                    : FP1
+CAPWAP Disconnect Reason:
+    Controller Last Sent: No value set
+Cisco Trustsec Config
+  AP Inline Tagging Mode            : Disabled
+  AP Sgacl Enforcement              : Disabled
+  AP Override Status                : Disabled
+Total Flash Writes Since Boot      : 133
+BLE Module Admin State             : Disabled
+Hyperlocation Admin State          : Disabled
