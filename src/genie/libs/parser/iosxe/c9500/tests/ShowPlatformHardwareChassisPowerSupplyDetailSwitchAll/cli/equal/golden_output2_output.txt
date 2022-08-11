@@ -1,0 +1,23 @@
+show platform hardware chassis power-supply detail switch active all
+PS1:
+Input Voltage   :     226.5000 V
+Input Current   :       1.9082 A
+Input Power     :     426.5000 W
+Output Voltage  :      12.0508 V
+Output Current  :      32.3125 A
+Output power    :     389.0000 W
+Temperature1    :      24.7500 C
+Temperature2    :      26.2500 C
+Temperature3    :      24.5000 C
+PS2:
+Input Voltage   :     227.5000 V
+Input Current   :       1.9238 A
+Input Power     :     431.5000 W
+Output Voltage  :      12.0498 V
+Output Current  :      32.6875 A
+Output power    :     394.0000 W
+Temperature1    :      25.0000 C
+Temperature2    :      27.2500 C
+Temperature3    :      24.5000 C
+PS3 is not Present.
+PS4 is not Present.

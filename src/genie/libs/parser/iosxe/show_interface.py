@@ -3903,7 +3903,7 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
         p1 = re.compile(r'^(?P<key>[Tt]ransceiver|[Tt]ype|[Nn]ame|[Pp]art +[Nn]umber) +is +(?P<value>[\S\s]+)$')
 
         # Voltage            Threshold   Threshold  Threshold  Threshold
-        p3_0 = re.compile(r'(?P<statistic>(Temperature|Voltage|Current|Transmit Power|Receive Power))')
+        p3_0 = re.compile(r'(?P<statistic>(Temperature|Voltage|Current|Transmit Power|Receive Power)) +Threshold +Threshold +Threshold +Threshold$')
 
         # Twe2/1/1     25.5                   90.0       85.0       -5.0      -10.0
         # Twe2/1/1   N/A    5.7                 50.0       40.0        2.0        1.0
@@ -3959,7 +3959,6 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
                     intf_dict[stat]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
                     intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
                     intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
-                    stat = None
                     continue
 
         return result_dict
