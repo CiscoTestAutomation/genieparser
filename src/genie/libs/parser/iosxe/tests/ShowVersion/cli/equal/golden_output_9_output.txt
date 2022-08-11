@@ -1,0 +1,62 @@
+Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500es8-UNIVERSALK9-M), Version 03.06.06.E RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2016 by Cisco Systems, Inc.
+Compiled Sat 17-Dec-16 03:54 by prod_rel_team
+
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2015 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.
+(http://www.gnu.org/licenses/gpl-2.0.html) For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+
+ROM: 15.1(1r)SG6
+sample_4507r_e uptime is 2 years, 39 weeks, 1 day, 22 hours, 42 minutes
+Uptime for this control processor is 2 years, 37 weeks, 1 day, 21 hours, 8 minutes
+System returned to ROM by RPR Switchover
+System restarted at 17:37:58 MEZ Thu Nov 7 2019
+System image file is "bootflash:cat4500es8-universalk9.SPA.03.06.06.E.152-2.E6.bin"
+Jawa Revision 3, RadTrooper Revision 0x0.0x41, Conan Revision 0x1449
+
+Last reload reason: Reload command
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+
+License Information for 'WS-X45-SUP8-E'
+    License Level: entservices   Type: Permanent Right-To-Use
+    Next reboot license Level: entservices
+
+cisco WS-C4507R+E (P5040) processor (revision 2) with 4194304K bytes of physical memory.
+Processor board ID FXS1736Q1AS
+P5040 CPU at 2.2GHz, Supervisor 8-E
+Last reset from Reload
+1 Virtual Ethernet interface
+120 Gigabit Ethernet interfaces
+16 Ten Gigabit Ethernet interfaces
+511K bytes of non-volatile configuration memory.
+
+Configuration register is 0x2102

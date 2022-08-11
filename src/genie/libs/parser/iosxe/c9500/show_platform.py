@@ -6,6 +6,11 @@ IOSXE c9500 parsers for the following show commands:
    * show redundancy
    * show inventory
    * show platform software object-manager switch {switchvirtualstate} {serviceprocessor} statistics
+   * show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
+   * show platform hardware chassis fantray detail
+   * show platform hardware chassis power-supply detail all
+   * show platform hardware chassis fantray detail switch {mode}
+   * show platform hardware chassis power-supply detail switch {mode} all
 '''
 
 # Python
@@ -1171,4 +1176,575 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
 
         return ret_dict
 
+class ShowPlatformHardwareChassisFantrayDetailSchema(MetaParser):
+    """
+    Schema for show platform hardware chassis fantray detail 
+    """
+    schema = {
+        Optional('control_mode'): str,
+        Optional('monitor_mode'): str,
+        Optional('duty_cycle'): str,
+        'fantray_details':{
+            Any(): {
+                'fan':{
+                    Any(): {
+                        'inlet_rpm': int,
+                        'outlet_rpm': int,
+                    },
+                },
+            },
+        },
+    }
 
+class ShowPlatformHardwareChassisFantrayDetail(ShowPlatformHardwareChassisFantrayDetailSchema):
+    """ Parser for show platform hardware chassis fantray detail"""
+
+    cli_command = 'show platform hardware chassis fantray detail'
+
+    def cli(self, output=None): 
+        if output is None:
+            # excute command to get output
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # Control Mode:   Auto, Monitor Mode:   Auto, Duty Cycle: 50.20%
+        p1 = re.compile(r'^Control Mode:\s+(?P<control_mode>\w+)\, Monitor Mode:\s+(?P<monitor_mode>\w+)\, Duty Cycle:\s+(?P<duty_cycle>\S+)')
+
+        #  Fan tray-1:
+        p2 = re.compile(r'^(?P<fan_tray>\bFan \w+-\d+)')
+
+        # FAN1 Inlet:  11062 RPM, Outlet:   9984 RPM
+        # FAN2 Inlet:  11039 RPM, Outlet:  10007 RPM
+        p3 = re.compile(r'^(?P<fan>\bFAN\d+) Inlet:\s+(?P<inlet_rpm>\d+) +RPM\, +Outlet:\s+(?P<outlet_rpm>\d+) +RPM$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Control Mode:   Auto, Monitor Mode:   Auto, Duty Cycle: 50.20%
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['control_mode'] = group['control_mode']
+                ret_dict['monitor_mode'] = group['monitor_mode']
+                ret_dict['duty_cycle'] = group['duty_cycle']
+                continue
+
+            #  Fan tray-1:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('fantray_details',{}).setdefault(group['fan_tray'],{})
+                continue
+                
+            # FAN1 Inlet:  11062 RPM, Outlet:   9984 RPM
+            # FAN2 Inlet:  11039 RPM, Outlet:  10007 RPM
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fan_dict = root_dict.setdefault('fan',{}).setdefault(group['fan'],{})
+                fan_dict['inlet_rpm'] = int(group['inlet_rpm'])
+                fan_dict['outlet_rpm'] = int(group['outlet_rpm'])
+                continue
+
+        return ret_dict
+
+
+
+class ShowPlatformHardwareChassisPowerSupplyDetailAllSchema(MetaParser):
+    """
+    Schema for show platform hardware chassis power-supply detail all
+    """
+    schema = {
+        'power_supply_details' : {
+            Any(): {
+                'input_voltage_volt': str,
+                'output_voltage_volt': str,
+                'input_power_watt':str,
+                'output_power_watt': str,
+                'input_current_amp': str,
+                'output_current_amp':str,
+                'temperature_celsius': {
+                    'temperature_1': str,
+                    'temperature_2': str,
+                    'temperature_3':str,
+                },
+                Optional('fan_speed_1_rpm'):str
+            },
+        },
+    }
+
+class ShowPlatformHardwareChassisPowerSupplyDetailAll(ShowPlatformHardwareChassisPowerSupplyDetailAllSchema):
+    """ Parser for show platform hardware chassis power-supply detail all"""
+
+    cli_command = 'show platform hardware chassis power-supply detail all'
+
+    def cli(self, output=None): 
+        if output is None:
+            # excute command to get output
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # PS1:
+        p1 = re.compile('^(?P<power_supply>.+)\:$')
+
+        # Input Voltage   :     231.0000 V
+        p2 = re.compile('^Input\s+Voltage\s+:\s+(?P<input_voltage_volt>\d+\.\d+) V$')
+
+        # Output Voltage  :      11.9490 V
+        p3 = re.compile('^Output\s+Voltage\s+:\s+(?P<output_voltage_volt>\d+\.\d+) V$')
+
+        # Input Power     :     165.0000 W
+        p4 = re.compile('^Input\s+Power\s+:\s+(?P<input_power_watt>\d+\.\d+) W$')
+
+        # Output Power    :     150.0000 W
+        p5 = re.compile('^Output\s+(Power|power)\s+:\s+(?P<output_power_watt>\d+\.\d+) W$')
+
+        # Input Current   :       0.7180 A
+        p6 = re.compile('^Input\s+Current\s+:\s+(?P<input_current_amp>\d+\.\d+) A$')
+
+        # Output Current  :      12.4840 A
+        p7 = re.compile('^Output\s+Current\s+:\s+(?P<output_current_amp>\d+\.\d+) A$')
+
+        # Temperature 1   :      30.7500 C
+        p8 = re.compile('^Temperature *1\s+:\s+(?P<temperature1_celsius>\d+\.\d+) C$')
+
+        # Temperature 2   :      33.0000 C
+        p9 = re.compile('^Temperature *2\s+:\s+(?P<temperature2_celsius>\d+\.\d+) C$')
+
+        # Temperature 3   :      33.5000 C
+        p10 = re.compile('^Temperature *3\s+:\s+(?P<temperature3_celsius>\d+\.\d+) C$')
+
+        # Fan Speed 1     :   10016.0000 RPM
+        p11= re.compile('^Fan\s+Speed\s+1\s+:\s+(?P<fan_speed_1_rpm>\d+\.\d+) RPM$')
+
+        for line in output.splitlines():
+            line=line.strip()
+
+            # PS1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                power_dict=ret_dict.setdefault('power_supply_details',{})
+                root_dict=power_dict.setdefault(group['power_supply'],{})
+                temp_dict=root_dict.setdefault('temperature_celsius',{})
+                continue
+
+            # Input Voltage   :     231.0000 V    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_voltage_volt'] = group['input_voltage_volt']
+                continue
+
+            # Output Voltage  :      11.9490 V
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_voltage_volt'] = group['output_voltage_volt']
+                continue
+
+            # Input Power     :     165.0000 W
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_power_watt'] = group['input_power_watt']
+                continue
+
+            # Output Power    :     150.0000 W
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_power_watt'] = group['output_power_watt']
+                continue
+
+            # Input Current   :       0.7180 A
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_current_amp'] = group['input_current_amp']
+                continue
+
+            # Output Current  :      12.4840 A
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_current_amp'] = group['output_current_amp']
+                continue
+
+            
+            
+            # Temperature 1   :      30.7500 C
+            # Temperature1    :      23.5000 C
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_1'] = group['temperature1_celsius']
+                continue
+
+            # Temperature 2   :      33.0000 C
+            # Temperature2    :      28.0000 C
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_2'] = group['temperature2_celsius']
+                continue
+
+            # Temperature 3   :      33.5000 C
+            # Temperature3    :      23.7500 C
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_3'] = group['temperature3_celsius']
+                continue
+
+            # Fan Speed 1     :   10016.0000 RPM
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['fan_speed_1_rpm'] = group['fan_speed_1_rpm']
+                continue
+
+        return ret_dict
+        
+class ShowPlatformHardwareChassisFantrayDetailSwitchSchema(MetaParser):
+    """
+    Schema for show platform hardware chassis fantray detail switch {mode}
+    """
+    schema = {
+        Optional('control_mode'): str,
+        Optional('monitor_mode'): str,
+        Optional('duty_cycle'): str,
+        'fantray_details':{
+            Any(): {
+                'fan':{
+                    Any(): {
+                        'inlet_rpm': int,
+                        'outlet_rpm': int,
+                    },
+                },
+            },
+        },
+    }
+
+class ShowPlatformHardwareChassisFantrayDetailSwitch(ShowPlatformHardwareChassisFantrayDetailSwitchSchema):
+    """ Parser for show platform hardware chassis fantray detail switch {mode}"""
+
+    cli_command = 'show platform hardware chassis fantray detail switch {mode}'
+
+    def cli(self, mode, output=None): 
+        if output is None:
+            # excute command to get output
+            output = self.device.execute(self.cli_command.format(mode=mode))
+
+        # initial variables
+        ret_dict = {}
+
+        # Control Mode:   Auto, Monitor Mode:   Auto, Duty Cycle: 50.20%
+        p1 = re.compile(r'^Control Mode:\s+(?P<control_mode>\w+)\, Monitor Mode:\s+(?P<monitor_mode>\w+)\, Duty Cycle:\s+(?P<duty_cycle>\S+)')
+
+        #  Fan tray-1:
+        p2 = re.compile(r'^(?P<fan_tray>\bFan \w+-\d+)')
+
+        # FAN1 Inlet:  11062 RPM, Outlet:   9984 RPM
+        # FAN2 Inlet:  11039 RPM, Outlet:  10007 RPM
+        p3 = re.compile(r'^(?P<fan>\bFAN\d+) Inlet:\s+(?P<inlet_rpm>\d+) +RPM\, +Outlet:\s+(?P<outlet_rpm>\d+) +RPM$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Control Mode:   Auto, Monitor Mode:   Auto, Duty Cycle: 50.20%
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['control_mode'] = group['control_mode']
+                ret_dict['monitor_mode'] = group['monitor_mode']
+                ret_dict['duty_cycle'] = group['duty_cycle']
+                continue
+
+            #  Fan tray-1:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('fantray_details',{}).setdefault(group['fan_tray'],{})
+                continue
+                
+            # FAN1 Inlet:  11062 RPM, Outlet:   9984 RPM
+            # FAN2 Inlet:  11039 RPM, Outlet:  10007 RPM
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fan_dict = root_dict.setdefault('fan',{}).setdefault(group['fan'],{})
+                fan_dict['inlet_rpm'] = int(group['inlet_rpm'])
+                fan_dict['outlet_rpm'] = int(group['outlet_rpm'])
+                continue
+
+        return ret_dict
+        
+class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAllSchema(MetaParser):
+    """
+    Schema for show platform hardware chassis power-supply detail switch {mode} all
+    """
+    schema = {
+        'power_supply_details' : {
+            Any(): {
+                'input_voltage_volt': str,
+                'output_voltage_volt': str,
+                'input_power_watt':str,
+                'output_power_watt': str,
+                'input_current_amp': str,
+                'output_current_amp':str,
+                'temperature_celsius': {
+                    'temperature_1': str,
+                    'temperature_2': str,
+                    'temperature_3':str,
+                },
+                Optional('fan_speed_1_rpm'):str
+            },
+        },
+    }
+
+class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardwareChassisPowerSupplyDetailSwitchAllSchema):
+    """ Parser for show platform hardware chassis power-supply detail switch {mode} all"""
+
+    cli_command = 'show platform hardware chassis power-supply detail switch {mode} all'
+
+    def cli(self, mode, output=None): 
+        if output is None:
+            # excute command to get output
+            output = self.device.execute(self.cli_command.format(mode=mode))
+        else:
+            output = output
+        # initial variables
+        ret_dict = {}
+
+        # PS1:
+        p1 = re.compile('^(?P<power_supply>.+)\:$')
+
+        # Input Voltage   :     231.0000 V
+        p2 = re.compile('^Input\s+Voltage\s+:\s+(?P<input_voltage_volt>\d+\.\d+) V$')
+
+        # Output Voltage  :      11.9490 V
+        p3 = re.compile('^Output\s+Voltage\s+:\s+(?P<output_voltage_volt>\d+\.\d+) V$')
+
+        # Input Power     :     165.0000 W
+        p4 = re.compile('^Input\s+Power\s+:\s+(?P<input_power_watt>\d+\.\d+) W$')
+
+        # Output Power    :     150.0000 W
+        p5 = re.compile('^Output\s+(Power|power)\s+:\s+(?P<output_power_watt>\d+\.\d+) W$')
+
+        # Input Current   :       0.7180 A
+        p6 = re.compile('^Input\s+Current\s+:\s+(?P<input_current_amp>\d+\.\d+) A$')
+
+        # Output Current  :      12.4840 A
+        p7 = re.compile('^Output\s+Current\s+:\s+(?P<output_current_amp>\d+\.\d+) A$')
+
+        # Temperature 1   :      30.7500 C
+        p8 = re.compile('^Temperature *1\s+:\s+(?P<temperature1_celsius>\d+\.\d+) C$')
+
+        # Temperature 2   :      33.0000 C
+        p9 = re.compile('^Temperature *2\s+:\s+(?P<temperature2_celsius>\d+\.\d+) C$')
+
+        # Temperature 3   :      33.5000 C
+        p10 = re.compile('^Temperature *3\s+:\s+(?P<temperature3_celsius>\d+\.\d+) C$')
+
+        # Fan Speed 1     :   10016.0000 RPM
+        p11= re.compile('^Fan\s+Speed\s+1\s+:\s+(?P<fan_speed_1_rpm>\d+\.\d+) RPM$')
+
+        for line in output.splitlines():
+            line=line.strip()
+
+            # PS1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                power_dict=ret_dict.setdefault('power_supply_details',{})
+                root_dict=power_dict.setdefault(group['power_supply'],{})
+                temp_dict=root_dict.setdefault('temperature_celsius',{})
+                continue
+
+            # Input Voltage   :     231.0000 V    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_voltage_volt'] = group['input_voltage_volt']
+                continue
+
+            # Output Voltage  :      11.9490 V
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_voltage_volt'] = group['output_voltage_volt']
+                continue
+
+            # Input Power     :     165.0000 W
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_power_watt'] = group['input_power_watt']
+                continue
+
+            # Output Power    :     150.0000 W
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_power_watt'] = group['output_power_watt']
+                continue
+
+            # Input Current   :       0.7180 A
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['input_current_amp'] = group['input_current_amp']
+                continue
+
+            # Output Current  :      12.4840 A
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['output_current_amp'] = group['output_current_amp']
+                continue
+
+            
+            
+            # Temperature 1   :      30.7500 C
+            # Temperature1    :      23.5000 C
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_1'] = group['temperature1_celsius']
+                continue
+
+            # Temperature 2   :      33.0000 C
+            # Temperature2    :      28.0000 C
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_2'] = group['temperature2_celsius']
+                continue
+
+            # Temperature 3   :      33.5000 C
+            # Temperature3    :      23.7500 C
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict['temperature_3'] = group['temperature3_celsius']
+                continue
+
+            # Fan Speed 1     :   10016.0000 RPM
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['fan_speed_1_rpm'] = group['fan_speed_1_rpm']
+                continue
+        return ret_dict
+
+# ================================================================================================
+# Schema for 'show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0'
+# ================================================================================================
+
+class ShowPlatformFedTcamPbrNatSchema(MetaParser):
+    """Schema for show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}"""
+
+    schema = {
+        Any():{
+            Optional('index'):{
+                Any():{
+                    Optional('mask'):{
+                        Any(): str,
+                    },
+                    Optional('key'):{
+                        Any(): str,
+                    },
+                    Optional('ad'): str
+                }
+            }
+        }
+    }
+
+# ================================================================================================
+# Parser for 'show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0'
+# ================================================================================================
+
+class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNatSchema):
+    """
+    show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
+    """
+
+    cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
+
+    def cli(self, nat_region, switch="", output=None):
+
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch,nat_region=nat_region)
+            else:
+                cmd = self.cli_command[1].format(nat_region=nat_region)
+
+            output = self.device.execute(cmd)
+
+        # initial variables
+        ret_dict = {}
+
+        # Printing entries for region NAT_1 (387) type 6 asic 0
+        p1 = re.compile(r'^Printing entries for region\s(?P<nat_r>\w+)\s\(\d+\)\stype\s\d+\sasic\s\d$')
+
+        # TAQ-0 Index-576 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+        p2 = re.compile(r'^TAQ-\d+\sIndex-(?P<index>\d+)\s\([A-Z]\:\d+,[A-Z]\:\d+\)\sValid\sStart[A-Z]-\d+\sStart[A-Z]-\d+\sSkip[A-Z]-\d+\sSkip[A-Z]-\d+$')
+
+        # Mask1 30fff000:0003ffff:00000000:0000ffff:00000000:00000000:ffffffff:ffffffff
+        p3 = re.compile(r'^Mask(?P<mask_name>\d+) +(?P<mask_id>\S+)$')
+        # Key1  10119000:00020014:00000000:00000028:00000000:00000000:0f000001:23000001
+        p4 = re.compile(r'^Key(?P<key_name>\d+) +(?P<key_id>\S+)$')
+        # AD    10087000:000000ae:00000000
+        p5 = re.compile(r'^AD +(?P<ad>[\da-f:]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Printing entries for region NAT_1 (387) type 6 asic 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                nat_r = group['nat_r']
+                nat_dict = ret_dict.setdefault(nat_r, {})
+                continue
+
+            # TAQ-0 Index-576 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index = group['index']
+                index_dict = nat_dict.setdefault('index', {}).setdefault(index, {})
+                mask_dict = index_dict.setdefault('mask', {})
+                key_dict = index_dict.setdefault('key', {})
+                continue
+
+            # Mask1 30fff000:0003ffff:00000000:0000ffff:00000000:00000000:ffffffff:ffffffff
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                mask_name = group['mask_name']
+                mask_dict[mask_name] = group['mask_id']
+                continue
+
+            # Key1  10119000:00020014:00000000:00000028:00000000:00000000:0f000001:23000001
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name']
+                key_dict[key_name] = group['key_id']
+                continue
+
+            # AD    10087000:000000ae:00000000
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict['ad'] = group['ad']
+                continue
+
+        return ret_dict

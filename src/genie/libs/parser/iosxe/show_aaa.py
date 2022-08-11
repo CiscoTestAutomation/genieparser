@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema,Any,Optional,Or,And,Default,Use
-                                         
+
 
 # ==================================================
 # Schema for 'show AAA Server'
@@ -168,16 +168,18 @@ class ShowAAServersSchema(MetaParser):
             },
         }
 
-#  ==================================================  
-#  Parser for 'show aaa servers'                        
-#  ==================================================  
+#  ==================================================
+#  Parser for 'show aaa servers'
+#  ==================================================
 class ShowAAServers(ShowAAServersSchema):
     """Parser for show aaa servers"""
 
+    cli_command = 'show aaa servers'
+
     def cli(self, output = None):
-        cli_command = 'show aaa servers'
+
         if output is None:
-            out = self.device.execute(cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -284,7 +286,7 @@ class ShowAAServers(ShowAAServersSchema):
 
         for line in out.splitlines():
             line = line.strip()
-        
+
             # RADIUS: id 9, priority 1, host 11.15.24.174, auth-port 1812, acct-port 1813, hostname ISE-RAD
             res = p1a.match(line)
             if res:
@@ -304,7 +306,7 @@ class ShowAAServers(ShowAAServersSchema):
                 serverdict.update(
                     {'radsec_port': int(group['radsec_port']), 'host': group['host'], 'hostname': group['hostname'],
                      'priority': int(group['priority']), 'id': int(group['id'])})
-            
+
             # RADIUS: id 9, priority 1, host 11.15.24.174, auth-port 1812, acct-port 1813
             res = p1c.match(line)
             if res:
@@ -314,14 +316,14 @@ class ShowAAServers(ShowAAServersSchema):
                 serverdict.update(
                     {'acct_port': int(group['acct_port']), 'auth_port': int(group['auth_port']), 'host': group['host'],
                      'priority': int(group['priority']), 'id': int(group['id'])})
-            
+
             # State: current UP, duration 294173s, previous duration 0s
             res = p2.match(line)
             if res:
                 group = res.groupdict()
                 serverdict.setdefault('platform_state_type', {}).setdefault('state', {})
                 serverdict['platform_state_type']['state'].update(group)
-            
+
             # Dead: total time 0s, count 0
             res = p3.match(line)
             if res:
@@ -342,7 +344,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 serverdict.setdefault('platform_state_type', {}).setdefault(pltfm_state, {})
                 serverdict['platform_state_type'][pltfm_state].update(group)
-                    
+
             # Platform State from WNCD (1) : current UP
             res = p5.match(line)
             if res:
@@ -350,7 +352,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 serverdict.setdefault('platform_state_type', {}).setdefault(platform_state, {})
                 serverdict['platform_state_type'][platform_state].update(group)
-            
+
             # Quarantined: No
             res = p6.match(line)
             if res:
@@ -367,7 +369,7 @@ class ShowAAServers(ShowAAServersSchema):
                 else:
                     aaadict = serverdict.setdefault('aaatype', {}).setdefault(aaa_type, {})
                 aaadict.update({k: int(v) for k, v in group.items()})
-            
+
             # Response: accept 0, reject 0, challenge 0
             res = p8.match(line)
             if res:
@@ -383,7 +385,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 aaadict.setdefault(aaarequest, {})
                 aaadict[aaarequest].update({k: int(v) for k, v in group.items()})
-            
+
             # Response: unexpected 0, server error 0, incorrect 0, time 0ms
             res = p10.match(line)
             if res:
@@ -401,7 +403,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 aaadict.setdefault(aaatransaction, {})
                 aaadict[aaatransaction].update({k: int(v) for k, v in group.items()})
-            
+
             # Throttled: transaction 0, timeout 0, failure 0
             res = p12.match(line)
             if res:
@@ -409,19 +411,19 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 aaadict.setdefault(aaathresold, {})
                 aaadict[aaathresold].update({k: int(v) for k, v in group.items()})
-            
+
             # Malformed responses: 0
             res = p13.match(line)
             if res:
                 group = res.groupdict()
                 aaadict.update(group)
-            
+
             # Bad authenticators: 0
             res = p14.match(line)
             if res:
                 group = res.groupdict()
                 aaadict.update(group)
-            
+
             # Dot1x transactions:
             res = p15.match(line)
             if res:
@@ -435,7 +437,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 transdict.setdefault(aaatransaction_res, {})
                 transdict[aaatransaction_res].update(group)
-            
+
             # Transaction: timeouts 0, failover 0
             res = p17.match(line)
             if res:
@@ -457,18 +459,18 @@ class ShowAAServers(ShowAAServersSchema):
             if res:
                 group = res.groupdict()
                 serverdict.update(group)
-            
+
             # Estimated Outstanding Access Transactions: 0
             res = p20.match(line)
             if res:
                 group = '_'.join(res.group(1, 2, 3, 4)).lower()
                 serverdict[group] = int(res.group(5))
-            
+
             # Maximum Throttled Transactions: access 0, accounting 0
             res = p21.match(line)
             if res:
                 max_thresold = '_'.join(res.group(1, 2, 3)).lower()
-                group = res.groupdict()                        
+                group = res.groupdict()
                 serverdict.setdefault(max_thresold, {})
                 serverdict[max_thresold].update({k: int(v) for k, v in group.items()})
 
@@ -481,7 +483,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 consedict = serverdict.setdefault(conse, {})
                 consedict.update({k: int(v) for k, v in group.items()})
-            
+
             # SMD Platform : max 0, current 0 total 0
             res = p23.match(line)
             if res:
@@ -496,7 +498,7 @@ class ShowAAServers(ShowAAServersSchema):
             if res:
                 req_past = '_'.join(res.groups()).lower()
                 serverdict.setdefault(req_past, {})
-            
+
             # high - 1 hours, 13 minutes ago: 0
             res = p25.match(line)
             if res:
@@ -504,7 +506,7 @@ class ShowAAServers(ShowAAServersSchema):
                 group = res.groupdict()
                 serverdict.setdefault(req_past, {}).setdefault('level_type', {}).setdefault(low_high_type, {})
                 serverdict[req_past]['level_type'][low_high_type].update({k: int(v) for k, v in group.items()})
-            
+
             # average: 0
             res = p26.match(line)
             if res:
@@ -616,13 +618,15 @@ class ShowAAAUserSchema(MetaParser):
 class ShowAAAUserAll(ShowAAAUserSchema):
     """Parser for show aaa user all"""
 
+    cli_command = 'show aaa user all'
+
     def cli(self, output=None):
-        cli_command = 'show aaa user all'
+
         if output is None:
-            out = self.device.execute(cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
-    
+
         # initialize variables
         resultdict = {}
         uniquedict = {}
@@ -1065,9 +1069,9 @@ class ShowAaaFqdnAll(ShowAaaFqdnAllSchema):
     Parser for show aaa fqdn all
     """
 
-    def cli(self, output=None):
+    cli_command = 'show aaa fqdn all'
 
-        cmd = 'show aaa fqdn all'
+    def cli(self, output=None):
 
         # FQDN Name : fqdnname
         p1 = re.compile(r'(^FQDN\s+Name)\s*:\s*(.*)')
@@ -1081,9 +1085,11 @@ class ShowAaaFqdnAll(ShowAaaFqdnAllSchema):
         fqdn_dict = {}
 
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
+
+        fqdn_name = ''
 
         for line in out.splitlines():
             line = line.strip()
@@ -1091,7 +1097,9 @@ class ShowAaaFqdnAll(ShowAaaFqdnAllSchema):
             # FQDN Name : fqdnname
             res = p1.match(line)
             if res:
-                fqdn_dict = ret_dict.setdefault('fqdn_name', {}).setdefault(res.group(2), {})
+                fqdn_name = res.group(2)
+                ret_dict.setdefault('fqdn_name', {}).setdefault(fqdn_name, {})
+                fqdn_dict = ret_dict['fqdn_name'][fqdn_name]
 
             # IPv4s     : 11.15.24.213
             # IPv6s     :
@@ -1099,6 +1107,8 @@ class ShowAaaFqdnAll(ShowAaaFqdnAllSchema):
             res = p2.match(line)
             if res:
                 fqdn_dict.update({res.group(1).lower(): res.group(2)})
+
+        return ret_dict
 
 # ====================================================
 #  Schema for show aaa cache group
@@ -1201,7 +1211,7 @@ class ShowAAACacheGroup(ShowAAACacheGroupSchema):
                 ret_dict.update({'total_entries': count})
                 continue
         return ret_dict
-        
+
 
 # ================================================================
 # Schema for 'show aaa common-criteria policy name {policy_name}'
@@ -1237,6 +1247,7 @@ class ShowAAACommonCriteraPolicy(ShowAAACommonCriteraPolicySchema):
     """
 
     cli_command = 'show aaa common-criteria policy name {policy_name}'
+
     def cli(self, policy_name, output=None):
         cmd = self.cli_command.format(policy_name=policy_name)
         if output is None:
@@ -1266,20 +1277,20 @@ class ShowAAACommonCriteraPolicy(ShowAAACommonCriteraPolicySchema):
         ret_dict = {}
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Policy name: enable_1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["policy_name"] = group["policy_name"]
-            
+
             # Minimum length: 10
             # Maximum length: 128
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict[group["length_key"].lower()+"_"+"length"] = int(group["len"])
-            
+
             # Upper Count: 0
             # Lower Count: 0
             # Numeric Count: 0
@@ -1288,13 +1299,13 @@ class ShowAAACommonCriteraPolicy(ShowAAACommonCriteraPolicySchema):
             if m:
                 group = m.groupdict()
                 ret_dict[group["count_key"].lower()+"_"+"count"] = int(group["count"])
-            
+
             # Number of character changes 4
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["character_changes"] = int(group["char_changes"])
-            
+
             # Valid forever. User tied to this policy will not expire
             m = p5.match(line)
             if m:
@@ -1346,33 +1357,35 @@ class ShowAAAMethodList(ShowAAAMethodListSchema):
     """
     Parser for 'show aaa method-lists {type}'
     """
+
     cli_command = 'show aaa method-lists {type}'
+
     def cli(self, type='all', output=None):
         if output == None:
             cmd = self.cli_command.format(type=type)
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # authen queue=AAA_ML_AUTHEN_LOGIN
         # author queue=AAA_ML_AUTHOR_SHELL
         # acct queue=AAA_ML_ACCT_AUTH_PROXY
         p1 = re.compile(r'^(?P<type>\S+)\squeue=(?P<queue_type>\S+)$')
-        
+
         # permanent lists
         p2 = re.compile(r'^permanent\slists$')
-        
+
         # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
         p3 = re.compile(r'^name=\s*(?P<name>[\S\s]+)valid=\s*(?P<valid>\S+)\sid=\s*(?P<id>\d+)\s:state=\s*(?P<state>\S+)\s:(?P<method_list>[\S\s]*)$')
-        
+
         # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
         p4 = re.compile(r'^name=\s*(?P<name>[\S\s]+)valid=\s*(?P<valid>\S+)\sid=\s*(?P<id>\d+)\sAction=\s*(?P<action>\S+)\s:state=\s*(?P<state>\S+)\s:(?P<method_list>[\S\s]*)$')
-        
+
         ret_dict = {}
-        
+
         # declaring two flags to deal with method list and permanent list in order to leverage the same set of regexp
         method_list_flag = True
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -1387,14 +1400,14 @@ class ShowAAAMethodList(ShowAAAMethodListSchema):
                 aaa_queue_dict = aaa_type_dict.setdefault('queue',{})
                 aaa_method_list_dict = aaa_queue_dict.setdefault(group['queue_type'],{})
                 continue
-            
+
             # permanent lists
             m = p2.match(line)
             if m:
                 method_list_flag = False
                 group = m.groupdict()
                 aaa_method_list_dict = aaa_type_dict.setdefault('permanent_list',{})
-            
+
             # name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
             m = p3.match(line)
             if m:
@@ -1403,7 +1416,7 @@ class ShowAAAMethodList(ShowAAAMethodListSchema):
                     name_aaa_method_list_dict = aaa_method_list_dict
                 else:
                     name_aaa_method_list_dict = aaa_method_list_dict.setdefault('_'.join(group['name'].strip().split()),{})
-                
+
                 name_aaa_method_list_dict.update({
                     'name': group['name'].strip(),
                     'valid': group['valid'].strip() == 'TRUE',

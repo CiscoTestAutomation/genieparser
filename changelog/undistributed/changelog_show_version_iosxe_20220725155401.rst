@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
                             Fix
 --------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowBgpVrfAllAllSummary:
-        * Added regex pattern <p8_3> and <p8_4> to accommodate output of neighbors with 4byte asn.
-
+* IOSXE
+    * Modified ShowVersion:
+        * Updated regex pattern p16_1 to accommodate a license_type with a spaces, e.g. "Type: Permanent Right-To-Use"

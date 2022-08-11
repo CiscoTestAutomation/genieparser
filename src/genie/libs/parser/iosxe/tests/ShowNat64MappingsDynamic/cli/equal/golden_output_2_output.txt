@@ -1,0 +1,7 @@
+Direction ID      ACL
+   Pool                             Flags
+   RG ID Mapping ID
+
+v6v4      1       acl_1                            NULL
+   n64_pool                         0x00000000 0.0.0.0 (none)
+   0     0
