@@ -37,14 +37,12 @@ class ShowGnxiState(ShowGnxiStateSchema):
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
-            print(line)
 
             m = p_full.match(line)
             if m:
                 ret_dict.update(m.groupdict())
                 continue
 
-        print(ret_dict)
         return ret_dict
 
 
