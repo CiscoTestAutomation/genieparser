@@ -28,22 +28,23 @@ class ShowGnxiState(ShowGnxiStateSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # Disabled         Down
         # Enabled          Up
-        p_full = re.compile(r"(?P<state>Disabled|Enabled)\s*(?P<status>Down|Up)")
-
-        matches = p_full.search(out)
+        p_full = re.compile(r"^(?P<state>Disabled|Enabled)\s*(?P<status>Down|Up)$")
 
         ret_dict = {}
-        if matches:
-            groups = matches.groupdict()
-            ret_dict['state'] = groups['state']
-            ret_dict['status'] = groups['status']
+        for line in output.splitlines():
+            line = line.strip()
+            print(line)
 
+            m = p_full.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+        print(ret_dict)
         return ret_dict
 
 
@@ -119,9 +120,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # sections
         p_settings = re.compile(r"^Settings$")
@@ -185,44 +184,65 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
         ret_dict = {}
         current_section = None
         current_subsection = None
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
-            # sections
+            # section matches
+
+            # Settings
+            # ========
             m = p_settings.match(line)
             if m:
                 current_section = self.sections['SETTINGS']
                 continue
+            # GNMI
+            # ====
             m = p_gnmi.match(line)
             if m:
                 current_section = self.sections['GNMI']
                 continue
+            # GNOI
+            # ====
             m = p_gnoi.match(line)
             if m:
                 current_section = self.sections['GNOI']
                 continue
 
             # subsection matches
+
+            #   gRPC Server
+            #   -----------
             m = p_grpc_section.match(line)
             if m:
                 current_subsection = self.subsections['GNMI_GRPC']
                 continue
+            #   Configuration service
+            #   ---------------------
             m = p_conf_section.match(line)
             if m:
                 current_subsection = self.subsections['GNMI_CONF']
                 continue
+            #   Telemetry service
+            #   -----------------
             m = p_telemetry_section.match(line)
             if m:
                 current_subsection = self.subsections['GNMI_TELEMETRY']
                 continue
+
             m = p_cert_section.match(line)
+            #   Cert Management service
+            #   -----------------
             if m:
                 current_subsection = self.subsections['GNOI_CERT']
                 continue
+            #   OS Image service
+            #   ----------------
             m = p_os_section.match(line)
             if m:
                 current_subsection = self.subsections['GNOI_OS']
                 continue
+            #   Factory Reset service
+            #   ---------------------
             m = p_reset_section.match(line)
             if m:
                 current_subsection = self.subsections['GNOI_RESET']
@@ -311,7 +331,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 if current_subsection is None:
                     ret_dict.setdefault(current_section, {})['admin_state'] = groups['admin_state']
                 else:
-                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['admin_state'] =\
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['admin_state'] = \
                         groups["admin_state"]
                 continue
 
@@ -323,7 +343,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 if current_subsection is None:
                     ret_dict.setdefault(current_section, {})['oper_status'] = groups['oper_status']
                 else:
-                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['oper_status'] =\
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['oper_status'] = \
                         groups["oper_status"]
                 continue
 
@@ -335,7 +355,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 if current_subsection is None:
                     ret_dict.setdefault(current_section, {})['supported'] = groups['supported']
                 else:
-                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['supported'] =\
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['supported'] = \
                         groups["supported"]
                 continue
 
