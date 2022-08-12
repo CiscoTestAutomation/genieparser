@@ -1,43 +1,45 @@
 expected_output = {
-    'oper_state': {
-        'admin_enabled': False,
-        'cert_mgmt_svc': {
-            'admin_enabled': False,
-            'oper_up': False
-        },
-        'config_svc': {
-            'admin_enabled': False,
-            'oper_up': False
-        },
-        'factory_reset_svc': {
-            'admin_enabled': False,
-            'oper_up': False,
-            'supported': False
-        },
-        'grpc': {
-            'admin_enabled': False,
-            'oper_up': False
-        },
-        'oper_up': False,
-        'os_image_svc': {
-            'admin_enabled': False,
-            'oper_up': False,
-            'supported': False
-        },
-        'provisioned': True,
-        'telemetry_svc': {
-            'admin_enabled': False,
-            'oper_up': False
-        }
-    },
     'settings': {
-        'insecure_port': 50052,
-        'insecure_server': False,
-        'secure_client_authentication': False,
-        'secure_client_trustpoint': '',
-        'secure_password_authentication': False,
-        'secure_port': 9339,
-        'secure_server': False,
-        'secure_trustpoint': ''
+        'server': 'Disabled',
+        'server_port': 50052,
+        'secure_server': 'Disabled',
+        'secure_server_port': 9339,
+        'secure_client_authentication': 'Disabled',
+        'secure_trustpoint': None,
+        'secure_client_trustpoint': None,
+        'secure_password_authentication': 'Disabled',
+    },
+    'gnmi': {
+        'admin_state': 'Disabled',
+        'oper_status': 'Down',
+        'state': 'Provisioned',
+        'grpc_server': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+        },
+        'configuration_service': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+        },
+        'telemetry_service': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+        },
+    },
+    'gnoi': {
+        'cert_management_service': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+        },
+        'factory_reset_service': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+            'supported': 'Not supported on this platform',
+        },
+        'os_image_service': {
+            'admin_state': 'Disabled',
+            'oper_status': 'Down',
+            'supported': 'Not supported on this platform',
+        }
     }
 }

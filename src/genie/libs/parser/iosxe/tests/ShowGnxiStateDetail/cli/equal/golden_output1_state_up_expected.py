@@ -1,43 +1,45 @@
 expected_output = {
-        "settings": {
-        "insecure_server": True,
-        "insecure_port": 50052,
-        "secure_server": False,
-        "secure_port": 9339,
-        "secure_client_authentication": False,
-        "secure_trustpoint": "",
-        "secure_client_trustpoint": "",
-        "secure_password_authentication": False
+    'settings': {
+        'server': 'Enabled',
+        'server_port': 50052,
+        'secure_server': 'Disabled',
+        'secure_server_port': 9339,
+        'secure_client_authentication': 'Disabled',
+        'secure_trustpoint': None,
+        'secure_client_trustpoint': None,
+        'secure_password_authentication': 'Disabled',
+    },
+    'gnmi': {
+        'admin_state': 'Enabled',
+        'oper_status': 'Up',
+        'state': 'Provisioned',
+        'grpc_server': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
         },
-        "oper_state": {
-        "grpc": {
-            "admin_enabled": True,
-            "oper_up": True
+        'configuration_service': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
         },
-        "config_svc": {
-            "admin_enabled": True,
-            "oper_up": True
+        'telemetry_service': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
+        }
+    },
+    'gnoi': {
+        'cert_management_service': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
         },
-        "telemetry_svc": {
-            "admin_enabled": True,
-            "oper_up": True
+        'os_image_service': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
+            'supported': 'Supported',
         },
-        "cert_mgmt_svc": {
-            "admin_enabled": True,
-            "oper_up": True
-        },
-        "os_image_svc": {
-            "admin_enabled": True,
-            "oper_up": True,
-            "supported": True
-        },
-        "factory_reset_svc": {
-            "admin_enabled": True,
-            "oper_up": True,
-            "supported": True
-        },
-        "admin_enabled": True,
-        "oper_up": True,
-        "provisioned": True
+        'factory_reset_service': {
+            'admin_state': 'Enabled',
+            'oper_status': 'Up',
+            'supported': 'Supported',
         }
     }
+}

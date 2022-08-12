@@ -4,27 +4,10 @@ IOSXE parsers for the following commands
     * 'show gnxi state'
     * 'show gnxi state detail'
 """
-
-from collections import defaultdict
 import re
-from enum import Enum
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional
-
-
-def _enabled_disabled_to_bool(value: str):
-    """ Returns True if argument string is "Enabled"
-        else False
-    """
-    return value == "Enabled"
-
-
-def _up_down_to_bool(value: str):
-    """ Returns True if argument string is "Up"
-        else False
-    """
-    return value == "Up"
+from genie.metaparser.util.schemaengine import Optional, Or
 
 
 class ShowGnxiStateSchema(MetaParser):
@@ -32,17 +15,15 @@ class ShowGnxiStateSchema(MetaParser):
             show gnxi state
     """
     schema = {
-        "oper_state": {
-            "admin_enabled": bool,
-            "oper_up": bool
-        }
+        'state': str,
+        'status': str
     }
 
 
 class ShowGnxiState(ShowGnxiStateSchema):
-    ''' Parser for:
+    """ Parser for:
             show gnxi state
-    '''
+    """
     cli_command = "show gnxi state"
 
     def cli(self, output=None):
@@ -51,21 +32,17 @@ class ShowGnxiState(ShowGnxiStateSchema):
         else:
             out = output
 
-        ret_dict = {}
-
         # Disabled         Down
         # Enabled          Up
-        p_full = re.compile(r"(?P<admin_state>Disabled|Enabled)\s*(?P<oper_status>Down|Up)")
+        p_full = re.compile(r"(?P<state>Disabled|Enabled)\s*(?P<status>Down|Up)")
 
         matches = p_full.search(out)
 
+        ret_dict = {}
         if matches:
             groups = matches.groupdict()
-
-            ret_dict = {"oper_state": {}}
-
-            ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
-            ret_dict["oper_state"]["oper_up"] = _up_down_to_bool(groups["oper_status"])
+            ret_dict['state'] = groups['state']
+            ret_dict['status'] = groups['status']
 
         return ret_dict
 
@@ -75,47 +52,47 @@ class ShowGnxiStateDetailSchema(MetaParser):
             show gnxi state detail
     """
     schema = {
-        "settings": {
-            "insecure_server": bool,
-            "insecure_port": int,
-            "secure_server": bool,
-            "secure_port": int,
-            "secure_client_authentication": bool,
-            "secure_trustpoint": str,
-            "secure_client_trustpoint": str,
-            "secure_password_authentication": bool
+        'settings': {
+            'server': str,
+            'server_port': int,
+            'secure_server': str,
+            'secure_server_port': int,
+            'secure_client_authentication': str,
+            'secure_trustpoint': Or(str, None),
+            'secure_client_trustpoint': Or(str, None),
+            'secure_password_authentication': str
         },
-
-        "oper_state": {
-            "admin_enabled": bool,
-            "oper_up": bool,
-            "provisioned": bool,
-
-            "grpc": {
-                "admin_enabled": bool,
-                "oper_up": bool
+        'gnmi': {
+            'admin_state': str,
+            'oper_status': str,
+            'state': str,
+            'grpc_server': {
+                'admin_state': str,
+                'oper_status': str
             },
-            "config_svc": {
-                "admin_enabled": bool,
-                "oper_up": bool
+            'configuration_service': {
+                'admin_state': str,
+                'oper_status': str
             },
-            "telemetry_svc": {
-                "admin_enabled": bool,
-                "oper_up": bool
+            'telemetry_service': {
+                'admin_state': str,
+                'oper_status': str
+            }
+        },
+        'gnoi': {
+            'cert_management_service': {
+                'admin_state': str,
+                'oper_status': str
             },
-            "cert_mgmt_svc": {
-                "admin_enabled": bool,
-                "oper_up": bool
+            Optional('os_image_service'): {
+                'admin_state': str,
+                'oper_status': str,
+                'supported': str
             },
-            Optional("os_image_svc"): {
-                "admin_enabled": bool,
-                "oper_up": bool,
-                "supported": bool
-            },
-            Optional("factory_reset_svc"): {
-                "admin_enabled": bool,
-                "oper_up": bool,
-                "supported": bool
+            Optional('factory_reset_service'): {
+                'admin_state': str,
+                'oper_status': str,
+                'supported': str
             }
         }
     }
@@ -126,15 +103,19 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
             show gnxi state detail
     """
     cli_command = "show gnxi state detail"
-
-    class GnmibSection(Enum):
-        SETTINGS = "settings"
-        GNMI_GRPC = "grpc"
-        GNMI_CONF = "config_svc"
-        GNMI_TELEMETRY = "telemetry_svc"
-        GNOI_CERT = "cert_mgmt_svc"
-        GNOI_OS = "os_image_svc"
-        GNOI_RESET = "factory_reset_svc"
+    sections = {
+        'SETTINGS': "settings",
+        'GNMI': "gnmi",
+        'GNOI': "gnoi"
+    }
+    subsections = {
+        'GNMI_GRPC': "grpc_server",
+        'GNMI_CONF': "configuration_service",
+        'GNMI_TELEMETRY': "telemetry_service",
+        'GNOI_CERT': "cert_management_service",
+        'GNOI_OS': "os_image_service",
+        'GNOI_RESET': "factory_reset_service"
+    }
 
     def cli(self, output=None):
         if output is None:
@@ -142,164 +123,220 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
         else:
             out = output
 
-        current_gnmib_section = self.GnmibSection.SETTINGS
+        # sections
+        p_settings = re.compile(r"^Settings$")
+        p_gnmi = re.compile(r"^GNMI$")
+        p_gnoi = re.compile(r"^GNOI$")
+
+        # subsections
+        p_grpc_section = re.compile(r"^gRPC Server$")
+        p_conf_section = re.compile(r"^Configuration service$")
+        p_telemetry_section = re.compile(r"^Telemetry service$")
+        p_cert_section = re.compile(r"^Cert Management service$")
+        p_os_section = re.compile(r"^OS Image service$")
+        p_reset_section = re.compile(r"^Factory Reset service$")
 
         # Server: Enabled
         # Server: Disabled
-        p_server = re.compile(r"Server: (?P<insecure_server>Disabled|Enabled)")
+        p_server = re.compile(r"^Server: (?P<server>Disabled|Enabled)$")
 
         # Server port: 50052
-        p_server_port = re.compile(r"Server port: (?P<insecure_port>\d+)")
+        p_server_port = re.compile(r"^Server port: (?P<server_port>\d+)$")
 
         # Secure server: Enabled
         # Secure server: Disabled
-        p_secure_server = re.compile(r"Secure server: (?P<secure_server>Disabled|Enabled)")
+        p_secure_server = re.compile(r"^Secure server: (?P<secure_server>Disabled|Enabled)$")
 
         # Secure server port: 9399
-        p_secure_server_port = re.compile(r"Secure server port: (?P<secure_port>\d+)")
+        p_secure_server_port = re.compile(r"^Secure server port: (?P<secure_server_port>\d+)$")
 
         # Secure client authentication: Disabled
         # Secure client authentication: Enabled
-        p_secure_client_auth = re.compile(r"Secure client authentication: (?P<secure_client_auth>Disabled|Enabled)")
+        p_secure_client_auth = re.compile(r"^Secure client authentication: "
+                                          r"(?P<secure_client_authentication>Disabled|Enabled)$")
 
         # Secure trustpoint: Trustpoint_name_here
-        p_secure_tp = re.compile(r"Secure trustpoint:\s?(?P<secure_trustpoint>.*)")
+        p_secure_tp = re.compile(r"^Secure trustpoint:( +)?(?P<secure_trustpoint>\S+)?$")
 
         # Secure client trustpoint: Trustpoint_name_here
-        p_secure_client_tp = re.compile(r"Secure client trustpoint:\s?(?P<secure_client_trustpoint>.*)")
+        p_secure_client_tp = re.compile(r"^Secure client trustpoint:( +)?(?P<secure_client_trustpoint>\S+)?$")
 
         # Secure password authentication: Disabled
         # Secure password authentication: Enabled
-        p_secure_pwd_auth = re.compile(r"Secure password authentication: (?P<secure_pass_auth>Disabled|Enabled)")
+        p_secure_pwd_auth = re.compile(r"^Secure password authentication: "
+                                       r"(?P<secure_password_authentication>Disabled|Enabled)$")
 
         # State: Provisioned
         # State: Default
-        p_bs_state = re.compile(r"State: (?P<bootstrapping_state>Provisioned|Default)")
-
-        p_grpc_section = re.compile(r"gRPC Server")
-        p_conf_section = re.compile(r"Configuration service")
-        p_telemetry_section = re.compile(r"Telemetry service")
-        p_cert_section = re.compile(r"Cert Management service")
-        p_os_section = re.compile(r"OS Image service")
-        p_reset_section = re.compile(r"Factory Reset service")
+        p_bs_state = re.compile(r"^State: (?P<state>Provisioned|Default)$")
 
         # Admin state: Enabled
         # Admin state: Disabled
-        p_admin_state = re.compile(r"Admin state: (?P<admin_state>Disabled|Enabled)")
+        p_admin_state = re.compile(r"^Admin state: (?P<admin_state>Disabled|Enabled)$")
 
         # Oper status: Up
         # Oper status: Down
-        p_oper_status = re.compile(r"Oper status: (?P<oper_status>Down|Up)")
+        p_oper_status = re.compile(r"^Oper status: (?P<oper_status>Down|Up)$")
 
         # Supported: Supported
         # Supported: Not supported on this platform
-        p_supported = re.compile(r"Supported: (?P<supported>Not supported on this platform|Supported)")
+        p_supported = re.compile(r"^Supported: (?P<supported>Not supported on this platform|Supported)$")
 
-        ret_dict = defaultdict(dict)
-
+        ret_dict = {}
+        current_section = None
+        current_subsection = None
         for line in out.splitlines():
-
             line = line.strip()
 
-            match = p_server.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["insecure_server"] = _enabled_disabled_to_bool(groups["insecure_server"])
+            # sections
+            m = p_settings.match(line)
+            if m:
+                current_section = self.sections['SETTINGS']
+                continue
+            m = p_gnmi.match(line)
+            if m:
+                current_section = self.sections['GNMI']
+                continue
+            m = p_gnoi.match(line)
+            if m:
+                current_section = self.sections['GNOI']
+                continue
 
-            match = p_server_port.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["insecure_port"] = int(groups["insecure_port"])
+            # subsection matches
+            m = p_grpc_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNMI_GRPC']
+                continue
+            m = p_conf_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNMI_CONF']
+                continue
+            m = p_telemetry_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNMI_TELEMETRY']
+                continue
+            m = p_cert_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNOI_CERT']
+                continue
+            m = p_os_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNOI_OS']
+                continue
+            m = p_reset_section.match(line)
+            if m:
+                current_subsection = self.subsections['GNOI_RESET']
+                continue
 
-            match = p_secure_server.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_server"] = _enabled_disabled_to_bool(groups["secure_server"])
+            # settings exclusive matches
 
-            match = p_secure_server_port.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_port"] = int(groups["secure_port"])
+            # Server: Enabled
+            # Server: Disabled
+            m = p_server.match(line)
+            if m:
+                settings_dict = ret_dict.setdefault('settings', {})
+                settings_dict.update(m.groupdict())
+                continue
 
-            match = p_secure_client_auth.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_client_authentication"] = _enabled_disabled_to_bool(
-                    groups["secure_client_auth"])
+            # Server port: 50052
+            m = p_server_port.match(line)
+            if m:
+                settings_dict.update({'server_port': int(m.groupdict()['server_port'])})
+                continue
 
-            match = p_secure_tp.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_trustpoint"] = str(groups["secure_trustpoint"])
+            # Secure server: Enabled
+            # Secure server: Disabled
+            m = p_secure_server.match(line)
+            if m:
+                settings_dict.update(m.groupdict())
+                continue
 
-            match = p_secure_client_tp.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_client_trustpoint"] = str(groups["secure_client_trustpoint"])
+            # Secure server port: 9399
+            m = p_secure_server_port.match(line)
+            if m:
+                settings_dict.update({'secure_server_port': int(m.groupdict()['secure_server_port'])})
+                continue
 
-            match = p_secure_pwd_auth.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["settings"]["secure_password_authentication"] = _enabled_disabled_to_bool(
-                    groups["secure_pass_auth"])
+            # Secure client authentication: Disabled
+            # Secure client authentication: Enabled
+            m = p_secure_client_auth.match(line)
+            if m:
+                settings_dict.update(m.groupdict())
+                continue
 
-            match = p_bs_state.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["oper_state"]["provisioned"] = groups["bootstrapping_state"] == "Provisioned"
-
-            match = p_grpc_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNMI_GRPC
-
-            match = p_conf_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNMI_CONF
-
-            match = p_telemetry_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNMI_TELEMETRY
-
-            match = p_cert_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNOI_CERT
-
-            match = p_os_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNOI_OS
-
-            match = p_reset_section.match(line)
-            if match:
-                groups = match.groupdict()
-                current_gnmib_section = self.GnmibSection.GNOI_RESET
-
-            match = p_admin_state.match(line)
-            if match:
-                groups = match.groupdict()
-                if current_gnmib_section == self.GnmibSection.SETTINGS:
-                    ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+            # Secure trustpoint: Trustpoint_name_here
+            m = p_secure_tp.match(line)
+            if m:
+                group = m.groupdict()
+                if group['secure_trustpoint'] is not None:
+                    settings_dict.update(m.groupdict())
                 else:
-                    ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})[
-                        "admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+                    settings_dict.update({'secure_trustpoint': None})
+                continue
 
-            match = p_oper_status.match(line)
-            if match:
-                groups = match.groupdict()
-                if current_gnmib_section == self.GnmibSection.SETTINGS:
-                    ret_dict["oper_state"]["oper_up"] = _up_down_to_bool(groups["oper_status"])
+            # Secure client trustpoint: Trustpoint_name_here
+            m = p_secure_client_tp.match(line)
+            if m:
+                group = m.groupdict()
+                if group['secure_client_trustpoint'] is not None:
+                    settings_dict.update(m.groupdict())
                 else:
-                    ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["oper_up"] = _up_down_to_bool(
-                        groups["oper_status"])
+                    settings_dict.update({'secure_client_trustpoint': None})
+                continue
 
-            match = p_supported.match(line)
-            if match:
-                groups = match.groupdict()
-                ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["supported"] = \
-                    groups["supported"] == "Supported"
+            # Secure password authentication: Disabled
+            # Secure password authentication: Enabled
+            m = p_secure_pwd_auth.match(line)
+            if m:
+                settings_dict.update(m.groupdict())
+                continue
 
-        return dict(ret_dict)
+            # GNMI exclusive matches
+
+            # State: Provisioned
+            # State: Default
+            m = p_bs_state.match(line)
+            if m:
+                gnmi_dict = ret_dict.setdefault('gnmi', {})
+                gnmi_dict.update(m.groupdict())
+                continue
+
+            # generic matches
+
+            # Admin state: Enabled
+            # Admin state: Disabled
+            m = p_admin_state.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_subsection is None:
+                    ret_dict.setdefault(current_section, {})['admin_state'] = groups['admin_state']
+                else:
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['admin_state'] =\
+                        groups["admin_state"]
+                continue
+
+            # Oper status: Up
+            # Oper status: Down
+            m = p_oper_status.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_subsection is None:
+                    ret_dict.setdefault(current_section, {})['oper_status'] = groups['oper_status']
+                else:
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['oper_status'] =\
+                        groups["oper_status"]
+                continue
+
+            # Supported: Supported
+            # Supported: Not supported on this platform
+            m = p_supported.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_subsection is None:
+                    ret_dict.setdefault(current_section, {})['supported'] = groups['supported']
+                else:
+                    ret_dict.setdefault(current_section, {}).setdefault(current_subsection, {})['supported'] =\
+                        groups["supported"]
+                continue
+
+        return ret_dict
