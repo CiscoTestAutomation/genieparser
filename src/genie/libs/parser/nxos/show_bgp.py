@@ -6278,7 +6278,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p42 = re.compile(r'^\s*neighbor +(?P<neighbor_id>[a-z0-9\.\:]+)$')
         p43 = re.compile(r'^\s*bfd$')
         p44 = re.compile(r'^\s*capability suppress 4-byte-as$')
-        p45 = re.compile(r'^\s*description +(?P<nbr_description>[A-Za-z0-9]+)$')
+        p45 = re.compile(r'^\s*description +(?P<nbr_description>.+)$')
         p46 = re.compile(r'^\s*disable-connected-check$')
         p47 = re.compile(r'^\s*ebgp-multihop +(?P<nbr_ebgp_multihop_max_hop>[0-9]+)$')
         p48 = re.compile(r'^\s*inherit peer-session +(?P<nbr_inherit_peer_session>[A-Za-z0-9\-]+)$')
