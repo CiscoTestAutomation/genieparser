@@ -5,7 +5,7 @@ expected_output = {
             'username': 'unassigned', 
             'vrf': 'default', 
             'ia_na': {
-                'iaid': {
+                '0x00000000': {
                     'ia_id': '0x00000000', 
                     't1': 43200, 
                     't2': 69120, 

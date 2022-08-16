@@ -3073,8 +3073,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                     current_rate = float(m.groupdict()['current_rate'])
                 except ValueError:
                     current_rate = m.groupdict()['current_rate']
-                finally:
-                    ret_dict.update({"current_rate": current_rate})
+                ret_dict.update({"current_rate": current_rate})
                 continue
 
             # Supported Rates : 24.0,36.0,48.0,54.0
@@ -3099,9 +3098,6 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
                 group = {k: v.lower() for k, v in m.groupdict().items()}
                 limit_type = f"qos_{group['type'].replace(' ', '_')}_data_rate_kbps"
-                print(group)
-                print()
-                print(limit_type)
 
                 if group['direction'] == "upstream":
                     qos_upstream_dict = qos_rate_limit_dict.setdefault("upstream", {})
@@ -3227,15 +3223,14 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                     vlan = int(m.groupdict()['vlan'])
                 except ValueError:
                     vlan = m.groupdict()['vlan']
-                finally:
-                    if local_policies:
-                        local_policies_dict.update({"vlan": vlan})
-                    elif server_policies:
-                        server_policies_dict.update({"vlan": vlan})
-                    elif resultant_policies:
-                        resultant_policies_dict.update({"vlan": vlan})
-                    else:
-                        ret_dict.update({"vlan": vlan})
+                if local_policies:
+                    local_policies_dict.update({"vlan": vlan})
+                elif server_policies:
+                    server_policies_dict.update({"vlan": vlan})
+                elif resultant_policies:
+                    resultant_policies_dict.update({"vlan": vlan})
+                else:
+                    ret_dict.update({"vlan": vlan})
                 continue
 
             # Multicast VLAN : 0

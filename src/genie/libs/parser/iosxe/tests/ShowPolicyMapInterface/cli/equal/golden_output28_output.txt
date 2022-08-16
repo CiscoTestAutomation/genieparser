@@ -1,0 +1,151 @@
+ GigabitEthernet0/0/0
+
+  Service-policy output: top
+
+    Class-map: vlan100 (match-all)
+      2619318 packets, 1309658128 bytes
+      5 minute offered rate 15632000 bps, drop rate 0000 bps
+      Match: vlan  100
+      Queueing
+      queue limit 64 packets
+      (queue depth/total drops/no-buffer drops) 0/2582299/0
+      (pkts output/bytes output) 36918/18458128
+      shape (average) cir 8000000, bc 32000, be 32000
+      target shape rate 8000000
+      bandwidth remaining ratio 1000
+
+      Service-policy : middle
+
+        Class-map: sec (match-all)
+          1761255 packets, 880627500 bytes
+          5 minute offered rate 10622000 bps, drop rate 0000 bps
+          Match: access-group name sec
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/1759330/0
+          (pkts output/bytes output) 1853/926500
+          shape (average) cir 8000000, bc 32000, be 32000
+          target shape rate 8000000
+          bandwidth remaining 3%
+
+          Service-policy : bottom
+
+            Class-map: ef (match-all)
+              889238 packets, 444619000 bytes
+              5 minute offered rate 5425000 bps, drop rate 5419000 bps
+              Match:  dscp ef (46)
+              Queueing
+              queue limit 64 packets
+              (queue depth/total drops/no-buffer drops) 64/888685/0
+              (pkts output/bytes output) 553/276500
+              bandwidth remaining 15%
+
+            Class-map: class-default (match-any)
+              871942 packets, 435971000 bytes
+              5 minute offered rate 5196000 bps, drop rate 5185000 bps
+              Match: any
+              Queueing
+              queue limit 512 packets
+              (queue depth/total drops/no-buffer drops/flowdrops) 65/870645/0/0
+              (pkts output/bytes output) 1300/650000
+              Fair-queue: per-flow queue limit 128 packets
+
+                Exp-weight-constant: 4 (1/16)
+                Mean queue depth: 65 packets
+                dscp       Transmitted      Random drop      Tail/Flow drop Minimum Maximum Mark
+                            pkts/bytes       pkts/bytes      pkts/bytes   thresh  thresh  prob
+
+                default        0/0               0/0              0/0                 34            62  1/10
+                af31        1300/650000         84/42000     870561/435280500         32            64  1/10
+              bandwidth remaining 85%
+
+        Class-map: class-default (match-any)
+          858034 packets, 429016128 bytes
+          5 minute offered rate 5011000 bps, drop rate 4803000 bps
+          Match: any
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 64/822969/0
+          (pkts output/bytes output) 35065/17531628
+          shape (average) cir 8000000, bc 32000, be 32000
+          target shape rate 8000000
+
+    Class-map: vlan101 (match-all)
+      830718 packets, 415358128 bytes
+      5 minute offered rate 4648000 bps, drop rate 0000 bps
+      Match: vlan  101
+      Queueing
+      queue limit 64 packets
+      (queue depth/total drops/no-buffer drops) 0/795129/0
+      (pkts output/bytes output) 35549/17773628
+      shape (average) cir 8000000, bc 32000, be 32000
+      target shape rate 8000000
+      bandwidth remaining ratio 1000
+
+      Service-policy : middle
+
+        Class-map: sec (match-all)
+          830706 packets, 415353000 bytes
+          5 minute offered rate 4648000 bps, drop rate 0000 bps
+          Match: access-group name sec
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/795129/0
+          (pkts output/bytes output) 35547/17773500
+          shape (average) cir 8000000, bc 32000, be 32000
+          target shape rate 8000000
+          bandwidth remaining 3%
+
+          Service-policy : bottom
+
+            Class-map: ef (match-all)
+              0 packets, 0 bytes
+              5 minute offered rate 0000 bps, drop rate 0000 bps
+              Match:  dscp ef (46)
+              Queueing
+              queue limit 64 packets
+              (queue depth/total drops/no-buffer drops) 0/0/0
+              (pkts output/bytes output) 0/0
+              bandwidth remaining 15%
+
+            Class-map: class-default (match-any)
+              830676 packets, 415338000 bytes
+              5 minute offered rate 4648000 bps, drop rate 4441000 bps
+              Match: any
+              Queueing
+              queue limit 512 packets
+              (queue depth/total drops/no-buffer drops/flowdrops) 63/795129/0/0
+              (pkts output/bytes output) 35547/17773500
+              Fair-queue: per-flow queue limit 128 packets
+
+                Exp-weight-constant: 4 (1/16)
+                Mean queue depth: 63 packets
+                dscp       Transmitted      Random drop      Tail/Flow drop Minimum Maximum Mark
+                            pkts/bytes       pkts/bytes      pkts/bytes   thresh  thresh  prob
+
+                default    35547/17773500     3561/1780500   791568/395784000         34            62  1/10
+                af31           0/0               0/0              0/0                 32            64  1/10
+              bandwidth remaining 85%
+
+        Class-map: class-default (match-any)
+          2 packets, 128 bytes
+          5 minute offered rate 0000 bps, drop rate 0000 bps
+          Match: any
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 2/128
+          shape (average) cir 8000000, bc 32000, be 32000
+          target shape rate 8000000
+
+    Class-map: class-default (match-any)
+      804701 packets, 402349628 bytes
+      5 minute offered rate 4303000 bps, drop rate 4055000 bps
+      Match: any
+      Queueing
+      queue limit 64 packets
+      (queue depth/total drops/no-buffer drops) 64/761091/0
+      (pkts output/bytes output) 43610/21804128
+      bandwidth remaining ratio 1
+      shape (average) cir 10000000, bc 40000, be 40000
+      target shape rate 10000000

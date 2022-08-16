@@ -119,7 +119,7 @@ class Ping(PingSchema):
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
         # Success rate is 0 percent (0/10)
         p4 = re.compile(
-            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<send>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+))?'
+            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<send>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<avg>\d+)/(?P<max>\d+) +(?P<unit>\w+))?'
         )
 
         ping_dict = {}
@@ -269,7 +269,7 @@ class PingMpls(PingMplsSchema):
 
         #Success rate is 100 percent (5/5), round-trip min/avg/max = 1/173/656 ms
         p3 = re.compile(
-            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<sent>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+))?'
+            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<sent>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<avg>\d+)/(?P<max>\d+) +(?P<unit>\w+))?'
         )
 
         #Total Time Elapsed 869 ms

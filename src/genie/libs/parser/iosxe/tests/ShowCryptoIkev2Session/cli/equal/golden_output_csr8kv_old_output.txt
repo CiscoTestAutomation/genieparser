@@ -1,0 +1,39 @@
+IPv4 Crypto IKEv2 Session 
+
+Session-id:3, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1         1.1.1.1/500           1.1.1.2/500           none/none            READY  
+      Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/38157 sec
+
+Child sa: local selector  30.10.10.0/0 - 50.10.10.255/65535
+          local selector  20.10.10.0/0 - 40.10.10.255/65535
+          remote selector 172.17.2.0/0 - 172.17.2.255/65535
+          remote selector 172.17.2.0/0 - 172.17.3.255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          
+Child sa: local selector  20.10.10.0/0 - 40.10.10.255/65535
+          remote selector 50.20.20.0/0 - 60.20.20.255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+          
+
+IPv6 Crypto IKEv2 Session
+Session-id:5, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1         1.1.1::1/500           1.1.1::2/500           none/none            READY  
+      Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/38157 sec
+      
+Child sa: 
+          local selector  30.10.10::0/0 - 50.10.10::255/65535
+          local selector  20.10.10::0/0 - 40.10.10::255/65535
+          remote selector 172.17.2::0/0 - 172.17.2::255/65535
+          remote selector 172.17.2::0/0 - 172.17.3::255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E  
+
+Child sa: 
+          local selector  20.10.10::0/0 - 40.10.10::255/65535
+          remote selector 50.20.20::0/0 - 60.20.20::255/65535
+          ESP spi in/out: 0x232CB82D/0x30767B6E

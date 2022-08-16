@@ -1,0 +1,7 @@
+Proto   Original IPv4           Translated IPv4
+        Translated IPv6         Original IPv6
+--------------------------------------------------------
+tcp     ---                     ---
+        1.1.2.2:100             [2011:1::2]:1234
+
+Total number of translations: 1

@@ -1,0 +1,15 @@
+Total group members registered to this box: 2
+
+Key Server Information For Group getvpn1:
+    Group Name               : getvpn1
+    Re-auth on new CRL       : Disabled
+    Group Identity           : 1223
+    Group Type               : GDOI (ISAKMP)
+    Group Members            : 2
+    Rekey Acknowledgement Cfg: Cisco
+    IPSec SA Direction       : Both
+    IP D3P Window            : Disabled
+    Split Resiliency Factor  : 0
+    CKM status               : Disabled
+    ACL Configured:
+        access-list acl1

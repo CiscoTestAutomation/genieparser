@@ -22,7 +22,7 @@ class ShowIpRouteDistributor(MetaParser):
                    'show ip route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
 
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
@@ -207,19 +207,25 @@ class ShowIpRoute(ShowIpRouteSchema):
             vrf = 'default'
 
         source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
+        source_protocol_dict['ospf'] = ['O','OI','OE1','OE2','ON1','ON2','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
         source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i','su','L1','L2','ia', 'I1', 'I2']
+        source_protocol_dict['isis'] = ['i','su','L1','L2','IA', 'I1', 'I2']
         source_protocol_dict['eigrp'] = ['D','EX', '+', '%', 'p', '&']
         source_protocol_dict['static'] = ['S', '+', '%', 'p', '&']
         source_protocol_dict['mobile'] = ['M']
         source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['lisp'] = ['I', 'Ir','Ia','Id']
+        source_protocol_dict['lisp'] = ['l','la','lr','ld','lA','le','lp','ls']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
         source_protocol_dict['connected'] = ['C', '+', '%', 'p', '&']
         source_protocol_dict['local_connected'] = ['LC']
         source_protocol_dict['bgp'] = ['B', '+', '%', 'p', '&']
+        source_protocol_dict['nd'] = ['ND','NDp']
+        source_protocol_dict['Per-user Static route'] = ['U']
+        source_protocol_dict['Destination'] = ['DCE']
+        source_protocol_dict['Redirect'] = ['NDr']
+        source_protocol_dict['omp'] = ['m']
+
 
         result_dict = {}
 
@@ -278,14 +284,16 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
         # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
+        # ND  ::/0 [2/0]
+        # NDp 2001:103::/64 [2/0]
         if self.IP_VER == 'ipv4':
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         else:
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]\s|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
                 r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
         
@@ -320,6 +328,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
+                results_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 continue
 
             # 10.1.0.0/32 is subnetted, 1 subnets
@@ -353,6 +362,8 @@ class ShowIpRoute(ShowIpRouteSchema):
             # S   &    10.69.0.0 [1/0] via 10.34.0.1
             # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
             # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+            # ND  ::/0 [2/0]
+            # NDp 2001:103::/64 [2/0]
             m = p3.match(line)
             if m:
                 active = True
@@ -1232,7 +1243,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
         # Tag 65161, type external
-        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\S+)$')
+        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\w+ *[\d]*)$')
 
         # AS Hops 9
         p16 = re.compile(r'^AS +Hops (?P<num_hops>\d+)$')
@@ -1454,13 +1465,20 @@ class ShowIpv6RouteWordSchema(MetaParser):
                 'metric': str,
                 Optional('route_count'): str,
                 Optional('share_count'): str,
+                Optional('tag_name'): str,
+                Optional('tag_type'): str,           
                 Optional('type'): str,
+                Optional('redist_via'): str,
+                Optional('redist_via_tag'): str,
+                Optional('tag'): str,
                 'paths': {
                     Any(): {
                         Optional('fwd_ip'): str,
                         Optional('fwd_intf'): str,
                         Optional('from'): str,
-                        Optional('age'): str
+                        Optional('age'): str,
+                        Optional('metric'): str,
+                        Optional('share_count'): str
                     }
                 }
             }
@@ -2864,9 +2882,7 @@ class ShowIpv6RouteSummarySchema(MetaParser):
                     'memory_bytes': int,
                 },
                 'number_of_prefixes': {
-                    'prefix_8': int,
-                    'prefix_64': int,
-                    'prefix_128': int,
+                    Optional(Any()): int,
                 },
                 'route_source': {
                     Any(): {
@@ -2953,7 +2969,7 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
         # ND              0           0           0
         # ospf 200        500         96000       108000
         p4 = re.compile(
-            r'^(?P<protocol>\w+)\s(?P<instance>\d+)?\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory_bytes>\d+)$')
+            r'^(?P<protocol>\w+)\s(?P<instance>\d+|\w+)?\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory_bytes>\d+)$')
 
         # Default: 0  Prefix: 0  Destination: 0  Redirect: 0
         p5 = re.compile(
@@ -2981,8 +2997,7 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
         p10 = re.compile(r'^Static\:\s+(?P<static>\d+)\s+Per\-user\s+static\:\s+(?P<per_user_static>\d+)$')
 
         # /8: 1, /64: 8, /128: 517
-        p11 = re.compile(
-            r'^\/\d+\:\s+(?P<prefix_8>\d+),\s+/\d+\:\s+(?P<prefix_64>\d+),\s+/\d+\:\s+(?P<prefix_128>\d+)$')
+        p11 = re.compile(r'(?P<prefix>\/\d+):\s+(?P<count>\d+)\,?\s?')
 
         ret_dict = {}
 
@@ -3077,12 +3092,93 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
                 continue
 
             # /8: 1, /64: 8, /128: 517
-            m = p11.match(line)
+            m = p11.findall(line)
             if m:
-                group = {k: int(v) for k, v in m.groupdict().items()}
+                group = {k: int(v) for k, v in m}
                 vrf_dict.setdefault('number_of_prefixes', {})
                 vrf_dict['number_of_prefixes'].update(group)
                 continue
 
+        return ret_dict
+# ====================================================
+#  parser for show ipv6 route supernets-only
+# ====================================================
+class ShowIpRouteSupernet(ShowIpRoute):
+    """ Parser for:
+        show ip route supernets-only
+        show ip route vrf <vrf> supernets-only
+    """
+
+    cli_command = ['show ip route vrf {vrf} supernets-only', 'show ip route supernets-only']
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(vrf=vrf, output=out)
+
+# ====================================================
+#  schema for show rib client
+# ====================================================
+class ShowRibClientSchema(MetaParser):
+    """Schema for show rib client
+    """
+    schema = {
+        Any():{
+            'handle': int,
+            'walkQ': int,
+            'walkQbyOwner': int
+        }
+    }
+
+# ====================================================
+#  parser for show rib client
+# ====================================================
+class ShowRibClient(ShowRibClientSchema):
+    cli_command = ['show rib client']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Client name          Handle     WalkQ  WalkQ by Owner
+        # NAT_ROUTE              1          0      0   
+        # OMP                    2          0      0   
+        # OMP TLOC/Network       3          0      0   
+        # IP Static Route        4          0      0   
+        # IP Static Default Ne   5          0      0   
+        # App Route              6          0      0   
+        # NVE MGR rwatch         7          0      0
+
+
+        # NAT_ROUTE              1          0      0   
+        p1 = re.compile(r'^(?P<client_name>[\S ]+)\b +(?P<handle>\d+) +(?P<walkQ>\d+) +(?P<walkQbyOwner>\d+)$')
+        
+        
+        ret_dict = {}
+        m = ''
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # NAT_ROUTE              1          0      0
+            m = p1.match(line)
+            if m:
+                client = m.groupdict()['client_name']
+                client_dict = ret_dict.setdefault(client,{})
+                group = m.groupdict()
+                del group['client_name']
+                group = {k : int(v) for k, v in group.items()}
+                client_dict.update(group)
+                
         return ret_dict
 

@@ -1,0 +1,10 @@
+GM1#show crypto gdoi gm dataplan counter
+
+Data-plane statistics for group getvpn1:
+    #pkts encrypt            : 21592009    #pkts decrypt            : 0
+    #pkts tagged (send)      : 0        #pkts untagged (rcv)     : 0
+    #pkts no sa (send)       : 0        #pkts invalid sa (rcv)   : 0
+    #pkts encaps fail (send) : 0        #pkts decap fail (rcv)   : 0
+    #pkts invalid prot (rcv) : 0        #pkts verify fail (rcv)  : 0
+    #pkts not tagged (send)  : 0        #pkts not untagged (rcv) : 0
+    #pkts internal err (send): 0        #pkts internal err (rcv) : 0

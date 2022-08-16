@@ -1,0 +1,23 @@
+show platform hardware chassis power-supply detail switch standby all
+PS1:
+  Input Voltage   :     230.5000 V
+  Output Voltage  :      12.0290 V
+  Input Current   :       0.5620 A
+  Output Current  :       9.5780 A
+  Input Power     :     127.5000 W
+  Output Power    :     115.1250 W
+  Temperature 1   :      34.4370 C
+  Temperature 2   :      55.9370 C
+  Temperature 3   :      37.9370 C
+  Fan Speed 1     :    4800.0000 RPM
+PS2:
+  Input Voltage   :       0.0000 V
+  Output Voltage  :       0.0000 V
+  Input Current   :       0.0000 A
+  Output Current  :       0.0000 A
+  Input Power     :       0.0000 W
+  Output Power    :       0.0000 W
+  Temperature 1   :      31.7500 C
+  Temperature 2   :      31.0620 C
+  Temperature 3   :       0.0000 C
+  Fan Speed 1     :       0.0000 RPM

@@ -1,0 +1,14 @@
+NAME: "Chassis", DESCR: "IE-3300-8U2X Expandable 4PPoE Chassis"
+PID: IE-3300-8U2X      , VID: V00  , SN: FCW2449P5SK
+
+NAME: "Supervisor", DESCR: "IE-3300 Expandable System: 8GE Copper (4PPoE) & 2 10G SFP"
+PID: IE-3300-8U2X      , VID: V00  , SN: FCW2449P5SK
+
+NAME: "TenGigabitEthernet1/1", DESCR: "1000BaseLX SFP"
+PID: GLC-LH-SMD          , VID: V02  , SN: ACW24443CJC     
+
+NAME: "TenGigabitEthernet1/2", DESCR: "10/100/1000BaseTX SFP"
+PID: GLC-TE              , VID: V03  , SN: AVC2435035M     
+
+NAME: "Expansion Module", DESCR: "IEM-3300: 8 Port GE Copper Exp Module Basic"
+PID: IEM-3300-8T       , VID: V01  , SN: FOC2251V2JA

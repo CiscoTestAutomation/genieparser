@@ -1,0 +1,29 @@
+GigabitEthernet0/4/0/4 - IPv4 vrID 2
+  Label m1 (1 slaves)
+  State is Master
+    2 state changes, last state change 01:03:26
+    State change history:
+    May 18 06:59:25.399 UTC  Init     -> Backup   Delay timer expired
+    May 18 06:59:29.008 UTC  Backup   -> Master   Master down timer expired
+  Last resign sent:     Never
+  Last resign received: Never
+  Virtual IP address is 12.0.0.1
+  Virtual MAC address is 0000.5E00.0102, state is active
+  Master router is local
+  Version is 2
+  Advertise time 1 secs
+    Master Down Timer 3.531 (3 x 1 + (136 x 1/256))
+  Minimum delay 1 sec, reload delay 5 sec
+  Current priority 120
+    Configured priority 120, may preempt
+      minimum delay 0 secs
+  Note: The following configured IP addresses are not used
+        as they don't belong to a network on this interface:
+    Secondary Virtual IP address 29.0.0.1
+
+GigabitEthernet0/4/0/4.10 - IPv4 vrID 20
+  Slave to m1
+  State is Master
+  Virtual IP address is 19.0.0.1
+  Virtual MAC address is 0000.5E00.0114, state is active
+  Master router is local

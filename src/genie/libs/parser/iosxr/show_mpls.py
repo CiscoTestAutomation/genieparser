@@ -14,6 +14,7 @@ IOSXR parsers for the following show commands:
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
     * 'show mpls forwarding vrf {vrf}'
+    * 'show mpls forwarding prefix {prefix}'
     * 'show mpls ldp igp sync'
     * 'show mpls ldp graceful-restart'
     * 'show mpls ldp nsr summary'
@@ -1879,6 +1880,7 @@ class ShowMplsForwardingVrf(ShowMplsForwardingVrfSchema):
 # ======================================================
 # Schema for
 #   * 'show mpls forwarding'
+#   * 'show mpls forwarding prefix {prefix}'
 # ======================================================
 class ShowMplsForwardingSchema(MetaParser):
     schema = {
@@ -1906,15 +1908,20 @@ class ShowMplsForwardingSchema(MetaParser):
 # ======================================================
 # Parser for 
 #   * 'show mpls forwarding'
+#   * 'show mpls forwarding prefix {prefix}'
 # ======================================================
 class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
 
-    cli_command = ['show mpls forwarding']
+    cli_command = ['show mpls forwarding','show mpls forwarding prefix {prefix}']
 
-    def cli(self, output=None):
+    def cli(self,prefix=None, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command[0])
+            if prefix:
+                command = self.cli_command[1].format(prefix=prefix)
+            else:
+                command = self.cli_command[0]
+            out = self.device.execute(command)
         else:
             out = output
 
@@ -2489,7 +2496,7 @@ class ShowMplsLdpIgpSyncSchema(MetaParser):
                     Any(): {
                         Optional('sync'): {
                         Optional('status'): str,
-                        Optional('delay'): str,
+                        Optional('delay'): Or(int, str),
                         Optional('peers'):{
                             Any():{
                                 Optional('graceful_restart'): bool
@@ -2521,25 +2528,29 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         ret_dict = {}
 
         # HundredGigE0/0/0/0:
-        p1 = re.compile(r'^(?P<interface>[\w]+[\/\d]+):$')
+        # Bundle-Ether40051:
+        p1 = re.compile(r'^(?P<interface>[\w-]+[\/\d]+):$')
 
         # VRF: 'default' (0x60000000)
         p2 = re.compile(r'^VRF:\s+\'(?P<vrf>\S+)\'\s+\((?P<vrf_index>.+)\)$')
 
         # Sync delay: Disabled
-        p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\S+)$')
+        # Sync delay: 5 sec
+        p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\w+)(?: sec)?$')
 
         # Sync status: Ready
         p4 = re.compile(r'^Sync +status:\s+(?P<status>.+)$')
 
         # 63.63.63.63:0   (GR)
-        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s+?(?P<gr_flag>\(GR\))?$')
+        # 10.120.0.10:0
+        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s*(?P<gr_flag>\(GR\))?$')
 
         for line in out.splitlines():
             line = line.strip()
 
 
             # HundredGigE0/0/0/0:
+            # Bundle-Ether40051:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2559,11 +2570,15 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # Sync delay: Disabled
+            # Sync delay: 5 sec
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 sync_dict = interface_dict.setdefault('sync', {})
-                sync_dict.update({'delay': group['delay']})
+                try:
+                    sync_dict.update({'delay': int(group['delay'])})
+                except ValueError:
+                    sync_dict.update({'delay': group['delay']})
                 continue
 
             # Sync status: Ready
@@ -2575,16 +2590,18 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # 63.63.63.63:0   (GR)
+            # 10.120.0.10:0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 peers = group['peers']
-                peers_dict = sync_dict.setdefault('peers', {}).\
-                    setdefault(peers, {})
+                peers_dict = sync_dict.setdefault('peers', {})\
+                                      .setdefault(peers, {})
 
+                gr_flag = False
                 if group['gr_flag']:
                     gr_flag = True
-                    peers_dict.update({'graceful_restart': gr_flag})
+                peers_dict.update({'graceful_restart': gr_flag})
                 continue
 
         return ret_dict

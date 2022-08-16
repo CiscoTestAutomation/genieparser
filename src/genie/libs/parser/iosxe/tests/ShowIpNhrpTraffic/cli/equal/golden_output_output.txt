@@ -1,0 +1,18 @@
+Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
+   Sent: Total 5266
+         69 Resolution Request  73 Resolution Reply  5083 Registration Request
+         0 Registration Reply  41 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress
+   Rcvd: Total 5251
+         73 Resolution Request  41 Resolution Reply  0 Registration Request
+         5055 Registration Reply  41 Purge Request  0 Purge Reply
+         0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+Tunnel111: Max-send limit:10000Pkts/10Sec, Usage:0%
+   Sent: Total 8531
+         0 Resolution Request  0 Resolution Reply  8531 Registration Request
+         0 Registration Reply  0 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress
+   Rcvd: Total 0
+         0 Resolution Request  0 Resolution Reply  0 Registration Request
+         0 Registration Reply  0 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress

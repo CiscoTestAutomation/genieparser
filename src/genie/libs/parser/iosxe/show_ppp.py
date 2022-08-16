@@ -1,13 +1,14 @@
 """show_PPP.py
 IOSXE parsers for the following show commands:
     * 'show ppp statistics'
+    * 'show pppatm session'
 """
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -543,5 +544,81 @@ class ShowPppStatistics(ShowPppStatisticsSchema):
 
         return res_dict
 
+
+# =======================================================
+# Parser Schema for 'show pppatm session'
+# =======================================================
+
+class ShowPppAtmSessionSchema(MetaParser):
+    """Schema for "show pppatm session" """
+
+    schema = {
+        'session_number': int,
+        'session_state': str,
+        'total_sessions': int,
+        'uniq_id': {
+            Any(): {
+                'atm_intf': str,
+                'vpi_vci': str,
+                'encap': str,
+                'vt': str,
+                'va': str,
+                'va_st': str,
+                'state': str
+            }
+        }
+    }
+
+
+# =================================================
+# Parser for 'show pppatm session'
+# =================================================
+
+class ShowPppAtmSession(ShowPppAtmSessionSchema):
+    """ parser for "show pppatm session" """
+
+    cli_command = "show pppatm session"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        p1 = re.compile(r'^(?P<session_number>\d+)\ssession\s+in\s(?P<session_state>\w+\s\(\w+\))\sState$')
+
+        p2 = re.compile(r'^(?P<total_sessions>\d+)\ssession\s+total$')
+
+        p3 = re.compile(
+            r'^(?P<uniq_id>[0-9A-Z\/]+)+\s+(?P<atm_intf>[0-9A-Z\/.]+)+\s+(?P<vpi_vci>[0-9\/]+)\s+(?P<encap>\w+)'
+            r'\s+(?P<vt>\w+)\s+(?P<va>\w+)\s+(?P<va_st>\w+)\s+(?P<state>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['session_number'] = int(group['session_number'])
+                parsed_dict['session_state'] = group['session_state']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['total_sessions'] = int(group['total_sessions'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                uniq_id = group.pop("uniq_id")
+
+                pppatm_dict = parsed_dict.setdefault("uniq_id", {}). \
+                    setdefault(uniq_id, {})
+
+                pppatm_dict.update({k: v for k, v in group.items()})
+
+        return parsed_dict
 
 

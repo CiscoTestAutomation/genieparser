@@ -1,0 +1,6 @@
+LISP Subscriber Information
+Entries total 2
+Subscriber                Type       Affinity-ID    
+10.10.10.10:19199         IID        200 , 10
+11.11.11.11:19199         IID        200
+21.21.21.21:46133         IID        -             

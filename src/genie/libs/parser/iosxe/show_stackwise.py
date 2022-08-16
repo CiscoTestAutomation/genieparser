@@ -6,6 +6,7 @@
      * 'show stackwise-virtual'
      * 'show stackwise-virtual switch {number} link'
      * 'show stackwise-virtual link'
+     * 'show stackwise-virtual neighbors'
 
 """
 import re
@@ -50,6 +51,8 @@ class ShowStackwiseVirtualDualActiveDetection(ShowStackwiseVirtualDualActiveDete
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         dad_dict = {}
 
@@ -158,6 +161,8 @@ class ShowStackwiseVirtualDualActiveDetectionPagp(ShowStackwiseVirtualDualActive
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
+        else:
+            out = output
 
         # Pagp dual-active detection enabled: Yes
         p1 = re.compile("^Pagp\s+dual\-active\s+detection\s+enabled\:\s+(?P<pagp_dad_enabled>\S+)$")
@@ -184,7 +189,7 @@ class ShowStackwiseVirtualDualActiveDetectionPagp(ShowStackwiseVirtualDualActive
         pagp_dad_obj = {}
 
         for line in output.splitlines():
-            line.strip()
+            line = line.strip()
             # remove headers
             if re.search(r"\s+Dual\-Active\s+Partner\s+Partner\s+Partner.*", line):
                 continue
@@ -511,5 +516,72 @@ class ShowStackwiseVirtualLink(ShowStackwiseVirtualLinkSchema):
                         'link_status' : str(group['link_status']),
                         'protocol_status' : str(group['protocol_status'])
                     })
+                continue
+        return ret_dict
+      
+class ShowStackwiseVirtualNeighborsSchema(MetaParser):
+    '''Schema for show stackwise-virtual neighbors '''
+
+    schema = {
+        'switch':{
+            int:{ 
+                'svl':{  
+                    int:{  
+                        'local_port':{
+                            str:{
+                                'remote_port':str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowStackwiseVirtualNeighbors(ShowStackwiseVirtualNeighborsSchema):   
+    '''Parser for show stackwise-virtual neighbors'''
+
+    cli_command = 'show stackwise-virtual neighbors'
+
+    def cli(self, output=None):
+        out = self.device.execute(self.cli_command) if output is None else output
+
+        ret_dict = {}
+
+        # 1               1          HundredGigE1/1/0/19     HundredGigE2/1/0/23              
+        p1 = re.compile(r'^(?P<switch>\d+)\s+(?P<svl>\d+)\s+(?P<local_port>[\w/]+)\s+(?P<remote_port>[\w/]+)$')
+        # HundredGigE1/5/0/17     HundredGigE2/1/0/24 
+        p2 = re.compile(r'^(?P<local_port>[\w/]+)\s+(?P<remote_port>[\w/]+)$')        
+        # FiftyGigE1/6/0/33   
+        p3 = re.compile(r'^(?P<local_port>[\w/]+)$')
+
+        for line in out.splitlines():
+            line = re.sub('\t', '   ', line)
+            line = line.strip()
+            # 1               1          HundredGigE1/1/0/19     HundredGigE2/1/0/23                
+            m =  p1.match(line)
+            if m:
+               group = m.groupdict()
+               switches_dict = ret_dict.setdefault('switch',{})  
+               switch_id_dict = switches_dict.setdefault(int(group['switch']),{})
+               svl_dict = switch_id_dict.setdefault('svl',{}) 
+               svl_id_dict = svl_dict.setdefault(int(group['svl']),{})
+               lo_port_dict = svl_id_dict.setdefault('local_port',{})
+               lo_port_id_dict = lo_port_dict.setdefault(str(group['local_port']),{})
+               lo_port_id_dict['remote_port'] = group['remote_port']
+               continue
+            # HundredGigE1/5/0/17     HundredGigE2/1/0/24 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lo_port_id_dict = lo_port_dict.setdefault(str(group['local_port']),{})
+                lo_port_id_dict['remote_port'] = group['remote_port']
+                continue
+            # FiftyGigE1/6/0/33  
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lo_port_id_dict = lo_port_dict.setdefault(str(group['local_port']),{})
+                lo_port_id_dict['remote_port'] = str(None)
                 continue
         return ret_dict
