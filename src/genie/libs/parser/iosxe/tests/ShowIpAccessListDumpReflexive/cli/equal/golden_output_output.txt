@@ -1,0 +1,9 @@
+-----------Reflexive ACL------------
+     permit udp host 80.0.1.83 eq 4083 host 70.0.1.83 eq 3083 (time left 107)
+        Name : R11  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 3083/4083 Type : REFLECT  Threshold Count : 0  Active : Y
+        Reflex Error Count:0
+        Evaluate Error Count:0
+     permit udp host 80.0.1.19 eq 4019 host 70.0.1.19 eq 3019 (time left 103)
+        Name : R11  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 3019/4019 Type : REFLECT  Threshold Count : 0  Active : Y
+        Reflex Error Count:0
+        Evaluate Error Count:0

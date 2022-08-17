@@ -1,0 +1,14 @@
+Access Tunnels General Statistics:
+  Number of AccessTunnel Data Tunnels       = 2  
+
+
+Name    RLOC IP(Source)  AP IP(Destination)  VRF ID  Source Port  Destination Port 
+------  ---------------  ------------------  ------  -----------  ----------------
+Ac0     110.1.1.1        110.201.2.152       0       N/A          4789             
+Ac1     110.1.1.1        110.201.2.153       0       N/A          4789             
+
+
+Name   IfId            Uptime       
+------ ---------- --------------------
+Ac0    0x0000006B 7 days, 09:01:18            
+Ac1    0x0000006C 7 days, 09:00:05 

@@ -1,0 +1,14 @@
+--------------------------------------------------------------------------------
+UPTIME SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+First customer power on : 03/27/2021 02:07:09
+Total uptime            :  1  years  20 weeks  0  days  2  hours  5  minutes
+Total downtime          :  2178 years  50 weeks  4  days  12 hours  5  minutes
+Number of resets        : 2325
+Number of slot changes  : 1
+Current reset reason    : Reload Command
+Current reset timestamp : 07/04/2022 15:45:54
+Current slot            : 1
+Chassis type            : 80
+Current uptime          :  0  years  0  weeks  0  days  17 hours  0  minutes
+--------------------------------------------------------------------------------

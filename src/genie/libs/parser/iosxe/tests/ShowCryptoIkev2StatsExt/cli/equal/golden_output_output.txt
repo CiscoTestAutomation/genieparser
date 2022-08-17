@@ -1,0 +1,41 @@
+GREENDAY#show crypto ikev2 stats ext-service 
+--------------------------------------------------------------
+AAA OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+RECEIVING PSKEY                                   0          0
+AUTHENTICATION USING EAP                          0          0
+START ACCOUNTING                                  0          0
+STOP ACCOUNTING                                   0          0
+AUTHORIZATION                                     0          0
+--------------------------------------------------------------
+IPSEC OPERATION                              PASSED     FAILED
+--------------------------------------------------------------
+IPSEC POLICY VERIFICATION                     27308          7
+SA CREATION                                   12279      14970
+SA DELETION                                   87418          7
+---------------------------------------------------------------
+CRYPTO ENGINE OPERATION                      PASSED     FAILED
+---------------------------------------------------------------
+DH PUBKEY GENERATED                          136093        654
+DH SHARED SECKEY GENERATED                    30624     105366
+SIGNATURE SIGN                                30271          0
+SIGNATURE VERIFY                              30271          0
+--------------------------------------------------------------
+PKI OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+VERIFY CERTIFICATE                            30271          3
+FETCHING CERTIFICATE USING HTTP                   0          0
+FETCHING PEER CERTIFICATE USING HTTP              0          0
+GET ISSUERS                                  158799          0
+GET CERTIFICATES FROM ISSUERS                 36300          0
+GET DN FROM CERT                                  0          0
+--------------------------------------------------------------
+GKM OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+GET_POLICY                                        0          0
+SET_POLICY                                        0          0
+--------------------------------------------------------------
+PPK SKS  OPERATION                           PASSED     FAILED
+--------------------------------------------------------------
+PPK GET CAP                                       0          0
+PPK GET KEY                                       0          0
