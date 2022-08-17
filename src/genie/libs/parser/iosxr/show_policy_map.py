@@ -173,6 +173,7 @@ class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
                     setdefault('input', {})
 
                 # define name_dict dictionary and assigned to serv_policy_dict
+                name_dict = {}
                 name_dict = serv_policy_dict.setdefault('policy_name', {}). \
                     setdefault(input, {})
 
