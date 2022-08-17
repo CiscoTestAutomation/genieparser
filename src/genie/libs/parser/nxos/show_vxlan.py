@@ -1527,9 +1527,10 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local
         # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66
         # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
+        # 202         0011.01ff.0002 BGP    --            0         2001:db8:646::5678:1 6:1:1::2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
-                        ' +(?P<next_hop1>[\w\/\.]+)$')
+                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
+                        ' +(?P<next_hop1>[\w\/\.\:]+)$')
 
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
@@ -1539,9 +1540,10 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cff.2293 10.111.1.3     BGP    --            0         10.76.23.23
         # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
-        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
+        # 202         0011.01ff.0001 5:1:1:1::2     BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:

@@ -1,0 +1,11 @@
+Printing entries for region NAT_1 (387) type 6 asic 0
+========================================================
+TAQ-0 Index-544 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+Mask1 30fff000:0003ffff:00000000:0000ffff:00000000:00000000:ffffffff:ffffffff
+Key1  10119000:00020014:00000000:00000028:00000000:00000000:0f000001:23000001
+AD    10087000:000000ad:00000000
+
+TAQ-0 Index-545 (A:0,C:0) Valid StartF-0 StartA-0 SkipF-0 SkipA-0
+Mask1 30fff000:0000ffff:00000000:0000ffff:00000000:00000000:ffffffff:ffffffff
+Key1  20119000:00000028:00000000:00000014:00000000:00000000:87000001:0f000001
+AD    10087000:000000ae:00000000

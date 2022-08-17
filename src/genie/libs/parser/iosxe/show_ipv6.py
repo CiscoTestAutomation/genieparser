@@ -1903,3 +1903,144 @@ class ShowIpv6NhrpSummary(ShowIpv6NhrpSummarySchema):
                     continue
 
         return ret_dict
+
+# ====================================================
+#  schema for show ipv6 cef summary
+# ====================================================
+class ShowIpv6CefSummarySchema(MetaParser):
+    """Schema for show ipv6 cef summary
+                  show ipv6 cef vrf <vrf> summary
+
+    """
+    schema = {
+        'vrf':{
+            Any():{
+                'prefixes': {
+                    'fwd': int,
+                    'non_fwd': int,
+                    'total_prefix': int
+                },
+                'table_id': str,
+                'epoch': int
+            }
+        }
+    }
+
+# ====================================================
+#  parser for show ipv6 cef summary
+# ====================================================
+class ShowIpv6CefSummary(ShowIpv6CefSummarySchema):
+    cli_command = ['show ipv6 cef summary', 'show ipv6 cef vrf {vrf} summary']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Vrf red
+        p1 = re.compile(r'^VRF +(?P<vrf>\S+)$')
+
+        # 6 prefixes (6/0 fwd/non-fwd)
+        p2 = re.compile(r'^(?P<total_prefix>\d+) +prefixes +\((?P<fwd>\d+)\/(?P<non_fwd>\d+)+ fwd\/non-fwd\)$')
+
+        # Table id 0x1E000001
+        p3 = re.compile(r'^Table id (?P<table_id>\S+)$')
+
+        #Database epoch:        0 (6 entries at this epoch)
+        p4 = re.compile(r'^Database epoch: +(?P<epoch>\d+) +\(\d+ entries at this epoch\)$')
+
+
+        ret_dict = {}
+        m = ''
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Vrf red
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                continue
+
+            # 6 prefixes (6/0 fwd/non-fwd)
+            m = p2.match(line)
+            if m:
+                prefix_dict = vrf_dict.setdefault('prefixes',{})
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items() if v is not None}
+                prefix_dict.update(group)
+                continue
+            
+            # Table id 0x1E000001
+            m = p3.match(line)
+            if m:
+                vrf_dict.update(m.groupdict())
+                continue
+
+            # Database epoch:        0 (6 entries at this epoch)
+            m = p4.match(line)
+            if m:
+              vrf_dict.update({'epoch': int(m.groupdict()['epoch'])}) 
+              continue
+
+        return ret_dict
+
+# ====================================================
+#  schema for show ipv6 static recursive
+# ====================================================
+class ShowIpv6StaticRecursiveSchema(MetaParser):
+    """Schema for show ipv6 static recursive
+    """
+    schema = {
+        Any():{
+            'via': list,
+            'distance': int,
+            'installed': bool
+        }
+    }
+
+# ====================================================
+#  parser for show ipv6 static recursive
+# ====================================================
+class ShowIpv6StaticRecursive(ShowIpv6StaticRecursiveSchema):
+    cli_command = ['show ipv6 static recursive']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # for routes installed in RIB
+        # *   2005::/64 via 2001::2, distance 1
+        p1 = re.compile(r'^(?P<installed>\*?) *(?P<prefix>[a-f0-9:]+:\/\d+) via (?P<nhop>[a-f0-9:]+)'
+                        r', distance (?P<distance>\d+)$')
+        
+        
+        ret_dict = {}
+        m = ''
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # *   2005::/64 via 2001::2, distance 1
+            m = p1.match(line)
+            if m:
+                prefix = m.groupdict()['prefix']
+                pref_dict = ret_dict.setdefault(prefix,{})
+                via_list = pref_dict.setdefault('via', [])
+                via_list.append(m.groupdict()['nhop'])
+                pref_dict.setdefault('distance', int(m.groupdict()['distance']))
+                if m.groupdict()['installed']:
+                    pref_dict.setdefault('installed', True)
+                else:
+                    pref_dict.setdefault('installed', False)
+                continue
+
+        return ret_dict
+

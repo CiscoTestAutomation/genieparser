@@ -1,0 +1,14 @@
+IP NHRP cache 0 entries, 0 bytes
+    0 static   0 dynamic    0 incomplete
+0 Remote
+    0 static   0 dynamic    0 incomplete
+    0 nhop     0 bfd
+    0 default  0 temporary
+    0 route
+        0 rib (0 H    0 nho)
+        0 bgp
+    0 lfib
+0 Local
+    0 static   0 dynamic    0 incomplete
+    0 lfib
+

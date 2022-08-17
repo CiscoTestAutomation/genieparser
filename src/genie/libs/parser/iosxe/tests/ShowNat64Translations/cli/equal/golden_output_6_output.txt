@@ -1,0 +1,9 @@
+Proto   Original IPv4           Translated IPv4
+        Translated IPv6         Original IPv6
+--------------------------------------------------------
+icmp    1.1.1.2:0               [1001::101:102]:0
+        5.5.5.5:0               [2009::2]:0
+udp     1.1.1.2:63              [1001::101:102]:63
+        5.5.5.5:63              [2009::2]:63
+
+Total number of translations: 2

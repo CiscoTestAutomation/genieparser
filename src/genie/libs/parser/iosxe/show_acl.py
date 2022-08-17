@@ -295,6 +295,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit icmp any 10.120.194.64 0.0.0.63
         # 20 permit tcp any eq 443 10.120.194.64 0.0.0.63
         # 10 permit icmp echo-reply (19 matches)
+
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
             r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?'
@@ -512,11 +513,11 @@ class ShowAccessLists(ShowAccessListsSchema):
                     .setdefault(protocol_name, {})
                 l3_dict['protocol'] = protocol
                 if src:
-                    l3_dict.setdefault('source_network', {})\
-                        .setdefault(src, {}).setdefault('source_network', src)
+                    l3_dict.setdefault('source_network', {}).setdefault(
+                            src, {}).setdefault('source_network', src)
                 if dst:
-                    l3_dict.setdefault('destination_network', {})\
-                        .setdefault(dst, {}).setdefault('destination_network', dst)
+                    l3_dict.setdefault('destination_network', {}).setdefault(
+                            dst, {}).setdefault('destination_network', dst)
 
                 l3_dict.setdefault('dscp', re.search('dscp +(\w+)', left).groups()[0])\
                     if 'dscp' in left else None
@@ -733,5 +734,129 @@ class ShowIpv6AccessLists(ShowAccessLists, ShowAccessListsSchema):
         else:
             show_output = output
 
-        # Call super
         return super().cli(output=show_output)
+
+class ShowIpAccessListDumpReflexiveSchema(MetaParser):
+    """show ip access-list <reflect_acl_name> dump-reflexive """
+    schema = {
+        'source': {
+            Any():{
+                Optional('timeleft'): int,
+                Optional('matchcount'): int,
+                Optional('protocol'): str,
+                'reflex_error': int,
+                'evaluate_error': int,
+                'name': {
+                    Any(): {
+                        'acl_type': {
+                            Any(): {
+                                'direction': {
+                                    Any(): {
+                                        'sport_dport': str,
+                                        'interface_num': str,
+                                        'threshold_count': int,
+                                        'active': str
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+class ShowIpAccessListDumpReflexive(ShowIpAccessListDumpReflexiveSchema):
+    """Parser for show ip access-list <reflect_acl_name> dump-reflexive """
+
+    cli_command = "show ip access-lists {reflect_acl_name} dump-reflexive"
+
+    def cli(self, reflect_acl_name="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(reflect_acl_name=reflect_acl_name)
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # permit tcp host 80.0.0.15 eq www host 70.0.0.15 eq 2015 (time left 99)
+        # permit udp host 80.0.1.3 eq 4003 host 70.0.1.3 eq 3003 (201 matches) (time left 56)
+        p1 = re.compile(
+            r'^(?P<seqnum>\d+)? ?(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
+            r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?(?: '
+            r'+(?P<src_operator>eq|gt|lt|neq|range) +(?P<src_port>.*?(?=(?: +any| +host +\d+.\d+.\d+.\d+| +\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)|$)))? '
+            r'?(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
+            r'+(?P<dst_port>(?:\S?)+\S))?(?: ?(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|router-advertisement|mld-query+))? '
+            r'?(\((?P<matchcount>\d+) (matches|match)\))? ?(\(time left (?P<timeleft>\d+)\))? ?(?P<left>.+)?$')
+
+        # Name : R101  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 2015/80 Type : REFLECT  Threshold Count : 8  Active : Y
+        p2 = re.compile(
+            r'^(?P<name>[\w\s]+): +(?P<value1>[\w\s]+)  +(?P<interface_num>[\w\s]+): +(?P<value2>[\.\)\(\w\s\-\/\ \\]+)  +(?P<direction>[\w\s]+): +(?P<value3>[\w\s]+) +(?P<sport_dport>[\w\s\/]+): +(?P<value4>[\w\s\/]+) +(?P<acl_type>[\w\s]+): +(?P<value5>[\w]+) +(?P<threshold_count>[\w\s+]+): +(?P<value6>[\d]+) +(?P<active>[\w\s]+): +(?P<value7>[\w\s]+)$')
+
+        # Reflex Error Count:0
+        # Evaluate Error Count:0
+        p3 = re.compile(r'^(?P<pattern8>[\w\s+]+):+(?P<value8>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # permit udp host 80.0.1.96 eq 4096 host 70.0.1.96 eq 3096 (time left 88)
+            # Name : R11  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 3096/4096 Type : REFLECT  Threshold Count : 0  Active : Y
+            # Reflex Error Count:0
+            # Evaluate Error Count:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if re.search('(permit)', line):
+                    source = group['src']
+                    if 'host' in source:
+                        source1=source.split()
+                        cli_dict = ret_dict.setdefault('source', {}).setdefault(source1[-1], {})
+                        cli_dict['protocol'] = group['protocol']
+                    else:
+                        cli_dict = ret_dict.setdefault('source', {}).setdefault(source, {})
+                        cli_dict['protocol'] = group['protocol']
+
+                    if re.search('(time left)', line):
+                        cli_dict['timeleft'] = int(group['timeleft'])
+                        continue
+
+                    if re.search('(match|matches)', line):
+                        cli_dict['matchcount'] = int(group['matchcount'])
+                        continue
+            # Name : R11  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 3096/4096 Type : REFLECT  Threshold Count : 0  Active : Y
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if re.search('(Name)', group['name']):
+                    name = group['value1']
+                if re.search('(Type)', group['acl_type']):
+                    acl_type = group['value5']
+                if re.search('(Direction)', group['direction']):
+                    direction = group['value3']
+                if group['name'] and group['acl_type'] and group['direction']:
+                    dir_dict = cli_dict.setdefault('name', {}). \
+                                setdefault(name, {}). \
+                                setdefault('acl_type', {}). \
+                                setdefault(acl_type, {}). \
+                                setdefault('direction', {}). \
+                                setdefault(direction, {})
+                    if group['sport_dport'] and group['threshold_count'] and group['active'] and group['interface_num']:
+                        dir_dict.update(
+                            {"sport_dport" : group['value4'], "threshold_count" : int(group['value6']), "active" : group['value7'], "interface_num" : group["value2"]})
+                        continue
+
+            # Reflex Error Count:0
+            # Evaluate Error Count:0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if re.search('(Reflex +Error +Count)', group['pattern8']):
+                    cli_dict['reflex_error'] = int(group['value8'])
+                    continue
+
+                elif re.search('(Evaluate +Error +Count)', group['pattern8']):
+                    cli_dict['evaluate_error'] = int(group['value8'])
+                    continue
+
+        return ret_dict
