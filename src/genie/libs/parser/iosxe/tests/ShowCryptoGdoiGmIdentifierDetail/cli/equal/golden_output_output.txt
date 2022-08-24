@@ -1,0 +1,25 @@
+GM Sender ID (SID) Information for Group bw6000:
+
+  Group Member: 44.44.44.1       vrf: None
+    Transform Mode                  : Non-Counter (Non-Suite-B)
+    # of SIDs Last Requested        : 0
+
+    CURRENT SIDs: None
+
+    NEXT SID REQUEST:
+      TEK Lifetime                  : 4873 sec
+      SID Length (Group Size)       : 24 bits (MEDIUM)
+
+
+
+GM Sender ID (SID) Information for Group bw600-IPV6:
+
+  Group Member: 41.41.41.1       vrf: None
+    Transform Mode                  : Non-Counter (Non-Suite-B)
+    # of SIDs Last Requested        : 0
+
+    CURRENT SIDs: None
+
+    NEXT SID REQUEST:
+      TEK Lifetime                  : 4954 sec
+      SID Length (Group Size)       : 24 bits (MEDIUM)

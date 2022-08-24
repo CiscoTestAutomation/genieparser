@@ -1,0 +1,34 @@
+Crypto Gdoi Group Name :bw600-IPV6_eft 
+        Group handle: 1073741871, Local Key Server handle: 1073741919
+
+        Local Address: 15.15.15.1 
+        Local Priority: 245      
+        Local KS Role: Primary   , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Primary Timers: 
+                Primary Refresh Policy Time: 20 
+                Remaining Time: 11
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 124
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741917
+                Peer Address: 16.16.16.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 200             
+                Peer KS Role: Secondary , Peer KS Status: Alive     
+                Antireplay Sequence Number: 5
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 122
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 4 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 104495 
+                    Total bytes recv: 2130

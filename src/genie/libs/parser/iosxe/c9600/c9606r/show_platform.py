@@ -4,9 +4,8 @@ IOSXE c9606r parser for the following show command:
    * show platform hardware fed active fwd-asic resource tcam utilization
    * show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
    * show ip nat translations
-   
+   * show platform hardware fed {switch} active fwd-asic resource tcam utilization
 '''
-# Python
 import re
 
 # Metaparser
@@ -16,7 +15,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 
 class ShowPlatformHardwareFedActiveTcamUtilizationSchema(MetaParser):
-    """Schema for show platform hardware fed active fwd-asic resource tcam utilization """
+    """Schema for show platform hardware fed active fwd-asic resource tcam utilization
+    'show platform hardware fed {switch} active fwd-asic resource tcam utilization' """
     schema = {
         'asic': {
             Any(): {
@@ -44,13 +44,19 @@ class ShowPlatformHardwareFedActiveTcamUtilizationSchema(MetaParser):
     }
     
 class ShowPlatformHardwareFedActiveTcamUtilization(ShowPlatformHardwareFedActiveTcamUtilizationSchema):
-    """Parser for show platform hardware fed active fwd-asic resource tcam utilization """
+    """Parser for show platform hardware fed active fwd-asic resource tcam utilization
+    show platform hardware fed switch active fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed active fwd-asic resource tcam utilization'
+    cli_command = ['show platform hardware fed active fwd-asic resource tcam utilization',
+                   'show platform hardware fed {switch} active fwd-asic resource tcam utilization']
 
-    def cli(self, output=None):
+    def cli(self, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
