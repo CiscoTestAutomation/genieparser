@@ -1,0 +1,16 @@
+Protocol     HSL ID         Name
+             Is Single      Range
+             Ranges
+             VRF Name
+
+IPv4         2              nat64_v4_pool
+             TRUE           (10.0.0.2 - 10.0.0.255)
+             10.0.0.2 - 10.0.0.255             
+             Static Routes for Range: 7
+             10.0.0.2/31
+             10.0.0.4/30
+             10.0.0.8/29
+             10.0.0.16/28
+             10.0.0.32/27
+             10.0.0.64/26
+             10.0.0.128/25

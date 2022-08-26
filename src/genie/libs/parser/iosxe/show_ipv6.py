@@ -41,7 +41,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 from genie.libs.parser.utils.common import Common
 
@@ -1018,40 +1018,44 @@ class ShowIpv6MfibSchema(MetaParser):
                                 {'source_address':
                                     {Any():
                                        {
-                                            Optional('oif_ic_count'): int,
-                                            Optional('oif_a_count'): int,
+                                            Optional('oif_ic_count'): Or(str,int),
+                                            Optional('oif_a_count'): Or(str,int),
                                             Optional('flags'): str,
-                                            Optional('sw_packet_count'): int,
-                                            Optional('sw_packets_per_second'): int,
-                                            Optional('sw_average_packet_size'): int,
-                                            Optional('sw_kbits_per_second'): int,
-                                            Optional('sw_total'): int,
-                                            Optional('sw_rpf_failed'): int,
-                                            Optional('sw_other_drops'): int,
-                                            Optional('hw_packet_count'): int,
-                                            Optional('hw_packets_per_second'): int,
-                                            Optional('hw_average_packet_size'): int,
-                                            Optional('hw_kbits_per_second'): int,
-                                            Optional('hw_total'): int,
-                                            Optional('hw_rpf_failed'): int,
-                                            Optional('hw_other_drops'): int,
-                                            'incoming_interfaces':
-                                                {Any():
-                                                    {
-                                                     'ingress_flags': str,
+                                            Optional('sw_packet_count'): Or(str,int),
+                                            Optional('sw_packets_per_second'): Or(str,int),
+                                            Optional('sw_average_packet_size'): Or(str,int),
+                                            Optional('sw_kbits_per_second'): Or(str,int),
+                                            Optional('sw_total'): Or(str,int),
+                                            Optional('sw_rpf_failed'): Or(str,int),
+                                            Optional('sw_other_drops'): Or(str,int),
+                                            Optional('hw_packet_count'): Or(str,int),
+                                            Optional('hw_packets_per_second'): Or(str,int),
+                                            Optional('hw_average_packet_size'): Or(str,int),
+                                            Optional('hw_kbits_per_second'): Or(str,int),
+                                            Optional('hw_total'): Or(str,int),
+                                            Optional('hw_rpf_failed'): Or(str,int),
+                                            Optional('hw_other_drops'): Or(str,int),
+                                            Optional('incoming_interfaces'): {
+                                                Any(): {
+                                                     Optional('ingress_flags'): str,                                                  	
+                                                     Optional('ingress_vxlan_version'): str,
+                                                     Optional('ingress_vxlan_cap'): str,
+                                                     Optional('ingress_vxlan_vni'): str,
+                                                     Optional('ingress_vxlan_nxthop'): str,
                                                     }
                                                 },
-                                            Optional('outgoing_interfaces'):
-                                                {Any():
-                                                    {
+                                            Optional('outgoing_interfaces'): {
+                                                Any(): {
                                                      Optional('egress_flags'): str,
                                                      Optional('egress_rloc'): str,
                                                      Optional('egress_underlay_mcast'): str,
                                                      Optional('egress_adj_mac'): str,
-                                                     Optional('egress_hw_pkt_count'): int,
-                                                     Optional('egress_fs_pkt_count'): int,
-                                                     Optional('egress_ps_pkt_count'): int,
-                                                     Optional('egress_pkt_rate'): int,
+                                                     Optional('egress_hw_pkt_count'): Or(str,int),
+                                                     Optional('egress_fs_pkt_count'): Or(str,int),
+                                                     Optional('egress_ps_pkt_count'): Or(str,int),
+                                                     Optional('egress_pkt_rate'): Or(str,int),
+                                                     Optional('egress_vxlan_version'): str,
+                                                     Optional('egress_vxlan_cap'): str,
                                                     },
                                                 },
                                             },
@@ -1076,7 +1080,7 @@ class ShowIpv6MfibSchema(MetaParser):
 # Parser for  show ipv6 mfib vrf {vrf} {group} {source}
 # Parser for  show ipv6 mfib vrf {vrf} verbose
 # Parser for  show ipv6 mfib vrf {vrf} {group} verbose
-# Parser for  show ipv6 mfib vrf {vrf} {group} {source} verbose
+# Parser for  show ipv6 mfib vrf {vrf} {group} {source} verbose 
 
 # =====================================
 class ShowIpv6Mfib(ShowIpv6MfibSchema):
@@ -1163,14 +1167,21 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         # LISP0.1 Flags: A NS
         #  Null0 Flags: A
         #  GigabitEthernet1/0/1 Flags: A NS
+        #Tunnel0, VXLAN Decap Flags: A
+        #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
 
-        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
+        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
+                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
                          ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+        
+        #Tunnel1, VXLAN v6 Decap Flags: F NS
+        
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
                         '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?)?'
 						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
@@ -1250,6 +1261,12 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                 ingress_interface = group['ingress_if']
                 ing_intf_dict = sw_data.setdefault('incoming_interfaces',{}).setdefault(ingress_interface,{})
                 ing_intf_dict['ingress_flags'] = group['ingress_flags']
+                if group['ingress_vxlan_cap']:
+                    ing_intf_dict['ingress_vxlan_cap']=group['ingress_vxlan_cap']
+                if group['ingress_vxlan_version']:
+                    ing_intf_dict['ingress_vxlan_version']=group['ingress_vxlan_version']
+                    ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                    ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 continue
 
 
@@ -1259,6 +1276,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
             if m:
                 group = m.groupdict()
                 outgoing_interface=group['egress_if']
+                
                 if group['egress_rloc']:
                     egress_data['egress_rloc'] = group['egress_rloc']
 
@@ -1277,8 +1295,14 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
 
                 egress_data=sw_data.setdefault('outgoing_interfaces',{}).setdefault(outgoing_interface,{})
                 egress_data['egress_flags'] = group['egress_flags']
+
                 if group['egress_underlay_mcast']:
                     egress_data['egress_underlay_mcast'] = group['egress_underlay_mcast']
+
+                if group['egress_vxlan_cap']:
+                    egress_data['egress_vxlan_cap'] = group['egress_vxlan_cap']
+                if group['egress_vxlan_version']:
+                    egress_data['egress_vxlan_version'] = group['egress_vxlan_version']
 
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800

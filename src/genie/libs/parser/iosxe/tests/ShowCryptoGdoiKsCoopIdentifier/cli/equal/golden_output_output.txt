@@ -1,0 +1,13 @@
+COOP-KS Sender ID (SID) Information for Group bw6000:
+
+    Local KS Role: Primary   , Local KS Status: Alive
+        Local Address                : 15.15.15.1
+        Next SID Client Operation    : NOTIFY
+        Re-initializing              : No
+        KSSID Overlap                : No
+        SID Length (Group Size) Cfg  : 24 bits (MEDIUM)
+        SID Length (Group Size) Used : 24 bits (MEDIUM)
+        Current KSSID In-Use         : none
+        KSSID(s) Assigned            : none
+        KSSID(s) Used                : none
+        Old KSSID(s) Used            : none

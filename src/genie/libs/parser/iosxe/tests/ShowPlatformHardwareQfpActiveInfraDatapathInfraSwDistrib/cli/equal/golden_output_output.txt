@@ -1,0 +1,93 @@
+pm9005#show platform hardware qfp active datapath infra sw-distrib
+Dist Mode: NSFBD
+Inactive PPEs: 4-9
+
+RX Stats
+Source  0: name   DST, pmask 0x3f0
+  Port  4 (fpe0/GigabitEthernet0/0/0): Classifier: L4TUPLE, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash   COFF Directed           Total
+    PP  0:           699898          699920               -          699920               -          699920
+    PP  1:          1104357         1109143               -         1109143               -         1109143
+    PP  2:               62              62               -              62               -              62
+    PP  3:              154             154               -             154               -             154
+    PP 11:                -               -               -               -         5392126         5392126
+  Port  5 (fpe1/GigabitEthernet0/0/1): Classifier: L4TUPLE, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash           Total
+    PP  0:           437963          438170               -          438170          438170
+    PP  1:          1117613         1118379               -         1118379         1118379
+    PP  2:           705275          706125               -          706125          706125
+    PP  3:           684700          684997               -          684997          684997
+  Port  6 (fpe2/GigabitEthernet0/0/2): Classifier: L4TUPLE, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash           Total
+    PP  0:       4767356568      7460738787               -      7460738787      7460738787
+    PP  1:       3731300598      3733800638               -      3733800638      3733800638
+    PP  2:       7374181015     11196023108               -     11196023108     11196023108
+    PP  3:       3727057997      3727069386               -      3727069386      3727069386
+  Port  7 (fpe3/GigabitEthernet0/0/3): Classifier: L4TUPLE, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash           Total
+    PP  3:           322255          322255               -          322255          322255
+  Port  8 (fpe4/GigabitEthernet0/0/4): Classifier: L4TUPLE, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash   COFF Directed           Total
+    PP  0:            36664           36664               -           36664               -           36664
+    PP  1:              388             388               -             388               -             388
+    PP  2:           644558          644563               -          644563               -          644563
+    PP  3:            94489          102255               -          102255               -          102255
+    PP 11:                -               -               -               -         5392172         5392172
+Source  1: name   RCL, pmask 0x02
+  Port  1 (rcl0/rcl0): Classifier: RECYCLE, Credit Err:  -
+                    Flushes         Flushed            Spin        Directed           Total
+    PP  0:         19535941        19540871               -        19540871        19540871
+    PP  1:          8336076         8405908               -         8405908         8405908
+    PP  2:        576095587      1165557978               -      1165557978      1165557978
+    PP  3:          1360299         1365775               -         1365775         1365775
+Source  2: name   IPC, pmask 0x04
+  Port  2 (ipc/ipc): Classifier: IPC, Credit Err: 4939494
+                    Flushes         Flushed            Spin        Directed           Total
+    PP  0:           920888          920888               -          920888          920888
+    PP  1:           920888          920888               -          920888          920888
+    PP  2:           920888          920888               -          920888          920888
+    PP  3:           920887          920887               -          920887          920887
+Source  3: name LSMPI, pmask 0x08
+  Port  3 (vxe_punti/vxe_puntif): Classifier: LSMPI, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash         Unknown           Total
+    PP  0:           105424          124727               -          124727               -          124727
+    PP  1:           691463          760512               -          760512               -          760512
+    PP  2:          1811684         2086691               -         2086691               -         2086691
+    PP  3:           359390          379228               -           33498          345730          379228
+Source  5: name   SVC, pmask 0xc00
+  Port 10 (vpg0/vpg0): Classifier: SVC_ENGINE_PI, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash           Total
+    PP  1:                1               1               -               1               1
+    PP  2:               93              94               -              94              94
+  Port 11 (vpg1/vpg1): Classifier: SVC_ENGINE_PI, Credit Err:  -
+                    Flushes         Flushed            Spin         SW Hash           Total
+    PP  0:               95              96               -              96              96
+    PP  2:                1               1               -               1               1
+
+PP Stats
+    PP  0:
+     Port:                     1               2               3               4               5               6               7               8              10              11       Total Pkts
+      My Pkts           19540871          920889          124727          699920          438170      7460736956               -         2074157               -              96       7484535786
+      Other Pkts               -               3               -               1               -            3389               -               -               -               -             3393
+     Priority:                 0               1               1               1               1               1               1               1               1               1
+    PP  1:
+     Port:                     1               2               3               4               5               6               7               8              10              11       Total Pkts
+      My Pkts            8405908          920890          760512         2437912         1118379      3733800008               -         1354843               1               -       3748798453
+      Other Pkts               -               6               -               -               -            3904               -               -               -               -             3910
+     Priority:                 0               1               1               1               1               1               1               1               1               1
+    PP  2:
+     Port:                     1               2               3               4               5               6               7               8              10              11       Total Pkts
+      My Pkts         1165557982          920878         2086691         2720592          706125     11196013418               -         1327598              94               1      12369333379
+      Other Pkts               -               -               -               -               -             838               -               -               -               -              838
+     Priority:                 0               1               1               1               1               1               1               1               1               1
+    PP  3:
+     Port:                     1               2               3               4               5               6               7               8              10              11       Total Pkts
+      My Pkts            1365775          920891          379228         1342980          684997      3727069041          322255         1419444               -               -       3733504611
+      Other Pkts               -               3               -               -               -            4365               -               -               -               -             4368
+     Priority:                 0               1               1               1               1               1               1               1               1               1
+
+    PPE Being Helped ->                0                1                2                3       Total Pkts
+      PP  0 Processed:        7484535789              222             3060              111       7484539182
+      PP  1 Processed:               633       3748798455             3151              126       3748802365
+      PP  2 Processed:               531              199      12369333391              108      12369334229
+      PP  3 Processed:               667              210             3491       3733504612       3733508980

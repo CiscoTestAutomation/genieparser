@@ -2939,3 +2939,230 @@ class ShowUtdEngineStandardStatisticsUrl(ShowUtdEngineStandardStatisticsUrlSchem
             
         return utm_data_dict
 
+# ==========================================================================================
+# Parser Schema for 'show utd engine standard config'
+# ==========================================================================================
+
+class ShowUtdEngineStandardConfigSchema(MetaParser):
+    """Schema for "show utd engine standard config" """
+
+    schema = {
+        'utd_eng_std_config': {
+            'unified_policy': str,
+            'url_filtering_cloud_lookup': str,
+            'url_filtering_on_box_lookup': str,
+            'file_reputation_cloud_lookup': str,
+            'file_analysis_cloud_submission': str,
+            'utd_tls_decryption_dataplane_policy': str,
+            'normalizer': str,
+            'flow_logging': str,
+            'utd_policy_table_entries': {
+                'polciy': {
+                    'name': str,
+                    'threat_profile': str
+                }
+            },
+            'virtual_port_group_id': int,
+            'utd_threat_inspection_profile_table_entries': {
+                'threat_profile': {
+                    'threat_profile_name': str,
+                    'mode': str,
+                    'policy': str,
+                    'logging_level': str
+                }
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show utd engine standard config'
+# ================================================================================
+
+class ShowUtdEngineStandardConfig(ShowUtdEngineStandardConfigSchema):
+    """ parser for "show utd engine standard config" """
+
+    cli_command = "show utd engine standard config"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # Unified Policy: Enabled
+        p1 = re.compile(r'^Unified\s+Policy:\s+(?P<status>\w+)$')
+
+        # URL-Filtering Cloud Lookup: Enabled
+        p2 = re.compile(r'^URL-Filtering\s+Cloud\s+Lookup:\s+(?P<status>\w+)$')
+        
+        # URL-Filtering On-box Lookup: Disabled
+        p3 = re.compile(r'^URL-Filtering\s+On-box\s+Lookup:\s+(?P<status>\w+)$')
+        
+        # File-Reputation Cloud Lookup: Disabled
+        p4 = re.compile(r'^File-Reputation\s+Cloud\s+Lookup:\s+(?P<status>\w+)$')
+        
+        # File-Analysis Cloud Submission: Disabled
+        p5 = re.compile(r'^File-Analysis\s+Cloud\s+Submission:\s+(?P<status>\w+)$')
+        
+        # UTD TLS-Decryption Dataplane Policy: Enabled
+        p6 = re.compile(r'^UTD\s+TLS-Decryption\s+Dataplane\s+Policy:\s+(?P<status>\w+)$')
+        
+        # Normalizer: Enabled
+        p7 = re.compile(r'^Normalizer:\s+(?P<status>\w+)$')
+        
+        # Flow Logging: Disabled
+        p8 = re.compile(r'^Flow\s+Logging:\s+(?P<status>\w+)$')
+        
+        # UTD Policy table entries:
+        p9 = re.compile(r'^(?P<name>(UTD\s+Policy\s+table\s+entries)|UTD\s+threat-inspection\s+profile\s+table\s+entries):$')
+        
+        # Policy: AIP1
+        p10 = re.compile(r'^Policy:\s+(?P<status>[A-Z0-9]+)$')
+        
+        # Threat Profile: IPPuni1
+        p11 = re.compile(r'^Threat\s+Profile:\s+(?P<status>\w+)$')
+        
+        # VirtualPortGroup Id: 1
+        p12 = re.compile(r'^VirtualPortGroup\s+Id:\s+(?P<status>\w+)$')
+        
+        # Threat profile: IPPuni1
+        p13 = re.compile(r'^Threat\s+profile:\s+(?P<status>\w+)$')
+        
+        #  Mode: Intrusion Detection
+        p14 = re.compile(r'^Mode:\s+(?P<status>[A-Za-z ]+)$')
+        
+        #  Policy: Balanced
+        p15 = re.compile(r'^Policy:\s+(?P<status>[A-Za-z]+)$')
+        
+        #  Logging level: Error
+        p16 = re.compile(r'^Logging\s+level:\s+(?P<status>\w+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Unified Policy: Enabled
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['unified_policy'] = group['status']
+                continue
+                
+            # URL-Filtering Cloud Lookup: Enabled
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['url_filtering_cloud_lookup'] = group['status']
+                continue
+            
+            # URL-Filtering On-box Lookup: Disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['url_filtering_on_box_lookup'] = group['status']
+                continue
+            
+            # File-Reputation Cloud Lookup: Disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['file_reputation_cloud_lookup'] = group['status']
+                continue
+            
+            # File-Analysis Cloud Submission: Disabled
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['file_analysis_cloud_submission'] = group['status']
+                continue
+            
+            # UTD TLS-Decryption Dataplane Policy: Enabled
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['utd_tls_decryption_dataplane_policy'] = group['status']
+                continue
+            
+            # Normalizer: Enabled
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['normalizer'] = group['status']
+                continue
+            
+            # Flow Logging: Disabled
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict = parsed_dict.setdefault('utd_eng_std_config', {})
+                utd_eng_std_config_dict['flow_logging'] = group['status']
+                continue
+            
+            # UTD Policy table entries:
+            # UTD threat-inspection profile table entries:
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name'].lower().replace('-','_').replace(' ','_')
+                utd_policy_table_entries_dict = utd_eng_std_config_dict.setdefault(name, {})
+                table_name = utd_policy_table_entries_dict
+                continue
+            
+            #  Policy: AIP1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                policy_table_name = table_name.setdefault('polciy',{})
+                policy_table_name['name'] = group['status']
+                continue
+            
+            # Threat Profile: IPPuni1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                policy_table_name['threat_profile'] = group['status']
+                continue
+            
+            # VirtualPortGroup Id: 1
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                utd_eng_std_config_dict['virtual_port_group_id'] = int(group['status'])
+                continue
+            
+            # Threat profile: IPPuni1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                threat_profile_table_name = table_name.setdefault('threat_profile',{})
+                threat_profile_table_name['threat_profile_name'] = group['status']
+                continue
+            
+            # Mode: Intrusion Detection
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                threat_profile_table_name['mode'] = group['status']
+                continue
+            
+            # Policy: Balanced
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                threat_profile_table_name['policy'] = group['status']
+                continue
+            
+            # Logging level: Error
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                threat_profile_table_name['logging_level'] = group['status']
+                continue
+            
+        return parsed_dict

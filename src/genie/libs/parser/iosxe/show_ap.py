@@ -12,7 +12,7 @@ class ShowApSummarySchema(MetaParser):
 
     schema = {
         "ap_neighbor_count": int,
-        "ap_name": {
+        Optional("ap_name"): {
             str: {
                 "slots_count": int,
                 "ap_model": str,
@@ -20,6 +20,7 @@ class ShowApSummarySchema(MetaParser):
                 "radio_mac": str,
                 "location": str,
                 "country": str,
+                Optional("regulatory_domain"): str,
                 "ap_ip_address": str,
                 "state": str
             }
@@ -40,32 +41,42 @@ class ShowApSummary(ShowApSummarySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
+
         
         ap_summary_dict = {}
-        # Number of APs: 149
+        # Number of APs: 3
         #
         # AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
         # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
         # a132-cap15                       2      9130AXI   a4b2.32ff.b3d5  2c57.41ff.f2c0  Fab A  UK          10.6.32.146                               Registered
         # a111-cap27                       2      9130AXI   a4b2.32ff.b3ed  2c57.41ff.f380  Fab A  UK          10.6.32.118.                              Registered
-        # a112-cap11                       2      9130AXI   a4b2.32ff.b362  2c57.41ff.f720  Fab A  UK          10.6.33.160                               Registered
-        # a112-cap10                       2      9130AXI   a4b2.32ff.b5b1  2c57.41ff.d1a0  Fab A  UK          10.6.33.102                               Registered
-        # a112-cap17                       2      9130AXI   a4b2.32ff.b5c5  2c57.41ff.d240  Fab A  UK          10.6.32.203                               Registered
-        # a112-cap14                       2      9130AXI   a4b2.32ff.b5c9  2c57.41ff.d260  Fab A  UK          10.6.32.202                               Registered
-        # a122-cap09                       2      9130AXI   a4b2.32ff.b5e1  2c57.41ff.d320  Fab A  UK          10.6.33.133                               Registered
-        # a131-cap43                       2      9130AXI   a4b2.32ff.b5e5  2c57.41ff.d340  Fab A  UK          10.6.33.93                                Registered
-        # a122-cap08                       2      9130AXI   a4b2.32ff.b5e9  2c57.41ff.d360  Fab A  UK          10.6.32.166                               Registered
 
-        # Number of APs: 149
+
+        # Number of APs: 3
         ap_neighbor_count_capture = re.compile(r"^Number\s+of\s+APs:\s+(?P<ap_neighbor_count>\d+)")
 
         # AP002C.C862.E708  2      AIR-AP1815I-A-K9      002c.c862.e708  002c.c88a.fd20  default location    US    9.4.57.241    Registered
-        ap_neighbor_info_capture = re.compile(
-               r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+" 
-               "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<location>.*)\s+" 
-               "(?P<country>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+" 
-               "(?P<state>(Registered))")
+        if "Country Code" not in out and "Regulatory Domain" not in out:
+            ap_neighbor_info_capture = re.compile(
+                   r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+" 
+                   "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<location>.*)\s+" 
+                   "(?P<country>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+" 
+                   "(?P<state>(Registered))")
+        else:
+            # For the new output
+            # CC = Country Code
+            # RD = Regulatory Domain
+            #
+            # AP Name                          Slots AP Model             Ethernet MAC   Radio MAC      CC   RD   IP Address                                State        Location
+            # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            # APF8B7.E2C4.1120                 2     AIR-AP1852I-B-K9     f8b7.e2c4.1120 f8b7.e2c4.9b60 US   -B   20.20.13.142                              Registered   default location
+            ap_neighbor_info_capture = re.compile(
+                r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+"
+                "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<country>.*)\s+"
+                "(?P<regulatory_domain>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+"
+                "(?P<state>(Registered))\s+(?P<location>.*)")
+
 
         remove_lines = ('AP Name', '----')
 

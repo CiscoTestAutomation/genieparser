@@ -16,10 +16,10 @@ Crypto Gdoi Group Name :bw600-IPV6_eft
                 Server handle: 1073741917
                 Peer Address: 16.16.16.1
                 Peer Version: 1.0.27
-                Peer COOP version: 1.0.8 
+                Peer COOP version: 1.0.8
                 COOP Protocol: base
                 Peer Priority: 200             
-                Peer KS Role: Secondary , Peer KS Status: Alive     
+                Peer KS Role: Secondary , Peer KS Status: Alive
                 Antireplay Sequence Number: 5
 
                 IKE status: Established
