@@ -1,0 +1,45 @@
+pm9008#show utd engine standard config
+UTD Engine Standard Configuration:
+
+Unified Policy: Enabled
+
+URL-Filtering Cloud Lookup: Enabled
+
+URL-Filtering On-box Lookup: Disabled
+
+File-Reputation Cloud Lookup: Disabled
+
+File-Analysis Cloud Submission: Disabled
+
+UTD TLS-Decryption Dataplane Policy: Enabled
+
+Normalizer: Enabled
+
+Flow Logging: Disabled
+
+UTD Policy table entries:
+Policy: AIP1
+ Threat Profile: IPPuni1
+
+VirtualPortGroup Id: 1
+
+UTD threat-inspection profile table entries:
+Threat profile: IPPuni1
+ Mode: Intrusion Detection
+ Policy: Balanced
+ Logging level: Error
+
+UTD threat-inspection whitelist profile table entries:
+ UTD threat-inspection whitelist profile table is empty
+
+UTD web-filter profile table entries
+ UTD web-filter profile table is empty
+
+UTD TLS-Decryption profile table entries
+ UTD TLS-Decryption profile table is empty
+
+UTD File analysis table entries
+ UTD File analysis profile table is empty
+
+UTD File reputation table entries
+ UTD File reputation profile table is empty

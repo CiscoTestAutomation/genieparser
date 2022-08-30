@@ -1,0 +1,24 @@
+Publication Information for LISP 0 EID-table vrf internet (IID 5000)
+
+  EID-prefix: 193.168.0.0/16
+    First published:      10:31:23
+    Last published:       10:31:22
+    Exported to:          local-eid
+
+    Publisher 100.78.78.78:4342, last published 10:31:22, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state unknown
+                                 xTR-ID unspecified
+                                 site-ID unspecified
+                                 Domain-ID extranet
+                                 Multihoming-ID unspecified
+                                 Extranet-IID 4101
+
+    Publisher 100.77.77.77:4342, last published 10:31:23, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state unknown
+                                 xTR-ID unspecified
+                                 site-ID unspecified
+                                 Domain-ID extranet
+                                 Multihoming-ID unspecified
+                                 Extranet-IID 4101

@@ -1,0 +1,38 @@
+sh cry gdoi ks members 42.42.42.1
+
+
+Group Member not Found
+
+
+
+Group Member not Found
+
+
+
+Group Member not Found
+
+
+
+Group Member not Found
+
+
+
+Group Member not Found
+
+Number of rekeys sent for group bw-suiteB-v6 : 0
+Number of retransmits during the last rekey for group bw-suiteB-v6 : 0
+Duration of the last rekey for group bw-suiteB-v6 : 1 msec
+
+Group Member ID    : 42.42.42.1  GM Version: 1.0.25
+ Group ID          : 2002
+ Group Name        : bw-suiteB-v6
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0

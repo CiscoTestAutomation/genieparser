@@ -1,10 +1,10 @@
 expected_output = {
     'group':{
-        'g1':{
+        'bw6000':{
             'local':{
                 'ks_role': 'Primary',
                 'ks_status': 'Alive',
-                'address': '10.78.106.116',
+                'address': '15.15.15.1',
                 'next_sid_client_operation': 'NOTIFY',
                 're_initializing' : 'No',
                 'kssid_overlap': 'No',
@@ -18,7 +18,7 @@ expected_output = {
             'peer':{
                 'ks_role': 'Secondary',
                 'ks_status': 'Alive',
-                'address': '10.78.106.117',
+                'address': '16.16.16.1',
                 'next_sid_client_operation': 'NOTIFY',
                 're_initializing' : 'No',
                 'kssid_overlap': 'No',

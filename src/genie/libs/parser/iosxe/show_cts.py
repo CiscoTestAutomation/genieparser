@@ -399,11 +399,58 @@ class ShowCtsRoleBasedCountersSchema(MetaParser):
 class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
     """Parser for show cts role-based counters"""
 
-    cli_command = 'show cts role-based counters'
+    cli_command = [
+        'show cts role-based counters',
+        'show cts role-based counters {ipv4}',
+        'show cts role-based counters {ipv6}',
+        'show cts role-based counters {default}',
+        'show cts role-based counters {default} {ipv4}',
+        'show cts role-based counters {default} {ipv6}',
+        'show cts role-based counters from {from_sgt}',
+        'show cts role-based counters from {from_sgt} {ipv4}',
+        'show cts role-based counters from {from_sgt} {ipv6}',
+        'show cts role-based counters from {from_sgt} to {to_sgt}',
+        'show cts role-based counters from {from_sgt} to {to_sgt} {ipv4}',
+        'show cts role-based counters from {from_sgt} to {to_sgt} {ipv6}',
+        'show cts role-based counters from {to_sgt}',
+        'show cts role-based counters from {to_sgt} {ipv4}',
+        'show cts role-based counters from {to_sgt} {ipv6}'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, ipv4=None, ipv6=None, from_sgt=None, to_sgt=None, default=None, output=None):
+        if from_sgt and to_sgt and ipv4:
+            cmd = self.cli_command[10].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv4=ipv4)
+        elif from_sgt and to_sgt and ipv6:
+            cmd = self.cli_command[11].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv6=ipv6)
+        elif from_sgt and to_sgt:
+            cmd = self.cli_command[9].format(from_sgt=from_sgt, to_sgt=to_sgt)
+        elif to_sgt and ipv4:
+            cmd = self.cli_command[13].format(to_sgt=to_sgt, ipv4=ipv4)
+        elif to_sgt and ipv6:
+            cmd = self.cli_command[14].format(to_sgt=to_sgt, ipv6=ipv6)
+        elif to_sgt:
+            cmd = self.cli_command[12].format(to_sgt=to_sgt)
+        elif from_sgt and ipv4:
+            cmd = self.cli_command[7].format(from_sgt=from_sgt, ipv4=ipv4)
+        elif from_sgt and ipv6:
+            cmd = self.cli_command[8].format(from_sgt=from_sgt, ipv6=ipv6)
+        elif from_sgt:
+            cmd = self.cli_command[6].format(from_sgt=from_sgt)
+        elif default and ipv4:
+            cmd = self.cli_command[4].format(default=default, ipv4=ipv4)
+        elif default and ipv6:
+            cmd = self.cli_command[5].format(default=default, ipv6=ipv6)
+        elif default:
+            cmd = self.cli_command[3].format(default=default)
+        elif ipv4:
+            cmd = self.cli_command[1].format(ipv4=ipv4)
+        elif ipv6:
+            cmd = self.cli_command[2].format(ipv6=ipv6)
+        else:
+            cmd = self.cli_command[0]
+
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -420,7 +467,7 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                                          r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
                                          r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
 
-        remove_lines = ('Role-based IPv4 counters', 'From')
+        remove_lines = ('Role-based IPv4 counters', 'Role-based IPv6 counters', 'From')
 
         # Remove unwanted lines from raw text
         def filter_lines(raw_output, remove_lines):
@@ -1799,7 +1846,7 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
 #  * 'show cts role-based permissions'
 # ====================================
 class ShowCtsRoleBasedPermissionsSchema(MetaParser):
-    """Schema for show cts role-based permissions."""
+    """Schema for show cts role-based permissions"""
 
     schema = {
         "indexes": {
@@ -1828,21 +1875,68 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
 class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
     """Parser for show cts role-based permissions"""
 
-    cli_command = 'show cts role-based permissions'
+    cli_command = [
+        'show cts role-based permissions',
+        'show cts role-based permissions {ipv4}',
+        'show cts role-based permissions {ipv6}',
+        'show cts role-based permissions {default}',
+        'show cts role-based permissions {default} {ipv4}',
+        'show cts role-based permissions {default} {ipv6}',
+        'show cts role-based permissions from {from_sgt}',
+        'show cts role-based permissions from {from_sgt} {ipv4}',
+        'show cts role-based permissions from {from_sgt} {ipv6}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt} {ipv4}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt} {ipv6}',
+        'show cts role-based permissions from {to_sgt}',
+        'show cts role-based permissions from {to_sgt} {ipv4}',
+        'show cts role-based permissions from {to_sgt} {ipv6}'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, ipv4=None, ipv6=None, from_sgt=None, to_sgt=None, default=None, output=None):
+        if from_sgt and to_sgt and ipv4:
+            cmd = self.cli_command[10].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv4=ipv4)
+        elif from_sgt and to_sgt and ipv6:
+            cmd = self.cli_command[11].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv6=ipv6)
+        elif from_sgt and to_sgt:
+            cmd = self.cli_command[9].format(from_sgt=from_sgt, to_sgt=to_sgt)
+        elif to_sgt and ipv4:
+            cmd = self.cli_command[13].format(to_sgt=to_sgt, ipv4=ipv4)
+        elif to_sgt and ipv6:
+            cmd = self.cli_command[14].format(to_sgt=to_sgt, ipv6=ipv6)
+        elif to_sgt:
+            cmd = self.cli_command[12].format(to_sgt=to_sgt)
+        elif from_sgt and ipv4:
+            cmd = self.cli_command[7].format(from_sgt=from_sgt, ipv4=ipv4)
+        elif from_sgt and ipv6:
+            cmd = self.cli_command[8].format(from_sgt=from_sgt, ipv6=ipv6)
+        elif from_sgt:
+            cmd = self.cli_command[6].format(from_sgt=from_sgt)
+        elif default and ipv4:
+            cmd = self.cli_command[4].format(default=default, ipv4=ipv4)
+        elif default and ipv6:
+            cmd = self.cli_command[5].format(default=default, ipv6=ipv6)
+        elif default:
+            cmd = self.cli_command[3].format(default=default)
+        elif ipv4:
+            cmd = self.cli_command[1].format(ipv4=ipv4)
+        elif ipv6:
+            cmd = self.cli_command[2].format(ipv6=ipv6)
+        else:
+            cmd = self.cli_command[0]
+
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
         cts_rb_permissions_dict = {}
 
         # IPv4 Role-based permissions default:
-        rb_default_capture = re.compile(r"^IPv4\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        rb_default_capture = re.compile(r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+(?P<default_group>default)")
         # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
         rb_permissions_capture = re.compile(
-            r"^IPv4\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
+            r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
         #         Deny IP-00
         policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
         # ACCESS-01
@@ -3006,5 +3100,316 @@ class ShowCtsSxpSgtMapBrief(ShowCtsSxpSgtMapBriefSchema):
                 total_group = m2.groupdict()
                 total_group['total_ip_sgt_mappings'] = int(total_group['total_ip_sgt_mappings'])
                 map_dict['total_ip_sgt_mappings'] = total_group['total_ip_sgt_mappings']
+
+        return result_dict
+
+
+class ShowCtsServerListSchema(MetaParser):
+    """
+        Schema for:
+            show cts server-list
+    """
+    schema = {
+        Optional('load_balance_status'): str,
+        Optional('load_balance_method'): str,
+        Optional('batch_size'): int,
+        Optional('ignore_preferred_server'): bool,
+        Optional('server_group_dead_time'): int,
+        Optional('server_group_dead_time_unit'): str,
+        Optional('global_server_liveness_automated_test'): {
+            Optional('dead_time'): int,
+            Optional('dead_time_unit'): str,
+            Optional('idle_time'): int,
+            Optional('idle_time_unit'): str,
+            Optional('status'): str
+        },
+        Optional('preferred_list'): {
+            Any(): {
+                Optional("server_ip"): str,
+                Optional("port_number"): int,
+                Optional("a_id"): str,
+                Optional("status"): str,
+                Optional("auto_test_status"): bool,
+                Optional("keywrap_enable"): bool,
+                Optional("idle_time"): int,
+                Optional("dead_time"): int,
+                Optional("idle_time_unit"): str,
+                Optional("dead_time_unit"): str,
+            }
+        },
+        Optional('installed_list'): {
+            Any(): {
+                Any(): {
+                    Optional("server_ip"): str,
+                    Optional("port_number"): int,
+                    Optional("a_id"): str,
+                    Optional("status"): str,
+                    Optional("auto_test_status"): bool,
+                    Optional("keywrap_enable"): bool,
+                    Optional("idle_time"): int,
+                    Optional("dead_time"): int,
+                    Optional("idle_time_unit"): str,
+                    Optional("dead_time_unit"): str,
+                }
+            }
+        },
+        Optional('http_server_list'): {
+            Any(): {
+                Optional('server_state'): str,
+                Optional('ipv4_address'): {
+                    Any(): str
+                },
+                Optional('ipv6_address'): {
+                    Any(): str
+                },
+                Optional('domain_name'): {
+                    Any(): str
+                },
+                Optional('trustpoint_name'): str,
+                Optional('port_number'): int,
+                Optional('trustpoint_chain'): str
+            }
+        }
+    }
+
+class ShowCtsServerList(ShowCtsServerListSchema):
+    """
+        Parser for:
+            show cts server-list
+    """
+
+    cli_command = 'show cts server-list'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # CTS Server Radius Load Balance = ENABLED
+        p1 = re.compile(r'^CTS\s+Server\s+Radius\s+Load\s+Balance\s+=\s+(?P<load_balance_status>\S+)$')
+        # Method = least-outstanding
+        p2 = re.compile(r'^Method\s+=\s+(?P<load_balance_method>\S+)$')
+        # Batch size = 50
+        p3 = re.compile(r'^Batch\s+size\s+=\s+(?P<batch_size>\d+)$')
+        # Ignore preferred server
+        p4 = re.compile(r'^Ignore\s+preferred\s+server$')
+        # Server Group Deadtime = 20 secs (default)
+        p5 = re.compile(r'^Server\s+Group\s+Deadtime\s+=\s+(?P<server_group_dead_time>\d+)\s+'
+        '(?P<server_group_dead_time_unit>\S+)')
+        # Global Server Liveness Automated Test Deadtime = 20 secs
+        p6 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Deadtime\s+=\s+'
+        '(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        # Global Server Liveness Automated Test Idle Time = 60 mins
+        p7 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Idle\s+Time\s+=\s+'
+        '(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
+        # Global Server Liveness Automated Test = ENABLED (default)
+        p8 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+=\s+'
+        '(?P<status>.*)$')
+        # Preferred list, 1 server(s):
+        p9 = re.compile(r'^Preferred\s+list.*$')
+        # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
+        p10 = re.compile(r'^Installed\s+list:\s+(?P<list_name>\S+),.*$')
+        # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+        p11 = re.compile(r'^\*Server:\s+(?P<server_ip>[\d\.]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
+        # Status = ALIVE
+        p12 = re.compile(r'^Status\s+=\s+(?P<status>\S+)$')
+        # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
+        # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
+        p13 = re.compile(r'^auto-test\s+=\s+(?P<auto_test_status>\S+),\s+(keywrap-enable\s+=\s+'
+        '(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
+        '\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        # HTTP Server-list:
+        p14 = re.compile(r'^HTTP\s+Server\-list:$')
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p15 = re.compile(r'^Server\s+Name\s+:\s+(?P<server_name>\S+)$')
+        # Server State : ALIVE
+        p16 = re.compile(r'^Server\s+State\s+:\s+(?P<server_state>\S+)$')
+        # IPv4 Address     : 10.76.119.180 (Unreachable)
+        # IPv4 Address     : 100.100.100.101 (Reachable)
+        p17 = re.compile(r'^IPv4\s+Address\s+:\s+(?P<ipv4_address>[\d\.]+)\s+\((?P<ipv4_status>\w+)\)$')
+        # IPv6 Address     : 1000::101 (Reachable)
+        # IPv6 Address     : 1100::101 (Reachable)
+        p18 = re.compile(r'^IPv6\s+Address\s+:\s+(?P<ipv6_address>[\w:]+)\s+\((?P<ipv6_status>\w+)\)$')
+        # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+        p19 = re.compile(r'^Domain-name\s+:\s+(?P<domain_name>\S+)\s+\((?P<domain_status>\w+)\)$')
+        # Trustpoint       : cts_tp_cts-auto-cls1-ise1.cisco.com_0
+        p20 = re.compile(r'^Trustpoint\s+:\s+(?P<trustpoint_name>\S+)$')
+        # Port-num         : 9063
+        p21 = re.compile(r'^Port-num\s+:\s+(?P<port_num>\d+)$')
+        # Trustpoint chain : NOT CONFIGURED
+        p22 = re.compile(r'^Trustpoint\s+chain\s+:\s+(?P<trustpoint_chain>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CTS Server Radius Load Balance = ENABLED
+            m = p1.match(line)
+            if m:
+                result_dict.update(m.groupdict())
+                continue
+
+            # Method = least-outstanding
+            m = p2.match(line)
+            if m:
+                result_dict.update(m.groupdict())
+                continue
+
+            # Batch size = 50
+            m = p3.match(line)
+            if m:
+                batch_dict = m.groupdict()
+                batch_dict['batch_size'] = int(batch_dict['batch_size'])
+                result_dict.update(batch_dict)
+                continue
+
+            # Ignore preferred server
+            m = p4.match(line)
+            if m:
+                result_dict.update({'ignore_preferred_server': True})
+                continue
+
+            # Server Group Deadtime = 20 secs (default)
+            m = p5.match(line)
+            if m:
+                server_group_dict = m.groupdict()
+                server_group_dict['server_group_dead_time'] = int(server_group_dict['server_group_dead_time'])
+                result_dict.update(server_group_dict)
+                continue
+
+            # Global Server Liveness Automated Test Deadtime = 20 secs
+            m = p6.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                dead_time_dict = m.groupdict()
+                dead_time_dict['dead_time'] = int(dead_time_dict['dead_time'])
+                auto_test_dict.update(dead_time_dict)
+                continue
+
+            # Global Server Liveness Automated Test Idle Time = 60 mins
+            m = p7.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                idle_time_dict = m.groupdict()
+                idle_time_dict['idle_time'] = int(idle_time_dict['idle_time'])
+                auto_test_dict.update(idle_time_dict)
+                continue
+
+            # Global Server Liveness Automated Test = ENABLED (default)
+            m = p8.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                auto_test_dict.update(m.groupdict())
+                continue
+
+            # Preferred list, 1 server(s):
+            m = p9.match(line)
+            if m:
+                server_list_dict = result_dict.setdefault('preferred_list', {})
+                continue
+
+            # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
+            m = p10.match(line)
+            if m:
+                server_list_dict = result_dict.setdefault('installed_list', {}).setdefault(
+                    m.groupdict()['list_name'], {})
+                continue
+
+            # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+            m = p11.match(line)
+            if m:
+                server_detail = m.groupdict()
+                server_detail['port_number'] = int(server_detail['port_number'])
+                server_status_dict = server_list_dict.setdefault(server_detail['server_ip'], {})
+                server_status_dict.update(server_detail)
+                continue
+
+            # Status = ALIVE
+            m = p12.match(line)
+            if m:
+                server_status_dict.update(m.groupdict())
+                continue
+
+            # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
+            # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                server_status_dict['auto_test_status'] = group['auto_test_status'] == 'TRUE'
+                if group["keywrap_enable"]:
+                    server_status_dict['keywrap_enable'] =  group ['keywrap_enable'] == 'TRUE'
+                server_status_dict['dead_time'] = int(group['dead_time'])
+                server_status_dict['idle_time'] = int(group['idle_time'])
+                server_status_dict['dead_time_unit'] = group['dead_time_unit']
+                server_status_dict['idle_time_unit'] = group['idle_time_unit']
+                continue
+
+            # HTTP Server-list:
+            m = p14.match(line)
+            if m:
+                http_dict = result_dict.setdefault('http_server_list', {})
+                continue
+
+            # Server Name  : cts-auto-cls1-ise1.cisco.com
+            m = p15.match(line)
+            if m:
+                name_group = m.groupdict()
+                server_dict = http_dict.setdefault(name_group['server_name'], {})
+                continue
+                
+            # Server State : ALIVE
+            m = p16.match(line)
+            if m:
+                state_group = m.groupdict()
+                server_dict['server_state'] = state_group['server_state']
+                continue
+
+            # IPv4 Address     : 10.76.119.180 (Unreachable)
+            # IPv4 Address     : 100.100.100.101 (Reachable)
+            m = p17.match(line)
+            if m:
+                ipv4_group = m.groupdict()
+                ipv4_dict = server_dict.setdefault('ipv4_address', {})
+                ipv4_dict[ipv4_group['ipv4_address']] = ipv4_group['ipv4_status']
+                continue
+
+            # IPv6 Address     : 1000::101 (Reachable)
+            # IPv6 Address     : 1100::101 (Reachable)
+            m = p18.match(line)
+            if m:
+                ipv6_group = m.groupdict()
+                ipv6_dict = server_dict.setdefault('ipv6_address', {})
+                ipv6_dict[ipv6_group['ipv6_address']] = ipv6_group['ipv6_status']
+                continue
+
+            # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+            m = p19.match(line)
+            if m:
+                domain_group = m.groupdict()
+                domain_dict = server_dict.setdefault('domain_name', {})
+                domain_dict[domain_group['domain_name']] = domain_group['domain_status']
+                continue
+
+            # Trustpoint       : cts_tp_cts-auto-cls1-ise1.cisco.com_0
+            m = p20.match(line)
+            if m:
+                tp_name_group = m.groupdict()
+                server_dict['trustpoint_name'] = tp_name_group['trustpoint_name']
+                continue
+
+            # Port-num         : 9063
+            m = p21.match(line)
+            if m:
+                port_num_group = m.groupdict()
+                server_dict['port_number'] = int(port_num_group['port_num'])
+                continue
+
+            # Trustpoint chain : NOT CONFIGURED
+            m = p22.match(line)
+            if m:
+                tp_chain_group = m.groupdict()
+                server_dict['trustpoint_chain'] = tp_chain_group['trustpoint_chain']
+                continue
 
         return result_dict

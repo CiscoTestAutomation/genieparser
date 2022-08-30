@@ -10,6 +10,9 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
    * show platform software fed active fnf record-count asic {asic_num}
    * show platform software fed {switch} active fnf record-count asic {asic_num}
+   * show platform software fed switch standby acl usage | include {acl_name}
+   * show platform software fed switch standby acl usage
+   * show platform hardware fed switch standby fwd-asic resource tcam utilization
 '''
 
 # Python
@@ -553,16 +556,16 @@ class ShowPlatformFedActiveFnfRecordCountAsicNum(ShowPlatformFedActiveFnfRecordC
     """
     Parser for
     * 'show platform software fed active fnf record-count asic {asic_num}'
-    * 'show platform software fed {switch} active fnf record-count asic {asic_num}'
+    * 'show platform software fed switch {state} fnf record-count asic {asic_num}'
     """
 
     cli_command = ['show platform software fed active fnf record-count asic {asic_num}',
-                   'show platform software fed {switch} active fnf record-count asic {asic_num}']
+                   'show platform software fed switch {state} fnf record-count asic {asic_num}']
 
-    def cli(self, asic_num="", switch=None, output=None):
+    def cli(self, asic_num="", state=None, output=None):
         if output is None:
-            if switch:
-                cmd = self.cli_command[1].format(switch=switch, asic_num=asic_num)
+            if state:
+                cmd = self.cli_command[1].format(state=state, asic_num=asic_num)
             else:
                 cmd = self.cli_command[0].format(asic_num=asic_num)
             output = self.device.execute(cmd)
@@ -688,3 +691,193 @@ class ShowPlatformFedSwitchActiveIfmMapping(ShowPlatformFedSwitchActiveIfmMappin
                 continue
         return ret_dict
 
+# =========================================================
+#  Schema for
+#  * 'show platform software fed switch standby acl usage'
+#  * 'show platform software fed switch standby acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema(MetaParser):
+    """Schema for 'show platform software fed switch standby acl usage
+    """
+    schema = {
+        Optional('acl_usage'): {
+            Optional('ace_software'): {
+                 Optional('vmr_max'): int,
+                 Optional('used'): int,
+             },
+            'acl_name': {
+                Any(): {
+                    'direction': {
+                        Any(): {
+                            'feature_type': str,
+                            'acl_type': str,
+                            'entries_used': int,
+                        },
+                    },
+                },
+            },
+        }
+    }
+
+# =========================================================
+#  Parser for
+#  * 'show platform software fed switch standby acl usage'
+#  * 'show platform software fed switch standby acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchStandbyAclUsage(ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema):
+    """
+    Parser for :
+        * show platform software fed switch standby acl usage
+        * show platform software fed switch standby acl usage | include {acl_name}
+    """
+
+    cli_command = ['show platform software fed switch standby acl usage',
+                   'show platform software fed switch standby acl usage | include {acl_name}']
+
+    def cli(self, acl_name="", output=None):
+        if output is None:
+            if acl_name:
+                cmd = self.cli_command[1].format(acl_name=acl_name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # #####  ACE Software VMR max:196608 used:253
+        p1 = re.compile(r'^\#\#\#\#\#\s+ACE\sSoftware\sVMR\smax\:(?P<vmr_max>\d+)\sused\:(?P<used>\d+)$')
+
+        #   RACL        IPV4     Ingress   PBR-DMVPN    92
+        p2 = re.compile(r'^(?P<feature_type>\S+)\s+(?P<acl_type>\S+)\s+(?P<direction>\S+)\s+(?P<name>\S+)\s+(?P<entries_used>\d+)$')
+
+        # initial return dictionary
+        ret_dict ={}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            acl_usage = ret_dict.setdefault('acl_usage', {})
+
+            # #####  ACE Software VMR max:196608 used:253
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_usage = ret_dict.setdefault('acl_usage', {})
+                ace_software = acl_usage.setdefault('ace_software', {})
+
+                vmr_max = group['vmr_max']
+                ace_software['vmr_max'] = int(vmr_max)
+
+                used = group['used']
+                ace_software['used'] = int(used)
+                continue
+
+            #   RACL        IPV4     Ingress   PBR-DMVPN    92
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_name = acl_usage.setdefault('acl_name', {}).setdefault(
+                    Common.convert_intf_name(group['name']), {})
+                direction = acl_name.setdefault('direction', {}).setdefault(
+                    Common.convert_intf_name(group['direction']), {})
+
+                direction['feature_type'] = group['feature_type']
+                direction['acl_type'] = group['acl_type']
+                direction['entries_used'] = int(group['entries_used'])
+                continue
+        return ret_dict
+
+# =========================================================
+#  Schema for
+#  * 'show platform hardware fed switch standby fwd-asic resource tcam utilization'
+# =========================================================
+class ShowPlatformTcamUtilizationswitchStandbySchema(MetaParser):
+    """Schema for show platform hardware fed switch standby fwd-asic resource tcam utilization """
+    schema = {
+        'asic': {
+            Any(): {
+                'table': {
+                    Any(): {
+                        'subtype': {
+                            Any(): {
+                                'direction': {
+                                    Any(): {
+                                        'max': str,
+                                        'used': str,
+                                        'used_percent': str,
+                                        'v4': str,
+                                        'v6': str,
+                                        'mpls': str,
+                                        'other': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =========================================================
+#  Parser for
+#  * 'show platform hardware fed sw standby fwd-asic resource tcam utilization'
+# =========================================================
+class ShowPlatformSwitchStandbyTcamUtilization(ShowPlatformTcamUtilizationswitchStandbySchema):
+    """Parser for show platform hardware fed sw standby fwd-asic resource tcam utilization """
+
+    cli_command = 'show platform hardware fed switch standby fwd-asic resource tcam utilization'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # CAM Utilization for ASIC  [0]
+        p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
+
+        #CTS Cell Matrix/VPN
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #CTS Cell Matrix/VPN
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+        # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+        p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<direction>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # CAM Utilization for ASIC  [0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            #CTS Cell Matrix/VPN
+            #Label                  EM           O       16384        0    0.00%        0        0        0        0
+            #CTS Cell Matrix/VPN
+            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+            # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                table_ = group.pop('table')
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
+                subtype_ = group.pop('subtype')
+                dir_ = group.pop('direction')
+                dir_dict = asic_dict.setdefault('table', {}). \
+                            setdefault(table_, {}). \
+                            setdefault('subtype', {}). \
+                            setdefault(subtype_, {}). \
+                            setdefault('direction', {}). \
+                            setdefault(dir_, {})
+                dir_dict.update({k: v for k, v in group.items()})
+                continue
+
+        return ret_dict

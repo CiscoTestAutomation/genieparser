@@ -1,0 +1,60 @@
+router bgp 65001
+ template peer-policy LEAF-EVPN-PEER-POLICY
+  send-community both
+ exit-peer-policy
+ !
+ template peer-policy SPINE-EVPN-PEER-POLICY
+  route-reflector-client
+  send-community both
+ exit-peer-policy
+ !
+ template peer-session EVPN-PEER-SESSION
+  remote-as 65001
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp router-id interface Loopback0
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 172.16.255.2 inherit peer-session EVPN-PEER-SESSION
+ neighbor 172.16.255.3 inherit peer-session EVPN-PEER-SESSION
+ neighbor 172.16.255.4 inherit peer-session EVPN-PEER-SESSION
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv4 mvpn
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.3 activate
+  neighbor 172.16.255.3 send-community extended
+  neighbor 172.16.255.3 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.4 activate
+  neighbor 172.16.255.4 send-community extended
+  neighbor 172.16.255.4 inherit peer-policy SPINE-EVPN-PEER-POLICY
+ exit-address-family
+ !        
+ address-family ipv6 mvpn
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.3 activate
+  neighbor 172.16.255.3 send-community extended
+  neighbor 172.16.255.3 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.4 activate
+  neighbor 172.16.255.4 send-community extended
+  neighbor 172.16.255.4 inherit peer-policy SPINE-EVPN-PEER-POLICY
+ exit-address-family
+ !        
+ address-family l2vpn evpn
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.3 activate
+  neighbor 172.16.255.3 send-community extended
+  neighbor 172.16.255.3 inherit peer-policy SPINE-EVPN-PEER-POLICY
+  neighbor 172.16.255.4 activate
+  neighbor 172.16.255.4 send-community extended
+  neighbor 172.16.255.4 inherit peer-policy SPINE-EVPN-PEER-POLICY
+ exit-address-family

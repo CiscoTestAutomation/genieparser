@@ -23,6 +23,7 @@
 * 'show sdwan policy access-list-counters'
 * 'show sdwan policy ipv6 access-list-counters'
 * 'show sdwan policy app-route-policy-filter' 
+* 'show sdwan policy from-vsmart'
 * 'show sdwan reboot history'
 * 'show sdwan software'
 * 'show sdwan system status'
@@ -4099,6 +4100,1192 @@ class ShowSdwanPolicyAppRoutePolicyFilter(ShowSdwanPolicyAppRoutePolicyFilterSch
                 )
                 counter_dict["packets"] = packets_counter
                 counter_dict["bytes"] = bytes_counter
+                continue
+
+        return parsed_dict
+
+# ========================================================
+# Schema for "show sdwan policy fromv-smart"
+# ========================================================
+
+class ShowSdwanPolicyFromVsmartSchema(MetaParser):
+    """Schema for 'show sdwan policy from-vsmart'"""
+
+    schema = {
+        Optional("sla_class"): {
+            Any(): {
+                "loss": int,
+                "latency": int,
+                "jitter": int,
+                Optional("fallback_best_tunnel"): {
+                    "criteria": list,
+                    "loss_variance": int,
+                    "latency_variance": int,
+                    "jitter_variance": int,
+                },
+            }
+        },
+        Optional("data_policy"): {
+            Any(): {
+                "direction": str,
+                "vpn_list": {
+                    Any(): {
+                        "sequence": {
+                            Any(): {
+                                "match": {
+                                    Optional("source_ip"): str,
+                                    Optional("destination_ip"): str,
+                                    Optional("dscp"): list,
+                                    Optional("app_list"): str,
+                                    Optional("source_data_prefix_list"): str,
+                                    Optional("destination_data_prefix_list"): str,
+                                    Optional("dns_app_list"): str,
+                                    Optional("source_port"): int,
+                                    Optional("destination_port"): int,
+                                    Optional("protocol"): list,
+                                    Optional("tcp"): str,
+                                    Optional("plp"): str,
+                                    Optional("traffic_to"): str,
+                                    Optional("destination_region"): str,
+                                    Optional("packet_length"): str,
+                                    Optional("dns"): str,
+                                },
+                                "action": {
+                                    Any(): {
+                                        Optional("count"): str,
+                                        Optional("nat"): {
+                                            Optional("use_vpn"): int,
+                                            Optional("fallback"): bool,
+                                            Optional("pool"): str,
+                                        },
+                                        Optional("log"): bool,
+                                        Optional("tcp_optimization"): bool,
+                                        Optional("loss_protection"): {
+                                            Optional("forward_error_correction"): str,
+                                            Optional("packet_duplication"): bool,
+                                        },
+                                        Optional("cflowd"): bool,
+                                        Optional("set"): {
+                                            Optional("local_tloc_list"): {
+                                                Optional("color"): list,
+                                                Optional("encap"): str,
+                                                Optional("restrict"): bool,
+                                            },
+                                            Optional("next_hop"): str,
+                                            Optional("next_hop_loose"): bool,
+                                            Optional("policer"): str,
+                                            Optional("dscp"): list,
+                                            Optional("forwarding_class"): str,
+                                            Optional("vpn"): int,
+                                            Optional("vip_tloc_pref_list"): {
+                                                Any(): {
+                                                    Optional("tloc"): {
+                                                        Optional("label"): int,
+                                                        Optional("ip"): str,
+                                                        Optional("color"): str,
+                                                        Optional("encap"): str,
+                                                    }
+                                                }
+                                            },
+                                            Optional("tloc_list"): list,
+                                            Optional("service"): {
+                                                Optional("name"): str,
+                                                Optional("vpn"): int,
+                                                Optional("tloc_list"): list,
+                                                Optional("tloc"): {
+                                                    Optional("ip"): str,
+                                                    Optional("color"): list,
+                                                    Optional("encap"): str,
+                                                },
+                                            },
+                                        },
+                                        Optional("redirect_dns"): str,
+                                    }
+                                },
+                            }
+                        },
+                        Optional("default_action"): str,
+                    }
+                },
+            }
+        },
+        Optional("cflowd_template"): {
+            Any(): {
+                "flow_active_timeout": int,
+                "flow_inactive_timeout": int,
+                "template_refresh": int,
+                "flow_sampling_interval": int,
+                "protocol": list,
+                "customized_ipv4_record_fields": {
+                    Optional("collect_tos"): bool,
+                    Optional("collect_dscp_output"): bool,
+                },
+                "collector": {
+                    "vpn": {
+                        Any(): {
+                            "address": str,
+                            "port": int,
+                            "transport": str,
+                            "source_interface": str,
+                        }
+                    }
+                },
+            }
+        },
+        Optional("app_route_policy"): {
+            Any(): {
+                "vpn_list": {
+                    Any(): {
+                        "sequence": {
+                            Any(): {
+                                "match": {
+                                    Optional("source_ip"): str,
+                                    Optional("destination_ip"): str,
+                                    Optional("dscp"): list,
+                                    Optional("app_list"): str,
+                                    Optional("source_data_prefix_list"): str,
+                                    Optional("destination_data_prefix_list"): str,
+                                    Optional("dns_app_list"): str,
+                                    Optional("source_port"): int,
+                                    Optional("destination_port"): int,
+                                    Optional("protocol"): list,
+                                    Optional("tcp"): str,
+                                    Optional("plp"): str,
+                                    Optional("traffic_to"): str,
+                                    Optional("destination_region"): str,
+                                    Optional("packet_length"): str,
+                                    Optional("dns"): str,
+                                    Optional("cloud_saas_app_list"): str,
+                                },
+                                "action": {
+                                    Optional("count"): str,
+                                    Optional("log"): bool,
+                                    Optional("backup_sla_preferred_color"): str,
+                                    Optional("sla_class"): {
+                                        Optional("types"): list,
+                                        Optional("preferred_color"): list,
+                                    },
+                                    Optional("cloud_saas"): str,
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        Optional("policer"): {
+            Any(): {
+                "rate": int, 
+                "burst": int, 
+                "exceed": str
+            }
+        },
+        Optional("lists"): {
+            Optional("vpn_list"): {
+                Any(): {
+                    "vpn": int
+                }
+            },
+            Optional("app_list"): {
+                Any(): {
+                    Optional("app"): list,
+                    Optional("app_family"): list
+                }
+            },
+            Optional("data_prefix_list"): {
+                Any(): {
+                    "ip_prefix": str
+                }
+            },
+            Optional("tloc_list"): {
+                Any(): {
+                    "tloc": {
+                        Any(): {
+                            "color": str, 
+                            "encap": str
+                        }
+                    }
+                }
+            },
+            Optional("preferred_color_group"): {
+                Any(): {
+                    Any(): {
+                        "color_preference": str,
+                        Optional("path_preference"): str
+                    }
+                }
+            },
+        },
+    }
+
+
+class ShowSdwanPolicyFromVsmart(ShowSdwanPolicyFromVsmartSchema):
+    """
+    Parser for 'show sdwan policy from-vsmart' on ios-xe sdwan devices.
+    parser class - implements detail parsing mechanisms for cli output.
+    """
+
+    cli_command = "show sdwan policy from-vsmart"
+
+    def cli(self, output: str = None) -> dict:
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # from-vsmart sla-class Realtime
+        p1 = re.compile(r"^from-vsmart+\s+(?P<policy_type>\S+)\s+(?P<policy_type_name>\S+)$")
+
+        # loss    21
+        # latency 300
+        # jitter  100
+        p2 = re.compile(r"^(?P<stat_name>(loss|latency|jitter)+)\s+(?P<value>\d+)$")
+
+        # criteria         loss latency jitter
+        p3 = re.compile(r"^criteria+\s+(?P<fallback_criteria>[\s\S]+)$")
+
+        # loss-variance    10
+        # latency-variance 100
+        # jitter-variance  200
+        p4 = re.compile(
+            r"^(?P<stat_name>(loss-variance|latency-variance|jitter-variance)+)\s+(?P<value>\d+)$"
+        )
+
+        # rate   3000000
+        # burst  150000
+        p5 = re.compile(r"^(?P<stat_name>(rate|burst)+)\s+(?P<value>\d+)$")
+
+        # exceed drop
+        p6 = re.compile(r"^exceed+\s+(?P<action>\S+)$")
+
+        # direction from-service
+        p7 = re.compile(r"^direction+\s+(?P<direction>\S+)$")
+
+        # vpn-list VPN1
+        p8 = re.compile(r"^vpn-list+\s+(?P<vpn_list_name>\S+)$")
+
+        # sequence 51
+        p9 = re.compile(r"^sequence+\s+(?P<sequence>\d+)$")
+
+        # source-ip 0.0.0.0/0
+        p10 = re.compile(r"^source-ip+\s+(?P<source_ip>\S+)$")
+
+        # destination-ip     0.0.0.0/0
+        p11 = re.compile(r"^destination-ip+\s+(?P<destination_ip>\S+)$")
+
+        # dscp               15
+        p12 = re.compile(r"^dscp+\s+(?P<dscp_list>[\s\d]+)$")
+
+        # app-list Email
+        p13 = re.compile(r"^app-list+\s+(?P<app_list>\S+)$")
+
+        # source-data-prefix-list site1_vpn10_ipv4
+        p14 = re.compile(r"^source-data-prefix-list+\s+(?P<sdata_prefix_list>\S+)$")
+
+        # destination-data-prefix-list site6_service_ipv4_red
+        p15 = re.compile(r"^destination-data-prefix-list+\s+(?P<ddata_prefix_list>\S+)$")
+
+        # dns-app-list                 Microsoft_Apps
+        p16 = re.compile(r"^dns-app-list+\s+(?P<dns_app_list>\S+)$")
+
+        # source-port                  1024
+        p17 = re.compile(r"^source-port+\s+(?P<source_port>\d+)$")
+
+        # destination-port             8080
+        p18 = re.compile(r"^destination-port+\s+(?P<destination_port>\d+)$")
+
+        # protocol 1 2 3
+        p19 = re.compile(r"^protocol+\s+(?P<protocol>[\s\S]+)$")
+
+        # tcp                          syn
+        p20 = re.compile(r"^tcp+\s+(?P<tcp_flag>\S+)$")
+
+        # plp                          high
+        p21 = re.compile(r"^plp+\s+(?P<plp>\S+)$")
+
+        # traffic-to                   core
+        p22 = re.compile(r"^traffic-to+\s+(?P<traffic_to>\S+)$")
+
+        # destination-region           primary-region
+        p23 = re.compile(r"^destination-region+\s+(?P<destination_region>\S+)$")
+
+        # packet-length                1-4096
+        p24 = re.compile(r"^packet-length+\s+(?P<packet_length>\S+)$")
+
+        # dns                          request
+        p25 = re.compile(r"^dns+\s+(?P<dns_query>\S+)$")
+
+        # cloud-saas-app-list gotomeeting_apps
+        p26 = re.compile(r"^cloud-saas-app-list+\s+(?P<cloud_saas_app_list>\S+)$")
+
+        # action accept
+        p27 = re.compile(r"^action+\s+(?P<action>\S+)$")
+
+        # action
+        p27_1 = re.compile(r"^action+$")
+
+        # nat pool 11
+        p28 = re.compile(r"^nat+\s+pool+\s+(?P<nat_pool_number>\d+)$")
+        p28_1 = re.compile(r"^nat+\s+[\s\S]+")
+
+        # nat use-vpn 0
+        p29 = re.compile(r"^nat+\s+use-vpn+\s+(?P<use_vpn_number>\d+)$")
+
+        # nat fallback
+        p30 = re.compile(r"^nat+\s+fallback+$")
+
+        # log
+        p31 = re.compile(r"^log+$")
+
+        # tcp-optimization
+        p32 = re.compile(r"^tcp-optimization+$")
+
+        # count  testing-counter_-2070586118
+        p33 = re.compile(r"^count+\s+(?P<count_name>\S+)$")
+
+        # set
+        p34_1 = re.compile(r"^set+$")
+
+        # local-tloc-list
+        p34 = re.compile(r"^local-tloc-list+$")
+
+        # restrict
+        p35 = re.compile(r"^restrict+$")
+
+        # color mpls public-internet
+        p36 = re.compile(r"^color+\s+(?P<color_types>[\s\S]+)$")
+
+        # encap ipsec
+        p37 = re.compile(r"^encap+\s+(?P<encap_type>\S+)$")
+
+        # next-hop         10.0.0.1
+        p38 = re.compile(r"^next-hop+\s+(?P<next_hop>\S+)$")
+
+        # next-hop-loose
+        p39 = re.compile(r"^next-hop-loose+$")
+
+        # policer          site6_policer
+        p40 = re.compile(r"^policer+\s+(?P<policer>\S+)$")
+
+        # forwarding-class Net-Mgmt
+        p41 = re.compile(r"^forwarding-class+\s+(?P<forwarding_class>\S+)$")
+
+        # vpn              10
+        p42 = re.compile(r"^vpn+\s+(?P<vpn>\d+)$")
+
+        # vip-tloc-pref-list 0
+        p43 = re.compile(r"^vip-tloc-pref-list+\s+(?P<vip_tloc_pref_list>\d+)$")
+
+        # tloc-label 1002
+        # tloc-ip    8.8.8.1
+        # tloc-color public-internet
+        # tloc-encap ipsec
+        p44 = re.compile(r"^tloc-+(?P<tloc_type>(?!list)\S+)\s+(?P<value>[\s\S]+)$")
+
+        # tloc-list        HUB2
+        p45 = re.compile(r"^tloc-list+\s+(?P<value>[\s\S]+)$")
+
+        # service FW
+        p46_1 = re.compile(r"^service+.+$")
+        p46 = re.compile(r"^service+\s+(?P<service_type>\S+)$")
+
+        # service vpn 23
+        p47 = re.compile(r"^service+\s+vpn+\s(?P<service_vpn_number>\d+)$")
+
+        # service tloc
+        p48 = re.compile(r"^service+\s+tloc+\s+.+$")
+
+        # service tloc-list HUB2
+        p48_1 = re.compile(r"^service+\s+tloc-list+\s+(?P<tloc_list>\S+)$")
+
+        # service tloc 10.101.7.2
+        p48_2 = re.compile(r"^service+\s+tloc+\s+(?P<service_tloc_ip>\S+)$")
+
+        # service tloc color public-internet
+        p49 = re.compile(r"^service+\s+tloc+\s+color+\s+(?P<service_tloc_colors>[\S\s]+)$")
+
+        # service tloc encap ipsec
+        p50 = re.compile(r"^service+\s+tloc+\s+encap+\s+(?P<encap>\S+)$")
+
+        # loss-protection forward-error-correction adaptive
+        p51_1 = re.compile(r"^loss-protection+.+$")
+        p51 = re.compile(
+            r"^loss-protection+\s+forward-error-correction+\s+(?P<fw_error_correction_type>\S+)$"
+        )
+
+        # loss-protection packet-duplication
+        p52 = re.compile(r"^loss-protection+\s+(?P<loss_prot_type>\S+)$")
+
+        # redirect-dns host
+        p53 = re.compile(r"^redirect-dns+\s+(?P<redirect_dns>\S+)$")
+
+        # cflowd
+        p54 = re.compile(r"^cflowd+$")
+
+        # default-action accept
+        p55 = re.compile(r"^default-action+\s+(?P<default_action>\S+)$")
+
+        # flow-active-timeout    600
+        # flow-inactive-timeout  60
+        p57 = re.compile(r"^flow-+(?P<flow_type>\S+)-timeout+\s+(?P<timeout_value>\d+)$")
+
+        # template-refresh       600
+        p58 = re.compile(r"^template-refresh+\s+(?P<template_refresh_value>\d+)$")
+
+        # flow-sampling-interval 1
+        p59 = re.compile(r"^flow-sampling-interval+\s+(?P<sampling_interval>\d+)$")
+
+        # customized-ipv4-record-fields
+        p60 = re.compile(r"^customized-ipv4-record-fields+$")
+
+        # collect-tos
+        p61 = re.compile(r"^collect-tos+$")
+
+        # no collect-dscp-output
+        p62 = re.compile(r"^no+\s+collect-dscp-output+$")
+
+        # collector vpn 10 address 10.0.0.1 port 1024 transport transport_udp
+        p63 = re.compile(
+            r"^collector+\s+vpn+\s+(?P<vpn_number>\d+)\s+address+\s+(?P<ip_address>\S+)\s+port+\s+(?P<port_number>\d+)\s+transport+\s+(?P<transport_type>\S+)$"
+        )
+
+        # source-interface GigabitEthernet0/0/0
+        p64 = re.compile(r"^source-interface+\s+(?P<interface_name>\S+)$")
+
+        # backup-sla-preferred-color bronze
+        p65 = re.compile(r"^backup-sla-preferred-color+\s+(?P<color>\S+)$")
+
+        # sla-class
+        p66_1 = re.compile(r"^sla-class+.+$")
+
+        # sla-class       raghav-test-Bulk-Data
+        p66 = re.compile(r"^sla-class+\s+(?P<sla_class>\S+)$")
+
+        # sla-class preferred-color biz-internet custom1
+        p67 = re.compile(r"^sla-class+\s+preferred-color+\s+(?P<preferred_color>[\S\s]+)$")
+
+        # cloud-saas allow-local
+        p68 = re.compile(r"^cloud-saas+\s+(?P<cloud_saas>\S+)$")
+
+        # from-vsmart lists vpn-list VPN1
+        # from-vsmart lists app-list Email
+        p69 = re.compile(r"^from-vsmart+\s+lists+\s+(?P<lists_type>\S+)+\s+(?P<list_name>\S+)$")
+
+        # app cisco-jabber-im
+        p70 = re.compile(r"^app+\s+(?P<app_type>\S+)$")
+
+        # app-family app-fam-2
+        p71 = re.compile(r"^app-family+\s+(?P<app_family_type>\S+)$")
+
+        # ip-prefix 10.10.1.0/24
+        p72 = re.compile(r"^ip-prefix+\s+(?P<ip_prefix>\S+)$")
+
+        # tloc 8.8.8.1 color public-internet encap ipsec
+        p73 = re.compile(
+            r"^tloc+\s+(?P<tloc_ip>\S+)\s+color+\s+(?P<color>\S+)\s+encap+\s+(?P<encap>\S+)$"
+        )
+
+        # primary-preference
+        # secondary-preference
+        # tertiary-preference
+        p74 = re.compile(r"^(?P<preference_order>\S+)-preference$")
+
+        # color-preference biz-internet
+        p75 = re.compile(r"^color-preference+\s+(?P<color_preference>\S+)$")
+
+        # path-preference  direct-path
+        p76 = re.compile(r"^path-preference+\s+(?P<path_preference>\S+)$")
+
+        parser_location = None
+        parsed_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # from-vsmart sla-class Realtime
+            m1 = p1.match(line)
+            if m1:
+                groups = m1.groupdict()
+                policy_type = groups["policy_type"]
+                policy_type = policy_type.replace('-', '_')
+                parser_location = policy_type
+                policy_type_name = groups["policy_type_name"]
+                policy_type_name = policy_type_name.replace('-', '_')
+                policy_dict = parsed_dict.setdefault(policy_type, {}).setdefault(
+                    policy_type_name, {}
+                )
+                continue
+
+            # loss    21
+            # latency 300
+            # jitter  100
+            m2 = p2.match(line)
+            if m2:
+                groups = m2.groupdict()
+                stat_name = groups["stat_name"]
+                stat_value = groups["value"]
+                policy_dict[stat_name] = int(stat_value)
+                continue
+
+            # criteria         loss latency jitter
+            m3 = p3.match(line)
+            if m3:
+                groups = m3.groupdict()
+                criteria = groups["fallback_criteria"].split()
+                fallback_policy_dict = policy_dict.setdefault("fallback_best_tunnel", {})
+                fallback_policy_dict["criteria"] = criteria
+                continue
+
+            # loss-variance    10
+            # latency-variance 100
+            # jitter-variance  200
+            m4 = p4.match(line)
+            if m4:
+                groups = m4.groupdict()
+                stat_name = groups["stat_name"]
+                stat_value = groups["value"]
+                stat_name = stat_name.replace('-', '_')
+                fallback_policy_dict[stat_name] = int(stat_value)
+                continue
+
+            # rate   3000000
+            # burst  150000
+            m5 = p5.match(line)
+            if m5:
+                groups = m5.groupdict()
+                stat_name = groups["stat_name"]
+                stat_value = groups["value"]
+                policy_dict[stat_name] = int(stat_value)
+                continue
+
+            # exceed drop
+            m6 = p6.match(line)
+            if m6:
+                groups = m6.groupdict()
+                exceed_action = groups["action"]
+                policy_dict["exceed"] = exceed_action
+                continue
+
+            # direction from-service
+            m7 = p7.match(line)
+            if m7:
+                groups = m7.groupdict()
+                direction = groups["direction"]
+                policy_dict["direction"] = direction
+                continue
+
+            # vpn-list VPN1
+            m8 = p8.match(line)
+            if m8:
+                groups = m8.groupdict()
+                vpn_name = groups["vpn_list_name"]
+                vpn_dict = policy_dict.setdefault("vpn_list", {}).setdefault(vpn_name, {})
+                continue
+
+            # sequence 51
+            m9 = p9.match(line)
+            if m9:
+                groups = m9.groupdict()
+                sequence = int(groups["sequence"])
+                sequence_dict = vpn_dict.setdefault("sequence", {}).setdefault(sequence, {})
+                sequence_current_dict = sequence_dict.setdefault("match", {})
+                continue
+
+            # source-ip 0.0.0.0/0
+            m10 = p10.match(line)
+            if m10:
+                groups = m10.groupdict()
+                source_ip = groups["source_ip"]
+                sequence_current_dict["source_ip"] = source_ip
+                continue
+
+            # destination-ip     0.0.0.0/0
+            m11 = p11.match(line)
+            if m11:
+                groups = m11.groupdict()
+                destination_ip = groups["destination_ip"]
+                sequence_current_dict["destination_ip"] = destination_ip
+                continue
+
+            # dscp               15
+            m12 = p12.match(line)
+            if m12:
+                groups = m12.groupdict()
+                dscp_list = groups["dscp_list"].split()
+                dscp_numbers = []
+                for dscp in dscp_list:
+                    dscp_numbers.append(int(dscp))
+                sequence_current_dict["dscp"] = dscp_numbers
+                continue
+
+            # app-list Email
+            m13 = p13.match(line)
+            if m13:
+                groups = m13.groupdict()
+                app_list = groups["app_list"]
+                sequence_current_dict["app_list"] = app_list
+                continue
+
+            # source-data-prefix-list site1_vpn10_ipv4
+            m14 = p14.match(line)
+            if m14:
+                groups = m14.groupdict()
+                sdata_prefix_list = groups["sdata_prefix_list"]
+                sequence_current_dict["source_data_prefix_list"] = sdata_prefix_list
+                continue
+
+            # destination-data-prefix-list site6_service_ipv4_red
+            m15 = p15.match(line)
+            if m15:
+                groups = m15.groupdict()
+                ddata_prefix_list = groups["ddata_prefix_list"]
+                sequence_current_dict["destination_data_prefix_list"] = ddata_prefix_list
+                continue
+
+            # dns-app-list                 Microsoft_Apps
+            m16 = p16.match(line)
+            if m16:
+                groups = m16.groupdict()
+                dns_app_list = groups["dns_app_list"]
+                sequence_current_dict["dns_app_list"] = dns_app_list
+                continue
+
+            # source-port                  1024
+            m17 = p17.match(line)
+            if m17:
+                groups = m17.groupdict()
+                source_port = groups["source_port"]
+                sequence_current_dict["source_port"] = int(source_port)
+                continue
+
+            # destination-port             8080
+            m18 = p18.match(line)
+            if m18:
+                groups = m18.groupdict()
+                destination_port = groups["destination_port"]
+                sequence_current_dict["destination_port"] = int(destination_port)
+                continue
+
+            # protocol 1 2 3
+            m19 = p19.match(line)
+            if m19:
+                groups = m19.groupdict()
+                protocols = groups["protocol"].split()
+                if parser_location != "cflowd_template":
+                    sequence_current_dict["protocol"] = protocols
+                    continue
+                policy_dict["protocol"] = protocols
+                continue
+
+            # tcp                          syn
+            m20 = p20.match(line)
+            if m20:
+                groups = m20.groupdict()
+                tcp_flag = groups["tcp_flag"]
+                sequence_current_dict["tcp"] = tcp_flag
+                continue
+
+            # plp                          high
+            m21 = p21.match(line)
+            if m21:
+                groups = m21.groupdict()
+                plp = groups["plp"]
+                sequence_current_dict["plp"] = plp
+                continue
+
+            # traffic-to                   core
+            m22 = p22.match(line)
+            if m22:
+                groups = m22.groupdict()
+                traffic_to = groups["traffic_to"]
+                sequence_current_dict["traffic_to"] = traffic_to
+                continue
+
+            # destination-region           primary-region
+            m23 = p23.match(line)
+            if m23:
+                groups = m23.groupdict()
+                destination_region = groups["destination_region"]
+                sequence_current_dict["destination_region"] = destination_region
+                continue
+
+            # packet-length                1-4096
+            m24 = p24.match(line)
+            if m24:
+                groups = m24.groupdict()
+                packet_length = groups["packet_length"]
+                sequence_current_dict["packet_length"] = packet_length
+                continue
+
+            # dns                          request
+            m25 = p25.match(line)
+            if m25:
+                groups = m25.groupdict()
+                dns = groups["dns_query"]
+                sequence_current_dict["dns"] = dns
+                continue
+
+            # cloud-saas-app-list gotomeeting_apps
+            m26 = p26.match(line)
+            if m26:
+                groups = m26.groupdict()
+                csaas_app_list = groups["cloud_saas_app_list"]
+                sequence_current_dict["cloud_saas_app_list"] = csaas_app_list
+                continue
+
+            # action accept
+            m27 = p27.match(line)
+            if m27:
+                groups = m27.groupdict()
+                action = groups["action"]
+                action_dict = sequence_dict.setdefault("action", {}).setdefault(action, {})
+
+            # action
+            m27_1 = p27_1.match(line)
+            if m27_1:
+                action_dict = sequence_dict.setdefault("action", {})
+
+            # nat pool 11
+            m28_1 = p28_1.match(line)
+            if m28_1:
+                nat_dict = action_dict.setdefault("nat", {})
+
+                # nat pool 11
+                m28 = p28.match(line)
+                if m28:
+                    groups = m28.groupdict()
+                    nat_pool_number = groups["nat_pool_number"]
+                    nat_dict["pool"] = nat_pool_number
+                    continue
+
+                # nat use-vpn 0
+                m29 = p29.match(line)
+                if m29:
+                    groups = m29.groupdict()
+                    vpn_number = groups["use_vpn_number"]
+                    nat_dict["use_vpn"] = int(vpn_number)
+                    continue
+
+                # nat fallback
+                m30 = p30.match(line)
+                if m30:
+                    nat_dict["fallback"] = True
+                    continue
+
+            # log
+            m31 = p31.match(line)
+            if m31:
+                action_dict["log"] = True
+                continue
+
+            # tcp-optimization
+            m32 = p32.match(line)
+            if m32:
+                action_dict["tcp_optimization"] = True
+                continue
+
+            # count  testing-counter_-2070586118
+            m33 = p33.match(line)
+            if m33:
+                groups = m33.groupdict()
+                count_name = groups["count_name"]
+                action_dict["count"] = count_name
+                continue
+
+            # set
+            m34_1 = p34_1.match(line)
+            if m34_1:
+                sequence_current_dict = action_dict.setdefault("set", {})
+                continue
+
+            # local-tloc-list
+            m34 = p34.match(line)
+            if m34:
+                local_tloc_dict = sequence_current_dict.setdefault("local_tloc_list", {})
+                continue
+
+            # restrict
+            m35 = p35.match(line)
+            if m35:
+                local_tloc_dict["restrict"] = True
+                continue
+
+            # color mpls public-internet
+            m36 = p36.match(line)
+            if m36:
+                groups = m36.groupdict()
+                color_types = groups["color_types"].split()
+                local_tloc_dict["color"] = color_types
+                continue
+
+            # encap ipsec
+            m37 = p37.match(line)
+            if m37:
+                groups = m37.groupdict()
+                encap = groups["encap_type"]
+                local_tloc_dict["encap"] = encap
+                continue
+
+            # next-hop         10.0.0.1
+            m38 = p38.match(line)
+            if m38:
+                groups = m38.groupdict()
+                next_hop = groups["next_hop"]
+                sequence_current_dict["next_hop"] = next_hop
+                continue
+
+            # next-hop-loose
+            m39 = p39.match(line)
+            if m39:
+                sequence_current_dict["next_hop_loose"] = True
+                continue
+
+            # policer          site6_policer
+            m40 = p40.match(line)
+            if m40:
+                groups = m40.groupdict()
+                policer = groups["policer"]
+                sequence_current_dict["policer"] = policer
+                continue
+
+            # forwarding-class Net-Mgmt
+            m41 = p41.match(line)
+            if m41:
+                groups = m41.groupdict()
+                forwarding_class = groups["forwarding_class"]
+                sequence_current_dict["forwarding_class"] = forwarding_class
+                continue
+
+            # vpn              10
+            m42 = p42.match(line)
+            if m42:
+                groups = m42.groupdict()
+                vpn = groups["vpn"]
+                if parser_location != "lists":
+                    sequence_current_dict["vpn"] = int(vpn)
+                    continue
+                policy_dict["vpn"] = int(vpn)
+                continue
+
+            # vip-tloc-pref-list 0
+            m43 = p43.match(line)
+            if m43:
+                groups = m43.groupdict()
+                vip_tloc_pref_list = groups["vip_tloc_pref_list"]
+                vip_tloc_dict = (
+                    sequence_current_dict.setdefault("vip_tloc_pref_list", {})
+                    .setdefault(vip_tloc_pref_list, {})
+                    .setdefault("tloc", {})
+                )
+                continue
+
+            # tloc-label 1002
+            # tloc-ip    8.8.8.1
+            # tloc-color public-internet
+            # tloc-encap ipsec
+            m44 = p44.match(line)
+            if m44:
+                groups = m44.groupdict()
+                tloc_type = groups["tloc_type"]
+                value = groups["value"]
+                if tloc_type == 'label':
+                    value = int(value)
+                vip_tloc_dict[tloc_type] = value
+                continue
+
+            # tloc-list        HUB2
+            m45 = p45.match(line)
+            if m45:
+                groups = m45.groupdict()
+                value = groups["value"].split()
+                sequence_current_dict["tloc_list"] = value
+                continue
+
+            # service
+            m46_1 = p46_1.match(line)
+            if m46_1:
+                service_dict = sequence_current_dict.setdefault("service", {})
+
+            # service FW
+            m46 = p46.match(line)
+            if m46:
+                groups = m46.groupdict()
+                service_type = groups["service_type"]
+                service_dict["name"] = service_type
+                continue
+
+            # service vpn 23
+            m47 = p47.match(line)
+            if m47:
+                groups = m47.groupdict()
+                service_vpn_number = groups["service_vpn_number"]
+                service_dict["vpn"] = int(service_vpn_number)
+                continue
+
+            # service tloc
+            m48 = p48.match(line)
+            if m48:
+                tloc_dict = service_dict.setdefault("tloc", {})
+
+            # service tloc-list HUB2
+            m48_1 = p48_1.match(line)
+            if m48_1:
+                groups = m48_1.groupdict()
+                tloc_list = groups["tloc_list"]
+                service_dict["tloc_list"] = tloc_list.split()
+                continue
+
+            # service tloc 10.101.7.2
+            m48_2 = p48_2.match(line)
+            if m48_2:
+                groups = m48_2.groupdict()
+                service_tloc_ip = groups["service_tloc_ip"]
+                tloc_dict["ip"] = service_tloc_ip
+                continue
+
+            # service tloc color public-internet
+            m49 = p49.match(line)
+            if m49:
+                groups = m49.groupdict()
+                colors = groups["service_tloc_colors"].split()
+                tloc_dict["color"] = colors
+                continue
+
+            # service tloc encap ipsec
+            m50 = p50.match(line)
+            if m50:
+                groups = m50.groupdict()
+                encap = groups["encap"]
+                tloc_dict["encap"] = encap
+                continue
+
+            # loss-protection forward-error-correction adaptive
+            m51_1 = p51_1.match(line)
+            if m51_1:
+                loss_prot_dict = action_dict.setdefault("loss_protection", {})
+
+            m51 = p51.match(line)
+            if m51:
+                groups = m51.groupdict()
+                correction_type = groups["fw_error_correction_type"]
+                loss_prot_dict["forward_error_correction"] = correction_type
+                continue
+
+            # loss-protection packet-duplication
+            m52 = p52.match(line)
+            if m52:
+                groups = m52.groupdict()
+                loss_prot_type = groups["loss_prot_type"]
+                loss_prot_type = loss_prot_type.replace('-', '_')
+                loss_prot_dict[loss_prot_type] = True
+                continue
+
+            # redirect-dns host
+            m53 = p53.match(line)
+            if m53:
+                groups = m53.groupdict()
+                redirect_dns = groups["redirect_dns"]
+                action_dict["redirect_dns"] = redirect_dns
+                continue
+
+            # cflowd
+            m54 = p54.match(line)
+            if m54:
+                action_dict["cflowd"] = True
+                continue
+
+            # default-action accept
+            m55 = p55.match(line)
+            if m55:
+                groups = m55.groupdict()
+                default_action = groups["default_action"]
+                vpn_dict["default_action"] = default_action
+                continue
+
+            # flow-active-timeout    600
+            m57 = p57.match(line)
+            if m57:
+                groups = m57.groupdict()
+                timeout_value = groups["timeout_value"]
+                flow_type = groups["flow_type"]
+                flow_type = f"flow_{flow_type}_timeout"
+                policy_dict[flow_type] = int(timeout_value)
+                continue
+
+            # template-refresh       600
+            m58 = p58.match(line)
+            if m58:
+                groups = m58.groupdict()
+                template_refresh_value = groups["template_refresh_value"]
+                policy_dict["template_refresh"] = int(template_refresh_value)
+                continue
+
+            # flow-sampling-interval 1
+            m59 = p59.match(line)
+            if m59:
+                groups = m59.groupdict()
+                samplig_interval = groups["sampling_interval"]
+                policy_dict["flow_sampling_interval"] = int(samplig_interval)
+                continue
+
+            # customized-ipv4-record-fields
+            m60 = p60.match(line)
+            if m60:
+                customized_ipv4_dict = policy_dict.setdefault("customized_ipv4_record_fields", {})
+                continue
+
+            # collect-tos
+            m61 = p61.match(line)
+            if m61:
+                customized_ipv4_dict["collect_tos"] = True
+                continue
+
+            # no collect-dscp-output
+            m62 = p62.match(line)
+            if m62:
+                customized_ipv4_dict["collect_dscp_output"] = False
+                continue
+
+            # collector vpn 10 address 10.0.0.1 port 1024 transport transport_udp
+            m63 = p63.match(line)
+            if m63:
+                groups = m63.groupdict()
+                vpn_number = groups["vpn_number"]
+                ip_address = groups["ip_address"]
+                port_number = groups["port_number"]
+                transport_type = groups["transport_type"]
+                collector_dict = (
+                    policy_dict.setdefault("collector", {})
+                    .setdefault("vpn", {})
+                    .setdefault(vpn_number, {})
+                )
+                collector_dict["address"] = ip_address
+                collector_dict["port"] = int(port_number)
+                collector_dict["transport"] = transport_type
+                continue
+
+            # source-interface GigabitEthernet0/0/0
+            m64 = p64.match(line)
+            if m64:
+                groups = m64.groupdict()
+                source_interface = groups["interface_name"]
+                collector_dict["source_interface"] = source_interface
+                continue
+
+            # backup-sla-preferred-color bronze
+            m65 = p65.match(line)
+            if m65:
+                groups = m65.groupdict()
+                color = groups["color"]
+                action_dict["backup_sla_preferred_color"] = color
+                continue
+
+            # sla-class       raghav-test-Bulk-Data
+            m66_1 = p66_1.match(line)
+            if m66_1:
+                sla_class_dict = action_dict.setdefault("sla_class", {})
+
+            m66 = p66.match(line)
+            if m66:
+                groups = m66.groupdict()
+                sla_class_type = groups["sla_class"]
+                sla_class_type_list = sla_class_dict.setdefault("types", [])
+                sla_class_type_list.append(sla_class_type)
+                continue
+
+            # sla-class preferred-color biz-internet custom1
+            m67 = p67.match(line)
+            if m67:
+                groups = m67.groupdict()
+                pref_color = groups["preferred_color"]
+                sla_class_dict["preferred_color"] = pref_color.split()
+                continue
+
+            # cloud-saas allow-local
+            m68 = p68.match(line)
+            if m68:
+                groups = m68.groupdict()
+                cloud_saas = groups["cloud_saas"]
+                action_dict["cloud_saas"] = cloud_saas
+                continue
+
+            # from-vsmart lists vpn-list VPN1
+            # from-vsmart lists app-list Email
+            m69 = p69.match(line)
+            if m69:
+                parser_location = "lists"
+                groups = m69.groupdict()
+                lists_type = groups["lists_type"]
+                list_name = groups["list_name"]
+                lists_type = lists_type.replace('-', '_')
+                list_name = list_name.replace('-', '_')
+                policy_dict = (
+                    parsed_dict.setdefault("lists", {})
+                    .setdefault(lists_type, {})
+                    .setdefault(list_name, {})
+                )
+                continue
+
+            # app cisco-jabber-im
+            m70 = p70.match(line)
+            if m70:
+                groups = m70.groupdict()
+                app_type = groups["app_type"]
+                app_list = policy_dict.setdefault("app", [])
+                app_list.append(app_type)
+                continue
+
+            # app-family app-fam-2
+            m71 = p71.match(line)
+            if m71:
+                groups = m71.groupdict()
+                app_family_type = groups["app_family_type"]
+                app_family_list = policy_dict.setdefault("app_family", [])
+                app_family_list.append(app_family_type)
+                continue
+
+            # ip-prefix 10.10.1.0/24
+            m72 = p72.match(line)
+            if m72:
+                groups = m72.groupdict()
+                ip_prefix = groups["ip_prefix"]
+                policy_dict["ip_prefix"] = ip_prefix
+                continue
+
+            # tloc 8.8.8.1 color public-internet encap ipsec
+            m73 = p73.match(line)
+            if m73:
+                groups = m73.groupdict()
+                tloc_ip = groups["tloc_ip"]
+                color = groups["color"]
+                encap = groups["encap"]
+                tloc_list_dict = policy_dict.setdefault("tloc", {}).setdefault(tloc_ip, {})
+                tloc_list_dict["color"] = color
+                tloc_list_dict["encap"] = encap
+                continue
+
+            # primary-preference
+            # secondary-preference
+            # tertiary-preference
+            m74 = p74.match(line)
+            if m74:
+                groups = m74.groupdict()
+                order = groups["preference_order"]
+                order = f"{order}_preference"
+                preference_dict = policy_dict.setdefault(order, {})
+                continue
+
+            # color-preference biz-internet
+            m75 = p75.match(line)
+            if m75:
+                groups = m75.groupdict()
+                color_preference = groups["color_preference"]
+                preference_dict["color_preference"] = color_preference
+                continue
+
+            # path-preference  direct-path
+            m76 = p76.match(line)
+            if m76:
+                groups = m76.groupdict()
+                path_preference = groups["path_preference"]
+                preference_dict["path_preference"] = path_preference
                 continue
 
         return parsed_dict

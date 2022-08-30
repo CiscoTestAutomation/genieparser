@@ -16,6 +16,10 @@ expected_output = {
                     'state': 'complete',
                     'last_modified': '00:00:23',
                     'map_source': '12.1.1.1',
+                    'activity': 'Active',
+                    'packets_out': 0,
+                    'packets_out_bytes': 0,
+                    'counters_not_accurate': True,
                     'locators': {
                         '192.168.3.3': {
                             'uptime': '00:00:23',

@@ -1,0 +1,8 @@
+Group Name: bw-suiteB-v6
+    Key Server ID       Version   Feature Supported
+        15.15.15.1          1.0.27         Yes
+        16.16.16.1          1.0.27         Yes
+
+    Group Member ID     Version   Feature Supported
+        41.41.6.1          1.0.25         Yes
+        51.51.6.1          1.0.25         Yes

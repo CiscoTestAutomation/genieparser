@@ -1,0 +1,15 @@
+PI-9500-svl-102#show issu state detail
+Current ISSU Status: Enabled        
+Previous ISSU Operation: Successful 
+=======================================================
+System Check                        Status
+-------------------------------------------------------
+Platform ISSU Support               Yes
+Standby Online                      Yes
+Autoboot Enabled                    Yes
+SSO Mode                            Yes
+Install Boot                        Yes
+Valid Boot Media                    Yes
+Operational Mode                    HA-REMOTE
+=======================================================
+No ISSU operation is in progress

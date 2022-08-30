@@ -1,0 +1,10 @@
+Stateful Prefixes
+
+
+Interface
+   NAT64 Enabled Global Prefix
+
+TwentyFiveGigE1/0/19
+   TRUE          TRUE   2001:1::/96
+TwentyFiveGigE2/0/9
+   TRUE          TRUE   2001:1::/96
