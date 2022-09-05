@@ -1,0 +1,12 @@
+Protocol    HSL ID       Name
+            Is Single    Range
+            Ranges
+            VRF Name
+
+IPv4        2            nat64_v4_pool
+            TRUE        (10.0.0.2 - 10.0.0.255)
+            10.0.0.2 - 10.0.0.255
+            
+IPv4       3            nat64_v4_pool_1
+           TRUE        (11.0.0.2 - 11.0.0.255)
+           11.0.0.2 - 11.0.0.255

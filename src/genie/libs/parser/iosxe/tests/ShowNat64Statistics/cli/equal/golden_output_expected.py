@@ -4,8 +4,8 @@ expected_output = {
         'active_translations': {
             'dynamic': 0,
             'extended': 1,
-            'static': 4,
-            'total_translations': 4
+            'static': 14,
+            'total_translations': 15
         },
         'dynamic_mapping_statistics': {
             'access_list': {

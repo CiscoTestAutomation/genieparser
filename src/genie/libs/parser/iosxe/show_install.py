@@ -8,6 +8,7 @@
      *  show install version all
      *  show install version summary
      *  show install version value {value}
+     *  show exception
 """
 
 # Python
@@ -857,4 +858,44 @@ class ShowInstallVersionValue(ShowInstallVersion):
             output = self.device.execute(self.cli_command.format(value=value))
 
         return super().cli(output=output)
+
+
+class ShowExceptionSchema(MetaParser):
+    """Schema for show exception"""
+    schema = {
+        Optional('patch_version'): str,
+        'implement' :str,
+    }
+
+
+class ShowException(ShowExceptionSchema):
+    """Parser for show exception
+    """
+
+    cli_command = 'show exception'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # !!!Patched Version!!!
+        p0 = re.compile(r'!!!Patched Version!!!')
+        # show exception not implemented
+        p1 = re.compile(r'show exception not implemented')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # !!!Patched Version!!!
+            m = p0.match(line)
+            if m:
+                ret_dict['patch_version'] = m.group(0)
+                continue
+            # show exception not implemented
+            m = p1.match(line)
+            if m:
+                ret_dict['implement'] = m.group(0)
+                continue
+        return ret_dict
 

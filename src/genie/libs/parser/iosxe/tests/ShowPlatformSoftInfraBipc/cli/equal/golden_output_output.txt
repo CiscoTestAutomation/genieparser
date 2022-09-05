@@ -1,0 +1,10 @@
+pm9005#show platform soft infra bipc | inc buffer
+ 338036 total buffers allocated
+ 338036 total buffers freed
+   307831 rx buffer allocated
+   307831 rx buffer freed
+   30205 tx buffer allocated
+   30205 tx buffer freed
+ 0 total buffer alloc failure
+   0 rx buffer alloc failure
+   0 tx buffer alloc failure

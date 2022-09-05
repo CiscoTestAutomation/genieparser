@@ -1,0 +1,13 @@
+GM1#show crypto gdoi gm acl local
+Group Name: bw6000
+ ACL Configured Locally: 
+Group Name: bw600-IPV6
+ ACL Configured Locally: 
+Group Name: bw6000_eft
+ ACL Configured Locally: 
+Group Name: bw600-IPV6_eft
+ ACL Configured Locally: 
+Group Name: bw-suiteB
+ ACL Configured Locally: 
+Group Name: bw-suiteB-v6
+ ACL Configured Locally:

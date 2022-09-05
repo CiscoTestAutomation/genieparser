@@ -612,7 +612,9 @@ class ShowLogging(ShowLoggingSchema):
 class ShowLoggingOnboardRpActiveUptimeSchema(MetaParser):
 
     '''Schema for:
-        show logging onboard Rp active uptime
+        'show logging onboard Rp active uptime'
+        'show logging onboard switch {switch_num} {rp_active} uptime'
+        'show logging onboard switch {switch_num} uptime'
     '''
     
     schema={
@@ -638,17 +640,25 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
     """
     Parser for :
         'show logging onboard Rp active uptime'
+        'show logging onboard switch {switch_num} {rp_active} uptime'
+        'show logging onboard switch {switch_num} uptime'
+
     """
 
     cli_command = ['show logging onboard rp active uptime',
-                   'show logging onboard switch {switch_num} rp active uptime']
+                   'show logging onboard switch {switch_num} {rp_active} uptime',
+                   'show logging onboard switch {switch_num} uptime']
+
 				   
-    def cli(self,switch_num="", output=None): 
+    def cli(self,switch_num="",rp_active="",output=None): 
 
         if output is None: 
             # Build the command
-            if switch_num:
-                cmd = self.cli_command[1].format(switch_num=switch_num)
+            if switch_num and rp_active:
+                cmd = self.cli_command[1].format(switch_num=switch_num,rp_active=rp_active)
+
+            elif switch_num:
+                cmd = self.cli_command[2].format(switch_num=switch_num)
             else:           
                 cmd = self.cli_command[0]   
 

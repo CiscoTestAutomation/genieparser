@@ -183,8 +183,12 @@ def get_parser(command, device, fuzzy=False):
         #  - each element has the format (show command, class, kwargs)
         # valid_results[0][1] is the class of the best match
         # valid_results[0][2] is a dict of parser kwargs
-        return valid_results[0][1], valid_results[0][2]
+        parser_class = valid_results[0][1]
+        parser_kwargs = valid_results[0][2]
+        log.debug(f'Parser class: {parser_class} arguments: {parser_kwargs}')
+        return parser_class, parser_kwargs
 
+    log.debug(f'Parser search results: {valid_results}')
     return valid_results
 
 

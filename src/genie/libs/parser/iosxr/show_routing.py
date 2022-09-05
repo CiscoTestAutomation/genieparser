@@ -633,9 +633,11 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # 172.23.6.96, from 172.23.15.196
         # 172.25.253.121, from 172.25.253.121, BGP external
         # 2001:10::1, via GigabitEthernet0/0/0/0
+        # 100.72.21.206, from 116.119.10.251, via Bundle-Ether104, Protected
+        # 100.72.21.209, from 116.119.10.251, via Bundle-Ether105, Backup (Local-LFA)
         p11 = re.compile(r'^(?P<nexthop>\S+)(,\s+from\s+(?P<from>\S+))?(, '
                          r'+via\s+(?P<interface>\S+))?'
-                         r'(, +BGP external)?$')
+                         r'(, +(BGP external|Protected|Backup \(Local-LFA\)))?$')
         
         # R2_xrv#show route ipv4
         # Routing Descriptor Blocks

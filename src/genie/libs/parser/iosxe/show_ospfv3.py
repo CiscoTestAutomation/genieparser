@@ -114,3 +114,93 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
 
 
         return ret_dict
+
+# ===============================================
+# schema for:
+#   * show ospfv3 vrf {vrf_id} neighbor
+# ======================================================
+class ShowOspfv3vrfNeighborSchema(MetaParser):
+    """Schema detail for:
+          * show ospfv3 vrf {vrf_id} neighbor
+     """
+    schema = {
+        'process_id': int,
+        'address_family': str,
+        'router_id': str,
+        'vrfs': {
+            int: {
+                'neighbor_id': {
+                    str: {
+                        'priority': int,
+                        'state': str,
+                        'dead_time': str,
+                        'address': int,
+                        'interface': str
+                        },
+                   },
+               },
+            },
+        }
+
+# ======================================================
+# parser for:
+#   * show ospfv3 vrf {vrf_id} neighbor
+# ======================================================
+class ShowOspfv3vrfNeighbor(ShowOspfv3vrfNeighborSchema):
+    """parser details for:
+        * show ospfv3 vrf {vrf_id} neighbor
+    """
+
+    cli_command = 'show ospfv3 vrf {vrf_id} neighbor'
+
+    def cli(self, vrf_id='', output=None):
+        cmd = self.cli_command.format(vrf_id=vrf_id)
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+        p1 = re.compile(
+            r'^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>\d+)'
+            r'\s+\(router-id\s+(?P<router_id>[\d\.\/]+)\)$')
+
+        # Neighbor ID     Pri   State           Dead Time   Address         Interface
+        # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+        # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+        # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
+        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s*[A-Z-]*)'
+                        r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_id = int(group['vrf_id'])
+                ret_dict['process_id'] = int(group['process_id'])
+                ret_dict['address_family'] = group['address_family']
+                ret_dict['router_id'] = group['router_id']
+                vrf_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf_id, {})
+
+            # Neighbor ID     Pri   State           Dead Time   Address         Interface
+            # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+            # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+            # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_id = group['neighbor_id']
+                neighbor_dict = vrf_dict.setdefault('neighbor_id', {}).setdefault(neighbor_id, {})
+                neighbor_dict['priority'] = int(group['priority'])
+                neighbor_dict['state'] = group['state']
+                neighbor_dict['dead_time'] = group['dead_time']
+                neighbor_dict['address'] = int(group['address'])
+                neighbor_dict['interface'] = group['interface']
+
+                continue
+
+        return ret_dict

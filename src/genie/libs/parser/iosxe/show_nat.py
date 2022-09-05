@@ -1,7 +1,24 @@
 '''show_nat.py
 
-IOSXE parser for the following show command:
+IOSXE parser for the following show commands:
    * show nat64 translations
+   * show nat64 translations entry-type bind {bind_type}
+   * show nat64 translations {pro_port_type} {pro_port}
+   * show nat64 translations {ip_type} {address_type} {address}
+   * show nat64 translations time created {time_stamp}
+   * show nat64 translations entry-type {session}
+   * show nat64 translations {verbose}
+   * show nat64 pools
+   * show nat64 pools {routes}
+   * show nat64 pools hsl-id {hsl_id}
+   * show nat64 pools hsl-id {hsl_id} {routes}
+   * show nat64 pools name {pool_name}
+   * show nat64 pools name {pool_name} {routes}
+   * show nat64 pools range {pool_start_ip} {upper_range} 
+   * show nat64 pools range {pool_start_ip} {upper_range} {routes}
+   * show nat64 prefix stateful global
+   * show nat64 prefix stateful interfaces,
+   * show nat64 prefix stateful interfaces prefix {prefix}
    
 '''
 # Python
@@ -34,8 +51,7 @@ class ShowNat64TranslationsSchema(MetaParser):
         },
         'total_no_of_translations': int
     }
-  
-    
+      
 class ShowNat64Translations(ShowNat64TranslationsSchema):
     """
     show nat64 translations
@@ -175,7 +191,7 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
                 continue
              
         return ret_dict
-
+              
 class ShowNat64TimeoutsSchema(MetaParser):
     """show nat64 timeouts"""
 
@@ -339,6 +355,7 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
        show nat64 statistics mapping <dynamic>
        show nat64 statistics mapping dynamic acl <acl_name>
        show nat64 statistics mapping dynamic pool <pool_name>
+       show nat64 statistics interface <interface_name>
     """
 
     cli_command = [
@@ -347,9 +364,10 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
                     'show nat64 statistics mapping {dynamic}',
                     'show nat64 statistics mapping dynamic acl {acl_name}',
                     'show nat64 statistics mapping dynamic pool {pool_name}',
+                    'show nat64 statistics interface {interface_name}'
                   ]
 
-    def cli(self, global_cmd="", dynamic="", acl_name="", pool_name="", output=None):
+    def cli(self, global_cmd="", dynamic="", acl_name="", pool_name="", interface_name="", output=None):
 
         if output is None:
             if global_cmd:
@@ -359,7 +377,9 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
             elif acl_name:
                 cmd = self.cli_command[3].format(acl_name=acl_name)
             elif pool_name:
-                cmd = self.cli_command[4].format(pool_name=pool_name)         
+                cmd = self.cli_command[4].format(pool_name=pool_name)
+            elif interface_name:
+                cmd = self.cli_command[5].format(interface_name=interface_name)            
             else:
                 cmd = self.cli_command[0]
                 
@@ -395,8 +415,9 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
         p7 = re.compile(r'^Stateful Prefix\: +(?P<stateful_prefix>(\S+))')
         
         # Total active translations: 2(1 static, 1 dynamic,1 extended)
+        # Total active translations: 12(10 static, 1 dynamic,1 extended)
         p8 = re.compile(
-            r'^Total active translations+\: +(?P<total_translations>(\d))\(+(?P<static>(\d)) +static, +(?P<dynamic>(\d)) +dynamic,+(?P<extended>(\d)) +extended')
+            r'^Total active translations+\: +(?P<total_translations>(\d+))\(+(?P<static>(\d+)) +static, +(?P<dynamic>(\d+)) +dynamic,+(?P<extended>(\d+)) +extended')
         
         # Active sessions: 0
         p9 = re.compile(r'^Active sessions\: +(?P<active_sessions>(\d+))')
@@ -481,6 +502,7 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
                 interface_dict = nat64_dict.setdefault('interface_statistics', {})
                 int_dict = interface_dict.setdefault(str(group['interface']), {})
                 stateful_dict = int_dict.setdefault('stateful_prefix', {})
@@ -638,7 +660,8 @@ class ShowNat64MappingsStaticAddresses(ShowNat64MappingsStaticAddressesSchema):
         p1 = re.compile(r'(?P<address>([[0-9]+[:|.]+.*))')
     
         # v6v4      1
-        p2 = re.compile(r'(?P<direction>(\S+)) +(?P<ref_count>(\d))')
+        # v6v4      16
+        p2 = re.compile(r'(?P<direction>(\S+)) +(?P<ref_count>(\d+))')
         for line in output.splitlines():
             line = line.strip()
     
@@ -691,7 +714,7 @@ class ShowNat64MappingsDynamic(ShowNat64MappingsDynamicSchema):
     """
 
     cli_command = [
-                    'show nat64 mappings static addresses',
+                    'show nat64 mappings dynamic',
                     'show nat64 mappings dynamic id {number}',
                     'show nat64 mappings dynamic list {access_list_name}',
                     'show nat64 mappings dynamic pool {pool_name}'
@@ -720,7 +743,8 @@ class ShowNat64MappingsDynamic(ShowNat64MappingsDynamicSchema):
         
         # Direction ID      ACL
         # v6v4      1       acl_1                            NULL
-        p2 = re.compile(r'(?P<direction>(\w+)) +(?P<dir_id>(\d)) +(?P<acl>(\w+)) +(?P<null>(\w+))')
+        # v6v4      27       acl_1                            NULL
+        p2 = re.compile(r'(?P<direction>(\w+)) +(?P<dir_id>(\d+)) +(?P<acl>(\w+)) +(?P<null>(\w+))')
         
         # Pool                             Flags
         # n64_pool                         0x00000000 0.0.0.0 (none)
@@ -728,7 +752,9 @@ class ShowNat64MappingsDynamic(ShowNat64MappingsDynamicSchema):
         
         # RG ID Mapping ID
         # 0     0
-        p4 = re.compile(r'(?P<rg_id>(\d)) +(?P<mapping_id>(\d))')
+        # RG ID Mapping ID
+        # 11     12
+        p4 = re.compile(r'(?P<rg_id>(\d+)) +(?P<mapping_id>(\d+))')
         
         for line in output.splitlines():
             line = line.strip()
@@ -859,7 +885,7 @@ class ShowNat64StatisticsPrefixStateful(ShowNat64StatisticsPrefixStatefulSchema)
         return ret_dict
 
 class ShowNat64MappingsStaticSchema(MetaParser):
-    """show nat64 mappings static addresses"""
+    """show nat64 mappings static"""
     
     schema = {
         'static_mappings': {
@@ -909,8 +935,10 @@ class ShowNat64MappingsStatic(ShowNat64MappingsStaticSchema):
         p4 = re.compile(r'(?P<non_key_address>([0-9]{1,3}.){3}([0-9]{1,3}))')
         
         # RG ID Mapping ID
-        # 0     0
-        p5 = re.compile(r'(?P<rg_id>(\d)) +(?P<mapping_id>(\d)) +(?P<is_valid>(\w+))')
+        # 0     0          FALSE
+        # RG ID Mapping ID
+        # 11     12          FALSE
+        p5 = re.compile(r'(?P<rg_id>(\d+)) +(?P<mapping_id>(\d+)) +(?P<is_valid>(\w+))')
         
         for line in output.splitlines():
             line = line.strip()
@@ -959,6 +987,387 @@ class ShowNat64MappingsStatic(ShowNat64MappingsStaticSchema):
                 pool_dict['rg_id'] = int(group['rg_id'])
                 pool_dict['mapping_id'] = int(group['mapping_id'])
                 pool_dict['is_valid'] = group['is_valid']
+                continue
+                
+        return ret_dict
+        
+class ShowNat64PoolsSchema(MetaParser):
+    """Schema for show nat64 pools"""
+
+    schema = {
+        Optional('pools_configured'): int,
+        Any():{
+            Any():{
+                'index':{
+                    Any():{
+                        'protocol': str,
+                        'hsl_id': int,
+                        'name': str,
+                        'is_single': str,
+                        'range': str,
+                        Optional('ranges'): str,
+                        Any():{
+                            Optional('static_routes_range'): int,
+                            Optional('static_routes'): list
+                        }
+                    }
+                }
+            }   
+        }    
+    }
+    
+class ShowNat64Pools(ShowNat64PoolsSchema):
+    """
+    show nat64 pools
+    show nat64 pools {routes}
+    show nat64 pools hsl-id {hsl_id}
+    show nat64 pools hsl-id {hsl_id} {routes}
+    show nat64 pools name {pool_name}
+    show nat64 pools name {pool_name} {routes}
+    show nat64 pools range {pool_start_ip} {upper_range} 
+    show nat64 pools range {pool_start_ip} {upper_range} {routes}
+    
+    """
+    cli_command = [
+                    'show nat64 pools',
+                    'show nat64 pools {routes}',
+                    'show nat64 pools hsl-id {hsl_id}',
+                    'show nat64 pools hsl-id {hsl_id} {routes}',
+                    'show nat64 pools name {pool_name}',
+                    'show nat64 pools name {pool_name} {routes}',
+                    'show nat64 pools range {pool_start_ip} {upper_range}',
+                    'show nat64 pools range {pool_start_ip} {upper_range} {routes}'                    
+                  ]
+    
+    def cli(self, 
+            routes="", 
+            hsl_id="", 
+            pool_name="", 
+            pool_start_ip="", 
+            upper_range="",            
+            output=None):
+                        
+            if output is None:            
+                if routes:
+                    if hsl_id:
+                        cmd = self.cli_command[3].format(hsl_id=hsl_id,routes=routes)
+                    elif pool_name:
+                        cmd = self.cli_command[5].format(pool_name=pool_name,routes=routes)
+                    elif pool_start_ip and upper_range:
+                        cmd = self.cli_command[7].format(pool_start_ip=pool_start_ip,upper_range=upper_range,routes=routes)
+                    else:
+                        cmd = self.cli_command[1].format(routes=routes)
+                else:
+                    if hsl_id:
+                        cmd = self.cli_command[2].format(hsl_id=hsl_id)
+                    elif pool_name:
+                        cmd = self.cli_command[4].format(pool_name=pool_name)
+                    elif pool_start_ip and upper_range:
+                        cmd = self.cli_command[6].format(pool_start_ip=pool_start_ip,upper_range=upper_range)
+                    else:
+                        cmd = self.cli_command[0]
+                output = self.device.execute(cmd)
+    
+            ret_dict = {}
+
+            index = 1
+            index_dict = {}
+            
+            # Pools configured: 2
+            p0 = re.compile(r'^Pools configured+: +(?P<pools_configured>\d+)$')
+            
+            # Protocol HSL ID     Name
+            # IPv4     1          n64_pool
+            p1 = re.compile(r'^(?P<protocol>\S+) +(?P<hsl_id>\d+) +(?P<name>\S+)$')
+            
+            # Is Single        Range
+            # TRUE            (135.0.0.1 - 135.0.0.100)
+            p2 = re.compile(r'^(?P<is_single>\w+) +(?P<range>\(+[\d.\s -]+\))$')
+            
+            # Ranges
+            # 135.0.0.1 - 135.0.0.100
+            p3 = re.compile(r'^(?P<ranges>[\d.\s -]+)$')
+            
+            # Static Routes for Range: 9
+            p4 = re.compile(r'^Static Routes for Range+: +(?P<static_routes_range>\d+)$')
+            
+            # Static Routes 135.0.0.1/32
+            p5 = re.compile(r'^(?P<static_routes>[\d./]+)$')
+            
+            for line in output.splitlines():
+                line = line.strip()
+                
+                # Pools configured: 2
+                m = p0.match(line)
+                if m:
+                    group = m.groupdict()
+                    ret_dict['pools_configured'] = int(group['pools_configured'])
+                    continue
+    
+                # Protocol HSL ID     Name
+                # IPv4     1          n64_pool
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    protocol = group['protocol']
+                    protocol = ret_dict.setdefault('protocol', {}).setdefault(protocol, {})
+                    index_dict = protocol.setdefault('index', {}).setdefault(index, {})
+                    index_dict['protocol'] = group['protocol']
+                    index_dict['hsl_id'] = int(group['hsl_id'])
+                    index_dict['name'] = group['name']
+                    index += 1
+                    continue
+    
+                # Is Single        Range
+                # TRUE            (135.0.0.1 - 135.0.0.100)
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    index_dict['is_single'] = group['is_single']
+                    index_dict['range'] = group['range']
+                    continue
+    
+                # Ranges
+                # 135.0.0.1 - 135.0.0.100
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    index_dict['ranges'] = group['ranges']
+                    continue
+    
+                # Static Routes for Range: 9
+                m= p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    static_dict = index_dict.setdefault('static_routes_dict', {})
+                    static_dict['static_routes_range'] = int(group['static_routes_range'])
+                    continue
+                    
+                # Static Routes 135.0.0.1/32
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    static_route_dict = static_dict.setdefault('static_routes', [])
+                    static_route_dict.append(group['static_routes'])
+                    continue
+                  
+            return ret_dict
+        
+class ShowNat64PrefixStatefulGlobalSchema(MetaParser):
+    """Schema for show nat64 prefix stateful global"""
+
+    schema = {
+        'validation': str,
+        'prefix': str,
+        Any():{
+            'index':{
+                Any():{
+                    'interface': str
+                }
+            }
+        }   
+    }
+    
+class ShowNat64PrefixStatefulGlobal(ShowNat64PrefixStatefulGlobalSchema):
+    """
+    show nat64 prefix stateful global
+    """
+
+    cli_command = 'show nat64 prefix stateful global'                    
+    
+    def cli(self, output=None):
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        index =  1
+
+        # Global Stateful Prefix: is valid, 1001::/96
+        p1 = re.compile(r'^Global Stateful Prefix+: is +(?P<validation>(\w+))\, +(?P<prefix>(.*))$')
+        
+        # Global Stateful Prefix: is not valid
+        p2 = re.compile(r'^Global Stateful Prefix+: is +(?P<validation>[\w ]+)$')
+        
+        # IFs Using Global Prefix
+        # Twe1/0/3
+        # Twe1/0/19
+        # Twe2/0/9
+        p3 = re.compile(r'^(?P<interface>\S+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+        
+            # Global Stateful Prefix: is valid, 1001::/96
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["validation"] = group["validation"]
+                ret_dict["prefix"] = group["prefix"]
+                continue
+                
+            # Global Stateful Prefix: is not valid
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["validation"] = group["validation"]
+                continue
+        
+            # IFs Using Global Prefix
+            # Twe1/0/3
+            # Twe1/0/19
+            # Twe2/0/9
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_global = ret_dict.setdefault('prefix_global', {})
+                index_dict = prefix_global.setdefault('index', {}).setdefault(index,{})
+                index_dict['interface'] = group['interface']
+                index += 1
+                continue
+
+        return ret_dict
+        
+class ShowNat64PrefixStatefulInterfacesSchema(MetaParser):
+    """Schema for  show nat64 prefix stateful interfaces"""
+
+    schema = {
+        Any():{
+            'index':{
+                Any():{
+                    'interface': str,
+                    'nat64_enabled': str,
+                    'global': str,
+                    'prefix': str
+                }
+            }
+        }   
+    }
+    
+class ShowNat64PrefixStatefulInterfaces(ShowNat64PrefixStatefulInterfacesSchema):
+    """
+    show nat64 prefix stateful interfaces,
+    show nat64 prefix stateful interfaces prefix {prefix}
+    """
+
+    cli_command = [
+                   'show nat64 prefix stateful interfaces',
+                   'show nat64 prefix stateful interfaces prefix {prefix}'
+                  ]                 
+    
+    def cli(self, prefix="", output=None):
+        
+        if output is None:
+            if prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}        
+        index =  1
+        
+        # Interface
+        # TwentyFiveGigE1/0/19
+        p1 = re.compile(r'^(?P<interface>\S+)$')
+        
+        #  NAT64 Enabled Global Prefix
+        #  TRUE          TRUE   1001::/96
+        p2 = re.compile(r'^(?P<nat64_enabled>\S+) + (?P<global>\S+) + (?P<prefix>\S+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface
+            # TwentyFiveGigE1/0/19
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_interfaces = ret_dict.setdefault('prefix_interfaces', {})
+                index_dict = prefix_interfaces.setdefault('index', {}).setdefault(index,{})
+                index_dict['interface'] = group['interface']
+                continue
+                
+            #  NAT64 Enabled Global Prefix
+            #  TRUE          TRUE   1001::/96
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict['nat64_enabled'] = group['nat64_enabled']
+                index_dict['global'] = group['global']
+                index_dict['prefix'] = group['prefix']
+                index += 1
+                continue
+       
+        return ret_dict
+                
+class ShowNat64PrefixStatefulStaticRoutesSchema(MetaParser):
+    """Schema for  show nat64 prefix stateful static-routes"""
+
+    schema = {
+        Any():{
+            'index':{
+                Any():{
+                    'nat64_prefix': str,
+                    'static_route_ref_count': int
+                }
+            }
+        }   
+    }
+    
+class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSchema):
+    """
+    show nat64 prefix stateful static-routes,
+    show nat64 prefix stateful static-routes prefix {prefix}
+    """
+
+    cli_command = [
+                   'show nat64 prefix stateful static-routes',
+                   'show nat64 prefix stateful static-routes prefix {prefix}'
+                  ]                 
+    
+    def cli(self, prefix="", output=None):
+        
+        if output is None:
+            if prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}        
+        index =  1        
+        index_dict = {}
+        
+        # NAT64 Prefix
+        # 1001::/96
+        p1 = re.compile(r'^(?P<nat64_prefix>[\w\:\.]+[\/]+[\d]+)$')
+
+        # Static Route Ref-Count
+        # 1
+        p2 = re.compile(r'^(?P<static_route_ref_count>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # NAT64 Prefix
+            # 1001::/96
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_static_routes = ret_dict.setdefault('prefix_static_routes', {})
+                index_dict = prefix_static_routes.setdefault('index', {}).setdefault(index,{})
+                index_dict['nat64_prefix'] = group['nat64_prefix']
+                continue
+                
+            # Static Route Ref-Count
+            # 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict['static_route_ref_count'] = int(group['static_route_ref_count'])
+                index += 1
                 continue
                 
         return ret_dict

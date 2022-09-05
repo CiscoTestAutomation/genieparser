@@ -414,3 +414,85 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
                 continue
 
         return ret_dict
+
+# ========================================================
+# Schema for:
+#  * 'show platform hardware authentication status'
+# ========================================================
+class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
+    """Schema for show platform hardware authentication status."""
+
+    schema = {
+        'switch': {
+            int: {
+                   'mainboard_authentication': str,
+                   'fru_authentication': str,
+                   'stack_cable_a_authentication': str,
+                   'stack_cable_b_authentication': str,
+             },
+	},
+    }
+
+
+# ===================================================
+# Parser for:
+#  * 'show platform hardware authentication status'
+# ===================================================
+class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticationStatusSchema):
+    """Parser for show platform hardware authentication status"""
+
+    cli_command = 'show platform hardware authentication status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result_dict = {}
+        # Switch 1:
+        p1 = re.compile(r'^Switch\s+(?P<switch>\d+):$')
+
+        #    Mainboard Authentication:     Passed
+        p2 = re.compile(r'^Mainboard Authentication:\s+(?P<mainboard_authentication>\w+(\s\w+)?)$')
+
+        #    FRU Authentication:           Not Available
+        p3 = re.compile(r'^FRU Authentication:\s+(?P<fru_authentication>\w+(\s\w+)?)$')
+        #    Stack Cable A Authentication: Passed
+        p4 = re.compile(r'^Stack Cable A Authentication:\s+(?P<stack_cable_a_authentication>\w+(\s\w+)?)$')
+        #    Stack Cable B Authentication: Passed
+        p5 = re.compile(r'^Stack Cable B Authentication:\s+(?P<stack_cable_b_authentication>\w+(\s\w+)?)$')
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Switch:1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                switch_dict = result_dict.setdefault('switch', {})
+                switch_id_dict = switch_dict.setdefault(int(switch), {})
+
+            #Mainboard Authentication:     Passed
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['mainboard_authentication'] = group['mainboard_authentication']
+
+            #FRU Authentication:           Not Available
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['fru_authentication'] = group['fru_authentication']
+
+            #Stack Cable A Authentication: Passed
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['stack_cable_a_authentication'] = group['stack_cable_a_authentication']
+
+            #Stack Cable B Authentication: Passed
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['stack_cable_b_authentication'] = group['stack_cable_b_authentication']
+        return result_dict
+

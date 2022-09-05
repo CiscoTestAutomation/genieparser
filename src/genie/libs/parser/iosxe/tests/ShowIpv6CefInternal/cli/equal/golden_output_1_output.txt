@@ -1,0 +1,46 @@
+IPv6 CEF is enabled and running centrally.
+VRF Default
+ 4 prefixes (4/0 fwd/non-fwd)
+ Table id 0x1E000000
+ Database epoch:        0 (4 entries at this epoch)
+
+::/0, epoch 0, flags [DefRtHndlr, defrt], refcnt 4, per-destination sharing
+  sources: DRH 
+  ifnums: (none)
+  path list 7FCDF9805F40, 4 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FCDF98063E8, share 1/1, type special prefix, for IPv6
+      no route
+  output chain:
+    no route
+::/127, epoch 0, flags [att, dscrd], RIB[C], refcnt 4, per-destination sharing
+  sources: RIB 
+  feature space:
+    IPRM: 0x00038002
+  ifnums: (none)
+  path list 7FCDF84DDDA8, 7 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FCDF84DE868, share 1/1, type special prefix, for IPv6
+      discard
+  output chain:
+    discard
+FE80::/10, epoch 0, flags [att, rcv, local], intf-rcv, RIB[C], refcnt 4, per-destination sharing
+  sources: RIB 
+  feature space:
+    IPRM: 0x00038002
+  ifnums: (none)
+  path list 7FCDF84DDCF8, 10 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FCDF84DE798, share 1/1, type receive, for IPv6
+      receive for Null0
+  output chain:
+    receive
+FF00::/8, epoch 0, RIB[C], refcnt 4, per-destination sharing
+  sources: Spc, RIB 
+  feature space:
+    IPRM: 0x00038002
+  subblocks:
+    Special source: multicast
+  ifnums: (none)
+  path list 7FCDF84DDAE8, 2 locks, per-destination, flags 0x42 [nonsh, hwcn]
+    path 7FCDF84DE528, share 1/1, type special prefix, for IPv6
+      multicast
+  output chain:
+    multicast

@@ -1,0 +1,7 @@
+Protocol       HSL ID       Name
+    Is Single  Range
+    Ranges
+    VRF Name
+
+IPv4           1            n64_pool
+    TRUE      (172.0.0.1 - 172.0.0.100)

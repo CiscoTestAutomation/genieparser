@@ -1,0 +1,18 @@
+Switch 1:
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Not Available
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+
+Switch 2:
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Not Available
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+
+Switch 3:
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Not Available
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+
