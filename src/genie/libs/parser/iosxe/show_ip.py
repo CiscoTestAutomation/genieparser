@@ -63,6 +63,8 @@ IOSXE parsers for the following show commands:
     * show ip dhcp binding
     * show ip dhcp binding | count Active
     * show ip nhrp summary
+    * show ip dhcp snooping binding | include Total number of bindings
+    * show ip dhcp snooping | include gleaning
     '''
 
 # Python
@@ -1810,9 +1812,9 @@ class ShowIpMfibSchema(MetaParser):
             {Any():
                 {'address_family':
                     {Any():
-                        {'multicast_group':
+                        {Optional('multicast_group'):
                             {Any():
-                                {'source_address':
+                                {Optional('source_address'):
                                     {Any():
                                        {
                                             Optional('oif_ic_count'): Or(str,int),
@@ -5569,6 +5571,81 @@ class ShowIpDhcpBindingActiveCount(ShowIpDhcpBindingActiveCountSchema):
 
         return parsed_dict
 
+# ================================================
+# Schema for 'show ip dhcp snooping binding | include Total number of bindings'
+# ================================================
+class ShowIpDhcpSnoopingBindingTotalNumberSchema(MetaParser):
+    """
+    Schema for show ip dhcp binding
+    """
+    schema = {
+        'dhcp_snooping_binding': {
+            'total_number': int
+        }
+    }
+
+class ShowIpDhcpSnoopingBindingTotalNumber(ShowIpDhcpSnoopingBindingTotalNumberSchema):
+
+    ''' Parser for "show ip dhcp binding | count Active"'''
+    cli_command = 'show ip dhcp snooping binding | include Total number of bindings'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Number of lines which match regexp = 0
+        p1 = re.compile(r'^Total number of bindings: (?P<total_number>(\d+))$')
+
+        # Number of lines which match regexp = 0
+        m = p1.match(output)
+
+        if m:
+            group = m.groupdict()
+            parsed_dict.setdefault('dhcp_snooping_binding', {})
+            parsed_dict['dhcp_snooping_binding']['total_number'] = int(group['total_number'])
+
+        return parsed_dict
+        
+# ================================================
+# Schema for 'show ip dhcp snooping | include gleaning'
+# ================================================
+class ShowIpDhcpSnoopingGleaningSchema(MetaParser):
+    """
+    Schema for show ip dhcp binding
+    """
+    schema = {
+        'dhcp_snooping_gleaning_status': {
+            'gleaning_status': str
+        }
+    }
+
+class ShowIpDhcpSnoopingGleaning(ShowIpDhcpSnoopingGleaningSchema):
+
+    ''' Parser for "show ip dhcp binding | count Active"
+    Switch DHCP gleaning is enabled|disabled    
+    '''
+    cli_command = 'show ip dhcp snooping | include gleaning'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Number of lines which match regexp = 0
+        p1 = re.compile(r'^Switch DHCP gleaning is (?P<gleaning_status>(\S+))$')
+
+        # Number of lines which match regexp = 0
+        m = p1.match(output)
+
+        if m:
+            group = m.groupdict()
+            parsed_dict.setdefault('dhcp_snooping_gleaning_status', {})
+            parsed_dict['dhcp_snooping_gleaning_status']['gleaning_status'] = str(group['gleaning_status'])
+
+        return parsed_dict
 
 # =================================================
 #  Schema for 'show ip nhrp summary'

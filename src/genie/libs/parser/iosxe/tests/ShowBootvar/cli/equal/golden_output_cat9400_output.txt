@@ -1,0 +1,17 @@
+CAT9400_HA_IOX#show bootvar
+BOOT variable = bootflash:packages.conf;
+MANUAL_BOOT variable = no
+BAUD variable = 9600
+ENABLE_BREAK variable = yes
+BOOTMODE variable does not exist
+IPXE_TIMEOUT variable does not exist
+CONFIG_FILE variable = 
+
+Standby BOOT variable = bootflash:packages.conf;
+Standby MANUAL_BOOT variable = no
+Standby BAUD variable = 9600
+Standby ENABLE_BREAK variable = yes
+Standby BOOTMODE variable does not exist
+Standby IPXE_TIMEOUT variable does not exist
+Standby CONFIG_FILE variable = 
+

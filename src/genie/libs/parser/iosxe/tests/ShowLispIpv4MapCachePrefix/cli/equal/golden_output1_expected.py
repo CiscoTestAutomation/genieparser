@@ -18,6 +18,7 @@ expected_output = {
                     'activity': 'Idle',
                     'packets_out': 57553,
                     'packets_out_bytes': 5755300,
+                    'counters_not_accurate': True,
                     'locators': {
                         '22.22.22.22': {
                             'uptime': '00:34:10',

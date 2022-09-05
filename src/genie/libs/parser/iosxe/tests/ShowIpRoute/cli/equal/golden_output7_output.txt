@@ -1,6 +1,6 @@
 #show ip route vrf 1
 
-Routing Table: 1
+Routing Table: red
 Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
@@ -14,16 +14,10 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
        + - replicated route, % - next hop override, p - overrides from PfR
        & - replicated local route overrides by connected
 
-Gateway of last resort is 10.23.8.239 to network 0.0.0.0
+Gateway of last resort is not set
 
-m*    0.0.0.0/0 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-      2.0.0.0/8 is variably subnetted, 65 subnets, 6 masks
-m        2.4.8.88/29 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.9.48/28 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.9.80/28 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.10.160/27 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.10.208/28 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.12.32/27 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.12.96/27 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.13.1/32 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
-m        2.4.13.3/32 [251/0] via 10.23.8.239, 09:29:07, Sdwan-system-intf
+      192.168.1.0/24 is variably subnetted, 4 subnets, 2 masks
+C        192.168.1.0/24 is directly connected, Vlan1500
+L        192.168.1.1/32 is directly connected, Vlan1500
+B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500

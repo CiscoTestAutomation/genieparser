@@ -6443,6 +6443,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     if 'vrf' not in bgp_dict['bgp']['instance']['default']:
                         bgp_dict['bgp']['instance']['default']['vrf'] = {}
                     if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
+                        if len(bgp_dict['bgp']['instance']['default']['vrf']['default']) == 0:
+                            bgp_dict['bgp']['instance']['default']['vrf'].pop("default", None)
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf] = {}
                         bgp_vrf_nondefault_dict = bgp_dict['bgp']['instance']['default']['vrf'][vrf]
                     continue

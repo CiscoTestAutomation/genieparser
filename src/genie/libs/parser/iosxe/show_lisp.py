@@ -8112,7 +8112,7 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
         #  Map-server       Uptime         ACK  Domain-ID
         #  100.31.31.31     00:00:21       No   0
         #  100.31.31.31     never          No   0
-        p13 = re.compile(r"^(?P<map_server>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<uptime>(\d{2}:\d{2}:\d{2})|never)\s+(?P<ack>Yes|No)\s+(?P<domain_id>\w+)")
+        p13 = re.compile(r"^(?P<map_server>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<uptime>\S+)\s+(?P<ack>Yes|No)\s+(?P<domain_id>\w+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -9628,13 +9628,13 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
         #0017.0100.0001/48, uptime: 18:33:39, expires: 05:26:20, via map-reply, complete, local-to-site
         # aabb.cc00.cb00/48, uptime: 00:00:03, expires: never, via pub-sub, complete, local-to-site
         p3 = re.compile(r"^(?P<eid_prefix>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2}),"
-                        r"\s+uptime:\s+(?P<uptime>\d{1,2}:\d{1,2}:\d{1,2}),\s+expires:\s+"
+                        r"\s+uptime:\s+(?P<uptime>\S+),\s+expires:\s+"
                         r"(?P<expiry_time>\d{1,2}:\d{1,2}:\d{1,2}|\S+),\s+via\s+(?P<via>\S+),\s+"
                         r"(?P<map_reply_state>\S+),\s+(?P<site>\S+)$")
 
         #  1.1.1.10  18:33:39  up      10/10        -
         p4 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
-                        r"(?P<uptime>\d{1,2}:\d{1,2}:\d{1,2})\s+(?P<rloc_state>\S+)"
+                        r"(?P<uptime>\S+)\s+(?P<rloc_state>\S+)"
                         r"\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<encap_iid>\S+)$")
         for line in output.splitlines():
             line = line.strip()
@@ -11321,6 +11321,7 @@ class ShowLispIpMapCachePrefixSchema(MetaParser):
                         Optional('packets_out'): int,
                         Optional('packets_out_bytes'): int,
                         Optional('action'): str,
+                        Optional('counters_not_accurate'): bool,
                         'locators': {
                             Any(): {
                                 'uptime': str,
@@ -11377,7 +11378,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
         # 191.168.1.11/32, uptime: 02:26:35, expires: 21:33:24, via map-reply, self, complete, remote-to-site
         # 2001:194:168:1::72/128, uptime: 00:44:35, expires: 23:15:25, via map-reply, complete
         p2 = re.compile(r"^(?P<eid>[a-fA-F\d\:\.]+)\/(?P<mask>\d{1,3}),\s+uptime:\s+"
-                        r"(?P<uptime>(\d{2}:?){3}|\dw\dd),\s+expires:\s+(?P<expires>(\d{2}:?){3}|never),"
+                        r"(?P<uptime>\S+),\s+expires:\s+(?P<expires>(\d{2}:?){3}|never),"
                         r"\s+via\s+(?P<via>[-\w]+)(,\s+self)?(,\s+complete)?(,\s+unknown-eid-forward)?(,\s+"
                         r"(?P<site>remote-to-site|local-to-site))?(,\s+\S+)?$")
 
@@ -11399,9 +11400,11 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
                         r"(?P<map_source>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\S+)$")
 
         # Exempt, Packets out: 146(14600 bytes) (~ 01:37:41 ago)
-        p7 = re.compile(r"^(?P<activity>Idle|Active|Exempt),\s+Packets\s+"
-                        r"out:\s+(?P<packets_out>\d+)\((?P<packets_out_bytes>\d+)"
-                        r"\s+bytes\)(\s+\(\W+\d{1,2}:\d{2}:\d{2}\s+ago\))?$")
+        # Active, Packets out: 2(1152 bytes), counters are not accurate (~ 00:01:05 ago)
+        p7 = re.compile(r"^(?P<activity>Idle|Active|Exempt),\s+Packets\s+out:\s+"
+                        r"(?P<packets_out>\d+)\((?P<packets_out_bytes>\d+)\s+bytes\)"
+                        r"(,\s+(?P<counters_not_accurate>counters are not accurate))?"
+                        r"(\s+\(\W+\d{1,2}:\d{2}:\d{2}\s+ago\))?$")
 
         # Negative cache entry, action: send-map-request
         p8 = re.compile(r"^Negative\s+cache\s+entry,\s+action:\s+(?P<action>\S+)$")
@@ -11409,7 +11412,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
         # 101.101.101.101  02:26:35  up           1/100       -             1/2           -
         # 45.45.45.45  00:00:04  up, self    10/50   111                 3/3      0
         p9 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)\s+"
-                        r"(?P<uptime>\d{1,2}:\d{2}:\d{2})\s+(?P<state>\S+)(,\s+self)?\s+"
+                        r"(?P<uptime>\S+)\s+(?P<state>\S+)(,\s+self)?\s+"
                         r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<encap_iid>\S+)|\s+"
                         r"(?P<domain_id>\d+)\/(?P<multihome_id>\d+)\s+(?P<metric>\S+)$")
 
@@ -11522,6 +11525,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
                 continue
 
             # Exempt, Packets out: 146(14600 bytes) (~ 01:37:41 ago)
+            # Active, Packets out: 2(1152 bytes), counters are not accurate (~ 00:01:05 ago)
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
@@ -11531,6 +11535,10 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
                 instance_id_dict.update({'activity':activity,
                                          'packets_out':packets_out,
                                          'packets_out_bytes':packets_out_bytes})
+                if groups['counters_not_accurate']:
+                    counters_not_accurate = groups['counters_not_accurate']
+                    counters_not_accurate_bool = counters_not_accurate == "counters are not accurate"
+                    instance_id_dict.update({'counters_not_accurate':counters_not_accurate_bool})
                 continue
 
             # Negative cache entry, action: send-map-request
@@ -17575,3 +17583,622 @@ class ShowLispInstanceIdEthernetMapCachePrefixRAR(ShowLispIpMapCachePrefixSuperP
                 raise TypeError("No arguments provided to parser")
         return super().cli(output=output,prefix=prefix,lisp_id=lisp_id,locator_table=locator_table,\
                            instance_id=instance_id)
+
+
+class ShowLispV4ServerConfigPropagation(ShowLispSiteSuperParser):
+
+    """
+    Parser for
+    * show lisp instance-id {instance_id} ipv4 server config-propagation
+    * show lisp {lisp_id} instance-id {instance_id} ipv4 server config-propagation
+    """
+    cli_command = ['show lisp instance-id {instance_id} ipv4 server config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv4 server config-propagation']
+
+    def cli(self, lisp_id=None, instance_id=None, output=None):
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].format(
+                    lisp_id=lisp_id, instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[0].format(
+                    instance_id=instance_id))
+        return super().cli(output=output,lisp_id=lisp_id, instance_id=instance_id)
+
+
+class ShowLispV6ServerConfigPropagation(ShowLispSiteSuperParser):
+
+    """
+    Parser for
+    * show lisp instance-id {instance_id} ipv6 server config-propagation
+    * show lisp {lisp_id} instance-id {instance_id} ipv6 server config-propagation
+    """
+    cli_command = ['show lisp instance-id {instance_id} ipv6 server config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv6 server config-propagation']
+
+    def cli(self, lisp_id=None, instance_id=None, output=None):
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].format(
+                    lisp_id=lisp_id, instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[0].format(
+                    instance_id=instance_id))
+        return super().cli(output=output,lisp_id=lisp_id, instance_id=instance_id)
+
+
+class ShowLispServerConfigPropV4Parser(ShowLispSiteSuperParser):
+
+    """ Parser for
+        * show lisp instance-id {instance_id} ipv4 server config-propagation
+        * show lisp {lisp_id} instance-id {instance_id} ipv4 server config-propagation
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv4 server config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv4 server config-propagation']
+
+    def cli(self, instance_id, lisp_id=None, output=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                cmd = self.cli_command[1].format(lisp_id=lisp_id, instance_id=instance_id)
+            else:
+                cmd = self.cli_command[0].format(instance_id=instance_id)
+            output = self.device.execute(cmd)
+        return super().cli(output=output, instance_id=instance_id)
+
+
+class ShowLispServerConfigPropV6Parser(ShowLispServerConfigPropV4Parser):
+
+    """ Parser for
+        * show lisp instance-id {instance_id} ipv6 server config-propagation
+        * show lisp {lisp_id} instance-id {instance_id} ipv6 server config-propagation
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv6 server config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv6 server config-propagation']
+
+    pass
+
+
+class ShowLispPublicationConfigPropSuperSchema(MetaParser):
+
+    schema = {
+        'lisp_id': {
+            int: {
+                'instance_id': {
+                    int: {
+                        'eid_table': {
+                            str: {
+                                'eid_prefix': {
+                                    str: {
+                                        'eid': str,
+                                        'mask': str,
+                                        'last_published': str,
+                                        'first_published': str,
+                                        'exported_to': list,
+                                        'publishers': {
+                                            str: {
+                                                'port': int,
+                                                'last_published': str,
+                                                'ttl': str,
+                                                'expires': str,
+                                                'epoch': {
+                                                    'publisher': int,
+                                                    'entry': int
+	                            		            },
+                                                'entry_state': str,
+                                                'xtr_id': str,
+                                                'domain_id': str,
+                                                'multihoming_id': str,
+                                                Optional('extranet_iid'): str
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+class ShowLispPublicationConfigPropSuperParser(ShowLispPublicationConfigPropSuperSchema):
+
+    """show lisp  instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}"""
+
+    def cli(self, instance_id, lisp_id=None, eid_prefix=None, output=None):
+
+        ret_dict = {}
+
+        # Publication Information for LISP 0 EID-table vrf internet (IID 5000)
+        p1 = re.compile(r'^Publication\s+Information\s+for\s+LISP\s+(?P<lisp_id>\d+)'
+                        r'\s+EID-table\s+(?P<eid_table>vrf\s+\S+)\s+'
+                        r'\(IID\s+(?P<instance_id>\d+)\)$')
+
+        # EID-prefix: 51.51.0.0/16
+        p2 = re.compile(r'^EID-prefix:\s+(?P<eid>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|'
+                        r'([a-fA-F\d\:]+))\/(?P<mask>\d{1,3})$')
+
+        # First published:      10:24:38
+        p3 = re.compile(r'^First\s+published:\s+(?P<first_published>never|\d{1,2}:\d{1,2}:\d{1,2})$')
+
+        # Last published:       10:24:36
+        p4 = re.compile(r'^Last\s+published:\s+(?P<last_published>never|\d{1,2}:\d{1,2}:\d{1,2})$')
+
+        # Exported to:          local-eid
+        p5 = re.compile(r'^Exported\s+to:\s+(?P<exported_to>[\s\S]+)$')
+
+        # Publisher 100.77.77.77:4342, last published 00:03:39, TTL never, Expires: never
+        p6 = re.compile(r'^Publisher\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):'
+                        r'(?P<port>\d+),\s+last\s+published\s+(?P<last_published>\d{1,2}:\d{1,2}:\d{1,2}),'
+                        r'\s+TTL\s+(?P<ttl>\S+)\s+Expires:\s+'
+                        r'(?P<expires>\S+)$')
+
+        # publisher epoch 0, entry epoch 0
+        p7 = re.compile(r"^publisher\s+epoch\s+(?P<publisher>\d+),"
+                        r"\s+entry\s+epoch\s+(?P<entry>\d+)")
+
+        # entry-state unknown
+        p8 = re.compile(r'^entry-state\s+(?P<entry_state>\S+)$')
+
+        # xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
+        p9 = re.compile(r'^xTR-ID\s+(?P<xtr_id>\S+)$')
+
+        # Domain-ID unset
+        p10 = re.compile(r"^Domain-ID\s+(?P<domain_id>\S+)")
+
+        # Multihoming-ID unspecified
+        p11 = re.compile(r"^Multihoming-ID\s+(?P<multihoming_id>\S+)")
+
+        # Extranet-IID 4101
+        p12 = re.compile(r'^Extranet-IID\s+(?P<extranet_iid>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Publication Information for LISP 0 EID-table vrf internet (IID 5000)
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                lisp_id = int(groups['lisp_id'])
+                instance_id = int(groups['instance_id'])
+                eid_table = groups['eid_table']
+                lisp_id_dict = ret_dict.setdefault('lisp_id',{})\
+                                       .setdefault(lisp_id,{})\
+                                       .setdefault('instance_id',{})\
+                                       .setdefault(instance_id,{})\
+                                       .setdefault('eid_table',{})\
+                                       .setdefault(eid_table,{})
+                continue
+
+            # EID-prefix: 51.51.0.0/16
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                eid = groups['eid']
+                mask = groups['mask']
+                eid_prefix = "{}/{}".format(eid,mask)
+                eid_prefix_dict = lisp_id_dict.setdefault('eid_prefix',{})\
+                                              .setdefault(eid_prefix,{})
+                eid_prefix_dict.update({'eid':eid,
+                                        'mask':mask})
+                continue
+
+            # First published:      10:24:38
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                first_published = groups['first_published']
+                eid_prefix_dict.update({'first_published':first_published})
+                continue
+
+            # Last published:       10:24:36
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                last_published = groups['last_published']
+                eid_prefix_dict.update({'last_published':last_published})
+                continue
+
+            # Exported to:          local-eid
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                exported_to = groups['exported_to']
+                exported_list = eid_prefix_dict.setdefault('exported_to',[])
+                exported_list.append(exported_to)
+                eid_prefix_dict.update({'exported_to':exported_list})
+
+            # Publisher 100.77.77.77:4342, last published 00:03:39, TTL never, Expires: never
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                publishers = groups['publishers']
+                port = int(groups['port'])
+                last_published = groups['last_published']
+                ttl = groups['ttl']
+                expires = groups['expires']
+                publisher_dict = eid_prefix_dict.setdefault('publishers',{}).\
+                                                 setdefault(publishers,{})
+                publisher_dict.update({'port':port,
+                                       'last_published':last_published,
+                                       'ttl':ttl,
+                                       'expires':expires})
+                continue
+
+            # publisher epoch 0, entry epoch 0
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                publisher = int(groups['publisher'])
+                entry = int(groups['entry'])
+                epoch_dict = publisher_dict.setdefault('epoch',{})
+                epoch_dict.update({'publisher':publisher,
+                                   'entry':entry})
+                continue
+
+            # entry-state unknown
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                entry_state = groups['entry_state']
+                publisher_dict.update({'entry_state':entry_state})
+                continue
+
+            # xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                xtr_id = groups['xtr_id']
+                publisher_dict.update({'xtr_id':xtr_id})
+                continue
+
+            # Domain-ID unset
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                domain_id = groups['domain_id']
+                publisher_dict.update({'domain_id':domain_id})
+                continue
+
+            # Multihoming-ID unspecified
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                multihoming_id = groups['multihoming_id']
+                publisher_dict.update({'multihoming_id':multihoming_id})
+                continue
+
+            # Extranet-IID 4101
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                extranet_iid = groups['extranet_iid']
+                publisher_dict.update({'extranet_iid':extranet_iid})
+                continue
+        return ret_dict
+
+
+class ShowLispPublicationConfigPropV4Parser(ShowLispPublicationConfigPropSuperParser):
+
+    ''' Parser for 
+    * show lisp {lisp_id} instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
+    * show lisp instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
+    * show lisp instance-id {instance_id} ipv4 publication config-propagation detail',
+    * show lisp all instance-id * ipv4 publication config-propagation
+    '''
+
+    cli_command = ['show lisp {lisp_id} instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
+                   'show lisp instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
+                   'show lisp instance-id {instance_id} ipv4 publication config-propagation detail',
+                   'show lisp all instance-id * ipv4 publication config-propagation']
+
+    def cli(self, instance_id, output=None, lisp_id=None, eid_prefix=None):
+
+        if output is None:
+            if lisp_id and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[1].format(instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3])
+        return super().cli(instance_id=instance_id,output=output)
+
+
+class ShowLispPublicationConfigPropV6Parser(ShowLispPublicationConfigPropSuperParser):
+
+    ''' Parser for 
+    * show lisp {lisp_id} instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
+    * show lisp instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
+    * show lisp instance-id {instance_id} ipv6 publication config-propagation detail',
+    * show lisp all instance-id * ipv6 publication config-propagation
+    '''
+
+    cli_command = ['show lisp instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
+                   'show lisp instance-id {instance_id} ipv6 publication config-propagation detail',
+                   'show lisp all instance-id * ipv6 publication config-propagation']
+
+    def cli(self, instance_id, output=None, lisp_id=None, eid_prefix=None):
+
+        if output is None:
+            if lisp_id and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[0].format(instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3])
+        return super().cli(instance_id=instance_id, output=output)
+
+
+class ShowLispDatabaseConfigPropSuperSchema(MetaParser):
+
+    schema = {
+        'lisp_id': {
+            int: {
+                'instance_id': {
+                    int: {
+                        'eid_table': str,
+                        'lsb': str,
+                        'entries': int,
+                        'no_route': int,
+                        'inactive': int,
+                        'do_not_register': int,
+                        'eid_prefix': {
+                            str: {
+                                'eid': str,
+                                'mask': str,
+                                Optional('import_from'): str,
+                                Optional('inherited_from'): str,
+                                Optional('auto_disc_rloc'): bool,
+                                Optional('proxy'): bool,
+                                'up_time': str,
+                                'last_change': str,
+                                'service_insertion': str,
+                                'extranet_iid': int,
+                                'locators': {
+                                    str: {
+                                        'priority': int,
+                                        'weight': int,
+                                        'source': str,
+                                        'state': str
+                                        }
+                                    },
+                                Optional('map_servers'): {
+                                    str: {
+                                        'uptime': str,
+                                        'ack': str,
+                                        'domain_id': str
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+class ShowLispDatabaseConfigPropSuperParser(ShowLispDatabaseConfigPropSuperSchema):
+
+    """
+    Parser for
+    * show lisp instance-id {instance_id} ipv4 database config-propagation 
+    * show lisp instance-id {instance_id} ipv6 database config-propagation 
+    """
+
+    def cli(self, instance_id, lisp_id=None, eid_prefix=None, output=None):
+
+        ret_dict = {}
+
+        # LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf internet (IID 5000), LSBs: 0x3
+        p1 = re.compile(r'^LISP\s+ETR\s+(IPv4|IPv6)\s+Mapping\s+Database\s+for\s+LISP\s+'
+                        r'(?P<lisp_id>\d+)\s+EID-table\s+(?P<eid_table>vrf\s+\S+)\s+'
+                        r'\(IID\s+(?P<instance_id>\d+)\),\s+LSBs:\s+(?P<lsb>\S+)$')
+
+        # Entries total 7, no-route 0, inactive 0, do-not-register 0
+        p2 = re.compile(r'^Entries\s+total\s+(?P<entries>\d+),\s+no-route\s+'
+                        r'(?P<no_route>\d+),\s+inactive\s+(?P<inactive>\d+),\s+'
+                        r'do-not-register\s+(?P<do_not_register>\d+)$')
+
+        # 51.51.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+        p3 = re.compile(r'^(?P<eid>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))'
+                        r'\/(?P<mask>\d{1,3})(,\s+import\s+from\s+(?P<import_from>\S+'
+                        r'|publication cfg prop))?(,\s+inherited\s+from\s+'
+                        r'(?P<inherited_from>default locator-set RLOC|\S+))?'
+                        r'(,\s+(?P<auto_disc_rloc>auto-discover-rlocs))?(,\s+(?P<proxy>proxy))?$')
+
+        # Uptime: 01:30:26, Last-change: 01:30:26
+        p4 = re.compile(r'^Uptime:\s+(?P<up_time>\d{1,2}:\d{1,2}:\d{1,2}),'
+                        r'\s+Last-change:\s+(?P<last_change>\d{1,2}:\d{1,2}:\d{1,2})$')
+
+        # Service-Insertion: N/A
+        p5 = re.compile(r'^Service-Insertion:\s+(?P<service_insertion>\S+)$')
+
+        # Extranet-IID: 5000  (Sourced by Config Propagation)
+        p6 = re.compile(r'^Extranet-IID:\s+(?P<extranet_iid>\d+)')
+
+        # 100.88.88.88   10/50   cfg-intf   site-self, reachable
+        p7 = re.compile(r'^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<source>\S+)\s+'
+                        r'(?P<state>site-self, reachable|site-other, report-reachable)$')
+
+        # 100.77.77.77     04:29:46       Yes  4
+        p8 = re.compile(r'^(?P<map_servers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<uptime>\d{1,2}:\d{1,2}:\d{1,2})\s+(?P<ack>\S+)\s+'
+                        r'(?P<domain_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf internet (IID 5000), LSBs: 0x3
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                lisp_id = int(groups['lisp_id'])
+                instance_id = int(groups['instance_id'])
+                eid_table = groups['eid_table']
+                lsb = groups['lsb']
+                lisp_id_dict = ret_dict.setdefault('lisp_id',{})\
+                                       .setdefault(lisp_id,{})\
+                                       .setdefault('instance_id',{})\
+                                       .setdefault(instance_id,{})
+                lisp_id_dict.update({'eid_table':eid_table,
+                                     'lsb':lsb})
+                continue
+
+            # Entries total 7, no-route 0, inactive 0, do-not-register 0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                entries = int(groups['entries'])
+                no_route = int(groups['no_route'])
+                inactive = int(groups['inactive'])
+                do_not_register = int(groups['do_not_register'])
+                lisp_id_dict.update({'entries':entries,
+                                     'no_route':no_route,
+                                     'inactive':inactive,
+                                     'do_not_register':do_not_register})
+                continue
+
+            # 51.51.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                eid = groups['eid']
+                mask = groups['mask']
+                eid_prefix = "{}/{}".format(eid,mask)
+                eid_prefix_dict = lisp_id_dict.setdefault('eid_prefix',{}).\
+                                               setdefault(eid_prefix,{})
+                eid_prefix_dict.update({'eid':eid,
+                                        'mask':mask})
+                if groups['import_from']:
+                    import_from = groups['import_from']
+                    eid_prefix_dict.update({'import_from':import_from})
+                if groups['inherited_from']:
+                    inherited_from = groups['inherited_from']
+                    eid_prefix_dict.update({'inherited_from':inherited_from})
+                if groups['auto_disc_rloc']:
+                    auto_disc_rloc = groups['auto_disc_rloc']
+                    eid_prefix_dict.update({'auto_disc_rloc':True})
+                if groups['proxy']:
+                    proxy = groups['proxy']
+                    eid_prefix_dict.update({'proxy':True})
+                continue
+
+            # Uptime: 01:30:26, Last-change: 01:30:26
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                up_time = groups['up_time']
+                last_change = groups['last_change']
+                eid_prefix_dict.update({'up_time':up_time,
+                                        'last_change':last_change})
+                continue
+
+            # Service-Insertion: N/A
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                service_insertion = groups['service_insertion']
+                eid_prefix_dict.update({'service_insertion':service_insertion})
+                continue
+
+            # Extranet-IID: 5000  (Sourced by Config Propagation)
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                extranet_iid = int(groups['extranet_iid'])
+                eid_prefix_dict.update({'extranet_iid':extranet_iid})
+                continue
+
+            # 100.88.88.88   10/50   cfg-intf   site-self, reachable
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                locators = groups['locators']
+                priority = int(groups['priority'])
+                weight = int(groups['weight'])
+                source = groups['source']
+                state = groups['state']
+                locators_dict = eid_prefix_dict.setdefault('locators',{}).\
+                                                setdefault(locators,{})
+                locators_dict.update({'priority':priority,
+                                      'weight':weight,
+                                      'source':source,
+                                      'state':state})
+                continue
+
+            # 100.77.77.77     04:29:46       Yes  4
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                map_servers = groups['map_servers']
+                uptime = groups['uptime']
+                ack = groups['ack']
+                domain_id = groups['domain_id']
+                map_dict = eid_prefix_dict.setdefault('map_servers',{}).\
+                                           setdefault(map_servers,{})
+                map_dict.update({'uptime':uptime,
+                                 'ack':ack,
+                                 'domain_id':domain_id})
+                continue
+        return ret_dict
+
+
+class ShowLispDatabaseConfigPropV4Parser(ShowLispDatabaseConfigPropSuperParser):
+
+    """
+    Parser for
+    * show lisp instance-id {instance_id} ipv4 database config-propagation 
+    * show lisp {lisp_id} instance-id {instance_id} ipv4 database config-propagation'
+    * show lisp instance-id {instance_id} ipv4 database config-propagation {eid_prefix}
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv4 database config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv4 database config-propagation',
+                   'show lisp instance-id {instance_id} ipv4 database config-propagation {eid_prefix}']
+
+    def cli(self, instance_id, output=None, lisp_id=None, eid_prefix=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id, instance_id=instance_id))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id, eid_prefix=eid_prefix))
+            else:
+                output = self.device.execute(self.cli_command[0].format(instance_id=instance_id))
+        return super().cli(instance_id=instance_id, output=output)
+
+
+class ShowLispDatabaseConfigPropV6Parser(ShowLispDatabaseConfigPropSuperParser):
+
+    """
+    Parser for
+    * show lisp instance-id {instance_id} ipv6 database config-propagation
+    * show lisp {lisp_id} instance-id {instance_id} ipv6 database config-propagation'
+    * show lisp instance-id {instance_id} ipv6 database config-propagation {eid_prefix}
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv6 database config-propagation',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv6 database config-propagation',
+                   'show lisp instance-id {instance_id} ipv6 database config-propagation {eid_prefix}']
+
+    def cli(self, instance_id, output=None, lisp_id=None, eid_prefix=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id, instance_id=instance_id))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id, eid_prefix=eid_prefix))
+            else:
+                output = self.device.execute(self.cli_command[0].format(instance_id=instance_id))
+        return super().cli(instance_id=instance_id,output=output)
