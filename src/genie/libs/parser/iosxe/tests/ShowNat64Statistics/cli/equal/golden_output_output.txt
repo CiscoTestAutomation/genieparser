@@ -26,7 +26,7 @@ Stateful Prefix: 2010:1::/96
         Packets translated (IPv6 -> IPv4): 1
         Packets dropped: 0
 
-Total active translations: 4(4 static, 0 dynamic,1 extended)
+Total active translations: 15(14 static, 0 dynamic,1 extended)
 Active sessions: 0
 Number of expired entries: 0
 

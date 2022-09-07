@@ -26,7 +26,7 @@ expected_output = {
                 'mapping_id': 1,
                 'non_key_address': '2.2.2.1',
                 'protocol': '---',
-                'rg_id': 6
+                'rg_id': 16
             },
             4: {
                 'address': '2009:1::2',

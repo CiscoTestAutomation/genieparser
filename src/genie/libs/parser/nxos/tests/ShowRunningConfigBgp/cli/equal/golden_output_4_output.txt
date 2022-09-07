@@ -1,0 +1,17 @@
+!Command: show running-config bgp
+!Running configuration last done at: Fri Aug 12 15:04:42 2022
+!Time: Fri Aug 12 15:06:52 2022
+
+version 9.3(7) Bios:version 07.68 
+feature bgp
+
+router bgp 65000
+  vrf bgptesting
+    router-id 192.168.1.1
+    log-neighbor-changes
+    address-family ipv4 unicast
+      network 192.168.1.1/32
+      network 192.168.3.0/24
+    neighbor 192.168.3.2
+      remote-as 65001
+      address-family ipv4 unicast

@@ -2187,7 +2187,7 @@ class ShowBgpSummarySchema(MetaParser):
                         {'address_family':
                             {Any():
                                 {'version': int,
-                                'as': int,
+                                'as': Or(int, str),
                                 'msg_rcvd': int,
                                 'msg_sent': int,
                                 'tbl_ver': int,
@@ -2394,7 +2394,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         # 192.168.4.1       4          100       0       0        1    0    0 never    Idle
         # 192.168.51.1       4          100       0       0        1    0    0 01:07:38 Idle
         p9 = re.compile(r'^ *(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
-                         ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
+                         ' +(?P<as>[0-9]+(\.\d+)?) +(?P<msg_rcvd>[0-9]+)'
                          ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                          ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
                          ' +(?P<up_down>[a-zA-Z0-9\:]+)'
@@ -2406,7 +2406,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
-                          ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
+                          ' +(?P<as>[0-9]+(\.\d+)?) +(?P<msg_rcvd>[0-9]+)'
                           ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                           ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
                           ' +(?P<up_down>[a-zA-Z0-9\:]+)'
@@ -2525,12 +2525,17 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             # 192.168.111.1       4          100       0       0        1    0    0 01:07:38 Idle
             # 192.168.4.1       4          100       0       0        1    0    0 never    Idle
             # 192.168.51.1       4          100       0       0        1    0    0 01:07:38 Idle
+            # 30.1.10.1       4      304.304    6953   38119   136088    0    0 00:50:14     2540
+            # 30.2.10.1       4      304.304    6347   38120   136088    0    0 00:50:13     2580
+            # 30.3.10.1       4      301.301    7722   38113   136088    0    0 00:50:14     4439
             m = p9.match(line)
             if m:
                 # Add neighbor to dictionary
                 neighbor = str(m.groupdict()['neighbor'])
-                neighbor_as = int(m.groupdict()['as'])
-
+                try:
+                    neighbor_as = int(m.groupdict()['as'])
+                except:
+                    neighbor_as = m.groupdict()['as']
                 if not passed_vrf:
                     if address_family not in ['ipv4 unicast', 'ipv6 unicast']:
                         if 'all summary' in cmd:
@@ -2648,7 +2653,10 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                 if m:
                     # Add keys for this address_family
                     nbr_af_dict['version'] = int(m.groupdict()['version'])
-                    nbr_af_dict['as'] = int(m.groupdict()['as'])
+                    try:
+                        nbr_af_dict['as'] = int(m.groupdict()['as'])
+                    except:
+                        nbr_af_dict['as'] = m.groupdict()['as']
                     nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                     nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
                     nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])

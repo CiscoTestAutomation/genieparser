@@ -1,0 +1,12 @@
+=================================================
+Output for router lisp 0 instance-id 7000
+=================================================
+LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf test7000 (IID 7000), LSBs: 0x1
+Entries total 1, no-route 0, inactive 0, do-not-register 0
+
+70.70.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 06:30:26, Last-change: 06:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 7000  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable

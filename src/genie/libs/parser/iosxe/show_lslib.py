@@ -186,7 +186,7 @@ class ShowLslibProducerAllLscacheLinksDetail(ShowLslibProducerAllLscacheLinksDet
         p35 = re.compile(r'^Delay-variation \(us\): (?P<delay_var>[\d]+)$')
 
         # Link-loss (%): 18 * 0.000003 (A)
-        p36 = re.compile(r'^Link-loss \(%\): (?P<link_loss>[\d*\s.]+).*$')
+        p36 = re.compile(r'^Link-loss \(%\): (?P<link_loss>.*)')
 
         # Residual-bw (kbits/sec): 9
         p37 = re.compile(r'^Residual-bw \(kbits\/sec\): (?P<res>[\d]+)$')

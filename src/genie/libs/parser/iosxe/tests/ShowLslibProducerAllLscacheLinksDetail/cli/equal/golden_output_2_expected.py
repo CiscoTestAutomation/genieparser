@@ -40,7 +40,7 @@ expected_output = {
         'min_delay': 18,
         'max_delay': 1179666,
         'delay_variation': 1184274,
-        'link_loss': '18 * 0.000003 ',
+        'link_loss': '18 * 0.000003 (A)',
         'residual_bw': 9,
         'available_bw': 9,
         'utilized_bw': 9

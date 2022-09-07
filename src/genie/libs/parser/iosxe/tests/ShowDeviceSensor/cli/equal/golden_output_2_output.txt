@@ -1,0 +1,127 @@
+Device: aaaa.aaaa.aaaa on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aaab on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aaac on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aaad on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aaae on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aaaf on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aab0 on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aab1 on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aab2 on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......
+
+
+
+Device: aaaa.aaaa.aab3 on port TenGigabitEthernet1/1/7
+
+
+----------------------------------------------------------------------------
+
+
+Proto Type:Name                       Len Value                       Text
+
+
+DHCP    55:parameter-request-list       8 37 06 01 03 06 0C 0F 1C     7.......

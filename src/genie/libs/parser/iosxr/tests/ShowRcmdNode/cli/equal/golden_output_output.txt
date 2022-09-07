@@ -1,0 +1,11 @@
+Fri Jul 15 17:22:25.063 UTC
+State  - RCMD State / Operational State
+Status - Fwd-Ref/Software-State/Card-State/Diag-Mode/Red-State
+-----------------------------------------------------------------------------------
+   Id.    |      Name      |Type|  State  |   Last Upd Time   | Status 
+-----------------------------------------------------------------------------------
+    1     | 0/RSP0/CPU0    | rp | Enbl/Yes| Jul 14 13:29:48.906 | No/6/0/0/1
+    17    | 0/RSP1/CPU0    | rp | Enbl/Yes| Jul 14 13:29:48.906 | No/6/0/0/2
+   2081   | 0/0/CPU0       | lc | Enbl/Yes| Jul 14 13:29:48.906 | No/6/0/0/0
+   2113   | 0/2/CPU0       | lc | Enbl/Yes| Jul 14 13:29:48.906 | No/6/0/0/0
+

@@ -1,0 +1,138 @@
+expected_output = {
+   'vrf':{
+      'default':{
+         'address_family':{
+            'ipv6':{
+               'prefix':{
+                  '::/0':{
+                     'output_chain':{
+                        
+                     },
+                     'epoch':0,
+                     'sharing':'per-destination',
+                     'refcnt':4,
+                     'flags':[
+                        'DefRtHndlr',
+                        'defrt'
+                     ],
+                     'sources':[
+                        'DRH'
+                     ],
+                     'path_list':{
+                        '7FCDF9805F40':{
+                           'locks':4,
+                           'sharing':'per-destination',
+                           'flags':'0x41 [shble, hwcn]',
+                           'path':{
+                              '7FCDF98063E8':{
+                                 'share':'1/1',
+                                 'type':'special prefix',
+                                 'for':'IPv6'
+                              }
+                           }
+                        }
+                     }
+                  },
+                  '::/127':{
+                     'output_chain':{
+                        
+                     },
+                     'epoch':0,
+                     'sharing':'per-destination',
+                     'rib':'[C]',
+                     'refcnt':4,
+                     'flags':[
+                        'att',
+                        'dscrd'
+                     ],
+                     'sources':[
+                        'RIB'
+                     ],
+                     'feature_space':{
+                        'iprm':'0x00038002'
+                     },
+                     'path_list':{
+                        '7FCDF84DDDA8':{
+                           'locks':7,
+                           'sharing':'per-destination',
+                           'flags':'0x41 [shble, hwcn]',
+                           'path':{
+                              '7FCDF84DE868':{
+                                 'share':'1/1',
+                                 'type':'special prefix',
+                                 'for':'IPv6'
+                              }
+                           }
+                        }
+                     }
+                  },
+                  'FE80::/10':{
+                     'output_chain':{
+                        
+                     },
+                     'epoch':0,
+                     'sharing':'per-destination',
+                     'rib':'[C]',
+                     'refcnt':4,
+                     'flags':[
+                        'att',
+                        'rcv',
+                        'local'
+                     ],
+                     'sources':[
+                        'RIB'
+                     ],
+                     'feature_space':{
+                        'iprm':'0x00038002'
+                     },
+                     'path_list':{
+                        '7FCDF84DDCF8':{
+                           'locks':10,
+                           'sharing':'per-destination',
+                           'flags':'0x41 [shble, hwcn]',
+                           'path':{
+                              '7FCDF84DE798':{
+                                 'share':'1/1',
+                                 'type':'receive',
+                                 'for':'IPv6'
+                              }
+                           }
+                        }
+                     }
+                  },
+                  'FF00::/8':{
+                     'output_chain':{
+                        
+                     },
+                     'epoch':0,
+                     'sharing':'per-destination',
+                     'rib':'[C]',
+                     'refcnt':4,
+                     'sources':[
+                        'Spc,',
+                        'RIB'
+                     ],
+                     'feature_space':{
+                        'iprm':'0x00038002'
+                     },
+                     'path_list':{
+                        '7FCDF84DDAE8':{
+                           'locks':2,
+                           'sharing':'per-destination',
+                           'flags':'0x42 [nonsh, hwcn]',
+                           'path':{
+                              '7FCDF84DE528':{
+                                 'share':'1/1',
+                                 'type':'special prefix',
+                                 'for':'IPv6'
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

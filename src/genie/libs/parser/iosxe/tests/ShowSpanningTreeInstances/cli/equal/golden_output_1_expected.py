@@ -1,0 +1,1 @@
+expected_output = {'vlan_count': 4093}    

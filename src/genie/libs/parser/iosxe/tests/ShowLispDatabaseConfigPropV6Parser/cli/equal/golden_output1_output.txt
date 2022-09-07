@@ -1,0 +1,13 @@
+LISP ETR IPv6 Mapping Database for LISP 0 EID-table vrf internet (IID 5000), LSBs: 0x3
+Entries total 1, no-route 0, inactive 0, do-not-register 0
+
+2001:88:88:1::/64, import from publication, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 05:28:43, Last-change: 05:28:43
+  Service-Insertion: N/A
+  Extranet-IID: 5000  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+  100.99.99.99   10/50   auto-disc  site-other, report-reachable
+  Map-server       Uptime         ACK  Domain-ID 
+  100.77.77.77     05:28:43       Yes  4         
+  100.78.78.78     05:28:43       Yes  4        

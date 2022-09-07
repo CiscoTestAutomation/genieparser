@@ -1,0 +1,5 @@
+Role-based IPv4 counters
+From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
+2       2       0          4          0          0          0          0         
+7       2       0          0          0          0          0          0         
+99      2       0          0          0          0          0          0         

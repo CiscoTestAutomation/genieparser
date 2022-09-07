@@ -7,7 +7,7 @@ expected_output = {
             },
             '5.5.5.5': {
                 'direction': 'v6v4',
-                'ref_count': 1
+                'ref_count': 10
             }
         }
     }
