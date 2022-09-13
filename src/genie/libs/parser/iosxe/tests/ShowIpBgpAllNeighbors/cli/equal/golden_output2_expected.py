@@ -134,13 +134,7 @@ expected_output = {
                         "min_rtt": 3,
                         "min_time_between_advertisement_runs": 0,
                         "minimum_incoming_ttl": 0,
-                        "option_flags": "VRF "
-                        "id "
-                        "set, "
-                        "nagle, "
-                        "path "
-                        "mtu "
-                        "capable",
+                        "option_flags": "VRF id set, nagle, path mtu capable",
                         "outgoing_ttl": 1,
                         "packet_fast_path": 0,
                         "packet_fast_processed": 0,
