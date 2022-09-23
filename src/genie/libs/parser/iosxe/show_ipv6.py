@@ -658,7 +658,9 @@ class ShowIpv6DhcpLdraStatistics(ShowIpv6DhcpLdraStatisticsSchema):
 #  schema for show ipv6 routers
 # ====================================================
 class ShowIpv6RoutersSchema(MetaParser):
-    """Schema for show ipv6 routers"""
+    """Schema for 
+       show ipv6 routers
+       show ipv6 routers vrf {vrf}"""
     schema = {
         'router': {
             Any(): {
@@ -687,21 +689,28 @@ class ShowIpv6RoutersSchema(MetaParser):
 # ================================================================
 # Parser for:
 #   * 'show ipv6 routers'
+#   * 'show ipv6 routers vrf {vrf}'
 # ================================================================
 class ShowIpv6Routers(ShowIpv6RoutersSchema):
     """ Parser for:
                 show ipv6 routers
+                show ipv6 routers vrf {vrf}
     """
 
-    cli_command = ['show ipv6 routers']
+    cli_command = ['show ipv6 routers',
+                   'show ipv6 routers vrf {vrf}']
 
-    def cli(self, output=None):
+    def cli(self, vrf='',output=None):
         """ cli for:
          ' show ipv6 routers '
+         ' show ipv6 routers vrf {vrf}'
         """
-
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if vrf != 'default':
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min, CONFLICT
         # Router FE80::FA7A:41FF:FE25:2502 on Vlan100, last update 0 min

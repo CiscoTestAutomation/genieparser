@@ -2,6 +2,7 @@
    supported commands:
      * show access-session
      * show access-session interface {interface} details
+     * show access-session brief
 """
 # Python
 import re
@@ -126,3 +127,74 @@ class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetai
 
         # Call super
         return super().cli(output=show_output, interface=interface)
+
+                                                                                                                                                                                                                                                                                                                                           
+# ====================================
+# Parser for 'show access-session brief'
+# ====================================
+class ShowAccessSessionBriefSchema(MetaParser):
+    """Schema for show access-session brief"""
+    schema = {
+        Optional('interfaces'): {
+            Any(): {
+                'interface': str,
+                'mac': {
+                    Any(): {
+                        'mac': str,
+                        'authc': str,
+                        'authz': str,
+                        'flag': str,
+                        'uptime': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+
+class ShowAccessSessionBrief(ShowAccessSessionBriefSchema):
+    """Parser for show access-session brief"""
+
+    cli_command = 'show access-session brief'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<intf>[\w\/\-\.]+) +'
+                        r'(?P<mac>[\w\.]+) +'
+                        r'(?P<authc>[\w\:]+) +'
+                        r'(?P<authz>[\w\:+\s+\w+\-]+) +'
+                        r'(?P<flag>\w+) +'
+                        r'(?P<uptime>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            line = line.replace('\t', '    ')
+            
+            # Gi1/0/23   34bd.c853.0505  d:OK           AZ: SA-                 X    6858s
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group['intf'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict['interface'] = intf
+                mac = group['mac']
+                mac_dict = intf_dict.setdefault('mac', {}).setdefault(mac, {})
+                mac_dict['mac'] = mac
+                mac_dict['authc'] = group['authc']
+                mac_dict['authz'] = group['authz']
+                mac_dict['flag'] = group['flag']
+                mac_dict['uptime'] = group['uptime']
+                
+                continue
+
+        return ret_dict

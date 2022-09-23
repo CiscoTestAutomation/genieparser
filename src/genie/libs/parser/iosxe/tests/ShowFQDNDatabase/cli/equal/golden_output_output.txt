@@ -1,0 +1,11 @@
+================ Cached FQDN entries =================
+FQDN Name: *.msft404.com
+IP Address                    Type       TTL          matched FQDN
+4.1.1.24                      IPv4       67/100       1
+2001:db8:4:1::1/64            IPv6       72/100       2
+
+FQDN Name: cisco.msf04.com
+IP Address                    Type       TTL          matched FQDN
+4.1.1.24                      IPv4       67/100       1
+2001:db8:4:1::1/64            IPv6       77/99        1
+

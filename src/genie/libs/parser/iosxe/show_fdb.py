@@ -4,6 +4,7 @@
      *  show mac address-table vlan {vlan}
      *  show mac address-table aging-time
      *  show mac address-table learning
+     *  show mac address-table interface {interface}
 """
 # Python
 import re
@@ -58,13 +59,16 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
     """Parser for show mac address-table"""
 
     cli_command = ['show mac address-table',
-                   'show mac address-table vlan {vlan}']
+                   'show mac address-table vlan {vlan}',
+                   'show mac address-table interface {interface}']
 
-    def cli(self, vlan='', output=None):
+    def cli(self, vlan='', interface='', output=None):
         if output is None:
             # get output from device
             if vlan:
                 out = self.device.execute(self.cli_command[1].format(vlan=vlan))
+            elif interface:
+                out = self.device.execute(self.cli_command[2].format(interface=interface))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:

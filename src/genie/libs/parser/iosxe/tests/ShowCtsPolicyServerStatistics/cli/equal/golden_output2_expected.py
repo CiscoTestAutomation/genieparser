@@ -1,0 +1,20 @@
+expected_output = {
+'cts_policy_server_stats': { 'dt-ise': {'http_200_ok': 1,
+                                        'http_400_badreq': 0,
+                                        'http_401_unauthorized_req': 0,
+                                        'http_403_req_forbidden': 0,
+                                        'http_404_notfound': 0,
+                                        'http_408_reqtimeout': 0,
+                                        'http_415_unsupported_media': 0,
+                                        'http_429_too_many_requests': 0,
+                                        'http_500_servererr': 0,
+                                        'http_501_req_nosupport': 0,
+                                        'http_503_service_unavailable': 0,
+                                        'http_other_err': 0,
+                                        'num_of_req_sent': 0,
+                                        'num_of_req_sent_fail': 0,
+                                        'num_of_res_recv': 1,
+                                        'num_of_res_recv_fail': 0,
+                                        'server_state': 'alive',
+                                        'tcp_or_tls_handshake_err': 0}}}
+

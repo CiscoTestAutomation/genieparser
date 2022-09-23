@@ -20,7 +20,7 @@ expected_output = {
         'current_reset_reason': 'Reload Command', 
         'current_reset_timestamp': '11/11/2019 03:44:28', 
         'current_slot': 1, 
-        'chassis_type': 80, 
+        'chassis_type': '80', 
         'current_uptime': {
             'years': 0, 
             'weeks': 0, 

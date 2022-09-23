@@ -1,7 +1,4 @@
 ''' show_platform.py
-
-
-
 IOSXE parsers for the following show commands:
 
     * 'show bootvar'
@@ -3396,6 +3393,9 @@ class ShowEnvironmentSchema(MetaParser):
                         Optional('poe_power'): str,
                         Optional('watts'): str,
                         Optional('temperature'): str,
+                        Optional('power_source'): str,
+                        Optional('type'): str,
+                        Optional('mode'): str
                     }
                 },
                 Optional('system_temperature_state'): str,
@@ -3437,7 +3437,8 @@ class ShowEnvironmentSchema(MetaParser):
                     }
                 }
             },
-        },
+        }
+
     }
 
 
@@ -3518,6 +3519,15 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
         p9 = re.compile(r'^(?P<switch>\d+)\s+(?P<status>\w+|Not\s+Present)\s+'
                          r'(?P<rps_name>\w+|<>)(\s+(?P<rps_serial_num>\w+)\s+'
                          r'(?P<rps_port_num>\w+))?$')
+
+        #Gi1/1/1        Type3          60(w)     Available
+        p10 = re.compile(r'^(?P<power_source>[\w./]+)\s+(?P<type>\w+)\s+(?P<watts>\S+)\(w\)\s+(?P<mode>\S+)')
+
+        #A.C. Input     Auxilliary     150(w)    Available
+        p11 = re.compile(r'^(?P<power_source>A.C. Input|\S+)\s+(?P<type>\w+)\s+(?P<watts>\S+)\(w\)\s+(?P<mode>\S+)')
+
+        #Built-In                      310(w)   
+        p12 = re.compile(r'^(?P<power_source>A.C. Input|\S+)\s+(?P<watts>\S+)\(w\)')
 
         # set default value for switch
         switch = 1
@@ -3666,6 +3676,35 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
                     redundant_power_system_dict['rps_port_num'] = group['rps_port_num']
                 continue
 
+            #Gi1/1/1        Type3          60(w)     Available 
+            m = p10.match(line)
+
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('power_source'))
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(intf, {})
+                power_supply_dict["power_source"] =  intf
+                power_supply_dict.update({k: v for k, v in group.items()})
+                continue
+
+            #A.C. Input     Auxilliary     150(w)    Available
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(group['power_source'], {})
+                power_supply_dict.update({k: v for k, v in group.items()})
+                continue
+
+            #Built-In                      310(w)   
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(group['power_source'], {})
+                power_supply_dict.update({k: v for k, v in group.items()})
+                continue
         return ret_dict
 
 
@@ -6528,7 +6567,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
 
 class ShowProcessesMemorySchema(MetaParser):
     schema = {
-        'processor_pool': {
+        Optional('processor_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -7555,13 +7594,15 @@ class ShowPlatformTcamUtilizationSchema(MetaParser):
 class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
     """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+    cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam utilization','show platform hardware fed active fwd-asic resource tcam utilization']
 
-    def cli(self, output=None):
+    def cli(self, output=None, switch=''):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
@@ -7579,7 +7620,7 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # CAM Utilization for ASIC  [0]
@@ -17891,7 +17932,7 @@ class ShowSystemMtu(ShowSystemMtuSchema):
         ret_dict = {}
 
         # Global Ethernet MTU is 1500 bytes
-        p1 = re.compile(r'^Global\s+Ethernet\s+MTU\s+is\s+(?P<mtu_in_bytes>\d+)\s+bytes$')
+        p1 = re.compile(r'^Global\s+Ethernet\s+MTU\s+is\s+(?P<mtu_in_bytes>\d+)\s+bytes\.$')
 
 
         for line in output.splitlines():
@@ -19658,7 +19699,8 @@ class ShowPlatformSoftwareFactoryResetSecureLogSchema(MetaParser):
             Optional('nist') : str,
             Optional('pnm') : str,
             Optional('prv') : str,
-            Optional('sn') : str
+            Optional('sn') : str,
+            Optional('mnm') : str
         }
     }
 
@@ -21434,3 +21476,98 @@ class ShowPlatformHardwareQfpActiveInfraDatapathInfraSwDistrib(ShowPlatformHardw
                 continue
 
         return parsed_dict
+# =========================================================
+#  Schema for
+#  * 'show platform software fed switch active acl usage'
+#  * 'show platform software fed switch active acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchActiveAclUsageSchema(MetaParser):
+    """Schema for 'show platform software fed switch active acl usage
+    """
+    schema = {
+        Optional('acl_usage'): {
+            Optional('ace_software'): {
+                 Optional('vmr_max') : int,
+                 Optional('used') : int,
+             },
+            'acl_name': {
+                Any(): {
+                    'direction': {
+                        Any(): {
+                            'feature_type': str,
+                            'acl_type': str,
+                            'entries_used': int,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =========================================================
+#  Parser for
+#  * 'show platform software fed switch active acl usage'
+#  * 'show platform software fed switch active acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchActiveAclUsage(ShowPlatformSoftwareFedSwitchActiveAclUsageSchema):
+    """
+    Parser for :
+        * show platform software fed switch active acl usage
+        * show platform software fed switch active acl usage | include {acl_name}
+    """
+
+    cli_command = ['show platform software fed switch active acl usage',
+                   'show platform software fed switch active acl usage | include {acl_name}']
+
+    def cli(self, acl_name="", output=None):
+        if output is None:
+            if acl_name:
+                cmd = self.cli_command[1].format(acl_name=acl_name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        ######  ACE Software VMR max:196608 used:253
+        p1 = re.compile(r'^\#\#\#\#\#\s+ACE\sSoftware\sVMR\smax\:(?P<vmr_max>\d+)\sused\:(?P<used>\d+)$')
+
+
+        #   RACL        IPV4     Ingress   PBR-DMVPN    92
+        p2 = re.compile(r'^(?P<feature_type>\S+)\s+(?P<acl_type>\S+)\s+(?P<direction>\S+)\s+(?P<name>\S+)\s+(?P<entries_used>\d+)$')
+
+        # initial return dictionary
+        ret_dict ={}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            acl_usage = ret_dict.setdefault('acl_usage', {})
+
+            ######  ACE Software VMR max:196608 used:253
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_usage = ret_dict.setdefault('acl_usage', {})
+                ace_software = acl_usage.setdefault('ace_software',{})
+
+                vmr_max = group['vmr_max']
+                ace_software['vmr_max'] = int(vmr_max)
+
+                used = group['used']
+                ace_software['used'] = int(used)
+                continue
+
+            #   RACL        IPV4     Ingress   PBR-DMVPN    92
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_name = acl_usage.setdefault('acl_name', {}).\
+                                 setdefault(Common.convert_intf_name(group['name']), {})
+                direction = acl_name.setdefault('direction',{}).\
+                                 setdefault(Common.convert_intf_name(group['direction']), {})
+
+
+                direction['feature_type'] = group['feature_type']
+                direction['acl_type'] = group['acl_type']
+                direction['entries_used'] = int(group['entries_used'])
+                continue
+        return ret_dict

@@ -1,0 +1,15 @@
+Thu Aug 18 14:37:09.795 UTC
+Legend:
+Event ID      - ISIS Process level IP FRR Event Counter
+Trigger Time  - Absolute time when the FRR Calculation was triggered (in mmm dd hh:mm:ss.msec)
+SPF           - Triggerred in SPF Run Calcultion (Referenced)
+Nodes         - Number of Remote Nodes (incase of Remote LFA Calculation)
+Total         - Total Number of Routes and its coverage
+                Percentage Values are calculated based on weighted average of paths
+
+Reporting IP-FRR Events for ISIS Instance: isis1  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Event ID |    Trigger Time    |   SPF    | Nodes |      Total       |     Critical     |       High       |      Medium      |       Low        
+----------------------------------------------------------------------------------------------------------------------------------------------
+        1  Aug 18 06:30:49.977          2       0       6 ( 0%)            1 ( 0%)            1 ( 0%)               -               4 ( 0%)      
+        2  Aug 18 06:31:56.854          3       2     9 (77.77%)           1 (100%)           1 (100%)           1 (100%)          6 (66.66%) 

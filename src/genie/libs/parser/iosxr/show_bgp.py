@@ -4337,6 +4337,51 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
         return ret_dict
 
+# ===============================================================================
+# Parser for:
+# 'show <address_family> neighbors <neighbor> advertised-count'
+# ===============================================================================
+class ShowBgpNeighborsAdvertisedCountSchema(MetaParser):
+
+    """ Schema for:
+        show bgp <address_family> neighbors <neighbor> advertised-count
+    """
+
+    schema = {'prefixes_advertised': int}
+
+class ShowBgpNeighborsAdvertisedCount(ShowBgpNeighborsAdvertisedCountSchema):
+
+    """ Parser for:
+        show bgp <address_family> neighbors <neighbor> advertised-count
+
+
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
+        - address_family
+        - neighbor
+    """
+    cli_command = ['show bgp {address_family} neighbors {neighbor} advertised-count']
+
+    def cli(self, address_family='', neighbor='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(address_family=address_family,
+                                                  neighbor=neighbor))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # No of prefixes Advertised: 673
+        p0 = re.compile(r'^No of prefixes Advertised: (?P<prefixes_advertised>\d+)$')
+
+        line_iterator = iter(out.splitlines())
+        for line in line_iterator:
+            line = line.strip()
+            m = p0.match(line)
+            if m:
+                prefixes_advertised = m.groupdict()['prefixes_advertised']
+                ret_dict['prefixes_advertised'] = int(prefixes_advertised)
+
+        return ret_dict
 
 # ====================================================================
 # Parser for:

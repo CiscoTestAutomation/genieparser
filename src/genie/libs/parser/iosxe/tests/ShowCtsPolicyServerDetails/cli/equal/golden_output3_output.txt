@@ -1,0 +1,10 @@
+server name   : cts-auto-cls1-ise2.cisco.com
+server status : active
+  ipv4 address     : 10.76.119.179 (reachable)
+  domain-name      : cts-auto-cls1-ise2.cisco.com (reachable)
+  trustpoint       : cts_tp_cts-auto-cls1-ise2.cisco.com_1
+  port-num         : 9063
+  retransmit count : 3
+  timeout          : 15
+  app content type : json
+  trustpoint chain : not configured

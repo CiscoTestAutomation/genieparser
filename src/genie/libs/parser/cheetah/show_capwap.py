@@ -46,7 +46,7 @@ class ShowCapwapClientRcbSchema(MetaParser):
                 "ap_override_status": str,
             },
             "total_flash_writes_since_boot": str,
-            "ble_module_admin_state": str,
+            Optional("ble_module_admin_state"): str,
             "hyperlocation_admin_state": str         
             }
 

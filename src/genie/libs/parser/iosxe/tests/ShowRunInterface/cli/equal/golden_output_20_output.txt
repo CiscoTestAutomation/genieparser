@@ -1,0 +1,10 @@
+ interface TenGigabitEthernet2/0/1
+ switchport trunk allowed vlan 302-311,2400-2419
+ switchport mode trunk
+ ip flow monitor monitor_ipv4_in input
+ ip flow monitor monitor_ipv4_out output
+ load-interval 60
+ ipv6 flow monitor monitor_ipv6_in sampler H_sampler input
+ ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
+ spanning-tree portfast
+end
