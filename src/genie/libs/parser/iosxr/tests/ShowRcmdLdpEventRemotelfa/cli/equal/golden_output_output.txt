@@ -1,0 +1,16 @@
+Thu Aug 18 14:51:19.791 UTC
+Legend:
+Event ID    - LDP Remote LFA Snapshot counter
+Time        - LDP Remote LFA Snapshot Time
+Remote Node - Total Nodes / Converged Node Count / Down Node Count
+              Down Node Count - sum of GRDown + Establishing + Retrying States
+Prefixes    - Number of IGP Prefixes with Remote LFA Protection 
+Paths       - Total IGP Prefix Paths with Remote LFA Protection
+Labels      - Total Received Remote LFA Backup Labels
+Coverage    - Protected Path Coverage
+* - fully covered  # - below threshold
+---------------------------------------------------------------------------------------------------------
+ Event Id |        Time         |     Remote Node     |  Prefixes  |   Paths    |   Labels   |  Coverage  
+---------------------------------------------------------------------------------------------------------
+        2   Aug 18 06:31:57.961        2 / 0 / 2                 4            4            0          0%
+

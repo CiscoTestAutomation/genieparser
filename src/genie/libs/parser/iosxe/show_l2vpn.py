@@ -2854,8 +2854,8 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
         #                            L:17 5.5.5.1
-        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
-        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
+        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:-]+)$')
+        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:-]+)$')
 
         # Local Address:             4.4.4.1
         p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')

@@ -12883,7 +12883,7 @@ class ShowLispSiteDetailSuperParserSchema(MetaParser):
                                             },
                                         Optional('etr'): {
                                             str: {
-                                                'port': int,
+                                                Optional('port'): int,
                                                 'last_registered': str,
                                                 'proxy_reply': bool,
                                                 'map_notify': bool,
@@ -12980,10 +12980,10 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
 
         # ETR 11.11.11.11:33079, last registered 00:45:46, proxy-reply, map-notify
         # ETR 100.99.99.99:34273, last registered 00:00:39, no proxy-reply, map-notify
-        p17 = re.compile(r"^ETR\s+(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port>\d+),"
+        # ETR 11.11.11.11, last registered 00:45:46, proxy-reply, map-notify
+        p17 = re.compile(r"(^ETR\s+((?P<etrp>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+),|(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}),))"
                          r"\s+last\s+registered\s+(?P<last_registered>\d{1,2}:\d{2}:\d{2}|\dw\dd),"
                          r"\s+(?P<proxy_reply>[\S\s]+),\s+(?P<map_notify>map-notify)$")
-
         # TTL 1d00h, no merge, hash-function sha1, nonce 0x4536735E-0xE5D90458
         # TTL 1d00h, merge, hash-function sha1
         p18 = re.compile(r"^TTL\s+(?P<ttl>\S+),\s+(no\s+)?merge,\s+"
@@ -13152,19 +13152,32 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
 
             # ETR 22.22.22.22:27643, last registered 00:45:42, proxy-reply, map-notify
             m = p17.match(line)
+            
             if m:
+                port = 0
                 groups = m.groupdict()
-                etr = groups['etr']
-                port = int(groups['port'])
+                
+                if groups['etrp']:
+
+                    etrp = str(groups['etrp'])
+                    (etr,port) = etrp.split(":")
+                    
+                elif groups['etr']:
+                    etr = groups['etr']
+
+                etr_dict = instance_dict.setdefault('etr',{})\
+                                        .setdefault(etr,{})
+                
+                if port != 0:
+                   etr_dict.update({'port':int(port)})
+                
                 last_registered = groups['last_registered']
                 proxy_reply = groups['proxy_reply']
                 map_notify = groups['map_notify']
                 proxy_reply_bool = proxy_reply == "proxy-reply"
                 map_notify_bool = bool(re.search("map-notify",map_notify))
-                etr_dict = instance_dict.setdefault('etr',{})\
-                                        .setdefault(etr,{})
-                etr_dict.update({'port':port,
-                                 'last_registered':last_registered,
+                
+                etr_dict.update({'last_registered':last_registered,
                                  'proxy_reply':proxy_reply_bool,
                                  'map_notify':map_notify_bool})
                 continue

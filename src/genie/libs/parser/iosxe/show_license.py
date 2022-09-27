@@ -2858,7 +2858,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p11_data1_2 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\: +(?P<trustvalue>No +Trust +Data)$')
         #P:C9300-24UX,S:FCW2134L00C: P:C9300-24UX,S:FCW2134L00C, state[2], Trust Data INSTALLED
         p11_data1_3 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*(?P<trustvalue>Trust +Data +INSTALLED)$')
-        
+        #P:C9300-48U,S:FCW2133G09T: P:C9300-48U,S:FCW2133G09T, state[1], NOT INSTALLED
+        p11_data1_4 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*(?P<trustvalue>NOT INSTALLED)$')
+
         #C9300-24UX: Total licenses found: 198
         p12_data1 = re.compile(r'^\s*(?P<pid>\S+)\: +Total licenses found\: +(?P<total_licenses_found>\d+)$')
         #P:C9300-24UX,S:FCW2134L00C:
@@ -3271,7 +3273,16 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                     current_dict.update({'p': group['p'], 'trustvalue':group['trustvalue']})
                     current_dict = ret_dict.setdefault('other_info', {})
                     continue
-                    
+
+                m1 = p11_data1_4.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict = ret_dict.setdefault('other_info', {}).setdefault('trust_data', {}).setdefault(
+                        group['s'].lower(), {})
+                    current_dict.update({'p': group['p'], 'trustvalue': group['trustvalue']})
+                    current_dict = ret_dict.setdefault('other_info', {})
+                    continue
+
                 m1= p10_data1.match(line)
                 if m1:
                     group = m1.groupdict()            

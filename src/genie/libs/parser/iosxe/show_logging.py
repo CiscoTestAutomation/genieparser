@@ -625,7 +625,7 @@ class ShowLoggingOnboardRpActiveUptimeSchema(MetaParser):
             'current_reset_reason':str,
             'current_reset_timestamp':str,
             'current_slot':int,
-            'chassis_type':int,
+            'chassis_type':str,
             Any():{
                 'years':int,
                 'weeks':int,
@@ -692,7 +692,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
         p8=re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
         
         #Chassis type            : 80
-        p9=re.compile('^Chassis type\s+: (?P<chassis_type>\d+)$')
+        p9=re.compile('^Chassis type\s+: (?P<chassis_type>\w+)$')
         
         #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
         p10=re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
@@ -772,7 +772,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
             m=p9.match(line)
             if m:
                 group=m.groupdict()
-                root_dict['chassis_type'] = int(group['chassis_type'])
+                root_dict['chassis_type'] = str(group['chassis_type'])
                 continue
                 
             #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes

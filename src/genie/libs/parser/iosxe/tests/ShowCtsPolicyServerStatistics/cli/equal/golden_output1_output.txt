@@ -1,0 +1,41 @@
+
+server name  : dt-ise
+server state : alive
+  number of request sent        : 0
+  number of request sent fail   : 0
+  number of response received   : 1
+  number of response recv fail  : 0
+    http 200 ok                 : 1
+    http 400 badreq             : 0
+    http 401 unauthorized req   : 0
+    http 403 req forbidden      : 0
+    http 404 notfound           : 0
+    http 408 reqtimeout         : 0
+    http 415 unsupported media  : 0
+    http 500 servererr          : 0
+    http 501 req nosupport      : 0
+    http 503 service unavailable: 0
+    http 429 too many requests  : 0
+    tcp or tls handshake error  : 0
+    http other error            : 0
+
+server name  : cts-auto-cls1-ise1.cisco.com
+server state : dead
+  number of request sent        : 8
+  number of request sent fail   : 1
+  number of response received   : 5
+  number of response recv fail  : 3
+    http 200 ok                 : 5
+    http 400 badreq             : 0
+    http 401 unauthorized req   : 1
+    http 403 req forbidden      : 0
+    http 404 notfound           : 0
+    http 408 reqtimeout         : 0
+    http 415 unsupported media  : 0
+    http 500 servererr          : 0
+    http 501 req nosupport      : 0
+    http 503 service unavailable: 0
+    http 429 too many requests  : 0
+    tcp or tls handshake error  : 2
+    http other error            : 0
+    

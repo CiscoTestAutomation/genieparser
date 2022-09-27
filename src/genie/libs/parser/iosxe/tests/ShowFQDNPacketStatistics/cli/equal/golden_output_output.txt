@@ -1,0 +1,21 @@
+show fqdn packet statistics
+ Total DNS Pkts Rcvd                      : 226
+     IPv4 DNS Pkts Rcvd                   : 226
+     IPv6 DNS Pkts Rcvd                   : 0
+ Total DNS Pkts for registered FQDNs      : 6
+ Total DNS Pkts with induced latency      : 6
+ DNS Packet Latency:
+     Min                                  : 12 ms
+     Max                                  : 3001 ms
+     Avg                                  : 1506 ms
+ Total DNS Pkts Injected                  : 226
+     DNS Pkts Injected by Ack             : 6
+     DNS Pkts with parse error            : 0
+     DNS Pkts with no answer              : 220
+     DNS Pkts with no A/AAAA Record       : 0
+     DNS Pkts with FQDN not registered    : 0
+     DNS Pkts with FQDN already cached    : 0
+ Total DNS Pkts Dropped by Nack           : 0
+ Average Input rate - 1 min               : 3 pps
+ Average Input rate - 5 min               : 3 pps
+ Average Input rate - 1 hr                : 3 pps

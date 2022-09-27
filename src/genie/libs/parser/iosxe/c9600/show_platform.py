@@ -196,12 +196,12 @@ class ShowPlatformFedActiveIfmMappingSchema(MetaParser):
                         'Inst': str,
                         'Asic': str,
                         'Core': str,
-                        'IFG_ID': str,
+                        Optional('IFG_ID'): str,
                         'Port': str,
                         'SubPort': str,
                         'Mac': str,
-                        'First_Serdes': str,
-                        'Last_Serdes': str,
+                        Optional('First_Serdes'): str,
+                        Optional('Last_Serdes'): str,
                         'Cntx': str,
                         'LPN': str,
                         'GPN': str,
@@ -228,53 +228,45 @@ class ShowPlatformFedActiveIfmMapping(ShowPlatformFedActiveIfmMappingSchema):
         ret_dict = {}
 
         # HundredGigE1/0/21       0x4d6    0   0    0      0    0      0     1  0            1            0    1    1    NIF    Y
-        p1 = re.compile(
-            r'^(?P<interface>\S+)\s+(?P<ifId>\S+)\s+(?P<inst>\d+)\s+(?P<asic>\d+)\s+(?P<core>\d+)\s+(?P<ifgId>\d+)\s+(?P<port>\d+)\s+(?P<sbPort>\d+)\s+(?P<mac>\d+)\s+(?P<first_serdes>\d+)\s+(?P<last_serdes>\d+)\s+(?P<cntx>\d+)\s+(?P<lpn>\d+)\s+(?P<gpn>\d+)\s+(?P<type>\w+)\s+(?P<act>\w+)$')
+        #p1 = re.compile(
+        #    r'^(?P<interface>\S+)\s+(?P<ifId>\S+)\s+(?P<inst>\d+)\s+(?P<asic>\d+)\s+(?P<core>\d+)\s+(?P<ifgId>\d+)\s+(?P<port>\d+)\s+(?P<sbPort>\d+)\s+(?P<mac>\d+)\s+(?P<first_serdes>\d+)\s+(?P<last_serdes>\d+)\s+(?P<cntx>\d+)\s+(?P<lpn>\d+)\s+(?P<gpn>\d+)\s+(?P<type>\w+)\s+(?P<act>\w+)$')
+        
+        #Interface IF_ID Inst Asic Core Port SubPort Mac Cntx LPN GPN Type Active
+        #FortyGigabitEthernet1/0/1 0x75 0 0 0 0 0 0 0 1 101 NIF N
 
+        p1 = re.compile(
+            r'^(?P<interface>\S+)\s+(?P<ifId>\S+)\s+(?P<inst>\d+)\s+(?P<asic>\d+)\s+(?P<core>\d+)\s+(?P<ifgId>\d+)?\s+(?P<port>\d+)\s+(?P<sbPort>\d+)\s+(?P<mac>\d+)\s+(?P<first_serdes>\d+)?\s+(?P<last_serdes>\d+)?\s+(?P<cntx>\d+)\s+(?P<lpn>\d+)\s+(?P<gpn>\d+)\s+(?P<type>\w+)\s+(?P<act>\w+)$')
+            
         for line in output.splitlines():
             line = line.strip()
-
             # HundredGigE1/0/21       0x4d6    0   0    0      0    0      0     1   0            1            0    1    1    NIF    Y
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 intfId = group['interface']
-                ifId = group['ifId']
-                instance = group['inst']
-                asic = group['asic']
-                core = group['core']
-                ifgId = group['ifgId']
-                port = group['port']
-                subPort = group['sbPort']
-                mac = group['mac']
-                first_serdes = group['first_serdes']
-                last_serdes = group['last_serdes']
-                cntx = group['cntx']
-                lpn = group['lpn']
-                gpn = group['gpn']
-                type = group['type']
-                active = group['act']
-
                 final_dict = ret_dict.setdefault('interface', {}).setdefault(intfId, {})
-
-                final_dict['IF_ID'] = ifId
-                final_dict['Inst'] = instance
-                final_dict['Asic'] = asic
-                final_dict['Core'] = core
-                final_dict['IFG_ID'] = ifgId
-                final_dict['Port'] = port
-                final_dict['SubPort'] = subPort
-                final_dict['Mac'] = mac
-                final_dict['First_Serdes'] = first_serdes
-                final_dict['Last_Serdes'] = last_serdes
-                final_dict['Cntx'] = cntx
-                final_dict['LPN'] = lpn
-                final_dict['GPN'] = gpn
-                final_dict['Type'] = type
-                final_dict['Active'] = active
+                final_dict['IF_ID'] = group['ifId']
+                final_dict['Inst'] = group['inst']
+                final_dict['Asic'] = group['asic']
+                final_dict['Core'] = group['core']
+                if group['ifgId']:
+                    final_dict['IFG_ID'] = group['ifgId']
+                final_dict['Port'] = group['port']
+                final_dict['SubPort'] = group['sbPort']
+                final_dict['Mac'] = group['mac']
+                if group['first_serdes']:
+                    final_dict['First_Serdes'] = group['first_serdes']
+                if group['last_serdes']:
+                    final_dict['Last_Serdes'] = group['last_serdes']
+                final_dict['Cntx'] = group['cntx']
+                final_dict['LPN'] = group['lpn']
+                final_dict['GPN'] = group['gpn']
+                final_dict['Type'] = group['type']
+                final_dict['Active'] = group['act']	
                 continue
 
-        return ret_dict
+        return ret_dict		
+
 
 # ==================================================================================
 #  Schema for 'show platform hardware fed active fwd-asic resource tcam utilization'
@@ -643,11 +635,15 @@ class ShowPlatformFedSwitchActiveIfmMappingSchema(MetaParser):
 class ShowPlatformFedSwitchActiveIfmMapping(ShowPlatformFedSwitchActiveIfmMappingSchema):
     """ Parser for show platform software fed switch active ifm mappings"""
 
-    cli_command = 'show platform software fed switch active ifm mappings'
+    cli_command = 'show platform software fed {switch} {state} ifm mappings'
 
-    def cli(self, output=None):
+    def cli(self, switch="switch", state="active", output=None):
+
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(switch=switch, state=state)
+            # Execute command to get output from device
+            output = self.device.execute(cmd)
+
         # initialize variables
         ret_dict = {}
 
