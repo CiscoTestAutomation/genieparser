@@ -36,6 +36,20 @@
 * cheetah
     * Fix ShowCapwapClientRcb to handle optional keyword
 
+* viptela
+    * Modified ShowControlLocalProperties:
+        * Changed keygen_interval from schema to Optional
+
+        * Changed public_ipv4, public_port, private_ipv4, private_ipv6 from schema to Optional
+        * Changed private_port, vsmart, vmanage, color, state, from schema to Optional
+        * Changed max_cntrl, restrict, control, stun, lr, lb from schema to Optional 
+        * Changed spi_time_remaining, nat_type, vm_con_prf from schema to Optional 
+
+        * Added public_ipv4, public_port, private_ipv4, private_ipv6 into new Optional dictory
+        * Added private_port, vsmart, vmanage, color, state, last_connection into new Optional dictory
+
+        * Changed regex pattern p27 to p27_1 to accommodate vedge win-interfaces table output
+        * Added regex pattern p27_2 to accommodate vsmart and vmanage win-interfaces table output
 
 --------------------------------------------------------------------------------
                                       New                                       
