@@ -135,7 +135,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "serial_num": str,
         Optional("enterprise_serial_num"): str,
         Optional("token"): str,
-        "keygen_interval": str,
+        Optional("keygen_interval"): str,
         "retry_interval": str,
         "no_activity_exp_interval": str,
         "dns_cache_ttl": str,
@@ -147,25 +147,37 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "number_active_wan_interfaces": str,
         "wan_interfaces": {
             Any(): {
-                "public_ipv4": str,
-                "public_port": str,
-                "private_ipv4": str,
-                "private_ipv6": str,
-                "private_port": str,
-                "vsmart": str,
-                "vmanage": str,
-                "color": str,
-                "state": str,
-                "max_cntrl": str,
-                "restrict": str,
-                "control": str,
-                "stun": str,
-                "lr": str,
-                "lb": str,
-                "last_connection": str,
-                "spi_time_remaining": str,
-                "nat_type": str,
-                "vm_con_prf": str,
+                Optional("public_ipv4"): str,
+                Optional("public_port"): str,
+                Optional("private_ipv4"): str,
+                Optional("private_ipv6"): str,
+                Optional("private_port"): str,
+                Optional("vsmart"): str,
+                Optional("vmanage"): str,
+                Optional("color"): str,
+                Optional("state"): str,
+                Optional("max_cntrl"): str,
+                Optional("restrict"): str,
+                Optional("control"): str,
+                Optional("stun"): str,
+                Optional("lr"): str,
+                Optional("lb"): str,
+                Optional("last_connection"): str,
+                Optional("spi_time_remaining"): str,
+                Optional("nat_type"): str,
+                Optional("vm_con_prf"): str,
+                Optional(Any()): {
+                    "public_ipv4": str,
+                    "public_port": str,
+                    "private_ipv4": str,
+                    "private_ipv6": str,
+                    "private_port": str,
+                    "vsmart": str,
+                    "vmanage": str,
+                    "color": str,
+                    "state": str,
+                    "last_connection": str,
+                },
             },
         },
     }
@@ -349,14 +361,14 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
             r"^number-active-wan-interfaces\s+(?P<number_active_wan_interfaces>.*)"
         )
 
-        # Match table output
+        # Match table output for vedge device
                                                                                                                                                                                           # VM
         #            PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                             MAX     CONTROL/            LAST         SPI TIME   NAT  CON
         # INTERFACE  IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM COLOR           STATE CNTRL   STUN         LR/LB  CONNECTION   REMAINING  TYPE PRF
         # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ge0/0      10.1.15.15      12426  10.1.15.15      ::                                      12426    0/0  lte              up    2      no/yes/no   No/No  0:00:00:16   0:11:26:41  E    5
 
-        p27 = re.compile(
+        p27_1 = re.compile(
             r"(?P<interface>\S+)\s+(?P<public_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
             r"(?P<public_port>\S+)\s+(?P<private_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
             r"(?P<private_ipv6>\S+)\s+(?P<private_port>\S+)\s+(?P<vsmart>\d+)\/" \
@@ -364,6 +376,23 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
             r"(?P<restrict>\w+)\/(?P<control>\w+)\/(?P<stun>\w+)\s+(?P<lr>\w+)\/(?P<lb>\w+)\s+" \
             r"(?P<last_connection>\S+)\s+(?P<spi_time_remaining>\S+)\s+(?P<nat_type>[EAN])\s+" \
             r"(?P<vm_con_prf>\S+)"
+        )
+
+        # Match table output for vsmart and vmanage device
+
+        #                      PUBLIC       PUBLIC PRIVATE      PRIVATE             PRIVATE                        LAST
+        #INSTANCE   INTERFACE  IPv4         PORT   IPv4         IPv6                PORT      VS/VM  COLOR   STATE CONNECTION
+        #--------------------------------------------------------------------------------------------------------------------
+        #0          eth1       10.0.5.19    12355  10.0.5.19    ::                  12355     1/1    default up    0:00:00:00
+        #1          eth1       10.0.5.19    12455  10.0.5.19    ::                  12455     0/0    default up    0:00:00:13
+
+        p27_2 = re.compile(
+            r"(?P<instance>\S+)\s+" \
+            r"(?P<interface>\S+)\s+(?P<public_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
+            r"(?P<public_port>\S+)\s+(?P<private_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
+            r"(?P<private_ipv6>\S+)\s+(?P<private_port>\S+)\s+(?P<vsmart>\d+)\/" \
+            r"(?P<vmanage>\d+)\s+(?P<color>\S+)\s+(?P<state>\S+)\s+" \
+            r"(?P<last_connection>\S+)"
         )
 
         for line in out.splitlines():
@@ -384,7 +413,7 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
                 parsed_dict[current_key] = group[current_key]
                 continue
             
-            m = p27.match(line)
+            m = p27_1.match(line)
             if m:
                 group = m.groupdict()
                 interface = group['interface']
@@ -398,6 +427,27 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
                         "color", "state", "max_cntrl", "restrict",\
                         "control", "stun", "lr", "lb", "last_connection", \
                         "spi_time_remaining", "nat_type", "vm_con_prf"]
+
+                for k in keys:
+                    connection_dict[k] = group[k]
+
+                continue
+
+            m = p27_2.match(line)
+
+            if m:
+                group = m.groupdict()
+                instance = group['instance']
+                interface = group['interface']
+
+                parsed_dict.setdefault("wan_interfaces", {}).\
+                            setdefault(instance, {}).\
+                            setdefault(interface, {})
+                connection_dict = parsed_dict["wan_interfaces"][instance][interface]
+
+                keys = ["public_ipv4", "public_port", "private_ipv4",\
+                        "private_ipv6", "private_port", "vsmart", "vmanage",\
+                        "color", "state", "last_connection"]
 
                 for k in keys:
                     connection_dict[k] = group[k]
