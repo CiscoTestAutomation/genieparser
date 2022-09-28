@@ -1,0 +1,43 @@
+ 
+vm9# show control local-properties 
+personality                       vsmart
+sp-organization-name              vIPtela Inc Regression
+organization-name                 vIPtela Inc Regression
+root-ca-chain-status              Installed
+
+certificate-status                Installed
+certificate-validity              Valid
+certificate-not-valid-before      Sep 23 04:02:04 2022 GMT
+certificate-not-valid-after       Sep 23 04:02:04 2023 GMT
+
+dns-name                          10.0.12.26
+site-id                           100
+domain-id                         1
+protocol                          dtls
+tls-port                          23456
+system-ip                         172.16.255.19
+chassis-num/unique-id             aecb941b-00cb-4885-b540-4b91877f0060
+serial-num                        12345701
+subject-serial-num                N/A
+token                             -NA-
+retry-interval                    0:00:00:15
+no-activity-exp-interval          0:00:00:20
+dns-cache-ttl                     0:00:00:00
+port-hopped                       FALSE
+time-since-last-port-hop          0:00:00:00
+cdb-locked                        false
+number-vbond-peers                1
+
+INDEX   IP                                      PORT
+-----------------------------------------------------
+0       10.0.12.26                              12346  
+
+number-active-wan-interfaces      2
+
+                                PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                               LAST
+INSTANCE             INTERFACE  IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM  COLOR            STATE CONNECTION
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+0                    eth1       10.0.5.19       12355  10.0.5.19       ::                                      12355   1/1    default          up    0:00:00:13
+1                    eth1       10.0.5.19       12455  10.0.5.19       ::                                      12455   0/0    default          up    0:00:00:11
+
+
