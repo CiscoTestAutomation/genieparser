@@ -2144,6 +2144,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         else:
             out = output
 
+        read_multicast_reserved_lines = False
+        multicast_groups = []
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -2167,8 +2169,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 interface_dict[interface]['oper_status'] = \
                     m.groupdict()['oper_status'].lower()
 
-                # initial variables
-                multicast_groups = []
                 continue
 
             # Internet address is 192.168.76.1/24
@@ -2331,18 +2331,22 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 #Split string of addressed into a list
                 multicast_groups = multicast_groups_address.split()
 
-                interface_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                interface_dict[interface]['multicast_groups'] = multicast_groups
+                read_multicast_reserved_lines = True
                 continue
 
             # Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
-            p41_1 = re.compile(r'(?P<multicast_groups>\d+\.\d+\.\d+\.\d+)')
-            m = p41_1.findall(line)
-            if m and multicast_groups:
-                multicast_groups.extend(m)
-                interface_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
-                continue
+            #       224.0.0.5  <----- this extra line
+            if read_multicast_reserved_lines:
+                if not re.match(r"[^\d. ]", line):
+                    p41_1 = re.compile(r'(?P<multicast_groups>\d+\.\d+\.\d+\.\d+)')
+                    m = p41_1.findall(line)
+                    multicast_groups.extend(m)
+                    continue
+                else:
+                    interface_dict[interface]['multicast_groups'] \
+                        = sorted(interface_dict[interface]['multicast_groups'])
+                    read_multicast_reserved_lines = False
 
             # Outgoing Common access list is not set
             p7 = re.compile(r'^Outgoing +Common +access +list +is +'
