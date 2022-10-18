@@ -99,8 +99,8 @@ class ShowPortSecurity(ShowPortSecuritySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = ret_dict.setdefault(Common.convert_intf_name('interfaces'), {})
-                interface = group['interface']
+                intf_dict = ret_dict.setdefault('interfaces', {})
+                interface = Common.convert_intf_name(group['interface'])
                 intf_dict[interface] = {}
                 intf_dict[interface]['max_secure_addr_cnt'] = int(group['max_secure_addr_cnt'])
                 intf_dict[interface]['current_addr_cnt'] = int(group['current_addr_cnt'])
