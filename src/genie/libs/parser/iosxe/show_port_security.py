@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
 import re
 # Metaparser
 from genie.metaparser import MetaParser
+from genie.libs.parser.utils.common import Common
 from genie.metaparser.util.schemaengine import Schema, \
     Any, \
     Optional, \
@@ -98,7 +99,7 @@ class ShowPortSecurity(ShowPortSecuritySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = ret_dict.setdefault('interfaces', {})
+                intf_dict = ret_dict.setdefault(Common.convert_intf_name('interfaces'), {})
                 interface = group['interface']
                 intf_dict[interface] = {}
                 intf_dict[interface]['max_secure_addr_cnt'] = int(group['max_secure_addr_cnt'])
