@@ -249,14 +249,14 @@ class ShowPlatformFedActiveIfmMapping(ShowPlatformFedActiveIfmMappingSchema):
                 final_dict['Inst'] = group['inst']
                 final_dict['Asic'] = group['asic']
                 final_dict['Core'] = group['core']
-                if group['ifgId']:
+                if group['ifgId'] is not None:
                     final_dict['IFG_ID'] = group['ifgId']
                 final_dict['Port'] = group['port']
                 final_dict['SubPort'] = group['sbPort']
                 final_dict['Mac'] = group['mac']
-                if group['first_serdes']:
+                if group['first_serdes'] is not None:
                     final_dict['First_Serdes'] = group['first_serdes']
-                if group['last_serdes']:
+                if group['last_serdes'] is not None:
                     final_dict['Last_Serdes'] = group['last_serdes']
                 final_dict['Cntx'] = group['cntx']
                 final_dict['LPN'] = group['lpn']
@@ -877,3 +877,412 @@ class ShowPlatformSwitchStandbyTcamUtilization(ShowPlatformTcamUtilizationswitch
                 continue
 
         return ret_dict
+
+# ======================================================================================
+# Schema for 'show platform software memory switch <switch number> alloc callsite brief'
+# ======================================================================================
+class ShowPlatformSoftwareMemorySwitchCallsiteSchema(MetaParser):
+    """ Schema for show platform software memory fed switch <switch_num> alloc callsite brief """
+    schema = {
+        'tracekey': {
+            Any(): {
+                'callsite': {
+                    Any(): {
+                        'thread': int,
+                        'diff_byte': int,
+                        'diff_call': int
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================================================
+# Parser for 'show platform software memory switch <switch number> alloc callsite brief'
+# ======================================================================================
+class ShowPlatformSoftwareMemorySwitchAllocCallsite(ShowPlatformSoftwareMemorySwitchCallsiteSchema):
+    """ Parser for show platform software memory fed switch <switch_num> alloc callsite brief """
+
+    cli_command = ['show platform software memory fed switch {switch_num} alloc callsite brief', 'show platform software memory fed {switch_type} alloc callsite brief']
+
+    def cli(self, switch_num="", switch_type="", output=None):
+        if output is None:
+            if switch_num is not None:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            elif switch_type is not None:
+                cmd = self.cli_command[1].format(switch_type=switch_type)
+            else:
+                raise TypeError('Must pass either switch_num or switch_type')
+            output = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+        
+        # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+        p1 = re.compile(r'^The +current +tracekey +is\s*: +(?P<tracekey>[#\w\d+]*)$')
+
+        # callsite      thread    diff_byte               diff_call
+        # ----------------------------------------------------------
+        # 1617611779    31884     57424                   2
+        p2 = re.compile(r'^(?P<callsite>(\d\w+))\s+(?P<thread>(\d+))\s+(?P<diffbyte>(\d+))\s+(?P<diffcall>(\d+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tracekey = group['tracekey']
+                callsite_dict = parsed_dict.setdefault('tracekey', {}).setdefault(tracekey, {})
+                continue
+
+            # callsite      thread    diff_byte               diff_call
+            # ----------------------------------------------------------
+            # 1617611779    31884     57424                   2
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = group['callsite']
+                one_callsite_dict = callsite_dict.setdefault('callsite', {}).setdefault(callsite, {})
+                one_callsite_dict['thread'] = int(group['thread'])
+                one_callsite_dict['diff_byte'] = int(group['diffbyte'])
+                one_callsite_dict['diff_call'] = int(group['diffcall'])
+                continue
+        return parsed_dict
+
+#====================================================================================
+# Schema for 'show platform software memory switch <switch_num> alloc backtrace'
+#====================================================================================
+class ShowPlatformSoftwareMemorySwitchBacktraceSchema(MetaParser):
+    """ Schema for show platform software memory switch <switch_num> alloc backtrace,
+    show platform software memory <active/standby> alloc backtrace """
+    schema = {
+        'backtrace': {
+            Any(): {
+                'callsite': {
+                    Any(): {
+                        'allocs': int,
+                        'frees': int,
+                        'call_diff': int,
+                        'thread_id': int
+                        }
+                    }
+                }
+            }
+        }
+
+#====================================================================================
+# Parser for 'show platform software memory switch <switch_num> alloc backtrace'
+#====================================================================================
+class ShowPlatformSoftwareMemorySwitchAllocBacktrace(ShowPlatformSoftwareMemorySwitchBacktraceSchema):
+    """ Parser for show platform software memory fed switch <switch_num> alloc backtrace, show platform software memory fed <active/standby> alloc backtrace """
+
+    cli_command = ['show platform software memory fed switch {switch_num} alloc backtrace', 'show platform software memory fed {switch_type} alloc backtrace']
+    def cli(self, switch_num="", switch_type="", output=None):
+        if output is None:
+            if switch_num is not None:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            elif switch_type is not None:
+                cmd = self.cli_command[1].format(switch_type=switch_type)
+            else:
+                raise TypeError('Must pass either switch_num or switch_type')
+            output = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+        
+        # backtrace: 1#2315ece11e07bc883d89421df58e37b6
+        p1 = re.compile(r'^backtrace: +(?P<backtrace>[#\w\d+]*)')
+
+        #   callsite: 2150603778, thread_id: 31884
+        p2 = re.compile(r'^callsite: +(?P<callsite>\d\w+), +thread_id: +(?P<thread_id>\d+)$')
+
+        #   allocs: 1, frees: 0, call_diff: 1
+        p3 = re.compile(r'^allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # backtrace: 1#2315ece11e07bc883d89421df58e37b6
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                backtrace = str(group['backtrace'])
+                backtrace_dict = parsed_dict.setdefault('backtrace', {}).setdefault(backtrace, {})
+                continue
+
+            #   callsite: 2150603778, thread_id: 31884
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = str(group['callsite'])
+                backtraces_dict = backtrace_dict.setdefault('callsite', {}).setdefault(callsite, {})
+                backtraces_dict['thread_id'] = int(group['thread_id'])
+                continue
+
+            #   allocs: 1, frees: 0, call_diff: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                backtraces_dict['allocs'] = int(group['allocs'])
+                backtraces_dict['frees'] = int(group['frees'])
+                backtraces_dict['call_diff'] = int(group['call_diff'])
+                continue
+
+        return parsed_dict
+
+# ======================================================================================
+# Schema for 'show platform hardware fed switch <> qos dscp-cos counters <interface>'
+# ======================================================================================
+class ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema(MetaParser):
+    """ Schema for show platform hardware fed switch <> qos dscp-cos counters <interface> """
+    schema = {
+        "@heading": str,
+        "traffictype": {
+            Any(): {            
+                "frames": int,
+                "bytes": int
+                }
+            }
+    }
+    
+# ======================================================================================
+# Parser for 'show platform hardware fed switch <> qos dscp-cos counters <interface>'
+# ======================================================================================
+class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema):
+    """ Parser for show platform hardware fed switch <> qos dscp-cos counters <interface> """
+
+    cli_command = ['show platform hardware fed switch {switch_num} qos dscp-cos counters interface {interface}','show platform hardware fed switch {switch_type} qos dscp-cos counters interface {interface}']
+    def cli(self, interface, switch_num="", switch_type="", output=None):
+        if output is None:
+            if switch_num is not None:
+                cmd = self.cli_command[0].format(switch_num=switch_num,interface=interface)
+            elif switch_type is not None:
+                cmd = self.cli_command[1].format(switch_type=switch_type,interface=interface)
+            else:
+                raise TypeError('Must pass either switch_num or switch_type')
+            output = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+        
+        #               Frames        Bytes
+        p1 = re.compile(r'^(?P<heading>\AFrames[\s]+ +Bytes)$')
+
+        # Ingress DSCP0 0             0
+        p2 = re.compile(r'^(?P<traffictype>[\w\s]*) +(?P<frames>\d+) +(?P<bytes>\d+)$')
+
+        for lines in output.splitlines():
+            line = lines.strip()
+
+            #               Frames        Bytes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['@heading'] = group['heading']
+                continue                
+
+            # Ingress DSCP0 0             0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                traffictype = group['traffictype']
+                type_dict = parsed_dict.setdefault('traffictype', {}).setdefault(traffictype, {})
+                type_dict['frames'] = int(group['frames'])
+                type_dict['bytes'] = int(group['bytes'])
+                continue
+
+        return parsed_dict
+
+# =========================================================
+#  Schema for
+#  * 'show platform software fed switch active acl usage'
+#  * 'show platform software fed switch active acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
+    """Schema for 'show platform software fed switch standby acl usage
+    """
+    schema = {
+        Optional('acl_usage'): {
+            Optional('ace_software'): {
+                 Optional('vmr_max'): int,
+                 Optional('used'): int,
+             },
+            'acl_name': {
+                Any(): {
+                    'direction': {
+                        Any(): {
+                            'feature_type': str,
+                            'acl_type': str,
+                            'entries_used': int,
+                        },
+                    },
+                },
+            },
+        }
+    }
+
+# =========================================================
+#  Parser for
+#  * 'show platform software fed switch active acl usage'
+#  * 'show platform software fed switch active acl usage | include {acl_name}'
+# =========================================================
+class ShowPlatformSoftwareFedSwitchActivEAclUsage(ShowPlatformSoftwareFedSwitchActivEAclUsageSchema):
+    """
+    Parser for :
+        * show platform software fed switch active acl usage
+        * show platform software fed switch active acl usage | include {acl_name}
+    """
+
+    cli_command = ['show platform software fed switch active acl usage',
+                   'show platform software fed switch active acl usage | include {acl_name}']
+
+    def cli(self, acl_name="", output=None):
+        if output is None:
+            if acl_name:
+                cmd = self.cli_command[1].format(acl_name=acl_name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # #####  ACE Software VMR max:196608 used:253
+        p1 = re.compile(r'^\#\#\#\#\#\s+ACE\sSoftware\sVMR\smax\:(?P<vmr_max>\d+)\sused\:(?P<used>\d+)$')
+
+        #   RACL        IPV4     Ingress   PBR-DMVPN    92
+        p2 = re.compile(r'^(?P<feature_type>\S+)\s+(?P<acl_type>\S+)\s+(?P<direction>\S+)\s+(?P<name>\S+)\s+(?P<entries_used>\d+)$')
+
+        # initial return dictionary
+        ret_dict ={}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            acl_usage = ret_dict.setdefault('acl_usage', {})
+
+            # #####  ACE Software VMR max:196608 used:253
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_usage = ret_dict.setdefault('acl_usage', {})
+                ace_software = acl_usage.setdefault('ace_software', {})
+
+                vmr_max = group['vmr_max']
+                ace_software['vmr_max'] = int(vmr_max)
+
+                used = group['used']
+                ace_software['used'] = int(used)
+                continue
+
+            #   RACL        IPV4     Ingress   PBR-DMVPN    92
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_name = acl_usage.setdefault('acl_name', {}).setdefault(
+                    Common.convert_intf_name(group['name']), {})
+                direction = acl_name.setdefault('direction', {}).setdefault(
+                    Common.convert_intf_name(group['direction']), {})
+
+                direction['feature_type'] = group['feature_type']
+                direction['acl_type'] = group['acl_type']
+                direction['entries_used'] = int(group['entries_used'])
+                continue
+        return ret_dict
+
+# =========================================================
+#  Schema for
+#  * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+# =========================================================
+class ShowPlatformTcamUtilizationswitchActiveSchema(MetaParser):
+    """Schema for show platform hardware fed switch active fwd-asic resource tcam utilization """
+    schema = {
+        'asic': {
+            Any(): {
+                'table': {
+                    Any(): {
+                        'subtype': {
+                            Any(): {
+                                'dir': {
+                                    Any(): {
+                                        'max': str,
+                                        'used': str,
+                                        'used_percent': str,
+                                        'v4': str,
+                                        'v6': str,
+                                        'mpls': str,
+                                        'other': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =========================================================
+#  Parser for
+#  * 'show platform hardware fed sw active fwd-asic resource tcam utilization'
+# =========================================================
+class ShowPlatformSwitchActiveTcamUtilization(ShowPlatformTcamUtilizationswitchActiveSchema):
+    """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
+
+    cli_command = 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # CAM Utilization for ASIC  [0]
+        p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
+
+        #CTS Cell Matrix/VPN
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #CTS Cell Matrix/VPN
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+        # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+        p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # CAM Utilization for ASIC  [0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            #CTS Cell Matrix/VPN
+            #Label                  EM           O       16384        0    0.00%        0        0        0        0
+            #CTS Cell Matrix/VPN
+            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+            # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                table_ = group.pop('table')
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
+                subtype_ = group.pop('subtype')
+                dir_ = group.pop('dir')
+                dir_dict = asic_dict.setdefault('table', {}). \
+                            setdefault(table_, {}). \
+                            setdefault('subtype', {}). \
+                            setdefault(subtype_, {}). \
+                            setdefault('dir', {}). \
+                            setdefault(dir_, {})
+                dir_dict.update({k: v for k, v in group.items()})
+                continue
+
+        return ret_dict        

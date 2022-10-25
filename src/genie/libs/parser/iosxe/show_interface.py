@@ -75,6 +75,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('oper_status'): str,
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
+                Optional('is_deleted'): bool,
                 Optional('connected'): bool,
                 Optional('err_disabled'): bool,
                 Optional('suspended'): bool,
@@ -552,6 +553,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel'] = {}
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
+
+                if 'deleted' in enabled:
+                    interface_dict[interface]['is_deleted'] = True
+                else:
+                    interface_dict[interface]['is_deleted'] = False
 
                 if 'administratively down' in enabled or 'delete' in enabled:
                     interface_dict[interface]['enabled'] = False

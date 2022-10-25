@@ -1,0 +1,4 @@
+Call-Home Version 3.0
+Component Version:
+ call-home: UNKNOWN
+ eem-call-home: UNKNOWN

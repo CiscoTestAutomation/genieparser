@@ -2505,6 +2505,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'send_utility_rum_reports':str,
             'save_unreported_rum_reports':str,
             Optional('process_utility_rum_reports'):str,
+            Optional('telemetry_reporting'):str,
             Optional('authorization_code_process'):str,
             Optional('authorization_confirmation_code_process'):str,
             'data_synchronization':str,
@@ -2582,6 +2583,10 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('in_storage'):int,
             Optional('mia'):str,
             Optional('report_module_status'):str,
+        },
+        Optional('telemetry_report_summary'):{
+            'device_telemetry':str,
+            'total_current_telemetry_reports':int,
         },
         'other_info':{
             'software_id':str,
@@ -2816,6 +2821,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Enforced Licenses:
         p12_1 = re.compile(r'^(?P<enforced_licenses>Enforced +Licenses)\:$')
 
+        #Telemetry Report Summary
+        p13 = re.compile(r'^(?P<telemetry_report_summary>Telemetry +Report +Summary)\:$')
+
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -2957,6 +2965,13 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})           
+                continue
+
+            #Telemetry Report Summary (new output section in 17.11.1)
+            m = p13.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('telemetry_report_summary', {})
                 continue
 
             #Setting the dictionary position for sub headings (2nd level and further levels down)

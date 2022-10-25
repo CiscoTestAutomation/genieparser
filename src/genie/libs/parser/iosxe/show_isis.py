@@ -374,7 +374,8 @@ class ShowIsisDatabaseSchema(MetaParser):
                                                 "a_bit": bool,
                                                 "min": int,
                                                 "max": int
-                                            }
+                                            },
+                                            Optional("appl_spec_te_metric"): int
                                         }
                                     }
                                 },
@@ -659,6 +660,9 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
 
         # Appl spec Uni Link Loss 0.899997% (Anomalous)
         p49 = re.compile(r'^Appl spec Uni Link Loss\s+(?P<loss>\S+)%(\s+\((?P<anomalous>Anomalous)\))?$')
+
+        # Appl spec Admin. Weight: 10
+        p50 = re.compile(r'^Appl spec Admin.\s+Weight:\s+(?P<appl_spec_te_metric>\d+)$')
 
         in_extended_affinity = False
         in_include_all = False
@@ -1163,6 +1167,13 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
                     standard_app_dict["appl_spec_uni_link_loss"]["anomalous"] = True
                 continue 
             
+            # Appl spec Admin. Weight: 10
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                standard_app_dict["appl_spec_te_metric"] = int(group["appl_spec_te_metric"])
+                continue
+
         return result_dict
 
 class ShowIsisDatabase(ShowIsisDatabaseSuperParser, ShowIsisDatabaseSchema):
@@ -1263,10 +1274,10 @@ class ShowIsisNodeSchema(MetaParser):
                     Any(): {
                         "hosts": {
                             Any(): {
-                                "ip_router_id": str,
-                                "ip_router_lsp": int,
-                                "ip_interface_address": str,
-                                "ip_interface_address_lsp": int,
+                                Optional("ip_router_id"): str,
+                                Optional("ip_router_lsp"): int,
+                                Optional("ip_interface_address"): str,
+                                Optional("ip_interface_address_lsp"): int,
                                 Optional("ip_pq_address"): str,
                                 Optional("ip_prefix_sid"): {
                                     "id": int,
@@ -1286,7 +1297,7 @@ class ShowIsisNodeSchema(MetaParser):
                                     "v_flag": int,
                                     "l_flag": int
                                 },
-                                "adj_sid": {
+                                Optional("adj_sid"): {
                                     Any(): {
                                         "lsp": int,
                                         "from_host": str,
@@ -1294,12 +1305,12 @@ class ShowIsisNodeSchema(MetaParser):
                                     }
                                 },
                                 "lsp_index": int,
-                                "srgb": {
+                                Optional("srgb"): {
                                     "start": int,
                                     "range": int,
                                     "lsp": int
                                 },
-                                "srlb": {
+                                Optional("srlb"): {
                                     "start": int,
                                     "range": int,
                                     "lsp": int
@@ -1307,7 +1318,7 @@ class ShowIsisNodeSchema(MetaParser):
                                 "capability": {
                                     "sr": str,
                                     "strict_spf": str,
-                                    "lsp": int
+                                    Optional("lsp"): int
                                 },
                                 Optional("sr_endpoint"): str,
                                 Optional("policy"): {
@@ -1381,7 +1392,7 @@ class ShowIsisNode(ShowIsisNodeSchema):
         p12 = re.compile(r'^SRLB start\[0]: (?P<srlb_start>\d+), SRLB range\[0]: (?P<srlb_range>\d+)\s+\(LSP\s+#(?P<lsp_id>\d+)\)$')
 
         # SR capable: No, Strict-SPF capable: No (LSP #0)
-        p13 = re.compile(r'^SR capable: (?P<sr_capable>\w+), Strict-SPF capable: (?P<strict_spf_capable>\w+)\s+\(LSP\s+#(?P<lsp_id>\d+)\)$')
+        p13 = re.compile(r'^SR capable: (?P<sr_capable>\w+), Strict-SPF capable: (?P<strict_spf_capable>\w+)(\s+\(?LSP\s+#)?(?P<lsp_id>\d+)?\)?$')
 
         # SR end-point: 4.4.4.4
         p14 = re.compile(r'^SR end-point: (?P<sr_endpoint>\d+\.\d+\.\d+\.\d+)$')
@@ -1521,7 +1532,8 @@ class ShowIsisNode(ShowIsisNodeSchema):
                 ret_dict["tag"][tag]["level"][level]["hosts"][host].setdefault("capability", {})
                 ret_dict["tag"][tag]["level"][level]["hosts"][host]["capability"]["sr"] = group["sr_capable"]
                 ret_dict["tag"][tag]["level"][level]["hosts"][host]["capability"]["strict_spf"] = group["strict_spf_capable"]
-                ret_dict["tag"][tag]["level"][level]["hosts"][host]["capability"]["lsp"] = int(group["lsp_id"])
+                if group["lsp_id"]:
+                    ret_dict["tag"][tag]["level"][level]["hosts"][host]["capability"]["lsp"] = int(group["lsp_id"])
                 continue
 
             # SR end-point: 4.4.4.4

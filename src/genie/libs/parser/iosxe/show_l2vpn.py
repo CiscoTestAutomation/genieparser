@@ -1467,13 +1467,13 @@ class ShowL2vpnEvpnEthernetSegmentDetailSchema(MetaParser):
 
     schema = {
         Any(): {
-            'interface': str,
+            'interface': list,
             'redundancy_mode': str,
             'df_wait_time': int,
             'split_horizon_label': int,
             'state': str,
             'encap_type': str,
-            'ordinal': int,
+            'ordinal': Or(int, str),
             'core_isolation': str,
             Optional('rd'): {
                 Any (): {
@@ -1503,9 +1503,9 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         if output is None:
             # Execute command
             if interface:
-                cli_cmd = self.device.execute(self.cli_command[0].format(interface=interface))
+                cli_cmd = self.cli_command[0].format(interface=interface)
             else:
-                cli_cmd = self.device.execute(self.cli_command[1])
+                cli_cmd = self.cli_command[1]
             cli_output = self.device.execute(cli_cmd)
         else:
             cli_output = output
@@ -1514,6 +1514,7 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         p1 = re.compile(r'^EVPN +Ethernet +Segment +ID: +(?P<eth_seg>[0-9a-fA-F\.]+)$')
 
         # Interface:              Po1
+        # Interface:              pw100002 pw100003 pw100005 pw100006
         p2 = re.compile(r'^Interface: +(?P<intf>.*)$')
 
         # Redundancy mode:        all-active
@@ -1526,16 +1527,19 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         p5 = re.compile(r'^Split +Horizon +label: +(?P<sh_label>\d+)$')
 
         # State:                  Ready
-        p6 = re.compile(r'^State: +(?P<state>\w+)$')
+        # State:                  Port Down
+        p6 = re.compile(r'^State: +(?P<state>[\w\(\): ]+)$')
 
         # Encapsulation:          mpls
         p7 = re.compile(r'^Encapsulation: +(?P<encap_type>\w+)$')
 
         # Ordinal:                1
-        p8 = re.compile(r'^Ordinal: +(?P<ordinal>\d+)$')
+        # Ordinal:                Not available
+        p8 = re.compile(r'^Ordinal: +(?P<ordinal>[\d\w ]+)$')
 
         # Core Isolation:         No
-        p9 = re.compile(r'^Core +Isolation: +(?P<core_iso>\w+)$')
+        # Core Isolation:         Yes (error disable)
+        p9 = re.compile(r'^Core +Isolation: +(?P<core_iso>[\w\(\) ]+)$')
 
         # RD:                     4.4.4.3:1
         p10 = re.compile(r'^RD: +(?P<rd>[0-9\.:]+)$')
@@ -1543,13 +1547,19 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         # Export-RTs:           100:2
         p11 = re.compile(r'^Export-RTs: +(?P<export_rt>[0-9: ]+)$')
 
+        #                       1:12 1:13 1:14 1:21 1:22 
+        p11_1 = re.compile(r'^(?P<export_rt>[0-9: ]+)$')
+
         # Forwarder List:         3.3.3.3 4.4.4.3
-        p12 = re.compile(r'^Forwarder +List: +(?P<fwd>[0-9\. /]+)$')
+        # Forwarder List:         
+        p12 = re.compile(r'^Forwarder +List: *(?P<fwd>[0-9\. ]*)$')
 
         parser_dict = {}
 
         if not cli_output:
             return
+
+        export_rts_multiline = False
 
         for line in cli_output.splitlines():
             line = line.strip()
@@ -1562,10 +1572,14 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 continue
 
             #  Interface:              Po1
+            #  Interface:              pw100002 pw100003 pw100005 pw100006
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                eth_seg.update({'interface': Common.convert_intf_name(group['intf'])})
+                intf = group['intf']
+                intf_list = eth_seg.setdefault('interface', [])
+                for item in intf.split():
+                    intf_list.append(Common.convert_intf_name(item))
                 continue
 
             #  Redundancy mode:        all-active
@@ -1589,6 +1603,7 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 eth_seg.update({'split_horizon_label': int(group['sh_label'])})
                 continue
             #  State:                  Ready
+            #  State:                  Port Down
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1601,12 +1616,17 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 eth_seg.update({'encap_type': group['encap_type']})
                 continue
             #  Ordinal:                1
+            #  Ordinal:                Not available
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                eth_seg.update({'ordinal': int(group['ordinal'])})
+                ordinal = group['ordinal']
+                if ordinal.isnumeric():
+                    ordinal = int(ordinal)
+                eth_seg.update({'ordinal': ordinal})
                 continue
             #  Core Isolation:         No
+            #  Core Isolation:         Yes (error disable)
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -1623,21 +1643,33 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
             #    Export-RTs:           100:2
             m = p11.match(line)
             if m:
+                export_rts_multiline = True
                 group = m.groupdict()
                 export_rt = group['export_rt']
                 export_rt_list = rt_dict.setdefault('export_rt', [])
                 for item in export_rt.split():
                     export_rt_list.append(item)
                 continue
+            elif export_rts_multiline:
+                #                       1:12 1:13 1:14 1:21 1:22 
+                m = p11_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    export_rt = group['export_rt']
+                    for item in export_rt.split():
+                        export_rt_list.append(item)
 
             #  Forwarder List:         3.3.3.3 4.4.4.3
+            #  Forwarder List:         
             m = p12.match(line)
             if m:
+                export_rts_multiline = False
                 group = m.groupdict()
                 fwd = group['fwd']
                 fwd_list = eth_seg.setdefault('forwarder_list', [])
-                for item in fwd.split():
-                    fwd_list.append(item) 
+                if fwd:
+                    for item in fwd.split():
+                        fwd_list.append(item) 
                 continue
 
         return parser_dict

@@ -1,0 +1,17 @@
+BGP routing table information for VRF default, address family L2VPN EVPN
+Route Distinguisher: 1004:4    (L3VNI 501004)
+BGP routing table entry for [5]:[0]:[0]:[32]:[100.4.1.1]/224, version 349
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+
+  Advertised path-id 1
+  Path type: internal, path is valid, is best path, no labeled nexthop
+             Imported from 99.99.99.99:10:[5]:[0]:[0]:[32]:[100.4.1.1]/224
+  Gateway IP: 0.0.0.0
+  AS-Path: 4 1 10 33299 51178 47751 {27016} , path sourced external to AS
+    93.93.93.93 (metric 5) from 99.99.99.99 (99.99.99.99)
+      Origin EGP, MED not set, localpref 100, weight 0
+      Received label 501004
+      Extcommunity: RT:3:501004 ENCAP:8 Router MAC:0200.5d5d.5d5d
+
+  Path-id 1 not advertised to any peer

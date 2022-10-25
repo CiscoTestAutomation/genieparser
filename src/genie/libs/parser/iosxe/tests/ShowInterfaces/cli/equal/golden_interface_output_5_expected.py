@@ -4,6 +4,7 @@ expected_output = {
          "port_channel_member":False
       },
       "enabled":True,
+      "is_deleted": False,
       "line_protocol":"down",
       "oper_status":"down",
       "type":"RP management port",

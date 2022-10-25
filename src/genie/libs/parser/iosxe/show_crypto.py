@@ -34,6 +34,7 @@ IOSXE parsers for the following show commands:
    * show crypto gdoi ks identifier detail
    * show crypto gdoi ks coop identifier detail
    * show crypto ikev2 psh
+   * show crypto ikev2 performance
 """
 
 # Python
@@ -12669,3 +12670,549 @@ class ShowCryptoGdoiKsMembersSummary(ShowCryptoGdoiKsMembersSummarySchema):
                 memeber_dict.update({'rekey_ack_missed':int(group['rekey_ack_missed'])})
                 continue
         return master_dict
+
+
+# ========================================
+# Schema for
+#   'show crypto key mypubkey all'
+#   'show crypto key mypubkey rsa'
+#   'show crypto key mypubkey ec'
+#   'show crypto key mypubkey rsa {key_name}'
+#   'show crypto key mypubkey ec {key_name}'
+# ========================================
+class ShowCryptoKeyMypubkeyMasterSchema(MetaParser):
+    """
+    Schema for
+        * 'show crypto key mypubkey all'
+        * 'show crypto key mypubkey ec'
+        * 'show crypto key mypubkey rsa'
+        * 'show crypto key mypubkey ec {key_name}'
+        * 'show crypto key mypubkey rsa {key_name}'
+    """
+    schema = {
+        "keys": {
+            Any(): {
+                "key_name": str,
+                "key_type": {
+                    Any(): {
+                        "key": str,
+                        "key_data": list,
+                        Optional("redundancy"): str,
+                        Optional("storage_device"): str,
+                        Optional("usage"): str
+                    }
+                },
+                "keypairgen_time": str
+            }
+        }
+    }
+
+# ========================================
+#   Parser for 'show crypto key mypubkey all'
+# ========================================
+
+
+class ShowCryptoKeyMypubkeyAll(ShowCryptoKeyMypubkeyMasterSchema):
+    """Parser for show crypto key mypubkey all"""
+
+    cli_command = 'show crypto key mypubkey all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # % Key pair was generated at: 06:51:40 UTC Aug 30 2022
+        p1 = re.compile(r'^% Key pair.*: +(?P<keypairgen_time>[\S\s]+)$')
+
+        # Key name: test
+        p2 = re.compile(r'^Key name: +(?P<key_name>\S+)$')
+
+        # Key type: RSA KEYS
+        p3 = re.compile(r'^Key type: +(?P<key_type>[\s\S]+)$')
+
+        # Storage Device: private-config
+        p4 = re.compile(r'^Storage Device: +(?P<storage_device>[\s\S]+)$')
+
+        # Usage: General Purpose Key
+        p5 = re.compile(r'^Usage: +(?P<usage>[\s\S]+)$')
+
+        # Key is not exportable. Redundancy enabled.
+        p6 = re.compile(
+            r'^Key is +(?P<key>[not exportable|exportable]+). +Redundancy +(?P<redundancy>[enabled|not enabled]+).$'
+        )
+
+        # Key is not exportable.
+        p7 = re.compile(r'^Key is +(?P<key>[not exportable|exportable]+).$')
+
+        # F2BC3B97 278C61D5 6700528C 59FF9BD2 A01F83E1 0123A7C5 638D212C FCA5AD92
+        # C907010D 1D1776D8 09DDECE9 80A88D97 109A4C88 B0F85889 F379B628 4E9E0434
+        p8 = re.compile(r'^(?P<key_data>[0-9A-Z\s]+)$')
+
+        ret_dict = {}
+        entry = 1
+        for line in output.splitlines():
+            line = line.strip()
+
+            # % Key pair was generated at: 06:51:40 UTC Aug 30 2022
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                entry_dict = ret_dict.setdefault('keys',
+                                                 {}).setdefault(entry, {})
+                entry_dict.update(groups)
+                entry += 1
+                continue
+
+            # Key name: test
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                entry_dict.update(groups)
+                continue
+
+            # Key type: RSA KEYS
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                key_dict = entry_dict.setdefault("key_type", {}).setdefault(
+                    groups['key_type'], {})
+                continue
+
+            # Storage Device: private-config
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key_dict.update(group)
+                continue
+
+            # Usage: General Purpose Key
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                key_dict.update(groups)
+                continue
+
+            # Key is not exportable. Redundancy enabled.
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                key_dict.update(groups)
+                continue
+
+            # Key is not exportable.
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                key_dict.update(groups)
+                continue
+
+
+            # F2BC3B97 278C61D5 6700528C 59FF9BD2 A01F83E1 0123A7C5 638D212C FCA5AD92
+            # C907010D 1D1776D8 09DDECE9 80A88D97 109A4C88 B0F85889 F379B628 4E9E0434
+            # B9020301 0001
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                key_data = key_dict.setdefault("key_data", [])
+                key_data.append(groups['key_data'])
+                continue
+
+        return ret_dict
+
+
+# ===================================================
+#  Parser for 'show crypto key mypubkey rsa'
+# ===================================================
+
+
+class ShowCryptoKeyMypubkeyRsa(ShowCryptoKeyMypubkeyAll):
+    ''' Parser for:
+        show crypto key mypubkey rsa
+    '''
+    cli_command = 'show crypto key mypubkey rsa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+
+# ===================================================
+#  Parser for 'show crypto key mypubkey ec'
+# ===================================================
+
+
+class ShowCryptoKeyMypubkeyEc(ShowCryptoKeyMypubkeyAll):
+    ''' Parser for:
+        show crypto key mypubkey ec
+    '''
+    cli_command = 'show crypto key mypubkey ec'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+
+# ===================================================
+#  Parser for 'show crypto key mypubkey rsa {key_name}'
+# ===================================================
+
+
+class ShowCryptoKeyMypubkeyRsaKeyName(ShowCryptoKeyMypubkeyAll):
+    ''' Parser for:
+        show crypto key mypubkey rsa {key_name}
+    '''
+    cli_command = 'show crypto key mypubkey rsa {key_name}'
+
+    def cli(self, key_name='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+
+# ===================================================
+#  Parser for 'show crypto key mypubkey ec {key_name}'
+# ===================================================
+
+
+class ShowCryptoKeyMypubkeyEcKeyName(ShowCryptoKeyMypubkeyAll):
+    ''' Parser for:
+        show crypto key mypubkey ec {key_name}
+    '''
+    cli_command = 'show crypto key mypubkey ec {key_name}'
+
+    def cli(self, key_name='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(output=output)
+
+
+# =================================================
+#  Schema for 'show crypto ikev2 performance'
+# =================================================
+class ShowCryptoIkev2PerformanceSchema(MetaParser):
+    """Schema for show crypto ikev2 performance """
+    schema = {
+        "crypto_isakmp_performance_stats": {
+            Any(): {
+                Any(): {
+                    'sample_size': int,
+                    'tps_avg': int,
+                    'tps_min': int,
+                    'tps_max': int,
+                    'cpu_avg': int,
+                    'cpu_min': int,
+                    'cpu_max': int,
+                }
+            }
+        },
+        Any(): {
+            Any(): {
+                "sample_size": int,
+                "avg": int,
+                "min": int,
+                "max": int,
+            }
+        },
+        "summary": {
+            Any(): {
+                "exchange_setup_value": int,
+                Any(): {
+                    "value": int,
+                    "percentage": int
+                }
+            }
+        }
+    }
+
+# ============================================
+#   Parser for 'show crypto ikev2 performance'
+# ============================================
+class ShowCryptoIkev2Performance(ShowCryptoIkev2PerformanceSchema):
+    """Parser for show crypto ikev2 performance"""
+
+    cli_command = 'show crypto ikev2 performance'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Crypto ISAKMP Performance Stats (tps):
+        # Crypto ISAKMP Packet Stats (pps):
+        # Crypto IKEv2 Packet Queue Stats (milliseconds):
+        # Crypto ISAKMP Protocol Stats (microseconds):
+        # Crypto Engine Stats (microseconds):
+        # External Service Stats (microseconds):
+        # Summary (microsecs):
+        p1 = re.compile(r"^(?P<stats_type>[\S\s]+)\(\w+\):$")
+
+        # Ingress:               SampleSize tps/avg min max cpu/avg min max
+        # Egress:                SampleSize tps/avg min max cpu/avg min max
+        p2 = re.compile(r"^(?P<tps>Ingress|Egress):.*$")
+
+        # IKE Established                 0       0   0   0       0   0   0
+        # IPSEC Child Establishe          0       0   0   0       0   0   0
+        # IKE Child Established           0       0   0   0       0   0   0
+        # IKE Established                 0       0   0   0       0   0   0
+        # IPSEC Child Establishe          0       0   0   0       0   0   0
+        # IKE Child Established           0       0   0   0       0   0   0
+        p3 = re.compile(r"^(?P<type>.*Est.*)\s+(?P<sample_size>\S+)\s+(?P<tps_avg>\S+)\s+(?P<tps_min>\S+)\s+(?P<tps_max>\S+)\s+(?P<cpu_avg>\S+)+\s+(?P<cpu_min>\S+)\s+(?P<cpu_max>\S+)$")
+
+        # Incoming IKE Packets            0       0   0   0
+        # -Init                           0       0   0   0
+        # -Auth                           0       0   0   0
+        # NO NAME                         0       0   0   0
+        # NO NAME                         0       0   0   0
+        # -Child                          0       0   0   0
+        # -Info                           0       0   0   0
+        # -Default                        0       0   0   0
+        # Egress IKE Attempted            0       0   0   0
+        # Packet Queue[0]             73614          0          0       1008
+        # Packet Queue[1]                 0          0          0          0
+        # Packet Queue[2]                 0          0          0          0
+        # Packet Queue[3]                 0          0          0          0
+        # Packet Queue[4]                 0          0          0          0
+        # Packet Queue[5]                 0          0          0          0
+        # Packet Queue[6]                 0          0          0          0
+        # R INIT PROC                     0          0          0          0
+        # I INIT_PROC                     0          0          0          0
+        # R AUTH PROC                     0          0          0          0
+        # I AUTH PROC                     0          0          0          0
+        # R INIT INT                      0          0          0          0
+        # I AUTH INT                      0          0          0          0
+        # R AUTH INT                      0          0          0          0
+        # I INIT SEND                     0          0          0          0
+        # R INIT SEND                     0          0          0          0
+        # I AUTH SEND                     0          0          0          0
+        # R AUTH SEND                     0          0          0          0
+        # R INIT Wire                     0          0          0          0
+        # I AUTH Wire                     0          0          0          0
+        # R AUTH Wire                     0          0          0          0
+        # R COOKIE INT                    0          0          0          0
+        # R COOKIE SEND                   0          0          0          0
+        # R KE INT                        0          0          0          0
+        # R KE SEND                       0          0          0          0
+        # I IKE CHILD PROC                0          0          0          0
+        # I IPSEC CHILD PROC              0          0          0          0
+        # R IKE CHILD PROC                0          0          0          0
+        # R IPSEC CHILD PROC              0          0          0          0
+        # R IKE CHILD Wire                0          0          0          0
+        # R IPSEC CHILD Wire              0          0          0          0
+        # I IKE CHILD SEND                0          0          0          0
+        # I IPSEC CHILD SEND              0          0          0          0
+        # R IKE CHILD SEND                0          0          0          0
+        # R IPSEC CHILD SEND              0          0          0          0
+        # R IKE CHILD INT                 0          0          0          0
+        # R IPSEC CHILD INT               0          0          0          0
+        # I IKE CHILD INT                 0          0          0          0
+        # I IPSEC CHILD INT               0          0          0          0
+        # DH Create                       0          0          0          0
+        # DH Share Secret                 0          0          0          0
+        # DH Delete                       0          0          0          0
+        # Create IKE SA                   0          0          0          0
+        # Delete IKE SA                   0          0          0          0
+        # PS Key Auth Generation          0          0          0          0
+        # RSA Public Key Auth Ge          0          0          0          0
+        # IKE Encrypt                     0          0          0          0
+        # IKE Decrypt                     0          0          0          0
+        # IKE HMAC                        0          0          0          0
+        # IPSEC Create Key                0          0          0          0
+        # IPSEC Delete SA                 0          0          0          0
+        # Public Key Sign                 0          0          0          0
+        # Public Key Verify               0          0          0          0
+        # Public Key Encrypt              0          0          0          0
+        # Public Key Decrypt              0          0          0          0
+        # Get IKE Policy                  0          0          0          0
+        # Get Pre-shared Key              0          0          0          0
+        # Get Config Mode Data            0          0          0          0
+        # Set Config Mode Data            0          0          0          0
+        # Received EAP                    0          0          0          0
+        # Recieved Client EAP             0          0          0          0
+        # Verify Certificate              0          0          0          0
+        # Fetch Certificate               0          0          0          0
+        # Get IPSEC Policy                0          0          0          0
+        # NO NAME                         0          0          0          0
+        # Redirect Check                  0          0          0          0
+        # Redirect Acceptance Ch          0          0          0          0
+        # NO NAME                         0          0          0          0
+        # NO NAME                         0          0          0          0
+        p5 = re.compile(r"^(?P<stats_type>[\S\s]+)\s+(?P<sample_size>\d+)\s+(?P<avg>\d+)\s+(?P<min>\d+)\s+(?P<max>\d+)$")
+
+        # Main Exchange Setup:            0
+        # Child Exchange Setup:            0
+        p6 = re.compile(r"^(?P<exchange_setup>Main|Child).*:\s+(?P<exchange_value>\d+)$")
+
+        # Child Processing:                0 -> 0%
+        # Transmission:                    0 -> 0%
+        # Main Processing:                0 -> 0%
+        # On IPC Queue:                   0 -> 0%
+        # Transmission:                   0 -> 0%
+        p7 = re.compile(r"^(?P<processing_type>[\w\s]+):\s+(?P<value>\d+)\s+->\s+(?P<percentage>\d+)%$")
+
+        ret_dict = {}
+        var = 0
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Crypto ISAKMP Performance Stats (tps):
+            # Crypto ISAKMP Packet Stats (pps):
+            # Crypto IKEv2 Packet Queue Stats (milliseconds):
+            # Crypto ISAKMP Protocol Stats (microseconds):
+            # Crypto Engine Stats (microseconds):
+            # External Service Stats (microseconds):
+            # Summary (microsecs):
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                stats_type = group['stats_type'].lower().strip().replace(' ', '_')
+                crypto_perf_dict = ret_dict.setdefault(stats_type,  {})
+                continue
+
+            # Ingress:               SampleSize tps/avg min max cpu/avg min max
+            # Egress:                SampleSize tps/avg min max cpu/avg min max
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                tps_type = group['tps'].lower().replace(' ', '_')
+                group_dict = crypto_perf_dict.setdefault(tps_type, {})
+                continue
+
+            # IKE Established                 0       0   0   0       0   0   0
+            # IPSEC Child Establishe          0       0   0   0       0   0   0
+            # IKE Child Established           0       0   0   0       0   0   0
+            # IKE Established                 0       0   0   0       0   0   0
+            # IPSEC Child Establishe          0       0   0   0       0   0   0
+            # IKE Child Established           0       0   0   0       0   0   0
+            m =  p3.match(line)
+            if m:
+                group = m.groupdict()
+                proto_type = group['type'].lower().strip().replace(' ', '_')
+                proto_dict = group_dict.setdefault(proto_type, {})
+                proto_dict.update({'sample_size': int(group['sample_size'])})
+                proto_dict.update({'tps_avg': int(group['tps_avg'])})
+                proto_dict.update({'tps_min': int(group['tps_min'])})
+                proto_dict.update({'tps_max': int(group['tps_max'])})
+                proto_dict.update({'cpu_avg': int(group['cpu_avg'])})
+                proto_dict.update({'cpu_min': int(group['cpu_min'])})
+                proto_dict.update({'cpu_max': int(group['cpu_max'])})
+                continue
+
+            # Incoming IKE Packets            0       0   0   0
+            # -Init                           0       0   0   0
+            # -Auth                           0       0   0   0
+            # NO NAME                         0       0   0   0
+            # NO NAME                         0       0   0   0
+            # -Child                          0       0   0   0
+            # -Info                           0       0   0   0
+            # -Default                        0       0   0   0
+            # Egress IKE Attempted            0       0   0   0
+            # Packet Queue[0]             75416          0          0       1008
+            # Packet Queue[1]                 0          0          0          0
+            # Packet Queue[2]                 0          0          0          0
+            # Packet Queue[3]                 0          0          0          0
+            # Packet Queue[4]                 0          0          0          0
+            # Packet Queue[5]                 0          0          0          0
+            # Packet Queue[6]                 0          0          0          0
+            # R INIT PROC                     0          0          0          0
+            # I INIT_PROC                     0          0          0          0
+            # R AUTH PROC                     0          0          0          0
+            # I AUTH PROC                     0          0          0          0
+            # R INIT INT                      0          0          0          0
+            # I AUTH INT                      0          0          0          0
+            # R AUTH INT                      0          0          0          0
+            # I INIT SEND                     0          0          0          0
+            # R INIT SEND                     0          0          0          0
+            # I AUTH SEND                     0          0          0          0
+            # R AUTH SEND                     0          0          0          0
+            # R INIT Wire                     0          0          0          0
+            # I AUTH Wire                     0          0          0          0
+            # R AUTH Wire                     0          0          0          0
+            # R COOKIE INT                    0          0          0          0
+            # R COOKIE SEND                   0          0          0          0
+            # R KE INT                        0          0          0          0
+            # R KE SEND                       0          0          0          0
+            # I IKE CHILD PROC                0          0          0          0
+            # I IPSEC CHILD PROC              0          0          0          0
+            # R IKE CHILD PROC                0          0          0          0
+            # R IPSEC CHILD PROC              0          0          0          0
+            # R IKE CHILD Wire                0          0          0          0
+            # R IPSEC CHILD Wire              0          0          0          0
+            # I IKE CHILD SEND                0          0          0          0
+            # I IPSEC CHILD SEND              0          0          0          0
+            # R IKE CHILD SEND                0          0          0          0
+            # R IPSEC CHILD SEND              0          0          0          0
+            # R IKE CHILD INT                 0          0          0          0
+            # R IPSEC CHILD INT               0          0          0          0
+            # I IKE CHILD INT                 0          0          0          0
+            # I IPSEC CHILD INT               0          0          0          0
+            # DH Create                       0          0          0          0
+            # DH Share Secret                 0          0          0          0
+            # DH Delete                       0          0          0          0
+            # Create IKE SA                   0          0          0          0
+            # Delete IKE SA                   0          0          0          0
+            # PS Key Auth Generation          0          0          0          0
+            # RSA Public Key Auth Ge          0          0          0          0
+            # IKE Encrypt                     0          0          0          0
+            # IKE Decrypt                     0          0          0          0
+            # IKE HMAC                        0          0          0          0
+            # IPSEC Create Key                0          0          0          0
+            # IPSEC Delete SA                 0          0          0          0
+            # Public Key Sign                 0          0          0          0
+            # Public Key Verify               0          0          0          0
+            # Public Key Encrypt              0          0          0          0
+            # Public Key Decrypt              0          0          0          0
+            # Get IKE Policy                  0          0          0          0
+            # Get Pre-shared Key              0          0          0          0
+            # Get Config Mode Data            0          0          0          0
+            # Set Config Mode Data            0          0          0          0
+            # Received EAP                    0          0          0          0
+            # Recieved Client EAP             0          0          0          0
+            # Verify Certificate              0          0          0          0
+            # Fetch Certificate               0          0          0          0
+            # Get IPSEC Policy                0          0          0          0
+            # NO NAME                         0          0          0          0
+            # Redirect Check                  0          0          0          0
+            # Redirect Acceptance Ch          0          0          0          0
+            # NO NAME                         0          0          0          0
+            # NO NAME                         0          0          0          0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                stats_type = group['stats_type'].lower().strip().replace(' ', '_').\
+                        replace('-', "").replace('[', "").replace(']', "")
+                if stats_type == 'no_name':
+                    stats_type = stats_type + '_' + str(var)
+                    var += 1
+                ike_dict = crypto_perf_dict.setdefault(stats_type, {})
+                ike_dict.update({'sample_size': int(group['sample_size'])})
+                ike_dict.update({'avg': int(group['avg'])})
+                ike_dict.update({'min': int(group['min'])})
+                ike_dict.update({'max': int(group['max'])})
+                continue
+
+            # Child Exchange Setup:            0
+            # Main Exchange Setup:            0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                exchange_setup = group['exchange_setup'].lower().strip()
+                exchange_dict = crypto_perf_dict.setdefault(exchange_setup, {})
+                exchange_dict.update({'exchange_setup_value': int(group['exchange_value'])})
+                continue
+
+            # Child Processing:                0 -> 0%
+            # Transmission:                    0 -> 0%
+            # Main Processing:                0 -> 0%
+            # On IPC Queue:                   0 -> 0%
+            # Transmission:                   0 -> 0%
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                processing_type = group['processing_type'].lower().strip().replace(' ', '_')
+                process_dict = exchange_dict.setdefault(processing_type, {})
+                process_dict.update({'value':  int(group['value'])})
+                process_dict.update({'percentage':  int(group['percentage'])})
+                continue
+
+        return ret_dict
