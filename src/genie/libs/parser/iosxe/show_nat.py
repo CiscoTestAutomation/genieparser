@@ -19,6 +19,7 @@ IOSXE parser for the following show commands:
    * show nat64 prefix stateful global
    * show nat64 prefix stateful interfaces,
    * show nat64 prefix stateful interfaces prefix {prefix}
+   * show ipv6 nd ra nat64-prefix
    
 '''
 # Python
@@ -1371,3 +1372,53 @@ class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSch
                 continue
                 
         return ret_dict
+        
+        
+class ShowIpv6NdRaPrefixSchema(MetaParser):
+    """Schema for  show ipv6 nd ra nat64-prefix"""
+
+    schema = {
+            'index':{
+                Any():{
+                    'prefix': str,
+                    'prefix_length': str,
+                    'time': int,
+                    'interface': str
+                }
+            }  
+    }
+    
+class ShowIpv6NdRaPrefix(ShowIpv6NdRaPrefixSchema):
+    """
+    show ipv6 nd ra nat64-prefix
+    """
+
+    cli_command = 'show ipv6 nd ra nat64-prefix'                 
+    
+    def cli(self, output=None):
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}        
+        index = 1
+        
+        # 5000::/32 100  GigabitEthernet29
+        p1 = re.compile(r'^(?P<prefix>[\w\:\.]+)\s+(?P<prefix_length>[\/]+[\d]+)\s+(?P<time>\d+)\s+(?P<interface>\S+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 5000::/32 100  GigabitEthernet29
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict['prefix'] = group['prefix']
+                index_dict['prefix_length'] = group['prefix_length']
+                index_dict['time'] = int(group['time'])
+                index_dict['interface'] = group['interface']
+                index += 1
+                continue
+                
+        return ret_dict                

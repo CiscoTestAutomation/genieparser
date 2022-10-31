@@ -99,6 +99,14 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active feature ipsec datapath drops all'
     * 'show platform hardware qfp active datapath pmd ifdev'
     * 'show platform hardware throughput level'
+    * 'show platform hardware fed active qos queue config interface'
+    * 'show platform hardware fed switch <no> qos queue config interface'
+    * 'show platform hardware iomd <slot> qos port <no> ingress queue stats'
+    * 'show platform hardware iomd switch <switch_no> <slot> qos port <no> ingress queue stats'
+    * 'show platform hardware iomd <slot> portgroups'
+    * 'show platform hardware iomd switch <switch_no> <slot> portgroups'
+    * 'show platform hardware fed active fwd-asic register read register-name xyz asic n core m'
+    * 'show platform hardware fed switch x fwd-asic register read register-name xyz asic n core m'
     '''
 
 # Python
@@ -3886,6 +3894,33 @@ class ShowModuleSchema(MetaParser):
         Optional('number_of_mac_address'):int,
         Optional('chassis_mac_address_lower_range'):str,
         Optional('chassis_mac_address_upper_range'):str,
+        Optional('switches'):{
+            int:{
+                Optional('module'):{
+                    int:{
+                        'ports':int,
+                        'card_type':str,
+                        'model':str,
+                        'serial':str,
+                        'mac_address':str,
+                        'hw':str,
+                        'fw':str,
+                        'sw':str,
+                        'status':str,
+                        Optional('redundancy_role'):str,
+                        Optional('operating_redundancy_mode'):str,
+                        Optional('configured_redundancy_mode'):str
+                    },
+                },              					
+            },
+        },
+        Optional('chassis'): {
+            int:{
+                'number_of_mac_address':int,
+                'chassis_mac_address_lower_range':str,
+                'chassis_mac_address_upper_range':str,
+            },
+        },			
     }
 
 
@@ -3900,6 +3935,7 @@ class ShowModule(ShowModuleSchema):
 
         # initial return dictionary
         ret_dict = {}
+        switch_flag = False
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<switch>\d+) *'
@@ -3930,8 +3966,15 @@ class ShowModule(ShowModuleSchema):
 
         p4=re.compile(r'^(?P<mod>\d+) *(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+)$')
 
-        #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff
+        # Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff
         p5=re.compile(r'^Chassis MAC address range: (?P<number_of_mac_address>\d+) addresses from (?P<chassis_mac_address_lower_range>.*) to (?P<chassis_mac_address_upper_range>.*)$')
+		
+        # Switch Number 1
+        p6 = re.compile(r'^Switch\s+Number\s+(?P<switch_number>\d+)$')
+		
+        # Chassis 1 MAC address range: 512 addresses from 40b5.c1ff.ee00 to 40b5.c1ff.efff
+        p7=re.compile(r'^Chassis\s*(?P<chassis>\d+)\s*MAC address range: (?P<number_of_mac_address>\d+) addresses from (?P<chassis_mac_address_lower_range>.*) to (?P<chassis_mac_address_upper_range>.*)$')
+		
 
         for line in output.splitlines():
             line = line.strip()
@@ -3947,6 +3990,14 @@ class ShowModule(ShowModuleSchema):
                 switch_dict.update({k: v.lower() for k, v in group.items()})
                 continue
 
+            # Switch Number 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                switch_dict = ret_dict.setdefault('switches', {}).setdefault(int(group['switch_number']), {}) 
+                switch_flag=True
+
+
             # Chassis Type: C9500X-28C8D
 
             # Mod Ports Card Type                                   Model          Serial No.
@@ -3956,7 +4007,10 @@ class ShowModule(ShowModuleSchema):
             if m:
                 group = m.groupdict()
                 switch = group.pop('mod')
-                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                if switch_flag:
+                    switch_dict=switch_dict.setdefault('module', {}).setdefault(int(switch), {})
+                else:
+                    switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 switch_dict['ports']=int(group['ports'])
                 continue
@@ -3969,7 +4023,10 @@ class ShowModule(ShowModuleSchema):
             if m:
                 group = m.groupdict()
                 switch = group.pop('mod')
-                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                if switch_flag:
+                    pass
+                else:
+                    switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 continue
 
@@ -3979,8 +4036,11 @@ class ShowModule(ShowModuleSchema):
             m=p4.match(line)
             if m:
                 group = m.groupdict()
-                switch = group.pop('mod')
-                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                switch = group.pop('mod')	
+                if switch_flag:
+                    pass
+                else:
+                    switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})				
                 switch_dict.update({k: v.lower().strip() for k, v in group.items()})
                 continue
 
@@ -3992,6 +4052,18 @@ class ShowModule(ShowModuleSchema):
                 ret_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
                 continue
 
+            # Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff
+            m=p7.match(line)
+            if m:
+                group=m.groupdict()
+                if switch_flag:
+                    chassis_dict = ret_dict.setdefault('chassis', {}).setdefault(int(group['chassis']), {})
+                    chassis_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
+                    chassis_dict['chassis_mac_address_lower_range'] = group['chassis_mac_address_lower_range']
+                    chassis_dict['chassis_mac_address_upper_range'] = group['chassis_mac_address_upper_range']
+		
+                continue
+				
         return ret_dict
 
 
@@ -21571,3 +21643,746 @@ class ShowPlatformSoftwareFedSwitchActiveAclUsage(ShowPlatformSoftwareFedSwitchA
                 direction['entries_used'] = int(group['entries_used'])
                 continue
         return ret_dict
+
+# ======================================================================================
+# Parser Schema for 'show platform hardware qfp active infrastructure exmem statistics'
+# ======================================================================================
+
+class ShowPlatformHardwareQfpActiveInfrastructureExmemStatisticsSchema(MetaParser):
+    """Schema for "show platform hardware qfp active infrastructure exmem statistics" """
+
+    schema = {
+        'qfp_exmem_stats': {
+            'type': {
+                Any(): {
+                    'qfp': int,
+                    'total': int,
+                    'inuse': int,
+                    'free': int,
+                    'lowest_free_water_mark': int
+                }
+            }
+        }
+    }
+
+# ===============================================================================
+# Parser for 'show platform hardware qfp active infrastructure exmem statistics'
+# ===============================================================================
+
+class ShowPlatformHardwareQfpActiveInfrastructureExmemStatistics(
+    ShowPlatformHardwareQfpActiveInfrastructureExmemStatisticsSchema):
+    """ parser for "show platform hardware qfp active infrastructure exmem statistics" """
+
+    cli_command = "show platform hardware qfp active infrastructure exmem statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # Type: Name: DRAM, QFP: 0
+        # Type: Name: IRAM, QFP: 0
+        # Type: Name: SRAM, QFP: 0
+        p1 = re.compile(r'^Type:\sName:\s(?P<type_name>\w+),\sQFP:\s(?P<qfp>\d+)$')
+
+        # Total: 536870912
+        p2 = re.compile(r'^Total:\s(?P<total>\d+)$')
+
+        # InUse: 423936
+        p3 = re.compile(r'^InUse:\s(?P<inuse>\d+)$')
+
+        # Free: 1673216
+        p4 = re.compile(r'^Free:\s(?P<free>\d+)$')
+
+        # Lowest free water mark: 1673216
+        p5 = re.compile(r'^Lowest\sfree\swater\smark:\s(?P<lowest_free_water_mark>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Type: Name: DRAM, QFP: 0
+            # Type: Name: IRAM, QFP: 0
+            # Type: Name: SRAM, QFP: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                type_name = group['type_name'].lower()
+                qfp_exmem_stats_dict = parsed_dict.setdefault('qfp_exmem_stats', {}). \
+                    setdefault('type', {})
+                type_dict = qfp_exmem_stats_dict.setdefault(type_name, {})
+                type_dict['qfp'] = int(group['qfp'])
+                continue
+
+            # Total: 536870912
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['total'] = int(group['total'])
+                continue
+
+            # InUse: 423936
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['inuse'] = int(group['inuse'])
+                continue
+            
+            # Free: 1673216
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['free'] = int(group['free'])
+                continue
+
+            # Lowest free water mark: 1673216
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['lowest_free_water_mark'] = int(group['lowest_free_water_mark'])
+                continue
+
+        return parsed_dict
+
+# ================================================================================
+# Parser Schema for 'show platform hardware fed active qos queue config interface'
+#            or 'show platform hardware fed switch <no> qos queue config interface'
+# ================================================================================
+class ShowPlatformHardwareFedActiveQosQueueConfigInterfaceSchema(MetaParser):
+    """Schema for show platform hardware fed active qos queue config interface"""
+
+    schema = {
+        Optional('asic'): int,
+        Optional('core'): int,
+        'data_port': int,
+        'gpn':  int,
+        Optional('linkspeed'): str,
+        'afd': str,
+        Optional('flatafd'): str,
+        'qosmap': int,
+        'hw_queues': {
+            'min': int,
+            'max': int,
+        },
+        'drainfast': str,
+        'portsoftstart': {
+            'min': int,
+            'max': int,
+        },
+        Optional('buffersharing'): str,
+        'queue': {
+            int: {
+                'dts': int,
+                'hardmax': int,
+                'softmax': int,
+                'portsmin': int,
+                'glblsmin': int,
+                'portstend': int,
+                Optional('qenable'): str,
+                'priority': int,
+                'schedule_mode': str,
+                'weight': int,
+                'shaping_step': int,
+                Optional('sharpedweight'): int,
+                'weight0': int,
+                'max_th0': int,
+                'min_th0': int,
+                'weight1': int,
+                'max_th1': int,
+                'min_th1': int,
+                'weight2': int,
+                'max_th2': int,
+                'min_th2': int,
+            },
+        },
+        Optional('port'):{
+            'priority': int,
+            'schedule_mode': str,
+            'weight': int,
+            'shaping_step': int,
+            Optional('sharpedweight'): int,
+            },
+    }
+
+# ================================================================================
+# Parser for 'show platform hardware fed active qos queue config interface'
+#         or 'show platform hardware fed switch <no> qos queue config interface'
+# ================================================================================
+class ShowPlatformHardwareFedActiveQosQueueConfigInterface(ShowPlatformHardwareFedActiveQosQueueConfigInterfaceSchema):
+    cli_command = ['show platform hardware fed active qos queue config interface {interface}',
+                   'show platform hardware fed switch {switch_num} qos queue config interface {interface}']
+
+    def cli(self, interface, switch_num=None, output=None):
+        if output is None:
+            if switch_num is None:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1].format(switch_num=switch_num,interface=interface)
+            
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        '''
+        Asic:1 Core:1 DATA Port:70 GPN:325 LinkSpeed:0xa
+        AFD:Disabled FlatAFD:Disabled QoSMap:0 HW Queues: 560 - 567
+        '''
+        p1 = re.compile(r'^Asic:(?P<asic>\d+)\s+Core:(?P<core>\d+)\s+DATA Port:(?P<data_port>\d+)\s+GPN:(?P<gpn>\d+)\s+LinkSpeed:(?P<linkspeed>\S+)$')
+        p2 = re.compile(r'^AFD:(?P<afd>\S+)\s+FlatAFD:(?P<flatafd>\S+)\s+QoSMap:(?P<qosmap>\d+)\s+HW Queues:\s*(?P<hw_queue1>\d+)\s*-\s*(?P<hw_queue2>\d+)$')
+        
+        '''
+        DATA Port:0 GPN:97 AFD:Disabled QoSMap:0 HW Queues: 0 - 7
+        '''
+        p2_1 = re.compile(r'^DATA Port:(?P<data_port>\d+)\s+GPN:(?P<gpn>\d+)\s+AFD:(?P<afd>\S+)\s+QoSMap:(?P<qosmap>\d+)\s+HW Queues:\s*(?P<hw_queue1>\d+)\s*-\s*(?P<hw_queue2>\d+)$')
+        
+        '''
+        DrainFast:Disabled PortSoftStart:3 - 42000 BufferSharing:Disabled
+        '''
+        p3 = re.compile(r'^DrainFast:(?P<drainfast>\S+)\s+PortSoftStart:(?P<portsoftstart1>\d+)\s*-\s*(?P<portsoftstart2>\d+)\s+BufferSharing:(?P<buffersharing>\S+)$')
+        
+        '''
+        DrainFast:Disabled PortSoftStart:2 - 2016
+        '''
+        p3_1 = re.compile(r'^DrainFast:(?P<drainfast>\S+)\s+PortSoftStart:(?P<portsoftstart1>\d+)\s*-\s*(?P<portsoftstart2>\d+)$')
+
+        '''
+           DTS  Hardmax  Softmax   PortSMin  GlblSMin  PortStEnd   QEnable
+          ----- --------  --------  --------  --------  ---------  -------
+        0   1  2   224   5 42000   0     0   0     0   1 42000      En
+        1   1  0     0   5 42000   1  1312   0     0   1 42000      En
+        '''
+        p4 = re.compile(r'^(?P<q_no>\d+)\s+(?P<dts>\d+)\s+(\d+)\s+(?P<hardmax>\d+)\s+'\
+                         '(\d+)\s+(?P<softmax>\d+)\s+(\d+)\s+(?P<portsmin>\d+)\s+(\d+)\s+(?P<glblsmin>\d+)\s+'\
+                         '(\d+)\s+(?P<portstend>\d+)\s+(?P<qenable>\S+)$'
+        )
+
+        '''
+          DTS  Hardmax  Softmax   PortSMin  GlblSMin  PortStEnd  
+          ----- --------  --------  --------  --------  --------- 
+        0   1  2   224   5 42000   0     0   0     0   1 42000    
+        1   1  0     0   5 42000   1  1312   0     0   1 42000    
+        '''
+        p4_1 = re.compile(r'^(?P<q_no>\d+)\s+(?P<dts>\d+)\s+(\d+)\s+(?P<hardmax>\d+)\s+'\
+                         '(\d+)\s+(?P<softmax>\d+)\s+(\d+)\s+(?P<portsmin>\d+)\s+(\d+)\s+(?P<glblsmin>\d+)\s+'\
+                         '(\d+)\s+(?P<portstend>\d+)$'
+        )
+
+        '''
+        Priority   Shaped/shared   weight  shaping_step  sharpedWeight
+        --------   -------------   ------  ------------   -------------
+        0      0     Shared            50           0           0
+
+        '''
+        p5 = re.compile(r'^(?P<q_no>\d+)\s+(?P<priority>\d+)\s+(?P<mode>\S+)\s+'\
+                         '(?P<weight>\d+)\s+(?P<shaping_step>\d+)\s+(?P<sharpedweight>\d+)$'
+        )
+
+        '''
+        Priority   Shaped/shared   weight  shaping_step 
+        --------   -------------   ------  ------------  
+        0      0     Shared            50           0   
+
+        '''
+        p5_1 = re.compile(r'^(?P<q_no>\d+)\s+(?P<priority>\d+)\s+(?P<mode>\S+)\s+'\
+                         '(?P<weight>\d+)\s+(?P<shaping_step>\d+)$'
+        )
+
+        '''
+           Weight0 Max_Th0 Min_Th0 Weigth1 Max_Th1 Min_Th1  Weight2 Max_Th2 Min_Th2
+        ------- ------- ------- ------- ------- -------  ------- ------- ------
+        0       0   33647       0       0   37605       0       0   42224       0
+        1       0   33468       0       0   37406       0       0   42000       0
+
+        '''
+        p6 = re.compile(r'^(?P<q_no>\d+)\s+(?P<weight0>\d+)\s+(?P<max_th0>\d+)\s+(?P<min_th0>\d+)\s+'\
+                         '(?P<weight1>\d+)\s+(?P<max_th1>\d+)\s+(?P<min_th1>\d+)\s+'\
+                         '(?P<weight2>\d+)\s+(?P<max_th2>\d+)\s+(?P<min_th2>\d+)$'
+        )
+
+        '''
+        Port       Port            Port    Port          Port
+        Priority   Shaped/shared   weight  shaping_step  sharpedWeight
+        --------   -------------   ------  ------------  -------------
+            2     Sharped           100        1023      1023
+
+        or (older releases)
+
+         Port       Port            Port    Port
+        Priority   Shaped/shared   weight  shaping_step
+        --------   -------------   ------  ------------
+            2     Shaped          1023        1023
+
+
+        '''
+        p7 = re.compile(r'^(?P<priority>\d+)\s+(?P<mode>\S+)\s+(?P<weight>\d+)\s+(?P<step>\d+)\s+(?P<s_weight>\d+)$')
+        p7_1 = re.compile(r'^(?P<priority>\d+)\s+(?P<mode>\S+)\s+(?P<weight>\d+)\s+(?P<step>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['asic'] = int(group['asic'])
+                ret_dict['core'] = int(group['core'])
+                ret_dict['data_port'] = int(group['data_port'])
+                ret_dict['gpn'] = int(group['gpn'])
+                ret_dict['linkspeed'] = group['linkspeed'].lower()
+                continue
+        
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['afd'] = group['afd'].lower()
+                ret_dict['flatafd'] = group['flatafd'].lower()
+                ret_dict['qosmap'] = int(group['qosmap'])
+                ret_dict['hw_queues'] = dict()
+                ret_dict['hw_queues']['min'] =  int(group['hw_queue1'])
+                ret_dict['hw_queues']['max'] =  int(group['hw_queue2'])
+                continue
+
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['data_port'] = int(group['data_port'])
+                ret_dict['gpn'] = int(group['gpn'])
+                ret_dict['afd'] = group['afd'].lower()
+                ret_dict['qosmap'] = int(group['qosmap'])
+                ret_dict['hw_queues'] = dict()
+                ret_dict['hw_queues']['min'] =  int(group['hw_queue1'])
+                ret_dict['hw_queues']['max'] =  int(group['hw_queue2'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['drainfast'] = group['drainfast'].lower()
+                ret_dict['portsoftstart'] = dict()
+                ret_dict['portsoftstart']['min'] =  int(group['portsoftstart1'])
+                ret_dict['portsoftstart']['max'] =  int(group['portsoftstart2'])
+                ret_dict['buffersharing'] = group['buffersharing'].lower()
+                continue
+
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['drainfast'] = group['drainfast'].lower()
+                ret_dict['portsoftstart'] = dict()
+                ret_dict['portsoftstart']['min'] =  int(group['portsoftstart1'])
+                ret_dict['portsoftstart']['max'] =  int(group['portsoftstart2'])
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict()).setdefault(int(group['q_no']), dict())
+                ret_dict['queue'][int(group['q_no'])]['dts'] = int(group['dts'])
+                ret_dict['queue'][int(group['q_no'])]['hardmax'] = int(group['hardmax'])
+                ret_dict['queue'][int(group['q_no'])]['softmax'] = int(group['softmax'])
+                ret_dict['queue'][int(group['q_no'])]['portsmin'] = int(group['portsmin'])
+                ret_dict['queue'][int(group['q_no'])]['glblsmin'] = int(group['glblsmin'])
+                ret_dict['queue'][int(group['q_no'])]['portstend'] = int(group['portstend'])
+                ret_dict['queue'][int(group['q_no'])]['qenable'] = group['qenable'].lower()
+                continue
+
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict()).setdefault(int(group['q_no']), dict())
+                ret_dict['queue'][int(group['q_no'])]['dts'] = int(group['dts'])
+                ret_dict['queue'][int(group['q_no'])]['hardmax'] = int(group['hardmax'])
+                ret_dict['queue'][int(group['q_no'])]['softmax'] = int(group['softmax'])
+                ret_dict['queue'][int(group['q_no'])]['portsmin'] = int(group['portsmin'])
+                ret_dict['queue'][int(group['q_no'])]['glblsmin'] = int(group['glblsmin'])
+                ret_dict['queue'][int(group['q_no'])]['portstend'] = int(group['portstend'])
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict()).setdefault(int(group['q_no']), dict())
+                ret_dict['queue'][int(group['q_no'])]['priority'] = int(group['priority'])
+                ret_dict['queue'][int(group['q_no'])]['schedule_mode'] = group['mode'].lower()
+                ret_dict['queue'][int(group['q_no'])]['weight'] = int(group['weight'])
+                ret_dict['queue'][int(group['q_no'])]['shaping_step'] = int(group['shaping_step'])
+                ret_dict['queue'][int(group['q_no'])]['sharpedweight'] = int(group['sharpedweight'])
+                continue
+
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict()).setdefault(int(group['q_no']), dict())
+                ret_dict['queue'][int(group['q_no'])]['priority'] = int(group['priority'])
+                ret_dict['queue'][int(group['q_no'])]['schedule_mode'] = group['mode'].lower()
+                ret_dict['queue'][int(group['q_no'])]['weight'] = int(group['weight'])
+                ret_dict['queue'][int(group['q_no'])]['shaping_step'] = int(group['shaping_step'])
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict()).setdefault(int(group['q_no']), dict())
+                ret_dict['queue'][int(group['q_no'])]['weight0'] = int(group['weight0'])
+                ret_dict['queue'][int(group['q_no'])]['max_th0'] = int(group['max_th0'])
+                ret_dict['queue'][int(group['q_no'])]['min_th0'] = int(group['min_th0'])
+                ret_dict['queue'][int(group['q_no'])]['weight1'] = int(group['weight1'])
+                ret_dict['queue'][int(group['q_no'])]['max_th1'] = int(group['max_th1'])
+                ret_dict['queue'][int(group['q_no'])]['min_th1'] = int(group['min_th1'])
+                ret_dict['queue'][int(group['q_no'])]['weight2'] = int(group['weight2'])
+                ret_dict['queue'][int(group['q_no'])]['max_th2'] = int(group['max_th2'])
+                ret_dict['queue'][int(group['q_no'])]['min_th2'] = int(group['min_th2'])
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = dict()
+                ret_dict['port']['priority'] = int(group['priority'])
+                ret_dict['port']['schedule_mode'] = group['mode'].lower()
+                ret_dict['port']['weight'] = int(group['weight'])
+                ret_dict['port']['shaping_step'] = int(group['step'])
+                ret_dict['port']['sharpedweight'] = int(group['s_weight'])
+                continue
+
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = dict()
+                ret_dict['port']['priority'] = int(group['priority'])
+                ret_dict['port']['schedule_mode'] = group['mode'].lower()
+                ret_dict['port']['weight'] = int(group['weight'])
+                ret_dict['port']['shaping_step'] = int(group['step'])
+                continue
+
+        return ret_dict
+
+# ================================================================================
+# Parser Schema for 'show platform hardware iomd <slot> qos port <no> ingress queue stats'
+#                   'show platform hardware iomd switch <switch_no> <slot> qos port <no> ingress queue stats'
+# ================================================================================
+class ShowPlatformHardwareIomdQosPortIngressQueueStatsSchema(MetaParser):
+    """Schema for show platform hardware iomd <slot> qos port <no> ingress queue stats"""
+    '''
+    mac-gen2#show platform hardware iomd 10/0 qos port 1 ingress queue stats 
+    DATA Port:1 StartingQueue:0  Enqueue Counters
+    -------------------------------------------          
+    Queue Buffers Enqueue-TH0 Enqueue-TH1 Enqueue-TH2        
+    ----- ------- ----------- ----------- -----------
+        0       0           0           0           0
+        1     314           0           0  1606072000
+    
+    DATA Port:0 Drop Counters
+    -------------------------------                     
+    Queue Drop-TH0    Drop-TH1    Drop-TH2    SBufDrop    QebDrop 
+    ----- ----------- ----------- ----------- ----------- -----------
+        0           0           0           0           0           0
+        1           0           0  1605942200           0           0
+    
+    Note: Queuing stats are in bytes
+    '''
+    schema = {
+        'unit': str,
+        'data_port': int,
+        'startingqueue':  int,
+        'queue': {
+            int: {
+                'buffers': int,
+                'enqueue_th0': int,
+                'enqueue_th1': int,
+                'enqueue_th2': int,
+                'drop_th0': int,
+                'drop_th1': int,
+                'drop_th2': int,
+                'sbufdrop': int,
+                'qebdrop': int,
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show platform hardware iomd <slot> qos port <no> ingress queue stats'
+#            'show platform hardware iomd switch <switch_no> <slot> qos port <no> ingress queue stats'
+# ================================================================================
+class ShowPlatformHardwareIomdQosPortIngressQueueStats(ShowPlatformHardwareIomdQosPortIngressQueueStatsSchema):
+    """ parser for "show platform hardware iomd <slot> qos port <no> ingress queue stats" """
+
+    # i.e. show platform hardware iomd 1/0 qos port 24 ingress queue stats"
+    cli_command = ["show platform hardware iomd {slot} qos port {port_no} ingress queue stats",
+                   "show platform hardware iomd switch {switch_no} {slot} qos port {port_no} ingress queue stats"]
+
+    def cli(self, slot, port_no, switch_no=None, output=None):
+        if output is None:
+            if not switch_no:
+                cmd = self.cli_command[0].format(slot=slot, port_no=str(port_no))
+            else:
+                cmd = self.cli_command[1].format(slot=slot, port_no=str(port_no), switch_no = switch_no)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        '''
+        DATA Port:1 StartingQueue:0  Enqueue Counters
+        '''
+        p1 = re.compile(r'^DATA Port:(?P<port_no>\d+)\s+StartingQueue:(?P<starting>\d+)\s+Enqueue Counters$')
+
+        '''
+        -------------------------------------------          
+        Queue Buffers Enqueue-TH0 Enqueue-TH1 Enqueue-TH2        
+        ----- ------- ----------- ----------- -----------
+        0       0           0           0           0
+        1     314           0           0  1606072000
+        '''
+        p2 = re.compile(r'^(?P<queue>\d+)\s+(?P<buf>\d+)\s+(?P<en_th0>\d+)\s+(?P<en_th1>\d+)\s+(?P<en_th2>\d+)$')
+
+        '''
+        -------------------------------                     
+        Queue Drop-TH0    Drop-TH1    Drop-TH2    SBufDrop    QebDrop 
+        ----- ----------- ----------- ----------- ----------- -----------
+        0           0           0           0           0           0
+        1           0           0  1605942200           0           0
+        '''
+        p3 = re.compile(r'^(?P<queue>\d+)\s+(?P<dr_th0>\d+)\s+(?P<dr_th1>\d+)\s+(?P<dr_th2>\d+)\s+(?P<sbuf>\d+)\s+(?P<qeb>\d+)$')
+
+        '''
+        Note: Queuing stats are in bytes
+        '''
+        p4 = re.compile(r'Note:\s+Queuing stats are in\s+(?P<unit>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['data_port'] = int(group['port_no'])
+                ret_dict['startingqueue'] =int(group['starting'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict())
+                queue_no = int(group['queue'])
+                ret_dict['queue'].setdefault(queue_no, dict())
+                ret_dict['queue'][queue_no]['buffers'] = int(group['buf'])
+                ret_dict['queue'][queue_no]['enqueue_th0'] = int(group['en_th0'])
+                ret_dict['queue'][queue_no]['enqueue_th1'] = int(group['en_th1'])
+                ret_dict['queue'][queue_no]['enqueue_th2'] = int(group['en_th2'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('queue', dict())
+                queue_no = int(group['queue'])
+                ret_dict['queue'].setdefault(queue_no, dict())
+                ret_dict['queue'][queue_no]['drop_th0'] = int(group['dr_th0'])
+                ret_dict['queue'][queue_no]['drop_th1'] = int(group['dr_th1'])
+                ret_dict['queue'][queue_no]['drop_th2'] = int(group['dr_th2'])
+                ret_dict['queue'][queue_no]['sbufdrop'] = int(group['sbuf'])
+                ret_dict['queue'][queue_no]['qebdrop'] = int(group['qeb'])
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['unit'] = group['unit'].lower()
+                continue
+
+        return ret_dict
+
+                
+# ================================================================================
+# Parser Schema for 'show platform hardware iomd <slot> portgroups'
+#                   'show platform hardware iomd switch <switch_no> <slot> portgroups'
+# ================================================================================
+class ShowPlatformHardwareIomdPortgroupsSchema(MetaParser):
+    """Schema for show platform hardware iomd <slot> portgroups"""
+    '''
+    mac-gen2#show platform hardware iomd 10/0 portgroups 
+    Port  Interface                       Status    Interface  Group Max   
+    Group                                           Bandwith   Bandwidth   
+    
+           
+    1     TenGigabitEthernet10/0/2        up         10G       
+    1     TenGigabitEthernet10/0/3        up         10G       
+    1     TenGigabitEthernet10/0/4        up         10G       
+    1     TenGigabitEthernet10/0/5        up         10G       
+    1     TenGigabitEthernet10/0/6        up         10G       60G       
+    1     TenGigabitEthernet10/0/7        up         10G       
+    1     TenGigabitEthernet10/0/8        up         10G       
+    1     TenGigabitEthernet10/0/9        up         10G       
+    1     TenGigabitEthernet10/0/10       up         10G       
+    1     TenGigabitEthernet10/0/11       up         10G       
+    1     TenGigabitEthernet10/0/12       up         10G       
+    
+    2     TenGigabitEthernet10/0/13       up         10G       
+    2     TenGigabitEthernet10/0/14       up         10G       
+    2     TenGigabitEthernet10/0/15       up         10G       
+    2     TenGigabitEthernet10/0/16       up         10G       
+    2     TenGigabitEthernet10/0/17       up         10G       
+    2     TenGigabitEthernet10/0/18       up         10G       60G       
+    2     TenGigabitEthernet10/0/19       down       10G       
+    '''
+    schema = {
+        'portgroup': {
+            int: {
+                'intf': {
+                    str: {
+                        'status': str,
+                        'intf_bw': str,
+                        'group_max_bw': str,
+                        'portgroup': int
+                    }
+                }
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show platform hardware iomd <slot> portgroups'
+#            'show platform hardware iomd switch <switch_no> <slot> portgroups'
+# ================================================================================
+class ShowPlatformHardwareIomdPortgroups(ShowPlatformHardwareIomdPortgroupsSchema):
+    """Parser for 'show platform hardware iomd <slot> portgroups'"""
+
+    cli_command = ["show platform hardware iomd {slot} portgroups",
+                   "show platform hardware iomd switch {switch_no} {slot} portgroups"]
+
+    def cli(self, slot, switch_no=None, output=None):
+        if output is None:
+            if not switch_no:
+                cmd = self.cli_command[0].format(slot=slot)
+            else:
+                cmd = self.cli_command[1].format(slot=slot, switch_no = switch_no)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        group_bw_dict = {}
+
+
+        # 1     TenGigabitEthernet10/0/18       up         10G       60G
+        p1 = re.compile(r'^(?P<group>\d+)\s+(?P<intf>\S+)\s+(?P<status>\S+)\s+(?P<intf_bw>\S+)\s+(?P<group_bw>\S+)$')
+
+        # 1     TenGigabitEthernet10/0/1        up         10G
+        p1_1 = re.compile(r'^(?P<group>\d+)\s+(?P<intf>\S+)\s+(?P<status>\S+)\s+(?P<intf_bw>\S+)$')
+
+
+        ## Pass1: Get group max bandwidth first
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('portgroup', dict())
+                parsed = m.groupdict()
+                group_no = int(parsed['group'])
+                ret_dict['portgroup'].setdefault(group_no, dict())
+                ret_dict['portgroup'][group_no].setdefault('intf', dict())
+
+                intf_dict = dict()
+                intf_dict['status'] = parsed['status'].lower()
+                intf_dict['intf_bw'] = parsed['intf_bw']
+                intf_dict['group_max_bw'] = parsed['group_bw']
+                intf_dict['portgroup'] = group_no
+
+                intf = parsed['intf'].lower()
+                ret_dict['portgroup'][group_no]['intf'][intf] = intf_dict
+
+                # for Pass2
+                group_bw_dict[group_no] = parsed['group_bw']
+
+        ## Pass2:
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1_1.match(line)
+            if m:
+                ret_dict.setdefault('portgroup', dict())
+                parsed = m.groupdict()
+                group_no = int(parsed['group'])
+                ret_dict['portgroup'].setdefault(group_no, dict())
+                ret_dict['portgroup'][group_no].setdefault('intf', dict())
+
+                intf_dict = dict()
+                intf_dict['status'] = parsed['status'].lower()
+                intf_dict['intf_bw'] = parsed['intf_bw']
+                intf_dict['portgroup'] = group_no
+                if group_no in group_bw_dict:  # schema should fail if not found
+                    intf_dict['group_max_bw'] = group_bw_dict[group_no]
+
+                intf = parsed['intf'].lower()
+                ret_dict['portgroup'][group_no]['intf'][intf] = intf_dict
+
+        return ret_dict
+
+# ================================================================================
+# Parser Schema for 'show platform hardware fed active fwd-asic register read register-name'
+# ================================================================================
+class ShowPlatformHardwareRegisterReadAsicSchema(MetaParser):
+    '''
+    This parser should fit any platform hardware Register Read CLIs: 
+    i.e.
+    show platform hardware fed active fwd-asic register read register-name xyz asic n core m
+    show platform hardware fed switch x fwd-asic register read register-name xyz asic n core m
+    '''
+    schema = {
+        'asic': {
+            int: {
+                'core': {
+                    int: {
+                        Any(): str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareRegisterReadAsic(ShowPlatformHardwareRegisterReadAsicSchema):
+    '''
+    show platform hardware fed active fwd-asic register read register-name xyz asic n core m
+    show platform hardware fed switch x fwd-asic register read register-name xyz asic n core m
+    '''
+    cli_command = ['show platform hardware fed active fwd-asic register read register-name {reg_name} asic {asic} core {core}',
+                   'show platform hardware fed switch {switch_no} fwd-asic register-name read register-name {reg_name} asic {asic} core {core}']
+
+    def cli(self, reg_name, asic, core, switch_no=None, output=None):
+        if output is None:
+            if not switch_no:
+                cmd = self.cli_command[0].format(reg_name = reg_name, asic=asic, core=core)
+            else:
+                cmd = self.cli_command[1].format(reg_name = reg_name, asic=asic, core=core, switch_no = switch_no)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # For asic 1 core 0
+        p0 = re.compile(r'^For +asic +(?P<asic>\d+) +core +(?P<core>\d+)$')
+
+        # <key>: <value>   i.e. waitTimer                 : 0xfffbfff88
+        p1 = re.compile(r'^(?P<key>\S+)\s*:\s*(?P<hex>0[xX][0-9a-fA-F]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # For asic 1 core 0 (Initilize the dict of the asic/core combination)
+            m = p0.match(line)
+            if m:
+                parsed = m.groupdict()
+                asic = int(parsed['asic'])
+                core = int(parsed['core'])
+                ret_dict.setdefault('asic', dict())
+                ret_dict['asic'].setdefault(asic, dict())
+                ret_dict['asic'][asic].setdefault('core', dict())
+                ret_dict['asic'][asic]['core'].setdefault(core, dict())
+                current_ret_dict = ret_dict['asic'][asic]['core'][core]
+                continue
+
+            # <key>: <value> ... any values that can match this pattern will be put under the asic/core dict
+            m = p1.match(line)
+            if m:
+                parsed = m.groupdict()
+                current_ret_dict[parsed['key']] = parsed['hex']
+
+        return ret_dict
+

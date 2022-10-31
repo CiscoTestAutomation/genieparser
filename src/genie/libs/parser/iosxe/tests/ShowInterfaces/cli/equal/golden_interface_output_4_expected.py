@@ -48,6 +48,7 @@ expected_output = {
         "description": "Genie to Genie-next for L2 Fiber lines ***",
         "duplex_mode": "full",
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {"encapsulation": "dot1q", "first_dot1q": "1"},
         "flow_control": {"receive": True, "send": True},
         "last_input": "00:00:00",
@@ -84,6 +85,7 @@ expected_output = {
         "delay": 10,
         "description": "Another Genie L2 connection",
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {"encapsulation": "dot1q", "first_dot1q": "105"},
         "ipv4": {"10.95.2.252/24": {"ip": "10.95.2.252", "prefix_length": "24"}},
         "line_protocol": "up",
@@ -104,6 +106,7 @@ expected_output = {
         "delay": 10,
         "description": "*** Genie VLAN  ***",
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "qinq virtual lan",
             "first_dot1q": "176",

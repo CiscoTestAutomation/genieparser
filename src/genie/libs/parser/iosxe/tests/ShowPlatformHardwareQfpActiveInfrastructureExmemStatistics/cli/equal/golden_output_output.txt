@@ -1,0 +1,18 @@
+pm9006#show platform hardware qfp active infrastructure exmem statistics
+QFP exmem statistics
+
+Type: Name: DRAM, QFP: 0
+  Total: 536870912
+  InUse: 219371520
+  Free: 317499392
+  Lowest free water mark: 301215744
+Type: Name: IRAM, QFP: 0
+  Total: 2097152
+  InUse: 423936
+  Free: 1673216
+  Lowest free water mark: 1673216
+Type: Name: SRAM, QFP: 0
+  Total: 0
+  InUse: 0
+  Free: 0
+  Lowest free water mark: 0

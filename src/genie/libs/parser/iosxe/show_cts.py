@@ -2303,7 +2303,9 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         p1 = re.compile(r'^Global Dot1x feature is\s+(?P<global_dot1x_feature>\w+)')
 
         # TenGigabitEthernet1/0/6:
-        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+):')
+        # Tunnel100: 
+        # TenGigabitEthernet1/0/6.30:
+        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+|Tunnel\d+|\S+\d+\/\d+\/\d+\.\d+):')
 
         # CTS_status : enabled,mode: MANUAL
         p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+),\s+mode:\s+(?P<mode>\S+)')
@@ -3817,7 +3819,7 @@ class ShowPlatformSoftwareFedActiveAclSgacl(ShowPlatformSoftwareFedActiveAclSgac
             if switch:
                 cmd = self.cli_command[1].format(switch=switch,instance=instance)
             else:
-                cmd = self.cli_command[0]
+                cmd = self.cli_command[0].format(instance=instance)
                     
             output = self.device.execute(cmd)
             

@@ -1,0 +1,35 @@
+BGP local router ID : 3.3.3.3
+ Local AS number : 64666
+
+ Address Family:Ipv4 Unicast
+ --------------------------------------------------------------------------------------------
+ Total number of peers : 4                 Peers in established state : 3
+
+  Peer                                      AS  MsgRcvd  MsgSent  OutQ  Up/Down       State    RtRcv    RtAdv
+  10.10.10:10                            65000        0        0     0 1272h18m     Connect        0        0
+  20.20.20.20                            65000   232782   279631     0 0646h36m Established        1        7
+  30.30.30.30                            64666     6677     6724     0 15:23:48 Established        1       41
+  40.40.40.40                            64666     6583     6562     0 15:05:29 Established       15       41
+ Address Family:Vpnv4 All
+ --------------------------------------------------------------------------------------------
+ Total number of peers : 7                  Peers in established state : 4
+                
+  Peer                                      AS  MsgRcvd  MsgSent  OutQ  Up/Down       State    RtRcv    RtAdv
+  50.50.50.50                            65000        0        0     0 16:22:55 Idle(Admin)        0        0
+  60.60.60.60                            65000   245080   279587     0 0646h36m Established       40       16
+  70.70.70.70                            65000   245082   279595     0 0646h36m Established       40       16
+   
+  Peer of IPv4-family for vpn instance :
+
+  VPN-Instance mobile, Router ID 10.104.126.148:
+  Peer                                      AS  MsgRcvd  MsgSent  OutQ  Up/Down       State    RtRcv    RtAdv
+  192.168.1.1                            64535        0        0     0 1272h18m        Idle        0        0
+  192.168.2.1                            64535    55487    57371     0 0832h15m Established        5        1
+  192.168.3.1                            64535        0        0     0 0138h25m        Idle        0        0
+  192.168.4.1                            64535    17621    17659     0 0256h06m Established       12        1
+ Address Family:Vpnv6 All
+ --------------------------------------------------------------------------------------------
+ Total number of peers : 1                 Peers in established state : 0
+
+  Peer                                      AS  MsgRcvd  MsgSent  OutQ  Up/Down       State    RtRcv    RtAdv
+  50.50.50.50                            65000        0        0     0 16:22:55 Idle(Admin)        0        0

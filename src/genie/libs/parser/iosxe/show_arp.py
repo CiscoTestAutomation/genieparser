@@ -90,8 +90,9 @@ class ShowArp(ShowArpSchema):
 
         # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
         # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
+        # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
-                         '(?P<mac>[\w\.]+) +(?P<type>\w+)( +(?P<interface>[\w\.\/\-]+))?$')
+                         '(?P<mac>[\w\.]+) +(?P<type>[\w\.]+)( +(?P<interface>[\w\.\/\-]+))?$')
         # initial variables
         ret_dict = {}
 
@@ -100,6 +101,7 @@ class ShowArp(ShowArpSchema):
 
             # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
             # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
+            # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
             m = p1.match(line)
             if m:
                 group = m.groupdict()

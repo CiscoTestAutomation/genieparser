@@ -2,6 +2,7 @@ expected_output = {
     "FastEthernet1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,

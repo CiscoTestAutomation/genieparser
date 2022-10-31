@@ -38,6 +38,7 @@ expected_output = {
         },
         "delay": 50000,
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "tunnel"
         },
@@ -116,6 +117,7 @@ expected_output = {
         },
         "delay": 50000,
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "tunnel"
         },
@@ -188,6 +190,7 @@ expected_output = {
         },
         "delay": 50000,
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "tunnel"
         },
@@ -262,6 +265,7 @@ expected_output = {
         },
         "delay": 50000,
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "tunnel"
         },
@@ -335,6 +339,7 @@ expected_output = {
         },
         "delay": 50000,
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "tunnel"
         },

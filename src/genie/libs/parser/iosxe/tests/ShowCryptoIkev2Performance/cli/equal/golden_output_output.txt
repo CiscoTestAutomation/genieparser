@@ -1,0 +1,115 @@
+Crypto ISAKMP Performance Stats (tps):
+Ingress:               SampleSize tps/avg min max cpu/avg min max
+IKE Established                 0       0   0   0       0   0   0
+IPSEC Child Establishe          0       0   0   0       0   0   0
+IKE Child Established           0       0   0   0       0   0   0
+
+Egress:                SampleSize tps/avg min max cpu/avg min max
+IKE Established                 0       0   0   0       0   0   0
+IPSEC Child Establishe          0       0   0   0       0   0   0
+IKE Child Established           0       0   0   0       0   0   0
+
+Crypto ISAKMP Packet Stats (pps):
+                       SampleSize     avg min max
+Incoming IKE Packets            0       0   0   0
+-Init                           0       0   0   0
+-Auth                           0       0   0   0
+NO NAME                         0       0   0   0
+NO NAME                         0       0   0   0
+-Child                          0       0   0   0
+-Info                           0       0   0   0
+-Default                        0       0   0   0
+
+Egress IKE Attempted            0       0   0   0
+
+Crypto IKEv2 Packet Queue Stats (milliseconds):
+                       SampleSize        avg        min        max
+Packet Queue[0]            108221          0          0       1008
+Packet Queue[1]                 0          0          0          0
+Packet Queue[2]                 0          0          0          0
+Packet Queue[3]                 0          0          0          0
+Packet Queue[4]                 0          0          0          0
+Packet Queue[5]                 0          0          0          0
+Packet Queue[6]                 0          0          0          0
+
+Crypto ISAKMP Protocol Stats (microseconds):
+                       SampleSize        avg        min        max
+R INIT PROC                     0          0          0          0
+I INIT_PROC                     0          0          0          0
+R AUTH PROC                     0          0          0          0
+I AUTH PROC                     0          0          0          0
+R INIT INT                      0          0          0          0
+I AUTH INT                      0          0          0          0
+R AUTH INT                      0          0          0          0
+I INIT SEND                     0          0          0          0
+R INIT SEND                     0          0          0          0
+I AUTH SEND                     0          0          0          0
+R AUTH SEND                     0          0          0          0
+R INIT Wire                     0          0          0          0
+I AUTH Wire                     0          0          0          0
+R AUTH Wire                     0          0          0          0
+R COOKIE INT                    0          0          0          0
+R COOKIE SEND                   0          0          0          0
+R KE INT                        0          0          0          0
+R KE SEND                       0          0          0          0
+I IKE CHILD PROC                0          0          0          0
+I IPSEC CHILD PROC              0          0          0          0
+R IKE CHILD PROC                0          0          0          0
+R IPSEC CHILD PROC              0          0          0          0
+R IKE CHILD Wire                0          0          0          0
+R IPSEC CHILD Wire              0          0          0          0
+I IKE CHILD SEND                0          0          0          0
+I IPSEC CHILD SEND              0          0          0          0
+R IKE CHILD SEND                0          0          0          0
+R IPSEC CHILD SEND              0          0          0          0
+R IKE CHILD INT                 0          0          0          0
+R IPSEC CHILD INT               0          0          0          0
+I IKE CHILD INT                 0          0          0          0
+I IPSEC CHILD INT               0          0          0          0
+
+Crypto Engine Stats (microseconds):
+                       SampleSize        avg        min        max
+DH Create                       0          0          0          0
+DH Share Secret                 0          0          0          0
+DH Delete                       0          0          0          0
+Create IKE SA                   0          0          0          0
+Delete IKE SA                   0          0          0          0
+PS Key Auth Generation          0          0          0          0
+RSA Public Key Auth Ge          0          0          0          0
+IKE Encrypt                     0          0          0          0
+IKE Decrypt                     0          0          0          0
+IKE HMAC                        0          0          0          0
+IPSEC Create Key                0          0          0          0
+IPSEC Delete SA                 0          0          0          0
+Public Key Sign                 0          0          0          0
+Public Key Verify               0          0          0          0
+Public Key Encrypt              0          0          0          0
+Public Key Decrypt              0          0          0          0
+
+External Service Stats (microseconds):
+                       SampleSize        avg        min        max
+Get IKE Policy                  0          0          0          0
+Get Pre-shared Key              0          0          0          0
+Get Config Mode Data            0          0          0          0
+Set Config Mode Data            0          0          0          0
+Received EAP                    0          0          0          0
+Recieved Client EAP             0          0          0          0
+Verify Certificate              0          0          0          0
+Fetch Certificate               0          0          0          0
+Get IPSEC Policy                0          0          0          0
+NO NAME                         0          0          0          0
+Redirect Check                  0          0          0          0
+Redirect Acceptance Ch          0          0          0          0
+NO NAME                         0          0          0          0
+NO NAME                         0          0          0          0
+
+Summary (microsecs):
+
+Main Exchange Setup:            0
+Main Processing:                0 -> 0%
+On IPC Queue:                   0 -> 0%
+Transmission:                   0 -> 0%
+
+Child Exchange Setup:            0
+Child Processing:                0 -> 0%
+Transmission:                    0 -> 0%

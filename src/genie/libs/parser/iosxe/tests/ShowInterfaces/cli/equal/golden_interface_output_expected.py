@@ -6,6 +6,7 @@ expected_output = {
         "arp_type": "arpa",
         "type": "CSR vNIC",
         "enabled": True,
+        "is_deleted": False,
         "media_type": "Virtual",
         "last_input": "00:00:02",
         "link_type": "auto",

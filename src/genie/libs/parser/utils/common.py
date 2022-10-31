@@ -635,7 +635,7 @@ class Common:
                     'Twe': 'TwentyFiveGigE',
                     'Fi': 'FiveGigabitEthernet',
                     'Fiv': 'FiveGigabitEthernet',
-                    'Fif': 'FiftyGigabitEthernet',
+                    'Fif': 'FiftyGigE',
                     'Fifty': 'FiftyGigabitEthernet',
                     'mgmt': 'mgmt',
                     'Vl': 'Vlan',

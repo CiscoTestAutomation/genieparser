@@ -10381,3 +10381,161 @@ class ShowIpv6OspfNeighbor(ShowIpv6OspfNeighborSchema):
                 continue
 
         return ret_dict
+
+# =================================================================
+# Schema for:
+#   * 'show ip ospf database database-summary detail'
+#   * 'show ip ospf {process_id }database database-summary detail'
+# =================================================================
+
+class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf database database-summary detail'
+        * 'show ip ospf {process_id} database database-summary detail'
+    '''
+
+    schema = {
+        'vrf':{
+            Any():{
+                'instance':{
+                    Any():{
+                        Any():{
+                            'router':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'network':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'summary_net':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'summary_asbr':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'type_5_ext':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'type_7_ext':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_link':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_area':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_as':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'total':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                        },
+                    },            
+                },
+            },
+        },
+    }        
+
+# ================================================================
+# Parser for:
+#   * 'show ip ospf database database-summary detail'
+#   * 'show ip ospf {process_id} database database-summary detail'
+# ================================================================
+class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema):
+
+    ''' Parser for:
+        * 'show ip ospf database database-summary detail'
+        * "show ip ospf {process_id} database database-summary detail"
+    '''
+
+    cli_command = ['show ip ospf database database-summary detail', 'show ip ospf {process_id} database database-summary detail']
+
+    def cli(self, process_id=None, output=None):
+
+        if not output:
+            if process_id:
+                output = self.device.execute(self.cli_command[1].format(process_id=process_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Init variables
+        ret_dict = {}
+        vrf = 'default'
+
+        # OSPF Router with ID (10.36.3.3) (Process ID 1)
+        # OSPF Router with ID (20.3.5.6) (Process ID 2, VRF VRF1)
+        p0 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\d+))'
+                        r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Router 22.22.22.22 LSA summary
+        p1 = re.compile('^Router +(?P<router_ip>(\S+)) +LSA +summary$')
+
+        #LSA Type      Count    Delete   Maxage
+        #Router        2        0        0
+        #Network       2        0        0
+        #Summary Net   2        0        0
+        #Summary ASBR  2        0        0
+        #Type-5 Ext    0        0        0
+        #Type-7 Ext    0        0        0
+        #Opaque Link   0        0        0
+        #Opaque Area   0        0        0
+        #Opaque AS     0        0        0
+        #Total         8        0        0
+        
+        p2 = re.compile(r'^(?P<lsa_type>(Router|Network|Summary Net|Summary ASBR|'
+                r'Type-5 Ext|Type-7 Ext|Opaque Link|Opaque Area|Opaque AS|Total))'
+                r' +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+))')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+
+                ospf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('instance', {}).setdefault(instance, {})
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['router_ip']
+                lsa_dict = ospf_dict.setdefault(item, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type = group['lsa_type'].strip().lower().replace(" ", "_").replace("-", "_")
+                tmp_dict = lsa_dict.setdefault(lsa_type, {})
+                tmp_dict['count'] = int(group['count'])
+                tmp_dict['delete'] = int(group['delete'])
+                tmp_dict['maxage'] = int(group['maxage'])
+        
+        return ret_dict

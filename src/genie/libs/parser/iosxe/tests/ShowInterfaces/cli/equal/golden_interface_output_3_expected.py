@@ -2,6 +2,7 @@ expected_output = {
     "GigabitEthernet3": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "CSR vNIC",
