@@ -1,7 +1,3 @@
-Only one changelog file per pull request. Combine these two templates where applicable.
-
-Templates
-=========
 --------------------------------------------------------------------------------
                             Fix
 --------------------------------------------------------------------------------
