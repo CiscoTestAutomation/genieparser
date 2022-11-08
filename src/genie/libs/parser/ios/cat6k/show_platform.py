@@ -38,9 +38,9 @@ class ShowVersionSchema(MetaParser):
             'cpu': {
                 'name': str,
                 'speed': str,
-                'implementation': str,
-                'rev': str,
-                'l2_cache': str,
+                Optional('implementation'): str,
+                Optional('rev'): str,
+                Optional('l2_cache'): str,
             },
             'last_reset': str,
             Optional('softwares'): list,
@@ -51,13 +51,13 @@ class ShowVersionSchema(MetaParser):
             },
             'memory': {
                 'non_volatile_conf': int,
-                'packet_buffer': int,
-                'flash_internal_SIMM': int,
+                Optional('packet_buffer'): int,
+                Optional('flash_internal_SIMM'): int,
             },
             'curr_config_register': str,
             Optional('last_reload'): {
                 'type': str,
-                'reason': str,
+                Optional('reason'): str,
             },
             Optional('control_processor_uptime'): str,
             Optional('controller'): {
@@ -92,7 +92,7 @@ class ShowVersion(ShowVersionSchema):
         p1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
                         r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
                         r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
-        
+
         # Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
         p1_1 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
@@ -135,7 +135,8 @@ class ShowVersion(ShowVersionSchema):
                          r'+\"(?P<system_image>.+)\"')
 
         # cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
-        p11 = re.compile(r'^cisco +(?P<chassis>[\S]+) +\((?P<processor_type>[\S]+)\)'
+        # Cisco CISCO7606-S (M8500) processor (revision 1.0) with 917504K/65536K bytes of memory.
+        p11 = re.compile(r'^[cC]isco +(?P<chassis>[\S]+) +\((?P<processor_type>[\S]+)\)'
                          r' +processor \(.+\) +with +(?P<main_mem>\d+).+ +bytes +of +memory.$')
 
         # Processor board ID FXS1821Q2H9
@@ -146,8 +147,15 @@ class ShowVersion(ShowVersionSchema):
                          r'+(?P<speed>\S+)\, Implementation (?P<implementation>\S+), '
                          r'Rev (?P<rev>\S+), +(?P<l2_cache>\S+) +L2 +[Cc]ache$')
 
+        # CPU: MPC8548_E, Version: 2.0, (0x80390020)
+        p13_1 = re.compile(r'^CPU: +(?P<name>\S+), Version: \d+\.\d+, \(0x\d+\)$')
+
+        # CPU:1200MHz, CCB:400MHz, DDR:200MHz,
+        p13_2 = re.compile(r'^CPU:+(?P<speed>\S+)\, CCB:\d+MHz, DDR:\d+MHz\,$')
+
         # Last reset from s/w reset
-        p14 = re.compile(r'^Last reset from (?P<reset>\S+) reset$')
+        # Last reset from power-on
+        p14 = re.compile(r'^Last reset from (?P<reset>\S+)( reset)?$')
 
         # SuperLAT software (copyright 1990 by Meridian Technology Corp).
         p15 = re.compile(r'^(?P<software>SuperLAT software .+)$')
@@ -186,13 +194,14 @@ class ShowVersion(ShowVersionSchema):
         # Configuration register is 0x102
         p30 = re.compile(r'^Configuration +register +is '
                          r'+(?P<curr_config_register>[\S]+)')
-        
+
         # 1 Enhanced FlexWAN controller (4 Serial).
         p31 = re.compile(r'^(?P<counts>\d+) (?P<type>[\S\s]+) '
                          r'controller \((?P<serial>\d+) Serial\).$')
-        
+
         # 1 Virtual Ethernet interface
-        p31_1 = re.compile(r'^(?P<interface>\d+) Virtual Ethernet interface$')
+        # 6 Virtual Ethernet interfaces
+        p31_1 = re.compile(r'^(?P<interface>\d+) Virtual Ethernet interface(s|\(s\))?$')
 
         # 52 Gigabit Ethernet interfaces
         p31_2 = re.compile(r'^(?P<interface>\d+) Gigabit Ethernet interfaces$')
@@ -217,7 +226,7 @@ class ShowVersion(ShowVersionSchema):
                 for k in ['os', 'platform', 'image_id', 'version']:
                     version_dict[k] = m.groupdict()[k]
                 continue
-            
+
             # Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
             m = p1_1.match(line)
             if m:
@@ -289,6 +298,7 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
+            # Cisco CISCO7606-S (M8500) processor (revision 1.0) with 917504K/65536K bytes of memory.
             m = p11.match(line)
             if m:
                 for k in ['chassis', 'processor_type', 'main_mem']:
@@ -311,7 +321,28 @@ class ShowVersion(ShowVersionSchema):
                     cpu_dict[k] = group[k]
                 continue
 
+            # CPU: MPC8548_E, Version: 2.0, (0x80390020)
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'cpu' not in version_dict:
+                    cpu_dict = version_dict.setdefault('cpu', {})
+                for k in ['name']:
+                    cpu_dict[k] = group[k]
+                continue
+
+            # CPU:1200MHz, CCB:400MHz, DDR:200MHz,
+            m = p13_2.match(line)
+            if m:
+                group = m.groupdict()
+                if 'cpu' not in version_dict:
+                    cpu_dict = version_dict.setdefault('cpu', {})
+                for k in ['speed']:
+                    cpu_dict[k] = group[k]
+                continue
+
             # Last reset from s/w reset
+            # Last reset from power-on
             m = p14.match(line)
             if m:
                 version_dict['last_reset'] = m.groupdict()['reset']
@@ -391,6 +422,7 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # 1 Virtual Ethernet interface
+            # 6 Virtual Ethernet interfaces
             m = p31_1.match(line)
             if m:
                 if 'interfaces' not in version_dict:
@@ -973,7 +1005,7 @@ class ShowModule(ShowModuleSchema):
         parsed_output = {}
 
         # 1    2  Catalyst 6000 supervisor 2 (Active)    WS-X6K-S2U-MSFC2   SAD0628035C
-        # 2    0  Supervisor-Other                       unknown            unknown        
+        # 2    0  Supervisor-Other                       unknown            unknown
         r1 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+'
                          '(S|s)upervisor.+)\s+(?P<model>\S+)\s+'
                          '(?P<serial_number>\S+)')
@@ -987,16 +1019,16 @@ class ShowModule(ShowModuleSchema):
         r3 = re.compile('(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+)\s{2,}'
                         '(?P<model>\S+)\s+(?P<serial_number>\S+)')
 
-        # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok 
+        # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok
         # 3  0005.74ff.1b9d to 0005.74ff.1bac   1.3   12.1(5r)E1   12.1(13)E3,  Ok
-        # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok    
+        # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok
         r4 = re.compile(r'(?P<mod>\d+)\s+(?P<mac_from>\S+)\s+to\s+(?P<mac_to>\S+)'
                          '\s+(?P<hw>\S+)\s+(?P<fw>\S+)\s+(?P<sw>[\d\.\(\)\w]+)\,'
                          '*\s+(?P<status>(Ok|Unknown))')
 
-        # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok     
-        # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok   
-        # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
+        # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok
+        # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok
+        # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok
         # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
         r5 = re.compile(r'(?P<mod>\d+)\s+(?P<sub_mod>.+)\s+(?P<model>\S+)\s+'
                          '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
@@ -1008,7 +1040,7 @@ class ShowModule(ShowModuleSchema):
             line = line.strip()
 
             # 1    2  Catalyst 6000 supervisor 2 (Active)    WS-X6K-S2U-MSFC2   SAD0628035C
-            # 2    0  Supervisor-Other                       unknown            unknown        
+            # 2    0  Supervisor-Other                       unknown            unknown
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -1076,9 +1108,9 @@ class ShowModule(ShowModuleSchema):
 
                 continue
 
-            # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok 
+            # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok
             # 3  0005.74ff.1b9d to 0005.74ff.1bac   1.3   12.1(5r)E1   12.1(13)E3,  Ok
-            # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok   
+            # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok
             result = r4.match(line)
             if result:
                 group = result.groupdict()
@@ -1107,9 +1139,9 @@ class ShowModule(ShowModuleSchema):
 
                 continue
 
-            # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok        
-            # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok   
-            # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
+            # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok
+            # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok
+            # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok
             # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
             result = r5.match(line)
             if result:
