@@ -1,0 +1,6 @@
+CDP counters :
+	Total packets output: 297183, Input: 2546
+	Hdr syntax: 0, Chksum error: 0, Encaps failed: 10
+	No memory: 0, Invalid packet: 7, 
+	CDP version 1 advertisements output: 0, Input: 0
+	CDP version 2 advertisements output: 297183, Input: 2546

@@ -1,0 +1,5 @@
+
+Name                 Interface                      Inconsistency
+-------------------- ------------------------------ ------------------
+
+Number of inconsistent ports (segments) in the system : 0

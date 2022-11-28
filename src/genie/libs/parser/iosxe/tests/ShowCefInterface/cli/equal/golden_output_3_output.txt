@@ -1,0 +1,14 @@
+Vlan1 is up (if_number 159)
+  Corresponding hwidb fast_if_number 159
+  Corresponding hwidb firstsw->if_number 159
+  Internet Protocol processing disabled
+  Hardware idb is Vlan1
+  Fast switching type 1, interface type 156
+  IP CEF switching disabled
+  IP Null turbo vector
+  IP Null turbo vector
+  IP prefix lookup IPv4 mtrie 8-8-8-8 optimized
+  Input fast flags 0x0, Output fast flags 0x0
+  ifindex 158(158)
+  Slot 0 (0) Slot unit 1 VC -1
+  IP MTU 0

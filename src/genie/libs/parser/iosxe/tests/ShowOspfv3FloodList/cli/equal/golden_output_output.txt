@@ -1,0 +1,23 @@
+          OSPFv3 50 address-family ipv6 (router-id 2.200.1.2)
+
+ Interface Vlan3892, Queue length 0
+
+ Interface Vlan3891, Queue length 0
+
+ Interface Vlan3888, Queue length 0
+
+ Interface Vlan1031, Queue length 0
+
+ Interface Vlan50, Queue length 0
+
+ Interface Port-channel192, Queue length 0
+
+ Interface Port-channel100, Queue length 0
+
+ Interface Port-channel80.2501, Queue length 0
+
+ Interface Port-channel70.2500, Queue length 0
+
+ Interface Port-channel52.4294967295, Queue length 0
+
+ Interface Port-channel33, Queue length 0

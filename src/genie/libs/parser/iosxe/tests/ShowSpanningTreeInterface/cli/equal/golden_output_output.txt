@@ -1,0 +1,4 @@
+Vlan                Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+VLAN0100            Desg FWD 20000     128.13   P2p Edge
+VLAN0200           Desg FWD 30000     128.15   P2p Edge

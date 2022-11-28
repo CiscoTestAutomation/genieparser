@@ -8355,7 +8355,10 @@ class ShowCryptoIkev2StatsSchema(MetaParser):
                     'incoming_challenge_reject': int,
                     'incoming_challenge_no_cookie': int                   
                 },
-                'deleted_sessions_cert_revoke': int
+                'deleted_sessions_cert_revoke': int,
+                Optional('active_qr_sessions'): int,
+                Optional('qr_manual'): int,
+                Optional('qr_dynamic'): int                
             },
         }
     
@@ -8417,6 +8420,8 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
         # Total Deleted sessions of Cert Revoked Peers: 0 
         p11 = re.compile(r'^Total Deleted sessions of Cert Revoked Peers:\s+(?P<del_sess_cert>\d+)$')
 
+        # Sessions with Quantum Resistance: 1        Manual: 4294967291 Dynamic: 6
+        p12 = re.compile(r'^Sessions with Quantum Resistance:\s+(?P<active_qr_sessions>\d+)\s+Manual:\s+(?P<qr_manual>\d+)\s+Dynamic:\s+(?P<qr_dynamic>\d+)$')
 
         # initial return dictionary
 
@@ -8516,7 +8521,16 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
                 group = m.groupdict()                   
                 v2stat_dict.update({'deleted_sessions_cert_revoke': int(group['del_sess_cert'])})
                 continue
-                
+
+            # Sessions with Quantum Resistance: 1        Manual: 4294967291 Dynamic: 6
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                v2stat_dict.update({'active_qr_sessions': int(group['active_qr_sessions'])})
+                v2stat_dict.update({'qr_manual': int(group['qr_manual'])})
+                v2stat_dict.update({'qr_dynamic': int(group['qr_dynamic'])})
+                continue
+
         return ret_dict
 
 

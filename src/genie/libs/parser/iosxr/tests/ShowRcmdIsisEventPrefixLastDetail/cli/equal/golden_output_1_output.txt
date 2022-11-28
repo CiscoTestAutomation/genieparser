@@ -1,0 +1,37 @@
+Mon Oct 31 12:04:10.934 UTC
+Legend:
+* - IP-FRR LFA Backup Path
+^ - IP-FRR Remote LFA Backup Path
+Time values are in the order of milliseconds
+    
+ISIS process: isis1           
+Event: 7       
+
+    Prefix: 4.4.4.4/32            Metric: 30          Priority: Low       
+    Route Type: L1                Path-Type: Backup   Chg-Type: Modify    IP-FRR Event ID: 2            
+
+    Paths: HundredGigE0/0/0/1             NextHop: 10.5.1.2           Metric: 10     Chg-Type: NoChange 
+           * HundredGigE0/0/0/0           NextHop: 10.1.1.2           Metric: 10     Chg-Type: Add        
+           
+    Trigger Time: Oct 31 06:10:21.775                 
+    
+    Summary:       
+        IP Route Program Time:        Min: 26(0/1/CPU0)             Max: 28(0/0/CPU0)             
+        MPLS Label Program Time:      Min: 29(0/1/CPU0)             Max: 31(0/0/CPU0)             
+
+    Timeline:
+        Details: (Offset from Trigger Time)                         
+            ISIS:                0
+            RIBv4-Enter:         0
+            RIBv4-Exit:          2
+            RIBv4-Redist:        3
+            LDP Enter:           3
+            LDP Exit:            5
+            LSD Enter:           5
+            LSD Exit:            7
+            LC Details(IP Path):
+              S  0/0/CPU0       28
+              F  0/1/CPU0       26
+            LC Details(MPLS Path):
+              S  0/0/CPU0       31
+              F  0/1/CPU0       29

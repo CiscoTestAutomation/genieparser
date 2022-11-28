@@ -1,0 +1,8 @@
+TDR test last run on: November 15 09:57:29
+
+Interface   Speed Local pair Pair length        Remote pair Pair status
+---------   ----- ---------- ------------------ ----------- --------------------
+Gi1/0/1     1000M Pair A     N/A                N/A         Not Completed      
+                  Pair B     N/A                N/A         Not Completed      
+                  Pair C     N/A                N/A         Not Completed      
+                  Pair D     N/A                N/A         Not Completed  

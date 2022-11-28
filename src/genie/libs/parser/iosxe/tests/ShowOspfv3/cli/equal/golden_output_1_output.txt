@@ -1,0 +1,92 @@
+show ospfv3
+ OSPFv3 5 address-family ipv4
+ Router ID 21.1.1.1
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Maximum number of non self-generated LSA allowed 200
+    Current number of non self-generated LSA 8
+    Threshold for warning message 75%
+    Ignore-time 5 minutes, reset-time 10 minutes
+    Ignore-count allowed 2, current ignore-count 0
+ Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+ It is an autonomous system boundary router
+ Redistributing External Routes from,
+    connected
+    bgp 100
+    isis 1
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ Retransmission limit dc 24 non-dc 24
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 9. Checksum Sum 0x04074C
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Graceful restart helper support enabled
+ Reference bandwidth unit is 100 mbps
+ RFC1583 compatibility enabled
+    Area BACKBONE(0)
+        Number of interfaces in this area is 1
+        SPF algorithm executed 10 times
+        Number of LSA 6. Checksum Sum 0x037090
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+ Maintenance Mode ID:     140410988076336
+ Maintenance Mode:        disabled
+ Maintenance Mode Timer:  stopped (0)
+  Graceful Reload FSU Global status : None (global: None)
+
+ OSPFv3 5 address-family ipv6
+ Router ID 21.1.1.1
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Maximum number of non self-generated LSA allowed 4294967295
+    Current number of non self-generated LSA 5
+    Threshold for warning message 75%
+    Ignore-time 5 minutes, reset-time 10 minutes
+    Ignore-count allowed 65535, current ignore-count 0
+ Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+ It is an autonomous system boundary router
+ Redistributing External Routes from,
+    connected
+    Maximum limit of redistributed prefixes 10101 (warning-only)
+    Threshold for warning message 75%
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ Retransmission limit dc 24 non-dc 24
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 5. Checksum Sum 0x02D2BA
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Graceful restart helper support enabled
+ Reference bandwidth unit is 100 mbps
+ RFC1583 compatibility enabled
+    Area BACKBONE(0)
+        Number of interfaces in this area is 1
+        SPF algorithm executed 8 times
+        Number of LSA 6. Checksum Sum 0x040B4A
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+ Maintenance Mode ID:     140410988076336
+ Maintenance Mode:        disabled
+ Maintenance Mode Timer:  stopped (0)
+  Graceful Reload FSU Global status : None (global: None)

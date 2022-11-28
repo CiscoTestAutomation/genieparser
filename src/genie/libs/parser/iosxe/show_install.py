@@ -899,3 +899,57 @@ class ShowException(ShowExceptionSchema):
                 continue
         return ret_dict
 
+# ======================================================
+# Parser for 'show install committed '
+# ======================================================
+
+class ShowInstallCommittedSchema(MetaParser):
+    """Schema for show install committed"""
+
+    schema = {
+        'committed': {
+            Any(): {
+                'type': str,
+                'state': str,
+                'version': str,
+            },
+        },
+        'abort_timer': str,
+    }
+
+class ShowInstallCommitted(ShowInstallCommittedSchema):
+    """Parser for show install committed"""
+
+    cli_command = 'show install committed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # IMG   C    17.06.03.0.3629
+        p1 = re.compile(r"^(?P<type>\w+)\s+(?P<state>\S)\s+(?P<version>\S+)$")
+        # Auto abort timer: inactive
+        p2 = re.compile(r"^Auto\s+abort\s+timer:\s+(?P<abort_timer>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # IMG   C    17.06.03.0.3629
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                version_var = dict_val['version']
+                committed = ret_dict.setdefault('committed', {})
+                version_dict = ret_dict['committed'].setdefault(version_var, {})
+                version_dict['type'] = dict_val['type']
+                version_dict['state'] = dict_val['state']
+                version_dict['version'] = dict_val['version']
+                continue
+            # Auto abort timer: inactive
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['abort_timer'] = dict_val['abort_timer']
+                continue
+
+        return ret_dict

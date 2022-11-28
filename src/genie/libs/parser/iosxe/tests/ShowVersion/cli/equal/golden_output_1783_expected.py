@@ -64,7 +64,8 @@ expected_output = {
                 "model_rev_num": "V00",
                 "system_sn": "FDO2607J4SK",
                 "top_assembly_part_num": "68-103582-02",
-                "top_assembly_rev_num": "02"
+                "top_assembly_rev_num": "02",
+                "system_fpga_version": "0.2.9"
             }
         },
         "system_image": "flash:s5200-universalk9.BLD_POLARIS_DEV_LATEST_20220708_143608.SSA.bin",

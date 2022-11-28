@@ -520,7 +520,7 @@ expected_output = {
                             "weight": {"level": {1: 0, 2: 0}},
                             "mpls": {
                                 "mpls_max_label_stack": "1/1/10/10 (PRI/BKP/SRTE/SRAT)",
-                                "ldp_sync": {"level": {1: "Enabled", 2: "Enabled"}},
+                                "ldp_sync": {"level": {1: "Enabled", 2: "Enabled"}, 'status': 'Achieved'},
                             },
                             "frr": {
                                 "level": {

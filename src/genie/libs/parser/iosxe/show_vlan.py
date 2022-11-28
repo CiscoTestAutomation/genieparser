@@ -874,3 +874,45 @@ class ShowVlanSummary(ShowVlanSummarySchema):
 
         return ret_dict
 
+class ShowVlanDot1qTagNativeSchema(MetaParser):
+    """Schema for show vlan dot1q tag native"""
+    schema = {
+        'ports': {
+            Any(): {
+                'mode': str,
+                'state': str
+            }
+        }
+    }
+
+class ShowVlanDot1qTagNative(ShowVlanDot1qTagNativeSchema):
+    """Parser for show vlan dot1q tag native"""
+    cli_command = 'show vlan dot1q tag native'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # *************************
+        # Port         Operational        Native VLAN
+        #                 Mode            Tagging State
+        # -------------------------------------------
+        #
+        # Tw1/0/4      trunk                 disabled
+        # Gi3/0/24     trunk                 disabled
+        p1 = re.compile(r'^(?P<port>[\w\/\-\.]+)\s+(?P<mode>trunk)\s+(?P<state>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('ports', {}).setdefault(Common.convert_intf_name(group['port']), {
+                    'mode': group['mode'],
+                    'state': group['state']
+                })
+
+        return ret_dict

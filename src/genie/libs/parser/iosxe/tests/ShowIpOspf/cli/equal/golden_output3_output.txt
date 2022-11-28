@@ -1,0 +1,72 @@
+show ip ospf
+ Routing Process "ospf 1" with ID 2.2.2.2
+ Start time: 00:07:57.265, Time elapsed: 8w5d
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Supports Link-local Signaling (LLS)
+ Supports area transit capability
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Maximum number of non self-generated LSA allowed 1000000
+    Current number of non self-generated LSA 9
+    Threshold for warning message 60%
+    Ignore-time 10 minutes, reset-time 44 minutes
+    Ignore-count allowed 22, current ignore-count 0
+ Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+ It is an area border and autonomous system boundary router
+ Redistributing External Routes from,
+    connected, includes subnets in redistribution
+    Maximum limit of redistributed prefixes 312321312 (warning-only)
+    Threshold for warning message 90%
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Incremental-SPF disabled
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 7. Checksum Sum 0x029C32
+ Number of opaque AS LSA 0. Checksum Sum 0x000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 2. 2 normal 0 stub 0 nssa
+ Number of areas transit capable is 0
+ External flood list length 0
+ IETF NSF helper support enabled
+ Cisco NSF helper support enabled
+ Reference bandwidth unit is 100 mbps
+    Area BACKBONE(0)
+        Number of interfaces in this area is 1
+        Area has no authentication
+        SPF algorithm last executed 3w3d ago
+        SPF algorithm executed 14 times
+        Area ranges are
+        Number of LSA 7. Checksum Sum 0x03BF96
+        Number of opaque link LSA 0. Checksum Sum 0x000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+    Area 2
+        Number of interfaces in this area is 1
+        Area has no authentication
+        SPF algorithm last executed 3w3d ago
+        SPF algorithm executed 7 times
+        Area ranges are
+        Number of LSA 7. Checksum Sum 0x041251
+        Number of opaque link LSA 0. Checksum Sum 0x000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+ Maintenance Mode ID:     140410988078960
+ Maintenance Mode:        disabled
+ Maintenance Mode Timer:  stopped (0)
+  Graceful Reload FSU Global status : None (global: None)
+        

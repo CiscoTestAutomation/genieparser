@@ -349,6 +349,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         # Init vars
         ret_dict = {}
+        max_lsa = False
+        redist_max_prefix = False
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
@@ -400,7 +402,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                             '(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?'
                             '(?:, +(?P<nssa>(nssa areas only)))?$')
 
-        p12_4 = re.compile(r'^Maximum +number +of +redistributed +prefixes'
+        p12_4 = re.compile(r'^Maximum +limit +of +redistributed +prefixes'
                             ' +(?P<num_prefix>(\d+))'
                             '(?: +\((?P<warn>(warning-only))\))?')
 
@@ -484,7 +486,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                             ' +(?P<num>(\d+))$')
 
         p33 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
-                            ' +allowed +(?P<max_lsa>(\d+))$')
+                            ' +allowed +(?P<max_lsa>(\d+))(?: +\((?P<warn>(warning-only))\))?')
 
         p33_1 = re.compile(r'^Current +number +of +non +self\-generated +LSA +(?P<max_lsa_current>\d+)$')
 
@@ -756,6 +758,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             # Maximum number of redistributed prefixes 3000 (warning-only)
             m = p12_4.match(line)
             if m:
+                redist_max_prefix = True
                 if 'max_prefix' not in sub_dict['redistribution']:
                     sub_dict['redistribution']['max_prefix'] = {}
                 sub_dict['redistribution']['max_prefix']['num_of_prefix'] = \
@@ -768,7 +771,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
             # Threshold for warning message 70%
             m = p12_5.match(line)
-            if m:
+            if m and redist_max_prefix:
+                redist_max_prefix = False
                 if 'max_prefix' not in sub_dict['redistribution']:
                     sub_dict['redistribution']['max_prefix'] = {}
                 sub_dict['redistribution']['max_prefix']['prefix_thld'] = \
@@ -1030,17 +1034,22 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Maximum number of non self-generated LSA allowed 123
+            # Maximum number of non self-generated LSA allowed 123 warning-only
             m = p33.match(line)
             if m:
+                max_lsa = True
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
                 sub_dict['database_control']['max_lsa'] = \
                     int(m.groupdict()['max_lsa'])
+                if m.groupdict()['warn']:
+                    sub_dict['database_control']['max_lsa_warning_only'] = True
                 continue
 
             # Current number of non self-generated LSA 0
             m = p33_1.match(line)
-            if m:
+            if m and max_lsa:
+                max_lsa = False
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
                 sub_dict['database_control']['max_lsa_current'] = \
@@ -10538,4 +10547,111 @@ class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema):
                 tmp_dict['delete'] = int(group['delete'])
                 tmp_dict['maxage'] = int(group['maxage'])
         
+        return ret_dict
+
+
+class ShowIpOspfNsrSchema(MetaParser):
+    """Schema for show ip ospf nsr"""
+
+    schema = {
+        'redundancy_state': str,
+        'peer_redundancy_state': str,
+        'ospf_num': int,
+        'ospf_id': str,
+        'sequence_num': int,
+        'sync_operations': int,
+        'check_time': str,
+        'check_date': str,
+        'lsa_count': int,
+        'checksum': str,
+    }
+
+
+class ShowIpOspfNsr(ShowIpOspfNsrSchema):
+    """Parser for show ip ospf nsr"""
+
+    cli_command = 'show ip ospf nsr'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Redundancy state: ACTIVE
+        p1 = re.compile(r"^Redundancy\s+state:\s+(?P<redundancy_state>\w+)$")
+        
+        # Peer redundancy state: STANDBY HOT
+        p2 = re.compile(r"^Peer\s+redundancy\s+state:\s+(?P<peer_redundancy_state>\S+\s+\S+)$")
+        
+        # Routing Process "ospf 50" with ID 2.200.1.2
+        p3 = re.compile(r"^Routing\s+Process\s+\"ospf\s+(?P<ospf_num>\d+)\"\s+with\s+ID\s+(?P<ospf_id>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # Checkpoint message sequence number: 12358
+        p4 = re.compile(r"^Checkpoint\s+message\s+sequence\s+number:\s+(?P<sequence_num>\d+)$")
+        
+        # Bulk sync operations:  1
+        p5 = re.compile(r"^Bulk\s+sync\s+operations:\s+(?P<sync_operations>\d+)$")
+        
+        # Next sync check time:  20:29:44.061 IST Thu Oct 6 2022
+        p6 = re.compile(r"^Next\s+sync\s+check\s+time:\s+(?P<check_time>\S+)\s+(?P<check_date>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        
+        # LSA Count: 60, Checksum Sum 0x001DF372
+        p7 = re.compile(r"^LSA\s+Count:\s+(?P<lsa_count>\d+),\s+Checksum\s+Sum\s+(?P<checksum>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Redundancy state: ACTIVE
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['redundancy_state'] = dict_val['redundancy_state']
+                continue
+
+            # Peer redundancy state: STANDBY HOT
+            match_obj = p2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['peer_redundancy_state'] = dict_val['peer_redundancy_state']
+                continue
+
+            # Routing Process "ospf 50" with ID 2.200.1.2
+            match_obj = p3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['ospf_num'] = int(dict_val['ospf_num'])
+                ret_dict['ospf_id'] = dict_val['ospf_id']
+                continue
+
+            # Checkpoint message sequence number: 12358
+            match_obj = p4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['sequence_num'] = int(dict_val['sequence_num'])
+                continue
+            
+            # Bulk sync operations:  1
+            match_obj = p5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['sync_operations'] = int(dict_val['sync_operations'])
+                continue
+
+            # Next sync check time:  20:29:44.061 IST Thu Oct 6 2022
+            match_obj = p6.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['check_time'] = dict_val['check_time']
+                ret_dict['check_date'] = dict_val['check_date']
+                continue
+
+            # LSA Count: 60, Checksum Sum 0x001DF372
+            match_obj = p7.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['lsa_count'] = int(dict_val['lsa_count'])
+                ret_dict['checksum'] = dict_val['checksum']
+                continue
+
         return ret_dict

@@ -1,0 +1,18 @@
+-------------------------
+Device ID: morph-192net
+Entry address(es): 
+Platform: cisco WS-C3850-48T,  Capabilities: Switch IGMP 
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet1/0/18
+Holdtime : 133 sec
+
+Version :
+Cisco IOS Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 15.2(3.1.30)E1, EARLY DEPLOYMENT PROD BUILD ENGINEERING NOVA_WEEKLY BUILD, synced to  END_OF_FLO_ISP
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Fri 12-Dec-14 06:48 by gereddy
+
+advertisement version: 2
+Peer Source MAC: 381c.1aa7.6012
+VTP Management Domain: ''
+Native VLAN: 1
+Duplex: full
