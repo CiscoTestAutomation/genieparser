@@ -1,0 +1,13 @@
+Tue Nov 15 07:45:44.542 UTC
+
+Protocol: ISIS    Process Name: isis1
+    Inst-Name: default:default:0 Upd-Time: Nov 14 10:45:35.012
+      Spf(T/RC/NR/NI): 4/0/0/0 LSP(C/L): 0/6 Arch(Spf/Lsp): 0/0
+        Inst-Id: 213120182 Upd-Time: Nov 14 10:45:35.013 State: Active Deleted: No FwdRef: No SpfOff: 0
+          Spf(T/RC/NR/NI): 4/3/1/0 Arch(Spf): 0 Total(Spt): 0
+
+Protocol: NA    Process Name: LDP
+    Inst-Name: default-ipv4 Upd-Time: Nov 14 10:45:35.009
+      Spf(T/RC/NR/NI): 0/0/0/0 LSP(C/L): 0/0 Arch(Spf/Lsp): 0/0
+        Inst-Id: 521118286 Upd-Time: Nov 14 10:45:35.010 State: Active Deleted: No FwdRef: No SpfOff: 0
+          Spf(T/RC/NR/NI): 0/0/0/0 Arch(Spf): 0 Total(Spt): 0

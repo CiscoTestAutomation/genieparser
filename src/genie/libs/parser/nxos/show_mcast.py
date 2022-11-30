@@ -13,7 +13,6 @@ NXOS parsers for the following show commands:
 
 # Python
 import re
-
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
@@ -279,15 +278,40 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
             out = output
 
         ipv6_mroute_vrf_all_dict = {}
+        # IPv6 Multicast Routing Table for VRF "default
+        # IPv6 Multicast Routing Table for VRF " vxlan-1001"
+        p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                            r' +[rR]outing +[tT]able +for +VRF'
+                            r' +(?P<vrf>\S+)$')
+        # (*, ff30::/12), uptime: 3d11h, pim6 ipv6
+        # (*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
+        p2 = re.compile(r'^\s*\((?P<source_address>(\S+)),'
+                            r' +(?P<multicast_group>(\S+))\),'
+                            r' *(?P<bidir>(\S+),)? *uptime:'
+                            r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
+                            r' *(?P<flag>[a-zA-Z0-9\s]+))?$')
+        # Incoming interface: Null, RPF nbr: 0::
+        # Incoming interface: Vlan71, RPF nbr: 2001:1:1:4d::1, internal
+        p3 =  re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+),'
+                             r' +RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\.]+),? *(?P<internal>internal)?$')
+        # Outgoing interface list: (count: 0)
+        # Outgoing interface list: (count: 2) (Fabric OIF)
+        p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
+                             ' +(?P<oil_count>[0-9]+)\) *(?P<fabric_oif>\(Fabric +OIF\))?$')
+        # loopback2, uptime: 3d11h, igmp
+        # port-channel80, uptime: 3d23h, pim6
+        p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
+                            r')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
+                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)$')
+        #Vlan71, uptime: 06:53:02, m6rib, (RPF)
+        #Vlan71, uptime: 06:53:02, m6rib, (bridge-only)
+        p5_1 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)'
+                            r',)? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
+                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)'
+                            r'(, +\((?P<oif_rpf>RPF|bridge-only)\))?$')
 
         for line in out.splitlines():
             line = line.rstrip()
-
-            # IPv6 Multicast Routing Table for VRF "default
-            # IPv6 Multicast Routing Table for VRF " vxlan-1001"
-            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                            r' +[rR]outing +[tT]able +for +VRF'
-                            r' +(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -302,14 +326,6 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 if address_family not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family']:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family] = {}
                 continue
-
-            # (*, ff30::/12), uptime: 3d11h, pim6 ipv6
-            # (*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
-            p2 = re.compile(r'^\s*\((?P<source_address>(\S+)),'
-                            r' +(?P<multicast_group>(\S+))\),'
-                            r' *(?P<bidir>(\S+),)? *uptime:'
-                            r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                            r' *(?P<flag>[a-zA-Z0-9\s]+))?$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -342,11 +358,6 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
                     [multicast_group]['source_address'][source_address]['bidir'] = True
                 continue
-
-            # Incoming interface: Null, RPF nbr: 0::
-            # Incoming interface: Vlan71, RPF nbr: 2001:1:1:4d::1, internal
-            p3 =  re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+),'
-                             r' +RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\.]+),? *(?P<internal>internal)?$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -368,24 +379,14 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 if internal:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]['incoming_interface_list'][incoming_interface]['internal'] = True
                 continue
-
-            # Outgoing interface list: (count: 0)
-            # Outgoing interface list: (count: 2) (Fabric OIF)
-            p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
-                             ' +(?P<oil_count>[0-9]+)\) *(?P<fabric_oif>\(Fabric +OIF\))?$')
             m = p4.match(line)
             if m:
                 oil_count = str(m.groupdict()['oil_count'])
                 ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['oil_count'] = oil_count
                 continue
-
-            # loopback2, uptime: 3d11h, igmp
-            # port-channel80, uptime: 3d23h, pim6
-            p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
-                            r')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)$')
             m = p5.match(line)
+
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
                 oil_uptime = m.groupdict()['oil_uptime']
@@ -408,12 +409,6 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 ['source_address'][source_address]['outgoing_interface_list']\
                 [outgoing_interface]['oil_flags'] = oil_flags
                 continue
-            
-            #Vlan71, uptime: 06:53:02, m6rib, (RPF)
-            p5_1 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)'
-                              r',)? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                              r' +(?:(?P<oil_flags>[\w+]+))?,?'
-                              r' +(?P<oif_rpf>(\(RPF\))+)*$')
             m = p5_1.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
@@ -439,7 +434,9 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['outgoing_interface_list']\
                 [outgoing_interface]['oif_rpf'] = oif_rpf
+            
         return ipv6_mroute_vrf_all_dict
+
 
 
 # ===========================================

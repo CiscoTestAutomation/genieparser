@@ -84,7 +84,7 @@ class ShowBootflash(ShowBootflashSchema):
 class ShowBootSystemSchema(MetaParser):
     """Schema for show boot system"""
     schema = {
-        'boot_variable': str,
+        'boot_variable': Or(str, None),
         Optional('manual_boot_variable'): str,
         Optional('is_manual_boot'): bool,
         Optional('baud'): int,
@@ -111,8 +111,9 @@ class ShowBootSystem(ShowBootSystemSchema):
 
         ret_dict={}
 
-        # BOOT variable = flash:packages.conf;
-        p1 = re.compile('^BOOT variable \=\s+(?P<boot>\S+)$')
+        # BOOT variable = flash:packages.conf; 
+        # Regexp has been updated to take care when boot variable is not set 
+        p1 = re.compile(r'(^BOOT variable ((\=\s+(?P<boot>\S+))|(does not exist))$)')
         
         # MANUAL_BOOT variable = no
         p2 = re.compile('^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
@@ -133,7 +134,7 @@ class ShowBootSystem(ShowBootSystemSchema):
         p5 = re.compile('^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
 
         # Boot Mode = DEVICE
-        p5_1 = re.compile('^Boot\sMode\s+\=\s+(?P<boot_mode>\w+)$')
+        p5_1 = re.compile('^Boot\sMode\s+\=\s+(?P<boot_mode>\S+)$')
 
         # Enable Break = yes
         p6 = re.compile('^Enable Break\s+\=\s+(?P<enable>yes|no)$')

@@ -1,0 +1,4 @@
+GigabitEthernet3/0/24 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds

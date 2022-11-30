@@ -1,0 +1,8 @@
+
+IPv6 Routing Table for VRF "VRF_Flow1_1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+100:1:1::1/128, ubest/mbest: 1/0
+    *via ::ffff:1.1.1.2%default:IPv4, [200/2219], 01:46:21, bgp-1, internal, tag 10, segid 501001 tunnelid: 0x5c5c5c5c encap: VXLAN

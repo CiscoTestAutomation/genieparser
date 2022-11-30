@@ -1,0 +1,5 @@
+
+ Interface        Trust State     Rate (pps)    Burst Interval
+ ---------------  -----------     ----------    --------------
+ Gi1/0/1          Untrusted               15                 1
+ Gi1/0/2          Untrusted               15                 1

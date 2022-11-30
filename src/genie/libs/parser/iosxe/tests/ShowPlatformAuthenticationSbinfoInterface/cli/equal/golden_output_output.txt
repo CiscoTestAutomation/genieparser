@@ -1,0 +1,37 @@
+sh platform authentication sbinfo interface g1/0/24
+            SB Access Vlan: 1
+             SB Voice Vlan: 100
+          Conf Access Vlan: 1
+           Conf Voice Vlan: 100
+          Oper Access Vlan: 1
+           Oper Voice Vlan: 100
+       Default Host Access: 1
+                Auth In VP: True
+             Client Count : 1
+               Vlan Count : 2
+
+Port-Control Auto Enabled : TRUE
+       CDP Bypass Enabled : FALSE
+                Port Mode : CLOSED
+        Control Direction : BOTH
+
+Domain Info : DATA   VOICE
+              VALID   VALID 
+ Oper Allow : FALSE      FALSE
+     Notify : TRUE      TRUE
+ Authorized : FALSE      TRUE
+
+      Flags : SECURE Mode Configured
+
+Interface      MAC          Domain   Vlan    Client    Port    Flags
+             Address                         Handle    Open       
+--------------------------------------------------------------------------
+
+ Gi1/0/24  001b.0c18.918d    VOICE    100  0x94000008  0x0002  None
+
+
+Interface  Vlan  Domain   User  Fwd   Client   VP    Flags
+                          Count Count Count  State        
+--------------------------------------------------------------------------
+ Gi1/0/24  1       DATA    1     0     0       2     None
+ Gi1/0/24  100    VOICE    2     1     1       8     None

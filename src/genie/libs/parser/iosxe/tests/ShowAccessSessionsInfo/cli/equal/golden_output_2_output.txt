@@ -1,0 +1,38 @@
+show access-session info
+Interface    MAC Address    M:D:S    Vlan     IPv4        Policy               User-Role
+-----------------------------------------------------------------------------------------
+Gi2/0/7      0010.9400.0003 D1x:D:AZ 1001 101.100.100.110 WA_Dot1xMabWa_conc.. USERABCD  
+Gi2/0/7      0010.9400.0004 D1x:D:AZ 1001 101.100.100.111 WA_Dot1xMabWa_conc.. ABCDEFGH..
+Gi2/0/7      0010.9400.0005 D1x:D:AZ 1001 101.100.100.112 WA_Dot1xMabWa_conc.. USER_ZYX..
+Gi2/0/7      0010.9400.0006 D1x:D:AZ 1001 101.100.100.113 WA_Dot1xMabWa_conc.. RANDOM    
+Gi2/0/7      0010.9400.0007 D1x:D:AZ 1001 101.100.100.114 WA_Dot1xMabWa_conc.. UA        
+Gi2/0/7      0010.9411.1111 Mab:D:AZ 1001 101.100.100.115 WA_Dot1xMabWa_conc.. 1234567890
+Gi2/0/7      0010.9411.1112 Mab:D:AZ 1001 101.100.100.116 WA_Dot1xMabWa_conc.. 1234567890
+Gi2/0/7      0010.9411.1113 Mab:D:AZ 1001 101.100.100.117 WA_Dot1xMabWa_conc.. 1234567890
+Gi2/0/7      0010.9411.1114 Mab:D:AZ 1001 101.100.100.118 WA_Dot1xMabWa_conc.. 1234567890
+Gi2/0/7      0010.9411.1115 Mab:D:AZ 1001 101.100.100.119 WA_Dot1xMabWa_conc.. 1234567890
+Gi3/0/11     0015.0100.0001 D1x:D:AZ  UA      200.1.0.210 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0002 D1x:D:AZ  UA      200.1.0.211 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0003 D1x:D:AZ  UA      200.1.0.212 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0004 D1x:D:AZ  UA      200.1.0.213 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0005 D1x:D:AZ  UA      200.1.0.214 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0006 D1x:D:AZ  UA      200.1.0.190 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0007 D1x:D:AZ  UA      200.1.0.191 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0008 D1x:D:AZ  UA      200.1.0.192 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0009 D1x:D:AZ  UA      200.1.0.193 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000a D1x:D:AZ  UA      200.1.0.194 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000b D1x:D:AZ  UA      200.1.0.195 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000c D1x:D:AZ  UA      200.1.0.196 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000d D1x:D:AZ  UA      200.1.0.197 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000e D1x:D:AZ  UA      200.1.0.198 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.000f D1x:D:AZ  UA      200.1.0.199 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0010 D1x:D:AZ  UA      200.1.0.200 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0011 D1x:D:AZ  UA      200.1.0.201 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0012 D1x:D:AZ  UA      200.1.0.202 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0013 D1x:D:AZ  UA      200.1.0.203 Dot1x                ABCDEFGH..
+Gi3/0/11     0015.0100.0014 D1x:D:AZ  UA      200.1.0.204 Dot1x                ABCDEFGH..
+Gi2/0/24     0800.0fcb.b7bf N/A:U:UZ  UA       UA         Dot1x_MAB            MITEL 53..
+Gi3/0/3      2894.0feb.9280 D1x:D:AZ  UA      200.1.0.215 Dot1x                USERABCD  
+Gi3/0/3      34db.fde5.34ab D1x:V:AZ  UA   101.101.101.21 Dot1x                CP-6941-..
+
+Session count = 33

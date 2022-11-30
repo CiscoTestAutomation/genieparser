@@ -363,7 +363,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # TenGigabitEthernet0/0/26
         # Serial0
         # VoIP-Null0
-        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*))$")
+        # Ethernet2/0
+        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Et\S*))$")
 
         # Gateway         Distance      Last Update
         # 10.36.3.3            110      07:33:00
@@ -964,6 +965,10 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 # Loopback0
                 # GigabitEthernet2
                 # GigabitEthernet1
+                # TenGigabitEthernet0/0/26
+                # Serial0
+                # VoIP-Null0
+                # Ethernet2/0
                 m = p7.match(line)
                 if m:
                     if routing_networks:
@@ -976,6 +981,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         routing_on_interfaces_intfs.append(str(m.groupdict()['interface']))
                         if protocol == 'ospf':
                             ospf_dict['areas'][area]['configured_interfaces'] = routing_on_interfaces_intfs
+                        elif protocol == 'isis':
+                            isis_dict['configured_interfaces'] = routing_on_interfaces_intfs
                     elif passive_interfaces:
                         passive_intfs.append(str(m.groupdict()['interface']))
                         if protocol == 'ospf':
@@ -1308,7 +1315,7 @@ class ShowIpv6ProtocolsSectionRip(ShowIpv6ProtocolsSectionRipSchema):
 # ==============================
 class ShowIpv6ProtocolsSchema(MetaParser):
 
-    ''' Schema for "show ip protocols" '''
+    ''' Schema for "show ipv6 protocols" '''
 
     schema = {
         'protocols': {
@@ -1513,7 +1520,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                     Any(): {
                                         Optional('redistributing'): str,
                                         Optional('address_summarization'): list,
-                                        'preference': {
+                                        Optional('preference'): {
                                             'single_value': {
                                                 'all': int
                                             }
@@ -1638,8 +1645,9 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # TenGigabitEthernet0/0/26
         # Serial0
         # VoIP-Null0
+        # Ethernet2/0
         p7 = re.compile(
-            r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Vlan\S*|Po\S*))'
+            r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Vlan\S*|Po\S*|Et\S*))'
             '( +\((?P<passive>passive)\))?$'
         )
 
@@ -2009,6 +2017,10 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             # Loopback0
             # GigabitEthernet2
             # GigabitEthernet1
+            # TenGigabitEthernet0/0/26
+            # Serial0
+            # VoIP-Null0
+            # Ethernet2/0
             m = p7.match(line)
             if m:
                 if routing_networks:
@@ -2028,6 +2040,8 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         passive_intfs.append(str(group['interface']))
                     if protocol == 'ospf':
                         ospf_dict['areas'][area]['configured_interfaces'] = routing_on_interfaces_intfs
+                    elif protocol == 'isis':
+                        isis_dict['configured_interfaces'] = routing_on_interfaces_intfs
                     elif protocol == 'rip':
                         rip_dict['configured_interfaces'] = routing_on_interfaces_intfs
                     elif protocol == 'eigrp':

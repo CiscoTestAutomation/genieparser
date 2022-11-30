@@ -11,6 +11,7 @@ IOSXE parsers for the following show commands:
     * show license eventlog 2
     * show license usage
     * show license tech support
+    * show license history message
 
 '''
 
@@ -3370,3 +3371,72 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         return ret_dict
         
 
+class ShowLicenseHistoryMessageSchema(MetaParser):
+    """Schema for show license history message"""
+    schema = {
+        'message_history': {
+            'trust_establishment': str,
+            'usage_reporting': str,
+            'result_polling': str,
+            'authorization_request': str,
+            'authorization_return': str,
+            'trust_sync': str
+        },
+        'import_message_history': {
+            'policy': str,
+            'auth': str,
+            'trust_code': str,
+            'rum_ack': str,
+            'conversion_ack': str,
+            'account_info': str
+        }
+    }
+
+
+class ShowLicenseHistoryMessage(ShowLicenseHistoryMessageSchema):
+    """Parser for show license history message"""
+    cli_command = 'show license history message'
+
+    def cli(self, output=None):
+        if output is None:
+          output = self.device.execute(self.cli_command)
+
+        # Message History (oldest to newest):
+        # Import Message History (oldest to newest):
+        p1 = re.compile(r'^[Import]*\s*Message\s+History\s+\(oldest\s+to\s+newest\):$')
+
+        # Trust Establishment:
+        p2 = re.compile(r'^(?P<key_name>(Trust\s+Establishment|Usage\s+Reporting|Result\s+Polling|'
+        r'Authorization\s+Request|Authorization\s+Return|Trust\s+Sync|Import\s+POLICY|Import\s+AUTH|'
+        r'Import\s+TRUST\s+CODE|Import\s+RUM\s+ACK|Import\s+CONVERSION\s+ACK|Import\s+ACCOUNT\s+INFO)):$')
+
+        # No past history
+        p3 = re.compile(r'^[\w\s]+$')
+
+        ret_dict = dict()
+        tmp_key = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Message History (oldest to newest):
+            # Import Message History (oldest to newest):
+            match = p1.match(line)
+            if match:
+                hist_dict = ret_dict.setdefault('import_message_history' if 'Import' in match.group() else 'message_history', {})
+                continue
+            
+            # Trust Establishment:
+            match = p2.match(line)
+            if match:
+                tmp_key = re.sub('\s+', '_', match.groupdict()['key_name'].lower())
+                tmp_key = re.sub('import_', '', tmp_key)
+                continue
+
+            # No past history
+            match = p3.match(line)
+            if match:
+                hist_dict[tmp_key] = match.group()
+                continue
+
+        return ret_dict

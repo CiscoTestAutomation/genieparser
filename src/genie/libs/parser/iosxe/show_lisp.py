@@ -6420,9 +6420,10 @@ class ShowLispAR(ShowLispARSchema):
             r"(?P<lisp_id>\d+)\s+instance-id\s+(?P<instance_id>\d+)$")
 
         # 0    192.168.1.1/32       aabb.cc00.ca00
+        # 4100 2001:192:168:1::71/128 aabb.cc00.c901
         p2 = re.compile(
             r"^(?P<l2_inst_id>\d+)\s+(?P<eid_address>[0-9.]+\d+\/\d+"
-            r"|[0-9a-fA-F.:]+\d+\/\d+)\s+(?P<mac_addr>[0-9a-fA-F.]+)$")
+            r"|[0-9a-fA-F.:]+\d+\/\d+|[0-9a-fA-F.:]+\/\d+)\s+(?P<mac_addr>[0-9a-fA-F.]+)$")
 
         for line in out.splitlines():
             line = line.strip()

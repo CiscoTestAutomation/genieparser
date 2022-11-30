@@ -1832,26 +1832,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
-            m = p3_4.match(line)
-            if m:
-                # Get keys
-                if 'njected' not in line and 'next_hop' in m.groupdict():
-                    next_hop = str(m.groupdict()['next_hop'])
-
-                    if data_on_nextline:
-                        data_on_nextline =  False
-                    else:
-                        index += 1
-
-                    # Init dict
-                    index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
-                      .setdefault('index', {}).setdefault(index, {})
-
-                    # Set keys
-                    index_dict['next_hop'] = next_hop
-                continue
-
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
@@ -2154,6 +2134,26 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_as_set'] = True
                         af_dict['aggregate_address_summary_only'] = True
                         continue
+                continue
+
+            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
+            m = p3_4.match(line)
+            if m:
+                # Get keys
+                if 'njected' not in line and 'next_hop' in m.groupdict():
+                    next_hop = str(m.groupdict()['next_hop'])
+
+                    if data_on_nextline:
+                        data_on_nextline =  False
+                    else:
+                        index += 1
+
+                    # Init dict
+                    index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                      .setdefault('index', {}).setdefault(index, {})
+
+                    # Set keys
+                    index_dict['next_hop'] = next_hop
                 continue
 
         # order the af prefixes index
@@ -9406,6 +9406,19 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                             '(?P<remote_port>\d+) +'
                             '(?P<notifications_sent>\d+)\/'
                             '(?P<notifications_received>\d+)$')
+        # 4.4.4.1         4258745628
+        p7_1 = re.compile(r'^(?P<nei>[\da-f.\:]+) +'
+                            '(?P<asn>\d+)$')
+        #                     0     00:01:39|00:00:11|00:00:20 E   179/21890      0/0
+        p7_2 = re.compile(r'^(?P<dropped>\d+) +'
+                            '(?P<last_flap>[\w\.\:]+) *\|'
+                            '(?P<last_read>[\w\.\:]+) *\|'
+                            '(?P<last_write>[\w\.\:]+) +'
+                            '(?P<state>[a-zA-Z]) +'
+                            '(?P<local_port>\d+)\/'
+                            '(?P<remote_port>\d+) +'
+                            '(?P<notifications_sent>\d+)\/'
+                            '(?P<notifications_received>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -9513,6 +9526,53 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
                     int(group['asn'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
+                    int(group['dropped'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_flap'] = \
+                    group['last_flap']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_read'] = \
+                    group['last_read']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_write'] = \
+                    group['last_write']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['state'] = \
+                    status_map[group['state']]
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['local_port'] = \
+                    int(group['local_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_port'] = \
+                    int(group['remote_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_sent'] = \
+                    int(group['notifications_sent'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_received'] = \
+                    int(group['notifications_received'])
+                continue
+
+            # 4.4.4.1         4258745628
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+
+                nei = group['nei']
+                if 'neighbor' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['neighbor'] = {}
+                if nei not in ret_dict['vrf'][vrf]['neighbor']:
+                    ret_dict['vrf'][vrf]['neighbor'][nei] = {}
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
+                    int(group['asn'])
+                continue
+
+            m = p7_2.match(line)
+            if m:
+                group = m.groupdict()
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
                     int(group['dropped'])

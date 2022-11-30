@@ -27,6 +27,8 @@
     * show interfaces {interface} mtu
     * show interfaces mtu module {mod}
     * show interfaces status module {mod}
+    * show pm vp interface {interface} {vlan}
+    * show interfaces transceiver supported-list
 """
 
 import os
@@ -4372,7 +4374,6 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
 
             m = p1.match(line)
             if m:
-
                 group = m.groupdict()
 
                 intf_dict = result_dict.setdefault('interfaces', {}).\
@@ -4392,3 +4393,144 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
                 continue
 
         return result_dict
+
+
+# ======================================================
+# Schema for 'show pm vp interface <interface> <vlan> '
+# ======================================================
+
+class ShowPmVpInterfaceVlanSchema(MetaParser):
+    """Schema for show pm vp interface <interface> <vlan>"""
+
+    schema = {
+        'pm_vp_info': {
+            Optional('vp'): str,
+            Optional('es'): str,
+            Optional('sm'): str,
+            Optional('running'): str,
+            Optional('state'): str,
+            Optional('last_transition'): str,
+        },
+        
+    }
+
+# ======================================================
+# Parser for 'show pm vp interface <interface> <vlan> '
+# ======================================================
+class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
+    """Parser for show pm vp interface <interface> <vlan>"""
+
+    cli_command = 'show pm vp interface {interface} {vlan}'
+
+    def cli(self, interface=None, vlan=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface, vlan=vlan)
+            output = self.device.execute(cmd)
+
+        # vp: 0x50823F64: 3/3(1001) es: 0, stp forwarding, link up, fwd yes
+        p1 = re.compile(r"^vp:\s+(?P<vp>\S+\s+\S+)\s+es:\s+(?P<es>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        # sm(pm_vp 3/3(1001)), running yes, state forwarding
+        p1_1 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+(?P<running>\w+),\s+state\s+(?P<state>\w+)$")
+        # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+        p1_2 = re.compile(r"^Last\s+transition\s+recorded:\s+(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+       
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # vp: 0x50823F64: 3/3(1001) es: 0, stp forwarding, link up, fwd yes
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['vp'] = dict_val['vp']
+                pm_vp_info['es'] = dict_val['es']
+                continue
+
+            # sm(pm_vp 3/3(1001)), running yes, state forwarding
+            match_obj = p1_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['sm'] = dict_val['sm']
+                pm_vp_info['running'] = dict_val['running']
+                pm_vp_info['state'] = dict_val['state']
+                continue
+
+            # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+            match_obj = p1_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['last_transition'] = dict_val['last_transition']
+                continue
+
+        return ret_dict
+
+# ====================================================
+#  schema for show interfaces transceiver supported-list
+# ====================================================
+
+class ShowInterfacesTransceiverSupportedlistSchema(MetaParser):
+    """Schema for:
+        * show interfaces transceiver supported-list
+    """
+
+    schema = {
+        'transceiver_type': {
+            Any() : {
+                'cisco_pin_min_version_supporting_dom' : str,
+            },
+        },
+    }
+
+#====================================================
+#  parser for show interfaces transceiver supported-list
+# ====================================================
+
+class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedlistSchema):
+    """parser for show interfaces transceiver supported-list
+    """
+
+    cli_command = 'show interfaces transceiver supported-list'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        
+        transceivers_supported_list = {}
+        
+        #------------------       ------------------------- 
+        #p1 will match dashes pattern used to create dict that to start adiing the transceiver types
+        p1 = re.compile(r"\-+\s+\-+")
+
+        #   GLC-FE-100FX-RGD         ALL
+        #   GLC-SX-MM                NONE
+        p2 = re.compile(r"^(?P<transceiver>[\w-]+)\s+(?P<pin_version>(ALL|NONE))")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #------------------       -------------------------
+            m1 = p1.match(line)
+            if m1:
+                transceiver_dict = transceivers_supported_list.setdefault('transceiver_type',{})
+
+            #   GLC-FE-100FX-RGD         ALL
+            #   GLC-SX-MM                NONE
+            m2 = p2.match(line)
+            if m2:
+                transceiver_dict.update({m2.groupdict()['transceiver'] :
+                                        { "cisco_pin_min_version_supporting_dom" :
+                                        m2.groupdict()['pin_version']}})
+
+        return transceivers_supported_list
+ 
+

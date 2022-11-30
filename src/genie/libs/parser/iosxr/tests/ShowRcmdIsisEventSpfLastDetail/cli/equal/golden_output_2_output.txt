@@ -1,0 +1,46 @@
+Mon Oct 31 12:07:03.936 UTC
+Event Status: ^  no route change #  threshold exceeded ~ incomplete data * collection pending                           
+FRR Coverage: coverage value signifies for all the routes in the routing table                                
+SPF Trigger reason:                                                                       
+cf - config              cr - clear route        fr - IP-FRR config                       
+pr - periodic            ln - LSP node           la - LSP attached bit                    
+lo - LSP overload bit    lp - LSP Prefix         ll - LSP link                            
+ls - LSP new/expiry      lt - LSP IP/area address                                         
+me - interface metric    nb - neigbhor event     te - TE tunnel                           
+
+ISIS process: isis1           
+SPF Info:
+
+   ^Run: 48       Topology: 0              Level: L1                Type: Full                         
+    Trigger: Oct 31 11:40:25.507            Trigger:  ls lp                         
+                   Wait: 3164               Start: 3164              Duration: 1              
+    Trigger LSP:   85d2.0001.0000.00-0b  Seq: 1  Change-type: Delete  Time: Oct 31 11:40:25.507
+    Node Stats:    Added: 0                 Deleted: 0               Modified: 0              
+                   Reachable: 5             Unreachable: 3           Touched: 5               
+    Summary:            
+        Priority: Critical 
+            Route Count:                  Added: 0            Deleted: 0          Modified: 0         
+            FRR Coverage:                 Total: 1            Full: 1             Partial: 0          Total: 100%         
+            IP Route Program Time:        -                             
+            MPLS Label Program Time:      -                             -                             
+        Priority: High     
+            Route Count:                  Added: 0            Deleted: 0          Modified: 0         
+            FRR Coverage:                 Total: 1            Full: 1             Partial: 0          Total: 100%         
+            IP Route Program Time:        -                             
+            MPLS Label Program Time:      -                             -                             
+        Priority: Medium   
+            Route Count:                  Added: 0            Deleted: 0          Modified: 0         
+            FRR Coverage:                 Total: 1            Full: 1             Partial: 0          Total: 100%         
+            IP Route Program Time:        -                             
+            MPLS Label Program Time:      -                             -                             
+        Priority: Low      
+            Route Count:                  Added: 0            Deleted: 0          Modified: 0         
+            FRR Coverage:                 Total: 7            Full: 5             Partial: 0          Total: 71.42%       
+            IP Route Program Time:        -                             
+            MPLS Label Program Time:      -                             -                             
+
+    LSP Processed:                        
+        Id: 85d2.0001.0000.00-0b  Seq: 1  Change-type: Delete  Recv-Time: Oct 31 11:40:25.507        
+        Id: 85d2.0001.0000.00-0c  Seq: 1  Change-type: Delete  Recv-Time: Oct 31 11:40:25.529
+    LSP Regenerated:              
+        - 

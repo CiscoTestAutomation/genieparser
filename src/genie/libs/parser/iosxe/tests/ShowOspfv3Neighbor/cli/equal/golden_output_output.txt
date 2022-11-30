@@ -1,0 +1,13 @@
+
+          OSPFv3 50 address-family ipv6 (router-id 2.200.1.2)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+2.200.33.3        1   FULL/BDR        00:00:33    4584            Vlan3892
+2.200.33.3        1   FULL/DR         00:00:31    4580            Vlan3891
+2.200.33.3        1   FULL/BDR        00:00:36    4840            Vlan3888
+2.200.33.3        1   FULL/DR         00:00:32    4582            Port-channel192
+2.200.1.1         1   FULL/BDR        00:00:32    341             Port-channel100
+2.200.7.1         1   FULL/DR         00:00:33    2175            Port-channel80.2501
+2.200.6.1         1   FULL/DR         00:00:37    4102            Port-channel70.2500
+2.200.33.3        1   FULL/DR         00:00:39    4574            Port-channel52.4294967295
+2.200.33.3        1   FULL/DR         00:00:32    4571            Port-channel33

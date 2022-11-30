@@ -1,0 +1,6 @@
+Type escape sequence to abort.
+Sending 100, 256-byte ICMP Echos to 50.1.1.2, timeout is 1 seconds:
+Packet sent with the DF bit set
+Reply data will be validated
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Success rate is 100 percent (100/100), round-trip min/avg/max = 1/1/2 ms

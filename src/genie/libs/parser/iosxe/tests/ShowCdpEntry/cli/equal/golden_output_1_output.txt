@@ -1,0 +1,71 @@
+-------------------------
+Device ID: 9300-24UX-1
+Entry address(es):
+Platform: cisco C9300-24UX,  Capabilities: Switch IGMP
+Interface: TwoGigabitEthernet1/0/14,  Port ID (outgoing port): TenGigabitEthernet1/0/4
+Holdtime : 171 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.10.20220811:080104 [BLD_POLARIS_DEV_LATEST_20220811_071526:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Thu 11-Aug-22 01:01 by mcpre
+
+advertisement version: 2
+Peer Source MAC: a03d.6ea4.6f04
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: 9300-24UX-1
+Entry address(es):
+Platform: cisco C9300-24UX,  Capabilities: Switch IGMP
+Interface: TwoGigabitEthernet1/0/15,  Port ID (outgoing port): TenGigabitEthernet1/0/5
+Holdtime : 171 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.10.20220811:080104 [BLD_POLARIS_DEV_LATEST_20220811_071526:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Thu 11-Aug-22 01:01 by mcpre
+
+advertisement version: 2
+Peer Source MAC: a03d.6ea4.6f05
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: 9300-24UX-1
+Entry address(es):
+Platform: cisco C9300-24UX,  Capabilities: Switch IGMP
+Interface: TwoGigabitEthernet1/0/16,  Port ID (outgoing port): TenGigabitEthernet1/0/6
+Holdtime : 172 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.10.20220811:080104 [BLD_POLARIS_DEV_LATEST_20220811_071526:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Thu 11-Aug-22 01:01 by mcpre
+
+advertisement version: 2
+Peer Source MAC: a03d.6ea4.6f06
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: 9300-24UX-1
+Entry address(es):
+Platform: cisco C9300-24UX,  Capabilities: Switch IGMP
+Interface: TwoGigabitEthernet1/0/13,  Port ID (outgoing port): TenGigabitEthernet1/0/7
+Holdtime : 160 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.10.20220811:080104 [BLD_POLARIS_DEV_LATEST_20220811_071526:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Thu 11-Aug-22 01:01 by mcpre
+
+advertisement version: 2
+Peer Source MAC: a03d.6ea4.6f07
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full

@@ -1,0 +1,14 @@
+Mon Oct 31 11:56:31.740 UTC
+ISIS process : isis1          
+Individual Prefix Events                                                                  
+Legend: # - threshold exceeded                                                                                
+---------------------------------------------------------------------------------------------------------
+ Event Id |       Prefix       |    Trigger Time    | Priority |Path-Type | Chg-Type |   Route    | Cost 
+---------------------------------------------------------------------------------------------------------
+        1   4.4.4.4/32           Oct 31 06:10:20.872   Medium    Primary      Add         L1          40
+        2   3.3.3.3/32           Oct 31 06:10:20.872     Low     Primary      Add         L1          30
+        3   4.4.4.4/32           Oct 31 06:10:21.273   Medium    Primary     Modify       L1          30
+        4   5.5.5.5/32           Oct 31 06:10:21.775     Low     Backup      Modify       L1          20
+        5   2.2.2.2/32           Oct 31 06:10:21.775     Low     Backup      Modify       L1          20
+        6   3.3.3.3/32           Oct 31 06:10:21.775     Low     Backup      Modify       L1          30
+        7   4.4.4.4/32           Oct 31 06:10:21.775     Low     Backup      Modify       L1          30
