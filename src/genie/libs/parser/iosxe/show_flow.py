@@ -754,10 +754,10 @@ class ShowFlowMonitorAll(ShowFlowMonitorAllSchema):
         p1 = re.compile(r'^Flow\sMonitor\s(?P<flow_monitor_name>[\w\-]+)\:$')
 
         # Description:       User defined
-        p2 = re.compile(r'^Description:\s+(?P<description>[\w\s]+)$')
+        p2 = re.compile(r'^Description:\s+(?P<description>[\w\s\.]+)$')
 
         # Flow Record:       v4-rec_sgt-output
-        p3 = re.compile(r'^Flow\sRecord:\s+(?P<record_name>\S+)$')
+        p3 = re.compile(r'^Flow\sRecord:\s+(?P<record_name>[\S\s]+)$')
 
         # Flow Exporter:     StealthWatch_Exporter
         p4 = re.compile(r'^Flow\sExporter:\s+(?P<exporter_name>\S+)$')

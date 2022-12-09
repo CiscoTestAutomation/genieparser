@@ -1,0 +1,4 @@
+Current smart-licensing transport settings:
+ Smart-license messages: enabled
+ Profile: CiscoTAC-1 (status: ACTIVE)
+ Destination  URL(s):  https://tools.cisco.com/its/service/oddce/services/DDCEService

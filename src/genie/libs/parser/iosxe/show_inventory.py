@@ -47,11 +47,12 @@ class ShowInventoryRaw(ShowInventoryRawSchema):
         
         #NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
         #NAME: "Gi2/0/5", DESCR: "Gi2/0/5"
-        p1 = re.compile(r'^NAME: "(?P<name>[\w\d\s(\/\-)?]+)", DESCR: "(?P<description>[\w\d\s(\-\.\/)?]+)"$')
+        #NAME: "Switch 1 Slot 1 Temp: S1_I_00", DESCR: "Temp: S1_I_00"
+        p1 = re.compile(r'^NAME: "(?P<name>[\w\d\s(\/\-)?(\:\")*]+)", DESCR: "(?P<description>[\w\d\s(\-\.\/)?(\:\_)*]+)"$')
         
-        #PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
-        #PID: C9300-24U         , VID:      , SN:
-        #PID: Unknown PID       , VID:      , SN:
+        # PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
+        # PID: C9300-24U         , VID:      , SN:
+        # PID: Unknown PID       , VID:      , SN:
         p2 = re.compile(r'^PID:\s+(?P<pid>[\w\d\-]+|Unknown PID)?\s*,\s+VID:\s+(?P<vid>[\d\w\.]+)?\s*,\s+SN:\s*(?P<sn>[\w\d\-]+)?$')
         
         

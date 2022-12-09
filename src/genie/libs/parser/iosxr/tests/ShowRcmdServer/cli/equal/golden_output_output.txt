@@ -1,0 +1,32 @@
+Tue Aug  9 09:13:20.699 UTC
+Routing Convergence Monitoring & Diagnostics (RCMD)
+ HostName                 : R1                              
+ Status                   : Enable                  
+ Max Events Stored        : 100        Event Buffer Size        : 120        
+ Monitoring Interval(mins): 5          Next Processing due(secs): 262        
+ Last Processing Started  : Aug  9 09:12:42.888             
+ Duration(ms)             : 241        Last Processing Status   : Success    
+ Processing count         : 42         SPF Processed count      : 6          
+
+ No. of RP Nodes          : 1          No. of LC Nodes          : 1          
+ Diag Mode Nodes          : 1          Disabled Nodes           : 0          
+ InActive Nodes           : 0          
+
+ Archival Path              
+   Reports                : Not-Configured
+   Diagnostics            : Not-Configured
+ Archival count           : 0           Last Archival Status    : 'Success'
+ Last Archival Error      : 'Success'
+ Last Archival Error Time : '*'
+
+ Protocol Configuration   : 
+   OSPF:    Priority     Threshold    Disabled             
+             Critical          0        No                
+             High              0        No                
+             Medium            0        No                
+             Low               0        No   
+   ISIS:    Priority     Threshold    Disabled             
+             Critical         10        No                
+             High              0        No                
+             Medium            0        No                
+             Low               0        No  

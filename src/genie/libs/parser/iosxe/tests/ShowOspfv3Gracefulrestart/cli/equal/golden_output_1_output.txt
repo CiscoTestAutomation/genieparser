@@ -1,0 +1,5 @@
+
+          OSPFv3 5 address-family ipv6 (router-id 1.1.1.1)
+
+  Graceful Restart helper support enabled
+    Number of neighbors performing Graceful Restart is 0

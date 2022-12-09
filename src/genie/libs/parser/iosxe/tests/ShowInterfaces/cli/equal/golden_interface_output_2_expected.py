@@ -2,6 +2,7 @@ expected_output = {
     "TenGigabitEthernet0/2/0": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "SPA-1X10GE-L-V2",

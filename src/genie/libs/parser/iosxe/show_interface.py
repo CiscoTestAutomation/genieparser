@@ -26,6 +26,9 @@
     * show interfaces mtu
     * show interfaces {interface} mtu
     * show interfaces mtu module {mod}
+    * show interfaces status module {mod}
+    * show pm vp interface {interface} {vlan}
+    * show interfaces transceiver supported-list
 """
 
 import os
@@ -51,6 +54,7 @@ except Exception:
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util import merge_dict, keynames_convert
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -73,6 +77,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('oper_status'): str,
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
+                Optional('is_deleted'): bool,
                 Optional('connected'): bool,
                 Optional('err_disabled'): bool,
                 Optional('suspended'): bool,
@@ -550,6 +555,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel'] = {}
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
+
+                if 'deleted' in enabled:
+                    interface_dict[interface]['is_deleted'] = True
+                else:
+                    interface_dict[interface]['is_deleted'] = False
 
                 if 'administratively down' in enabled or 'delete' in enabled:
                     interface_dict[interface]['enabled'] = False
@@ -2142,6 +2152,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         else:
             out = output
 
+        read_multicast_reserved_lines = False
+        multicast_groups = []
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -2165,8 +2177,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 interface_dict[interface]['oper_status'] = \
                     m.groupdict()['oper_status'].lower()
 
-                # initial variables
-                multicast_groups = []
                 continue
 
             # Internet address is 192.168.76.1/24
@@ -2329,18 +2339,22 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 #Split string of addressed into a list
                 multicast_groups = multicast_groups_address.split()
 
-                interface_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                interface_dict[interface]['multicast_groups'] = multicast_groups
+                read_multicast_reserved_lines = True
                 continue
 
             # Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
-            p41_1 = re.compile(r'(?P<multicast_groups>\d+\.\d+\.\d+\.\d+)')
-            m = p41_1.findall(line)
-            if m and multicast_groups:
-                multicast_groups.extend(m)
-                interface_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
-                continue
+            #       224.0.0.5  <----- this extra line
+            if read_multicast_reserved_lines:
+                if not re.match(r"[^\d. ]", line):
+                    p41_1 = re.compile(r'(?P<multicast_groups>\d+\.\d+\.\d+\.\d+)')
+                    m = p41_1.findall(line)
+                    multicast_groups.extend(m)
+                    continue
+                else:
+                    interface_dict[interface]['multicast_groups'] \
+                        = sorted(interface_dict[interface]['multicast_groups'])
+                    read_multicast_reserved_lines = False
 
             # Outgoing Common access list is not set
             p7 = re.compile(r'^Outgoing +Common +access +list +is +'
@@ -4291,3 +4305,232 @@ class ShowInterfacesMtu(ShowInterfacesMtuSchema):
                 continue
 
         return result_dict
+
+# ====================================================
+#  schema for show interfaces status module {mod}
+# ====================================================
+
+
+class ShowInterfacesStatusModuleSchema(MetaParser):
+
+    """
+    Schema for show interfaces status module {mod} 
+
+    """
+
+    schema = {
+        Optional('interfaces'): {
+            Any(): {
+                Optional('name'): str,
+                'status': str,
+                'vlan': str,
+                'duplex_code': str,
+                'port_speed': str,
+                Optional('type'): str,
+            }
+        },
+        Optional('var') : str,
+    }
+#====================================================
+#  parser for show interfaces status module {mod}
+# ====================================================
+
+class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
+
+    ''' Parser for :
+        'show interfaces status module {mod}'
+    '''
+    cli_command = ['show interfaces status module {mod}']
+    def cli(self, mod="", output = None):
+
+        output = self.device.execute(self.cli_command[0].format(mod=mod))
+
+        result_dict = {}
+        
+        p0 = re.compile(r'(?P<var>%.*)')
+
+            # Port         Name               Status       Vlan       Duplex  Speed Type
+            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
+
+        p1 = re.compile(r'^(?P<interfaces>\S+)(?:\s+(?P<name>(.+)))?'
+                r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
+                r'\s+(?P<vlan>\d+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
+
+        
+        # %Module1 is not Present
+        
+        m = p0.match(output)
+        if m:
+            
+            var = m.groupdict()['var']
+            result_dict['var'] = var
+            
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port         Name               Status       Vlan       Duplex  Speed Type
+            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
+
+                name_val = group['name'].strip()
+                if len(name_val)>0 :
+                    intf_dict['name'] = name_val
+
+                keys = ['status',
+                        'vlan', 'duplex_code', 'port_speed',
+                        'type']
+
+                for k in keys:
+                    if group[k]:
+                        intf_dict[k] = group[k].strip()
+                continue
+
+        return result_dict
+
+
+# ======================================================
+# Schema for 'show pm vp interface <interface> <vlan> '
+# ======================================================
+
+class ShowPmVpInterfaceVlanSchema(MetaParser):
+    """Schema for show pm vp interface <interface> <vlan>"""
+
+    schema = {
+        'pm_vp_info': {
+            Optional('vp'): str,
+            Optional('es'): str,
+            Optional('sm'): str,
+            Optional('running'): str,
+            Optional('state'): str,
+            Optional('last_transition'): str,
+        },
+        
+    }
+
+# ======================================================
+# Parser for 'show pm vp interface <interface> <vlan> '
+# ======================================================
+class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
+    """Parser for show pm vp interface <interface> <vlan>"""
+
+    cli_command = 'show pm vp interface {interface} {vlan}'
+
+    def cli(self, interface=None, vlan=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface, vlan=vlan)
+            output = self.device.execute(cmd)
+
+        # vp: 0x50823F64: 3/3(1001) es: 0, stp forwarding, link up, fwd yes
+        p1 = re.compile(r"^vp:\s+(?P<vp>\S+\s+\S+)\s+es:\s+(?P<es>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        # sm(pm_vp 3/3(1001)), running yes, state forwarding
+        p1_1 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+(?P<running>\w+),\s+state\s+(?P<state>\w+)$")
+        # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+        p1_2 = re.compile(r"^Last\s+transition\s+recorded:\s+(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+       
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # vp: 0x50823F64: 3/3(1001) es: 0, stp forwarding, link up, fwd yes
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['vp'] = dict_val['vp']
+                pm_vp_info['es'] = dict_val['es']
+                continue
+
+            # sm(pm_vp 3/3(1001)), running yes, state forwarding
+            match_obj = p1_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['sm'] = dict_val['sm']
+                pm_vp_info['running'] = dict_val['running']
+                pm_vp_info['state'] = dict_val['state']
+                continue
+
+            # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+            match_obj = p1_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'pm_vp_info' not in ret_dict:
+                    pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
+                pm_vp_info['last_transition'] = dict_val['last_transition']
+                continue
+
+        return ret_dict
+
+# ====================================================
+#  schema for show interfaces transceiver supported-list
+# ====================================================
+
+class ShowInterfacesTransceiverSupportedlistSchema(MetaParser):
+    """Schema for:
+        * show interfaces transceiver supported-list
+    """
+
+    schema = {
+        'transceiver_type': {
+            Any() : {
+                'cisco_pin_min_version_supporting_dom' : str,
+            },
+        },
+    }
+
+#====================================================
+#  parser for show interfaces transceiver supported-list
+# ====================================================
+
+class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedlistSchema):
+    """parser for show interfaces transceiver supported-list
+    """
+
+    cli_command = 'show interfaces transceiver supported-list'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        
+        transceivers_supported_list = {}
+        
+        #------------------       ------------------------- 
+        #p1 will match dashes pattern used to create dict that to start adiing the transceiver types
+        p1 = re.compile(r"\-+\s+\-+")
+
+        #   GLC-FE-100FX-RGD         ALL
+        #   GLC-SX-MM                NONE
+        p2 = re.compile(r"^(?P<transceiver>[\w-]+)\s+(?P<pin_version>(ALL|NONE))")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #------------------       -------------------------
+            m1 = p1.match(line)
+            if m1:
+                transceiver_dict = transceivers_supported_list.setdefault('transceiver_type',{})
+
+            #   GLC-FE-100FX-RGD         ALL
+            #   GLC-SX-MM                NONE
+            m2 = p2.match(line)
+            if m2:
+                transceiver_dict.update({m2.groupdict()['transceiver'] :
+                                        { "cisco_pin_min_version_supporting_dom" :
+                                        m2.groupdict()['pin_version']}})
+
+        return transceivers_supported_list
+ 
+

@@ -1,0 +1,13 @@
+show adjacency summary
+Adjacency table has 0 adjacencies:
+  each adjacency consumes 548 bytes (72 bytes platform extension)
+  0 complete adjacencies
+  0 incomplete adjacencies
+
+Adjacency database high availability:
+  Database epoch:        2
+
+RP adjacency component enabled
+Adjacency manager summary event processing:
+ Summary events epoch is 774
+ Summary events queue contains 0 events (high water mark 257 events)

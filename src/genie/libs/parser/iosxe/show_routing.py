@@ -258,6 +258,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         # initial variables
         ret_dict = {}
+        line1 = ''
         index = 0
         active = False
 
@@ -291,12 +292,29 @@ class ShowIpRoute(ShowIpRouteSchema):
                 r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.20/32
+            p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+
         else:
             p3 = re.compile(
                 r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]\s|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
                 r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-        
+                
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.20/32
+            p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+
         #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
         p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
                         r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
@@ -315,7 +333,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]{4,}),?)?'
                         r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+),?)?,?( +receive)?'
                         r'( +directly connected)?( +indirectly connected)?$')
-
+        
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -393,20 +411,16 @@ class ShowIpRoute(ShowIpRouteSchema):
                         route_preference = routepreference.split('/')[0]
                         metrics = routepreference.split('/')[1]
 
-                if m.groupdict()['next_hop']:
-                    next_hop = m.groupdict()['next_hop']
+                group = m.groupdict()
+                if group['next_hop']:
+                    next_hop = group.get('next_hop', None)
                     index = 1
                 else:
                     index = 0
-
-                if m.groupdict()['interface']:
-                    interface = m.groupdict()['interface']
-
-                if m.groupdict()['date']:
-                    updated = m.groupdict()['date']
-
-                if m.groupdict()['nh_vrf']:
-                    nh_vrf = m.groupdict()['nh_vrf']
+                
+                interface = group.get('interface', None)
+                updated = group.get('date', None)
+                nh_vrf = group.get('nh_vrf', None)
 
                 route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                                         .setdefault('address_family', {}).setdefault(af, {})\
@@ -442,6 +456,205 @@ class ShowIpRoute(ShowIpRouteSchema):
                         idx_dict['vrf'] = nh_vrf
 
                 continue
+            
+            # storing the line which moves in the next line because of split in the for loop
+            m = p8.match(line) 
+            if m:
+                line1 = line
+
+            # B        192.168.1.20/32
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            m = p9.match(line)
+            if m:
+                # B        192.168.1.20/32
+                m = p8.match(line1)
+                if m:
+                    active = True
+                    #source_protocol_codes: 'B'
+                    if m.groupdict()['code']:
+                        # running the for loop to access all the key and value pair of dict "source_protocol_dict = {}""
+                        source_protocol_codes = m.groupdict()['code'].strip()
+                        for key,val in source_protocol_dict.items():
+                            #'If m.groupdict()['code'] = S* then below code will split the 'S' & '*' 
+                            #and store it in array and the put [0] as to store only 'S' as code '*' has no use in the output
+                            # Example = S*       0.0.0.0/0 [1/0] via 10.50.15.1  >>>> ['S', '*']
+                            source_protocol_replaced = source_protocol_codes.split('*')[0]
+                            if source_protocol_replaced in val:
+                                source_protocol = key
+
+                    if m.groupdict()['network']:
+                        #'192.168.1.20/32'
+                        network = m.groupdict()['network']
+                        if '/' not in network and self.IP_VER == 'ipv4':
+                            route = '{}/{}'.format(network,netmask)
+                        else:
+                            route = network
+
+                    #'192.168.1.20/32'
+                    if not m.groupdict()['network']:
+                        route = route
+
+                # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+                m = p9.match(line)
+                if m:
+                    #'route_preference': 200,
+                    if m.groupdict()['route_preference']:
+                        routepreference = m.groupdict()['route_preference']
+                        if '/' in routepreference:
+                            route_preference = routepreference.split('/')[0]
+                            metrics = routepreference.split('/')[1]
+
+                    #next_hop': 
+                    if m.groupdict()['next_hop']:
+                        next_hop = m.groupdict()['next_hop']
+                        index = 1
+                    else:
+                        index = 0
+
+                    #'route': '192.168.1.20/32'
+                    if m.groupdict()['interface']:
+                        interface = m.groupdict()['interface']
+                    
+                    #'updated': '00:03:46',
+                    if m.groupdict()['date']:
+                        updated = m.groupdict()['date']
+
+                    #'vrf': 'red:ipv6'
+                    if m.groupdict()['nh_vrf']:
+                        nh_vrf = m.groupdict()['nh_vrf']
+                    route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                                            .setdefault('address_family', {}).setdefault(af, {})\
+                                            .setdefault('routes', {}).setdefault(route, {})
+
+                    # 'route': '192.168.1.20/32',
+                    route_dict['route'] = route
+                    route_dict['active'] = active
+
+                    #'route_preference': 200,
+                    #'source_protocol': 'bgp',
+                    #'source_protocol_codes': 'B'
+                    if metrics:
+                        route_dict['metric'] = int(metrics)
+                    if route_preference:
+                        route_dict['route_preference'] = int(route_preference)
+                    if source_protocol_codes:
+                        route_dict['source_protocol_codes'] = source_protocol_codes
+                        route_dict['source_protocol'] = source_protocol
+                    next_hop_dict = route_dict.setdefault('next_hop', {})
+
+                    #'outgoing_interface': 'Vlan500',
+                    if not next_hop and interface:
+                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
+                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+
+                    # 'next_hop_list': 1
+                    elif next_hop:
+                        idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
+                        idx_dict['index'] = index
+                        #next_hop': 
+                        idx_dict['next_hop'] = next_hop
+                        if updated:
+                            idx_dict['updated'] = updated
+                        if interface:
+                            idx_dict['outgoing_interface'] = interface
+                        if nh_vrf:
+                            idx_dict['vrf'] = nh_vrf
+                    continue
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
+            else:
+                m = p7.match(line)
+                if m:
+                    active = True
+                    #source_protocol_codes: 'B'
+                    if m.groupdict()['code']:
+                        # running the for loop to access all the key and value pair of dict "source_protocol_dict = {}""
+                        source_protocol_codes = m.groupdict()['code'].strip()
+                        for key,val in source_protocol_dict.items():
+                            '''If m.groupdict()['code'] = S* then below code will split the 'S' & '*' 
+                            and store it in array and the put [0] as to store only 'S' as code '*' has no use in the output'''
+                            # Exmaple = S*       0.0.0.0/0 [1/0] via 10.50.15.1  >>>> ['S', '*']
+                            source_protocol_replaced = source_protocol_codes.split('*')[0]
+                            if source_protocol_replaced in val:
+                                source_protocol = key
+
+                    if m.groupdict()['network']:
+                        #'192.168.1.20/32'
+                        network = m.groupdict()['network']
+                        if '/' not in network and self.IP_VER == 'ipv4':
+                            route = '{}/{}'.format(network,netmask)
+                        else:
+                            route = network
+
+                    #'192.168.1.20/32'
+                    if not m.groupdict()['network']:
+                        route = route
+
+                    #'route_preference': 200,
+                    if m.groupdict()['route_preference']:
+                        routepreference = m.groupdict()['route_preference']
+                        if '/' in routepreference:
+                            route_preference = routepreference.split('/')[0]
+                            metrics = routepreference.split('/')[1]
+
+                    #next_hop': 
+                    if m.groupdict()['next_hop']:
+                        next_hop = m.groupdict()['next_hop']
+                        index = 1
+                    else:
+                        index = 0
+
+                    #'route': '192.168.1.20/32'
+                    if m.groupdict()['interface']:
+                        interface = m.groupdict()['interface']
+
+                    #'updated': '00:03:46',
+                    if m.groupdict()['date']:
+                        updated = m.groupdict()['date']
+
+                    #'vrf': 'red:ipv6'
+                    if m.groupdict()['nh_vrf']:
+                        nh_vrf = m.groupdict()['nh_vrf']
+
+                    route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                                            .setdefault('address_family', {}).setdefault(af, {})\
+                                            .setdefault('routes', {}).setdefault(route, {})
+
+                    # 'route': '192.168.1.20/32',
+                    route_dict['route'] = route
+                    route_dict['active'] = active
+
+                    #'route_preference': 200,
+                    #'source_protocol': 'bgp',
+                    #'source_protocol_codes': 'B'
+                    if metrics:
+                        route_dict['metric'] = int(metrics)
+                    if route_preference:
+                        route_dict['route_preference'] = int(route_preference)
+                    if source_protocol_codes:
+                        route_dict['source_protocol_codes'] = source_protocol_codes
+                        route_dict['source_protocol'] = source_protocol
+
+                    next_hop_dict = route_dict.setdefault('next_hop', {})
+
+                    #'outgoing_interface': 'Vlan500',
+                    if not next_hop and interface:
+                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
+                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+
+                    # 'next_hop_list': 1
+                    elif next_hop:
+                        idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
+                        idx_dict['index'] = index
+                        idx_dict['next_hop'] = next_hop
+
+                        if updated:
+                            idx_dict['updated'] = updated
+                        if interface:
+                            idx_dict['outgoing_interface'] = interface
+                        if nh_vrf:
+                            idx_dict['vrf'] = nh_vrf
+                    continue
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
             m = p4.match(line)
@@ -590,7 +803,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                             idx_dict['outgoing_interface'] = interface
                     if vrf_val:
                         idx_dict['vrf'] = vrf_val
-
+                        
                 continue
 
             # Routing entry for 10.151.0.0/24, 1 known subnets
@@ -2863,6 +3076,33 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 continue
 
         return result_dict
+
+
+class ShowIpv6CefInternal(ShowIpCefInternal):
+    ''' Parser for:
+        * 'show ipv6 cef internal'
+        * 'show ipv6 cef {ip} internal'
+        * 'show ipv6 cef vrf {vrf} {ip} internal'
+    '''
+
+    cli_command = ['show ipv6 cef {ip} internal',
+                   'show ipv6 cef internal',
+                   'show ipv6 cef vrf {vrf} {ip} internal']
+
+    def cli(self, ip="", vrf="", output=None):
+
+        if output is None:
+            if ip and vrf:
+                cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
+            elif ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output 
+        return super().cli(vrf=vrf, ip=ip, output=output)
+
 
 # ====================================================
 #  schema for show ipv6 route summary

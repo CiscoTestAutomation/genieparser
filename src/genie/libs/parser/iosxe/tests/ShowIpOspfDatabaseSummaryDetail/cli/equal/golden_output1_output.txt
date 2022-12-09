@@ -1,0 +1,85 @@
+show ip ospf database database-summary detail
+
+            OSPF Router with ID (22.22.22.22) (Process ID 2)
+
+Router 22.22.22.22 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        2        0        0       
+  Network       2        0        0       
+  Summary Net   2        0        0       
+  Summary ASBR  2        0        0       
+  Type-5 Ext    0        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         8        0        0       
+
+Router 3.3.3.3 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        2        0        0       
+  Network       0        0        0       
+  Summary Net   2        0        0       
+  Summary ASBR  0        0        0       
+  Type-5 Ext    1        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         5        0        0       
+
+            OSPF Router with ID (12.1.1.2) (Process ID 100)
+
+Router 12.1.1.2 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        1        0        0       
+  Network       1        0        0       
+  Summary Net   0        0        0       
+  Summary ASBR  0        0        0       
+  Type-5 Ext    0        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         2        0        0       
+
+Router 12.1.1.1 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        1        0        0       
+  Network       0        0        0       
+  Summary Net   0        0        0       
+  Summary ASBR  0        0        0       
+  Type-5 Ext    0        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         1        0        0       
+
+            OSPF Router with ID (2.2.2.2) (Process ID 1)
+
+Router 2.2.2.2 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        2        0        0       
+  Network       2        0        0       
+  Summary Net   2        0        0       
+  Summary ASBR  2        0        0       
+  Type-5 Ext    0        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         8        0        0       
+
+Router 1.1.1.1 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router        2        0        0       
+  Network       0        0        0       
+  Summary Net   2        0        0       
+  Summary ASBR  0        0        0       
+  Type-5 Ext    1        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Opaque AS     0        0        0       
+  Total         5        0        0

@@ -1,0 +1,12 @@
+pm9008#show platform hardware qfp active interface all statistics drop_summary
+----------------------------------------------------------------
+Drop Stats Summary:
+note: 1) these drop stats are only updated when PAL
+         reads the interface stats.
+      2) the interface stats include the subinterface
+
+Interface                                       Rx Pkts             Tx Pkts
+---------------------------------------------------------------------------
+GigabitEthernet0/0/0                                 16                   0
+GigabitEthernet0/0/1                            1526420                   0
+GigabitEthernet0/0/2                              12994                   6

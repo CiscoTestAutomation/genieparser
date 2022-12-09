@@ -1,0 +1,7 @@
+Port           Device Name     Device ID    Port ID         Neighbor State
+----           -----------     ---------    -------         --------------
+Fo3/1/1        78725D298A40    1            Fo1/0/15        Bidirectional
+Fo3/1/2        78725D298A40    1            Fo2/0/15        Bidirectional
+Te4/1/1        7C21E167CB8     1            Te2/6/0/7       Bidirectional
+
+Total number of bidirectional entries displayed: 3

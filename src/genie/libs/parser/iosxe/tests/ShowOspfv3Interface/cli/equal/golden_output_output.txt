@@ -1,0 +1,17 @@
+TwoGigabitEthernet1/0/10 is down, line protocol is down (notconnect) 
+  Link Local Address FE80::E75:BDFF:FE6E:DB47, Interface ID 18 (snmp-if-index)
+  Area 0, Process ID 5, Instance ID 0, Router ID 1.1.1.1
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State DOWN, Priority 1
+  No designated router on this network
+  No backup designated router on this network
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+
+  TwoGigabitEthernet2/0/10 is up, line protocol is up (notconnect) 
+  Link Local Address FE80::E75:BDFF:FE6E:BD34, Interface ID 22 (snmp-if-index)
+  Area 1, Process ID 5, Instance ID 0, Router ID 1.1.1.1
+  Network Type BROADCAST, Cost: 10
+  Transmit Delay is 2 sec, State DOWN, Priority 3
+  No designated router on this network
+  No backup designated router on this network
+  Timer intervals configured, Hello 20, Dead 80, Wait 40, Retransmit 5

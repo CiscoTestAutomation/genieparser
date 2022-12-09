@@ -1,5 +1,7 @@
 expected_output = {
-        'boot_variable': 'bootflash:packages.conf;', 
-        'manual_boot_variable': 'no', 
-        'baud': 9600
+        'boot_variable': None, 
+        'is_manual_boot': True,
+        'enable_break': True,
+        'bootmode': 'DEVICE',
+        'ipxe_timeout': 0
         } 

@@ -306,111 +306,84 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 continue
         return ret_dict
 
-# ============================
-#  Schema for 'show idprom interface <interface>'
-# ============================
+# ========================================================
+# Schema for:
+#  * 'show platform hardware authentication status'
+# ========================================================
+class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
+    """Schema for show platform hardware authentication status."""
 
-class ShowIdpromInterfaceSchema(MetaParser):
-    """Schema for show idprom interface {interface}"""
     schema = {
-        'sfp_info': {
-            'vendor_name': str,
-            'cisco_part_number': str,
-            'vendor_revision': str,
-            'serial_number': str,
-            'product_identifier': str,
-            'connector_type': str,
-        }
+        'switch': {
+            int: {
+                   'mainboard_authentication': str,
+                   'fru_authentication': str,
+                   'stack_cable_a_authentication': str,
+                   'stack_cable_b_authentication': str,
+             },
+    },
     }
 
-# ============================
-#  Parser for 'show idprom interface <interface>'
-# ============================
 
-class ShowIdpromInterface(ShowIdpromInterfaceSchema):
-    """Parser for show idprom interface <interface>"""
+# ===================================================
+# Parser for:
+#  * 'show platform hardware authentication status'
+# ===================================================
+class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticationStatusSchema):
+    """Parser for show platform hardware authentication status"""
 
-    cli_command = [
-        'show idprom interface {interface}'
-    ]
+    cli_command = 'show platform hardware authentication status'
 
-    def cli(self, interface, output=None):
+    def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command[0].format(interface=interface)
-            output = self.device.execute(cmd)
+            output = self.device.execute(self.cli_command)
 
-        ret_dict = {}
+        result_dict = {}
+        # Switch 1:
+        p1 = re.compile(r'^Switch\s+(?P<switch>\d+):$')
 
-        # General SFP Information
-        p1 = re.compile(
-            r'^General SFP Information$')
+        #    Mainboard Authentication:     Passed
+        p2 = re.compile(r'^Mainboard Authentication:\s+(?P<mainboard_authentication>\w+(\s\w+)?)$')
 
-        # Vendor Name           :   CISCO-EXCELIGHT
-        p2 = re.compile(
-            r'^Vendor +Name\s+:\s+(?P<vendor_name>.*)$')
-
-        # Vendor Part Number    :   SPP5101SR-C1 
-        p3 = re.compile(
-            r'^Vendor +Part +Number\s+:\s+(?P<part_number>.*)$')
-
-        # Vendor Revision       :   0x41 0x20 0x20 0x20
-        p4 = re.compile(
-            r'^Vendor +Revision\s+\:\s+(?P<vendor_revision>[0-9a-fA-Fx ]+)$')
-        
-        # Vendor Serial Number  :   ECL1249000S 
-        p5 = re.compile(
-            r'^Vendor +Serial +Number\s+:\s+(?P<serial_number>.*)$')
-
-        # Identifier            :   SFP/SFP+
-        p6 = re.compile(
-            r'^Identifier\s+:\s+(?P<product_identifier>.*)$')
-
-        # Connector             :   LC connector
-        p7 = re.compile(
-            r'^Connector\s+:\s+(?P<connector_type>[\w\s]+)$')
-        
+        #    FRU Authentication:           Not Available
+        p3 = re.compile(r'^FRU Authentication:\s+(?P<fru_authentication>\w+(\s\w+)?)$')
+        #    Stack Cable A Authentication: Passed
+        p4 = re.compile(r'^Stack Cable A Authentication:\s+(?P<stack_cable_a_authentication>\w+(\s\w+)?)$')
+        #    Stack Cable B Authentication: Passed
+        p5 = re.compile(r'^Stack Cable B Authentication:\s+(?P<stack_cable_b_authentication>\w+(\s\w+)?)$')
         for line in output.splitlines():
             line = line.strip()
 
-            # General SFP Information
+            #Switch:1
             m = p1.match(line)
             if m:
-                sfp_info_dict = ret_dict.setdefault('sfp_info',{})
-            
-            # Vendor Name           :   CISCO-EXCELIGHT
+                group = m.groupdict()
+                switch = group['switch']
+                switch_dict = result_dict.setdefault('switch', {})
+                switch_id_dict = switch_dict.setdefault(int(switch), {})
+
+            #Mainboard Authentication:     Passed
             m = p2.match(line)
             if m:
-                sfp_info_dict['vendor_name'] = m.groupdict()['vendor_name']
-                continue
+                group = m.groupdict()
+                switch_id_dict['mainboard_authentication'] = group['mainboard_authentication']
 
-            # Vendor Part Number    :   SPP5101SR-C1 
+            #FRU Authentication:           Not Available
             m = p3.match(line)
             if m:
-                sfp_info_dict['cisco_part_number'] = m.groupdict()['part_number']
-                continue
+                group = m.groupdict()
+                switch_id_dict['fru_authentication'] = group['fru_authentication']
 
-            # Vendor Revision       :   0x41 0x20 0x20 0x20
+            #Stack Cable A Authentication: Passed
             m = p4.match(line)
             if m:
-                sfp_info_dict['vendor_revision'] = m.groupdict()['vendor_revision']
-                continue
+                group = m.groupdict()
+                switch_id_dict['stack_cable_a_authentication'] = group['stack_cable_a_authentication']
 
-            # Vendor Serial Number  :   ECL1249000S 
+            #Stack Cable B Authentication: Passed
             m = p5.match(line)
             if m:
-                sfp_info_dict['serial_number'] = m.groupdict()['serial_number']
-                continue
+                group = m.groupdict()
+                switch_id_dict['stack_cable_b_authentication'] = group['stack_cable_b_authentication']
+        return result_dict
 
-            # Identifier            :   SFP/SFP+
-            m = p6.match(line)
-            if m:
-                sfp_info_dict['product_identifier'] = m.groupdict()['product_identifier']
-                continue
-
-            # Connector             :   LC connector
-            m = p7.match(line)
-            if m:
-                sfp_info_dict['connector_type'] = m.groupdict()['connector_type']
-                continue
-
-        return ret_dict

@@ -1,0 +1,46 @@
+sh platform pm port-data g1/0/24
+
+  Field                     AdminFields          OperFields
+===============================================================
+  Access Mode               Multi-Static         Multi-Static
+  Access Vlan Id            1                    0
+  Voice Vlan Id             100                  100
+  VLAN Unassigned                                0
+  ExAccess Vlan Id          32767                
+  Native Vlan Id            1                    
+  Port Mode                 access               access
+  Encapsulation             802.1Q               Native
+  disl                      trunk off            
+  Media                     unknown              
+  DTP Nonegotiate           0                    0
+  Port Protected            0                    0
+  Unknown Unicast Blocked   0                    0
+  Unknown Multicast Blocked 0                    0
+  Vepa Enabled              0                    0
+  App interface             0                    0
+  Span Destination          0                    
+
+  Duplex                    auto                 full 
+  Default Duplex            auto                 
+  Speed                     auto                 100
+  Auto Speed Capable        1                    1
+  No Negotiate              0                    0
+  No Negotiate Capable      0                    0
+  Flow Control Receive      ON                   ON
+  Flow Control Send         Off                  Off
+  Jumbo                     0                    0
+  saved_holdqueue_out       0                    
+  saved_input_defqcount     2000                 
+  Jumbo Size                1500                 
+
+  Forwarding Vlans : 100
+  Current Pruned Vlans : none
+  Previous Pruned Vlans : none
+
+
+  Sw LinkNeg State : LinkStateUp
+  No.of LinkDownEvents :    3                    
+  XgxsResetOnLinkDown(10GE):
+  Time Stamp Last Link Flapped(U) : Sep 13 20:14:35.714
+  LastLinkDownDuration(sec) 2                    
+  LastLinkUpDuration(sec):  1355054              

@@ -1,0 +1,19 @@
+50.1.1.1/32, rev 0 (no route)
+        No local binding
+        Remote bindings: (3 peers)
+            Peer                Label
+            -----------------   ---------
+            50.1.1.2:0          24010
+            50.1.1.4:0          24013
+            50.1.1.6:0          24017
+50.1.1.2/32, rev 267
+        Local binding: label: 24000
+        Remote bindings: (3 peers)
+            Peer                Label
+            -----------------   ---------
+            50.1.1.2:0          ImpNull
+            50.1.1.4:0          24018
+            50.1.1.6:0          24014
+2.2.2.2/32, rev 0
+        No local binding (label OOR)
+        No remote bindings 

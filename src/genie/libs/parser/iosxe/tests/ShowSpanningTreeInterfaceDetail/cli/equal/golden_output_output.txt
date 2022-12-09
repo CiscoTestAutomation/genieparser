@@ -1,0 +1,14 @@
+Port 13 (TwoGigabitEthernet1/0/13) of VLAN0001 is designated forwarding
+   Port path cost 20000, Port priority 128, Port Identifier 128.13.
+   Designated root has priority 32769, address 14a2.a035.b700
+   Designated bridge has priority 32769, address cc7f.763d.9a00
+   Designated port id is 128.13, designated path cost 40000
+   Timers: message age 0, forward delay 15, hold 10
+   Number of transitions to forwarding state: 1
+   The port is in the portfast mode
+   Link type is point-to-point by default
+   Bpdu guard is enabled
+   Bpdu filter is enabled
+   Root guard is enabled on the port
+   Loop guard is enabled on the port
+   BPDU: sent 22783, received 0

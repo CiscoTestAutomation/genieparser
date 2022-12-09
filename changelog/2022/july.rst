@@ -101,8 +101,19 @@
         * show processes cpu platform sorted
     * Added ShowUtdEngineStandardStatisticsUrl
         * for 'show utd engine standard statistics url'
-
-
+    * Added ShowCryptoGdoiFeatureCrlCheck :
+        * added new parser for cli "show crypto gdoi feature crl-check"
+    * Added ShowCryptoGdoiFeatureCtsSgt : 
+        * added new parser for cli "show crypto gdoi feature cts-sgt"		
+    * Added ShowCryptoGdoiFeatureGikev2 :
+        * added new parser for cli "show crypto gdoi feature gikev2"
+    * Added ShowCryptoGdoiKsCoopIdentifier :
+        * added new parser for cli "show crypto gdoi ks coop identifier"
+    * Modified ShowIpv6Mfib:
+        * Updated ShowIpv6MfibSchema with optional keys <ingress_vxlan_version>,<ingress_vxlan_vni>,<ingress_vxlan_nxthop>,<ingress_vxlan_cap>,<egress_vxlan_version>,<egress_vxlan_vni>,<egress_vxlan_nxthop>,<egress_vxlan_cap>
+        * Updated patterns <p7> and <p8> to accommodate various outputs to parse VXlan related information
+    * Modified ShowIpMfib:
+        * Made multicast_group and source_address as optional keys under ShowIpMfibSchema
 --------------------------------------------------------------------------------
                                       Fix                                       
 --------------------------------------------------------------------------------

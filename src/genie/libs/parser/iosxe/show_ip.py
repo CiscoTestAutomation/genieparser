@@ -63,6 +63,10 @@ IOSXE parsers for the following show commands:
     * show ip dhcp binding
     * show ip dhcp binding | count Active
     * show ip nhrp summary
+    * show ip dhcp snooping binding | include Total number of bindings
+    * show ip dhcp snooping | include gleaning
+    * show ip dns view
+    * show ip admission cache
     '''
 
 # Python
@@ -1810,9 +1814,9 @@ class ShowIpMfibSchema(MetaParser):
             {Any():
                 {'address_family':
                     {Any():
-                        {'multicast_group':
+                        {Optional('multicast_group'):
                             {Any():
-                                {'source_address':
+                                {Optional('source_address'):
                                     {Any():
                                        {
                                             Optional('oif_ic_count'): Or(str,int),
@@ -5569,6 +5573,81 @@ class ShowIpDhcpBindingActiveCount(ShowIpDhcpBindingActiveCountSchema):
 
         return parsed_dict
 
+# ================================================
+# Schema for 'show ip dhcp snooping binding | include Total number of bindings'
+# ================================================
+class ShowIpDhcpSnoopingBindingTotalNumberSchema(MetaParser):
+    """
+    Schema for show ip dhcp binding
+    """
+    schema = {
+        'dhcp_snooping_binding': {
+            'total_number': int
+        }
+    }
+
+class ShowIpDhcpSnoopingBindingTotalNumber(ShowIpDhcpSnoopingBindingTotalNumberSchema):
+
+    ''' Parser for "show ip dhcp binding | count Active"'''
+    cli_command = 'show ip dhcp snooping binding | include Total number of bindings'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Number of lines which match regexp = 0
+        p1 = re.compile(r'^Total number of bindings: (?P<total_number>(\d+))$')
+
+        # Number of lines which match regexp = 0
+        m = p1.match(output)
+
+        if m:
+            group = m.groupdict()
+            parsed_dict.setdefault('dhcp_snooping_binding', {})
+            parsed_dict['dhcp_snooping_binding']['total_number'] = int(group['total_number'])
+
+        return parsed_dict
+        
+# ================================================
+# Schema for 'show ip dhcp snooping | include gleaning'
+# ================================================
+class ShowIpDhcpSnoopingGleaningSchema(MetaParser):
+    """
+    Schema for show ip dhcp binding
+    """
+    schema = {
+        'dhcp_snooping_gleaning_status': {
+            'gleaning_status': str
+        }
+    }
+
+class ShowIpDhcpSnoopingGleaning(ShowIpDhcpSnoopingGleaningSchema):
+
+    ''' Parser for "show ip dhcp binding | count Active"
+    Switch DHCP gleaning is enabled|disabled    
+    '''
+    cli_command = 'show ip dhcp snooping | include gleaning'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Number of lines which match regexp = 0
+        p1 = re.compile(r'^Switch DHCP gleaning is (?P<gleaning_status>(\S+))$')
+
+        # Number of lines which match regexp = 0
+        m = p1.match(output)
+
+        if m:
+            group = m.groupdict()
+            parsed_dict.setdefault('dhcp_snooping_gleaning_status', {})
+            parsed_dict['dhcp_snooping_gleaning_status']['gleaning_status'] = str(group['gleaning_status'])
+
+        return parsed_dict
 
 # =================================================
 #  Schema for 'show ip nhrp summary'
@@ -5752,4 +5831,267 @@ class ShowIpNhrpSummary(ShowIpNhrpSummarySchema):
         return ret_dict
 
 
+# ====================================================
+#  schema for show ip cef summary
+# ====================================================
+class ShowIpCefSummarySchema(MetaParser):
+    """Schema for show ip cef summary"""
+    schema = {
+        'vrf':{
+            Any():{
+                'prefixes': {
+                    'fwd': int,
+                    'non_fwd': int,
+                    'total_prefix': int
+                },
+                'table_id': str,
+                'epoch': int
+            }
+        }
+    }
 
+# ====================================================
+#  parser for show ip cef summary
+# ====================================================
+class ShowIpCefSummary(ShowIpCefSummarySchema):
+    cli_command = 'show ip cef summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # Vrf red
+        p1 = re.compile(r'^VRF +(?P<vrf>\S+)$')
+
+        # 4 prefixes (4/0 fwd/non-fwd)
+        p2 = re.compile(r'^(?P<total_prefix>\d+) +prefixes +\((?P<fwd>\d+)\/(?P<non_fwd>\d+)+ fwd\/non-fwd\)$')
+
+        # Table id 0x1E000001
+        p3 = re.compile(r'^Table id (?P<table_id>\S+)$')
+
+        #Database epoch:        0 (6 entries at this epoch)
+        p4 = re.compile(r'^Database epoch: +(?P<epoch>\d+) +\(\d+ entries at this epoch\)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Vrf red
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                continue
+
+            # 4 prefixes (4/0 fwd/non-fwd)
+            m = p2.match(line)
+            if m:
+                prefix_dict = vrf_dict.setdefault('prefixes',{})
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items() if v is not None}
+                prefix_dict.update(group)
+                continue
+            
+            # Table id 0x1E000001
+            m = p3.match(line)
+            if m:
+                vrf_dict.update(m.groupdict())
+                continue
+
+            # Database epoch:        0 (6 entries at this epoch)
+            m = p4.match(line)
+            if m:
+              vrf_dict.update({'epoch': int(m.groupdict()['epoch'])}) 
+              continue
+
+        return ret_dict
+
+
+# =======================================================================
+# Parser Schema for 'show ip dns view'
+# =======================================================================
+
+class ShowIpDnsViewSchema(MetaParser):
+
+    """Schema for "show ip dns view" """
+
+    schema = {
+        "dns_parameters": {
+            "vrf_id": {
+                Any(): {
+                    Optional("dns_lookup"): str,
+                    Optional("domain_name"): str,
+                    "dns_servers": list,
+                }
+            }
+        }
+    }
+
+
+# ==============================================
+# Parser for 'show ip dns view'
+# ==============================================
+
+
+class ShowIpDnsView(ShowIpDnsViewSchema):
+    """parser for "show ip dns view" """
+
+    cli_command = "show ip dns view"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # DNS View default vrf 65528 parameters:
+        p1 = re.compile(
+            r"^DNS+\s+View+\s+default+\s+vrf+\s+(?P<vrf_id>\d+)\s+parameters:+$"
+        )
+
+        # DNS View default parameters:
+        p2 = re.compile(r"^DNS+\s+View+\s+default+\s+parameters:$")
+
+        # Default domain name: pm9001_201_dhcp.intranet
+        p3 = re.compile(r"^Default+\s+domain+\s+name:+\s+(?P<domain_name>\S+)$")
+
+        # Domain lookup is enabled
+        p4 = re.compile(r"^Domain+\s+lookup+\s+is+\s+enabled$")
+
+        # Domain name-servers:
+        p5 = re.compile(r"^Domain+\s+name-servers:$")
+
+        # 10.10.201.144
+        p6 = re.compile(r"^(?P<dns_server>^\d+[.]\d+[.]\d+[.]\d+)$")
+
+        # 10.10.201.144 (vrf 65528)
+        p7 = re.compile(
+            r"^(?P<dns_server>^\d+[.]\d+[.]\d+[.]\d+)\s+[(]vrf+\s+(?P<vrf_id>\d+)[)]$"
+        )
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            dns_view_dict = parsed_dict.setdefault("dns_parameters", {}).setdefault(
+                "vrf_id", {}
+            )
+
+            # DNS View default vrf 65528 parameters:
+            m1 = p1.match(line)
+            if m1:
+                groups = m1.groupdict()
+                specific_dns = dns_view_dict.setdefault(groups["vrf_id"], {})
+                continue
+
+            # DNS View default parameters:
+            m2 = p2.match(line)
+            if m2:
+                specific_dns = dns_view_dict.setdefault("0", {})
+                continue
+
+            # Default domain name: pm9001_201_dhcp.intranet
+            m3 = p3.match(line)
+            if m3:
+                groups = m3.groupdict()
+                specific_dns.update({"domain_name": groups["domain_name"]})
+                continue
+
+            # Domain lookup is enabled
+            m4 = p4.match(line)
+            if m4:
+                specific_dns.update({"dns_lookup": "enabled"})
+                continue
+
+            # Domain name-servers:
+            m5 = p5.match(line)
+            if m5:
+                dns_servers = specific_dns.setdefault("dns_servers", [])
+                continue
+
+            # 10.10.201.144
+            m6 = p6.match(line)
+            if m6:
+                groups = m6.groupdict()
+                dns_servers.append(groups["dns_server"])
+                continue
+            # 10.10.201.144 (vrf 65528)
+            m7 = p7.match(line)
+            if m7:
+                groups = m7.groupdict()
+                dns_servers.append(groups["dns_server"])
+                continue
+
+        return parsed_dict
+        
+
+# ======================================================
+# Schema for 'show ip admission cache '
+# ======================================================
+
+class ShowIpAdmissionCacheSchema(MetaParser):
+    """Schema for show ip admission cache"""
+
+    schema = {
+        'admission_cache': {
+            'total_session': int,
+            'init_session': int,
+        },
+        'auth_proxy_cache': {
+            Any(): {
+                'client_mac': str,
+                'client_ip': str,
+                'state': str,
+                'method': str,
+            },
+        },
+    }
+
+# ======================================================
+# Parser for 'show ip admission cache '
+# ======================================================
+class ShowIpAdmissionCache(ShowIpAdmissionCacheSchema):
+    """Parser for show ip admission cache"""
+
+    cli_command = 'show ip admission cache'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total Sessions: 101 Init Sessions: 1
+        p1 = re.compile(r"^Total\s+Sessions:\s+(?P<total_session>\d+)\s+Init\s+Sessions:\s+(?P<init_session>\d+)$")
+        #  Client Mac 000a.aaaa.0001 Client IP 0.0.0.0 IPv6 , State INIT, Method Webauth
+        p2 = re.compile(r"^\s+Client\s+Mac\s+(?P<client_mac>\S+)\s+Client\s+IP\s+(?P<client_ip>(\d{1,3}\.){3}\d{1,3})\s+IPv6\s+,\s+State\s+(?P<state>\w+),\s+Method\s+(?P<method>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Total Sessions: 101 Init Sessions: 1
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'admission_cache' not in ret_dict:
+                    admission_cache = ret_dict.setdefault('admission_cache', {})
+                admission_cache['total_session'] = int(dict_val['total_session'])
+                admission_cache['init_session'] = int(dict_val['init_session'])
+                continue
+
+            #  Client Mac 000a.aaaa.0001 Client IP 0.0.0.0 IPv6 , State INIT, Method Webauth
+            match_obj = p2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                client_mac_var = dict_val['client_mac']
+                if 'auth_proxy_cache' not in ret_dict:
+                    auth_proxy_cache = ret_dict.setdefault('auth_proxy_cache', {})
+                if client_mac_var not in ret_dict['auth_proxy_cache']:
+                    client_mac_dict = ret_dict['auth_proxy_cache'].setdefault(client_mac_var, {})
+                client_mac_dict['client_mac'] = dict_val['client_mac']
+                client_mac_dict['client_ip'] = dict_val['client_ip']
+                client_mac_dict['state'] = dict_val['state']
+                client_mac_dict['method'] = dict_val['method']
+                continue
+
+
+        return ret_dict

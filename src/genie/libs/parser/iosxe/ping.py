@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
     * ping {addr}
     * ping {addr} source {source} repeat {count}
     * ping vrf {vrf} {addr}
+    * ping {addr} Extended-data {extended_data}
     * ping mpls ip {addr} {mask} repeat {count} timeout {timeout}
     * ping mpls traffic-eng tunnel {tunnel_id}
     * ping mpls pseudowire <ip> <vc_id>
@@ -21,6 +22,7 @@ class PingSchema(MetaParser):
             * ping {addr}
             * ping {addr} source {source} repeat {count}
             * ping vrf {vrf} {addr}
+            * ping {addr} Extended-data {extended_data}
     """
 
     schema = {
@@ -50,12 +52,14 @@ class Ping(PingSchema):
         * ping {addr}
         * ping {addr} source {source} repeat {count}
         * ping vrf {vrf} {addr}
+        * ping {addr} Extended-data {extended_data}
     """
 
     cli_command = [
         'ping {addr}',
         'ping {addr} source {source} repeat {count}',
-        'ping vrf {vrf} {addr}'
+        'ping vrf {vrf} {addr}',
+        'ping {addr} Extended-data {extended_data}'
     ]
 
     def cli(self,
@@ -72,6 +76,7 @@ class Ping(PingSchema):
             rapid=None,
             do_not_fragment=None,
             validate=None,
+            extended_data=None,
             output=None):
 
         if not output:
@@ -80,6 +85,8 @@ class Ping(PingSchema):
                 cmd.append('ping vrf {vrf} {addr}'.format(vrf=vrf, addr=addr))
             elif addr:
                 cmd.append('ping {addr}'.format(addr=addr))
+            if extended_data:
+                cmd.append(f'Extended-data {extended_data}')
             if source:
                 cmd.append('source {source}'.format(source=source))
             if count:

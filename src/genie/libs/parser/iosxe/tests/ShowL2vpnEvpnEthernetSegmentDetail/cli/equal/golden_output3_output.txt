@@ -1,0 +1,42 @@
+EVPN Ethernet Segment ID: 00CA.FE00.0000.0000.0001
+  Interface:              Et0/0
+  Redundancy mode:        single-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    0
+  State:                  Ready
+  Encapsulation:          vxlan
+  Ordinal:                1
+  Core Isolation:         No
+  RD:                     2.2.2.3:1
+    Export-RTs:           1:1 1:2 1:5 1:6 1:11 
+                          1:12 1:13 1:14 1:21 1:22 
+                          1:23 1:24 
+  Forwarder List:         1.1.1.2 2.2.2.2 
+
+EVPN Ethernet Segment ID: 00CA.FE00.0000.0000.0002
+  Interface:              Et0/1
+  Redundancy mode:        single-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    0
+  State:                  Ready
+  Encapsulation:          vxlan
+  Ordinal:                1
+  Core Isolation:         No
+  RD:                     2.2.2.3:3
+    Export-RTs:           1:1 1:2 1:5 1:6 1:11 
+                          1:12 1:13 1:14 1:21 1:22 
+                          1:23 1:24 
+  Forwarder List:         1.1.1.2 2.2.2.2 
+
+EVPN Ethernet Segment ID: 00CA.FE00.0000.0000.0003
+  Interface:              pw100002 pw100003 pw100005 pw100006
+  Redundancy mode:        single-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    0
+  State:                  Port Down
+  Encapsulation:          vxlan
+  Ordinal:                Not available
+  Core Isolation:         No
+  RD:                     2.2.2.3:2
+    Export-RTs:           1:11 1:12 
+  Forwarder List:         

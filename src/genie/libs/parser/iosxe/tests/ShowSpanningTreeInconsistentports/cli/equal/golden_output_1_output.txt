@@ -1,0 +1,5 @@
+
+Name                 Interface                      Inconsistency
+-------------------- ------------------------------ ------------------
+VLAN0010             GigabitEthernet1/0/5           Root Inconsistent
+VLAN0012             GigabitEthernet1/1/5           Root Inconsistent

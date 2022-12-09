@@ -80,6 +80,23 @@ expected_output = {
             "in_crimson": "yes",
             "client_id": "0000.0000.0000",
             "policy": ""
-        }
+        },
+        5: {
+            "dev_code": "DH4",
+            "network_layer_address": "20.0.0.20",
+            "link_layer_address": "000a.000b.000c(D)",
+            "interface": "Twe1/0/1",
+            "mode": "trunk",
+            "vlan_id": 100,
+            "pref_level_code": 100,
+            "age": "30566mn",
+            "state": "DOWN",
+            "time_left": "100 s(200 s)",
+            "filter": "no",
+            "in_crimson": "yes",
+            "client_id": "0000.0000.0000",
+            "policy": ""
+        }        
+        
     }
 }

@@ -1,0 +1,24 @@
+GigabitEthernet0/0 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+TwoGigabitEthernet1/0/1 is down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 90 seconds
+  Holdtime is 160 seconds
+TwoGigabitEthernet1/0/2 is down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+TwentyFiveGigE3/1/1 is down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+AppGigabitEthernet3/0/1 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+
+ cdp enabled interfaces : 172
+ interfaces up          : 7
+ interfaces down        : 166

@@ -221,8 +221,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                             r'(?P<protocol>\w+)(\-(?P<process>\w+))?,? *'
                             r'(?P<attribute>\w+)?,? *'
                             r'(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
-                            r',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
-                            r'(?P<tunnelid>[0-9x]+))?,?( +encap: +'
+                            r',?( +segid:? +(?P<segid>\d+))?,?( +tunnelid: +'
+                            r'(?P<tunnelid>[0-9a-fA-Fx]+))?,?( +encap: +'
                             r'(?P<encap>[a-zA-Z0-9]+))?$')
             m = p3.match(line)
             if m:
@@ -743,9 +743,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
                         r'( +\((?P<hidden>hidden)\))?'
-                        r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid: +(?P<segid>\d+))?,?'
+                        r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid:? +(?P<segid>\d+))?,?'
                         r'( +\((?P<asymmetric>Asymmetric)\))?'
-                        r'( +tunnelid: +(?P<tunnelid>[0-9x]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
+                        r'( +tunnelid: +(?P<tunnelid>[0-9a-fA-Fx]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
 
         #    tag 100
         p4 = re.compile(r'^tag +(?P<tag>\d+)$')

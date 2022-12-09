@@ -1,0 +1,3 @@
+Vlan1 is down (if_number 75)
+  Corresponding hwidb fast_if_number 75
+  Corresponding hwidb firstsw->if_number 75

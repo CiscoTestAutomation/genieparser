@@ -1,0 +1,33 @@
+Interface  MAC Address     AuthC           AuthZ                   Fg  Uptime
+-----------------------------------------------------------------------------
+Gi1/0/23   34bd.c853.0505  d:OK           AZ: SA-                 X    6858s
+Gi1/0/23   34bd.c853.0543  d:NR           UZ: SA- FA-             X    6853s
+ 
+Key to Authentication Attributes:
+ 
+ RN - Running
+ ST - Stopped
+ OK - Authentication Success
+ CF - Credential Failure
+ AD - AAA Server Failure
+ NR - No Response
+ TO - Timeout
+ AR - AAA Not Ready
+ 
+Key to Authorization Attributes:
+ 
+ AZ - Authorized, UZ - UnAuthorized
+ SA - Success Attributes, FA - Failed Attributes
+ D: - DACL, F: - Filterid / InACL, U: - URL ACL
+ V: - Vlan, I: - Inactivity Timer, O: - Open Dir
+ 
+Key to Session Events Blocked Status Flags:
+ 
+  A - Applying Policy (multi-line status for details)
+  D - Awaiting Deletion
+  F - Final Removal in progress
+  I - Awaiting IIF ID allocation
+  P - Pushed Session
+  R - Removing User Profile (multi-line status for details)
+  U - Applying User Profile (multi-line status for details)
+  X - Unknown Blocker

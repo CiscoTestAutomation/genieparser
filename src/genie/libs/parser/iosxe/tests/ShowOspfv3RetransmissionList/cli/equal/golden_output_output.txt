@@ -1,0 +1,19 @@
+          OSPFv3 50 address-family ipv6 (router-id 2.200.1.2)
+
+ Neighbor 2.200.33.3, interface Vlan3892
+
+ Neighbor 2.200.33.3, interface Vlan3891
+
+ Neighbor 2.200.33.3, interface Vlan3888
+
+ Neighbor 2.200.33.3, interface Port-channel192
+
+ Neighbor 2.200.1.1, interface Port-channel100
+
+ Neighbor 2.200.7.1, interface Port-channel80.2501
+
+ Neighbor 2.200.6.1, interface Port-channel70.2500
+
+ Neighbor 2.200.33.3, interface Port-channel52.4294967295
+
+ Neighbor 2.200.33.3, interface Port-channel33

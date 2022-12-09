@@ -1943,8 +1943,8 @@ class ShowMplsLdpBindingsSchema(MetaParser):
         'lib_entry': {
             Any(): {
                 'rev': int,
-                'local_binding': {
-                    'label': str
+                Optional('local_binding'): {
+                    'label': str,
                 },
                 Optional('remote_bindings'): {
                     Optional('peer_count'): int,
@@ -1991,7 +1991,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # 10.145.95.95:0       16002
         # lsr:10.255.255.255:0, label:16 
         p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+),? +(?:label:)?(?P<remote_label>\S+)')
-        
 
         for line in output.splitlines():
             line = line.strip() # strip whitespace from beginning and end
@@ -2029,7 +2028,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                    
                 lsr_id = remote_dict.setdefault('label', {}).\
                             setdefault(group['remote_label'],{}).\
                             setdefault('lsr_id', {}).\
@@ -2038,7 +2036,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 lsr_id.update({'label': group['remote_label']})
                 lsr_id.update({'lsr_id': group['lsr_id']})
                 continue
-                
             
         return result_dict
 

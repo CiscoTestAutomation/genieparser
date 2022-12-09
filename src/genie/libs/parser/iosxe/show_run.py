@@ -6,6 +6,8 @@ IOSXE parsers for the following show commands:
         * 'show running-config all | sec {interface}'
         * 'show running-config mdns-sd' 
     * 'show running-config aaa'
+    * 'show running-config nve'
+    * 'show running-config | section bgp'
 '''
 
 # Python
@@ -397,6 +399,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('power_inline_port_priority'): str,
                 Optional('flow_monitor_input'): str,
                 Optional('flow_monitor_output'): str,
+                Optional('flow_monitor_input_v6'): str,
+                Optional('flow_monitor_output_v6'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -609,7 +613,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p48 = re.compile(r'^switchport +block +multicast$')
 
         # switchport trunk allowed vlan 820,900-905
-        p49 = re.compile(r'^switchport +trunk +allowed +vlan (?P<vlans>[\S\s]+)$')
+        # switchport trunk allowed vlan add 905-908
+        p49 = re.compile(r'^switchport +trunk +allowed +vlan( +add)? (?P<vlans>[\S\s]+)$')
 
         # ip dhcp snooping trust
         p50 = re.compile(r'^ip +dhcp +snooping +trust$')
@@ -717,6 +722,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         
         #no ip dhcp snooping information option allow-untrusted
         p84 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
+
+        #ipv6 flow monitor monitor_ipv6_in sampler H_sampler input
+        p85 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_input_v6>[\S]+)\s+sampler\s+[\S]+\s+input$')
+
+        #ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
+        p86 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_output_v6>[\S]+)\s+sampler\s+[\S]+\s+output$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1111,9 +1122,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 continue
 
             # switchport trunk allowed vlan 820,900-905
+            # switchport trunk allowed vlan add 905-908
             m = p49.match(line)
             if m:
                 group = m.groupdict()
+                if 'switchport_trunk_vlans' in intf_dict:
+                    group['vlans'] = intf_dict['switchport_trunk_vlans'] + ',' + group['vlans']
                 intf_dict.update({'switchport_trunk_vlans': group['vlans']})
                 continue
 
@@ -1398,6 +1412,21 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
                 continue
+
+            #ipv6 flow monitor monitor_ipv6_in input
+            m = p85.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_input_v6': group['flow_monitor_input_v6']})
+                continue
+
+            #ipv6 flow monitor monitor_ipv6_out output
+            m = p86.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
+                continue
+
 
         return config_dict
 
@@ -2843,7 +2872,7 @@ class ShowRunningConfigAAA(ShowRunningConfigAAASchema):
 class ShowRunningConfigNveSchema(MetaParser):
     """Schema for show running-config nve"""
     schema = {
-        'l2vpn_global': {
+        Optional('l2vpn_global'): {
             Optional('replication_type'): str,
             Optional('router_id'): str,
             Optional('default_gateway'): bool,
@@ -2903,8 +2932,8 @@ class ShowRunningConfigNveSchema(MetaParser):
             },
         },
 
-        Optional('overlay_interfaces'):{
-            Any():{
+        Optional('overlay_interfaces'): {
+            Any(): {
                 Optional('name'): str,
                 Optional('shutdown'): bool,
                 Optional('vrf'): str,
@@ -2925,21 +2954,21 @@ class ShowRunningConfigNveSchema(MetaParser):
             },
         },
         Optional('nve_interfaces'): {
-            Any():{
+            Any(): {
                 Optional('description'): str,
                 Optional('shutdown'): bool,
                 Optional('ip_addr_state'): str,
                 Optional('host_reachability_protocol'): str,
                 Optional('source_interface'): str,
-                Optional('vni'):{
-                    'l2vni':{
-                        Any():{
+                Optional('vni'): {
+                    Optional('l2vni'): {
+                        Any(): {
                             Optional('replication_mcast'): str,
                             Optional('replication_type'): str,
                         },
                     },
-                    'l3vni':{
-                        Any():{
+                    Optional('l3vni'): {
+                        Any(): {
                             'vrf': str,
                         },
                     },
@@ -2947,21 +2976,21 @@ class ShowRunningConfigNveSchema(MetaParser):
             },
         },
         Optional('bgp'): {
-            Any():{
+            Any(): {
                 'as_number': str,
                 Optional('router_id'): str,
                 Optional('log_neighbor_change'): bool,
                 Optional('graceful_restart'): bool,
                 Optional('max_update_delay'): str,
                 Optional('ipv4_unicast_state'): bool,
-                Optional('neighbors'):{
-                    Any():{
+                Optional('neighbors'): {
+                    Any(): {
                         'peer_as_number': str,
                         Optional('bgp_update_source'): str,
                     },
                 },
-                Optional('address_family'):{
-                    Any():{
+                Optional('address_family'): {
+                    Any(): {
                         Optional('vrf'): str,
                         Optional('advertise_l2vpn_evpn'): bool,
                         Optional('redistribute_connected'): bool,
@@ -2970,8 +2999,8 @@ class ShowRunningConfigNveSchema(MetaParser):
                         Optional('select_additional_paths'): bool,
                         Optional('addr_family_additional_paths'): str,
                         Optional('max_path'): str,
-                        Optional('address_family_neighbor'):{
-                            Any():{
+                        Optional('address_family_neighbor'): {
+                            Any(): {
                                 Optional('community_attr_to_send'): str,
                                 Optional('additional_paths'): str,
                                 Optional('advertise_additional_paths'): str,
@@ -2985,8 +3014,8 @@ class ShowRunningConfigNveSchema(MetaParser):
             Any(): {
                 Optional('route_distinguisher'): str,
                 Optional('description'): str,
-                Optional('address_family'):{
-                    Any():{
+                Optional('address_family'): {
+                    Any(): {
                         Optional('mdt_default_vxlan'): str,
                         Optional('mdt_auto_discovery'): str,
                         Optional('bgp_inter_as'): bool,
@@ -3775,3 +3804,270 @@ class ShowRunRoute(ShowRunRouteSchema):
                 route_list.append(str(group['routes']))
         
         return res_dict
+
+
+# =================================================
+# Schema for:
+#   * 'show running-config | section bgp'
+# ==================================================
+
+class ShowRunSectionBgpSchema(MetaParser):
+    """Schema for show running-config | section bgp"""
+
+    schema = {
+        Optional('bgp'): {
+            Any(): {
+                'as_number': int,
+                Optional('router_id'): str,
+                Optional('log_neighbor_change'): bool,
+                Optional('graceful_restart'): bool,
+                Optional('max_update_delay'): str,
+                Optional('ipv4_unicast_state'): bool,
+                Optional('neighbors'): {
+                    Any(): {
+                        'peer_as_number': str,
+                        Optional('bgp_update_source'): str,
+                    },
+                },
+                Optional('address_family'): {
+                    Any(): {
+                        Optional('vrf'): str,
+                        Optional('advertise_l2vpn_evpn'): bool,
+                        Optional('redistribute_connected'): bool,
+                        Optional('default_info_originate'): bool,
+                        Optional('redistribute_static'): bool,
+                        Optional('select_additional_paths'): bool,
+                        Optional('addr_family_additional_paths'): str,
+                        Optional('max_path'): str,
+                        Optional('address_family_neighbor'): {
+                            Any(): {
+                                Optional('community_attr_to_send'): str,
+                                Optional('additional_paths'): str,
+                                Optional('advertise_additional_paths'): str,
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    }
+
+# ===================================
+# Parser for:
+#   * 'show running-config | section bgp'
+# ===================================
+
+class ShowRunSectionBgp(ShowRunSectionBgpSchema):
+    """Parser for show running-config | section bgp"""
+
+    cli_command = 'show running-config | section bgp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        bgp_asn = ''
+
+        # router bgp 65535.65535
+        p0 = re.compile(r'^router +bgp +(?P<asn>[\d.]+)$')
+
+        #   bgp router-id interface Loopback0
+        p1 = re.compile(r'^bgp +router\-id +interface +(?P<if_name>\S+)$')
+
+        #   bgp log-neighbor-changes
+        p2 = re.compile(r'^bgp +log\-neighbor\-changes$')
+
+        #   bgp update-delay 240
+        p3 = re.compile(r'^bgp +update\-delay +(?P<delay_time>\d+)$')
+
+        #   bgp graceful-restart
+        p4 = re.compile(r'^bgp +graceful\-restart$')
+
+        #   no bgp default ipv4-unicast
+        p5 = re.compile(r'^no +bgp +default +ipv4\-unicast$')
+
+        #   neighbor 10.11.11.11 remote-as 1
+        p6 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +remote\-as +(?P<remote_as>[\d.]+)$')
+
+        #   neighbor 10.11.11.11 update-source Loopback0
+        p7 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +update\-source +(?P<if_name>\S+)$')
+
+        #   address-family l2vpn evpn
+        #   address-family ipv4
+        #   address-family ipv4 vrf green
+        #   address-family mvpn ipv4
+        #   address-family mvpn ipv6
+        p8 = re.compile(r'^address\-family +(?P<family_name>l2vpn evpn|ipv4|ipv6|ipv4 mvpn|ipv6 mvpn)(\s+vrf +(?P<vrf_name>\S+))?$')
+
+        #   bgp additional-paths select all
+        p9 = re.compile(r'^bgp +additional\-paths +select +all$')
+
+        #   bgp additional-paths send
+        p10 = re.compile(r'^bgp +additional\-paths +(?P<option>send|receive|send receive)$')
+
+        #   neighbor 10.5.5.50 activate
+        p11 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +activate$')
+
+        #   neighbor 10.5.5.50 send-community both
+        p12 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +send\-community +(?P<community_attr>both|extended|standard)$')
+
+        #   neighbor 10.5.5.50 additional-paths send
+        p13 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +additional\-paths +(?P<option>send|receive|send receive)$')
+
+        #   neighbor 10.5.5.50 advertise additional-paths best 2
+        #   neighbor 10.5.5.50 advertise additional-paths group-best
+        #   neighbor 10.5.5.50 advertise additional-paths all group-best
+        p14 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +advertise +additional\-paths +(?P<option>.*)$')
+
+        #   advertise l2vpn evpn
+        p15 = re.compile(r'^advertise +l2vpn +evpn$')
+
+        #   redistribute connected
+        p16 = re.compile(r'^redistribute +connected$')
+
+        #   redistribute static
+        p17 = re.compile(r'^redistribute +static$')
+
+        #   maximum-paths 4
+        p18 = re.compile(r'^maximum\-paths +(?P<max_path>\d+)$')
+
+        #   default-information originate
+        p19 = re.compile(r'^default\-information +originate$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #   router bgp 65535.65535
+            m = p0.match(line)
+            if m:
+                bgp_asn = int(m.groupdict().pop('asn'))
+                bgp_dict = ret_dict.setdefault('bgp', {}).setdefault(bgp_asn, {})
+                bgp_dict.update({'as_number': bgp_asn})
+                continue
+
+            if bgp_asn:
+                #   bgp router-id interface Loopback0
+                m = p1.match(line)
+                if m:
+                    bgp_dict.update({'router_id': m.groupdict()['if_name']})
+                    continue
+
+                #   bgp log-neighbor-changes
+                m = p2.match(line)
+                if m:
+                    bgp_dict.update({'log_neighbor_change': True})
+                    continue
+
+                #   bgp update-delay 240
+                m = p3.match(line)
+                if m:
+                    bgp_dict.update({'max_update_delay': m.groupdict()['delay_time']})
+                    continue
+
+                #   bgp graceful-restart
+                m = p4.match(line)
+                if m:
+                    bgp_dict.update({'graceful_restart': True})
+                    continue
+
+                #   no bgp default ipv4-unicast
+                m = p5.match(line)
+                if m:
+                    bgp_dict.update({'ipv4_unicast_state': False})
+                    continue
+
+                #   neighbor 10.11.11.11 remote-as 1
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    neighbor_dict = bgp_dict.setdefault('neighbors', {}).setdefault(group['ip'], {})
+                    neighbor_dict['peer_as_number'] = group['remote_as']
+                    continue
+
+                #   neighbor 10.11.11.11 update-source Loopback0
+                m = p7.match(line)
+                if m:
+                    neighbor_dict['bgp_update_source'] = m.groupdict()['if_name']
+                    continue
+
+                #   address-family l2vpn evpn
+                #   address-family ipv4
+                #   address-family ipv4 vrf green
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    af = group['family_name']
+                    af_dict = bgp_dict.setdefault('address_family', {}).setdefault(af, {})
+                    continue
+
+                #   bgp additional-paths select all
+                m = p9.match(line)
+                if m:
+                    af_dict.update({'select_additional_paths': True})
+                    continue
+
+                #   bgp additional-paths send receive
+                m = p10.match(line)
+                if m:
+                    af_dict['addr_family_additional_paths'] = m.groupdict()['option']
+                    continue
+
+                #   neighbor 10.5.5.50 activate
+                m = p11.match(line)
+                if m:
+                    neighbor = m.groupdict()['ip']
+                    address_family_neighbor_dict = af_dict.setdefault('address_family_neighbor', {}).setdefault(neighbor, {})
+                    continue
+
+                #   neighbor 10.5.5.50 send-community both
+                m = p12.match(line)
+                if m:
+                    address_family_neighbor_dict['community_attr_to_send'] = m.groupdict()['community_attr']
+                    continue
+
+                #   neighbor 10.5.5.50 additional-paths send
+                m = p13.match(line)
+                if m:
+                    address_family_neighbor_dict['additional_paths'] = m.groupdict()['option']
+                    continue
+
+                #   neighbor 10.5.5.50 advertise additional-paths best 3
+                #   neighbor 10.5.5.50 advertise additional-paths group-best
+                #   neighbor 10.5.5.50 advertise additional-paths all group-best
+                m = p14.match(line)
+                if m:
+                    address_family_neighbor_dict['advertise_additional_paths'] = m.groupdict()['option']
+                    continue
+
+                #   advertise l2vpn evpn
+                m = p15.match(line)
+                if m:
+                    af_dict['advertise_l2vpn_evpn'] = True
+                    continue
+
+                #   redistribute connected
+                m = p16.match(line)
+                if m:
+                    af_dict.update({'redistribute_connected': True})
+                    continue
+
+                #   redistribute static
+                m = p17.match(line)
+                if m:
+                    af_dict.update({'redistribute_static': True})
+                    continue
+
+                #   maximum-paths 4
+                m = p18.match(line)
+                if m:
+                    af_dict.update({'max_path': m.groupdict()['max_path']})
+                    continue
+
+                # default-information originate
+                m = p19.match(line)
+                if m:
+                    af_dict.update({'default_info_originate': True})
+                    continue
+
+        return ret_dict

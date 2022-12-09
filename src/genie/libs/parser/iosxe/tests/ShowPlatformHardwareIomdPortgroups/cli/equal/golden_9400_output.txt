@@ -1,0 +1,58 @@
+show platform hardware iomd 6/0 portgroups
+Port  Interface                       Status    Interface  Group Max   
+Group                                           Bandwith   Bandwidth   
+
+1     TenGigabitEthernet6/0/1         up         10G       
+1     TenGigabitEthernet6/0/2         up         10G       
+1     TenGigabitEthernet6/0/3         up         10G       
+1     TenGigabitEthernet6/0/4         up         10G       
+1     TenGigabitEthernet6/0/5         up         10G       
+1     TenGigabitEthernet6/0/6         up         10G       120G      
+1     TenGigabitEthernet6/0/7         up         10G       
+1     TenGigabitEthernet6/0/8         up         10G       
+1     TenGigabitEthernet6/0/9         up         10G       
+1     TenGigabitEthernet6/0/10        up         10G       
+1     TenGigabitEthernet6/0/11        up         10G       
+1     TenGigabitEthernet6/0/12        up         10G       
+
+2     TenGigabitEthernet6/0/13        up         10G       
+2     TenGigabitEthernet6/0/14        up         10G       
+2     TenGigabitEthernet6/0/15        up         10G       
+2     TenGigabitEthernet6/0/16        up         10G       
+2     TenGigabitEthernet6/0/17        up         10G       
+2     TenGigabitEthernet6/0/18        up         10G       120G      
+2     TenGigabitEthernet6/0/19        up         10G       
+2     TenGigabitEthernet6/0/20        up         10G       
+2     TenGigabitEthernet6/0/21        up         10G       
+2     TenGigabitEthernet6/0/22        up         10G       
+2     TenGigabitEthernet6/0/23        up         10G       
+2     TenGigabitEthernet6/0/24        up         10G       
+
+3     TenGigabitEthernet6/0/25        up         10G       
+3     TenGigabitEthernet6/0/26        up         10G       
+3     TenGigabitEthernet6/0/27        up         10G       
+3     TenGigabitEthernet6/0/28        up         10G       
+3     TenGigabitEthernet6/0/29        up         10G       
+3     TenGigabitEthernet6/0/30        up         10G       120G      
+3     TenGigabitEthernet6/0/31        up         10G       
+3     TenGigabitEthernet6/0/32        up         10G       
+3     TenGigabitEthernet6/0/33        up         10G       
+3     TenGigabitEthernet6/0/34        up         10G       
+3     TenGigabitEthernet6/0/35        up         10G       
+3     TenGigabitEthernet6/0/36        up         10G       
+
+4     TenGigabitEthernet6/0/37        up         10G       
+4     TenGigabitEthernet6/0/38        up         10G       
+4     TenGigabitEthernet6/0/39        up         10G       
+4     TenGigabitEthernet6/0/40        up         10G       
+4     TenGigabitEthernet6/0/41        up         10G       
+4     TenGigabitEthernet6/0/42        up         10G       120G      
+4     TenGigabitEthernet6/0/43        up         10G       
+4     TenGigabitEthernet6/0/44        up         10G       
+4     TenGigabitEthernet6/0/45        up         10G       
+4     TenGigabitEthernet6/0/46        up         10G       
+4     TenGigabitEthernet6/0/47        up         10G       
+4     TenGigabitEthernet6/0/48        up         10G       
+
+
+av35top_7slot#

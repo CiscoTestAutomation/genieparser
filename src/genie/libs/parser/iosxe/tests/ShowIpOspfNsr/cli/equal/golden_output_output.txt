@@ -1,0 +1,16 @@
+ Active RP
+ Operating in duplex mode
+ Redundancy state: ACTIVE
+ Peer redundancy state: STANDBY HOT
+ Checkpoint peer ready
+ Checkpoint messages enabled
+ ISSU negotiation complete
+ ISSU versions compatible
+
+ Routing Process "ospf 50" with ID 2.200.1.2
+ NSR configured
+ Checkpoint message sequence number: 12358
+ Standby synchronization state: synchronized
+ Bulk sync operations:  1
+ Next sync check time:  20:29:44.061 IST Thu Oct 6 2022
+ LSA Count: 60, Checksum Sum 0x001DF372

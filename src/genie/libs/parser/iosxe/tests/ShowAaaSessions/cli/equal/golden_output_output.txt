@@ -1,0 +1,20 @@
+sh aaa sessions 
+Total sessions since last reload: 6
+Session Id: 4003
+   Unique Id: 13
+   User Name: *not available*
+   IP Address: 0.0.0.0
+   Idle Time: 0
+   CT Call Handle: 0
+Session Id: 4005
+   Unique Id: 15
+   User Name: *not available*
+   IP Address: 192.168.1.5
+   Idle Time: 0
+   CT Call Handle: 0
+Session Id: 4006
+   Unique Id: 16
+   User Name: *not available*
+   IP Address: 192.168.1.5
+   Idle Time: 0
+   CT Call Handle: 0

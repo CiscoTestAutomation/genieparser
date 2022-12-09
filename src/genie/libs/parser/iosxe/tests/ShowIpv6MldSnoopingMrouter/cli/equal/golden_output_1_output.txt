@@ -1,0 +1,3 @@
+Vlan    ports
+----    -----
+100     Router

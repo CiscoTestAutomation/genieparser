@@ -1,0 +1,24 @@
+Vlan1 is up (if_number 159) ['2]
+  Corresponding hwidb fast_if_number 159
+  Corresponding hwidb firstsw->if_number 159
+  Internet Protocol processing disabled
+  Input features: IP not enabled discard
+  Suppressed input features: MCI Check
+  Hardware idb is Vlan1
+  Fast switching type 1, interface type 156
+  IP CEF switching disabled
+  IP Null turbo vector
+  IP Null turbo vector
+  IP prefix lookup IPv4 mtrie 8-8-8-8 optimized
+  Flags 0x26000, hardware flags 0x5
+  Input fast flags 0x0, Output fast flags 0x0
+  ifindex 158(158) ['2]
+  Slot 0 (0) Slot unit 1 VC -1
+  IP MTU 0
+  VRF: Default(0)
+ Status flags:
+  hwidb    status 210048 status2 200011 status3 0 status4 0
+  fibhwidb status 210048 status2 200011 status3 0 status4 0
+ Subblocks:
+  Protocol discard for IPv6 - discarded packets: 0
+  Protocol discard for IPv4 - discarded packets: 0

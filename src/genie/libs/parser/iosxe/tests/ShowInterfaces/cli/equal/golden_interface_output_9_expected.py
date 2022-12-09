@@ -51,6 +51,7 @@ expected_output = {
         "description": "test",
         "duplex_mode": "full",
         "enabled": True,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "arpa"
         },

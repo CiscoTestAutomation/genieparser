@@ -1,0 +1,4 @@
+show platform hardware fed switch active fwd resource utilization | i LABEL
+
+RSC_LABEL_STACK_ID       24034       41503
+RSC_LABEL_STACK_ID       24034       41503 

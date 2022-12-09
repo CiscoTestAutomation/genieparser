@@ -1,0 +1,31 @@
+Tag nSVL-1:
+
+ISIS level-1 node information for sw.14A2A08BB00.00
+  IP interface address: 1.1.1.1 (LSP #0)
+  LSP index: 1
+  SR capable: No, Strict-SPF capable: No
+
+ISIS level-1 node information for sw.14A2A095300.00
+  IP interface address: 2.2.2.2 (LSP #0)
+  LSP index: 3
+  SR capable: No, Strict-SPF capable: No
+
+ISIS level-1 node information for sw.14A2A095300.01
+  LSP index: 4
+  SR capable: No, Strict-SPF capable: No
+
+Tag nSVL-1:
+
+ISIS level-2 node information for sw.14A2A08BB00.00
+  IP interface address: 1.1.1.1 (LSP #0)
+  LSP index: 2
+  SR capable: No, Strict-SPF capable: No
+
+ISIS level-2 node information for sw.14A2A095300.00
+  IP interface address: 2.2.2.2 (LSP #0)
+  LSP index: 5
+  SR capable: No, Strict-SPF capable: No
+
+ISIS level-2 node information for sw.14A2A095300.01
+  LSP index: 6
+  SR capable: No, Strict-SPF capable: No

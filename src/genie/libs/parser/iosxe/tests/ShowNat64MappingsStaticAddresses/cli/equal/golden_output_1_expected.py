@@ -3,7 +3,7 @@ expected_output = {
         'address': {
             '5.5.5.5': {
                 'direction': 'v6v4',
-                'ref_count': 1
+                'ref_count': 11
             }
         }
     }

@@ -1,0 +1,30 @@
+show running-config | section ospfv3
+ ospfv3 5 ipv4 area 0
+ ospfv3 5 ipv6 area 0
+ ospfv3 5 ipv6 area 0
+router ospfv3 5
+ max-lsa 3300 ignore-time 34 reset-time 22 ignore-count 98
+ !
+ address-family ipv4 unicast
+  redistribute connected
+  redistribute bgp 100
+  redistribute isis 1
+  max-lsa 200 ignore-count 2
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  redistribute maximum-prefix 10101 warning-only
+  redistribute connected
+  max-lsa 4294967295 ignore-count 65535
+ exit-address-family
+ !
+ address-family ipv4 unicast vrf red
+  redistribute connected
+  max-lsa 300000 reset-time 11
+ exit-address-family
+ !
+ address-family ipv6 unicast vrf red
+  redistribute maximum-prefix 388899 76
+  redistribute connected
+  max-lsa 200000
+ exit-address-family
