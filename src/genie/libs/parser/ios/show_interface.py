@@ -14,7 +14,8 @@
     * show interfaces {interface} transceiver
     * show interfaces transceiver detail
     * show interfaces {interface} transceiver detail
-
+    * show interfaces capabilities
+    * show interfaces {interface} capabilities
     # TODO: Need find replacement command for IOSXE 'show interface <intf> counters'
 """
 
@@ -42,7 +43,8 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowInterfacesDescription as ShowInterfacesDescription_iosxe, \
     ShowInterfacesStatus as ShowInterfacesStatus_iosxe, \
     ShowInterfacesTransceiver as ShowInterfacesTransceiver_iosxe, \
-    ShowInterfacesTransceiverDetail as ShowInterfacesTransceiverDetail_iosxe
+    ShowInterfacesTransceiverDetail as ShowInterfacesTransceiverDetail_iosxe, \
+    ShowInterfacesCapabilities as ShowInterfacesCapabilities_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -151,5 +153,13 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiver_iosxe):
     Parser for:
         * show interfaces transciever
         * show interfaces <interface> transceiver
+    """
+    pass
+
+class ShowInterfacesCapabilities(ShowInterfacesCapabilities_iosxe):
+    """
+    Parser for:
+        * show interfaces capabilities
+        * show interfaces {interface} capabilities
     """
     pass

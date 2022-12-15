@@ -1,0 +1,9 @@
+interface GigabitEthernet1/0/10
+ switchport mode access
+ ip flow monitor IPv4_NETFLOW input
+ load-interval 30
+ shutdown
+ speed auto 10 100 1000
+ duplex full
+ spanning-tree portfast
+ 

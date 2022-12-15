@@ -5,7 +5,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -18,7 +18,7 @@ class ShowSwitchStackPortsSummarySchema(MetaParser):
             Any(): {
                 'stackport_id': str,
                 'port_status': str,
-                'neighbor': int,
+                'neighbor': Or(int, str),
                 'cable_length': str,
                 'link_ok': str,
                 'link_active': str,
@@ -54,8 +54,8 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
 
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
                         " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>[\d+])"
-                        " +(?P<cable_length>\w+)"
+                        " +(?P<neighbor>\S+)"
+                        " +(?P<cable_length>No +cable|\w+)"
                         " +(?P<link_ok>\w+)"
                         " +(?P<link_active>\w+)"
                         " +(?P<sync_ok>\w+)"
@@ -82,7 +82,10 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
 
                 ret_dict['stackports'][stackport_id]['stackport_id'] = stackport_id
                 ret_dict['stackports'][stackport_id]['port_status'] = m.groupdict()['port_status']
-                ret_dict['stackports'][stackport_id]['neighbor'] = int(m.groupdict()['neighbor'])
+                try:
+                    ret_dict['stackports'][stackport_id]['neighbor'] = int(m.groupdict()['neighbor'])
+                except ValueError:
+                    ret_dict['stackports'][stackport_id]['neighbor'] = m.groupdict()['neighbor']
                 ret_dict['stackports'][stackport_id]['cable_length'] = m.groupdict()['cable_length']
                 ret_dict['stackports'][stackport_id]['link_ok'] = m.groupdict()['link_ok']
                 ret_dict['stackports'][stackport_id]['link_active'] = m.groupdict()['link_active']

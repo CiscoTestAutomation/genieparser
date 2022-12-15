@@ -1,0 +1,4 @@
+Sw#/Port#  Port Status  Neighbor  Cable Length   Link OK   Link Active   Sync OK   #Changes to LinkOK  In Loopback
+-------------------------------------------------------------------------------------------------------------------
+1/1        DOWN         NONE      No cable       No        No            Yes       0                   Yes
+1/2        DOWN         NONE      No cable       No        No            Yes       0                   Yes

@@ -425,6 +425,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('stackwise_virtual_link'): int,
                 Optional('dual_active_detection'): bool,
                 Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
+                Optional('speed'): str,
+                Optional('duplex'): str,                
             }
         }
     }
@@ -728,6 +730,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         #ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
         p86 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_output_v6>[\S]+)\s+sampler\s+[\S]+\s+output$')
+
+        # speed auto 10 100 1000
+        p87 = re.compile(r'^speed\s+(?P<speed>.*$)')
+
+        # duplex full
+        p88 = re.compile(r'^duplex\s+(?P<duplex>.*$)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1427,6 +1435,19 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
                 continue
 
+            # speed auto 10 100 1000
+            m = p87.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed': group['speed']})
+                continue
+
+            # duplex full
+            m = p88.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'duplex': group['duplex']})
+                continue
 
         return config_dict
 

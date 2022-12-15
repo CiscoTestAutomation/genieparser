@@ -1,0 +1,20 @@
+FastEthernet0/1
+  Model:                 WS-C3560-48TS
+  Type:                  10/100BaseTX
+  Speed:                 10,100,auto
+  Duplex:                half,full,auto
+  Trunk encap. type:     802.1Q,ISL
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(4q3t) (3t: Two configurable values and one fixed.)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          no
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
