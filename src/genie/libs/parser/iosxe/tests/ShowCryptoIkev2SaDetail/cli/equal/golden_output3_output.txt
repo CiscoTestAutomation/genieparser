@@ -1,0 +1,71 @@
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1         10.146.0.154/500     107.90.29.85/500      gre/gre              READY  
+      Encr: AES-GCM, keysize: 256, PRF: SHA512, Hash: None, DH Grp:21, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/20635 sec
+      CE id: 53247, Session-id: 494
+      Local spi: 26E77925771B44B1       Remote spi: 4785C18DB784C439
+      Status Description: Negotiation done
+      Local id: cedar.flex.example.com
+      Remote id: example-r46.flex.example.com
+      Local req msg id:  3              Remote req msg id:  5         
+      Local next msg id: 3              Remote next msg id: 5         
+      Local req queued:  3              Remote req queued:  5         
+      Local window:      5              Remote window:      5         
+      DPD configured for 10 seconds, retry 2
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected  
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : No
+      Remote subnets:
+      10.255.1.238 255.255.255.255
+      PEER TYPE: IOS-XE
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+8         10.146.0.154/4500    3.130.109.2/4500      gre/gre              READY  
+      Encr: AES-CBC, keysize: 128, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/16301 sec
+      CE id: 0, Session-id: 470
+      Local spi: B3A917AB8A5F68A9       Remote spi: FBAFD8516EA9D5E8
+      Status Description: Negotiation done
+      Local id: cedar.flex.example.com
+      Remote id: test-r1.flex.example.com
+      Local req msg id:  0              Remote req msg id:  16        
+      Local next msg id: 0              Remote next msg id: 16        
+      Local req queued:  0              Remote req queued:  16        
+      Local window:      5              Remote window:      5         
+      DPD configured for 10 seconds, retry 2
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is detected  outside
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : No
+      Remote subnets:
+      172.31.0.4 255.255.255.255
+      PEER TYPE: Other
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+9         10.146.0.154/500     65.27.58.179/500      gre/gre              READY  
+      Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/16298 sec
+      CE id: 0, Session-id: 471
+      Local spi: EA7CC2DFCC83A760       Remote spi: E4D5BDA3B19BBD80
+      Status Description: Negotiation done
+      Local id: cedar.flex.example.com
+      Remote id: test2-r1.split.flex.example.com
+      Local req msg id:  0              Remote req msg id:  15        
+      Local next msg id: 0              Remote next msg id: 15        
+      Local req queued:  0              Remote req queued:  15        
+      Local window:      5              Remote window:      5         
+      DPD configured for 10 seconds, retry 2
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected  
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : No
+      Remote subnets:
+      10.255.3.229 255.255.255.255
+      PEER TYPE: Other
