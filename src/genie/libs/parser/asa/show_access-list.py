@@ -1,17 +1,24 @@
+''' show_access-list.py
+Parser for the following show commands:
+    * show access-list
+'''
+
+# Python
 import re
 import ipaddress
+
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
-
 
 # ==============================
 # Schema for 'show access-list'
 # ==============================
 class ShowAccessListSchema(MetaParser):
-    ''' Schema for "show access-list" '''
+    """Schema for
+        * show access-list
+    """
 
-    # These are the key-value pairs to add to the parsed dictionary
     schema = {
         'acl': {
             Any(): {
@@ -34,9 +41,8 @@ class ShowAccessListSchema(MetaParser):
         }
     }
 
-
 # ==============================
-# Parser for 'show access-list session'
+# Parser for 'show access-list'
 # ==============================
 
 def acl_no_sub_elements(lines, n):
@@ -160,28 +166,37 @@ def get_rule_terms(line):
     svc_proto = re.compile(r'tcp|udp|icmp|ip')
 
     # Source and destination Regexes
-    host_host = re.compile(r"host \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
-    host_net = re.compile(r"host \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
-    net_host = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
-    net_net = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    #host_host = re.compile(r"host \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
+    host_host = re.compile(r"host (\d+\.){3}\d+ host (\d+\.){3}\d+")
+    #host_net = re.compile(r"host \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    host_net = re.compile(r"host (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
+    #net_host = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
+    net_host = re.compile(r"(\d+\.){3}\d+ (\d+\.){3}\d+ host (\d+\.){3}\d+")
+    #net_net = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    net_net = re.compile(r"(\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
 
     # Source and destination ranges Regexes
-    host_range = re.compile(r"host \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
-    range_host = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
-    net_range = re.compile(r"\d+\.\d+\.\d+\.\d+.*\d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
-    range_net = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
-    range_range = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    #host_range = re.compile(r"host \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    host_range = re.compile(r"host (\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
+    #range_host = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
+    range_host = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ host (\d+\.){3}\d+")
+    #net_range = re.compile(r"\d+\.\d+\.\d+\.\d+.*\d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    net_range = re.compile(r"(\d+\.){3}\d+.*(\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
+    #range_net = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    range_net = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
+    #range_range = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
+    range_range = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
 
-    range_host = range_host.findall(line)
-    host_range = host_range.findall(line)
-    net_range = net_range.findall(line)
-    range_net = range_net.findall(line)
-    range_range = range_range.findall(line)
+    m_range_host = range_host.search(line)
+    m_host_range = host_range.search(line)
+    m_net_range = net_range.search(line)
+    m_range_net = range_net.search(line)
+    m_range_range = range_range.search(line)
 
-    host_host = host_host.findall(line)
-    host_net = host_net.findall(line)
-    net_host = net_host.findall(line)
-    net_net = net_net.findall(line)
+    m_host_host = host_host.search(line)
+    m_host_net = host_net.search(line)
+    m_net_host = net_host.search(line)
+    m_net_net = net_net.search(line)
 
     svc_range = svc_range.findall(line)
     svc_port = svc_port.findall(line)
@@ -212,34 +227,35 @@ def get_rule_terms(line):
 
     # Set the dest and src vars - list of IP network objects
     # Convert ranges to a list of IP network objects
-    if host_host:
-        dest = [ipaddress.ip_network(host_host[0].split()[-1], '/32')]
-        src = [ipaddress.ip_network(host_host[0].split()[1])]
-    elif range_host:
-        dest = [ipaddress.ip_network(range_host[0].split()[-1], '/32')]
-        src = range_subnets(range_host[0].split()[1], range_host[0].split()[2])
-    elif range_net:
-        dest = [ipaddress.ip_network('/'.join(range_net[0].split()[-2:]))]
-        src = range_subnets(range_net[0].split()[1], range_net[0].split()[2])
-    elif range_range:
-        dest = range_subnets(range_range[0].split()[-2], range_range[0].split()[-1])
-        src = range_subnets(range_range[0].split()[1], range_range[0].split()[2])
-    elif host_net:
-        dest = [ipaddress.ip_network('/'.join(host_net[0].split()[-2:]))]
-        src = [ipaddress.ip_network(host_net[0].split()[1], '/32')]
-    elif host_range:
-        dest = range_subnets(host_range[0].split()[-2], host_range[0].split()[-1])
-        src = [ipaddress.ip_network(host_range[0].split()[1], '/32')]
-    elif net_host:
-        dest = [ipaddress.ip_network(net_host[0].split()[-1])]
-        src = [ipaddress.ip_network('/'.join(net_host[0].split()[:2]))]
-    elif net_net:
-        dest = [ipaddress.ip_network('/'.join(net_net[0].split()[-2:]))]
-        src = [ipaddress.ip_network('/'.join(net_net[0].split()[:2]))]
-    elif net_range:
-        dest = range_subnets(net_range[0].split()[-2], net_range[0].split()[-1])
-        src = [ipaddress.ip_network('/'.join(net_range[0].split()[:2]))]
+    if m_host_host:
+        dest = [ipaddress.ip_network(m_host_host.group(0).split()[-1], '/32')]
+        src = [ipaddress.ip_network(m_host_host.group(0).split()[1])]
+    elif m_range_host:
+        dest = [ipaddress.ip_network(m_range_host.group(0).split()[-1], '/32')]
+        src = range_subnets(m_range_host.group(0).split()[1], m_range_host.group(0).split()[2])
+    elif m_range_net:
+        dest = [ipaddress.ip_network('/'.join(m_range_net.group(0).split()[-2:]))]
+        src = range_subnets(m_range_net.group(0).split()[1], m_range_net.group(0).split()[2])
+    elif m_range_range:
+        dest = range_subnets(m_range_range.group(0).split()[-2], m_range_range.group(0).split()[-1])
+        src = range_subnets(m_range_range.group(0).split()[1], m_range_range.group(0).split()[2])
+    elif m_host_net:
+        dest = [ipaddress.ip_network('/'.join(m_host_net.group(0).split()[-2:]))]
+        src = [ipaddress.ip_network(m_host_net.group(0).split()[1], '/32')]
+    elif m_host_range:
+        dest = range_subnets(m_host_range.group(0).split()[-2], m_host_range.group(0).split()[-1])
+        src = [ipaddress.ip_network(m_host_range.group(0).split()[1], '/32')]
+    elif m_net_host:
+        dest = [ipaddress.ip_network(m_net_host.group(0).split()[-1])]
+        src = [ipaddress.ip_network('/'.join(m_net_host.group(0).split()[:2]))]
+    elif m_net_net:
+        dest = [ipaddress.ip_network('/'.join(m_net_net.group(0).split()[-2:]))]
+        src = [ipaddress.ip_network('/'.join(m_net_net.group(0).split()[:2]))]
+    elif m_net_range:
+        dest = range_subnets(m_net_range.group(0).split()[-2], m_net_range.group(0).split()[-1])
+        src = [ipaddress.ip_network('/'.join(m_net_range.group(0).split()[:2]))]
     else:
+        print('No Match', line)
         dest = []
         src = []
     return src, dest, proto, port_range, rule_hitcnt(line), action
