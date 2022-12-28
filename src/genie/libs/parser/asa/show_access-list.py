@@ -166,25 +166,16 @@ def get_rule_terms(line):
     svc_proto = re.compile(r'tcp|udp|icmp|ip')
 
     # Source and destination Regexes
-    #host_host = re.compile(r"host \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
     host_host = re.compile(r"host (\d+\.){3}\d+ host (\d+\.){3}\d+")
-    #host_net = re.compile(r"host \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     host_net = re.compile(r"host (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
-    #net_host = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
     net_host = re.compile(r"(\d+\.){3}\d+ (\d+\.){3}\d+ host (\d+\.){3}\d+")
-    #net_net = re.compile(r"\d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     net_net = re.compile(r"(\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
 
     # Source and destination ranges Regexes
-    #host_range = re.compile(r"host \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     host_range = re.compile(r"host (\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
-    #range_host = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ host \d+\.\d+\.\d+\.\d+")
     range_host = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ host (\d+\.){3}\d+")
-    #net_range = re.compile(r"\d+\.\d+\.\d+\.\d+.*\d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     net_range = re.compile(r"(\d+\.){3}\d+.*(\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
-    #range_net = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     range_net = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+ (\d+\.){3}\d+")
-    #range_range = re.compile(r"range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+ range \d+\.\d+\.\d+\.\d+ \d+\.\d+\.\d+\.\d+")
     range_range = re.compile(r"range (\d+\.){3}\d+ (\d+\.){3}\d+ range (\d+\.){3}\d+ (\d+\.){3}\d+")
 
     m_range_host = range_host.search(line)
@@ -198,62 +189,75 @@ def get_rule_terms(line):
     m_net_host = net_host.search(line)
     m_net_net = net_net.search(line)
 
-    svc_range = svc_range.findall(line)
-    svc_port = svc_port.findall(line)
-    svc_proto = svc_proto.findall(line)
-    svc_port_gt = svc_port_gt.findall(line)
+    m_svc_range = svc_range.search(line)
+    m_svc_port = svc_port.search(line)
+    m_svc_proto = svc_proto.search(line)
+    m_svc_port_gt = svc_port_gt.search(line)
 
     # Set the port range var based on what matches for the service port.
     # Set the port_range var to a tuple of ints for.
     # if one port then same int for start and end - e.g. (80, 80)
-    if svc_range:
+    if m_svc_range:
         port_range = tuple(get_port_number(x) for x in
-                           [svc_range[0].split()[1], svc_range[0].split()[2]])
-    elif svc_port:
+                           [m_svc_range.group(0).split()[1], m_svc_range.group(0).split()[2]])
+    elif m_svc_port:
         port_range = tuple(get_port_number(x) for x in
-                           [svc_port[0].split()[1], svc_port[0].split()[1]])
-    elif svc_port_gt:
-        port_range = tuple([get_port_number(svc_port_gt[0].split()[1]), get_port_number('65536')])
+                           [m_svc_port.group(0).split()[1], m_svc_port.group(0).split()[1]])
+    elif m_svc_port_gt:
+        port_range = tuple([get_port_number(m_svc_port_gt.group(0).split()[1]), get_port_number('65536')])
 
     # If nothing matches set to 0, 0
     else:
+        print('No Match Port', line)
         port_range = (0, 0)
 
     # Check if the protocol was found
-    if svc_proto:
-        proto = svc_proto[0]
+    if m_svc_proto:
+        proto = m_svc_proto.group(0)
     else:
+        print('No Match Proto', line)
         proto = 'None'
 
     # Set the dest and src vars - list of IP network objects
     # Convert ranges to a list of IP network objects
+    # !!! Keep these in the correct order since some matches at the bottom
+    # Can overlap with matches at the top !!!
     if m_host_host:
-        dest = [ipaddress.ip_network(m_host_host.group(0).split()[-1], '/32')]
-        src = [ipaddress.ip_network(m_host_host.group(0).split()[1])]
+        split_it = m_host_host.group(0).split()
+        dest = [ipaddress.ip_network(split_it[-1], '/32')]
+        src = [ipaddress.ip_network(split_it[1])]
     elif m_range_host:
-        dest = [ipaddress.ip_network(m_range_host.group(0).split()[-1], '/32')]
-        src = range_subnets(m_range_host.group(0).split()[1], m_range_host.group(0).split()[2])
+        split_it = m_range_host.group(0).split()
+        dest = [ipaddress.ip_network(split_it[-1], '/32')]
+        src = range_subnets(split_it[1], split_it[2])
     elif m_range_net:
-        dest = [ipaddress.ip_network('/'.join(m_range_net.group(0).split()[-2:]))]
-        src = range_subnets(m_range_net.group(0).split()[1], m_range_net.group(0).split()[2])
+        split_it = m_range_net.group(0).split()
+        dest = [ipaddress.ip_network('/'.join(split_it[-2:]))]
+        src = range_subnets(split_it[1], split_it[2])
     elif m_range_range:
-        dest = range_subnets(m_range_range.group(0).split()[-2], m_range_range.group(0).split()[-1])
-        src = range_subnets(m_range_range.group(0).split()[1], m_range_range.group(0).split()[2])
+        split_it = m_range_range.group(0).split()
+        dest = range_subnets(split_it[-2], split_it[-1])
+        src = range_subnets(split_it[1], split_it[2])
     elif m_host_net:
-        dest = [ipaddress.ip_network('/'.join(m_host_net.group(0).split()[-2:]))]
-        src = [ipaddress.ip_network(m_host_net.group(0).split()[1], '/32')]
+        split_it = m_host_net.group(0).split()
+        dest = [ipaddress.ip_network('/'.join(split_it[-2:]))]
+        src = [ipaddress.ip_network(split_it[1], '/32')]
     elif m_host_range:
-        dest = range_subnets(m_host_range.group(0).split()[-2], m_host_range.group(0).split()[-1])
-        src = [ipaddress.ip_network(m_host_range.group(0).split()[1], '/32')]
+        split_it = m_host_range.group(0).split()
+        dest = range_subnets(split_it[-2], split_it[-1])
+        src = [ipaddress.ip_network(split_it[1], '/32')]
     elif m_net_host:
-        dest = [ipaddress.ip_network(m_net_host.group(0).split()[-1])]
-        src = [ipaddress.ip_network('/'.join(m_net_host.group(0).split()[:2]))]
+        split_it = m_net_host.group(0).split()
+        dest = [ipaddress.ip_network(split_it[-1])]
+        src = [ipaddress.ip_network('/'.join(split_it[:2]))]
     elif m_net_net:
-        dest = [ipaddress.ip_network('/'.join(m_net_net.group(0).split()[-2:]))]
-        src = [ipaddress.ip_network('/'.join(m_net_net.group(0).split()[:2]))]
+        split_it = m_net_net.group(0).split()
+        dest = [ipaddress.ip_network('/'.join(split_it[-2:]))]
+        src = [ipaddress.ip_network('/'.join(split_it[:2]))]
     elif m_net_range:
-        dest = range_subnets(m_net_range.group(0).split()[-2], m_net_range.group(0).split()[-1])
-        src = [ipaddress.ip_network('/'.join(m_net_range.group(0).split()[:2]))]
+        split_it = m_net_range.group(0).split()
+        dest = range_subnets(split_it[-2], split_it[-1])
+        src = [ipaddress.ip_network('/'.join(split_it[:2]))]
     else:
         print('No Match', line)
         dest = []
