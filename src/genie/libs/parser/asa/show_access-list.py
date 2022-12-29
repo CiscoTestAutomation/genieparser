@@ -351,6 +351,6 @@ class ShowAccessList(ShowAccessListSchema):
                 else:
                     # if this is an ACE element
                     # Then parse out details
-                    add_element(parsed_dict, line, line_key, acl)
+                    add_element(parsed_dict, line.strip(), line_key, acl)
 
         return parsed_dict
