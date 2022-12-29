@@ -262,7 +262,7 @@ def get_rule_terms(line):
         print('No Match', line)
         dest = []
         src = []
-    return src, dest, proto, port_range, rule_hitcnt(line), action
+    return [str(x) for x in src], [str(x) for x in dest], proto, port_range, rule_hitcnt(line), action
 
 
 def get_remarks(lines, n):
