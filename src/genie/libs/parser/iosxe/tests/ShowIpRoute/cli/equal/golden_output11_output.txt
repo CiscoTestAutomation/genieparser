@@ -1,0 +1,35 @@
+
+R_iosxe#show ip route vrf 1
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP
+       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       H - NHRP, G - NHRP registered, g - NHRP registration summary
+       o - ODR, P - periodic downloaded static route, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+       & - replicated local route overrides by connected
+
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+n*Nd  0.0.0.0/0 [6/0], 3w2d, Null0
+      10.0.0.0/8 is variably subnetted, 35 subnets, 4 masks
+m        10.0.1.0/24 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.1.3.0/24 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.1.4.0/24 [251/0] via 172.30.1.9, 04:14:21, Sdwan-system-intf
+m        10.128.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.129.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.130.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.131.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.132.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.133.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.140.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.145.0.0/16 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.146.2.0/24 [251/0] via 172.30.1.7, 04:14:21, Sdwan-system-intf
+m        10.147.0.0/24 [251/0] via 172.30.1.7, 04:14:21, Sdwan-system-intf
+m        10.147.1.0/24 [251/0] via 172.30.1.7, 04:14:21, Sdwan-system-intf
+m        10.151.99.0/24 [251/0] via 172.30.1.10, 04:14:21, Sdwan-system-intf
+m        10.166.0.0/24 [251/0] via 172.30.1.10, 04:13:21, Sdwan-system-intf
