@@ -994,8 +994,9 @@ class ShowCryptoSessionSchema(MetaParser):
             Optional("profile"): str,
             Optional("group"): str,
             Optional("assigned_address"):str,
+            "interface":str,
             "session_status": str,
-            "peer":{
+            Optional("peer"):{
                 Any():
                 {
                     "port":{
@@ -1005,7 +1006,7 @@ class ShowCryptoSessionSchema(MetaParser):
                         Optional("ivrf"): str,
                         Optional("phase1_id"): str,
                         Optional("desc"): str,
-                        "ike_sa":{
+                        Optional("ike_sa"):{
                             Any():
                             {
                                 "local": str,
@@ -1020,7 +1021,7 @@ class ShowCryptoSessionSchema(MetaParser):
                                 Optional("session_id"): str
                             },
                         },
-                        "ipsec_flow": {
+                        Optional("ipsec_flow"): {
                             Any():
                                 {
                                 "active_sas": int,
@@ -1109,10 +1110,7 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         
         ret_dict = {}
         check_flag = 1
-        peer_flag = 1
-        sa_flag = 1
-        flow_flag = 1
-        ike_index = 1
+        interface_index=1
         session_id = None
         
         for line in output.splitlines():
@@ -1126,8 +1124,14 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
             m1= p1.match(line)
             if m1:
                 groups=m1.groupdict()
-                crypto_session_dict[groups['interface_name']]={}
-                interface_dict=crypto_session_dict[groups['interface_name']]
+                crypto_session_dict[str(interface_index)]={}
+                interface_dict=crypto_session_dict[str(interface_index)]
+                interface_dict['interface']=groups['interface_name']
+                interface_index+= 1
+                peer_flag = 1
+                sa_flag = 1
+                flow_flag = 1
+                ike_index = 1
             
             #Uptime: 3d18h
             m2= p2.match(line)

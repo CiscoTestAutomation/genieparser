@@ -1,6 +1,7 @@
 expected_output= {
     "interface": {
-        "Virtual-Access2": {
+        "1": {
+            "interface": "Virtual-Access2",
             "user_name": "cisco",
             "profile": "prof",
             "group": "easy",
