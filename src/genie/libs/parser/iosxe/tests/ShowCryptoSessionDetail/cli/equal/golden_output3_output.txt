@@ -1,0 +1,50 @@
+Crypto session current status
+
+Code: C - IKE Configuration mode, D - Dead Peer Detection     
+K - Keepalives, N - NAT-traversal, T - cTCP encapsulation     
+X - IKE Extended Authentication, F - IKE Fragmentation
+R - IKE Auto Reconnect, U - IKE Dynamic Route Update
+S - SIP VPN
+
+Interface: Tunnel3111
+Session status: DOWN
+Peer: 192.168.1.1 port 500 fvrf: (none) ivrf: inner
+      Desc: (none)
+      Phase1_id: (none)
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.25.0/255.255.255.128 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.25.0/255.255.255.128 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.26.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.26.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.25.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.25.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+        Inbound:  #pkts dec'ed 0 drop 0 life (KB/Sec) 0/0
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 0/0
+
+Interface: Tunnel3111
+Profile: ISAKMP-inner-LOC_A
+Session status: DOWN-NEGOTIATING
+Peer: 192.168.1.1 port 500 fvrf: (none) ivrf: (none)
+      Desc: (none)
+      Phase1_id: (none)
+  Session ID: 0  
+  IKEv1 SA: local 94.140.184.80/500 remote 192.168.1.1/500 Inactive 
+          Capabilities:(none) connid:0 lifetime:0
+  Session ID: 0  
+  IKEv1 SA: local 94.140.184.80/500 remote 192.168.1.1/500 Inactive 
+          Capabilities:(none) connid:0 lifetime:0
