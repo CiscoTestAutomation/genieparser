@@ -273,7 +273,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # VTP Management Domain: 'Accounting Group'
         vtp_management_domain_re = re.compile(r''
             'VTP\s*Management\s*Domain\s*:\s*\W*'
-            '(?P<vtp_management_domain>([a-zA-Z\s]+))\W*')
+            '(?P<vtp_management_domain>([a-zA-Z0-9\s]+))\W*')
 
         # Holdtime : 126 sec
         hold_time_re = re.compile(r'Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
