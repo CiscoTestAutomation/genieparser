@@ -1341,6 +1341,55 @@ class ShowCryptoSessionLocal(ShowCryptoSessionSuperParser, ShowCryptoSessionSche
             output = self.device.execute(self.cli_command)
         return super().cli(output=output)
 
+class ShowCryptoSessionIvrf(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session ivrf {ivrf}'
+    '''
+ 
+    cli_command = "show crypto session ivrf {ivrf}"
+
+    def cli(self, ivrf='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ivrf=ivrf))
+        return super().cli(output=output)
+
+class ShowCryptoSessionIvrfDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session ivrf {ivrf} detail'
+    '''
+
+    cli_command = "show crypto session ivrf {ivrf} detail"
+
+    def cli(self, ivrf='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ivrf=ivrf))
+        return super().cli(output=output)
+
+class ShowCryptoSessionFvrf(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session fvrf {fvrf}'
+    '''
+ 
+    cli_command = "show crypto session fvrf {fvrf}"
+
+    def cli(self, fvrf='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(fvrf=fvrf))
+        return super().cli(output=output)
+
+class ShowCryptoSessionFvrfDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
+    '''Parser for:
+        * 'show crypto session fvrf {fvrf} detail'
+    '''
+
+    cli_command = "show crypto session fvrf {fvrf} detail"
+
+    def cli(self, fvrf='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(fvrf=fvrf))
+        return super().cli(output=output)
+
+
 # =================================================
 #  Schema for 'show crypto ipsec sa count'
 # =================================================
