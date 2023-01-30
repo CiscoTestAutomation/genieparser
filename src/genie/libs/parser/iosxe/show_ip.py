@@ -2923,6 +2923,110 @@ class ShowIpSlaResponder(ShowIpSlaResponderSchema):
         return parsed_dict
 
 
+# =======================================
+# Schema for 'show ip device tracking all'
+# =======================================
+class ShowIpDeviceTrackingAllSchema(MetaParser):
+    """ 
+    Schema for 'show ip device tracking all' 
+    """
+
+    schema = {
+        'state': str,
+        'probe_count': int,
+        'probe_interval': int,
+        'delay_interval': int,
+        'total_numb_if_enabled': int,
+        'devices': {
+            Any(): {
+                'mac_address': str,
+                'vlan': int,
+                'interface': str,
+                'state': str,
+                Optional('source'): str,
+                Optional('probe_timeout'): int,
+            }
+        }
+    }
+
+
+# =========================================
+# Parser for 'show ip device tracking all
+# =========================================
+class ShowIpDeviceTrackingAll(ShowIpDeviceTrackingAllSchema):
+    """
+    Parser for 'show ip device tracking all'
+    """
+    cli_command = 'show ip device tracking all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        parsed_dict = {}
+        # Global IP Device Tracking for clients = Enabled
+        p_state = re.compile(r".*=\s(Enabled|Disabled)")
+        
+        # Global IP Device Tracking Probe Count = 3
+        # Global IP Device Tracking Probe Interval = 30
+        # Global IP Device Tracking Probe Delay Interval = 0
+        p_info = re.compile(r".*=\s(\d+)")
+        
+        # EXAMPLE (Note: some devices do not have probe-timeout and sources)
+        # -----------------------------------------------------------------------------------------------
+        #   IP Address    MAC Address   Vlan  Interface           Probe-Timeout      State    Source
+        # -----------------------------------------------------------------------------------------------
+        #   192.168.178.218 b437.6c25.f929 30   GigabitEthernet0/8     30              ACTIVE   ARP
+        p_clients = re.compile(
+            r"(?P<ip>\b25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)\s+(?P<mac>([a-fA-F0-9]{4}\.){2}[a-fA-F0-9]{4})\s+(?P<vlan>\d+)\s+(?P<int>\S+)\s+(?P<probe>\d+)?\s+(?P<state>\S+)(\s+)?(?P<source>\S+)?")
+        # Total number interfaces enabled: 8
+        p_int_count = re.compile(
+            r"(Total number interfaces enabled:)\s(?P<numb>\d+)")
+
+        for line in out.splitlines():
+            m_state = p_state.match(line)
+            
+            parsed_dict.setdefault('devices', {})
+            
+            if m_state:
+                parsed_dict['state'] = m_state.group(1)
+                continue
+
+            m_info = p_info.match(line)
+            if m_info:
+                if 'Probe Count' in line:
+                    parsed_dict['probe_count'] = int(m_info.group(1))
+                elif 'Probe Interval' in line:
+                    parsed_dict['probe_interval'] = int(m_info.group(1))
+                elif 'Probe Delay Interval' in line:
+                    parsed_dict['delay_interval'] = int(m_info.group(1))
+                continue
+
+            m_clients = p_clients.match(line)
+            if m_clients:
+                parsed_dict['devices'][m_clients.group("ip")] = {}
+                parsed_dict['devices'][m_clients.group("ip")]['interface'] = m_clients.group("int")
+                parsed_dict['devices'][m_clients.group("ip")]['mac_address'] = m_clients.group("mac")
+                parsed_dict['devices'][m_clients.group("ip")]['vlan'] = int(m_clients.group("vlan"))
+                parsed_dict['devices'][m_clients.group("ip")]['state'] = m_clients.group("state")
+                
+                # some devices do not have source and probe attribute
+                if m_clients.groupdict().get("source") is not None:
+                    parsed_dict['devices'][m_clients.group("ip")]['source'] = m_clients.group("source")
+                
+                if m_clients.groupdict().get("probe") is not None:
+                    parsed_dict['devices'][m_clients.group("ip")]['probe_timeout'] = int(m_clients.group("probe"))
+                continue
+
+            m_int_count = p_int_count.match(line)
+            if m_int_count:
+                parsed_dict['total_numb_if_enabled'] = int(m_int_count.group("numb"))
+                continue
+        return parsed_dict
+
+
 class ShowIpDhcpBindingSchema(MetaParser):
     """
     Schema for show ip dhcp binding
