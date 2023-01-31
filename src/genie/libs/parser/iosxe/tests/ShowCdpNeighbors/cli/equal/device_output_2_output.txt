@@ -10,4 +10,5 @@ Port ID
 device2      Eth 0          152      R           AS5200    Eth 0
 device3      Eth 0          144      R           3640      Eth0/0
 device4      Eth 0          141                  RP1      Eth 0/0
-    
+
+Total cdp entries displayed : 3

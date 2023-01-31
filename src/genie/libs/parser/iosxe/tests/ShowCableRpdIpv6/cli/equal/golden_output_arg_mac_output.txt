@@ -1,0 +1,5 @@
+MAC Address     I/F       State        Role HA  Auth IP Address
+70b3.1791.4266  Te1/1/0   online       Pri  Act N/A  2002::C096:103
+
+! = PTP clock out of phaselock occurred, ^ = Default password in use
+

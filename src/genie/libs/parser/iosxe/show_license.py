@@ -2589,6 +2589,10 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'device_telemetry':str,
             'total_current_telemetry_reports':int,
         },
+        Optional('device_telemetry_report_summary'):{
+            'data_channel':str,
+            'reports_on_disk':int,
+        },
         'other_info':{
             'software_id':str,
             'agent_state':str,
@@ -2824,6 +2828,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
 
         #Telemetry Report Summary
         p13 = re.compile(r'^(?P<telemetry_report_summary>Telemetry +Report +Summary)\:$')
+        
+        #Device Telemetry Report Summary
+        p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')
 
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
@@ -2974,6 +2981,13 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('telemetry_report_summary', {})
                 continue
+            
+	    #Device telemetry  report  summary (new  output  section  in 17.11.1)
+            m = p14.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('device_telemetry_report_summary', {})
+                continue    
 
             #Setting the dictionary position for sub headings (2nd level and further levels down)
             m = p1_1.match(line)

@@ -67,6 +67,10 @@ IOSXE parsers for the following show commands:
     * show ip dhcp snooping | include gleaning
     * show ip dns view
     * show ip admission cache
+    * show ip igmp snooping detail
+    * show ip dhcp excluded-addresses all
+    * show ip dhcp excluded-addresses vrf {vrf}
+    * show ip dhcp excluded-addresses pool {pool}
     '''
 
 # Python
@@ -5830,7 +5834,6 @@ class ShowIpNhrpSummary(ShowIpNhrpSummarySchema):
 
         return ret_dict
 
-
 # ====================================================
 #  schema for show ip cef summary
 # ====================================================
@@ -6095,3 +6098,277 @@ class ShowIpAdmissionCache(ShowIpAdmissionCacheSchema):
 
 
         return ret_dict
+
+
+class ShowIpIgmpSnoopingDetailSchema(MetaParser):
+    """Schema for show ip igmp snooping detail"""
+    schema = {
+        'igmp_snooping': str,
+        'global_pim_snooping': str,
+        'igmpv3_snooping': str,
+        'report_supression': str,
+        'tcn_solicit_query': str,
+        'tcn_flood_query_count': int,
+        'robustness_variable': int,
+        'last_member_query_count': int,
+        'last_member_query_interval': int,
+        'vlan': {
+            Any(): {
+                'igmp_snooping': str,
+                'pim_snooping': str,
+                'igmpv2_immediate_leave': str,
+                'explicit_host_tracking': str,
+                'multicast_router_learning_mode': str,
+                'cgmp_inter_mode': str,
+                'robustness_variable': int,
+                'last_member_query_count': int,
+                'last_member_query_interval': int,
+                'topology_change_state': str,
+            },
+        }
+    }
+
+class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
+    """Parser for show ip igmp snooping detail"""
+    cli_command = 'show ip igmp snooping detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Vlan 10:
+        p0 = re.compile(r"^Vlan\s+(?P<vlan>\d+):\s*$")
+        
+        # IGMP snooping : Enabled
+        p1 = re.compile(r"^IGMP\s+snooping\s+:\s+(?P<igmp_snooping>\w+)$")
+
+        # Global PIM Snooping : Disabled
+        p2 = re.compile(r"^Global\s+PIM\s+Snooping\s+:\s+(?P<global_pim_snooping>\w+)$")
+
+        # IGMPv3 snooping : Enabled
+        p3 = re.compile(r"^IGMPv3\s+snooping\s+:\s+(?P<igmpv3_snooping>\w+)$")
+
+        # Report suppression : Enabled
+        p4 = re.compile(r"^Report\s+suppression\s+:\s+(?P<report_supression>\w+)$")
+
+        # TCN solicit query : Disabled
+        p5 = re.compile(r"^TCN\s+solicit\s+query\s+:\s+(?P<tcn_solicit_query>\w+)$")
+
+        # TCN flood query count      : 2
+        p6 = re.compile(r"^TCN\s+flood\s+query\s+count\s+:\s+(?P<tcn_flood_query_count>\d+)$")
+
+        # Robustness variable : 2
+        p7 = re.compile(r"^Robustness\s+variable\s+:\s+(?P<robustness_variable>\d+)$")
+
+        # Last member query count  : 2
+        p8 = re.compile(r"^Last\s+member\s+query\s+count\s+:\s+(?P<last_member_query_count>\d+)$")
+
+        # Last member query interval   : 1000
+        p9 = re.compile(r"^Last\s+member\s+query\s+interval\s+:\s+(?P<last_member_query_interval>\d+)$")
+
+        # Pim Snooping                        : Disabled
+        p10 = re.compile(r"^Pim\s+Snooping\s+:\s+(?P<pim_snooping>\w+)$")
+
+        # IGMPv2 immediate leave              : Disabled
+        p11 = re.compile(r"^IGMPv2\s+immediate\s+leave\s+:\s+(?P<igmpv2_immediate_leave>\w+)$")
+
+        # Explicit host tracking              : Enabled
+        p12 = re.compile(r"^Explicit\s+host\s+tracking\s+:\s+(?P<explicit_host_tracking>\w+)$")
+
+        # Multicast router learning mode      : pim-dvmrp
+        p13 = re.compile(r"^Multicast\s+router\s+learning\s+mode\s+:\s+(?P<multicast_router_learning_mode>\S+)$")
+
+        # CGMP interoperability mode          : IGMP_ONLY
+        p14 = re.compile(r"^CGMP\s+interoperability\s+mode\s+:\s+(?P<cgmp_inter_mode>\S+)$")
+
+        # Topology change                     : No
+        p15 = re.compile(r"^Topology\s+change\s+:\s+(?P<topology_change_state>\w+)$")
+
+        vlan_dict = ret_dict
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan 10:
+            m = p0.match(line)
+            if m:
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(m.groupdict()['vlan'], {})
+            
+            # IGMP snooping : Enabled
+            m = p1.match(line)
+            if m:
+                vlan_dict.update({
+                    "igmp_snooping": m.groupdict()["igmp_snooping"]
+                })
+                continue
+            
+            # Global PIM Snooping : Disabled
+            m = p2.match(line)
+            if m:
+                ret_dict["global_pim_snooping"] = m.groupdict()["global_pim_snooping"]
+                continue
+
+            # IGMPv3 snooping : Enabled
+            m = p3.match(line)
+            if m:
+                ret_dict["igmpv3_snooping"] = m.groupdict()["igmpv3_snooping"]
+                continue
+
+            # Report suppression : Enabled
+            m = p4.match(line)
+            if m:
+                ret_dict["report_supression"] = m.groupdict()["report_supression"]
+                continue
+
+            # TCN solicit query : Disabled
+            m = p5.match(line)
+            if m:
+                ret_dict["tcn_solicit_query"] = m.groupdict()["tcn_solicit_query"]
+                continue
+
+            # TCN flood query count      : 2
+            m = p6.match(line)
+            if m:
+                ret_dict["tcn_flood_query_count"] = int(m.groupdict()["tcn_flood_query_count"])
+                continue
+
+            # Robustness variable : 2
+            m = p7.match(line)
+            if m:
+                vlan_dict.update({
+                    "robustness_variable": int(m.groupdict()["robustness_variable"])
+                })
+                continue
+
+            # Last member query count  : 2
+            m = p8.match(line)
+            if m:
+                vlan_dict.update({
+                    "last_member_query_count": int(m.groupdict()["last_member_query_count"])
+                })
+                continue
+
+            # Last member query interval   : 1000
+            m = p9.match(line)
+            if m:
+                vlan_dict.update({
+                    "last_member_query_interval": int(m.groupdict()["last_member_query_interval"])
+                })
+                continue
+
+            # Pim Snooping                        : Disabled
+            m = p10.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # IGMPv2 immediate leave              : Disabled
+            m = p11.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Explicit host tracking              : Enabled
+            m = p12.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Multicast router learning mode      : pim-dvmrp
+            m = p13.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # CGMP interoperability mode          : IGMP_ONLY
+            m = p14.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Topology change                     : No
+            m = p15.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
+
+# ===================================================
+# Schema for 'show ip dhcp excluded-addresses all'
+#            'show ip dhcp excluded-addresses vrf {vrf}'
+#            'show ip dhcp excluded-addresses pool {pool}'
+# ===================================================
+
+
+class ShowIpDhcpExcludedAddressesSchema(MetaParser):
+    """
+    Schema for
+        show ip dhcp excluded-addresses all
+        show ip dhcp excluded-addresses vrf {vrf}
+        show ip dhcp excluded-addresses pool {pool}
+    """
+    schema = {
+        Any(): {
+            'start_ip': str,
+            'end_ip': str,
+            'num_of_ip': int,
+            Optional('vrf'): Any()
+        }
+    }
+
+
+# ===================================================
+# Parser for 'show ip dhcp excluded-addresses all'
+#            'show ip dhcp excluded-addresses vrf {vrf}'
+#            'show ip dhcp excluded-addresses pool {pool}'
+# ===================================================
+
+
+class ShowIpDhcpExcludedAddresses(ShowIpDhcpExcludedAddressesSchema):
+
+    ''' Parser for "show ip dhcp excluded-addresses all"'''
+    cli_command = ['show ip dhcp excluded-addresses all',
+                   'show ip dhcp excluded-addresses vrf {vrf}',
+                   'show ip dhcp excluded-addresses pool {pool}']
+
+    # Defines a function to run the cli_command
+    def cli(self, vrf=None, pool=None, output=None):
+        if output is None:
+            if vrf:
+                output = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            elif pool:
+                output = self.device.execute(self.cli_command[2].format(pool=pool))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        parsed_dict = {}
+
+        # for excluded-addresses list
+        var = 1
+
+        # Start IP        End IP          Number of IP's  VRF
+        # ================================================================
+        # 16.16.16.2      16.16.16.222    221
+        # 20.0.0.1        20.0.0.1        1               my-dhcp-test-vrf
+
+        p1 = re.compile(r'^\s*(?P<start_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<end_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<num_of_ip>\d+)(\s+(?P<vrf>\S+))?\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 16.16.16.2      16.16.16.222    221
+            # 20.0.0.1        20.0.0.1        1               my-dhcp-test-vrf
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault(var, {})
+                group = m.groupdict()
+                parsed_dict[var]['start_ip'] = group['start_ip']
+                parsed_dict[var]['end_ip'] = group['end_ip']
+                parsed_dict[var]['num_of_ip'] = int(group['num_of_ip'])
+                parsed_dict[var]['vrf'] = group.get('vrf', None)
+                var += 1
+                continue
+
+        return parsed_dict

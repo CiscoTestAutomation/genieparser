@@ -1,0 +1,22 @@
+expected_output = {   
+   "system_port":26,
+   "svl_control_interface":{
+      "FiftyGigE1/0/30":{
+         "32":{
+            "ec_if_id":"105",
+            "system_port":26,
+            "if_type":"Member"
+         },
+         "58":{
+            "ec_if_id":"105",
+            "system_port":27,
+            "if_type":"Member"
+         },
+         "105":{
+            "ec_if_id":"105",
+            "system_port":28,
+            "if_type":"Etherchannel"
+         }
+      }
+   }
+}

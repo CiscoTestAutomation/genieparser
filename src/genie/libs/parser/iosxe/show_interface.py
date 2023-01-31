@@ -128,6 +128,8 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('tunnel_transport_mtu'): int,
                 Optional('tunnel_transmit_bandwidth'): int,
                 Optional('tunnel_receive_bandwidth'): int,
+                Optional('tunnel_protection'): str,
+                Optional('tunnel_profile'): str,
                 Optional('queues'): {
                     Optional('input_queue_size'): int,
                     Optional('input_queue_max'): int,
@@ -523,6 +525,9 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Tunnel receive bandwidth 10000000 (kbps)
         p51 = re.compile(r'^Tunnel +receive +bandwidth +(?P<tunnel_receive_bandwidth>\d+)')
+
+        # Tunnel Protection profile
+        p52 = re.compile(r'^Tunnel +protection +via +(?P<tunnel_protection>[\w]+) +\(profile \"(?P<tunnel_profile>[\w]+)\"\)')
 
         interface_dict = {}
         unnumbered_dict = {}
@@ -1269,6 +1274,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_receive_bandwidth': int(group['tunnel_receive_bandwidth'])})
 
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                if group['tunnel_protection']:
+                    interface_dict[interface].update({'tunnel_protection': group['tunnel_protection']})
+                if group['tunnel_profile']:
+                    interface_dict[interface].update({'tunnel_profile': group['tunnel_profile']})
+
         # create strucutre for unnumbered interface
         if not unnumbered_dict:
             return(interface_dict)
@@ -1603,6 +1616,8 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                 Optional('unknown_unicast_blocked'): bool,
                 Optional('unknown_multicast_blocked'): bool,
                 Optional('appliance_trust'): str,
+                Optional('admin_ethertype'): str,
+                Optional('oper_ethertype'): str, 
             },
         }
 
@@ -1734,6 +1749,12 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
         # Appliance trust: none
         p28 = re.compile(r'^Appliance +trust: +(?P<trust>[\w\-]+)$')
+
+        #Administrative Dot1q Ethertype: 0x9100
+        p29 = re.compile(r'^Administrative +Dot1q +Ethertype: +(?P<admin_ethertype>\w+)$')
+
+        #Operational Dot1q Ethertype: 0x9100
+        p30 = re.compile(r'^Operational +Dot1q +Ethertype: +(?P<oper_ethertype>\w+)$')        
 
         ret_dict = {}
         private_trunk_mappings = None
@@ -2064,6 +2085,19 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 if m.groupdict()['trust'] != 'none':
                     ret_dict[intf]['appliance_trust'] = m.groupdict()['trust']
                 continue
+
+            # Administrative Dot1q Ethertype: 0x9100    
+            m = p29.match(line)
+            if m:
+                admin_ethertype = m.groupdict()['admin_ethertype']
+                ret_dict[intf]['admin_ethertype'] = admin_ethertype
+
+            # Operational Dot1q Ethertype: 0x9100
+            m = p30.match(line)
+            if m:
+                oper_ethertype = m.groupdict()['oper_ethertype']
+                ret_dict[intf]['oper_ethertype'] = oper_ethertype
+
         return ret_dict
 
 
@@ -4395,7 +4429,7 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
         return result_dict
 
 
-# ======================================================
+#======================================================
 # Schema for 'show pm vp interface <interface> <vlan> '
 # ======================================================
 
@@ -4532,5 +4566,3 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
                                         m2.groupdict()['pin_version']}})
 
         return transceivers_supported_list
- 
-

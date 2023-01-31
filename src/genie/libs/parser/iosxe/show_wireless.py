@@ -2295,13 +2295,13 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
             "session_timeout": int,
             "common_session_id": str,
             "acct_session_id": str,
-            "last_tried_aaa_server_details": {
+            Optional("last_tried_aaa_server_details"): {
                 "server_ip": str
             },
             "auth_method_status_list": {
                 "method": {
                     Any(): {
-                        "sm_state": str,
+                        Optional("sm_state"): str,
                         Optional("sm_bend_state"): str,
                         Optional("authen_status"): str
                     }
@@ -2361,7 +2361,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
             "radio_signal_strength_indicator_dbm": int,
             "signal_to_noise_ration_db": int
         },
-        "fabric_status": "Disabled",
+        "fabric_status": str,
         "radio_measurement_enabled_capabilities": {
             "capabilities": list
         },
@@ -2433,7 +2433,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         # Client MAC Type : Locally Administered Address
         p1 = re.compile(r'^Client MAC Type : (?P<client_mac_type>[\S ]+)$')
 
-        p2 = re.compile(r'^Client Username : (?P<client_username>\S+)')
+        p2 = re.compile(r'^Client Username *: (?P<client_username>\S+)')
 
         # AP MAC Address : bead:4321:dead
         p3 = re.compile(r'^AP MAC Address : (?P<ap_mac_address>\S+)$')

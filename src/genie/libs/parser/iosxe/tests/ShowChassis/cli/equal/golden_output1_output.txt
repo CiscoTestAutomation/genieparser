@@ -1,0 +1,7 @@
+Chassis/Stack Mac Address : 000c.295f.6203 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                             H/W   Current
+Chassis#   Role    Mac Address     Priority Version  State                 IP
+-------------------------------------------------------------------------------------
+ 1       Standby  0050.568d.bf37     1      V02     Ready                169.254.62.83
+*2       Active   000c.295f.6203     2      V02     Ready                169.254.62.82

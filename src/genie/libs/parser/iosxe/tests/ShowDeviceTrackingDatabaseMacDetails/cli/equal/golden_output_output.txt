@@ -2,4 +2,6 @@
 S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47      
     Attached IP: 10.10.10.11     
     Attached IP: 10.10.10.10     
-L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60      
+L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60 
+L2F  0001.0002.0001         Gi1/0/23   110        NO TRUST   MAC-REACHABLE    231 s            LISP-DT-GLEAN-VLAN-MULTI-IP 31
+L    ba25.cdf4.ad38         Vl110      110        TRUSTED    MAC-REACHABLE    N/A              LISP-DT-GLEAN-VLAN-MULTI-IP 60     

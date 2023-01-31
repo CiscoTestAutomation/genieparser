@@ -1,0 +1,12 @@
+[ Switch 1 2 3 4 ] Installed Package(s) Information:
+State (St): I - Inactive, U - Activated & Uncommitted,
+            C - Activated & Committed, D - Deactivated & Uncommitted
+--------------------------------------------------------------------------------
+Type  St   Filename/Version
+--------------------------------------------------------------------------------
+IMG   C    17.06.03.0.3629
+SMU   I    flash:cat9k_iosxe.17.06.03.CSCwc85207.SPA.smu.bin
+ 
+--------------------------------------------------------------------------------
+Auto abort timer: inactive
+--------------------------------------------------------------------------------

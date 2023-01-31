@@ -33,6 +33,7 @@ expected_output = {
                 'platform': 'Mitel 532',
                 'port_id': 'Port1'
             }
-        }
+        },
+        'total_entries': 4
     }
 }

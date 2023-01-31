@@ -1,0 +1,6 @@
+CISP Status for interface Gi1/6
+-------------------------------------
+Version:  1
+Mode:  Supplicant
+Peer Mode:  Authenticator
+Supp State:   Idle
