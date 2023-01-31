@@ -1,5 +1,6 @@
 '''show_template.py
 IOSXE parsers for the following commands
+    * show template
     * show template interface source built-in Original all
     * show template brief
 '''
@@ -15,6 +16,65 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, D
 # pyATS
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+
+# ======================================================
+# Parser for 'show template '
+# ======================================================
+
+class ShowTemplateSchema(MetaParser):
+    """Schema for show template"""
+
+    schema = {
+        'templates': {
+            Any(): {
+                'template': str,
+                'class': str,
+                'type': str,
+            },
+        },
+    }
+
+class ShowTemplate(ShowTemplateSchema):
+    """Parser for show template"""
+
+    cli_command = 'show template'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # --------                                         -----      ----
+        p1 = re.compile(r"-{3}")   
+
+        # AP_INTERFACE_TEMPLATE                            owner      Built-in        
+        p2 = re.compile(r"^(?P<template>\S+)\s+(?P<class>\w+)\s+(?P<type>\S+)$")
+
+        ret_dict = {}
+        temp_flag = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            match_obj = p1.match(line)
+            if match_obj:
+                temp_flag = True
+                continue
+
+            if temp_flag:
+                match_obj = p2.match(line)
+                dict_val = match_obj.groupdict()
+                template_var = dict_val['template']
+                templates = ret_dict.setdefault('templates', {})
+                template_dict = templates.setdefault(template_var, {})
+                template_dict['template'] = dict_val['template']
+                template_dict['class'] = dict_val['class']
+                template_dict['type'] = dict_val['type']
+                continue
+
+
+        return ret_dict
+
 
 
 class ShowTemplateInterfaceSourceBuiltInOriginalAllSchema(MetaParser):
@@ -37,10 +97,10 @@ class ShowTemplateInterfaceSourceBuiltInOriginalAll(ShowTemplateInterfaceSourceB
         if output is None:
             output = self.device.execute(self.cli_command)
         
-        # Template Name:   IP_PHONE_INTERFACE_TEMPLATE
+        # Template Name:   IP_PHONE_INTERFACE_TEMPLATE  
         p1 = re.compile(r'^Template Name:\s+(?P<template>\w+)$')
 
-        # Template Definition:
+        # Template Definition: 
         p2 = re.compile(r'^Template Definition:$')
 
         # switchport mode access 
@@ -150,7 +210,7 @@ class ShowTemplateBrief(ShowTemplateBriefSchema):
                 "bound_to_session" ],
             index=[0])
 
-        # Building the schema out of the parsergen output
+        # Building the schema out of the parsergen output      
         if res.entries:
             for tmp, values in res.entries.items():
                 del values['service_template']
@@ -158,4 +218,61 @@ class ShowTemplateBrief(ShowTemplateBriefSchema):
 
         return ret_dict
 
-        
+
+class ShowTemplateTemplateSchema(MetaParser):
+    """Schema for show template {template}"""
+
+    schema = {
+        'template': str,
+        'class': str,
+        'type': str,
+        Optional('bound'): list,
+    }
+
+class ShowTemplateTemplate(ShowTemplateTemplateSchema):
+    """Parser for show template {template}"""
+
+    cli_command = 'show template {template}'
+
+    def cli(self, template, output=None):
+        if output is None:
+            cmd = self.cli_command.format(template=template)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Template                                         Class      Type
+        # --------                                         -----      ----
+        # test                                             owner      User
+        res = parsergen.oper_fill_tabular(device_output=output,
+            device_os='iosxe',
+            table_terminal_pattern=r"^\n",
+            header_fields=
+            [ "Template",
+                "Class",
+                "Type" ],
+            label_fields=
+            [ "template",
+                "class",
+                "type" ],
+            index=[0])
+
+        # Building the schema out of the parsergen output
+        if res.entries and template in res.entries:
+            for key, value in res.entries[template].items():
+                ret_dict.setdefault(key, value)
+
+        #  Regex everything before "BOUND:", then grab everything after
+        #  BOUND: Twe1/0/1               Twe1/0/2               Twe1/0/3
+        #         Twe1/0/4               Twe1/0/5
+        p1 = re.compile(r'^(.|\n)*(?P<bound>BOUND:)\s+(?P<targets>(.|\n)*)$')
+
+        match = p1.match(output)
+        if match:
+            ret_dict.setdefault('bound', [])
+            groups = match.groupdict()
+            targets = [target.strip() for target in groups['targets'].split()]
+            ret_dict['bound'] = targets
+
+        return ret_dict
+

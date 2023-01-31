@@ -238,7 +238,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         #  *>   [3][3001:1][*][*][1.1.1.1]/14
-        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+        # *m   [2][2.2.2.2:1][0][48][000C293B2157][0][*]/20
+        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|m|\s)+)?'
                           r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-\*]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
@@ -1048,8 +1049,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
         # 3
         # 38         44         45
-        p6_3 = re.compile(r'^(?P<group1>(\d+))'
-                          r'(?: +(?P<group2>(\d+)) +(?P<group3>(\d+)))?$')
+        p6_3 = re.compile(r'(?P<group1>(\d+))'
+                          r'(?: +(?P<group2>(\d+)))?(?: +(?P<group3>(\d+)))?')
 
         # Refresh Epoch 1
         p7 = re.compile(r'^Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
@@ -1658,12 +1659,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             m = p6_3.match(line)
             if m and next_line_update_group:
                 group = m.groupdict()
-                if group['group2'] and group['group3']:
+                if group['group2'] or group['group3']:
                     update_group = []
                     for item in group:
-                        update_group.append(int(group[item]))
-                        # in-place sort is more efficient
-                        update_group.sort()
+                        if group[item]:
+                            update_group.append(int(group[item]))
+                            # in-place sort is more efficient
+                            update_group.sort()
                 else:
                     update_group = int(group['group1'])
                 next_line_update_group = False

@@ -1,0 +1,40 @@
+Virtual access subinterface creation is globally enabled
+
+         Active     Active    Subint  Interface
+       Interface Subinterface Capable Type
+       --------- ------------ ------- ---------
+Vt1            0            1   Yes   Serial 
+
+Usage Summary
+                              Interface   Subinterface
+                              ---------   ------------
+Current Serial  in use                2              1
+Current Serial  free                  0              1
+Current Ether   in use                0              0
+Current Ether   free                  0              0
+Current Tunnel  in use                0              0
+Current Tunnel  free                  0              0
+Current VPN  in use                0              0
+Current VPN  free                  0              0
+Total                                 2              2
+
+Cumulative created                    3             45
+Cumulative freed                      0             44
+
+Base virtual access interfaces: 2
+Total create or clone requests: 2
+Cancelled create or clone requests: 0
+Cumulative create request waiting for sso resources: 0
+Current request queue size: 0
+Current free pending: 0
+Current recycle pending: 0
+Current ordered recycle pending: 0
+
+Maximum request duration: 8 msec
+Average request duration: 5 msec
+Last request duration: 8 msec
+
+Maximum processing duration: 8 msec
+Average processing duration: 5 msec
+Last processing duration: 8 msec
+

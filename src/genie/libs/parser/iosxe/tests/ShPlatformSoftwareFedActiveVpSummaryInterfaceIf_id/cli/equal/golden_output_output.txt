@@ -1,0 +1,11 @@
+if_id      vlan_id   pvlan_mode   pvlan_vlan   stp_state  vtp pruned          Untagged
+-------------------------------------------------------------------------------------------------
+             102           80        trunk            1  forwarding          No                No
+             102           70        trunk            1  forwarding          No                No
+             102           60        trunk            1  forwarding          No                No
+             102           50        trunk            1  forwarding          No                No
+             102           40        trunk            1  forwarding          No                No
+             102           30        trunk            1  forwarding          No                No
+             102           20        trunk            1  forwarding          No                No
+             102           10        trunk            1  forwarding          No                No
+             102            1        trunk            1  forwarding          No               Yes

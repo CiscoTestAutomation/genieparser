@@ -14,8 +14,13 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+# unicon
+from unicon.eal.dialogs import Dialog, Statement
+from genie.libs.parser.utils.common import Common
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 class PingSchema(MetaParser):
     """ Schema for
@@ -330,4 +335,142 @@ class PingMpls(PingMplsSchema):
             if m4:
                 group = m4.groupdict()
                 stat_dict.update({'elapsed-time':  (float(group['elapsed_time']))})
+        return ret_dict
+
+
+class PingIpv6Schema(MetaParser):
+    '''Schema for ping ipv6 {addr}'''
+    schema = {
+        'ping': {
+            'address': str,
+            'data_bytes': int,
+            'repeat': int,
+            'timeout_secs': int,
+            Optional('source'): str,
+            Optional('interface'): str,
+            Optional('request'): {
+                Any(): list
+            },
+            'statistics': {
+                'send': int,
+                'received': int,
+                'success_rate_percent': float,
+                Optional('multicast_replies'): int,
+                Optional('errors'): int,
+                Optional('round_trip'): {
+                    'min_ms': int,
+                    'avg_ms': int,
+                    'max_ms': int,
+                }
+            }
+        }
+    }
+
+
+class PingIpv6(PingIpv6Schema):
+    '''Parser for ping ipv6 {addr}'''
+
+    cli_command = ['ping ipv6 {addr}', 'ping ipv6 {addr} {interface}']
+    
+    def cli(self, addr="", interface="", output=None):
+        if output is None:
+            if interface:
+                interface = Common.convert_intf_name(interface)
+                dialog = Dialog(
+                    [
+                        Statement(
+                            pattern=r".*Output Interface:.*",
+                            action=lambda spawn: spawn.sendline(interface),
+                            loop_continue=True,
+                            continue_timer=False
+                        ),
+                        Statement(
+                            pattern=f".*{self.device.context.hostname}#$",
+                            action=None,
+                            loop_continue=False,
+                            continue_timer=False
+                        )
+                    ]
+                )
+                output = self.device.execute(' '.join(self.cli_command[1].split()[:-1]).format(addr=addr), reply=dialog, timeout=60)
+            else:
+                output = self.device.execute(self.cli_command[0].format(addr=addr))
+        
+        # Output Interface: gigabitEthernet1/0/1
+        p1 = re.compile(r'^Output Interface:\s(?P<interface>[\w\/\.]+)$')
+        
+        # Sending 5, 100-byte ICMP Echos to FF08::10, timeout is 2 seconds:
+        p2 = re.compile(r'^Sending\s(?P<repeat>\d+),\s(?P<data_bytes>\d+)-byte ICMP Echos to\s(?P<address>[a-fA-F0-9:]+), timeout is\s(?P<timeout_secs>\d+)\sseconds:$')
+        
+        # Packet sent with a source address of 2012:AA:23::3
+        p3 = re.compile(r'^Packet sent with a source address of\s(?P<source>[a-fA-F0-9:]+)$')
+        
+        # Reply to request 0 received from 2012:AA:1:0:200:23FF:FE53:B72A, 38 ms
+        p4 = re.compile(r'^Reply to request\s(?P<request>\d+)\sreceived from\s(?P<addr>[a-fA-F0-9:]+),\s(?P<rtt>\d+)\sms$')
+
+        # Success rate is 100 percent (5/5), round-trip min/avg/max = 1/25/73 ms
+        p5 = re.compile(r'^Success rate is\s(?P<success_rate_percent>[\d\.]+)\spercent\s\((?P<received>\d+)/(?P<send>\d+)\)(, round\-trip min/avg/max =\s(?P<min_ms>\d+)/(?P<avg_ms>\d+)/(?P<max_ms>\d+)\sms)?$')
+
+        # 19 multicast replies and 0 errors.
+        p6 = re.compile(r'^(?P<multicast_replies>\d+)\smulticast replies and\s(?P<errors>\d+)\serrors\.$')
+        
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Output Interface: gigabitEthernet1/0/1
+            m = p1.match(line)
+            if m:
+                ping_dict = ret_dict.setdefault('ping', {})
+                ping_dict.setdefault('interface', Common.convert_intf_name(m.groupdict()['interface']))
+                continue
+
+            # Sending 5, 100-byte ICMP Echos to FF08::10, timeout is 2 seconds:
+            m = p2.match(line)
+            if m:
+                output = m.groupdict()
+                ping_dict = ret_dict.setdefault('ping', {})
+                ping_dict.setdefault('repeat', int(output['repeat']))
+                ping_dict.setdefault('data_bytes', int(output['data_bytes']))
+                ping_dict.setdefault('timeout_secs', int(output['timeout_secs']))
+                ping_dict.setdefault('address', output['address'])
+                continue
+
+            # Packet sent with a source address of 2012:AA:23::3
+            m = p3.match(line)
+            if m:
+                ping_dict.update(m.groupdict())
+                continue
+
+            # Reply to request 0 received from 2012:AA:1:0:200:23FF:FE53:B72A, 38 ms
+            m = p4.match(line)
+            if m:
+                req_dict = ping_dict.setdefault('request', {}).setdefault(m.groupdict()['request'], [])
+                req_dict.append({'addr': m.groupdict()['addr'], 'rtt': int(m.groupdict()['rtt'])})
+                continue
+
+            # Success rate is 100 percent (5/5), round-trip min/avg/max = 1/25/73 ms
+            m = p5.match(line)
+            if m:
+                output = m.groupdict()
+                stat_dict = ping_dict.setdefault('statistics', {})
+                stat_dict.setdefault('send', int(output['send']))
+                stat_dict.setdefault('received', int(output['received']))
+                stat_dict.setdefault('success_rate_percent', float(output['success_rate_percent']))
+                if 'min_ms' in output and output['min_ms']:
+                    rtt_dict = stat_dict.setdefault('round_trip', {})
+                    rtt_dict.setdefault('min_ms', int(output['min_ms']))
+                    rtt_dict.setdefault('avg_ms', int(output['avg_ms']))
+                    rtt_dict.setdefault('max_ms', int(output['max_ms']))
+                continue
+            
+            # 19 multicast replies and 0 errors.
+            m = p6.match(line)
+            if m:
+                output = m.groupdict()
+                stat_dict = ping_dict.setdefault('statistics', {})
+                stat_dict.setdefault('multicast_replies', int(output['multicast_replies']))
+                stat_dict.setdefault('errors', int(output['errors']))
+        
         return ret_dict

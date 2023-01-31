@@ -40,6 +40,7 @@ expected_output = {
                 'hold_time': 158,
                 'local_interface': 'Ethernet1/39/3'
             }
-        }
+        },
+        'total_entries': 6
     }
 }

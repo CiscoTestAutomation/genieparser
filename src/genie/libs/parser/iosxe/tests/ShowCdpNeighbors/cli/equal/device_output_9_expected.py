@@ -9,6 +9,7 @@ expected_output = {
                 'platform':'Phone',
                 'port_id':'Port1'
             }
-        }
+        },
+        'total_entries': 1
     }
 } 

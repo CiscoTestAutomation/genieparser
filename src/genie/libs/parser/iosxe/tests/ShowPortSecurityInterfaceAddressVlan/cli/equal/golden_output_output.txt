@@ -1,0 +1,3 @@
+Default maximum: not set, using 4096
+VLAN  Maximum    Current   
+2     default    3

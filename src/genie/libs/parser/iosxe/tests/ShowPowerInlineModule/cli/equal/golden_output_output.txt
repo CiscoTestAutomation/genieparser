@@ -1,0 +1,57 @@
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+1           525.0        0.0       525.0
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Tw1/0/1   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/2   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/3   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/4   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/5   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/6   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/7   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/8   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/9   auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/10  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/11  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/12  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/13  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/14  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/15  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/16  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/17  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/18  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/19  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/20  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/21  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/22  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/23  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/24  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/25  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/26  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/27  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/28  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/29  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/30  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/31  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/32  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/33  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/34  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/35  auto   off        0.0     n/a                 n/a   60.0 
+Tw1/0/36  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/37  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/38  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/39  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/40  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/41  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/42  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/43  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/44  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/45  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/46  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/47  auto   off        0.0     n/a                 n/a   60.0 
+Te1/0/48  auto   off        0.0     n/a                 n/a   60.0 
+--------- ------ ---------- ---------- ---------- ------ ----- 
+Totals:          0    on    0.0       

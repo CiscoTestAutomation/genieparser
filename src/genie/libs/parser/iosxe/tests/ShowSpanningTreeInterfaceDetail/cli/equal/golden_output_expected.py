@@ -2,6 +2,7 @@ expected_output = {
     'interface': 'TwoGigabitEthernet1/0/13',
     'port': '13',
     'vlan': 'VLAN0001',
+    'port_span_mode': 'designated forwarding',
     'path_cost': 20000,
     'port_id': '128.13.',
     'port_priority': 128,

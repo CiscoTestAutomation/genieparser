@@ -1,0 +1,8 @@
+
+show ip ospf 10 neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+102.16.44.4       1   FULL/DR         00:00:36    10.10.196.38    Vlan1013
+102.16.44.5       1   FULL/DR         00:00:31    10.10.196.34    Vlan1012
+102.16.44.5       1   FULL/DR         00:00:39    10.10.196.46    Vlan1011
+102.16.44.4       1   FULL/DR         00:00:36    10.10.196.42    Vlan1010

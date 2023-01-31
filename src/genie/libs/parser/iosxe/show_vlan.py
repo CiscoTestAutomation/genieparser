@@ -874,6 +874,97 @@ class ShowVlanSummary(ShowVlanSummarySchema):
 
         return ret_dict
 
+  # ======================================================
+# Parser for 'show vlan private-vlan '
+# ======================================================
+
+class ShowVlanPrivateVlanSchema(MetaParser):
+    """Schema for show vlan private-vlan"""
+
+    schema = {
+        'private': {
+            Any(): {
+                'ports': str,
+                'type': str,
+                'sec': str,
+                'primary': str,
+            },
+        },
+    }
+
+class ShowVlanPrivateVlan(ShowVlanPrivateVlanSchema):
+    """Parser for show vlan private-vlan"""
+
+    cli_command = 'show vlan private-vlan'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 500     501       community         Twe1/0/7, Twe1/0/8, Twe1/0/33
+        p1 = re.compile(r"^(?P<primary>\d+)\s+(?P<sec>\d+)\s+(?P<type>\w+)\s+(?P<ports>.*)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 500     501       community         Twe1/0/7, Twe1/0/8, Twe1/0/33
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sec_var = dict_val['sec']
+                private = ret_dict.setdefault('private', {})
+                sec_dict = ret_dict['private'].setdefault(sec_var, {})
+                sec_dict['ports'] = dict_val['ports']
+                sec_dict['type'] = dict_val['type']
+                sec_dict['sec'] = dict_val['sec']
+                sec_dict['primary'] = dict_val['primary']
+                continue
+
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show vlan private-vlan type '
+# ======================================================
+
+class ShowVlanPrivateVlanTypeSchema(MetaParser):
+    """Schema for show vlan private-vlan type"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'type': str,
+                'vlan_id': str,
+            },
+        },
+    }
+
+class ShowVlanPrivateVlanType(ShowVlanPrivateVlanTypeSchema):
+    """Parser for show vlan private-vlan type"""
+
+    cli_command = 'show vlan private-vlan type'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 500  primary          
+        p1 = re.compile(r"^(?P<vlan_id>\d+)\s+(?P<type>\w+)$")
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 500  primary          
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_id_var = dict_val['vlan_id']
+                vlan = ret_dict.setdefault('vlan', {})
+                vlan_id_dict = ret_dict['vlan'].setdefault(vlan_id_var, {})
+                vlan_id_dict['type'] = dict_val['type']
+                vlan_id_dict['vlan_id'] = dict_val['vlan_id']
+                continue
+        return ret_dict
 class ShowVlanDot1qTagNativeSchema(MetaParser):
     """Schema for show vlan dot1q tag native"""
     schema = {
@@ -888,11 +979,9 @@ class ShowVlanDot1qTagNativeSchema(MetaParser):
 class ShowVlanDot1qTagNative(ShowVlanDot1qTagNativeSchema):
     """Parser for show vlan dot1q tag native"""
     cli_command = 'show vlan dot1q tag native'
-
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
-
+            output = self.device.execute(self.cli_command)    
         ret_dict = {}
 
         # *************************

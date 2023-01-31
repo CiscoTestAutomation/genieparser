@@ -17,6 +17,7 @@ expected_output = {
                 "platform": "7206",
                 "port_id": "Ethernet1/0",
             },
-        }
+        },
+        'total_entries': 2
     }
 }

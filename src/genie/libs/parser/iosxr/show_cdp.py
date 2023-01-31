@@ -4,6 +4,7 @@ IOSXR parsers for the following commands:
 
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
+    * 'show cdp'
 
 """
 
@@ -382,3 +383,83 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                 continue
 
         return parsed_dict
+
+class ShowCdpSchema(MetaParser):
+    """Schema for show cdp"""
+    schema = {
+        'enabled': bool,
+        Optional('cdp_packets'): int,
+        Optional('hold_timer'): int,
+        Optional('cdpv2_advertisements'): str
+    }
+
+# =======================================
+# Parser for 'show cdp'
+# =======================================
+
+class ShowCdp(ShowCdpSchema):
+    """Parser for show cdp"""
+
+    cli_command = 'show cdp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Global CDP information:
+        p1 = re.compile(r'^Global\s+CDP\s+information:$')
+
+        # Sending CDP packets every 60 seconds
+        p2 = re.compile(r'^Sending\s+CDP\s+packets\s+every\s+(?P<cdp_packets>\d+)\s+seconds$')
+
+        # Sending a holdtime value of 180 seconds
+        p3 = re.compile(r'^Sending\s+a\s+holdtime\s+value\s+of\s+(?P<hold_timer>\d+)\s+seconds$')
+
+        # Sending CDPv2 advertisements is not enabled
+        # Sending CDPv2 advertisements is enabled
+        p4 = re.compile(r'^Sending\s+CDPv2\s+advertisements\s+is\s+(?P<cdpv2_advertisements>[\w ]+)$')
+
+        # % CDP is not enabled
+        p5 = re.compile(r'^%\s+CDP\s+is\s+not\s+enabled$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Global CDP information:
+            m = p1.match(line)
+            if m:
+                ret_dict['enabled'] = True
+                continue
+
+            # Sending CDP packets every 60 seconds
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['cdp_packets'] = int(group['cdp_packets'])
+                continue
+
+            # Sending a holdtime value of 180 seconds
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['hold_timer'] = int(group['hold_timer'])
+                continue
+
+            # Sending CDPv2 advertisements is not enabled
+            # Sending CDPv2 advertisements is enabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['cdpv2_advertisements'] = group['cdpv2_advertisements']
+                continue
+
+            # % CDP is not enabled
+            m = p5.match(line)
+            if m:
+                ret_dict['enabled'] = False
+                continue
+
+        return ret_dict

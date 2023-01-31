@@ -7,7 +7,8 @@ expected_output = {
         "switchport_enable": True,
         "native_vlan_tagging": True,
         "negotiation_of_trunk": False,
-        "encapsulation": {
+        "oper_ethertype": "0x8100",        
+	"encapsulation": {
             "native_vlan": "1",
             "native_vlan_name": "default",
             "operational_encapsulation": "dot1q",
@@ -35,7 +36,8 @@ expected_output = {
         "capture_vlans": "all",
         "negotiation_of_trunk": False,
         "unknown_multicast_blocked": False,
-        "port_channel": {
+        "oper_ethertype": "0x8100",
+	"port_channel": {
             "port_channel_int": "Port-channel12",
             "port_channel_member": True,
         },

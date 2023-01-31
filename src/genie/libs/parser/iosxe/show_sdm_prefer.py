@@ -493,3 +493,102 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
                 re_dict.update({"vlan_filters_entries":int(groups['vlan_filters_entries'])})
                 
         return result_dict
+
+class ShowSdmPreferCustomSchema(MetaParser):
+    """Schema for show sdm prefer"""
+    schema = {
+        'template_title': str,
+        'template_type': str, #template used 
+        Optional('ipv4/ipv6_shared_unicast_routes'): int,
+        Optional('wired_clients'): int,
+        Optional('mpls_labels'): int,
+        Optional('max_vpls/vpws_pseudowires'): int,
+        Optional('qos_egress_non-ipv4_access_control_entries'): int,
+        Optional('netflow_input_access_control_entries'): int,
+        Optional('max_vpls_bridge_domains'): int,
+        Optional('qos_ingress_ipv4_access_control_entries'): int,
+        Optional('sgt/dgt_(or)_mpls_vpn_entries'): int,
+        Optional('number_of_vlans'): int,
+        Optional('l2_vpn_eompls_attachment_circuit'): int,
+        Optional('max_vpls_peers_per_bridge_domain'): int,
+        Optional('l2_multicast_entries'): int,
+        Optional('l3_multicast_entries'): int,
+        Optional('overflow_unicast_mac_addresses'): int,
+        Optional('input_netflow_flows'): int,
+        Optional('netflow_output_access_control_entries'): int,
+        Optional('mpls_l3_vpn_routes_vrf_mode'): int,
+        Optional('flow_span_output_access_control_entries'): int,
+        Optional('mpls_l3_vpn_routes_prefix_mode'): int,
+        Optional('security_ingress_non-ipv4_access_control_entries'): int,
+        Optional('tunnels'): int,
+        Optional('control_plane_entries'): int,
+        Optional('output_netflow_flows'): int,
+        Optional('policy_based_routing_aces_/_nat_aces'): int,
+        Optional('mvpn_mdt_tunnels'): int,
+        Optional('unicast_mac_addresses'): int,
+        Optional('overflow_l2_multicast_entries'): int,
+        Optional('overflow_l3_multicast_entries'): int,
+        Optional('sgt/dgt_(or)_mpls_vpn_overflow_entries'): int,
+        Optional('lisp_instance_mapping_entries'): int,
+        Optional('security_egress_non-ipv4_access_control_entries'): int,
+        Optional('qos_ingress_non-ipv4_access_control_entries'): int,
+        Optional('security_egress_ipv4_access_control_entries'): int,
+        Optional('macsec_spd_entries'): int,
+        Optional('overflow_shared_unicast_routes'): int,
+        Optional('qos_egress_ipv4_access_control_entries'): int,
+        Optional('flow_span_input_access_control_entries'): int,
+        Optional('vrf'): int,
+        Optional('security_ingress_ipv4_access_control_entries'): int
+    }
+
+# ===================================================
+# Parser for 'show sdm prefer custom'
+# ===================================================
+class ShowSdmPreferCustom(ShowSdmPreferCustomSchema):
+    """Parser for show sdm prefer custom"""
+
+    cli_command = 'show sdm prefer custom'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # Showing SDM Template Info
+        p0 = re.compile(r'^Showing+\s+(?P<template_title>[\w]+)+\s+Template Info+$')
+
+        # "This is the Custom template"
+        p1 = re.compile(r'^This is the+\s+(?P<template_type>[\w]+)+\s+template+\.?$')
+
+        # initial regexp pattern
+        p2 = re.compile(r'^(?P<pattern>[\S \* ]+): +(?P<value>\d+) ?((?P<pattern1>[\w\s\(\)]+) [\-] (?P<value1>\d+) (?P<pattern2>[\w\s\(\)]+))?$')
+
+        # loop to split lines of output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Showing SDM Template Info
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({'template_title': group['template_title']})
+                continue
+
+            # This is the Custom template.  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({'template_type': group['template_type']})
+                continue
+
+            # Number of VLANs: 4094
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_').replace('*', '')
+                result_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+
+        return result_dict
