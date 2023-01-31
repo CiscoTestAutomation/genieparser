@@ -2928,7 +2928,7 @@ class ShowIpSlaResponder(ShowIpSlaResponderSchema):
 # =======================================
 class ShowIpDeviceTrackingAllSchema(MetaParser):
     """ 
-    Schema for 'show ip device tracking all' 
+    Schema for 'show ip device tracking all'
     """
 
     schema = {
@@ -2967,62 +2967,62 @@ class ShowIpDeviceTrackingAll(ShowIpDeviceTrackingAllSchema):
 
         parsed_dict = {}
         # Global IP Device Tracking for clients = Enabled
-        p_state = re.compile(r".*=\s(Enabled|Disabled)")
+        p1 = re.compile(r".*=\s(Enabled|Disabled)")
         
         # Global IP Device Tracking Probe Count = 3
         # Global IP Device Tracking Probe Interval = 30
         # Global IP Device Tracking Probe Delay Interval = 0
-        p_info = re.compile(r".*=\s(\d+)")
+        p2 = re.compile(r".*=\s(\d+)")
         
         # EXAMPLE (Note: some devices do not have probe-timeout and sources)
         # -----------------------------------------------------------------------------------------------
         #   IP Address    MAC Address   Vlan  Interface           Probe-Timeout      State    Source
         # -----------------------------------------------------------------------------------------------
         #   192.168.178.218 b437.6c25.f929 30   GigabitEthernet0/8     30              ACTIVE   ARP
-        p_clients = re.compile(
+        p3 = re.compile(
             r"(?P<ip>\b25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)\s+(?P<mac>([a-fA-F0-9]{4}\.){2}[a-fA-F0-9]{4})\s+(?P<vlan>\d+)\s+(?P<int>\S+)\s+(?P<probe>\d+)?\s+(?P<state>\S+)(\s+)?(?P<source>\S+)?")
         # Total number interfaces enabled: 8
-        p_int_count = re.compile(
+        p4 = re.compile(
             r"(Total number interfaces enabled:)\s(?P<numb>\d+)")
 
         for line in out.splitlines():
-            m_state = p_state.match(line)
+            line = line.strip()
+            m1 = p1.match(line)
             
-            parsed_dict.setdefault('devices', {})
-            
-            if m_state:
-                parsed_dict['state'] = m_state.group(1)
+            if m1:
+                parsed_dict['state'] = m1.group(1)
                 continue
 
-            m_info = p_info.match(line)
-            if m_info:
+            m2 = p2.match(line)
+            if m2:
                 if 'Probe Count' in line:
-                    parsed_dict['probe_count'] = int(m_info.group(1))
+                    parsed_dict['probe_count'] = int(m2.group(1))
                 elif 'Probe Interval' in line:
-                    parsed_dict['probe_interval'] = int(m_info.group(1))
+                    parsed_dict['probe_interval'] = int(m2.group(1))
                 elif 'Probe Delay Interval' in line:
-                    parsed_dict['delay_interval'] = int(m_info.group(1))
+                    parsed_dict['delay_interval'] = int(m2.group(1))
                 continue
 
-            m_clients = p_clients.match(line)
-            if m_clients:
-                parsed_dict['devices'][m_clients.group("ip")] = {}
-                parsed_dict['devices'][m_clients.group("ip")]['interface'] = m_clients.group("int")
-                parsed_dict['devices'][m_clients.group("ip")]['mac_address'] = m_clients.group("mac")
-                parsed_dict['devices'][m_clients.group("ip")]['vlan'] = int(m_clients.group("vlan"))
-                parsed_dict['devices'][m_clients.group("ip")]['state'] = m_clients.group("state")
+            m3 = p3.match(line)
+            if m3:
+                parsed_dict.setdefault('devices', {}).setdefault(m3.group("ip"),{})
+                parsed_dict['devices'][m3.group("ip")] = {}
+                parsed_dict['devices'][m3.group("ip")]['interface'] = m3.group("int")
+                parsed_dict['devices'][m3.group("ip")]['mac_address'] = m3.group("mac")
+                parsed_dict['devices'][m3.group("ip")]['vlan'] = int(m3.group("vlan"))
+                parsed_dict['devices'][m3.group("ip")]['state'] = m3.group("state")
                 
                 # some devices do not have source and probe attribute
-                if m_clients.groupdict().get("source") is not None:
-                    parsed_dict['devices'][m_clients.group("ip")]['source'] = m_clients.group("source")
+                if m3.groupdict().get("source") is not None:
+                    parsed_dict['devices'][m3.group("ip")]['source'] = m3.group("source")
                 
-                if m_clients.groupdict().get("probe") is not None:
-                    parsed_dict['devices'][m_clients.group("ip")]['probe_timeout'] = int(m_clients.group("probe"))
+                if m3.groupdict().get("probe") is not None:
+                    parsed_dict['devices'][m3.group("ip")]['probe_timeout'] = int(m3.group("probe"))
                 continue
 
-            m_int_count = p_int_count.match(line)
-            if m_int_count:
-                parsed_dict['total_numb_if_enabled'] = int(m_int_count.group("numb"))
+            m4 = p4.match(line)
+            if m4:
+                parsed_dict['total_numb_if_enabled'] = int(m4.group("numb"))
                 continue
         return parsed_dict
 
