@@ -15,6 +15,7 @@ IOSXE parsers for the following show command:
     * 'show power inline consumption {interface}'
     * 'show power'
     * 'show power {detail}'
+    * 'show power inline module {module}'
 """
 
 import re
@@ -1367,4 +1368,70 @@ class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
                 intf_dict.update(group)
                 continue
 
+        return ret_dict
+
+# ======================================================
+# Parser for 'show power inline module {moduleNum}'
+# ======================================================
+
+class ShowPowerInlineModuleSchema(MetaParser):
+    """Schema for show power inline module {moduleNum}"""
+    schema = {
+        'module': {
+            Any(): {
+                'mod': str,
+                'available_power': str,
+                'used_power': str,
+                'remaining_power': str,
+            },
+        },
+        'interfaces': {
+            Any(): {
+                'admin': str,
+                'oper': str,
+                'power': str,
+                'device': str,
+                'class': str,
+                'max': str,
+            },
+        },
+    }
+
+
+class ShowPowerInlineModule(ShowPowerInlineModuleSchema):
+    """Parser for show power inline module {moduleNum}"""
+
+    cli_command = ['show power inline module {moduleNum}']
+
+    def cli(self, moduleNum='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(moduleNum=moduleNum))
+
+        # 1           675.0       16.6       658.4
+        p1 = re.compile(r"^(?P<mod>\d+)\s+(?P<available_power>\S+)\s+(?P<used_power>\S+)\s+(?P<remaining_power>\S+)$")
+        # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
+        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>\w+)\s+(?P<power>\d+\.\d+)\s+(?P<device>\S+)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # 1           675.0       16.6       658.4
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                mod_var = dict_val['mod']
+                mod_dict = ret_dict.setdefault('module', {}).setdefault(mod_var, {})
+                mod_dict['mod'] = dict_val['mod']
+                mod_dict['available_power'] = dict_val['available_power']
+                mod_dict['used_power'] = dict_val['used_power']
+                mod_dict['remaining_power'] = dict_val['remaining_power']
+                continue
+
+            # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_var = Common.convert_intf_name(dict_val.pop('interface'))
+                ret_dict.setdefault('interfaces', {}).setdefault(interface_var, dict_val)
+                continue
         return ret_dict

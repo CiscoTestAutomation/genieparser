@@ -25,6 +25,7 @@ expected_output = {
                 "platform": "C887VA-W-W",
                 "port_id": "GigabitEthernet0",
             },
-        }
+        },
+        'total_entries': 3
     }
 }

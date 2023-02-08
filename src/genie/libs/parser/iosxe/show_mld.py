@@ -587,3 +587,41 @@ class ShowIpv6MldSnoopingAddressCount(ShowIpv6MldSnoopingAddressCountSchema):
                 igmp_groups_count_dict['mld_groups_count'] = int(group['mld_groups_count'])
 
         return ret_dict
+
+
+class ShowIpv6MldGroupsSummarySchema(MetaParser):
+    '''Schema for show ipv6 mld groups summary'''
+    schema = {
+        'route': {
+            Any(): {
+                'routes': int
+            }
+        }
+    }
+
+
+class ShowIpv6MldGroupsSummary(ShowIpv6MldGroupsSummarySchema):
+    '''Parser for show ipv6 mld groups summary'''
+
+    cli_command = 'show ipv6 mld groups summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # No. of (*,G) routes = 9
+        p1 = re.compile(r'^No\. of \((?P<route>.+)\) routes =\s(?P<routes>\d+)$')
+
+        ret_dict = dict()
+        for line in output.splitlines():
+            line = line.strip()
+
+            # No. of (S,G) routes = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict = ret_dict.setdefault('route', {}).setdefault(group['route'], {})
+                route_dict.setdefault('routes', int(group['routes']))
+
+        return ret_dict

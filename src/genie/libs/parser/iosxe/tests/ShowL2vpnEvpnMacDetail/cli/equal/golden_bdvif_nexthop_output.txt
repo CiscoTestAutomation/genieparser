@@ -1,0 +1,9 @@
+MAC Address:                0000.0115.1112
+EVPN Instance:              11011
+Bridge Domain:              11011
+Ethernet Segment:           0000.0000.0000.0000.0000
+Ethernet Tag ID:            0
+Next Hop(s):                V:11011 BD-VIF1500111
+Sequence Number:            0
+MAC only present:           No
+MAC Duplication Detection:  Timer not running

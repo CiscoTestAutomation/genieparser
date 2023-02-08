@@ -1,0 +1,24 @@
+Output Interface: gigabitEthernet1/0/1
+Sending 5, 100-byte ICMP Echos to FF08::10, timeout is 2 seconds:
+Packet sent with a source address of 2012:AA:23::3
+Reply to request 0 received from 2012:AA:1:0:200:23FF:FE53:B72A, 38 ms
+Reply to request 0 received from 2012:AA:12::1, 73 ms
+Reply to request 0 received from 2012:AA:1::1, 73 ms
+Reply to request 0 received from 2012:AA:1:0:200:23FF:FE53:B72A, 73 ms
+Reply to request 0 received from 2012:AA:12::1, 73 ms
+Reply to request 0 received from 2012:AA:1::1, 73 ms
+Reply to request 0 received from 2012:AA:1:0:200:23FF:FE53:B72A, 73 ms
+Reply to request 1 received from 2012:AA:1:0:200:23FF:FE53:B72A, 1 ms
+Reply to request 1 received from 2012:AA:12::1, 1 ms
+Reply to request 1 received from 2012:AA:12::1, 1 ms
+Reply to request 2 received from 2012:AA:1:0:200:23FF:FE53:B72A, 1 ms
+Reply to request 2 received from 2012:AA:12::1, 1 ms
+Reply to request 2 received from 2012:AA:12::1, 1 ms
+Reply to request 3 received from 2012:AA:1:0:200:23FF:FE53:B72A, 1 ms
+Reply to request 3 received from 2012:AA:12::1, 1 ms
+Reply to request 3 received from 2012:AA:12::1, 1 ms
+Reply to request 4 received from 2012:AA:1:0:200:23FF:FE53:B72A, 1 ms
+Reply to request 4 received from 2012:AA:12::1, 1 ms
+Reply to request 4 received from 2012:AA:12::1, 1 ms
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/25/73 ms
+19 multicast replies and 0 errors.

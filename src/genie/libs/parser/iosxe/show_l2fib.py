@@ -19,6 +19,156 @@ from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 
 
 # ====================================================
+# Schema for 'show l2fib output-list <id>'
+# ====================================================
+class ShowL2fibOlistSchema(MetaParser):
+    """ Schema for show l2fib output-list {id} """
+
+    schema = {
+        'olist_id': int,
+        'bd_id': int,
+        'ref_cnt': int,
+        'flags': str,
+        Optional('ports'): list,
+        'port_cnt': int,
+        Optional('ports_desc'): {
+            Any(): {
+                'type': str,
+                'is_pathlist': bool,
+                Optional('desc'): {
+                    'pl_id': int,
+                    'pl_cnt': int,
+                    'pl_type': str,
+                    'pl_desc': str,
+                }
+            },
+        }
+    }
+
+
+# =============================================
+# Parser for 'show l2fib output-list <id>'
+# =============================================
+class ShowL2fibOlist(ShowL2fibOlistSchema):
+    """ Parser for show l2fib output-list {id} """
+
+    cli_command = ['show l2fib output-list {id}']
+
+    def cli(self, id=None, output=None):
+
+        if output is None:
+            cli_output = self.device.execute(self.cli_command[0].format(id=id))
+        else:
+            cli_output = output
+
+        # ID                            : 3
+        p1 = re.compile(r'^ID\s+:\s+(?P<olist_id>\d+)$')
+
+        # Bridge Domain                 : 11
+        p2 = re.compile(r'^Bridge Domain\s+:\s+(?P<bd_id>\d+)$')
+
+        # Reference Count               : 4
+        p3 = re.compile(r'^Reference Count\s+:\s+(?P<ref_cnt>\d+)$')
+
+        # Flags                         : flood list
+        p4 = re.compile(r'^Flags\s+:\s+(?P<flags>[\w ]+)$')
+
+        # Port Count                    : 3
+        p5 = re.compile(r'^Port Count\s+:\s+(?P<port_cnt>\d+)$')
+
+        # Port(s) : VXLAN_REP PL:1(1) T:VXLAN_REP [SMC]20011:227.0.0.1
+        p6 = re.compile(r'^(Port\(s\)\s+)?'
+                        r':\s+(?P<type>\w+)\s+'
+                        r'PL:(?P<pl_id>\d+)\((?P<pl_cnt>\d+)\)\s+'
+                        r'T:(?P<pl_type>\w+)\s+'
+                        r'(?P<pl_desc>\[\w+\][0-9a-fA-F\.:@ ]+)$')
+
+        # Port(s) : BD_PORT   Et0/1:11
+        p7 = re.compile(r'^(Port\(s\)\s+)?'
+                        r':\s+(?P<type>BD_PORT)\s+(?P<port>[\w:\/]+)$')
+
+        parser_dict = {}
+
+        with_ports = 'Port(s)' in cli_output
+        if with_ports:
+            ports = parser_dict.setdefault('ports', [])
+            ports_desc = parser_dict.setdefault('ports_desc', {})
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # ID                            : 3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parser_dict.update({'olist_id': int(group['olist_id'])})
+                continue
+
+            # Bridge Domain                 : 11
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parser_dict.update({'bd_id': int(group['bd_id'])})
+                continue
+
+            # Reference Count               : 4
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parser_dict.update({'ref_cnt': int(group['ref_cnt'])})
+                continue
+
+            # Flags                         : flood list
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parser_dict.update({'flags': group['flags']})
+                continue
+
+            # Port Count                    : 3
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                parser_dict.update({'port_cnt': int(group['port_cnt'])})
+                continue
+
+            if with_ports:
+                # Port(s) : VXLAN_REP PL:1(1) T:VXLAN_REP [SMC]20011:227.0.0.1
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    port = group['pl_desc']
+
+                    ports.append(port)
+                    ports_desc.update({port: {
+                        'type': group['type'],
+                        'is_pathlist': True,
+                        'desc': {'pl_id': int(group['pl_id']),
+                                 'pl_cnt': int(group['pl_cnt']),
+                                 'pl_type': group['pl_type'],
+                                 'pl_desc': group['pl_desc']}
+                    }})
+                    continue
+
+                # Port(s) : BD_PORT   Et0/1:11
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    port = group['port']
+
+                    ports.append(port)
+                    ports_desc.update({port: {'type': group['type'],
+                                              'is_pathlist': False
+                                              }
+                                       })
+                    continue
+
+        return parser_dict
+
+
+# ====================================================
 # Schema for 'show l2fib path-list <id>'
 # ====================================================
 class ShowL2fibPathListIdSchema(MetaParser):
@@ -296,8 +446,10 @@ class ShowL2fibBridgedomainAddressUnicast(ShowL2fibBridgedomainAddressUnicastSch
 
         #Adjacency                     : MPLS_UC   PL:5(1) T:MPLS_UC [MAC]16@2.2.2.1
         #PD Adjacency                  : MPLS_UC   PL:5(1) T:MPLS_UC [MAC]16@2.2.2.1
+        #Adjacency                     : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
+        #PD Adjacency                  : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
         p7 = re.compile(r'^(?P<tag>(Adjacency|PD Adjacency))\s+:\s+(?P<type>\w+)\s+PL:(?P<path_list_id>\d+)\((?P<path_list_count>\d+)\)'
-                        r'\s+T:(?P<path_list_type>\w+)\s+(?P<path_list_desc>\[\w+\][0-9a-fA-F:@\.]+)$')
+                        r'\s+T:(?P<path_list_type>\w+)\s+(?P<path_list_desc>\[\w+\][0-9a-fA-F:@\.]+)(\s+...)?$')
 
         #Adjacency                     : Olist: 3, Ports: 1
         #PD Adjacency                  : Olist: 3, Ports: 1
@@ -369,6 +521,8 @@ class ShowL2fibBridgedomainAddressUnicast(ShowL2fibBridgedomainAddressUnicastSch
 
             #Adjacency                     : MPLS_UC   PL:5(1) T:MPLS_UC [MAC]16@2.2.2.1
             #PD Adjacency                  : MPLS_UC   PL:5(1) T:MPLS_UC [MAC]16@2.2.2.1
+            #Adjacency                     : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
+            #PD Adjacency                  : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
             m = p7.match(line)
             if m:
                 group = m.groupdict()

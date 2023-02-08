@@ -1,0 +1,6 @@
+RP/0/RSP0/CPU0:P-9001-1#show cdp
+Wed Jan 11 07:55:48.580 UTC
+Global CDP information:
+        Sending CDP packets every 60 seconds
+        Sending a holdtime value of 180 seconds
+        Sending CDPv2 advertisements is not enabled

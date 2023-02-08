@@ -4,9 +4,11 @@ START : 04-07-2022, 12:36:01
   END : 04-07-2022, 12:38:46
 -MTD-
 PNM : nor
+Status : SUCCESS
 NIST : PURGE
 -eMMC-
 MID : 'Toshiba'
 PNM : '016GB0'
 SN : 0x00000000
+Status : SUCCESS
 NIST : PURGE

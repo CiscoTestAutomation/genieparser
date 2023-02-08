@@ -4,7 +4,8 @@ expected_output = {
         'access_vlan_name': '<SANITIZED>',
         'capture_mode': False,
         'capture_vlans': 'all',
-        'encapsulation': {
+        'oper_ethertype': '0x8100',
+	'encapsulation': {
             'administrative_encapsulation': 'negotiate',
             'native_vlan': '1',
             'native_vlan_name': 'default',

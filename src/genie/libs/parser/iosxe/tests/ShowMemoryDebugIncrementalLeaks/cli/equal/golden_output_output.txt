@@ -1,0 +1,22 @@
+show memory debug incremental leaks 
+
+Adding blocks for GD... 
+
+            Processor memory 
+            
+Address Size PID Alloc-Proc Name Alloc_pc 
+7F7AF0C6BA38 448 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+7F7AF49F3D78 168 0 *Init* Init :560DB012A000+6172177 
+7F7AF49F3E20 168 0 *Init* Init :560DB012A000+6172177 
+7F7B26B56758 360 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+7F7B27184598 448 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+7F7B27188F98 448 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+7F7B275FE3D0 360 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+
+            reserve Processor memory 
+            
+Address Size PID Alloc-Proc Name Alloc_pc 
+
+            lsmpi_io memory 
+
+Address Size PID Alloc-Proc Name Alloc_pc 

@@ -1,0 +1,10 @@
+Channel-group listing:
+----------------------
+
+Group: 1
+----------
+Protocol:   -  (Mode ON)
+
+Group: 40
+----------
+Protocol:   -  LACP

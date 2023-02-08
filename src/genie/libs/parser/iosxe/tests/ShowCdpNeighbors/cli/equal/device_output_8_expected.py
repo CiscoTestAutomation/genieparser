@@ -105,6 +105,7 @@ expected_output = {
                 "platform": "ISR4431/K",
                 "port_id": "GigabitEthernet0/0/0"
             }
-        }
+        },
+        'total_entries': 13
     }
 }

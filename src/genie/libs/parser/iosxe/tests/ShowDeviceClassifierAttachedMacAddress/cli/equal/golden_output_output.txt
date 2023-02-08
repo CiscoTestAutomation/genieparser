@@ -1,0 +1,5 @@
+Summary:
+
+MAC_Address     Port_Id    Profile Name               Device Name
+==========================================================================
+001b.0c18.918d  GigabitEthernet1/0/24 Cisco-IP-Phone-7970          Cisco IP Phone 7970

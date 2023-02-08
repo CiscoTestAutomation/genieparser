@@ -562,8 +562,10 @@ class ShowVrrpBriefSchema(MetaParser):
             Any(): {
                 'group': {
                     Any(): {
+                        Optional('version'):str,
                         'pri': int,
                         'time': int,
+                        Optional('own'):str,
                         'pre': str,
                         'state': str,
                         'master_addr': str,
@@ -606,6 +608,11 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
             r'(?P<state>\w+)\s+(?P<master_addr>[\d\.]+)\s+'
             r'(?P<group_addr>[\d\.]+)')
+        #Interface          Grp  A-F Pri  Time Own Pre State   Master addr   Group addr
+        #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+        p1_1 = re.compile(
+        r'^(?P<interface_name>\S+)\s+(?P<grp>\d+)\s+(?P<version>\w+)\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<own>\w+)'
+        r'\s+(?P<pre>\w+)\s+(?P<state>\w+)\s+(?P<master_addr>[\w\S:.]*)\s+(?P<group_addr>[\w:.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -631,8 +638,29 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
                 interface_dict['group_addr'] =  group['group_addr']
                 continue
 
-        return parsed_dict
+            #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = \
+                    Common.convert_intf_name(group['interface_name'])
+                group_id =  int(group['grp'])
+                
+                interface_dict = parsed_dict.setdefault('interface', {})\
+                    .setdefault(interface_name, {})\
+                    .setdefault('group', {})\
+                    .setdefault(group_id, {})
+                interface_dict['version'] =  group['version']
+                interface_dict['pri'] =  int(group['pri'])
+                interface_dict['time'] =  int(group['time'])
+                interface_dict['own']  = group['own']
+                interface_dict['pre'] =  group['pre']
+                interface_dict['state'] =  group['state']
+                interface_dict['master_addr'] =  group['master_addr']
+                interface_dict['group_addr'] =  group['group_addr']
+                continue
 
+        return parsed_dict
 
 # ================================
 # Parser for 'show vrrp brief all'

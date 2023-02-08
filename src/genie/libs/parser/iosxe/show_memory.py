@@ -546,3 +546,80 @@ class ShowMemoryPlatformInformation(ShowMemoryPlatformInformationSchema):
                 continue
             
         return parsed_dict
+
+
+class ShowMemoryDebugIncrementalLeaksSchema(MetaParser):
+    '''schema for
+        * show memory debug incremental leaks
+    '''
+
+    schema = {
+        'memory': {
+            str: {
+                Optional(str): {
+                    'size': int,
+                    'pid': int,
+                    'alloc_proc': str,
+                    'name': str,
+                    'alloc_pc': str,
+                }
+            }
+        }
+    }
+
+class ShowMemoryDebugIncrementalLeaks(ShowMemoryDebugLeaksSchema):                                                            
+
+    '''parser for
+        * show memory debug incremental leaks
+    '''
+
+    cli_command = 'show memory debug incremental leaks'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Processor memory
+        # reserve Processor memory
+        # lsmpi_io memory
+        p1 = re.compile(r'^(?P<memory>[\w\s]*memory)$')
+
+        # 10.0.0.1        80  1234   Placeholder_proc        Placeholder_name               Placeholder_pc
+        p2 = re.compile(r'^(?P<address>\S+) +(?P<size>\d+) +(?P<pid>\d+) +'
+                       r'(?P<alloc_proc>\S+) +(?P<name>\S+) +(?P<alloc_pc>.*)$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+
+            # Processor memory
+            # reserve Processor memory
+            # lsmpi_io memory
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                memories = ret_dict.setdefault('memory', {})
+                memory = memories.setdefault(group['memory'].lower().replace(' ', '_'), {})
+                continue
+
+
+            # 7F7B27188F98 448 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+            # 7F7B275FE3D0 360 86 IOSD ipc task IOSD ipc task :560DB012A000+A66ECD0 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address = memory.setdefault(group['address'], {})
+                address.update({
+                    'size': int(group['size']),
+                    'pid': int(group['pid']),
+                    'alloc_proc': group['alloc_proc'],
+                    'name': group['name'],
+                    'alloc_pc': group['alloc_pc'],
+                })
+                continue
+
+        return ret_dict

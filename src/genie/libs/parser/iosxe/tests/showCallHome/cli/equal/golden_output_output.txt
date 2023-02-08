@@ -1,0 +1,57 @@
+Current call home settings:
+    call home feature : enable
+    call home message's from address: Not yet set up
+    call home message's reply-to address: Not yet set up
+
+    vrf for call-home messages: Not yet set up
+
+    contact person's email address: sch-smart-licensing@cisco.com
+
+    contact person's phone number: Not yet set up
+    street address: Not yet set up
+    customer ID: Not yet set up
+    contract ID: Not yet set up
+    site ID: Not yet set up
+
+    source ip address: Not yet set up
+    source interface: Not yet set up
+    Mail-server[1]: Address: ott-ads-035 Priority: 1 Secure: none
+    Mail-server[2]: Address: ott-ads-085 Priority: 2 Secure: tls
+    http proxy: Not yet set up
+    http secure:
+      server identity check: enabled
+    http resolve-hostname: default
+
+    Diagnostic signature: enabled
+    Profile: muskan (status: INACTIVE)
+
+    Smart licensing messages: enabled
+    Profile: CiscoTAC-1 (status: ACTIVE)
+
+    aaa-authorization: disable
+    aaa-authorization username: callhome (default)
+    data-privacy: normal
+    syslog throttling: enable
+
+    Rate-limit: 20 message(s) per minute
+
+    Snapshot command: Not yet set up
+
+Available alert groups:
+    Keyword                  State   Description
+    ------------------------ ------- -------------------------------
+    configuration            Enable  configuration info
+    crash                    Enable  crash and traceback info
+    diagnostic               Enable  diagnostic info
+    environment              Enable  environmental info
+    inventory                Enable  inventory info
+    snapshot                 Enable  snapshot info
+    syslog                   Enable  syslog info
+
+Profiles:
+    Profile Name: CiscoTAC-1
+    Profile Name: dummy
+    Profile Name: MohamedMuskan
+    Profile Name: muskan
+    Profile Name: Shishir
+    Profile Name: test
