@@ -83,8 +83,8 @@ class ShowLoggingLevelSchema(MetaParser):
 
     schema = { 'facility':
                 { Any():
-                    { def_severity: int,
-                      curr_severity: int }
+                    { 'def_severity': int,
+                      'curr_severity': int }
                 }
             }
 
