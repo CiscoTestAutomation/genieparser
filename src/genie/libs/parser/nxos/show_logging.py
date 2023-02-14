@@ -124,7 +124,7 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
                     ret_dict['facility'][facility] = {}
 
                 for x in ['def_severity', 'curr_severity']:
-                    x_val = m.groupdict()[x]
+                    x_val = int(m.groupdict()[x])
                     ret_dict['facility'][facility][x] = x_val
 
         return ret_dict
