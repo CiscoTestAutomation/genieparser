@@ -91,15 +91,19 @@ class ShowLoggingLevelSchema(MetaParser):
 class ShowLoggingLevel(ShowLoggingLevelSchema):
     '''Schema for:
         * 'show logging level'
+        * 'show logging level {name}'
     '''
 
-    cli_command = 'show logging level'
+    cli_command = [ 'show logging level', 'show logging level {name}' ]
 
-    def cli(self, output=None):
+    def cli(self, name='', output=None):
 
         if (output is None):
             # Build the command
-            cmd = self.cli_command
+            if name:
+                cmd = self.cli_command[0].format(name=name)
+            else:
+                cmd = self.cli_command[1]
 
             # Execute the command
             out = self.device.execute(cmd)
