@@ -110,15 +110,16 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
         p = re.compile(r'(?P<facility>\S+)\s+'
                         '(?P<def_severity>\d)\s+'
                         '(?P<curr_severity>\d)')
-        ret_dict = {
-            'facility': {}
-        }
+        ret_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
 
             m = p.match(line)
             if m:
+                if 'facility' not in ret_dict:
+                    ret_dict['facility'] = {}
+
                 facility = m.groupdict()['facility']
                 if facility not in ret_dict['facility']:
                     ret_dict['facility'][facility] = {}
