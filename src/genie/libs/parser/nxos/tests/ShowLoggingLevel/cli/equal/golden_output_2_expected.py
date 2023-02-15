@@ -3,8 +3,8 @@
 expected_output = {
     'facility': {
         "aaa": {
-            'def_severity': 3,
-            'curr_severity': 5
+            'default_severity': 3,
+            'current_session_severity': 5
         }
     },
 }

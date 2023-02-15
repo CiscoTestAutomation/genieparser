@@ -83,25 +83,25 @@ class ShowLoggingLevelSchema(MetaParser):
 
     schema = { 'facility':
                 { Any():
-                    { 'def_severity': int,
-                      'curr_severity': int }
+                    { 'default_severity': int,
+                      'current_session_severity': int }
                 }
             }
 
 class ShowLoggingLevel(ShowLoggingLevelSchema):
     '''Schema for:
         * 'show logging level'
-        * 'show logging level {name}'
+        * 'show logging level {facility}'
     '''
 
-    cli_command = [ 'show logging level', 'show logging level {name}' ]
+    cli_command = [ 'show logging level', 'show logging level {facility}' ]
 
-    def cli(self, name='', output=None):
+    def cli(self, facility='', output=None):
 
         if (output is None):
             # Build the command
-            if name:
-                cmd = self.cli_command[0].format(name=name)
+            if facility:
+                cmd = self.cli_command[0].format(facility=facility)
             else:
                 cmd = self.cli_command[1]
 
@@ -112,8 +112,8 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
             out = output
 
         p = re.compile(r'(?P<facility>\S+)\s+'
-                        '(?P<def_severity>\d)\s+'
-                        '(?P<curr_severity>\d)')
+                        '(?P<default_severity>\d)\s+'
+                        '(?P<current_session_severity>\d)')
         ret_dict = {}
 
         for line in out.splitlines():
@@ -128,7 +128,7 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
                 if facility not in ret_dict['facility']:
                     ret_dict['facility'][facility] = {}
 
-                for x in ['def_severity', 'curr_severity']:
+                for x in ['default_severity', 'current_session_severity']:
                     x_val = int(m.groupdict()[x])
                     ret_dict['facility'][facility][x] = x_val
 

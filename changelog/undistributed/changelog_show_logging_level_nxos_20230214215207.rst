@@ -4,4 +4,4 @@
 * NXOS
     * Added ShowLoggingLevel:
         * show logging level
-        * show logging level {name}
+        * show logging level {facility}
