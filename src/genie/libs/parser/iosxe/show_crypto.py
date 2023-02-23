@@ -1474,8 +1474,8 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         r7 = "^Local id: +(?P<local_id>[\w\d\S]+)$"
         p7 = re.compile(r7)
 
-        # Remote id: 22.1.1.2
-        r8 = "^Remote id: +(?P<remote_id>[\d\.]+)$"
+        # Remote id: hostname.remoteid.example.com
+        r8 = "^Remote id: +(?P<remote_id>[\w\d\S]+)$"
         p8 = re.compile(r8)
 
         # Local req msg id:  214            Remote req msg id:  6
