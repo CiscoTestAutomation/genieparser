@@ -55,8 +55,10 @@ class ShowLoggingOnboardSwitchClilog(ShowLoggingOnboardSwitchClilogSchema):
             output = self.device.execute(self.cli_command.format(switch=switch))
         
         ret_dict = {}
-        #1    clear obfl switch 3 environment
-        p1 = re.compile(r'(?P<count>\d)\s+(?P<command>clear+\s+obfl+\s+switch+\s+\d+\s+.*)')
+
+        # 1    clear obfl switch 3 environment
+        # 1    clear obfl switch 1
+        p1 = re.compile(r'(?P<count>\d)\s+(?P<command>clear+\s+obfl+\s+switch+\s+\d+(\s+.*)?)')
         
         for line in output.splitlines():
             line = line.strip()
@@ -344,7 +346,7 @@ class ShowLoggingOnboardSwitchContinuousSchema(MetaParser):
     '''
 
     schema={
-        'application':str,
+        Optional('application'):str,
         Optional('temperature_sensors'):{
             Any():{
                 'id': int,

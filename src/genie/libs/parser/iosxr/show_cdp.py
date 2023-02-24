@@ -5,6 +5,8 @@ IOSXR parsers for the following commands:
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
     * 'show cdp'
+    * 'show cdp interface'
+    * 'show cdp interface {interface}'
 
 """
 
@@ -460,6 +462,108 @@ class ShowCdp(ShowCdpSchema):
             m = p5.match(line)
             if m:
                 ret_dict['enabled'] = False
+                continue
+
+        return ret_dict
+
+class ShowCdpInterfaceSchema(MetaParser):
+    """ Schema for:
+        * 'show cdp interface {interface}'
+        * 'show cdp interface'
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'interface': str,
+                'status': str,
+                'encapsulation': str,
+                'cdp_packets': int,
+                'hold_timer': int
+            }
+        }
+    }
+
+
+# =======================================
+# Parser for 'show cdp interface {interface}'
+# Parser for 'show cdp interface'
+# =======================================
+
+
+class ShowCdpInterface(ShowCdpInterfaceSchema):
+    ''' Parser for commands:
+        * 'show cdp interface {interface}'
+        * 'show cdp interface'
+    '''
+
+    cli_command = ['show cdp interface {interface}',
+                   'show cdp interface']
+
+    def cli(self, interface=None, output=None):
+
+        if output is None:
+            if interface:
+                command = self.cli_command[0].format(interface=interface)
+            else:
+                command = self.cli_command[1]
+            output = self.device.execute(command)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # GigabitEthernet0/0/0/16 is Up
+        # GigabitEthernet0/0/0/17 is Down
+        # GigabitEthernet0/0/0/18 is Administratively Down
+        # TenGigE0/0/2/0 is Down
+        # TenGigE0/0/2/1 is Up
+        p1 = re.compile(r'^(?P<interface_name>\S+)\s+is\s+(?P<status>[a-zA-Z ]+)$')
+
+        # Encapsulation ether
+        p2 = re.compile(r'^Encapsulation\s+(?P<encapsulation>\w+)$')
+
+        # Sending CDP packets every 60 seconds
+        p3 = re.compile(r'^Sending\s+CDP\s+packets\s+every\s+(?P<cdp_packets>\d+)\s+seconds$')
+
+        # Holdtime is 180 seconds
+        p4 = re.compile(r'^Holdtime\s+is\s+(?P<hold_timer>\d+)\s+seconds$')
+
+        for line in output.splitlines():
+            line = line.strip() # strip whitespace from beginning and end
+
+            # GigabitEthernet0/0/0/16 is Up
+            # GigabitEthernet0/0/0/17 is Down
+            # GigabitEthernet0/0/0/18 is Administratively Down
+            # TenGigE0/0/2/0 is Down
+            # TenGigE0/0/2/1 is Up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group['interface_name'])
+                int_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                int_dict.update({'interface': intf})
+                int_dict.update({'status': group['status']})
+                continue
+
+            # Encapsulation ether
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'encapsulation': group['encapsulation']})
+                continue
+
+            # Sending CDP packets every 60 seconds
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'cdp_packets': int(group['cdp_packets'])})
+                continue
+
+            # Holdtime is 180 seconds
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'hold_timer': int(group['hold_timer'])})
                 continue
 
         return ret_dict

@@ -196,12 +196,29 @@ class ShowFlowMonitorCacheSchema(MetaParser):
         Optional('entries'): {
             Any(): {
                 Optional('ip_vrf_id_input'): str,
-                'ipv4_src_addr': str,
-                'ipv4_dst_addr': str,
-                'intf_input': str,
-                'intf_output': str,
+                Optional('ipv4_src_addr'): str,
+                Optional('ipv4_dst_addr'): str,
+                Optional('intf_input'): str,
+                Optional('intf_output'): str,
                 Optional('pkts'): int,
-            }
+                Optional('ipv6_src_addr'): str,
+                Optional('ipv6_dst_addr'): str,
+                Optional('trns_src_port'): int,
+                Optional('trns_dst_port'): int,
+                Optional('flow_direction'): str,
+                Optional('vxlan_vni_id'): str,
+                Optional('vxlan_vtep_input'): str,
+                Optional('vxlan_vtep_output'): str,
+                Optional('ip_protocol'): int,
+                Optional('ipv4_nxt_hop'): str,
+                Optional('ipv4_src_mask'): str,
+                Optional('ipv4_dst_mask'): str,
+                Optional('tcp_flags'): str,
+                Optional('counter_bytes'): int,
+                Optional('counter_pkts_long'): int,
+                Optional('timestamp_abs_first'): str,
+                Optional('timestamp_abs_last'): str,
+            },
         },
     }
 
@@ -273,6 +290,57 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
 
         # counter packets:           3
         p14 = re.compile(r'^counter packets: +(?P<pkts>\d+)$')
+
+        # IPV6 SOURCE ADDRESS:       BBBB:172:51:15::11
+        p15 = re.compile(r'^IPV6 SOURCE ADDRESS: +(?P<ipv6_src_addr>\S+)$')
+
+        # IPV6 DESTINATION ADDRESS:  BBBB:172:51:15::111
+        p16 = re.compile(r'^IPV6 DESTINATION ADDRESS: +(?P<ipv6_dst_addr>\S+)$')
+
+        # TRNS SOURCE PORT:          0
+        p17 = re.compile(r'^TRNS SOURCE PORT: +(?P<trns_src_port>\d+)$')
+
+        # TRNS DESTINATION PORT:     0
+        p18 = re.compile(r'^TRNS DESTINATION PORT: +(?P<trns_dst_port>\d+)$')
+
+        # FLOW DIRECTION:            Input
+        p19 = re.compile(r'^FLOW DIRECTION: +(?P<flow_direction>\S+)$')
+
+        # VXLAN VXLAN VNID:          20015
+        p20 = re.compile(r'^VXLAN VXLAN VNID: +(?P<vxlan_vni_id>\S+)$')
+
+        # VXLAN VXLAN VTEP INPUT:    172.11.1.22
+        p21 = re.compile(r'^VXLAN VXLAN VTEP INPUT: +(?P<vxlan_vtep_input>\S+)$')
+
+        # VXLAN VXLAN VTEP OUTPUT:   172.11.1.1
+        p22 = re.compile(r'^VXLAN VXLAN VTEP OUTPUT: +(?P<vxlan_vtep_output>\S+)$')
+
+        # IP PROTOCOL:               1
+        p23 = re.compile(r'^IP PROTOCOL: +(?P<ip_protocol>\d+)$')
+
+        # ipv4 next hop address:     0.0.0.0
+        p24 = re.compile(r'^ipv4 next hop address: +(?P<ipv4_nxt_hop>\S+)$')
+
+        # ipv4 source mask:          /0
+        p25 = re.compile(r'^ipv4 source mask: +(?P<ipv4_src_mask>\S+)$')
+
+        # ipv4 destination mask:     /0
+        p26 = re.compile(r'^ipv4 destination mask: +(?P<ipv4_dst_mask>\S+)$')
+        
+        # tcp flags:                 0x00
+        p27 = re.compile(r'^tcp flags: +(?P<tcp_flags>\S+)$')
+
+        # counter bytes long:        192
+        p28 = re.compile(r'^counter bytes long: +(?P<counter_bytes>\d+)$')
+
+        # counter packets long:      3
+        p29 = re.compile(r'^counter packets long: +(?P<counter_pkts_long>\S+)$')
+
+        # timestamp abs first:       07:50:06.900
+        p30 = re.compile(r'^timestamp abs first: +(?P<timestamp_abs_first>\S+)$')
+
+        # timestamp abs last:        07:50:58.900
+        p31 = re.compile(r'^timestamp abs last: +(?P<timestamp_abs_last>\S+)$')
 
         # entry_dict intializes on p8 or p9 condition
         # but some output doesn't match these conditions.
@@ -403,6 +471,131 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             if m:
                 group = m.groupdict()
                 entry_dict.update({'pkts': int(group['pkts'])})
+                continue
+
+            # IPV6 SOURCE ADDRESS:  BBBB:172:51:15::11
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+
+                if not entry_dict_created:
+                    index += 1
+                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
+                        index, {})
+
+                entry_dict.update({'ipv6_src_addr': group['ipv6_src_addr']})
+                continue
+
+            # IPV6 DESTINATION ADDRESS:  BBBB:172:51:15::111
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv6_dst_addr': group['ipv6_dst_addr']})
+                continue
+
+            # TRNS SOURCE PORT:          1
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'trns_src_port': int(group['trns_src_port'])})
+                continue
+
+            # TRNS DESTINATION PORT:     100
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
+                continue
+
+            # FLOW DIRECTION:            Input
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'flow_direction': group['flow_direction']})
+                continue
+
+            # VXLAN VXLAN VNID:          20015
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'vxlan_vni_id': group['vxlan_vni_id']})
+                continue
+
+            # VXLAN VXLAN VTEP INPUT:    172.11.1.2
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'vxlan_vtep_input': group['vxlan_vtep_input']})
+                continue
+
+            # VXLAN VXLAN VTEP OUTPUT:   172.11.1.1
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'vxlan_vtep_output': group['vxlan_vtep_output']})
+                continue
+
+            # IP PROTOCOL:               6
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ip_protocol': int(group['ip_protocol'])})
+                continue
+
+            # ipv4 next hop address:     0.0.0.0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv4_nxt_hop': group['ipv4_nxt_hop']})
+                continue
+
+            # ipv4 source mask:          /0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv4_src_mask': group['ipv4_src_mask']})
+                continue
+
+            # ipv4 destination mask:     /0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv4_dst_mask': group['ipv4_dst_mask']})
+                continue
+
+            # tcp flags:                 0x00
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'tcp_flags': group['tcp_flags']})
+                continue
+
+            # counter bytes long:        4991616
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'counter_bytes': int(group['counter_bytes'])})
+                continue
+
+            # counter packets long:      38997
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'counter_pkts_long': int(group['counter_pkts_long'])})
+                continue
+
+            # timestamp abs first:       07:49:20.900
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'timestamp_abs_first': group['timestamp_abs_first']})
+                continue
+
+            # timestamp abs last:        07:51:29.900
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'timestamp_abs_last': group['timestamp_abs_last']})
                 continue
 
         return ret_dict

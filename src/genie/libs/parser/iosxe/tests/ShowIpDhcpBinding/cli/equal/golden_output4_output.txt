@@ -1,0 +1,9 @@
+show ip dhcp binding vrf ten-11
+
+Bindings from VRF pool ten-11:
+IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
+		Hardware address/
+		User name
+172.51.11.13    0100.006c.be93.54       Jan 20 2023 08:37 PM    Automatic  Active     Vlan111
+172.51.11.14    0100.006c.be93.56       Jan 20 2023 08:37 PM    Automatic  Active     Vlan111
+

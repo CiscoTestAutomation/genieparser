@@ -1,0 +1,7 @@
+Interface Templates
+===================
+Interface: Gi1/0/1
+Method             Source                       Template-Name
+------                 ------                           -------------
+static                  User                           Parent
+child-stat            User                           Child

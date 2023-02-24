@@ -61,6 +61,7 @@ IOSXE parsers for the following show commands:
     * show nhrp stats detail
     * show nhrp stats {tunnel} detail
     * show ip dhcp binding
+    * show ip dhcp binding vrf {vrf_name}
     * show ip dhcp binding | count Active
     * show ip nhrp summary
     * show ip dhcp snooping binding | include Total number of bindings
@@ -68,6 +69,8 @@ IOSXE parsers for the following show commands:
     * show ip dns view
     * show ip admission cache
     * show ip igmp snooping detail
+    * show ip verify source interface {interface}
+    * show ip verify source
     * show ip dhcp excluded-addresses all
     * show ip dhcp excluded-addresses vrf {vrf}
     * show ip dhcp excluded-addresses pool {pool}
@@ -1978,20 +1981,22 @@ class ShowIpMfib(ShowIpMfibSchema):
         #  GigabitEthernet1/0/1 Flags: A NS
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
+        #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
-                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
                          ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
         #Tunnel0, VXLAN Decap Flags: F
         #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
+        #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: F
         #Null0, LISPv4 Decap Flags: RF F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
                         '(\,\s+LISPv4\s*Decap\s*)?'
                         '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
-                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
 						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
@@ -2067,6 +2072,7 @@ class ShowIpMfib(ShowIpMfibSchema):
             #  GigabitEthernet1/0/1 Flags: A NS
             #Tunnel0, VXLAN Decap Flags: A
             #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
+            #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: A
             m=p7.match(line)
             if m:
                 group = m.groupdict()
@@ -2086,6 +2092,7 @@ class ShowIpMfib(ShowIpMfibSchema):
             #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
             #Tunnel0, VXLAN Decap Flags: F
             #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
+            #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: F
             #Null0, LISPv4 Decap Flags: RF F NS
             m=p8.match(line)
 
@@ -2930,6 +2937,7 @@ class ShowIpSlaResponder(ShowIpSlaResponderSchema):
 class ShowIpDhcpBindingSchema(MetaParser):
     """
     Schema for show ip dhcp binding
+               show ip dhcp binding vrf {vrf_name}
     """
     schema = {
         Optional('dhcp_binding'): {
@@ -2946,14 +2954,21 @@ class ShowIpDhcpBindingSchema(MetaParser):
 
 class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
 
-    ''' Parser for "show ip dhcp binding"'''
-    cli_command = 'show ip dhcp binding'
+    ''' Parser for "show ip dhcp binding"
+                   " show ip dhcp binding vrf {vrf_name}"
+    '''
+    cli_command = ['show ip dhcp binding', 'show ip dhcp binding vrf {vrf_name}']
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, vrf_name='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if vrf_name:
+                cmd = self.cli_command[1].format(vrf_name=vrf_name)
+            else:
+                cmd = self.cli_command[0]
 
+            output = self.device.execute(cmd)
+        
         parsed_dict = {}
 
         # for number of bindings
@@ -6099,6 +6114,52 @@ class ShowIpAdmissionCache(ShowIpAdmissionCacheSchema):
 
         return ret_dict
 
+# ======================================================
+# Schema for 'show ip cef exact-route {source} {destination}'
+# ======================================================
+
+class showIpcefExactRouteSchema(MetaParser):
+    """ Schema for the commands:
+            * show ip cef exact-route {source} {destination}
+    """
+
+    schema = {
+        "ip_adj": str,
+        "ip_addr": str,
+        "source": str,
+        "destination": str
+    }
+
+
+class ShowIpcefExactRoute(showIpcefExactRouteSchema):
+    """
+        * show ip cef exact-route
+    """
+
+    cli_command = 'show ip cef exact-route {source} {destination}'
+
+    def cli(self, source, destination, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(source=source, destination=destination))
+
+        # 10.1.1.1 -> 20.1.1.1 =>IP adj out of Vlan13, addr 172.27.0.1
+        p1 = re.compile(r'^(?P<source>\d+.\d+.\d+.\d+) +-> +(?P<destination>\d+.\d+.\d+.\d+) +=>IP adj +(?P<ip_adj>.*), +addr +(?P<ip_addr>\S+)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # 10.1.1.1 -> 20.1.1.1 =>IP adj out of Vlan13, addr 172.27.0.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['source'] = group['source']
+                ret_dict['destination'] = group['destination']
+                ret_dict['ip_adj'] = group['ip_adj']
+                ret_dict['ip_addr'] = group['ip_addr']
+                continue
+
+        return ret_dict
 
 class ShowIpIgmpSnoopingDetailSchema(MetaParser):
     """Schema for show ip igmp snooping detail"""
@@ -6119,7 +6180,7 @@ class ShowIpIgmpSnoopingDetailSchema(MetaParser):
                 'igmpv2_immediate_leave': str,
                 'explicit_host_tracking': str,
                 'multicast_router_learning_mode': str,
-                'cgmp_inter_mode': str,
+                Optional('cgmp_inter_mode'): str,
                 'robustness_variable': int,
                 'last_member_query_count': int,
                 'last_member_query_interval': int,
@@ -6291,6 +6352,55 @@ class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
             m = p15.match(line)
             if m:
                 vlan_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show ip verify source'
+# ======================================================
+
+class ShowIpVerifySourceSchema(MetaParser):
+      
+    """Schema for show ip verify source"""
+
+    schema = {
+        'ip_address': {
+            Any(): {
+                'interface_name': str,
+                'filter_type': str,
+                'filter_mode': str,
+                'vlan':str,
+
+            },
+        },
+    }
+
+class ShowIpVerifySource(ShowIpVerifySourceSchema):
+    """Parser for show ip verify source"""
+
+    cli_command = ['show ip verify source', 'show ip verify source interface {interface_name}']
+
+    def cli(self, interface_name=None, output=None):
+        if output is None:
+            if interface_name:
+                output = self.device.execute(self.cli_command[1].format(interface_name=interface_name))
+            else:
+                output = self.device.execute(self.cli_command[0])
+               
+        #Gi1/0/3      ip trk       active       40.1.1.24                           10  
+        p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip\s+\S+)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<vlan>\d+)$") 
+  
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # Gi1/0/3      ip trk       active       40.1.1.24                           10   
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_name_var = dict_val['ip_address']
+                del dict_val['ip_address']
+                ret_dict.setdefault('ip_address', {}).setdefault(int_name_var, dict_val) 
                 continue
 
         return ret_dict

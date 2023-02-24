@@ -1180,10 +1180,13 @@ class ShowWirelessFabricClientSummarySchema(MetaParser):
         Optional("mac_address") : {
             Optional(str) : {
                 Optional("ap_name") : str,
+                Optional("type") : str,
                 Optional("wlan") : int,
                 Optional("state") : str,
                 Optional("protocol") : str,
                 Optional("method") : str,
+                Optional("l2_vnid") : int,
+                Optional("rloc_ip") : str,
             }
         }
     }
@@ -1203,7 +1206,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         else:
             output=output
 
-        show_wireless_fabric_client_summary_dict = {}
+        ret_dict = {}
 
 
         # Number of Fabric Clients : 8
@@ -1224,18 +1227,12 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
 
-        # MAC Address    AP Name                          WLAN State              Protocol Method
-        p_header = re.compile(r"^MAC\s+Address\s+AP\s+Name\s+WLAN\s+State\s+Protocol\s+Method$")
-
-        # -------------------------------------------------------------------------------------------------------------------------
-        p_delimiter = re.compile(
-            r"^-------------------------------------------------------------------------------------------------------------------------$")
-
         # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
         p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
 
-
-        show_wireless_fabric_client_summary_dict = {}
+        # MAC Address    AP Name                  Type ID   State              Protocol Method     L2 VNID    RLOC IP
+        # dca6.3249.1877 AP-E6-25C0               WLAN 18   Run                11n(2.4) Dot1x      8189       10.240.240.3
+        p_client_info_n = re.compile(r"(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wtype>\w+)\s+(?P<wlan>\d+)\s+(?P<state>(\w+\s*\w+))\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))\s+(?P<l2_vnid>\d+)\s+(?P<rloc_ip>((\d{1,3}\.){3}\d{1,3}))")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1243,19 +1240,12 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
             if p_clients.match(line):
                 match = p_clients.match(line)
                 client_count = int(match.group('clients'))
-                if not show_wireless_fabric_client_summary_dict.get('number_of_fabric_clients'):
-                    show_wireless_fabric_client_summary_dict.update({'number_of_fabric_clients' : client_count})
+                if not ret_dict.get('number_of_fabric_clients'):
+                    ret_dict.update({'number_of_fabric_clients' : client_count})
                 continue
-            # MAC Address    AP Name                          WLAN State              Protocol Method
-            elif p_header.match(line):
-                match = p_header.match(line)
-                continue
-            # -------------------------------------------------------------------------------------------------------------------------
-            elif p_delimiter.match(line):
-                match = p_delimiter.match(line)
-                continue
+
             # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
-            elif p_client_info.match(line):
+            if p_client_info.match(line):
                 match = p_client_info.match(line)
                 groups = match.groupdict()
                 mac_address = groups['mac']
@@ -1264,11 +1254,38 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
                 state = groups['state'].strip()
                 protocol = groups['protocol']
                 method = groups['method']
-                if not show_wireless_fabric_client_summary_dict.get('mac_address'):
-                    show_wireless_fabric_client_summary_dict['mac_address'] = {}
-                show_wireless_fabric_client_summary_dict['mac_address'].update({mac_address : {'ap_name' : ap_name, 'wlan' : wlan, 'state' : state, 'protocol' : protocol, 'method' : method}})
+                if not ret_dict.get('mac_address'):
+                    ret_dict['mac_address'] = {}
+                ret_dict['mac_address'].update({mac_address : {'ap_name' : ap_name,
+                                                               'wlan' : wlan,
+                                                               'state' : state,
+                                                               'protocol' : protocol,
+                                                               'method' : method}})
 
-        return show_wireless_fabric_client_summary_dict
+            # dca6.3249.1877 AP-E6-25C0               WLAN 18   Run                11n(2.4) Dot1x      8189       10.240.240.3
+            if p_client_info_n.match(line):
+                match = p_client_info_n.match(line)
+                groups = match.groupdict()
+                mac_address = groups['mac']
+                ap_name = groups['name']
+                wtype = groups['wtype']
+                wlan = int(groups['wlan'])
+                state = groups['state'].strip()
+                protocol = groups['protocol']
+                method = groups['method']
+                l2_vnid = int(groups['l2_vnid'])
+                rloc_ip = groups['rloc_ip']
+                if not ret_dict.get('mac_address'):
+                    ret_dict['mac_address'] = {}
+                ret_dict['mac_address'].update({mac_address : {'ap_name': ap_name,
+                                                               'type': wtype,
+                                                               'wlan': wlan,
+                                                               'state': state,
+                                                               'protocol': protocol,
+                                                               'method': method,
+                                                               'l2_vnid': l2_vnid,
+                                                               'rloc_ip':rloc_ip}})
+        return ret_dict
 
 
 # =================================
@@ -1770,109 +1787,6 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_info_obj["ap_name"].update(ap_name_dict)
 
         return ap_info_obj
-      
-      
-# ========================================
-# Schema for:
-#  * 'show wireless fabric client summary'
-# ========================================
-class ShowWirelessFabricClientSummarySchema(MetaParser):
-    """Schema for show wireless fabric client summary."""
-
-    schema = {
-        "number_of_fabric_clients" : int,
-        Optional("mac_address") : {
-            Optional(str) : {
-                Optional("ap_name") : str,
-                Optional("wlan") : int,
-                Optional("state") : str,
-                Optional("protocol") : str,
-                Optional("method") : str,
-            }
-        }
-    }
-
-# ========================================
-# Parser for:
-#  * 'show wireless fabric client summary'
-# ========================================
-class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
-    """Parser for show wireless fabric client summary"""
-
-    cli_command = 'show wireless fabric client summary'
-
-    def cli(self, output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command)
-        else:
-            output=output
-
-
-        show_wireless_fabric_client_summary_dict = {}
-
-        # Number of Fabric Clients : 8
-
-        # MAC Address    AP Name                          WLAN State              Protocol Method     
-        # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
-        # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
-        # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
-
-        # Number of Fabric Clients : 8
-        p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
-
-        # MAC Address    AP Name                          WLAN State              Protocol Method
-        p_header = re.compile(r"^MAC\s+Address\s+AP\s+Name\s+WLAN\s+State\s+Protocol\s+Method$")
-
-        # -------------------------------------------------------------------------------------------------------------------------
-        p_delimiter = re.compile(
-            r"^-------------------------------------------------------------------------------------------------------------------------$")
-
-        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
-        p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
-
-
-        show_wireless_fabric_client_summary_dict = {}
-
-        for line in output.splitlines():
-            line = line.strip()
-            # Number of Fabric Clients : 8
-            if p_clients.match(line):
-                match = p_clients.match(line)
-                client_count = int(match.group('clients'))
-                if not show_wireless_fabric_client_summary_dict.get('number_of_fabric_clients'):
-                    show_wireless_fabric_client_summary_dict.update({'number_of_fabric_clients' : client_count})
-                continue
-            # MAC Address    AP Name                          WLAN State              Protocol Method
-            elif p_header.match(line):
-                match = p_header.match(line)
-                continue
-            # -------------------------------------------------------------------------------------------------------------------------
-            elif p_delimiter.match(line):
-                match = p_delimiter.match(line)
-                continue
-            # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
-            elif p_client_info.match(line):
-                match = p_client_info.match(line)
-                groups = match.groupdict()
-                mac_address = groups['mac']
-                ap_name = groups['name']
-                wlan = int(groups['wlan'])
-                state = groups['state'].strip()
-                protocol = groups['protocol']
-                method = groups['method']
-                if not show_wireless_fabric_client_summary_dict.get('mac_address'):
-                    show_wireless_fabric_client_summary_dict['mac_address'] = {}
-                show_wireless_fabric_client_summary_dict['mac_address'].update({mac_address : {'ap_name' : ap_name, 'wlan' : wlan, 'state' : state, 'protocol' : protocol, 'method' : method}})
-
-        return show_wireless_fabric_client_summary_dict
 
 
 # ===================================
@@ -5360,3 +5274,118 @@ class ShowWirelessManagementTrustPoint(ShowWirelessManagementTrustPointSchema):
                 ret_dict["certificate_hash"] = m.groupdict()['certificate_hash'].strip()
               
         return ret_dict   
+
+
+# ========================================
+# Schema for:
+#  * 'show wireless multicast'
+# ========================================
+class ShowWirelessMulticastSchema(MetaParser):
+    """ Schema for :
+        show wireless multicast"""
+
+    schema = {
+        "multicast": bool,
+        "ap_capwap_multicast": str,
+        "wireless_broadcast": bool,
+        "mcast_no_ip_mcast": bool,
+        "mcast_link_local": bool,
+        Optional("ipv4_mcast_group_address"): str,
+        Optional("ipv6_mcast_group_address"): str,
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show wireless multicast'
+# ========================================
+class ShowWirelessMulticast(ShowWirelessMulticastSchema):
+    """Parser for :
+        show wireless multicast"""
+
+    cli_command = 'show wireless multicast'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        ret_dict = {}
+
+        str_to_bool_map = {
+            'Enabled': True,
+            'Disabled': False
+        }
+
+        # Multicast                               : Enabled
+        p1_rgx = r'Multicast\s+:\s+(?P<multicast>(Enabled|Disabled))'
+
+        # AP Capwap Multicast                     : Unicast
+        p2_rgx = r'Capwap Multicast\s+:\s+(?P<ap_capwap_multicast>(Unicast|Multicast))'
+
+        # Wireless Broadcast                      : Disabled
+        p3_rgx = r'Broadcast\s+:\s+(?P<wireless_broadcast>(Enabled|Disabled))'
+
+        # Wireless Multicast non-ip-mcast         : Disabled
+        p4_rgx = r'non-ip-mcast\s+:\s+(?P<mcast_no_ip_mcast>(Enabled|Disabled))'
+
+        # Wireless Multicast link-local           : Enabled
+        p5_rgx = r'link-local\s+:\s+(?P<mcast_link_local>(Enabled|Disabled))'
+
+        # AP Capwap IPv4 Multicast group Address  : 239.1.1.1
+        p6_rgx = r'IPv4[\s\w]+:\s+(?P<ipv4>((\d{1,3}\.){3}\d{1,3}))'
+
+        # AP Capwap IPv6 Multicast group Address  : ff11::1
+        p7_rgx = r'IPv6[\s\w]+:\s+(?P<ipv6>(([a-fA-F\d]{1,4}:*:?){1,7}[a-fA-F\d]{1,4}))'
+
+        for line in out.splitlines():
+
+            # # Multicast                               : Enabled
+            m = re.search(p1_rgx, line)
+            if m:
+                multicast = m.groupdict()['multicast']
+                ret_dict['multicast'] = str_to_bool_map[multicast]
+                continue
+
+            # AP Capwap Multicast                     : Unicast
+            m = re.search(p2_rgx, line)
+            if m:
+                ap_capwap_multicast = m.groupdict()['ap_capwap_multicast']
+                ret_dict['ap_capwap_multicast'] = ap_capwap_multicast
+                continue
+
+            # Wireless Broadcast                      : Disabled
+            m = re.search(p3_rgx, line)
+            if m:
+                wireless_broadcast = m.groupdict()['wireless_broadcast']
+                ret_dict['wireless_broadcast'] = str_to_bool_map[wireless_broadcast]
+                continue
+
+            # Wireless Multicast non-ip-mcast         : Disabled
+            m = re.search(p4_rgx, line)
+            if m:
+                mcast_no_ip_mcast = m.groupdict()['mcast_no_ip_mcast']
+                ret_dict['mcast_no_ip_mcast'] = str_to_bool_map[mcast_no_ip_mcast]
+                continue
+
+            # Wireless Multicast link-local           : Enabled
+            m = re.search(p5_rgx, line)
+            if m:
+                mcast_link_local = m.groupdict()['mcast_link_local']
+                ret_dict['mcast_link_local'] = str_to_bool_map[mcast_link_local]
+                continue
+
+            # AP Capwap IPv4 Multicast group Address  : 239.1.1.1
+            m = re.search(p6_rgx, line)
+            if m:
+                ipv4 = m.groupdict()['ipv4']
+                ret_dict['ipv4_mcast_group_address'] = ipv4
+                continue
+
+            # AP Capwap IPv6 Multicast group Address  : ff11::1
+            m = re.search(p7_rgx, line)
+            if m:
+                ipv6 = m.groupdict()['ipv6']
+                ret_dict['ipv6_mcast_group_address'] = ipv6
+
+        return ret_dict

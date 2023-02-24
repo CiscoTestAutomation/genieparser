@@ -789,6 +789,10 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('source_ipv6'): str,
                 Optional('destination_ipv6'): str,
                 Optional('vxlan_id'): int,
+                Optional('dscp_value'): int,
+                Optional('packet_identifier'): str,
+                Optional('authenticator'): str,
+                Optional('vendor_id'): str
             }
         }
     }
@@ -798,11 +802,18 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
 # ======================================================
 class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
     """Parser for 'show monitor capture buffer detailed"""
-    cli_command = 'show monitor capture {capture_name} buffer detailed'
+    cli_command = ['show monitor capture {capture_name} buffer detailed',
+                    'show monitor capture {capture_name} buffer display-filter "{filter_criteria}" detailed']
     
-    def cli(self, capture_name="", output=None):
+    def cli(self, capture_name="", filter_criteria="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(capture_name=capture_name))
+            # Build the command
+            if filter_criteria:
+                cmd = self.cli_command[1].format(capture_name=capture_name, filter_criteria=filter_criteria)
+            else:
+                cmd = self.cli_command[0].format(capture_name=capture_name)
+            # Execute the command
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
@@ -830,6 +841,9 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
         
         # VXLAN Network Identifier (VNI): 50000
         p7 = re.compile(r'^VXLAN +Network +Identifier +\(VNI+\): +(?P<vxlan_id>(\d+))$')
+
+        #     1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
+        p8 = re.compile(r'^[\S\s]+\s+= Differentiated Services Codepoint: [\s\S]+ \((?P<dscp_value>\d+)\)$')
 
         # loop to split lines of output
         for line in output.splitlines():
@@ -911,6 +925,13 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
             if m:
                 groups = m.groupdict()
                 result_dict.update({"vxlan_id":int(groups['vxlan_id'])})
+                continue
+            
+            # 1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dscp_value":int(group['dscp_value'])})
                 continue
 
         return ret_dict

@@ -826,7 +826,8 @@ class ShowVlanSummarySchema(MetaParser):
         'vlan_summary': {
             'existing_vlans': int,
             'existing_vtp_vlans': int,
-            'existing_extend_vlans': int
+            Optional('existing_extend_vlans'): int,
+            Optional('existing_extend_vtp_vlans'): int
         }
     }
 
@@ -847,6 +848,9 @@ class ShowVlanSummary(ShowVlanSummarySchema):
 
         #Number of existing extended VLANS     : 4
         p3 = re.compile(r'Number\sof\sexisting\sextended\sVLANS\s+\:\s+(?P<existing_extend_vlans>\d+)')
+
+        # Number of existing extended VTP VLANS : 0
+        p4 = re.compile(r'Number of existing extended VTP VLANS\s+:\s+(?P<existing_extend_vtp_vlans>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -870,6 +874,12 @@ class ShowVlanSummary(ShowVlanSummarySchema):
             if m:
                 group = m.groupdict()
                 vlan_summary['existing_extend_vlans'] = int(group['existing_extend_vlans'])
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_summary['existing_extend_vtp_vlans'] = int(group['existing_extend_vtp_vlans'])
                 continue
 
         return ret_dict
@@ -1003,5 +1013,68 @@ class ShowVlanDot1qTagNative(ShowVlanDot1qTagNativeSchema):
                     'mode': group['mode'],
                     'state': group['state']
                 })
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show platform software fed active vt if-id'
+# ==========================================================================================
+
+class ShowPlatformSoftwareFedActiveVtIfIdSchema(MetaParser):
+    """
+    Schema for
+        * 'show platform software fed active vt if-id {if_id}'
+    """
+
+    schema = {
+        'port_data': {
+            'if_id': {
+                int: {
+                    'cvlan_id': int,
+                    'svlan_id': int,
+                    'action': int
+                }
+            }
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'show platform software fed active vt if-id'
+# ==========================================================================================
+
+class ShowPlatformSoftwareFedActiveVtIfId(ShowPlatformSoftwareFedActiveVtIfIdSchema):
+    """
+    Parser for
+        * 'show platform software fed active vt if-id {if_id}'
+    """
+    cli_command = [
+                'show platform software fed switch {switch_type} vt if-id {if_id}',
+                'show platform software fed active vt if-id {if_id}'
+    ]
+    def cli(self, if_id, switch_type=None, output=None):
+        if output is None:
+            if switch_type:
+                cmd = self.cli_command[0].format(if_id=if_id, switch_type=switch_type)
+            else:
+                cmd = self.cli_command[1].format(if_id=if_id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        # 102           40            30                    1
+        p1 = re.compile(r'^(?P<if_id>\d+)\s*(?P<cvlan_id>\d+)\s*(?P<svlan_id>\d+)\s*(?P<action>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 102           40            30                    1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('port_data',{})
+                if_dict = root_dict.setdefault('if_id',{}).setdefault(int(group['if_id']),{})
+                if_dict['cvlan_id'] = int(group['cvlan_id'])
+                if_dict['svlan_id'] = int(group['svlan_id'])
+                if_dict['action'] = int(group['action'])
+                continue
 
         return ret_dict

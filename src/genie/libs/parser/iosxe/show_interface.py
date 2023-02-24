@@ -28,6 +28,7 @@
     * show interfaces mtu module {mod}
     * show interfaces status module {mod}
     * show pm vp interface {interface} {vlan}
+    * show pm port interface {interface}
     * show interfaces transceiver supported-list
 """
 
@@ -4445,7 +4446,7 @@ class ShowPmVpInterfaceVlanSchema(MetaParser):
             Optional('state'): str,
             Optional('last_transition'): str,
         },
-        
+
     }
 
 # ======================================================
@@ -4467,16 +4468,16 @@ class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
         p1_1 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+(?P<running>\w+),\s+state\s+(?P<state>\w+)$")
         # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
         p1_2 = re.compile(r"^Last\s+transition\s+recorded:\s+(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
-       
+
 
         ret_dict = {}
 
         for line in output.splitlines():
 
             # vp: 0x50823F64: 3/3(1001) es: 0, stp forwarding, link up, fwd yes
-            match_obj = p1.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
                 if 'pm_vp_info' not in ret_dict:
                     pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
                 pm_vp_info['vp'] = dict_val['vp']
@@ -4484,9 +4485,9 @@ class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
                 continue
 
             # sm(pm_vp 3/3(1001)), running yes, state forwarding
-            match_obj = p1_1.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
+            m = p1_1.match(line)
+            if m:
+                dict_val = m.groupdict()
                 if 'pm_vp_info' not in ret_dict:
                     pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
                 pm_vp_info['sm'] = dict_val['sm']
@@ -4495,9 +4496,9 @@ class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
                 continue
 
             # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
-            match_obj = p1_2.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
+            m = p1_2.match(line)
+            if m:
+                dict_val = m.groupdict()
                 if 'pm_vp_info' not in ret_dict:
                     pm_vp_info = ret_dict.setdefault('pm_vp_info', {})
                 pm_vp_info['last_transition'] = dict_val['last_transition']
@@ -4566,3 +4567,593 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
                                         m2.groupdict()['pin_version']}})
 
         return transceivers_supported_list
+
+
+# ======================================================
+# Schema for 'show pm  port interface <interface> '
+# ======================================================
+
+class ShowPmPortInterfaceSchema(MetaParser):
+    """Schema for show pm port interface <interface>"""
+
+    schema = {
+        'pm_port_info': {
+            'port': str,
+            'pd': str,
+            'sw_idb': str,
+            'sb': str,
+            'hw_idb': str,
+            'if_num': int,
+            'hw_if_index': int,
+            'snmp_if_index': str,
+            'ptrunk_group': str,
+            'admin': str,
+            'line': str,
+            'oper_err': str,
+            'port_mac': str,
+            'idb_port_vlan': int,
+            'def_vlan_id': int,
+            'internal_vlan': str,
+            'dtp_special': str,
+            'pagp_special': str,
+            'speed': str,
+            'duplex': str,
+            'mode': str,
+            'encap': str,
+            'dtp_nonego': str,
+            'flow_ctrl_receive': str,
+            'flow_ctrl_send': str,
+            'link_flap_cnt': int,
+            'dtp_flap_cnt': int,
+            'pagp_flap_cnt': int,
+            'unidirectional': str,
+            'oper_vlan': int,
+            'flag': int,
+            'sm': str,
+            'running': str,
+            'state': str,
+            'last_transition': str,
+            'vp': str,
+            'vlans': str,
+            'trunk_vlans': str,
+            'fwd_vlans': int,
+            'current_pruned_vlans': str,
+            'previous_pruned_vlans': str,
+            'protocols': str,
+        },
+        'config_values': {
+            'access_mode': str,
+            'access_vlan_id': int,
+            'native_vlan_id': int,
+            'trunk_vlans': str,
+            'prune_vlans': str,
+            'primary_host_vlan': int,
+            'sec_host_vlan': int,
+            'pri_promiscuous_vlan': int,
+            'sec_prom_vlan': str,
+            'speed': str,
+            'speed_auto': str,
+            'duplex': str,
+            'mode': str,
+            'encap': str,
+            'nonego': str,
+            'jumbo_cap': str,
+            'jumbo': str,
+            'mtu': int,
+            'sync_delay': int,
+            'hol': str,
+            'bcast_sup_level': int,
+            'mcast_sup_level': int,
+            'ucast_sup_level': int,
+            'disl': str,
+            'dtp_nonego': str,
+            'media': str,
+            'dualmode': int,
+            'tdr_ever_run': str,
+            'tdr_in_progress': str,
+            'tdr_result_valid': str,
+            'tdr_error_code': int,
+            'prbs_err_code': int,
+            'prbs': str,
+            
+        },
+    }
+    
+# ======================================================
+# Parser for 'show pm  port interface <interface> '
+# ======================================================
+
+class ShowPmPortInterface(ShowPmPortInterfaceSchema):
+    """Parser for show pm port interface <interface>"""
+
+    cli_command = 'show pm port interface {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40 
+        p1 = re.compile(r"^port\s+(?P<port>\S+)\s+pd\s+(?P<pd>\S+)\s+swidb\s+"
+             "(?P<sw_idb>\S+)\s+sb\s+(?P<sb>\S+)$")
+        #  hwidb 0x7F837EBF8C38
+        p1_1 = re.compile(r"^hwidb\s+(?P<hw_idb>\S+)$")
+        # if_number = 32 hw_if_index = 31 snmp_if_index = 32(32) ptrunkgroup = 0(port)
+        p1_2 = re.compile(r"^if_number\s+=\s+(?P<if_num>\d+)\s+hw_if_index\s+="
+               "\s+(?P<hw_if_index>\d+)\s+snmp_if_index\s+=\s+(?P<snmp_if_index>\S+)"
+               "\s+ptrunkgroup\s+=\s+(?P<ptrunk_group>\S+)$")
+        # admin up(up)  line up(up)  operErr none
+        p1_3 = re.compile(r"^admin\s+(?P<admin>\S+)\s+line\s+(?P<line>\S+)\s+"
+               "operErr\s+(?P<oper_err>\w+)$")
+        # port assigned mac address 683b.78f3.3118
+        p1_4 = re.compile(r"^port\s+assigned\s+mac\s+address\s+(?P<port_mac>\S+)$")
+        # idb port vlan id 1  default vlan id 1
+        p1_5 = re.compile(r"^idb\s+port\s+vlan\s+id\s+(?P<idb_port_vlan>\d+)\s+"
+               "default\s+vlan\s+id\s+(?P<def_vlan_id>\d+)$")
+        # internalVlan 0x0  remapVlan 0x0
+        p1_6 = re.compile(r"^internalVlan\s+(?P<internal_vlan>\S+)\s+remapVlan\s+0x0$")
+        # dtp special no  pagp special no
+        p1_7 = re.compile(r"^dtp\s+special\s+(?P<dtp_special>\w+)\s+pagp\s+"
+               "special\s+(?P<pagp_special>\w+)$")
+        # speed: 100M   duplex: full   mode: access   encap: native 
+        p1_8 = re.compile(r"^speed:\s+(?P<speed>\S+)\s+duplex:\s+(?P<duplex>\w+)"
+               "\s+mode:\s+(?P<mode>\w+)\s+encap:\s+(?P<encap>\w+)$")
+        # dtp nonegotiate: FALSE 
+        p1_9 = re.compile(r"^dtp\s+nonegotiate:\s+(?P<dtp_nonego>\w+)$")
+        # flowcontrol receive: on   flowcontrol send: off 
+        p1_10 = re.compile(r"^flowcontrol\s+receive:\s+(?P<flow_ctrl_receive>\w+)"
+                "\s+flowcontrol\s+send:\s+(?P<flow_ctrl_send>\w+)$")
+        # linkflapcnt: 0  dtpflapcnt: 0  pagpflapcnt: 0
+        p1_11 = re.compile(r"^linkflapcnt:\s+(?P<link_flap_cnt>\d+)\s+dtpflapcnt:"
+                "\s+(?P<dtp_flap_cnt>\d+)\s+pagpflapcnt:\s+(?P<pagp_flap_cnt>\d+)$")
+        # unidirectional: off 
+        p1_12 = re.compile(r"^unidirectional:\s+(?P<unidirectional>\w+)$")
+        # operVlan: 0 
+        p1_13 = re.compile(r"^operVlan:\s+(?P<oper_vlan>\d+)$")
+        # flag:     0 
+        p1_14 = re.compile(r"^flag:\s+(?P<flag>\d+)$")
+        # sm(pm_port 1/24), running yes, state access_multi
+        p1_15 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+"
+                "(?P<running>\w+),\s+state\s+(?P<state>\S+)$")
+        # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi 
+        p1_16 = re.compile(r"^Last\s+transition\s+recorded:\s+"
+                "(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+"
+                "\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+"
+                "\s+\S+\s+\S+)$")
+        # vp:  1 100
+        p1_17 = re.compile(r"^vp:\s+(?P<vp>\S+\s+\S+)$")
+        # vlans:  1 100
+        p1_18 = re.compile(r"^vlans:\s+(?P<vlans>\S+\s+\S+)$")
+        # trunkVlans:  1 100
+        p1_19 = re.compile(r"^trunkVlans:\s+(?P<trunk_vlans>\S+\s+\S+)$")
+        # fwdVlans:  100
+        p1_20 = re.compile(r"^fwdVlans:\s+(?P<fwd_vlans>\d+)$")
+        # currentlyPrunedVlans:  none
+        p1_21 = re.compile(r"^currentlyPrunedVlans:\s+(?P<current_pruned_vlans>\w+)$")
+        # previouslyPrunedVlans:  none
+        p1_22 = re.compile(r"^previouslyPrunedVlans:\s+(?P<previous_pruned_vlans>\w+)$")
+        # protocols: ip=on ipx=on misc=on other=on 
+        p1_23 = re.compile(r"^protocols:\s+(?P<protocols>\S+\s+\S+\s+\S+\s+\S+)$")
+        # access mode: unknown   access vlanid: 1   native vlanid: 1 
+        p2 = re.compile(r"^access\s+mode:\s+(?P<access_mode>\w+)\s+"
+             "access\s+vlanid:\s+(?P<access_vlan_id>\d+)\s+native\s+vlanid:\s+"
+             "(?P<native_vlan_id>\d+)$")
+        # trunkVlans:  1-4094
+        p2_1 = re.compile(r"^trunkVlans:\s+(?P<trunk_vlans>\S+)$")
+        # pruneVlans:  2-1001primary host vlanid: 32767    secondary host vlanid: 32767
+        p2_2 = re.compile(r"^pruneVlans:\s+(?P<prune_vlans>\S+)primary\s+host\s+"
+               "vlanid:\s+(?P<primary_host_vlan>\d+)\s+secondary\s+host\s+"
+               "vlanid:\s+(?P<sec_host_vlan>\d+)$")
+        # primary promiscuous vlanid: 32767
+        p2_3 = re.compile(r"^primary\s+promiscuous\s+vlanid:\s+"
+               "(?P<pri_promiscuous_vlan>\d+)$")
+        # secondary prom vlans:  none
+        p2_4 = re.compile(r"^secondary\s+prom\s+vlans:\s+(?P<sec_prom_vlan>\w+)$")
+        # speed: auto speedauto: auto-default   duplex: auto   mode: access 
+        p2_5 = re.compile(r"^speed:\s+(?P<speed>\w+)\s+speedauto:\s+"
+               "(?P<speed_auto>\S+)\s+duplex:\s+(?P<duplex>\w+)\s+"
+               "mode:\s+(?P<mode>\w+)$")
+        # encap: dot1q   nonegotiate: false 
+        p2_6 = re.compile(r"^encap:\s+(?P<encap>\S+)\s+nonegotiate:\s+"
+               "(?P<nonego>\w+)$")
+        # jumbo cap: true   jumbo: false  mtu: 1500  sync-delay: 210  HOL: Enable
+        p2_7 = re.compile(r"^jumbo\s+cap:\s+(?P<jumbo_cap>\w+)\s+jumbo:\s+"
+               "(?P<jumbo>\w+)\s+mtu:\s+(?P<mtu>\d+)\s+sync-delay:\s+"
+               "(?P<sync_delay>\d+)\s+HOL:\s+(?P<hol>\w+)$")
+        # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000 
+        p2_8 = re.compile(r"^bcast-supp-level:\s+(?P<bcast_sup_level>\d+)\s+"
+               "mcast-supp-level:\s+(?P<mcast_sup_level>\d+)\s+ucast-supp-level:"
+               "\s+(?P<ucast_sup_level>\d+)$")
+        # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0 
+        p2_9 = re.compile(r"^disl:\s+(?P<disl>\w+)\s+dtp\s+nonegotiate:\s+"
+               "(?P<dtp_nonego>\w+)\s+media:\s+(?P<media>\w+)\s+dualmode\s+"
+               "(?P<dualmode>\d+)$")
+        # tdr_ever_run: FALSE tdr_in_progress: FALSE tdr_result_valid: FALSE
+        p2_10 = re.compile(r"^tdr_ever_run:\s+(?P<tdr_ever_run>\w+)\s+"
+                "tdr_in_progress:\s+(?P<tdr_in_progress>\w+)\s+tdr_result_valid:"
+                "\s+(?P<tdr_result_valid>\w+)$")
+        # tdr_err_code: 0, prbs_err_code: 0
+        p2_11 = re.compile(r"^tdr_err_code:\s+(?P<tdr_error_code>\d+),\s+"
+                "prbs_err_code:\s+(?P<prbs_err_code>\d+)$")
+        # PRBS: Stopped PRBS - port was admin down
+        p2_12 = re.compile(r"^PRBS:\s+(?P<prbs>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40 
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['port'] = dict_val['port']
+                pm_port_info['pd'] = dict_val['pd']
+                pm_port_info['sw_idb'] = dict_val['sw_idb']
+                pm_port_info['sb'] = dict_val['sb']
+                continue
+
+            #  hwidb 0x7F837EBF8C38
+            m = p1_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['hw_idb'] = dict_val['hw_idb']
+                continue
+
+            # if_number = 32 hw_if_index = 31 snmp_if_index = 32(32) ptrunkgroup = 0(port)
+            m = p1_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['if_num'] = int(dict_val['if_num'])
+                pm_port_info['hw_if_index'] = int(dict_val['hw_if_index'])
+                pm_port_info['snmp_if_index'] = dict_val['snmp_if_index']
+                pm_port_info['ptrunk_group'] = dict_val['ptrunk_group']
+                continue
+
+            # admin up(up)  line up(up)  operErr none
+            m = p1_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['admin'] = dict_val['admin']
+                pm_port_info['line'] = dict_val['line']
+                pm_port_info['oper_err'] = dict_val['oper_err']
+                continue
+
+            # port assigned mac address 683b.78f3.3118
+            m = p1_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['port_mac'] = dict_val['port_mac']
+                continue
+
+            # idb port vlan id 1  default vlan id 1
+            m = p1_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['idb_port_vlan'] = int(dict_val['idb_port_vlan'])
+                pm_port_info['def_vlan_id'] = int(dict_val['def_vlan_id'])
+                continue
+
+            # internalVlan 0x0  remapVlan 0x0
+            m = p1_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['internal_vlan'] = dict_val['internal_vlan']
+                continue
+
+            # dtp special no  pagp special no
+            m = p1_7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['dtp_special'] = dict_val['dtp_special']
+                pm_port_info['pagp_special'] = dict_val['pagp_special']
+                continue
+
+            # speed: 100M   duplex: full   mode: access   encap: native 
+            m = p1_8.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['speed'] = dict_val['speed']
+                pm_port_info['duplex'] = dict_val['duplex']
+                pm_port_info['mode'] = dict_val['mode']
+                pm_port_info['encap'] = dict_val['encap']
+                continue
+
+            # dtp nonegotiate: FALSE 
+            m = p1_9.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['dtp_nonego'] = dict_val['dtp_nonego']
+                continue
+
+            # flowcontrol receive: on   flowcontrol send: off 
+            m = p1_10.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['flow_ctrl_receive'] = dict_val['flow_ctrl_receive']
+                pm_port_info['flow_ctrl_send'] = dict_val['flow_ctrl_send']
+                continue
+
+            # linkflapcnt: 0  dtpflapcnt: 0  pagpflapcnt: 0
+            m = p1_11.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['link_flap_cnt'] = int(dict_val['link_flap_cnt'])
+                pm_port_info['dtp_flap_cnt'] = int(dict_val['dtp_flap_cnt'])
+                pm_port_info['pagp_flap_cnt'] = int(dict_val['pagp_flap_cnt'])
+                continue
+
+            # unidirectional: off 
+            m = p1_12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['unidirectional'] = dict_val['unidirectional']
+                continue
+
+            # operVlan: 0 
+            m = p1_13.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['oper_vlan'] = int(dict_val['oper_vlan'])
+                continue
+
+            # flag:     0 
+            m = p1_14.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['flag'] = int(dict_val['flag'])
+                continue
+
+            # sm(pm_port 1/24), running yes, state access_multi
+            m = p1_15.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['sm'] = dict_val['sm']
+                pm_port_info['running'] = dict_val['running']
+                pm_port_info['state'] = dict_val['state']
+                continue
+
+            # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi 
+            m = p1_16.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['last_transition'] = dict_val['last_transition']
+                continue
+
+            # vp:  1 100
+            m = p1_17.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['vp'] = dict_val['vp']
+                continue
+
+            # vlans:  1 100
+            m = p1_18.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['vlans'] = dict_val['vlans']
+                continue
+
+            # trunkVlans:  1 100
+            m = p1_19.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['trunk_vlans'] = dict_val['trunk_vlans']
+                continue
+
+            # fwdVlans:  100
+            m = p1_20.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['fwd_vlans'] = int(dict_val['fwd_vlans'])
+                continue
+
+            # currentlyPrunedVlans:  none
+            m = p1_21.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['current_pruned_vlans'] = dict_val['current_pruned_vlans']
+                continue
+
+            # previouslyPrunedVlans:  none
+            m = p1_22.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['previous_pruned_vlans'] = dict_val['previous_pruned_vlans']
+                continue
+
+            # protocols: ip=on ipx=on misc=on other=on 
+            m = p1_23.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'pm_port_info' not in ret_dict:
+                    pm_port_info = ret_dict.setdefault('pm_port_info', {})
+                pm_port_info['protocols'] = dict_val['protocols']
+                continue
+
+            # access mode: unknown   access vlanid: 1   native vlanid: 1 
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['access_mode'] = dict_val['access_mode']
+                config_values['access_vlan_id'] = int(dict_val['access_vlan_id'])
+                config_values['native_vlan_id'] = int(dict_val['native_vlan_id'])
+                continue
+
+            # trunkVlans:  1-4094
+            m = p2_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['trunk_vlans'] = dict_val['trunk_vlans']
+                continue
+
+            # pruneVlans:  2-1001primary host vlanid: 32767    secondary host vlanid: 32767
+            m = p2_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['prune_vlans'] = dict_val['prune_vlans']
+                config_values['primary_host_vlan'] = int(dict_val['primary_host_vlan'])
+                config_values['sec_host_vlan'] = int(dict_val['sec_host_vlan'])
+                continue
+
+            # primary promiscuous vlanid: 32767
+            m = p2_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['pri_promiscuous_vlan'] = int(dict_val['pri_promiscuous_vlan'])
+                continue
+
+            # secondary prom vlans:  none
+            m = p2_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['sec_prom_vlan'] = dict_val['sec_prom_vlan']
+                continue
+
+            # speed: auto speedauto: auto-default   duplex: auto   mode: access 
+            m = p2_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['speed'] = dict_val['speed']
+                config_values['speed_auto'] = dict_val['speed_auto']
+                config_values['duplex'] = dict_val['duplex']
+                config_values['mode'] = dict_val['mode']
+                continue
+
+            # encap: dot1q   nonegotiate: false 
+            m = p2_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['encap'] = dict_val['encap']
+                config_values['nonego'] = dict_val['nonego']
+                continue
+                
+             
+            # jumbo cap: true   jumbo: false  mtu: 1500  sync-delay: 210  HOL: Enable
+            m = p2_7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['jumbo_cap'] = dict_val['jumbo_cap']
+                config_values['jumbo'] = dict_val['jumbo']
+                config_values['mtu'] = int(dict_val['mtu'])
+                config_values['sync_delay'] = int(dict_val['sync_delay'])
+                config_values['hol'] = dict_val['hol']
+                continue
+
+            # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000 
+            m = p2_8.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['bcast_sup_level'] = int(dict_val['bcast_sup_level'])
+                config_values['mcast_sup_level'] = int(dict_val['mcast_sup_level'])
+                config_values['ucast_sup_level'] = int(dict_val['ucast_sup_level'])
+                continue            
+
+            # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0 
+            m = p2_9.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['disl'] = dict_val['disl']
+                config_values['dtp_nonego'] = dict_val['dtp_nonego']
+                config_values['media'] = dict_val['media']
+                config_values['dualmode'] = int(dict_val['dualmode'])
+                continue            
+
+            # tdr_ever_run: FALSE tdr_in_progress: FALSE tdr_result_valid: FALSE
+            m = p2_10.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['tdr_ever_run'] = dict_val['tdr_ever_run']
+                config_values['tdr_in_progress'] = dict_val['tdr_in_progress']
+                config_values['tdr_result_valid'] = dict_val['tdr_result_valid']
+                continue
+
+            # tdr_err_code: 0, prbs_err_code: 0
+            m = p2_11.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['tdr_error_code'] = int(dict_val['tdr_error_code'])
+                config_values['prbs_err_code'] = int(dict_val['prbs_err_code'])
+                continue
+
+            # PRBS: Stopped PRBS - port was admin down
+            m = p2_12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'config_values' not in ret_dict:
+                    config_values = ret_dict.setdefault('config_values', {})
+                config_values['prbs'] = dict_val['prbs']
+                continue            
+
+        return ret_dict

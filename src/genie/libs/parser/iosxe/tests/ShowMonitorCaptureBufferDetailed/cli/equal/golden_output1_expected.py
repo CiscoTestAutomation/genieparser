@@ -7,6 +7,7 @@ expected_output =  {
             'destination': '226.0.0.6',
             'destination_eth': '01:00:5e:00:00:06 (01:00:5e:00:00:06)',
             'destination_ipv4': '226.0.0.6',
+            'dscp_value': 0,
             'encapsulation_type': 'Ethernet (1)',
             'epoch_time': '1666853391.280889000 seconds',
             'flags': '0x0000',

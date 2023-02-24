@@ -1,0 +1,1271 @@
+Global MLD Snooping configuration:
+-------------------------------------------
+MLD snooping                 : Enabled
+Global PIM Snooping          : Disabled
+MLDv2 snooping               : Enabled
+Listener message suppression : Enabled
+TCN solicit query            : Disabled
+TCN flood query count        : 2
+Robustness variable          : 2
+Last listener query count    : 2
+Last listener query interval : 1000
+
+Vlan 1:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 2:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1878:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1879:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1880:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1881:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1882:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1883:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1884:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1885:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1886:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1887:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1888:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1889:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1890:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1891:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1892:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1893:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1894:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1895:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1896:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1897:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1898:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1899:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1900:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1901:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1902:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1903:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1904:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1905:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1906:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1907:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1908:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1909:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1910:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1911:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1912:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1913:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1914:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1915:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1916:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1917:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1918:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1919:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1920:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1921:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1922:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1923:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1924:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1925:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1926:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1927:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1928:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1929:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1930:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1931:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1932:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1933:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1934:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1935:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1936:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1937:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1938:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1939:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1940:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1941:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1942:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1943:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1944:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1945:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1946:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1947:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1948:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1949:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1950:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1951:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1952:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1953:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1954:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1955:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1956:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1957:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1958:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1959:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1960:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1961:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1962:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1963:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1964:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1965:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1966:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1967:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1968:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1969:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1970:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1971:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1972:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1973:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1974:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1975:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1976:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1977:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1978:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1979:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1980:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1981:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1982:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1983:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1984:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1985:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1986:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1987:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1988:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1989:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1990:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1991:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1992:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1993:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1994:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1995:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1996:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1997:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1998:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 1999:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 2000:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000
+
+Vlan 2001:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Disabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Enabled
+Robustness variable                 : 2
+Last listener query count           : 2
+Last listener query interval        : 1000

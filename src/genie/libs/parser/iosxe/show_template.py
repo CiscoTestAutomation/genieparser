@@ -31,6 +31,8 @@ class ShowTemplateSchema(MetaParser):
                 'template': str,
                 'class': str,
                 'type': str,
+                Optional('bound'): list,
+                Optional('nested_template'): str,
             },
         },
     }
@@ -50,11 +52,17 @@ class ShowTemplate(ShowTemplateSchema):
         # AP_INTERFACE_TEMPLATE                            owner      Built-in        
         p2 = re.compile(r"^(?P<template>\S+)\s+(?P<class>\w+)\s+(?P<type>\S+)$")
 
+        #  BOUND: Twe1/0/1               Twe1/0/2               Twe1/0/3
+        p3 = re.compile(r'^\sBOUND:\s+(?P<bound>(.|\n)*)$')
+
+        # NESTED TEMPLATE:  Child
+        p4 = re.compile(r'^\sNESTED TEMPLATE:\s+(?P<nested_template>\S+)$')
+
         ret_dict = {}
         temp_flag = False
 
         for line in output.splitlines():
-            line = line.strip()
+            line = line.rstrip()
             
             match_obj = p1.match(line)
             if match_obj:
@@ -62,19 +70,22 @@ class ShowTemplate(ShowTemplateSchema):
                 continue
 
             if temp_flag:
-                match_obj = p2.match(line)
-                dict_val = match_obj.groupdict()
-                template_var = dict_val['template']
-                templates = ret_dict.setdefault('templates', {})
-                template_dict = templates.setdefault(template_var, {})
-                template_dict['template'] = dict_val['template']
-                template_dict['class'] = dict_val['class']
-                template_dict['type'] = dict_val['type']
-                continue
-
-
+                m = p2.match(line)
+                if m:
+                    dict_val = m.groupdict()
+                    templates = ret_dict.setdefault('templates', {})
+                    template_dict = templates.setdefault(dict_val['template'], dict_val)
+                    continue
+                
+                m = p3.match(line)
+                if m:
+                    template_dict.setdefault('bound', m.groupdict()['bound'].split())
+                
+                m = p4.match(line)
+                if m:
+                    template_dict.setdefault('nested_template', m.groupdict()['nested_template'])
+        
         return ret_dict
-
 
 
 class ShowTemplateInterfaceSourceBuiltInOriginalAllSchema(MetaParser):
@@ -276,3 +287,64 @@ class ShowTemplateTemplate(ShowTemplateTemplateSchema):
 
         return ret_dict
 
+
+class ShowTemplateInterfaceBindingTargetSchema(MetaParser):
+    """Schema for show template brief"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('method'): {
+                    Any(): {
+                        'source': str,
+                        'template_name': str
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowTemplateInterfaceBindingTarget(ShowTemplateInterfaceBindingTargetSchema):
+    """Parser for show template interface binding target {interface}"""
+
+    cli_command = 'show template interface binding target {interface}'
+    
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        # Interface: Gi1/0/1
+        p1 = re.compile(r'^Interface:\s+(?P<interface>\S+)$')
+
+        ret_dict = dict()
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+
+        res = parsergen.oper_fill_tabular(device_output=output,
+            device_os='iosxe',
+            table_terminal_pattern=r"^\n",
+            header_fields=
+            [ "Method",
+                "Source",
+                "Template-Name" ],
+            label_fields=
+            [ "method",
+                "source",
+                "template_name" ],
+            index=[0])
+
+        # Building the schema out of the parsergen output
+        if res.entries:
+            for tmp, values in res.entries.items():
+                del values['method']
+                if values["source"] and values["template_name"]:
+                    int_dict.setdefault('method', {}).update({tmp: values})
+
+        return ret_dict

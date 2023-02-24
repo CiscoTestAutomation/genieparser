@@ -22,38 +22,38 @@ class ShowSdmPreferSchema(MetaParser):
     schema = {
         str:{ #title of data
             'template_type': str, #template used 
-            'current_ingress_ipv4': int, 
-            'proposed_ingress_ipv4': int, 
-            'current_ingress_non_ipv4': int, 
-            'proposed_ingress_non_ipv4': int, 
-            'current_egress_ipv4': int, 
-            'proposed_egress_ipv4': int, 
-            'current_egress_non_ipv4': int, 
-            'proposed_egress_non_ipv4': int, 
-            'current_qos_ingress_ipv4': int, 
-            'proposed_qos_ingress_ipv4': int, 
-            'current_qos_ingress_non_ipv4': int, 
-            'proposed_qos_ingress_non_ipv4': int, 
-            'current_qos_egress_ipv4': int, 
-            'proposed_qos_egress_ipv4': int, 
-            'current_qos_egress_non_ipv4': int, 
-            'proposed_qos_egress_non_ipv4': int, 
-            'current_netflow_input_entry': int, 
-            'proposed_netflow_input_entry': int, 
-            'current_netflow_output_entry': int, 
-            'proposed_netflow_output_entry': int, 
-            'current_flow_span_input_entry': int, 
-            'proposed_flow_span_input_entry': int, 
-            'current_flow_span_output_entry': int, 
-            'proposed_flow_span_output_entry': int, 
+            Optional('current_ingress_ipv4'): int, 
+            Optional('proposed_ingress_ipv4'): int, 
+            Optional('current_ingress_non_ipv4'): int, 
+            Optional('proposed_ingress_non_ipv4'): int, 
+            Optional('current_egress_ipv4'): int, 
+            Optional('proposed_egress_ipv4'): int, 
+            Optional('current_egress_non_ipv4'): int, 
+            Optional('proposed_egress_non_ipv4'): int, 
+            Optional('current_qos_ingress_ipv4'): int, 
+            Optional('proposed_qos_ingress_ipv4'): int, 
+            Optional('current_qos_ingress_non_ipv4'): int, 
+            Optional('proposed_qos_ingress_non_ipv4'): int, 
+            Optional('current_qos_egress_ipv4'): int, 
+            Optional('proposed_qos_egress_ipv4'): int, 
+            Optional('current_qos_egress_non_ipv4'): int, 
+            Optional('proposed_qos_egress_non_ipv4'): int, 
+            Optional('current_netflow_input_entry'): int, 
+            Optional('proposed_netflow_input_entry'): int, 
+            Optional('current_netflow_output_entry'): int, 
+            Optional('proposed_netflow_output_entry'): int, 
+            Optional('current_flow_span_input_entry'): int, 
+            Optional('proposed_flow_span_input_entry'): int, 
+            Optional('current_flow_span_output_entry'): int, 
+            Optional('proposed_flow_span_output_entry'): int, 
             'vlan_count': int, 
             'unicast_mac_addresses_count': int, 
             'overflow_mac_addresses_count': int, 
             'overflow_l2_muticast_entries': int, 
             'l3_muticast_entries': int, 
             'overflow_l3_muticast_entries': int, 
-            'ipv4_v6_shared_unicast_routes': int, 
-            'overflow_shared_unicast_routes': int, 
+            Optional('ipv4_v6_shared_unicast_routes'): int, 
+            Optional('overflow_shared_unicast_routes'): int, 
             'policy_based_routing_aces/nat_aces': int, 
             'tunnels_count': int, 
             'lisp_instance_entries': int, 
@@ -73,7 +73,7 @@ class ShowSdmPreferSchema(MetaParser):
             'max_vpls_bridge_domains': int, 
             'max_vpls_peers_per_bridge_domain': int, 
             'max_vpls/vpws_pseudowires': int, 
-            'vlan_filters_entries': int
+            Optional('vlan_filters_entries'): int
     }
 }
 
@@ -142,55 +142,55 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
         p14 = re.compile(r'^Number of VLANs+\:+\s+(?P<vlan_count>[\d]+)$')
 
         # Unicast MAC addresses*:                              98304
-        p15 = re.compile(r'^Unicast MAC addresses+\*+\:+\s+(?P<unicast_mac_addresses_count>[\d]+)$')
+        p15 = re.compile(r'^Unicast MAC addresses+\*?\:+\s+(?P<unicast_mac_addresses_count>[\d]+)$')
 
         # Overflow Unicast MAC addresses*:                     768
-        p16 = re.compile(r'^Overflow Unicast MAC addresses+\*+\:+\s+(?P<overflow_mac_addresses_count>[\d]+)$')
+        p16 = re.compile(r'^Overflow Unicast MAC addresses+\*?\:+\s+(?P<overflow_mac_addresses_count>[\d]+)$')
 
         # Overflow L2 Multicast entries*:                      2048
-        p17 = re.compile(r'^Overflow L2 Multicast entries+\*+\:+\s+(?P<overflow_l2_muticast_entries>[\d]+)$')
+        p17 = re.compile(r'^Overflow L2 Multicast entries+\*?\:+\s+(?P<overflow_l2_muticast_entries>[\d]+)$')
 
         # L3 Multicast entries*:                               16384
-        p18 = re.compile(r'^L3 Multicast entries\*+\:+\s+(?P<l3_muticast_entries>[\d]+)$')
+        p18 = re.compile(r'^L3 Multicast entries\*?\:+\s+(?P<l3_muticast_entries>[\d]+)$')
 
         # Overflow L3 Multicast entries*:                      768
-        p19 = re.compile(r'^Overflow L3 Multicast entries\*+\:+\s+(?P<overflow_l3_muticast_entries>[\d]+)$')
+        p19 = re.compile(r'^Overflow L3 Multicast entries\*?\:+\s+(?P<overflow_l3_muticast_entries>[\d]+)$')
 
         # Ipv4/Ipv6 shared unicast routes*:                    81920
-        p20 = re.compile(r'^Ipv4\/Ipv6 shared unicast routes\*+\:+\s+(?P<ipv4_v6_shared_unicast_routes>[\d]+)+$')
+        p20 = re.compile(r'^Ipv4\/Ipv6 shared unicast routes\*?\:+\s+(?P<ipv4_v6_shared_unicast_routes>[\d]+)+$')
 
         # Overflow shared unicast routes*:                     1536
-        p21 = re.compile(r'^Overflow shared unicast routes\*+\:+\s+(?P<overflow_shared_unicast_routes>[\d]+)$')
+        p21 = re.compile(r'^Overflow shared unicast routes\*?\:+\s+(?P<overflow_shared_unicast_routes>[\d]+)$')
 
         # Policy Based Routing ACEs / NAT ACEs*:               3072
-        p22 = re.compile(r'^Policy Based Routing ACEs \/ NAT ACEs+\*+\:+\s+(?P<policy_based_routing_aces>[\d]+)$')
+        p22 = re.compile(r'^Policy Based Routing ACEs( \/ NAT ACEs)?\*?\:+\s+(?P<policy_based_routing_aces>[\d]+)$')
 
         # Tunnels*:                                            2816
-        p23 = re.compile(r'^Tunnels\*\:+\s+(?P<tunnels_count>[\d]+)$')
+        p23 = re.compile(r'^Tunnels\*?\:+\s+(?P<tunnels_count>[\d]+)$')
 
         # LISP Instance Mapping Entries*:                      2048
-        p24 = re.compile(r'^LISP Instance Mapping Entries\*\:+\s+(?P<lisp_instance_entries>[\d]+)$')
+        p24 = re.compile(r'^LISP Instance Mapping Entries\*?\:+\s+(?P<lisp_instance_entries>[\d]+)$')
 
         # Control Plane Entries*:                              512
-        p25 = re.compile(r'^Control Plane Entries\*\:+\s+(?P<control_plane_entries>[\d]+)$')
+        p25 = re.compile(r'^Control Plane Entries\*?\:+\s+(?P<control_plane_entries>[\d]+)$')
 
         # Input Netflow flows*:                                49152
-        p26 = re.compile(r'^Input Netflow flows\*\:+\s+(?P<input_netflow_flows>[\d]+)$')
+        p26 = re.compile(r'^Input Netflow flows\*?\:+\s+(?P<input_netflow_flows>[\d]+)$')
 
         # Output Netflow flows*:                               49152
-        p27 = re.compile(r'^Output Netflow flows\*\:+\s+(?P<output_netflow_flows>[\d]+)$')
+        p27 = re.compile(r'^Output Netflow flows\*?\:+\s+(?P<output_netflow_flows>[\d]+)$')
 
         # SGT/DGT (or) MPLS VPN entries*:                      32768
-        p28 = re.compile(r'^SGT\/DGT \(or\) MPLS VPN entries\*\:+\s+(?P<sgt_dgt_mpls_vpn_entries>[\d]+)$')
+        p28 = re.compile(r'^SGT\/DGT \(or\) MPLS VPN entries\*?\:+\s+(?P<sgt_dgt_mpls_vpn_entries>[\d]+)$')
 
         # SGT/DGT (or) MPLS VPN Overflow entries*:             768
-        p29 = re.compile(r'^SGT\/DGT \(or\) MPLS VPN Overflow entries\*\:+\s+(?P<sgt_dgt_vpn_overflow_entries>[\d]+)$')
+        p29 = re.compile(r'^SGT\/DGT \(or\) MPLS VPN Overflow entries\*?\:+\s+(?P<sgt_dgt_vpn_overflow_entries>[\d]+)$')
 
         # Wired clients:                                       2048
         p30 = re.compile(r'^Wired clients\:+\s+(?P<wired_clients>[\d]+)$')
 
         # MACSec SPD Entries*:                                 256
-        p31 = re.compile(r'^MACSec SPD Entries\*\:+\s+(?P<macsec_spd_entries>[\d]+)$')
+        p31 = re.compile(r'^MACSec SPD Entries\*?\:+\s+(?P<macsec_spd_entries>[\d]+)$')
 
         # VRF:                                                 1024
         p32 = re.compile(r'^VRF\:+\s+(?P<vrf_count>[\d]+)$')
@@ -199,10 +199,10 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
         p33 = re.compile(r'^MPLS Labels\:+\s+(?P<mpls_labels>[\d]+)$')
 
         # MPLS L3 VPN Routes VRF Mode*:                        81920
-        p34 = re.compile(r'^MPLS L3 VPN Routes VRF Mode\*\:+\s+(?P<mpls_l3_vrf_mode>[\d]+)$')
+        p34 = re.compile(r'^MPLS L3 VPN Routes VRF Mode\*?\:+\s+(?P<mpls_l3_vrf_mode>[\d]+)$')
 
         # MPLS L3 VPN Routes Prefix Mode*:                     32768
-        p35 = re.compile(r'^MPLS L3 VPN Routes Prefix Mode\*\:+\s+(?P<mpls_l3_prefix_mode>[\d]+)$')
+        p35 = re.compile(r'^MPLS L3 VPN Routes Prefix Mode\*?\:+\s+(?P<mpls_l3_prefix_mode>[\d]+)$')
 
         # MVPN MDT Tunnels:                                    1024
         p36 = re.compile(r'^MVPN MDT Tunnels\:+\s+(?P<mvpn_mdt_tunnels>[\d]+)$')

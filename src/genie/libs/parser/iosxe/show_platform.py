@@ -88,6 +88,8 @@ IOSXE parsers for the following show commands:
     * 'show platform software node cluster-manager switch {mode} B0 node {node}'
     * 'show platform hardware fed switch active fwd resource utilization | include LABEL'
     * 'show file systems'
+    * 'show platform software fed {switch} active vt counter'
+    * 'show platform software fed switch active vt all '
     * 'show platform hardware qfp active interface all statistics drop_summary'
     * 'show platform software factory-reset secure log'
     * 'show platform hardware qfp active infra punt stat type per | ex _0_'
@@ -99,7 +101,7 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active feature ipsec datapath drops all'
     * 'show platform hardware qfp active datapath pmd ifdev'
     * 'show platform hardware throughput level'
-    * show platform software wired-client switch {switch_state} r0
+    * 'show platform software wired-client switch {switch_state} r0'
     * 'show platform hardware fed active qos queue config interface'
     * 'show platform hardware fed switch <no> qos queue config interface'
     * 'show platform hardware iomd <slot> qos port <no> ingress queue stats'
@@ -117,6 +119,7 @@ IOSXE parsers for the following show commands:
     * 'show platform usb status'
     * 'show platform software monitor session {session}'
     * 'show platform software fed active vp summary interface if_id {interface_id}'
+    * 'show platform software fed switch active matm adjacencies'
     '''
 
 # Python
@@ -17237,14 +17240,14 @@ class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
 
     """ Parser for show platform software fed switch active ifm mappings"""
 
-    cli_command = ['show platform software fed {switch} {state} ifm mappings',
+    cli_command = ['show platform software fed switch {state} ifm mappings',
                    'show platform software fed active ifm mappings']
 
-    def cli(self, switch= None, state= None, output=None):
+    def cli(self, state= None, output=None):
        
         if output is None:
-            if switch and state:
-                cmd = self.cli_command[0].format(switch=switch,state=state)            
+            if state:
+                cmd = self.cli_command[0].format(state=state)            
             else:
                 cmd = self.cli_command[1]
          
@@ -21543,6 +21546,90 @@ class ShowPlatformSoftwareFedSwitchActiveAclUsage(ShowPlatformSoftwareFedSwitchA
                 continue
         return ret_dict
 
+
+# =============================================
+# Schema for 'show platform software fed {switch} active vt counter'
+# Schema for 'show platform software fed active vt counter'
+# =============================================
+
+class ShowPlatformSoftwareFedSwitchActiveVtCounterSchema(MetaParser):
+    """Schema for show platform software fed switch active vt counter"""
+    schema = {
+        'number_of_vlans': int,
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveVtCounter(ShowPlatformSoftwareFedSwitchActiveVtCounterSchema):
+    """Parser for show platform software fed switch active vt counter"""
+
+    cli_command = ['show platform software fed switch {switch} active vt counter','show platform software fed active vt counter']
+    def cli(self, output=None, switch=''):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch)
+            else:
+                cmd = self.cli_command[1]
+
+            output = self.device.execute(cmd)
+
+        # Total no of vlan mappings configured: 1
+        p1 = re.compile(r"^Total\s+no\s+of\s+vlan\s+mappings\s+configured:\s+(?P<number_of_vlans>\d+)$")
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            matched_values = p1.match(line)
+            if matched_values:
+                vlan_dict = matched_values.groupdict()
+                ret_dict['number_of_vlans'] = int(vlan_dict['number_of_vlans'])
+                continue
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show platform software fed switch active vt all '
+# ======================================================
+
+class ShowPlatformSoftwareFedSwitchActiveVtAllSchema(MetaParser):
+    """Schema for show platform software fed switch active vt all"""
+
+    schema = {
+        'interface_id': {
+            Any(): {
+                'cvlan_id': int,
+                'svlan_id': int,
+                'action': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveVtAll(ShowPlatformSoftwareFedSwitchActiveVtAllSchema):
+    """Parser for show platform software fed switch active vt all"""
+
+    cli_command = 'show platform software fed switch active vt all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        #interface_id  cvlan_id      svlan-id              action
+        #183           20            30                    1
+        p1 = re.compile(r"^(?P<interface_id>\d+)\s+(?P<cvlan_id>\d+)\s+(?P<svlan_id>\d+)\s+(?P<action>\d+)$")
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            matched_values = p1.match(line)
+            if matched_values:
+                parsed_dict = matched_values.groupdict()
+                interface_id_var = parsed_dict['interface_id']
+                group = ret_dict.setdefault('interface_id', {}).setdefault(interface_id_var, {})
+                group['cvlan_id'] = int(parsed_dict['cvlan_id'])
+                group['svlan_id'] = int(parsed_dict['svlan_id'])
+                group['action'] = int(parsed_dict['action'])
+                continue
+        return ret_dict
+
+
 # ======================================================================================
 # Parser Schema for 'show platform hardware qfp active infrastructure exmem statistics'
 # ======================================================================================
@@ -25550,4 +25637,329 @@ class ShowPlatformPmInterfaceNumbers(ShowPlatformPmInterfaceNumbersSchema):
                 interface_dict['snmp_if_index'] = int(dict_val['snmp_if_index'])
                 continue
         
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedActiveMonitorSchema(MetaParser):
+    '''
+        Schema for 'show platform software fed active monitor {session}'
+    '''
+    schema = {
+        'session_type': str,
+        'source_ports': {
+            'rx': list,
+            'tx': list
+        },
+        Optional('destination_ports'): list,
+        Optional('source_vlans'): list,
+        Optional('destination_vlans'): list,
+        'source_rspan_vlan': int,
+        'destination_rspan_vlan': int,
+        'encap': str,
+        'ingress_forwarding': str,
+        Optional('filter_vlans'): list,
+        'erspan_enable': int,
+        'erspan_hw_programmed': int,
+        'erspan_mandatory_cfg': int,
+        'erspan_id': int,
+        Optional('gre_protocol'): str,
+        'mtu': int,
+        'ip_tos': int,
+        'ip_ttl': int,
+        'cos': int,
+        'vrf_id': int,
+        'tunnel_if_id': int,
+        'destination_ip': str,
+        'org_ip': str,
+        Optional('sgt_count'): int,
+        Optional('sgt_tag'): str
+    }
+
+
+class ShowPlatformSoftwareFedActiveMonitor(ShowPlatformSoftwareFedActiveMonitorSchema):
+    '''
+        Parser for 'show platform software fed active monitor {session}'
+    '''
+
+    cli_command = 'show platform software fed active monitor {session}'
+
+    def cli(self, session, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(session=session))
+        
+        # Session Type         : ERSPAN Source Session
+        p1 = re.compile(r'^Session Type\s+:\s+(?P<session_type>[\w\s]+)$')
+
+        # Source Ports         : RX: GigabitEthernet1/0/1 TenGigabitEthernet1/1/3 TX: None 
+        p2 = re.compile(r'^Source Ports\s+: RX:\s+(?P<rx>[\w\/\s]+)\sTX:\s+(?P<tx>[\w\/\s]+)$')
+
+        # Destination Ports    : TwoGigabitEthernet1/0/13
+        p3 = re.compile(r'^Destination Ports\s+:\s+(?P<destination_ports>[\w\/\s]+(?<!None))$')
+
+        # Source VLANs         : None
+        p4 = re.compile(r'^Source VLANs\s+:\s+(?P<source_vlans>[\w\-\d\s]+(?<!None))$')
+
+        # Destination VLANs    : None
+        p5 = re.compile(r'^Destination VLANs\s+:\s+(?P<destination_vlans>[\w\-\d\s]+(?<!None))$')
+
+        # Source RSPAN VLAN    : 0
+        p6 = re.compile(r'^Source RSPAN VLAN\s+:\s+(?P<source_rspan_vlan>\d+)$')
+
+        # DST RSPAN VLAN       : 0
+        p7 = re.compile(r'^DST RSPAN VLAN\s+:\s+(?P<destination_rspan_vlan>\d+)$')
+
+        # Encap                : Native
+        p8 = re.compile(r'^Encap\s+:\s+(?P<encap>\S+)$')
+
+        # Ingress Forwarding   : Disabled
+        p9 = re.compile(r'^Ingress Forwarding\s+:\s+(?P<ingress_forwarding>\S+)$')
+
+        # Filter VLANs         : None
+        p10 = re.compile(r'^Filter VLANs\s+:\s+(?P<filter_vlans>[\d\s]+(?<!None))$')
+
+        # ERSPAN Enable        : 1
+        p11 = re.compile(r'^ERSPAN Enable\s+:\s+(?P<erspan_enable>\d+)$')
+
+        # ERSPAN Hw Programmed : 1
+        p12 = re.compile(r'^ERSPAN Hw Programmed\s+:\s+(?P<erspan_hw_programmed>\d+)$')
+
+        # ERSPAN Mandatory Cfg : 1
+        p13 = re.compile(r'^ERSPAN Mandatory Cfg\s+:\s+(?P<erspan_mandatory_cfg>\d+)$')
+
+        # ERSPAN Id            : 3
+        p14 = re.compile(r'^ERSPAN Id\s+:\s+(?P<erspan_id>\d+)$')
+
+        # Gre Prot             : 88be
+        p15 = re.compile(r'^Gre Prot\s+:\s+(?P<gre_protocol>\S+)$')
+
+        # MTU                  : 9000
+        p16 = re.compile(r'^MTU\s+:\s+(?P<mtu>\d+)$')
+
+        # Ip Tos               : 0 (DSCP:0)
+        p17 = re.compile(r'^Ip Tos\s+:\s+(?P<ip_tos>\d+).+$')
+
+        # Ip Ttl               : 255
+        p18 = re.compile(r'^Ip Ttl\s+:\s+(?P<ip_ttl>\d+)$')
+
+        # Cos                  : 0
+        p19 = re.compile(r'^Cos\s+:\s+(?P<cos>\d+)$')
+
+        # Vrf Id               : 0
+        p20 = re.compile(r'^Vrf Id\s+:\s+(?P<vrf_id>\d+)$')
+
+        # Tunnel IfId          : 65
+        p21 = re.compile(r'^Tunnel IfId\s+:\s+(?P<tunnel_if_id>\d+)$')
+
+        # Dst Ip               : 1.1.3.2
+        p22 = re.compile(r'^Dst Ip\s+:\s+(?P<destination_ip>\S+)$')
+
+        # Org Ip               : 1.1.3.1
+        p23 = re.compile(r'^Org Ip\s+:\s+(?P<org_ip>\S+)$')
+
+        # SGT count            : 0
+        p24 = re.compile(r'^SGT count\s+:\s+(?P<sgt_count>\d+)$')
+
+        # SGT Tag(s)           :
+        p25 = re.compile(r'^SGT Tag\(s\)\s+:\s+(?P<sgt_tag>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                # ret_dict.update(m.groupdict())
+                ret_dict['session_type'] = m.groupdict()['session_type']
+                continue
+            
+            m = p2.match(line)
+            if m:
+                port_dict = ret_dict.setdefault('source_ports', {})
+                port_dict['rx'] = m.groupdict()['rx'].split()
+                port_dict['tx'] = m.groupdict()['tx'].split()
+                continue
+            
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('destination_ports', m.groupdict()['destination_ports'].split(' '))
+                continue
+            
+            m = p4.match(line)
+            if m:
+                ret_dict.setdefault('source_vlans', m.groupdict()['source_vlans'].split(' '))
+                continue
+
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('destination_vlans', m.groupdict()['destination_vlans'].split(' '))
+                continue
+            
+            m = p6.match(line)
+            if m:
+                ret_dict.setdefault('source_rspan_vlan', int(m.groupdict()['source_rspan_vlan']))
+                continue
+            
+            m = p7.match(line)
+            if m:
+                ret_dict.setdefault('destination_rspan_vlan', int(m.groupdict()['destination_rspan_vlan']))
+                continue
+            
+            m = p8.match(line)
+            if m:
+                ret_dict.setdefault('encap', m.groupdict()['encap'])
+                continue
+
+            m = p9.match(line)
+            if m:
+                ret_dict.setdefault('ingress_forwarding', m.groupdict()['ingress_forwarding'])
+                continue
+
+            m = p10.match(line)
+            if m:
+                ret_dict.setdefault('filter_vlans', m.groupdict()['filter_vlans'])
+                continue
+
+            m = p11.match(line)
+            if m:
+                ret_dict.setdefault('erspan_enable', int(m.groupdict()['erspan_enable']))
+                continue
+
+            m = p12.match(line)
+            if m:
+                ret_dict.setdefault('erspan_hw_programmed', int(m.groupdict()['erspan_hw_programmed']))
+                continue
+
+            m = p13.match(line)
+            if m:
+                ret_dict.setdefault('erspan_mandatory_cfg', int(m.groupdict()['erspan_mandatory_cfg']))
+                continue
+
+            m = p14.match(line)
+            if m:
+                ret_dict.setdefault('erspan_id', int(m.groupdict()['erspan_id']))
+                continue
+
+            m = p15.match(line)
+            if m:
+                ret_dict.setdefault('gre_protocol', m.groupdict()['gre_protocol'])
+                continue
+
+            m = p16.match(line)
+            if m:
+                ret_dict.setdefault('mtu', int(m.groupdict()['mtu']))
+                continue
+
+            m = p17.match(line)
+            if m:
+                ret_dict.setdefault('ip_tos', int(m.groupdict()['ip_tos']))
+                continue
+
+            m = p18.match(line)
+            if m:
+                ret_dict.setdefault('ip_ttl', int(m.groupdict()['ip_ttl']))
+                continue
+
+            m = p19.match(line)
+            if m:
+                ret_dict.setdefault('cos', int(m.groupdict()['cos']))
+                continue
+
+            m = p20.match(line)
+            if m:
+                ret_dict.setdefault('vrf_id', int(m.groupdict()['vrf_id']))
+                continue
+
+            m = p21.match(line)
+            if m:
+                ret_dict.setdefault('tunnel_if_id', int(m.groupdict()['tunnel_if_id']))
+                continue
+
+            m = p22.match(line)
+            if m:
+                ret_dict.setdefault('destination_ip', m.groupdict()['destination_ip'])
+                continue
+
+            m = p23.match(line)
+            if m:
+                ret_dict.setdefault('org_ip', m.groupdict()['org_ip'])
+                continue
+
+            m = p24.match(line)
+            if m:
+                ret_dict.setdefault('sgt_count', int(m.groupdict()['sgt_count']))
+                continue
+
+            m = p25.match(line)
+            if m:
+                ret_dict.setdefault('sgt_tag', m.groupdict()['sgt_tag'])
+                continue
+        
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedSwitchActiveMonitor(ShowPlatformSoftwareFedActiveMonitor):
+    '''
+        Parser for 'show platform software fed switch active monitor {session}'
+    '''
+
+    cli_command = 'show platform software fed switch active monitor {session}'
+
+    def cli(self, session, output=None):
+        return super().cli(session=session, output=output)
+# ======================================================
+# Parser for 'show platform software fed switch active matm adjacencies '
+# ======================================================
+
+class ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesSchema(MetaParser):
+    """Schema for show platform software fed switch active matm adjacencies"""
+    schema = {
+        'adjacencies': {
+            Any(): {
+                'adj_id': int,
+                'adj_key': str,
+                'encap': str,
+                'link': str,
+                'sihandle': str,
+                'rihandle': str,
+                'dihandle': str,
+                'obj_type': str,
+            },
+        },
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveMatmAdjacencies(ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesSchema):
+    """Parser for show platform software fed switch active matm adjacencies"""
+
+    cli_command = 'show platform software fed switch active matm adjacencies'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+
+        # 201    89          0x100000059      VXLAN  V4     0x7fd728bf1be8   0x7fd728bf17a8   0x0              CP         
+        p2 = re.compile(r"^(?P<vlan>\d+)\s+(?P<adj_id>\d+)\s+(?P<adj_key>\S+)\s+(?P<encap>\w+)\s+(?P<link>\S+)\s+(?P<sihandle>\S+)\s+(?P<rihandle>\S+)\s+(?P<dihandle>\S+)\s+(?P<obj_type>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            #201    89          0x100000059      VXLAN  V4     0x7fd728bf1be8   0x7fd728bf17a8   0x0              CP         
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                adjacencies = ret_dict.setdefault('adjacencies', {})
+                vlan_id = int(dict_val['vlan'])
+                index_adjacencies = ret_dict['adjacencies'].setdefault(vlan_id, {})
+                index_adjacencies['adj_id'] = int(dict_val['adj_id'])
+                index_adjacencies['adj_key'] = dict_val['adj_key']
+                index_adjacencies['encap'] = dict_val['encap']
+                index_adjacencies['link'] = dict_val['link']
+                index_adjacencies['sihandle'] = dict_val['sihandle']
+                index_adjacencies['rihandle'] = dict_val['rihandle']
+                index_adjacencies['dihandle'] = dict_val['dihandle']
+                index_adjacencies['obj_type'] = dict_val['obj_type']
+                continue
+
         return ret_dict

@@ -464,11 +464,11 @@ class ShowHwModuleUsbflash1SecuritySchema(MetaParser):
 class ShowHwModuleUsbflash1Security(ShowHwModuleUsbflash1SecuritySchema):
     '''Parser for show hw-module usbflash1 security status'''
 
-    cli_command = 'show hw-module usbflash1 security status'
+    cli_command = ['show hw-module usbflash1 switch {switch_num} security status', 'show hw-module usbflash1 security status']
 
-    def cli(self, output=None):
+    def cli(self, switch_num='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command[0].format(switch_num = switch_num) if switch_num else self.cli_command[1])
         
         # 1                    USB Not Present
         # 2                    USB Not Present

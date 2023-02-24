@@ -425,6 +425,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('stackwise_virtual_link'): int,
                 Optional('dual_active_detection'): bool,
                 Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
+                Optional('speed'): int,
+                Optional('speed_nonegotiate'): bool,
             }
         }
     }
@@ -729,6 +731,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         #ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
         p86 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_output_v6>[\S]+)\s+sampler\s+[\S]+\s+output$')
 
+        # speed 25000
+        p87 = re.compile(r'^speed +(?P<speed>\d+)$')
+        
+        # speed nonegotiate
+        p88 = re.compile(r'^speed +(?P<speed_nonegotiate>nonegotiate)$')
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -1426,7 +1434,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
                 continue
-
+            
+            #speed  25000
+            m = p87.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed': int(group['speed'])})
+                continue
+            
+            #speed  nonegotiate
+            m = p88.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed_nonegotiate': True})
+                continue    
 
         return config_dict
 
@@ -2289,7 +2310,7 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa user-name
+#   * show running-config aaa user-name
 #   * show running-config aaa username
 # ==================================================
 class ShowRunningConfigAAAUsernameSchema(MetaParser):
@@ -2672,7 +2693,7 @@ class ShowRunningConfigFlowMonitor(ShowRunningConfigFlowMonitorSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa
+#   * show running-config aaa
 # ==================================================
 class ShowRunningConfigAAASchema(MetaParser):
     """
