@@ -70,45 +70,68 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
+        
+        # Tag isis_net:
+        p1 = re.compile(r'^Tag +(?P<isis_name>\S+)\s*:$')
 
-        # initial return dictionary
-        ret_dict = {}
-        tag_null = True
+        # LAB-9001-2      L1   Te0/0/26      10.239.7.29     UP    27       00
+        # spine2-ott-lisp-c9k-127 \
+        p2 = re.compile(r'^\s*((?P<system_id>\S+([^(L1L2|L1|L2)]))(\s*\\)?)?\s*((?P<type>(L1L2|L1|L2))\s+'
+                        r'(?P<interface>\S+)\s+(?P<ip_address>\S+)\s+'
+                        r'(?P<state>(UP|DOWN|INIT|NONE)+)\s+(?P<holdtime>\S+)\s+'
+                        r'(?P<circuit_id>\S+))?$')
+        
+        ret_dict, tag_null, prev_sys_id = {}, True, None
         for line in out.splitlines():
             line = line.strip()
 
             # Tag isis_net:
-            p1 = re.compile(r'^Tag +(?P<isis_name>\S+)\s*:$')
             m = p1.match(line)
             if m:
-                isis_name = m.groupdict()['isis_name']
+                group = m.groupdict()
+                isis_name = group['isis_name']
                 isis_dict = ret_dict.setdefault('isis', {}).setdefault(isis_name, {})
                 tag_null = False
                 continue
 
             # LAB-9001-2      L1   Te0/0/26      10.239.7.29     UP    27       00
-            p2 = re.compile(r'^(?P<system_id>\S+)\s+(?P<type>\S+)\s+(?P<interface>\S+)\s+'
-                             '(?P<ip_address>\S+)\s+(?P<state>(UP|DOWN|INIT|NONE)+)\s+'
-                             '(?P<holdtime>\S+)\s+(?P<circuit_id>\S+)$')
+            # spine2-ott-lisp-c9k-127 \
             m = p2.match(line)
             if m:
-                system_id = m.groupdict()['system_id']
-                isis_type = m.groupdict()['type']
+                group = m.groupdict()
+                if prev_sys_id:
+                    system_id = prev_sys_id
+                    prev_sys_id = None
+                else:
+                    system_id = group['system_id'] if group['system_id'] else None
+                
+                isis_type = group['type'] if group['type'] else None
+                interface = Common.convert_intf_name(group['interface']) if group["interface"] else None
+                ip = group['ip_address'] if group['ip_address'] else None
+                state = group['state'] if group['state'] else None
+                holdtime = group['holdtime'] if group['holdtime'] else None
+                circuit_id = group['circuit_id'] if group['circuit_id'] else None
+
+                if not any([system_id, isis_type, interface, ip, state, holdtime, circuit_id]):
+                    continue
+                elif system_id and not any([isis_type, interface, ip, state, holdtime, circuit_id]):
+                    prev_sys_id = system_id
+                    continue
 
                 if tag_null:
                     neighbour_dict = ret_dict.setdefault('isis', {}).setdefault('null', {}).\
-                                              setdefault('neighbors', {}).setdefault(system_id, {})
+                                            setdefault('neighbors', {}).setdefault(system_id.strip(), {})
                 else:
-                    neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
+                    neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id.strip(), {})
 
                 type_dict = neighbour_dict.setdefault('type', {}).setdefault(isis_type, {})
+                interfaces_dict = type_dict.setdefault('interfaces', {}).setdefault(interface, {})
 
-                interface_name = Common.convert_intf_name(m.groupdict()['interface'])
-                interfaces_dict = type_dict.setdefault('interfaces', {}).setdefault(interface_name, {})
-                interfaces_dict['ip_address'] = m.groupdict()['ip_address']
-                interfaces_dict['state'] = m.groupdict()['state']
-                interfaces_dict['holdtime'] = m.groupdict()['holdtime']
-                interfaces_dict['circuit_id'] = m.groupdict()['circuit_id']
+                interfaces_dict['ip_address'] = ip
+                interfaces_dict['state'] = state
+                interfaces_dict['holdtime'] = holdtime
+                interfaces_dict['circuit_id'] = circuit_id
+
                 continue
 
         return ret_dict
@@ -3346,11 +3369,13 @@ class ShowIsisMicroloopAvoidanceFlexAlgo(ShowIsisMicroloopAvoidanceFlexAlgoSchem
 
         # initial variables
         ret_dict = {}
-        ###Tag: srtest
+        # Tag: srtest
         p1 = re.compile(r'Tag\:\s+(?P<isis_tag>\w+)')
-        ##Algo  State            Delay  Running(L1/L2)
-        ##128   Segment-Routing  5000   FALSE/NA
+
+        # Algo  State            Delay  Running(L1/L2)
+        # 128   Segment-Routing  5000   FALSE/NA
         p2 = re.compile(r'(?P<flex_algo_id>\d+)\s+(?P<state>[\w\-]+)\s+(?P<delay>\d+)\s+(?P<RunningL1>\S+)\/(?P<RunningL2>\S+)$')
+
         for line in output.splitlines():
             line = line.strip()
 

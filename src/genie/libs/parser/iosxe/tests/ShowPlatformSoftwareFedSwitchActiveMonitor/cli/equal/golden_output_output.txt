@@ -1,0 +1,28 @@
+Session 0
+---------
+  Session Type         : ERSPAN Source Session
+  Source Ports         : RX: GigabitEthernet1/0/1 GigabitEthernet1/0/2 GigabitEthernet1/0/3 TenGigabitEthernet1/1/2 TenGigabitEthernet1/1/4 TX: None  
+  Destination Ports    : None
+  Source VLANs         : None  
+  Destination VLANs    : None  
+  Source RSPAN VLAN    : 0
+  DST RSPAN VLAN       : 0
+  Encap                : Native
+  Ingress Forwarding   : Disabled
+  Filter VLANs         : None
+  ERSPAN Enable        : 1
+  ERSPAN Hw Programmed : 1
+  ERSPAN Mandatory Cfg : 1
+  ERSPAN Id            : 3
+  Gre Prot             : 88be
+  MTU                  : 9000
+  Ip Tos               : 0 (DSCP:0)
+  Ip Ttl               : 255
+  Ipv6 flow label      : 0
+  Cos                  : 0
+  Vrf Id               : 0
+  Tunnel IfId          : 65
+  Dst Ip               : 1.1.3.2
+  Org Ip               : 1.1.3.1
+  Dst Ipv6             : ::
+  Org Ipv6             : ::

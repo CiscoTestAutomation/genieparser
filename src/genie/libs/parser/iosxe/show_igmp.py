@@ -892,8 +892,9 @@ class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #801       225.6.1.1                igmp        v2          pw100155
-            p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>\S+)$')
+            # 801       225.6.1.1                igmp        v2          pw100155
+            # 10        225.1.1.1                igmp        v2          Tw1/0/4, Tw1/0/25
+            p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>[\S,\s]+)$')
 
             m = p1.match(line)
             if m:

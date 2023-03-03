@@ -1,0 +1,3 @@
+Number of existing VLANs               : 5
+ Number of existing VTP VLANs          : 5
+ Number of existing extended VTP VLANS : 0

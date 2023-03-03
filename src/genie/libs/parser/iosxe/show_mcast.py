@@ -192,12 +192,13 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
         # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
         # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
+        # (50.50.50.2, 239.0.0.13), 00:00:39/00:02:20, flags:
         p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'
                             '(\s+)?(?P<multicast_group>[\w\:\.\/]+)\),'
                             ' +(?P<uptime>[\w\:\.]+)\/'
                             '(?P<expires>[\w\:\.\-]+),'
                             '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                            ' +flags: *(?P<flags>[a-zA-Z]+)$')  
+                            ' +flags: *(?P<flags>[a-zA-Z]*)$')  
                             
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
@@ -226,11 +227,11 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # POS4/0, Forward, 00:02:06/00:03:27
         # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
-        # Vlan500, VXLAN v6 Encap: (50000, FF05::2), Forward/Sparse, 01:31:20/stopped
+        # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
                             '(VCD +(?P<vcd>\d+))?(\,\s+)?'
                             '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
-                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[0-9a-fA-F\.\:]+)?\)?)?)?(\,\s+)?'
+                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
                             '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
                             '(?P<uptime>[a-zA-Z0-9\:]+)\/'
                             '(?P<expire>[\w\:]+)(\,\s+)?'
@@ -412,6 +413,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # POS4/0, Forward, 00:02:06/00:03:27
             # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
             # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
+            # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
             m = p5.match(line)
             if m and outgoing:
                 ### adding below code for multiple outgoing interfaces with same different rloc's example below

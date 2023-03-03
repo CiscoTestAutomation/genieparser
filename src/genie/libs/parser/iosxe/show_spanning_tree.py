@@ -1141,8 +1141,8 @@ class ShowSpanningTreeInterfaceDetailSchema(MetaParser):
         'dport_id': str,
         'des_path_cost': int,
         'forward_trans': int,
-        'port_mode': str,
-        'bpdu_guard': str,
+        Optional('port_mode'): str,
+        Optional('bpdu_guard'): str,
         'link_type': str,
         Optional('bpdu_filter'): str,
         Optional('root_guard'): str,
@@ -1335,7 +1335,7 @@ class ShowSpanningTreeInterfaceDetail(ShowSpanningTreeInterfaceDetailSchema):
 
 
 class ShowSpanningTreeInterfaceSchema(MetaParser):
-    """Schema for show spanning tree interface"""
+    """Schema for show spanning-tree interface"""
 
     schema = {
         'vlan': {
@@ -1353,7 +1353,7 @@ class ShowSpanningTreeInterfaceSchema(MetaParser):
 class ShowSpanningTreeInterface(ShowSpanningTreeInterfaceSchema):
     """Parser for show spanning tree interface"""
 
-    cli_command = 'show spanning tree interface {interface}'
+    cli_command = 'show spanning-tree interface {interface}'
 
     def cli(self, interface='', output=None):
         if output is None:

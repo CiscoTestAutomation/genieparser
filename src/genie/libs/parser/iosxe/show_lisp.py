@@ -1608,7 +1608,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
         #   10.1.8.8 00:04:02  up          50/50        -
         # State can be: 'up', 'down', 'route-rejec', 'up, self' and etc
-        p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
+        p5 = re.compile(r'(?P<locator>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+)) +(?P<uptime>(\S+))'
                          ' +(?P<state>(\S+|up, self))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
@@ -2947,6 +2947,17 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                           ' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
                           '(?P<weight>(\d+)) +(?P<scope>(.*))$')
 
+        # ETR 10.16.2.2
+        p22 = re.compile(r'ETR +(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+
+        # ETR 1000:1000:1000:1000:1000::
+        p23 = re.compile(r'ETR +(?P<etr>[a-fA-F\d\:]+)$')
+
+        # last registered 01:12:41, proxy-reply, map-notify
+        p24 = re.compile(r'last +registered +(?P<last_registered>(\S+)),'
+                          '(?: +(?P<proxy_reply>(proxy-reply)),)'
+                          '?(?: +(?P<map_notify>(map-notify)))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -3172,6 +3183,31 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                 locator_dict['priority'] = int(group['priority'])
                 locator_dict['weight'] = int(group['weight'])
                 locator_dict['scope'] = group['scope']
+                continue
+
+            # ETR 10.16.2.2
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                etr = group['etr']
+                continue
+
+            # ETR 1000:1000:1000:1000:1000::
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                etr = group['etr']
+                continue
+
+            # last registered 01:12:41, proxy-reply, map-notify
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                creation_time = group['last_registered']
+                if group['proxy_reply']:
+                    proxy_reply = True
+                if group['map_notify']:
+                    map_notify = True
                 continue
 
         return parsed_dict
@@ -4679,6 +4715,84 @@ class ShowLispInstanceIdEthernetServer(ShowLispSiteSuperParser):
                 output = self.device.execute(self.cli_command[0].\
                                             format(instance_id=instance_id))
         return super().cli(lisp_id=lisp_id, instance_id=instance_id, output=output)
+
+
+class ShowLispIpv4ServerSHD(ShowLispSiteSuperParser):
+
+    """ Parser for show lisp site
+        * show lisp instance-id {instance_id} ipv4 server silent-host-detection
+        * show lisp {lisp_id} instance-id {instance_id} ipv4 server silent-host-detection
+        * show lisp eid-table {eid_table} ipv4 server silent-host-detection
+        * show lisp eid-table vrf {vrf} ipv4 server silent-host-detection
+        * show lisp locator-table {locator_table} instance-id {instance_id} ipv4 server silent-host-detection
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv4 server silent-host-detection',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv4 server silent-host-detection',
+                   'show lisp eid-table {eid_table} ipv4 server silent-host-detection',
+                   'show lisp eid-table vrf {vrf} ipv4 server silent-host-detection',
+                   'show lisp locator-table {locator_table} instance-id {instance_id} ipv4 server silent-host-detection']
+
+    def cli(self, lisp_id=None, instance_id=None, eid_table=None, locator_table=None, vrf=None, output=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                            format(lisp_id=lisp_id,
+                                                   instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[4].\
+                                            format(locator_table=locator_table,
+                                                   instance_id=instance_id))
+            elif vrf:
+                output = self.device.execute(self.cli_command[3].\
+                                            format(vrf=vrf))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[2].\
+                                            format(eid_table=eid_table))
+            else:
+                output = self.device.execute(self.cli_command[0].\
+                                            format(instance_id=instance_id))
+        return super().cli(output=output)
+
+
+class ShowLispIpv6ServerSHD(ShowLispSiteSuperParser):
+
+    """ Parser for show lisp site
+        * show lisp instance-id {instance_id} ipv6 server silent-host-detection
+        * show lisp {lisp_id} instance-id {instance_id} ipv6 server silent-host-detection
+        * show lisp eid-table {eid_table} ipv6 server silent-host-detection
+        * show lisp eid-table vrf {vrf} ipv6 server silent-host-detection
+        * show lisp locator-table {locator_table} instance-id {instance_id} ipv6 server silent-host-detection
+    """
+
+    cli_command = ['show lisp instance-id {instance_id} ipv6 server silent-host-detection',
+                   'show lisp {lisp_id} instance-id {instance_id} ipv6 server silent-host-detection',
+                   'show lisp eid-table {eid_table} ipv6 server silent-host-detection',
+                   'show lisp eid-table vrf {vrf} ipv6 server silent-host-detection',
+                   'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 server silent-host-detection']
+
+    def cli(self, lisp_id=None, instance_id=None, eid_table=None, locator_table=None, vrf=None, output=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                            format(lisp_id=lisp_id,
+                                                   instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[4].\
+                                            format(locator_table=locator_table,
+                                                   instance_id=instance_id))
+            elif vrf:
+                output = self.device.execute(self.cli_command[3].\
+                                            format(vrf=vrf))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[2].\
+                                            format(eid_table=eid_table))
+            else:
+                output = self.device.execute(self.cli_command[0].\
+                                            format(instance_id=instance_id))
+        return super().cli(output=output)
 
 
 class ShowLispIpv4ServerExtranetPolicy(ShowLispSiteSuperParser):
@@ -6539,11 +6653,14 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         p1 = re.compile(r'^Output +for +router +lisp +(?P<lisp_id>(\S+))'
                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        # 23.23.23.23                             ETR Map-Server not found       Down            Off
-        # 23.23.23.23                             Unreachable       Down                         Off
-        # 23.23.23.23                             Reachable       Down                           Off
-        p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F.:]+)\s+(?P<state>ETR Map-Server '
-                        r'not found|Unreachable|Reachable)\s+(?P<session>\w+)\s+(?P<pubsub_state>\w+)$')
+        # 23.23.23.23    ETR Map-Server not found      Down            Off
+        # 23.23.23.23    Unreachable                   Down            Off
+        # 23.23.23.23    Reachable                     Down            Off
+        # 23.23.23.23    No ETR MS                     Down            Off
+        p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F.:]+)\s+'
+                        r'(?P<state>ETR Map-Server not found|Unreachable'
+                        r'|Reachable|No ETR MS)\s+(?P<session>\w+)\s+'
+                        r'(?P<pubsub_state>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -6559,9 +6676,10 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
                     instance_id = int(group['instance_id'])
                 continue
 
-            # 23.23.23.23                             ETR Map-Server not found       Down            Off
-            # 23.23.23.23                             Unreachable       Down                         Off
-            # 23.23.23.23                             Reachable       Down                           Off
+            # 23.23.23.23   ETR Map-Server not found   Down   Off
+            # 23.23.23.23   Unreachable                Down   Off
+            # 23.23.23.23   Reachable                  Down   Off
+            # 23.23.23.23   No ETR MS                  Down   Off
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -6730,8 +6848,19 @@ class ShowLispPublicationPrefixSchema(MetaParser):
                                                 Optional('multihoming_id'): int,
                                                 Optional('affinity_id_x'): int,
                                                 Optional('affinity_id_y'): int,
+                                                Optional('rdp'): str
                                                 }
                                             }
+                                        }
+                                    },
+                                Optional('merged_locators'): {
+                                    str: {
+                                        'priority': int,
+                                        'weight': int,
+                                        'state': str, # (up|down)
+                                        'encap_iid': str,
+                                        'rdp_len': int,
+                                        'src_add': str
                                         }
                                     }
                                 }
@@ -6775,7 +6904,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         #Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
         p7 = re.compile(r"^Publisher\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
                         r":(?P<port>\d+),\s+last\s+published\s+"
-                        r"(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\S+)")
+                        r"(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\w+)")
 
         #publisher epoch 1, entry epoch 1
         p8 = re.compile(r"^publisher\s+epoch\s+(?P<publisher_epoch>\d+),"
@@ -6799,16 +6928,38 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         #Multihoming-ID unspecified
         p14 = re.compile(r"^Multihoming-ID\s+(?P<multihoming_id>\S+)")
 
+        # Merge Locator Information
+        # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address 
+        # 100.88.88.88    20/90   up        -          0       100.77.77.77 
+        p15 = re.compile(r"^(?P<merged_locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)\s+"
+                         r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)\s+"
+                         r"(?P<rdp_len>\d+)\s+(?P<src_add>\S+)$")
+
+        #100.88.88.88  100/50   up        -                   [-]
+        p16 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
+                         r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
+                         r"\s+(?P<rdp>\S+)")
+
         #100.88.88.88  100/50   up        -                   1/1       44
-        p15 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+        p17 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
                          r"|\s+(?P<domain_id>\d+)\/(?P<multihoming_id>\d+)\s+(?P<metric>\d+)")
 
         # Affinity-id: 20 , 20
-        p15_1 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
+        p18 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
 
         #  Instance ID:                              4100
-        p16 = re.compile(r"^\s+Instance\s+ID:\s+(?P<inst_id>\S+)")
+        p19 = re.compile(r"^\s+Instance\s+ID:\s+(?P<inst_id>\S+)")
+
+        #Publisher 100.100.100.100:4342
+        p20 = re.compile(r"^Publisher\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+                        r":(?P<port>\d+)$")
+
+        #Publisher 100::100:100:100.4342
+        p21 = re.compile(r"^Publisher\s+(?P<publishers>[a-fA-F\d\:]+)\.(?P<port>\d+)$")
+
+        #last published 16:02:47, TTL never
+        p22 = re.compile(r"^last\s+published\s+(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\S+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -6950,8 +7101,51 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'multihoming_id':multihoming_id})
                 continue
 
-            #22.22.22.22   10/10   up        -
+            # Merge Locator Information
+            # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address 
+            # 100.88.88.88    20/90   up        -          0       100.77.77.77 
             m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                merged_locators = (groups['merged_locators'])
+                priority = int(groups['priority'])
+                weight = int(groups['weight'])
+                state = groups['state']
+                encap_iid = groups['encap_iid']
+                rdp_len = int(groups['rdp_len'])
+                src_add = groups['src_add']
+                merged_dict =  eid_prefix_dict.setdefault('merged_locators',{})\
+                                            .setdefault(merged_locators,{})
+                merged_dict.update({'priority':priority})
+                merged_dict.update({'weight':weight})
+                merged_dict.update({'state':state})
+                merged_dict.update({'encap_iid':encap_iid})
+                merged_dict.update({'rdp_len':rdp_len})
+                merged_dict.update({'src_add':src_add})
+                continue
+
+            #22.22.22.22   10/10   up        -      [-]
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                locators = (groups['locators'])
+                priority = int(groups['priority'])
+                weight = int(groups['weight'])
+                state = groups['state']
+                encap_iid = groups['encap_iid']
+                locator_dict =  publish_dict.setdefault('locators',{})\
+                                            .setdefault(locators,{})
+                locator_dict.update({'priority':priority})
+                locator_dict.update({'weight':weight})
+                locator_dict.update({'state':state})
+                locator_dict.update({'encap_iid':encap_iid})
+                if groups['rdp'] != None:
+                    rdp = groups['rdp']
+                    locator_dict.update({'rdp':rdp})
+                continue
+
+            #100.88.88.88  100/50   up        -                   1/1       44
+            m = p17.match(line)
             if m:
                 groups = m.groupdict()
                 locators = (groups['locators'])
@@ -6977,7 +7171,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 continue
 
             # Affinity-id: 20 , 20
-            m = p15_1.match(line)
+            m = p18.match(line)
             if m:
                 groups = m.groupdict()
                 affinity_id_x = int(groups['affinity_id_x'])
@@ -6987,6 +7181,42 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                                          'affinity_id_y':affinity_id_y})
                 else:
                     locator_dict.update({'affinity_id_x':affinity_id_x})
+                continue
+
+            #Publisher 100.100.100.100:4342
+            m = p20.match(line)
+            if m:
+                groups = m.groupdict()
+                publishers = groups['publishers']
+                port = int(groups['port'])
+                publishers = "{}:{}".format(publishers,port)
+                publish_dict = eid_prefix_dict.setdefault('publishers',{})\
+                                              .setdefault(publishers,{})
+                publish_dict.update({'port':port})
+                continue
+
+            #Publisher 100::100:100:100:100:100.4342
+            m = p21.match(line)
+            if m:
+                groups = m.groupdict()
+                publishers = groups['publishers']
+                port = int(groups['port'])
+                publishers = "{}.{}".format(publishers,port)
+                publish_dict = eid_prefix_dict.setdefault('publishers',{})\
+                                              .setdefault(publishers,{})
+                publish_dict.update({'port':port})
+                continue
+
+	    #last published 16:02:47, TTL never
+            m = p22.match(line)
+            if m:
+                groups = m.groupdict()
+                last_published = groups['last_published']
+                ttl = groups['ttl']
+                publish_dict.update({'last_published':last_published})
+                publish_dict.update({'ttl':ttl})
+                continue
+
         return lisp_v4_pub_pre
 
 
@@ -12902,9 +13132,22 @@ class ShowLispSiteDetailSuperParserSchema(MetaParser):
                                                         'state': str, 
                                                         'priority': int,
                                                         'weight': int,
-                                                        'scope': str
+                                                        'scope': str,
+                                                        Optional('rdp'): str
                                                         }
                                                     }
+                                                }
+                                            },
+                                        Optional('merged_locators'): {
+                                            str: {
+                                                'local': str,
+                                                'state': str, 
+                                                'priority': int,
+                                                'weight': int,
+                                                'scope': str,
+                                                'reg_etr': str,
+                                                Optional('port'): int,
+                                                'rdp': str
                                                 }
                                             }
                                         }
@@ -12985,10 +13228,14 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
         p17 = re.compile(r"(^ETR\s+((?P<etrp>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+),|(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}),))"
                          r"\s+last\s+registered\s+(?P<last_registered>\d{1,2}:\d{2}:\d{2}|\dw\dd),"
                          r"\s+(?P<proxy_reply>[\S\s]+),\s+(?P<map_notify>map-notify)$")
+
         # TTL 1d00h, no merge, hash-function sha1, nonce 0x4536735E-0xE5D90458
         # TTL 1d00h, merge, hash-function sha1
         p18 = re.compile(r"^TTL\s+(?P<ttl>\S+),\s+(no\s+)?merge,\s+"
                          r"hash-function\s+sha1(,\s+nonce\s+(?P<nonce>\S+))?$")
+
+        # nonce 0x4536735E-0xE5D90458
+        p18_1 = re.compile(r"^nonce\s+(?P<nonce>\S+)$")
 
         # state complete, no security-capability
         p19 = re.compile(r"^state\s+(?P<state>\S+),\s+no\s+security-capability$")
@@ -12999,16 +13246,47 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
         # Domain-ID local
         p21 = re.compile(r"^Domain-ID\s+(?P<domain_id>local)$")
 
+        # Domain-ID '1'
+        p21_1 = re.compile(r"^Domain-ID\s+(?P<domain_id>\S+)$")
+
         # Multihoming-ID unspecified
         p22 = re.compile(r"^Multihoming-ID\s+(?P<multihoming_id>\S+)$")
 
         # Affinity-id: 20 , 20
         p22_1 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
 
-        # 22.22.22.22  yes    up          10/10   IPv4 none
-        p23 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+        # 22.22.22.22    yes    up          10/10   IPv4 none
+        # 22:22:22:22::  yes    up          10/10   IPv4 none
+        p23 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
                          r"(?P<local>yes|no)\s+(?P<state>\S+)\s+(?P<priority>\d+)"
                          r"\/(?P<weight>\d+)\s+(?P<scope>IPv4)\snone$")
+
+        # 22.22.22.22  yes    up          10/10   IPv4 none     [-]
+        p24 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
+                         r"(?P<local>yes|no)\s+(?P<state>\S+)\s+(?P<priority>\d+)"
+                         r"\/(?P<weight>\d+)\s+(?P<scope>IPv4)\snone\s+(?P<rdp>\S+)$")  
+
+        # Merged locators
+        #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP             
+        #  100.99.99.99  yes    up          10/50   IPv4 none    100.99.99.99:30343       [-]
+        p25 = re.compile(r"^(?P<merged_locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
+                         r"(?P<local>yes|no)\s+(?P<state>\S+)\s+(?P<priority>\d+)"
+                         r"\/(?P<weight>\d+)\s+(?P<scope>IPv4)\snone\s+"
+                         r"((?P<etrp>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+)|(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\s+"
+                         r"(?P<rdp>\S+)$")
+
+        # ETR 11.11.11.11:33079
+        # ETR 11.11.11.11
+        p26 = re.compile(r"(^ETR\s+((?P<etrp>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+)|"
+                         r"(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})))$")
+
+        # ETR 100:99:99:99::
+        # ETR 100:99:99:99::.34273
+        p27 = re.compile(r"(^ETR\s+((?P<etrp>[a-fA-F\d\:]+\.\d+)|(?P<etr>[a-fA-F\d\:]+)))$")
+
+        # last registered 00:45:46, proxy-reply, map-notify
+        p28 = re.compile(r"last\s+registered\s+(?P<last_registered>\d{1,2}:\d{2}:\d{2}|\dw\dd),"
+                         r"\s+(?P<proxy_reply>[\S\s]+),\s+(?P<map_notify>map-notify)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -13194,6 +13472,14 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                     etr_dict.update({'nonce':nonce})
                 continue
 
+            #nonce 0xC7E970BF-0x125C7F7B
+            m = p18_1.match(line)
+            if m:
+                groups = m.groupdict()
+                nonce = groups['nonce']
+                etr_dict.update({'nonce':nonce})
+                continue
+
             # state complete, no security-capability
             m = p19.match(line)
             if m:
@@ -13212,6 +13498,14 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
 
             # Domain-ID local
             m = p21.match(line)
+            if m:
+                groups = m.groupdict()
+                domain_id = groups['domain_id']
+                etr_dict.update({'domain_id':domain_id})
+                continue
+
+            # Domain-ID '1'
+            m = p21_1.match(line)
             if m:
                 groups = m.groupdict()
                 domain_id = groups['domain_id']
@@ -13239,7 +13533,8 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                     etr_dict.update({'affinity_id_x':affinity_id_x})
                 continue
 
-            # 22.22.22.22  yes    up          10/10   IPv4 none
+            # 22.22.22.22    yes    up          10/10   IPv4 none
+            # 22:22:22:22::  yes    up          10/10   IPv4 none
             m = p23.match(line)
             if m:
                 groups = m.groupdict()
@@ -13257,6 +13552,106 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                                       'weight':weight,
                                       'scope':scope})
                 continue
+
+            # 22.22.22.22  yes    up          10/10   IPv4 none     [-]
+            m = p24.match(line)
+            if m:
+                groups = m.groupdict()
+                locators = groups['locators']
+                local = groups['local']
+                state = groups['state']
+                priority = int(groups['priority'])
+                weight = int(groups['weight'])
+                scope = groups['scope']
+                rdp = groups['rdp']
+                locators_dict = etr_dict.setdefault('locators',{})\
+                                        .setdefault(locators,{})
+                locators_dict.update({'local':local,
+                                      'state':state,
+                                      'priority':priority,
+                                      'weight':weight,
+                                      'scope':scope,
+                                      'rdp':rdp})
+                continue
+
+            # Merged locators
+            #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP             
+            #  100.99.99.99  yes    up          10/50   IPv4 none    100.99.99.99:30343       [-]
+            m = p25.match(line)
+            if m:
+                groups = m.groupdict()
+                merged_locators = groups['merged_locators']
+                local = groups['local']
+                state = groups['state']
+                priority = int(groups['priority'])
+                weight = int(groups['weight'])
+                scope = groups['scope']
+                rdp = groups['rdp']
+                merged_dict = instance_dict.setdefault('merged_locators',{})\
+                                        .setdefault(merged_locators,{})
+                if groups['etrp']:
+                    etrp = str(groups['etrp'])
+                    (etr,port) = etrp.split(":")
+                    port_val = int(port)
+                    merged_dict.update({'port':port_val})
+                elif groups['etr']:
+                    etr = groups['etr']
+                merged_dict.update({'local':local,
+                                    'state':state,
+                                    'priority':priority,
+                                    'weight':weight,
+                                    'scope':scope,
+                                    'reg_etr':etr,
+                                    'rdp':rdp})
+                continue
+
+            # ETR 11.11.11.11:33079
+            m = p26.match(line)
+            if m:
+                port = 0
+                groups = m.groupdict()
+                if groups['etrp']:
+                    etrp = str(groups['etrp'])
+                    (etr,port) = etrp.split(":")
+                elif groups['etr']:
+                    etr = groups['etr']
+                etr_dict = instance_dict.setdefault('etr',{})\
+                                        .setdefault(etr,{})
+                if port != 0:
+                   etr_dict.update({'port':int(port)})
+                continue
+
+            # ETR 100.99.99.99:34273
+            m = p27.match(line)
+            if m:
+                port = 0
+                groups = m.groupdict()
+                if groups['etrp']:
+                    etrp = str(groups['etrp'])
+                    (etr,port) = etrp.split(":")
+                elif groups['etr']:
+                    etr = groups['etr']
+                etr_dict = instance_dict.setdefault('etr',{})\
+                                        .setdefault(etr,{})
+                if port != 0:
+                   etr_dict.update({'port':int(port)})
+                continue
+
+            # last registered 00:45:46, proxy-reply, map-notify
+            m = p28.match(line)
+            if m:
+                groups = m.groupdict()
+                last_registered = groups['last_registered']
+                proxy_reply = groups['proxy_reply']
+                map_notify = groups['map_notify']
+                proxy_reply_bool = proxy_reply == "proxy-reply"
+                map_notify_bool = bool(re.search("map-notify",map_notify))
+                
+                etr_dict.update({'last_registered':last_registered,
+                                 'proxy_reply':proxy_reply_bool,
+                                 'map_notify':map_notify_bool})
+                continue
+
         return ret_dict
 
 
@@ -16896,7 +17291,7 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
         p2 = re.compile(r'^(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/'
                         r'\d{1,2}|[a-fA-F\d\.]+\/\d{1,3}),\s+uptime:\s(?P<uptime>\S+),\sexpires:\s'
                         r'(?P<expiry_time>\d{1,2}:\d{2}:\d{2}|never),\svia\s(?P<via>\S+)(,'
-                        r'\s(?P<map_reply_state>(complete|unknown-eid-forward'
+                        r'\s(?P<map_reply_state>(complete|unknown-eid-forward|forward-native'
                         r'|send-map-request|drop|incomplete)))?'
                         r'(,\s(?P<site>local-to-site|remote-to-site))?$')
 
@@ -16908,7 +17303,7 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
         # Negative cache entry, action: send-map-request
         p4 = re.compile(r'^(?P<negative_cache_entry>Negative cache entry,\s)?'
                         r'action:\s(?P<action>(send-map-request\s\+\s'
-                        r'Encapsulating to proxy ETR)|send-map-request)$')
+                        r'Encapsulating to proxy ETR)|send-map-request|forward-native)$')
 
         # 100.165.165.165  2d09h     up          10/10        4100
         # FE80::A8BB:CCFF:FE00:CA00  00:00:10  admin-down  255/0         -

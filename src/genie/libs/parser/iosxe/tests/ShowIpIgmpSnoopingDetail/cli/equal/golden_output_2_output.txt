@@ -1,0 +1,73 @@
+
+Global IGMP Snooping configuration:
+-------------------------------------------
+IGMP snooping : Disabled
+Global PIM Snooping : Disabled
+IGMPv3 snooping : Disabled
+Report suppression : Disabled
+TCN solicit query : Disabled
+TCN flood query count : 2
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Vlan 1:
+--------
+IGMP snooping : Disabled
+Pim Snooping : Disabled
+IGMPv2 immediate leave : Disabled
+Explicit host tracking : Enabled
+Multicast router learning mode : pim-dvmrp
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Topology change : No
+Vlan 5:
+--------
+IGMP snooping : Disabled
+Pim Snooping : Disabled
+IGMPv2 immediate leave : Disabled
+Explicit host tracking : Enabled
+Multicast router learning mode : pim-dvmrp
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Topology change : No
+Vlan 10:
+--------
+IGMP snooping : Disabled
+Pim Snooping : Disabled
+IGMPv2 immediate leave : Disabled
+Explicit host tracking : Enabled
+Multicast router learning mode : pim-dvmrp
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Topology change : No
+Vlan 11:
+--------
+IGMP snooping : Disabled
+Pim Snooping : Disabled
+IGMPv2 immediate leave : Disabled
+Explicit host tracking : Enabled
+Multicast router learning mode : pim-dvmrp
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Topology change : No
+Vlan 100:
+--------
+IGMP snooping : Disabled
+Pim Snooping : Disabled
+IGMPv2 immediate leave : Disabled
+Explicit host tracking : Enabled
+Multicast router learning mode : pim-dvmrp
+Robustness variable : 2
+Last member query count : 2
+Last member query interval : 1000
+
+Topology change : No
