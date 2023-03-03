@@ -2,6 +2,7 @@
 IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
     * show hw-module slot {slot} port-group mode
+    * show hw-module usbflash1 security status
 '''
 
 # Python
@@ -124,14 +125,16 @@ class ShowHwModuleStatus(ShowHwModuleStatusSchema):
             return transceiver_dict
         else:
             return {}
-
+# ==================================================================================
+#  Schema for 'show hardware led
+# ==================================================================================
 
 class ShowHardwareLedSchema(MetaParser):
     """
     Schema for show hardware led
     """
     schema = {
-        'switch': {
+        Optional('switch'): {
             Any():{
                 'system': str,
                 'beacon': str,
@@ -149,6 +152,17 @@ class ShowHardwareLedSchema(MetaParser):
                 'system_fan':str,
                 },
             },
+        Optional('system'):str,
+        Optional('status'):{
+                    str: str
+                    },
+        Optional('number_of_ports_in_status'):str,
+        Optional('express_setup'):str,
+        Optional('dc_a'):str,
+        Optional('dc_b'):str,
+        Optional('alarm-out'):str,
+        Optional('alarm-in1'):str,
+        Optional('alarm-in2'):str,
         }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -162,6 +176,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
 
         # initial variables
         ret_dict = {}
+        root_dict = ret_dict
 
         # SWITCH: 1
         p1 = re.compile('^SWITCH:\s+(?P<switch_num>\d+)$')
@@ -174,6 +189,9 @@ class ShowHardwareLed(ShowHardwareLedSchema):
 
         # PORT STATUS: (124) Hu1/0/1:GREEN Hu1/0/2:OFF Hu1/0/3:GREEN Hu1/0/4:OFF Hu1/0/5:OFF Hu1/0/6:GREEN Hu1/0/7:OFF Hu1/0/8:OFF Hu1/0/9:OFF Hu1/0/10:GREEN Hu1/0/11:GREEN Hu1/0/12:GREEN Hu1/0/13:GREEN Hu1/0/14:GREEN Fou1/0/15:GREEN Fou1/0/16:GREEN Fou1/0/17:GREEN Fou1/0/18:GREEN Fou1/0/19:GREEN Fou1/0/20:GREEN Fou1/0/21:GREEN Fou1/0/22:GREEN Hu1/0/23:GREEN Hu1/0/24:GREEN Hu1/0/25:OFF Hu1/0/26:GREEN Hu1/0/27:GREEN Hu1/0/28:GREEN Hu1/0/29:GREEN Hu1/0/30:GREEN Hu1/0/31:OFF Hu1/0/32:GREEN Hu1/0/33:GREEN Hu1/0/34:GREEN Hu1/0/35:GREEN Hu1/0/36:GREEN
         p4 = re.compile('^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
+        
+        #STATUS: (28) Gi1/0/1:FLASH_GREEN Gi1/0/2:BLACK Gi1/0/3:BLACK Gi1/0/4:BLACK Gi1/0/5:FLASH_GREEN Gi1/0/6:FLASH_GREEN Gi1/0/7:FLASH_GREEN Gi1/0/8:FLASH_GREEN Gi1/0/9:BLACK Gi1/0/10:FLASH_GREEN Gi1/0/11:FLASH_GREEN Gi1/0/12:BLACK Gi1/0/13:BLACK Gi1/0/14:BLACK Gi1/0/15:BLACK Gi1/0/16:BLACK Gi1/0/17:BLACK Gi1/0/18:BLACK Gi1/0/19:BLACK Gi1/0/20:BLACK Gi1/0/21:BLACK Gi1/0/22:BLACK Gi1/0/23:FLASH_GREEN Gi1/0/24:FLASH_GREEN Gi1/0/25:BLACK Gi1/0/26:BLACK Gi1/0/27:BLACK Gi1/0/28:BLACK
+        p4_1 = re.compile('^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
 
         # RJ45 CONSOLE: GREEN
         p5 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
@@ -183,6 +201,12 @@ class ShowHardwareLed(ShowHardwareLedSchema):
 
         # POWER-SUPPLY 1 BEACON: OFF
         p7 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+        
+        #DC-A: GREEN
+        p7_1 = re.compile('^DC-A:\s+(?P<dc_a>\w+)$')
+
+        #DC-B: BLACK
+        p7_2 = re.compile('^DC-B:\s+(?P<dc_b>\w+)$')
 
         # SYSTEM PSU: AMBER
         p8 = re.compile('^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
@@ -190,6 +214,13 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # SYSTEM FAN: GREEN
         p9 = re.compile('^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
 
+        #EXPRESS-SETUP: BLACK
+        p10 = re.compile('^EXPRESS-SETUP:\s+(?P<express_setup>\w+)$')
+
+        # ALARM-OUT: GREEN
+        # ALARM-IN1: GREEN
+        # ALARM-IN2: GREEN
+        p11 = re.compile('^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -222,6 +253,28 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['led_ports'].split():
                     port = (port.split(':'))
                     port_led_dict = root_dict.setdefault('port_led_status',{})
+                    port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
+                continue
+            
+            # STATUS: (10) Gi1/1:BLINK_GREEN-BLACK Gi1/2:BLACK-BLINK_AMBER Gi1/3:BLACK Gi1/4:BLINK_AMBER Gi1/5:BLINK_AMBER Gi1/6:BLINK_AMBER Gi1/7:BLINK_AMBER Gi1/8:BLINK_AMBER Gi1/9:BLINK_AMBER Gi1/10:BLINK_GREEN
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
+                for port in group['led_ports'].split():
+                    port = (port.split(':'))
+                    port_led_dict = root_dict.setdefault('status',{})
+                    port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
+                continue
+            
+            # STATUS: (10) Gi1/1:BLINK_GREEN-BLACK Gi1/2:BLACK-BLINK_AMBER Gi1/3:BLACK Gi1/4:BLINK_AMBER Gi1/5:BLINK_AMBER Gi1/6:BLINK_AMBER Gi1/7:BLINK_AMBER Gi1/8:BLINK_AMBER Gi1/9:BLINK_AMBER Gi1/10:BLINK_GREEN
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
+                for port in group['led_ports'].split():
+                    port = (port.split(':'))
+                    port_led_dict = root_dict.setdefault('status',{})
                     port_led_dict.update({port[0]: port[1]})
                 continue
 
@@ -247,6 +300,18 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 power_supply_dict= root_dict.setdefault('power_supply_beacon_status',{})
                 power_supply_dict.setdefault(int(group['power_supply_num']),group['power_supply_status'])
                 continue
+            
+            #DC-A: GREEN
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'dc_a': group['dc_a']})
+
+            #DC-B: BLACK
+            m = p7_2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'dc_b': group['dc_b']})
 
             # SYSTEM PSU: AMBER
             m = p8.match(line)
@@ -261,7 +326,21 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 group = m.groupdict()
                 root_dict.update({'system_fan' : group['system_fan']})
                 continue
-               
+            
+            #EXPRESS-SETUP: BLACK
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'express_setup' : group['express_setup']})
+                continue
+
+            #ALARM-OUT: GREEN
+            #ALARM-IN1: GREEN
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({group['alarm'].lower() : group['alarm_color']})
+
         return ret_dict
 
 
@@ -368,4 +447,43 @@ class ShowHwModuleSlotPortGroupMode(ShowHwModuleSlotPortGroupModeSchema):
                     'mode' : str(group['mode']),
                 })
                 continue
+        return ret_dict
+
+
+class ShowHwModuleUsbflash1SecuritySchema(MetaParser):
+    '''Schema for show hw-module usbflash1 security status'''
+    schema = {
+        'switch': {
+            Any(): {
+                'auth_status': str
+            }
+        }
+    }
+
+
+class ShowHwModuleUsbflash1Security(ShowHwModuleUsbflash1SecuritySchema):
+    '''Parser for show hw-module usbflash1 security status'''
+
+    cli_command = ['show hw-module usbflash1 switch {switch_num} security status', 'show hw-module usbflash1 security status']
+
+    def cli(self, switch_num='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(switch_num = switch_num) if switch_num else self.cli_command[1])
+        
+        # 1                    USB Not Present
+        # 2                    USB Not Present
+        # 3                    USB Not Present
+        p1 = re.compile(r'^(?P<switch>\d+)\s+(?P<auth_status>.+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 1                    USB Not Present
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {'auth_status': m.groupdict()['auth_status']})
+                continue
+        
         return ret_dict

@@ -577,7 +577,7 @@ class MonitorCaptureStopSchema(MetaParser):
         'packets_received': int,
         'packets_dropped': int,
         'packets_oversized': int,
-        'bytes_dropped_in_asic': int,
+        Optional('bytes_dropped_in_asic'): int,
         'stopped_capture_name': str
     }
 
@@ -656,6 +656,282 @@ class MonitorCaptureStop(MonitorCaptureStopSchema):
             if m:
                 stopped_capture_name = m.groupdict()['stopped_capture_name']
                 ret_dict.update({'stopped_capture_name': stopped_capture_name})
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show monitor capture {capture_name} buffer'
+#=================================================
+
+class ShowMonitorCaptureBufferSchema(MetaParser):
+    schema = {
+
+        'capture': {
+            int: {
+                'time': str,
+                'scr_mac_address': str,
+                'dst_mac_address': str,
+                'protocol': str,
+                'packet_size': int,
+                'data': str,
+            },
+        }
+    }
+
+#=================================================
+# Parser for 'show monitor capture {capture_name} buffer'
+#=================================================
+
+class ShowMonitorCaptureBuffer(ShowMonitorCaptureBufferSchema):
+
+    cli_command = 'show monitor capture {capture_name} buffer'
+
+    def cli(self, capture_name="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(capture_name=capture_name),timeout=180)
+
+        # 1   0.000000 f4:db:e6:5b:97:04 -> 01:80:c2:00:00:00 STP 60 RST. Root = 32768/805/6c:b2:ae:49:6a:40  Cost = 0  Port = 0x8185
+        p1 = re.compile(r'^(?P<pck_no>\d+) +(?P<time>[\d\.]+) +(?P<scr_mac_address>[\da-f\:\.]+) +-> +(?P<dst_mac_address>[\da-f\:\.]+) +(?P<protocol>[A-Z]+) +(?P<packet_size>[0-9]+) +(?P<data>.*)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Capture duration - 56 seconds
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                pck_no = group.pop('pck_no')
+                capture = ret_dict.setdefault('capture', {}).setdefault(int(pck_no), {})
+                capture.update({k: v for k, v in group.items() if "packet_size" != k })
+                capture.update({"packet_size":int(group['packet_size'])})
+                continue
+        return ret_dict
+
+# ======================================================
+# Schema for 'show monitor capture buffer detailed '
+# ======================================================
+class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
+    schema = {
+        'framenumber': {
+            Any():{
+                Optional('source_ipv4'): str,
+                Optional('destination_ipv4'): str, 
+                Optional('source_eth'): str, 
+                Optional('destination_eth'): str,
+                Optional('interface_id'): str,
+                Optional('interface_name'): str,
+                Optional('encapsulation_type'): str,
+                Optional('arrival_time'): str,
+                Optional('time_shift_for_this_packet'): str,
+                Optional('epoch_time'): str,
+                Optional('time_delta_from_previous_captured_frame'): str,
+                Optional('time_delta_from_previous_displayed_frame'): str,
+                Optional('time_since_reference_or_first_frame'): str,
+                Optional('frame_number'): str,
+                Optional('frame_length'): str,
+                Optional('capture_length'): str,
+                Optional('frame_is_marked'): str,
+                Optional('frame_is_ignored'): str,
+                Optional('protocols_in_frame'): str,
+                Optional('type'): str,
+                Optional('sgt'): str,
+                Optional('destination'): str,
+                Optional('source'): str,
+                Optional('address'): str,
+                Optional('options'): str,
+                Optional('version'): str,
+                Optional('total_length'): str,
+                Optional('identification'): str,
+                Optional('flags'): str,
+                Optional('fragment_offset'): str,
+                Optional('time_to_live'): str,
+                Optional('protocol'): str,
+                Optional('header_checksum'): str,
+                Optional('header_checksum_status'): str,
+                Optional('length'): str,
+                Optional('time_since_previous_frame'): str,
+                Optional('time_since_first_frame'): str,
+                Optional('reserved'): str,
+                Optional('stream_index'): str,
+                Optional('checksum'): str, 
+                Optional('source_port'): str, 
+                Optional('group_policy_id'): str, 
+                Optional('destination_port'): str, 
+                Optional('checksum_status'): str,
+                Optional('tcp_segment_len'): str,
+                Optional('sequence_number'): str,
+                Optional('next_sequence_number'): str,
+                Optional('acknowledgment_number'): str,
+                Optional('window_size_value'): str,
+                Optional('calculated_window_size'): str,
+                Optional('window_size_scaling_factor'): str,
+                Optional('urgent_pointer'): str,
+                Optional('bytes_in_flight'): str,
+                Optional('bytes_sent_since_last_psh_flag'): str,
+                Optional('severity_level'): str,
+                Optional('group'): str,
+                Optional('the_rto_for_this_segment_was'): str,
+                Optional('rto_based_on_delta_from_frame'): str,
+                Optional('time_since_first_frame_in_this_tcp_stream'): str,
+                Optional('time_since_previous_frame_in_this_tcp_stream'): str,
+                Optional('tcp_source_port'): int,
+                Optional('tcp_destination_port'): int,
+                Optional('tcp_seq_num'): int,
+                Optional('tcp_len'): int,
+                Optional('udp_source_port'): int,
+                Optional('udp_destination_port'): int,
+                Optional('next_header'): str,
+                Optional('hop_limit'): str,
+                Optional('payload_length'): str,
+                Optional('source_ipv6'): str,
+                Optional('destination_ipv6'): str,
+                Optional('vxlan_id'): int,
+                Optional('dscp_value'): int,
+                Optional('packet_identifier'): str,
+                Optional('authenticator'): str,
+                Optional('vendor_id'): str
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show monitor capture buffer detailed '
+# ======================================================
+class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
+    """Parser for 'show monitor capture buffer detailed"""
+    cli_command = ['show monitor capture {capture_name} buffer detailed',
+                    'show monitor capture {capture_name} buffer display-filter "{filter_criteria}" detailed']
+    
+    def cli(self, capture_name="", filter_criteria="", output=None):
+        if output is None:
+            # Build the command
+            if filter_criteria:
+                cmd = self.cli_command[1].format(capture_name=capture_name, filter_criteria=filter_criteria)
+            else:
+                cmd = self.cli_command[0].format(capture_name=capture_name)
+            # Execute the command
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Frame 1: 1496 bytes on wire (11968 bits), 80 bytes captured (640 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+        p0 =re.compile(r'^Frame (?P<frame_num>\d+): +(?P<frame_value>[\w\s\(\)\,\/]+)$')
+
+        # Frame Number: 1
+        p1 = re.compile(r'^(?P<pattern>[a-zA-Z \[]+): +(?P<value>[\w\s\(\)\:\,\.\/\]\[]+)$')
+        
+        # Internet Protocol Version 4, Src: 49.1.1.2, Dst: 91.4.1.1
+        p2 = re.compile(r'^Internet Protocol Version 4, Src:+\s+(?P<source_ipv4>[\d\.]+)+, Dst:+\s+(?P<destination_ipv4>[\.\d]+)$')
+
+        # Ethernet II, Src: fa:88:8e:78:00:02 (fa:88:8e:78:00:02), Dst: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+        p3=re.compile(r'^Ethernet II, Src:+\s+(?P<source_eth>[\:\w\)\( ]+)+, Dst:+\s+(?P<destination_eth>[\:\w\(\) ]+)$')
+
+        # Transmission Control Protocol, Src Port: 0, Dst Port: 0, Seq: 1, Len: 942
+        p4 = re.compile(r'^Transmission Control Protocol, Src Port:+\s+(?P<tcp_source_port>[\d]+)+, Dst Port:+\s+(?P<tcp_destination_port>[\d]+)+, Seq:+\s+(?P<tcp_seq_num>[\d]+)+, Len:+\s+(?P<tcp_len>[\d]+)$')
+
+        # User Datagram Protocol, Src Port: 65473, Dst Port: 4789
+        p5 = re.compile(r'^User Datagram Protocol, Src Port:+\s+(?P<udp_source_port>[\d]+)+, Dst Port:+\s+(?P<udp_destination_port>[\d]+)$')
+
+        # Internet Protocol Version 6, Src: 2000:10::10, Dst: 2000:14::20
+        p6 = re.compile(r'^Internet Protocol Version 6, Src:+\s+(?P<source_ipv6>[\d\:]+)+, Dst:+\s+(?P<destination_ipv6>[\:\d]+)$')
+        
+        # VXLAN Network Identifier (VNI): 50000
+        p7 = re.compile(r'^VXLAN +Network +Identifier +\(VNI+\): +(?P<vxlan_id>(\d+))$')
+
+        #     1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
+        p8 = re.compile(r'^[\S\s]+\s+= Differentiated Services Codepoint: [\s\S]+ \((?P<dscp_value>\d+)\)$')
+
+        # loop to split lines of output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Frame 1: 1496 bytes on wire (11968 bits), 80 bytes captured (640 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+            m = p0.match(line)
+            if m:
+                groups = m.groupdict()
+                framenumber = int(groups["frame_num"])
+                result_dict = ret_dict.setdefault('framenumber', {}).setdefault(framenumber, {})
+                continue
+
+            # Frame Number: 1
+            # Capture Length: 80 bytes (640 bits)
+            # [Frame is marked: False]
+            # Encapsulation type: Ethernet [1]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_').replace('[', '')
+                result_dict.update({scrubbed.lower(): (group['value'].replace(']', '').replace('[', ''))})
+                continue
+            
+            # Internet Protocol Version 4, Src: 49.1.1.2, Dst: 91.4.1.1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({
+                    "source_ipv4":groups['source_ipv4'],
+                    "destination_ipv4":groups['destination_ipv4']
+                    })
+                continue
+
+            # Ethernet II, Src: fa:88:8e:78:00:02 (fa:88:8e:78:00:02), Dst: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({
+                    "source_eth":groups['source_eth'],
+                    "destination_eth":groups['destination_eth']
+                    })
+                continue
+
+            # Transmission Control Protocol, Src Port: 0, Dst Port: 0, Seq: 1, Len: 942
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({
+                    "tcp_source_port":int(groups['tcp_source_port']),
+                    "tcp_destination_port":int(groups['tcp_destination_port']),
+                    "tcp_seq_num":int(groups['tcp_seq_num']),
+                    "tcp_len":int(groups['tcp_len'])
+                    })
+                continue
+
+            # User Datagram Protocol, Src Port: 65473, Dst Port: 4789
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({
+                    "udp_source_port":int(groups['udp_source_port']),
+                    "udp_destination_port":int(groups['udp_destination_port'])
+                    })
+                continue
+
+            # Internet Protocol Version 6, Src: 2000:10::10, Dst: 2000:14::20
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({
+                    "source_ipv6":groups['source_ipv6'],
+                    "destination_ipv6":groups['destination_ipv6']
+                    })
+                continue
+
+            # VXLAN Network Identifier (VNI): 50000
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                result_dict.update({"vxlan_id":int(groups['vxlan_id'])})
+                continue
+            
+            # 1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dscp_value":int(group['dscp_value'])})
                 continue
 
         return ret_dict

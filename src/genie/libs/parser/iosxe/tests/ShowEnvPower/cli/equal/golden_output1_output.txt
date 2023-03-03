@@ -1,0 +1,10 @@
+PoE Power - Available:184(w)
+
+Power Source   Type           Power(w)  Mode      
+-------------- -------------- --------- --------- 
+A.C. Input     Auxilliary     150(w)    Available 
+
+Gi1/1/1        Type1          60(w)     Available 
+
+Built-In                      310(w) 
+---------------------------------------------------

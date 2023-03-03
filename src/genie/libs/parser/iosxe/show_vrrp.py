@@ -49,17 +49,17 @@ class ShowVrrpSchema(MetaParser):
                 'group': {
                     int: {
                         Optional('description'): str,
-                        'state': str,
+                        Optional('state'): str,
                         Optional('state_duration'): {
                             'minutes': int,
                             'seconds': float,
                         },
-                        'virtual_ip_address': str,
-                        'virtual_mac_address': str,
-                        'advertise_interval_secs': float,
-                        'preemption': str,
+                        Optional('virtual_ip_address'): str,
+                        Optional('virtual_mac_address'): str,
+                        Optional('advertise_interval_secs'): float,
+                        Optional('preemption'): str,
                         Optional('vrrp_delay'): float,
-                        'priority': int,
+                        Optional('priority'): int,
                         Optional('vrrs_name'): {
                             str: {
                                 Optional('track_object'): {
@@ -77,12 +77,12 @@ class ShowVrrpSchema(MetaParser):
                             }
                         },
                         Optional('auth_text'): str,
-                        'master_router_ip': str,
+                        Optional('master_router_ip'): str,
                         Optional('master_router'): str,
-                        'master_router_priority': Or(int, str),
-                        'master_advertisement_interval_secs': Or(float, str),
+                        Optional('master_router_priority'): Or(int, str),
+                        Optional('master_advertisement_interval_secs'): Or(float, str),
                         Optional('master_advertisement_expiration_secs'): float,
-                        'master_down_interval_secs': Or(float, str),
+                        Optional('master_down_interval_secs'): Or(float, str),
                         Optional('master_down_expiration_secs'): float,
                         Optional('flags'): str,
                         Optional('address_family'): {
@@ -94,7 +94,7 @@ class ShowVrrpSchema(MetaParser):
                                     'seconds': float,
                                 },
                                 'virtual_ip_address': str,
-                                'virtual_secondary_addresses': list,
+                                Optional('virtual_secondary_addresses'): list,
                                 'virtual_mac_address': str,
                                 'advertise_interval_secs': float,
                                 'preemption': str,
@@ -166,7 +166,8 @@ class ShowVrrp(ShowVrrpSchema):
         p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT|BACKUP)).*$')
 
         # State duration 8 mins 40.214 secs
-        p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
+        # State duration 49.507 secs
+        p2_1 = re.compile(r'^State\s+duration\s+((?P<minutes>\d+)\s+mins\s+)?(?P<seconds>[\d\.]+)\s+secs$')
 
         # Virtual IP address is 10.2.0.10
         # Virtual IP address is FE80::1
@@ -291,7 +292,7 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 dur_dict = vrrp_dict.setdefault('state_duration', {})
-                dur_dict.update({'minutes': int(group['minutes']), 
+                dur_dict.update({'minutes': int(group['minutes']) if group['minutes'] else 0, 
                                  'seconds': float(group['seconds'])})
                 continue
 
@@ -562,8 +563,10 @@ class ShowVrrpBriefSchema(MetaParser):
             Any(): {
                 'group': {
                     Any(): {
+                        Optional('version'):str,
                         'pri': int,
                         'time': int,
+                        Optional('own'):str,
                         'pre': str,
                         'state': str,
                         'master_addr': str,
@@ -606,6 +609,11 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
             r'(?P<state>\w+)\s+(?P<master_addr>[\d\.]+)\s+'
             r'(?P<group_addr>[\d\.]+)')
+        #Interface          Grp  A-F Pri  Time Own Pre State   Master addr   Group addr
+        #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+        p1_1 = re.compile(
+        r'^(?P<interface_name>\S+)\s+(?P<grp>\d+)\s+(?P<version>\w+)\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<own>\w+)'
+        r'\s+(?P<pre>\w+)\s+(?P<state>\w+)\s+(?P<master_addr>[\w\S:.]*)\s+(?P<group_addr>[\w:.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -631,8 +639,29 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
                 interface_dict['group_addr'] =  group['group_addr']
                 continue
 
-        return parsed_dict
+            #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = \
+                    Common.convert_intf_name(group['interface_name'])
+                group_id =  int(group['grp'])
+                
+                interface_dict = parsed_dict.setdefault('interface', {})\
+                    .setdefault(interface_name, {})\
+                    .setdefault('group', {})\
+                    .setdefault(group_id, {})
+                interface_dict['version'] =  group['version']
+                interface_dict['pri'] =  int(group['pri'])
+                interface_dict['time'] =  int(group['time'])
+                interface_dict['own']  = group['own']
+                interface_dict['pre'] =  group['pre']
+                interface_dict['state'] =  group['state']
+                interface_dict['master_addr'] =  group['master_addr']
+                interface_dict['group_addr'] =  group['group_addr']
+                continue
 
+        return parsed_dict
 
 # ================================
 # Parser for 'show vrrp brief all'

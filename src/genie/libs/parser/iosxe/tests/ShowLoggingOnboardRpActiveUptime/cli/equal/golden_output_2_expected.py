@@ -20,7 +20,7 @@ expected_output={
     'current_reset_reason': 'Chassis is reloading;switch num conflicts with peer',
     'current_reset_timestamp': '07/05/2022 10:50:59',
     'current_slot': 1,
-    'chassis_type': 80,
+    'chassis_type': '80',
     'current_uptime': {
       'years': 0,
       'weeks': 0,

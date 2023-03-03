@@ -1,0 +1,32 @@
+=================================================
+Output for router lisp 0 instance-id 0
+=================================================
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID
+Shire          never     no     --                   0        1.1.1.0/24
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID
+Shire          never     no     --                   4100     192.168.1.0/24
+               never     no     --                   4100     194.168.1.0/24
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID
+Shire          never     no     --                   4101     193.168.1.0/24

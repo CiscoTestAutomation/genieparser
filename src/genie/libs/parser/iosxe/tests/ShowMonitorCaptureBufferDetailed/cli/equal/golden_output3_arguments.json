@@ -1,0 +1,4 @@
+{
+    "capture_name": "dscp_ssh",
+    "filter_criteria": "frame.number in {1 2}"
+}

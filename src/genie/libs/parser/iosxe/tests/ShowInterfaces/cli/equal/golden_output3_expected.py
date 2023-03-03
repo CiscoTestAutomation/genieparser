@@ -2,6 +2,7 @@ expected_output = {
     "Serial1/0/2:0": {
         "port_channel": {"port_channel_member": False},
         "enabled": False,
+        "is_deleted": False,
         "suspended": False,
         "line_protocol": "down",
         "oper_status": "down",

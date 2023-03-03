@@ -428,11 +428,12 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
         # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
         # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
+        # DH4 10.0.0.2                                 000b.000c.000d(D)      Gi1/0/1    access     100 ( 100)      0024       45mn       STALE      221 s(7177 s)    no         yes          000b.000c.000d
         device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
                                          r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
                                          r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
-                                         r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss))?'
+                                         r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss)|(\d+\s+s\(\d+\s+s\)))?'
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
                                          r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
 
@@ -2181,21 +2182,23 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
         # L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60      
 
         # S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47               60
+        # L2F  0001.0002.0001         Gi1/0/23   110        NO TRUST   MAC-REACHABLE    231 s            LISP-DT-GLEAN-VLAN-MULTI-IP 31
+        # L    ba25.cdf4.ad38         Vl110      110        TRUSTED    MAC-REACHABLE    N/A              LISP-DT-GLEAN-VLAN-MULTI-IP 60
+        
         device_capture = re.compile(
             r"^(?P<dev_code>\S+)"
             r"\s+(?P<link_layer_address>(\S+\.\S+\.\S+))"
             r"\s+(?P<interface>\S+)"
             r"\s+(?P<vlan_id>\d+)"
-            r"\s+(?P<prlvl>\S+)"
+            r"\s+(?P<prlvl>\S+|\S+\s?\S+)"
             r"\s+(?P<state>\S+)"
-            r"(\s+(?P<time_left>\S+\ss))?"
+            r"(\s+(?P<time_left>\S+\ss|N\/A))?"
             r"\s+(?P<policy>\S+)"
             r"(\s+(?P<input_index>\d+))?$"
         )
         attached_capture = re.compile(
             r"^Attached IP: (?P<ip>\S+)$"
         )
-
         device_index = 0
         attached_counter = 0
         for line in out.splitlines():

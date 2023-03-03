@@ -2303,7 +2303,9 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         p1 = re.compile(r'^Global Dot1x feature is\s+(?P<global_dot1x_feature>\w+)')
 
         # TenGigabitEthernet1/0/6:
-        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+):')
+        # Tunnel100: 
+        # TenGigabitEthernet1/0/6.30:
+        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+|Tunnel\d+|\S+\d+\/\d+\/\d+\.\d+):')
 
         # CTS_status : enabled,mode: MANUAL
         p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+),\s+mode:\s+(?P<mode>\S+)')
@@ -3103,7 +3105,6 @@ class ShowCtsSxpSgtMapBrief(ShowCtsSxpSgtMapBriefSchema):
 
         return result_dict
 
-
 class ShowCtsServerListSchema(MetaParser):
     """
         Schema for:
@@ -3413,3 +3414,436 @@ class ShowCtsServerList(ShowCtsServerListSchema):
                 continue
 
         return result_dict
+# =====================================
+# Schema for:
+#  * 'show cts policy-server statistics all'
+#  * 'show cts policy-server statistics active'
+#  * 'show cts policy-server statistics name <server_name>'
+# =====================================
+class ShowCtsPolicyServerStatisticsSchema(MetaParser):
+    """
+        Schema for:
+            show cts policy-server statistics all
+    """
+    schema = {
+        "cts_policy_server_stats": {
+            Any(): {  
+                "server_state": str,
+                "num_of_req_sent": int,
+                "num_of_req_sent_fail": int,
+                "num_of_res_recv_fail": int,
+                "num_of_res_recv": int,
+                "http_200_ok": int,
+                "http_400_badreq":int,
+                "http_401_unauthorized_req": int,
+                "http_403_req_forbidden": int,
+                "http_404_notfound": int,           
+                "http_408_reqtimeout": int,
+                "http_415_unsupported_media": int,
+                "http_500_servererr": int,
+                "http_501_req_nosupport": int,
+                "http_503_service_unavailable": int,
+                "http_429_too_many_requests" : int,
+                "tcp_or_tls_handshake_err": int,
+                "http_other_err" : int   
+
+            }
+        }
+    }
+# =====================================
+# Parser for:
+#  * 'show cts policy-server statistics all'
+#  * 'show cts policy-server statistics active'
+#  * 'show cts policy-server statistics name <server_name>'
+# =====================================
+class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
+    """
+        Parser for:
+            show cts policy-server statistics all
+            show cts policy-server statistics active
+            show cts policy-server statistics name <server_name>
+
+    """
+    cli_command = ['show cts policy-server statistics all', 
+                 'show cts policy-server statistics active', 
+                 'show cts policy-server statistics name {server_name}']
+
+    def cli(self, all=None, active=None, server_name=None, output=None):
+        if output is None:
+            if server_name:
+                cmd = self.cli_command[2].format(server_name=server_name)
+            elif active:
+                cmd = self.cli_command[1]
+            elif all:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+            
+            output.lower()
+
+        # initial return dictionary
+        result_dict = {}
+        
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server State : DEAD
+        p1 = re.compile(r'^server +state +: +(?P<server_state>\S+)$')
+        # Number of Request sent        : 8
+        p2 = re.compile(r'^number +of +request +sent +: +(?P<num_of_req_sent>\d+)$')
+        # Number of Request sent fail   : 1
+        p3 = re.compile(r'^number +of +request +sent +fail +: +(?P<num_of_req_sent_fail>\d+)$')
+        # Number of Response received   : 5
+        p4 = re.compile(r'^number +of +response +received +: +(?P<num_of_res_recv>\d+)$')
+        # Number of Response recv fail  : 3
+        p5 = re.compile(r'^number +of +response +recv +fail +: +(?P<num_of_res_recv_fail>\d+)$')
+        #     HTTP 200 OK                 : 5
+        p6 = re.compile('^http +200 +ok +: +(?P<http_200_ok>\d+)$')
+        #     HTTP 400 BadReq             : 0
+        p7 = re.compile('^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
+        #     HTTP 401 UnAuthorized Req   : 1
+        p8 = re.compile('^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
+        #     HTTP 403 Req Forbidden      : 0
+        p9 = re.compile('^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
+        #     HTTP 404 NotFound           : 0
+        p10 = re.compile('^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
+        #     HTTP 408 ReqTimeout         : 0
+        p11 = re.compile('^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
+        #     HTTP 415 UnSupported Media  : 0
+        p12 = re.compile('^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
+        #     HTTP 500 ServerErr          : 0
+        p13 = re.compile('^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
+        #     HTTP 501 Req NoSupport      : 0
+        p14 = re.compile('^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
+        #     HTTP 503 Service Unavailable: 0
+        p15 = re.compile('^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
+        #     HTTP 429 Too Many Requests  : 0
+        p16 = re.compile('^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
+        #     TCP or TLS handshake error  : 2
+        p17 = re.compile('^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
+        #     HTTP Other Error            : 0
+        p18 = re.compile('^http +other +error +: +(?P<http_other_err>\d+)$')
+       
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            map_dict = result_dict.setdefault('cts_policy_server_stats', {})
+            print(line)
+            m0 = p0.match(line)
+            if m0:
+                
+                policy_dict = map_dict.setdefault(m0.group('server_name'), {})
+                continue
+
+            m1 = p1.match(line)
+            if m1:
+                policy_dict['server_state'] = m1.group('server_state')
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                policy_dict['num_of_req_sent']= int(m2.group('num_of_req_sent'))
+                continue
+            m3 = p3.match(line)
+            if m3:
+                policy_dict['num_of_req_sent_fail']= int(m3.group('num_of_req_sent_fail'))
+                continue
+            m4 = p4.match(line)
+            if m4:
+                policy_dict['num_of_res_recv']= int(m4.group('num_of_res_recv'))
+                continue
+            m5 = p5.match(line)
+            if m5:
+                policy_dict['num_of_res_recv_fail']= int(m5.group('num_of_res_recv_fail'))
+                continue
+            m6 = p6.match(line)
+            if m6:
+                policy_dict['http_200_ok']= int(m6.group('http_200_ok'))
+                continue
+            m7 = p7.match(line)
+            if m7:
+                policy_dict['http_400_badreq']= int(m7.group('http_400_badreq'))
+                continue
+            m8 = p8.match(line)
+            if m8:
+                policy_dict['http_401_unauthorized_req']= int(m8.group('http_401_unauthorized_req'))
+                continue
+            m9 = p9.match(line)
+            if m9:
+                policy_dict['http_403_req_forbidden']= int(m9.group('http_403_req_forbidden'))
+                continue
+            m10 = p10.match(line)
+            if m10:
+                policy_dict['http_404_notfound']= int(m10.group('http_404_notfound'))
+                continue
+                
+            m11 = p11.match(line)
+            if m11:
+                policy_dict['http_408_reqtimeout']= int(m11.group('http_408_reqtimeout'))
+                continue
+            m12 = p12.match(line)
+            if m12:
+                policy_dict['http_415_unsupported_media']= int(m12.group('http_415_unsupported_media'))
+                continue
+            m13 = p13.match(line)
+            if m13:
+                policy_dict['http_500_servererr']= int(m13.group('http_500_servererr'))
+                continue
+            m14 = p14.match(line)
+            if m14:
+                policy_dict['http_501_req_nosupport']= int(m14.group('http_501_req_nosupport'))
+                continue
+            m15 = p15.match(line)
+            if m15:
+                policy_dict['http_503_service_unavailable']= int(m15.group('http_503_service_unavailable'))
+                continue
+            m16 = p16.match(line)
+            if m16:
+                policy_dict['http_429_too_many_requests']= int(m16.group('http_429_too_many_requests'))
+                continue
+            m17 = p17.match(line)
+            if m17:
+                policy_dict['tcp_or_tls_handshake_err']= int(m17.group('tcp_or_tls_handshake_err'))
+                continue
+            m18 = p18.match(line)
+            if m18:
+                policy_dict['http_other_err']= int(m18.group('http_other_err'))
+                continue
+        return result_dict
+
+# =====================================
+# Schema for:
+#  * 'show cts policy-server details all'
+#  * 'show cts policy-server details active'
+#  * 'show cts policy-server details name <server_name>'
+# =====================================
+class ShowCtsPolicyServerDetailsSchema(MetaParser):
+    """
+        Schema for:
+            show cts policy-server details all
+    """
+    
+    schema = {
+        "cts_policy_server_details": {
+            
+            Any(): {
+                "server_status": str,
+                Optional("ipv4_address"): {
+                    Any(): str
+                }, 
+                Optional("ipv6_address"): {
+                    Any(): str
+                },
+                Optional("domain_name"): {
+                    Any() : str
+                },
+                Optional("trustpoint")      : str,
+                Optional("port_num")        : int,
+                Optional("retransmit_count") : int,
+                Optional("timeout")         : int,
+                Optional("app_content_type") : str,
+                Optional("trustpoint_chain") : str    
+                
+            }
+        }
+    }
+
+# =====================================
+# Parser for:
+#  * 'show cts policy-server details all'
+#  * 'show cts policy-server details active'
+#  * 'show cts policy-server details name <server_name>'
+# =====================================
+class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
+    """
+        Parser for:
+            show cts policy-server details all
+            show cts policy-server details active
+            show cts policy-server details name <server_name>
+
+    """
+    cli_command = ['show cts policy-server details all', 
+                 'show cts policy-server details active', 
+                 'show cts policy-server details name {server_name}']
+
+    def cli(self, all=None, active=None, server_name=None, output=None):
+        if output is None:
+            if server_name:
+                cmd = self.cli_command[2].format(server_name=server_name)
+            elif active:
+                cmd = self.cli_command[1]
+            elif all:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+            
+            output.lower()
+
+        # initial return dictionary
+        results_dict = {}
+        
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server Status : Inactive
+        p1 = re.compile(r'^server +status +: +(?P<server_status>\S+)$')
+        # IPv4 Address     : 10.76.119.181 (Reachable)
+        p2 = re.compile(r'^ipv4\s+address\s*: +(?P<ipv4_address>\S+)(:?\s*\((?P<ipv4_status>\S+)\))?$')
+        # Domain-name      : cts-auto-cls1-ise3.cisco.com (Reachable)
+        p3 = re.compile(r'^domain-name\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
+        # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
+        p4 = re.compile(r'^trustpoint +: +(?P<trustpoint>\S+)$')
+        # Port-num         : 9063
+        p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
+        #     Retransmit count : 3
+        p6 = re.compile('^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        #     Timeout          : 15
+        p7 = re.compile('^timeout +: +(?P<timeout>\d+)$')
+        #    App Content type : JSON
+        p8 = re.compile('^app +content +type +: +(?P<app_content_type>\S+)$')
+        #    Trustpoint chain : NOT CONFIGURED
+        p9 = re.compile('^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        # IPv6 Address     : 1100::101 (Reachable)
+        p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # skip empty lines
+            if not line:
+                continue
+
+            maps_dict = results_dict.setdefault('cts_policy_server_details', {})
+            
+            # Server Name  : cts-auto-cls1-ise1.cisco.com
+            m0 = p0.match(line)
+            if m0:
+                details_dict = maps_dict.setdefault(m0.group('server_name'), {})
+                continue
+            # Server Status : Inactive
+            m1 = p1.match(line)
+            if m1:
+                details_dict['server_status'] = m1.group('server_status')
+                continue
+            # IPv4 Address     : 10.76.119.181 (Reachable)
+            m2 = p2.match(line)
+            if m2:
+                ipv4_grp = m2.groupdict()
+                ipv4_dict = details_dict.setdefault('ipv4_address', {})
+                if ipv4_grp['ipv4_status']:
+                    ipv4_dict[ipv4_grp['ipv4_address']] = ipv4_grp['ipv4_status']
+                else:
+                    ipv4_dict[ipv4_grp['ipv4_address']] = 'NA'
+                continue
+            # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+            m3 = p3.match(line)
+            if m3:
+                domain_group = m3.groupdict()
+                domain_dict = details_dict.setdefault('domain_name', {})
+                domain_dict[domain_group['domain_name']] = domain_group['domain_status']
+            # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
+            m4 = p4.match(line)
+            if m4:
+                details_dict['trustpoint']= m4.group('trustpoint')
+                continue
+            # Port-num         : 9063
+            m5 = p5.match(line)
+            if m5:
+                details_dict['port_num']= int(m5.group('port_num'))
+                continue
+            #     Retransmit count : 3
+            m6 = p6.match(line)
+            if m6:
+                details_dict['retransmit_count']= int(m6.group('retransmit_count'))
+                continue
+            #     Timeout          : 15
+            m7 = p7.match(line)
+            if m7:
+                details_dict['timeout']= int(m7.group('timeout'))
+                continue
+            #    App Content type : JSON
+            m8 = p8.match(line)
+            if m8:
+                details_dict['app_content_type']= m8.group('app_content_type')
+                continue
+            #    Trustpoint chain : NOT CONFIGURED
+            m9 = p9.match(line)
+            if m9:
+                details_dict['trustpoint_chain']= m9.group('trustpoint_chain')
+                continue
+            # IPv6 Address     : 1100::101 (Reachable)
+            m10 = p10.match(line)
+            if m10:
+                ipv6_grp = m10.groupdict()
+                ipv6_dict = details_dict.setdefault('ipv6_address', {})
+                
+                if ipv6_grp['ipv6_status']:
+                    ipv6_dict[ipv6_grp['ipv6_address']] = ipv6_grp['ipv6_status']
+                else:
+                    ipv6_dict[ipv6_grp['ipv6_address']] = 'NA'
+                continue
+        
+        return results_dict
+
+class ShowPlatformSoftwareFedActiveAclSgaclSchema(MetaParser):
+    """Schema for show platform software fed active acl sgacl cell all"""
+
+    schema = {
+        'active_acl_sgacl_cell':{
+            Any():{
+                Optional('sgt'): int,
+                Optional('dgt'): int,
+                Optional('monitor_mode'): int,
+                Optional('counter_oid'): int,
+                Optional('acl_cg_id'): str
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedActiveAclSgacl(ShowPlatformSoftwareFedActiveAclSgaclSchema):
+    """
+    show platform software fed {instance} acl sgacl cell all
+    """
+    cli_command = [
+                    'show platform software fed {instance} acl sgacl cell all',
+                    'show platform software fed {switch} {instance} acl sgacl cell all'                                                  
+                  ]
+    
+    def cli(self, instance="",switch="", output=None):
+                        
+        if output is None:            
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch,instance=instance)
+            else:
+                cmd = self.cli_command[0].format(instance=instance)
+                    
+            output = self.device.execute(cmd)
+            
+        ret_dict = {}
+        index = 1
+
+        #SGT       DGT     Monitor-Mode    Counter-OID   ACL-CG-ID
+        #0      0                0            2610             529
+        p1 = re.compile(r'^(?P<sgt>\d+)\s+(?P<dgt>\d+)\s+(?P<monitor_mode>\d+)\s+(?P<counter_oid>\d+)\s+(?P<acl_cg_id>\S+)$')
+        
+        for line in output.splitlines(): 
+            line = line.strip()
+            
+            #SGT       DGT     Monitor-Mode    Counter-OID   ACL-CG-ID
+            #0      0                0            2610             529
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                active_acl_sgacl_cell = ret_dict.setdefault('active_acl_sgacl_cell', {}).setdefault(index,{})
+                active_acl_sgacl_cell['sgt'] = int(group['sgt'])
+                active_acl_sgacl_cell['dgt'] = int(group['dgt'])
+                active_acl_sgacl_cell['monitor_mode'] = int(group['monitor_mode'])
+                active_acl_sgacl_cell['counter_oid'] = int(group['counter_oid'])
+                active_acl_sgacl_cell['acl_cg_id'] = group['acl_cg_id']
+                index += 1
+                
+        return ret_dict

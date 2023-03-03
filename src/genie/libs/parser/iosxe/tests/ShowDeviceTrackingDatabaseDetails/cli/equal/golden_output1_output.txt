@@ -32,3 +32,5 @@ S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  a
 ND  FE80::6AF3:3E56:FE0B:BEE9                0050.56b0.afed(S)      Twe1/0/42  access     39  (  39)      0005       5mn        VERIFY     15 s try 2       no         yes          0000.0000.0000     test1 (Device-tracking)
 ND  FE80::5786:483C:BD32:CC21                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       171s       REACHABLE  137 s try 0      no         yes          0000.0000.0000     test1 (Device-tracking)
 S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       38959mn    DOWN       N/A              no         yes          0000.0000.0000
+DH6 2001::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       38959mn    DOWN       123 s(456 s)     no         yes          0000.0000.0000
+

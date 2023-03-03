@@ -860,3 +860,58 @@ class ShowIpAccessListDumpReflexive(ShowIpAccessListDumpReflexiveSchema):
                     continue
 
         return ret_dict
+
+
+class ShowPlatformSoftwareFedSwitchActiveAclSchema(MetaParser):
+    """Schema for show platform software fed switch active acl counters hardware | include Ingress IPv4 Forward"""
+
+    schema = {
+        'ingress_ipv4': {
+            'asic_value': str,
+            'counter': int
+        },
+        'cpu': {
+            'asic_value': str,
+            'counter': int
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveAcl(ShowPlatformSoftwareFedSwitchActiveAclSchema):
+    """Parser for show platform software fed switch active acl counters hardware | include Ingress IPv4 Forward"""
+
+    cli_command = 'show platform software fed switch active acl counters hardware | include Ingress IPv4 Forward'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Ingress IPv4 Forward             (0xb5000003):  2686698 frames
+        p1 = re.compile(r"^Ingress\s+IPv4\s+Forward\s+\((?P<asic_value>\S+)\):\s+(?P<counter>\d+)\s+frames$")
+        
+        # Ingress IPv4 Forward from CPU    (0xe5000004):          10 frames
+        p2 = re.compile(r"^Ingress\s+IPv4\s+Forward\s+from\s+CPU\s+\((?P<asic_value>\S+)\):\s+(?P<counter>\d+)\s+frames$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Ingress IPv4 Forward             (0xb5000003):  2686665498 frames
+            m= p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ingress_ipv4 = ret_dict.setdefault('ingress_ipv4', {})
+                ingress_ipv4['asic_value'] = dict_val['asic_value']
+                ingress_ipv4['counter'] = int(dict_val['counter'])
+                continue
+
+            # Ingress IPv4 Forward from CPU    (0xe5000004):           0 frames
+            m= p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ingress_ipv4 = ret_dict.setdefault('cpu', {})
+                ingress_ipv4['asic_value'] = dict_val['asic_value']
+                ingress_ipv4['counter'] = int(dict_val['counter'])
+                continue
+
+        return ret_dict

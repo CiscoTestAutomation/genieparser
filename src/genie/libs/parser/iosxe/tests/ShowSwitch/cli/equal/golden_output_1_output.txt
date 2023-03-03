@@ -1,0 +1,8 @@
+Switch/Stack Mac Address : 0c75.bd6e.db00 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                             H/W   Current
+Switch#   Role    Mac Address     Priority Version  State 
+-------------------------------------------------------------------------------------
+*1       Active   0c75.bd6e.db00     15     V02     Ready                               
+ 2       Member   0000.0000.0000     0              Provisioned                         
+ 3       Member   0000.0000.0000     0              Provisioned 

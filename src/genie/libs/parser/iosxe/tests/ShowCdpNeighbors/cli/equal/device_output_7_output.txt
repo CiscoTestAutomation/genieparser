@@ -12,3 +12,5 @@ xxx006.xx.xxx.xxx
 xxx001.xx.xxx.xxx
                  Gig 0/1           125              S I   WS-C2960X Gig 1/0/41
 xxx010
+
+Total cdp entries displayed : 4

@@ -1,0 +1,3 @@
+show cef interface Vlan 2 brief
+Interface                       IP-Address      Status  Switching               
+Vlan2                           2.1.1.1         up      CEF

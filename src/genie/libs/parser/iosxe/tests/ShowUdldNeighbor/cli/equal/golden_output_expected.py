@@ -3,7 +3,7 @@ expected_output = {
         'GigabitEthernet1/0/7' : {
             'device_name' : 'A4B43937780',
             'device_id' : '1',
-            'port_id' : 'A4:B4:39:37:78:',
+            'port_id' : 'Gi1/0/6',
             'neighbor_state' : 'Bidirectional'
             }
         },

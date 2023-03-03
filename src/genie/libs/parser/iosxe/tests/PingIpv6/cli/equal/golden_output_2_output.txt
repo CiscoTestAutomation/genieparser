@@ -1,0 +1,5 @@
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001::1, timeout is 2 seconds:
+
+% No valid route for destination
+Success rate is 0 percent (0/1)

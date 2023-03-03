@@ -1,0 +1,6 @@
+WBFFT Trigger Mode  : N/A
+Enable UTSC         : False
+Samples Num         : 0
+Low Bin SesID       : 00001000
+PNM Dest IP         : 0.0.0.0
+PNM Dest Mac        : 0000.0000.0000

@@ -44,6 +44,7 @@ NXOS parsers for the following show commands:
     * 'show bgp <address_family>  labels | xml'
     * 'show bgp l2vpn evpn summary'
     * 'show bgp l2vpn evpn route-type <route-type>'
+    * 'show bgp l2vpn evpn route-type <route-type> vrf <vrf>'
     * 'show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>'
 
 """
@@ -1831,26 +1832,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
-            m = p3_4.match(line)
-            if m:
-                # Get keys
-                if 'njected' not in line and 'next_hop' in m.groupdict():
-                    next_hop = str(m.groupdict()['next_hop'])
-
-                    if data_on_nextline:
-                        data_on_nextline =  False
-                    else:
-                        index += 1
-
-                    # Init dict
-                    index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
-                      .setdefault('index', {}).setdefault(index, {})
-
-                    # Set keys
-                    index_dict['next_hop'] = next_hop
-                continue
-
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
@@ -2153,6 +2134,26 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_as_set'] = True
                         af_dict['aggregate_address_summary_only'] = True
                         continue
+                continue
+
+            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
+            m = p3_4.match(line)
+            if m:
+                # Get keys
+                if 'njected' not in line and 'next_hop' in m.groupdict():
+                    next_hop = str(m.groupdict()['next_hop'])
+
+                    if data_on_nextline:
+                        data_on_nextline =  False
+                    else:
+                        index += 1
+
+                    # Init dict
+                    index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                      .setdefault('index', {}).setdefault(index, {})
+
+                    # Set keys
+                    index_dict['next_hop'] = next_hop
                 continue
 
         # order the af prefixes index
@@ -9405,6 +9406,19 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                             '(?P<remote_port>\d+) +'
                             '(?P<notifications_sent>\d+)\/'
                             '(?P<notifications_received>\d+)$')
+        # 4.4.4.1         4258745628
+        p7_1 = re.compile(r'^(?P<nei>[\da-f.\:]+) +'
+                            '(?P<asn>\d+)$')
+        #                     0     00:01:39|00:00:11|00:00:20 E   179/21890      0/0
+        p7_2 = re.compile(r'^(?P<dropped>\d+) +'
+                            '(?P<last_flap>[\w\.\:]+) *\|'
+                            '(?P<last_read>[\w\.\:]+) *\|'
+                            '(?P<last_write>[\w\.\:]+) +'
+                            '(?P<state>[a-zA-Z]) +'
+                            '(?P<local_port>\d+)\/'
+                            '(?P<remote_port>\d+) +'
+                            '(?P<notifications_sent>\d+)\/'
+                            '(?P<notifications_received>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -9512,6 +9526,53 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
                     int(group['asn'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
+                    int(group['dropped'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_flap'] = \
+                    group['last_flap']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_read'] = \
+                    group['last_read']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['last_write'] = \
+                    group['last_write']
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['state'] = \
+                    status_map[group['state']]
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['local_port'] = \
+                    int(group['local_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_port'] = \
+                    int(group['remote_port'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_sent'] = \
+                    int(group['notifications_sent'])
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['notifications_received'] = \
+                    int(group['notifications_received'])
+                continue
+
+            # 4.4.4.1         4258745628
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+
+                nei = group['nei']
+                if 'neighbor' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['neighbor'] = {}
+                if nei not in ret_dict['vrf'][vrf]['neighbor']:
+                    ret_dict['vrf'][vrf]['neighbor'][nei] = {}
+
+                ret_dict['vrf'][vrf]['neighbor'][nei]['remote_as'] = \
+                    int(group['asn'])
+                continue
+
+            m = p7_2.match(line)
+            if m:
+                group = m.groupdict()
 
                 ret_dict['vrf'][vrf]['neighbor'][nei]['connections_dropped'] = \
                     int(group['dropped'])
@@ -10323,7 +10384,8 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         # BGP community entries [1/32], BGP clusterlist entries [3/12]
         #
         # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        # 172.16.205.8      4   200     130     139      155    0    0 02:05:01 0L2ROUTE Summary
+        # 172.16.205.8    4   200     130     139      155    0    0 02:05:01 0
+        # 90:90:90::3     4   500     200     300      400    0    0 03:52:17 0
 
         p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
@@ -10342,7 +10404,7 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                         ' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
 
         p7 = re.compile(
-            r'^\s*(?P<neighborid>[\d\.]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
+            r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
             ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
             ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
 
@@ -10420,12 +10482,13 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
 
         return result_dict
 
-# ==========================================================
-#  schema for show bgp l2vpn evpn route-type <route_type>
-# ===========================================================
+# ==================================================================
+#  schema for show bgp l2vpn evpn route-type <route_type> vrf <vrf>
+# ==================================================================
 class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
     """Schema for:
-        show bgp l2vpn evpn route-type <route-type>"""
+        show bgp l2vpn evpn route-type <route-type>
+        show bgp l2vpn evpn route-type <route-type> vrf <vrf>"""
 
     schema = {
         'instance': {
@@ -10455,6 +10518,7 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                     Any(): {
                                                         Optional('pathnr'): int,
                                                         Optional('policyincomplete'): bool,
+                                                        Optional('pathtype'): str,
                                                         'pathvalid': bool,
                                                         'pathbest': bool,
                                                         Optional('pathdeleted'): bool,
@@ -10463,6 +10527,9 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                         Optional('pathovermaxaslimit'): bool,
                                                         Optional('pathmultipath'): bool,
                                                         Optional('pathnolabeledrnh'): bool,
+                                                        Optional('imported_from'): str,
+                                                        Optional('gateway_ip'): str,
+                                                        Optional('as_path'): str,
                                                         'ipnexthop': str,
                                                         'nexthopmetric': int,
                                                         'neighbor': str,
@@ -10498,26 +10565,27 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
     }
 
 
-# ====================================================
-#  Parser for show bgp l2vpn evpn route-type
-# ====================================================
+# ==================================================================
+#  Parser for show bgp l2vpn evpn route-type <route_type> vrf <vrf>
+# ==================================================================
 class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
     """parser for:
-        show bgp l2vpn evpn route-type <1>
-        show bgp l2vpn evpn route-type <2>
-        show bgp l2vpn evpn route-type <3>
-        show bgp l2vpn evpn route-type <4>"""
-    cli_command = 'show bgp l2vpn evpn route-type {route_type}'
+        show bgp l2vpn evpn route-type <route_type>
+        show bgp l2vpn evpn route-type <route_type> vrf <vrf>"""
+    cli_command = ['show bgp l2vpn evpn route-type {route_type}', 'show bgp l2vpn evpn route-type {route_type} vrf {vrf}']
     exclude = [
       'prefixversion',
       'Extcommunity',
       'prefixversion']
 
-    def cli(self,route_type,output=None):
+    def cli(self,route_type,vrf='',output=None):
         if not route_type:
             out = ""
         if output is None:
-            out = self.device.execute(self.cli_command.format(route_type=route_type))
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(route_type=route_type,vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0].format(route_type=route_type))
         else:
             out = output
 
@@ -10551,23 +10619,28 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         p6 = re.compile(r'^\s*Multipath: +(?P<multipath>[\w]+)$')
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\S\s\,\:\/]+)?$')
-        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
-        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\((?:(?P<inaccessible>(inaccessible)), +)?metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
+        #          Imported from 99.99.99.99:10:[5]:[0]:[0]:[32]:[100.4.1.2]/224
+        p9 = re.compile(r'^\s*Imported from +(?P<imported_from>[\w\.\:\/\[\]\,]+)$')
+        #   Gateway IP: 0.0.0.0
+        p10 = re.compile(r'^\s*Gateway IP: +(?P<gateway_ip>[a-zA-Z0-9\.\:]+)$')
+        #   AS-Path: 4 1 10 33299 51178 47751 {27016} , path sourced external to AS
+        p11 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\d\s\{\}]+|[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
+        p12 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\((?:(?P<inaccessible>(inaccessible)), +)?metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
                          ' +\((?P<neighborid>[\d\.]+)\)$')
-        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
+        p13 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
-        p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
-        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
-        p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
-        p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
-        p16 = re.compile(r'^\s*Received +label +(?P<inlabel>[\d]+)$')
+        p14 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
+        p15 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
+        p16 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
+        p17 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
+        p18 = re.compile(r'^\s*Received +label +(?P<inlabel>[\d]+)$')
 
         # PMSI Tunnel Attribute:
-        p17 = re.compile(r'^\s*(?P<attribute>[\w]+) +Tunnel +Attribute:$')
+        p19 = re.compile(r'^\s*(?P<attribute>[\w]+) +Tunnel +Attribute:$')
         #         flags: 0x00, Tunnel type: Ingress Replication
-        p18 = re.compile(r'^\s*flags: +(?P<flags>[\w]+), +Tunnel type: +(?P<tunnel_type>[\w\s]+)$')
+        p20 = re.compile(r'^\s*flags: +(?P<flags>[\w]+), +Tunnel type: +(?P<tunnel_type>[\w\s]+)$')
         #         Label: 10101, Tunnel Id: 10.196.7.7
-        p19 = re.compile(r'^\s*Label: +(?P<label>[\d]+), +Tunnel +Id: +(?P<tunnel_id>[\d\.]+)$')
+        p21 = re.compile(r'^\s*Label: +(?P<label>[\d]+), +Tunnel +Id: +(?P<tunnel_id>[\d\.]+)$')
 
         for line in out.splitlines():
             if line:
@@ -10639,6 +10712,8 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 path_dict = path_temp_dict.setdefault(index, {})
                 path_dict.update({'pathnr': index-1})
                 group = m.groupdict()
+                pathtype = group.get('path_type').strip()
+                path_dict.update({'pathtype': pathtype})
                 pathtypes = group.get('pathtypes')
                 if 'path is valid' in pathtypes:
                     path_dict.update({'pathvalid': True})
@@ -10654,8 +10729,27 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 else:
                     path_dict.update({'pathnolabeledrnh': False})
                 continue
+            
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'imported_from': group.get('imported_from')})
+                continue
 
             m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'gateway_ip': group.get('gateway_ip')})
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                as_path = group.get('as_path').strip().lower()
+                path_dict.update({'as_path': as_path})	
+                continue
+
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 path_dict['ipnexthop'] = group['ipnexthop']
@@ -10666,7 +10760,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                     path_dict['inaccessible'] = True
                 continue
 
-            m = p11.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 path_dict.update({'origin': group.pop('origin').lower()})
@@ -10674,13 +10768,13 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 path_dict.update({'weight': int(group.pop('weight'))})
                 continue
 
-            m = p12.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 path_dict.update({k: v.split( ) for k, v in group.items()})
                 continue
 
-            m = p13.match(line)
+            m = p15.match(line)
             if m:
                 group = m.groupdict()
                 path_dict.update({'originatorid': group.pop('originatorid')})
@@ -10688,7 +10782,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 continue
 
 
-            m = p15.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 for k, v in group.items():
@@ -10698,25 +10792,25 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                         path_dict.update({k:v.split()})
                 continue
 
-            m = p16.match(line)
+            m = p18.match(line)
             if m:
                 group = m.groupdict()
                 path_dict.update({'inlabel': int(group.pop('inlabel'))})
                 continue
 
-            m = p17.match(line)
+            m = p19.match(line)
             if m:
                 group = m.groupdict()
                 tunnel_dict = path_dict.setdefault('pmsi_tunnel_attribute',{})
                 continue
 
-            m = p18.match(line)
+            m = p20.match(line)
             if m:
                 group = m.groupdict()
                 tunnel_dict.update({k:v for k, v in group.items()})
                 continue
 
-            m = p19.match(line)
+            m = p21.match(line)
             if m:
                 group = m.groupdict()
                 tunnel_dict.update({k: v for k, v in group.items()})

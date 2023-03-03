@@ -5,8 +5,12 @@
      * show aaa fqdn all
      * show aaa common-criteria policy name {policy_name}  
      * show aaa method-lists {type}
+     * show aaa sessions
+     * show aaa memory
+     * show aaa dead-criteria radius {server_ip}
+     * show aaa dead-criteria radius {server_ip} auth-port {auth_port} acct-port {acct_port}
+     * show aaa dead-criteria radius server-name {server_name}
 """
-
 #python
 import re
 import logging
@@ -1163,9 +1167,9 @@ class ShowAAACacheGroup(ShowAAACacheGroupSchema):
         mac_compile = re.compile(r'MAC ADDR:[\s\t]+(?P<macAddr>\w+\.\w+\.\w+)')
         # Profile Name: regProfile
         profile_compile = re.compile(r'Profile Name:[\s\t]+(?P<profile>[0-9A-Za-z\-\.]+)')
-        # User Name:    	test
+        # User Name:          test
         user_compile = re.compile(r'User Name:[\s\t]+(?P<user>[0-9A-Za-z\-\.]+)')
-        # Timeout:      	86400
+        # Timeout:            86400
         timeout_compile = re.compile(r'Timeout:[\s\t]+(?P<timeout>\w+)')
         # Total number of Cache entries is 2
         total_entries = re.compile(r'Total number of Cache entries is[\s\t]+(?P<count>[0-9]+)')
@@ -1189,14 +1193,14 @@ class ShowAAACacheGroup(ShowAAACacheGroupSchema):
                 client_dict['profile_name'] = profile_name
                 continue
 
-            # User Name:    	test
+            # User Name:      test
             m3 = user_compile.match(line)
             if m3:
                 group = m3.groupdict()
                 profile_name = group['user']
                 client_dict['user_name'] = profile_name
 
-            # Timeout:      	86400
+            # Timeout:        86400
             m3 = timeout_compile.match(line)
             if m3:
                 group = m3.groupdict()
@@ -1440,4 +1444,437 @@ class ShowAAAMethodList(ShowAAAMethodListSchema):
                 })
 
         return ret_dict
+        
+# ====================================================
+#  Schema for show aaa dead-criteria radius
+# ====================================================
+class ShowAaaDeadCriteriaRadiusSchema(MetaParser):
+    """Schema for 'show aaa dead-criteria radius {server_ip}'
+                  'show aaa dead-criteria radius {server_ip} auth-port {auth_port} acct-port {acct_port}'
+                  'show aaa dead-criteria radius server-name {server_name}'
+    """
+    schema = {
+            'server_group': str,
+            'server': {
+                'address': str,
+                'auth_port': int,
+                'acct_port': int
+            },
+            'dead_criteria': {
+                'conf_retransmits': int,
+                'conf_timeout': int,
+                'esti_outstand_access_transactions': int,
+                'esti_outstand_accounting_transactions': int,
+                'dead_detect_time_seconds': int,
+                'computed_retransmit_tries': int
+            },
+            'statistics': {
+                'max_computed_outstand_transaction': int,
+                'max_computed_dead_detect_time_seconds': int,
+                'max_computed_retransmit': int
+            }
+    }
 
+
+
+# ====================================================
+#  Parser for show aaa dead-criteria radius
+# ====================================================
+class ShowAaaDeadCriteriaRadius(ShowAaaDeadCriteriaRadiusSchema):
+    """Parser for 'show aaa dead-criteria radius {server_ip}'
+                  'show aaa dead-criteria radius {server_ip} auth-port {auth_port} acct-port {acct_port}'
+                  'show aaa dead-criteria radius server-name {server_name}'
+    """
+
+    cli_command = ['show aaa dead-criteria radius {server_ip}', 
+                   'show aaa dead-criteria radius {server_ip} auth-port {auth_port} acct-port {acct_port}', 
+                   'show aaa dead-criteria radius server-name {server_name}']
+
+    def cli(self, server_ip=None, auth_port=None, acct_port=None, server_name=None, output=None):
+
+        # Get output by executing cmd on device
+        if output is None:
+            if server_name:
+                cmd = self.cli_command[2].format(server_name=server_name)
+            else:
+                if auth_port is None:
+                    cmd = self.cli_command[0].format(server_ip=server_ip)
+                else:
+                    cmd = self.cli_command[1].format(server_ip=server_ip,auth_port=auth_port,acct_port=acct_port)                
+
+            output = self.device.execute(cmd)
+
+
+	    # Address   : 11.19.12.66
+            p1 = re.compile(r"^Address\s+:\s+(?P<address>(\d{1,3}\.){3}\d{1,3})$")
+	    # Auth Port : 1645
+            p2 = re.compile(r"^Auth\s+Port\s+:\s+(?P<auth_port>\d+)$")
+	    # Acct Port : 1646
+            p3 = re.compile(r"^Acct\s+Port\s+:\s+(?P<acct_port>\d+)$")
+	    # Server Group  : radius
+            p4 = re.compile(r"^Server\s+Group\s+:\s+(?P<server_group>\w+)$")
+	    # Configured Retransmits   : 3
+            p5 = re.compile(r"^Configured\s+Retransmits\s+:\s+(?P<conf_retransmits>\d+)$")
+	    # Estimated Outstanding Access Transactions: 0
+            p6 = re.compile(r"^Estimated\s+Outstanding\s+Access\s+Transactions:\s+(?P<esti_outstand_access_transactions>\d+)$")
+	    # Configured Timeout       : 5
+            p7 = re.compile(r"^Configured\s+Timeout\s+:\s+(?P<conf_timeout>\d+)$")
+	    # Estimated Outstanding Accounting Transactions: 0
+            p8 = re.compile(r"^Estimated\s+Outstanding\s+Accounting\s+Transactions:\s+(?P<esti_outstand_accounting_transactions>\d+)$")
+	    # Dead Detect Time         : 10s
+            p9 = re.compile(r"^Dead\s+Detect\s+Time\s+:\s+(?P<dead_detect_time_seconds>\d+)s*$")
+	    # Computed Retransmit Tries: 10
+            p10 = re.compile(r"^Computed\s+Retransmit\s+Tries:\s+(?P<computed_retransmit_tries>\d+)$")
+	    # Max Computed Outstanding Transactions: 2
+            p11 = re.compile(r"^Max\s+Computed\s+Outstanding\s+Transactions:\s+(?P<max_computed_outstand_transaction>\d+)$")
+	    # Max Computed Dead Detect Time: 20s
+            p12 = re.compile(r"^Max\s+Computed\s+Dead\s+Detect\s+Time:\s+(?P<max_computed_dead_detect_time_seconds>\d+)s*$")
+	    # Max Computed Retransmits : 20
+            p13 = re.compile(r"^Max\s+Computed\s+Retransmits\s+:\s+(?P<max_computed_retransmit>\d+)$")
+
+            ret_dict = {}
+            for line in output.splitlines():
+                line = line.strip()
+
+                # Address   : 11.19.12.66
+                match_obj = p1.match(line)
+                if match_obj:
+                    dict_val = ret_dict.setdefault('server', match_obj.groupdict())
+                    continue
+
+                # Auth Port : 1645
+                match_obj = p2.match(line)
+                if match_obj:
+                    dict_val['auth_port'] = int(match_obj.groupdict()['auth_port'])
+                    continue
+
+                # Acct Port : 1646
+                match_obj = p3.match(line)
+                if match_obj:
+                    dict_val['acct_port'] = int(match_obj.groupdict()['acct_port'])
+                    continue
+
+                # Server Group  : radius
+                match_obj = p4.match(line)
+                if match_obj:
+                    ret_dict.update(match_obj.groupdict())
+                    continue
+
+                # Configured Retransmits   : 3
+                match_obj = p5.match(line)
+                if match_obj:
+                    dict_val = ret_dict.setdefault('dead_criteria', {})
+                    dict_val['conf_retransmits'] = int(match_obj.groupdict()['conf_retransmits'])
+                    continue
+                # Configured Retransmits   : 3
+                match_obj = p6.match(line)
+                if match_obj:
+                    dict_val['esti_outstand_access_transactions'] = int(match_obj.groupdict()['esti_outstand_access_transactions'])
+                    continue
+                
+                # Configured Timeout       : 5
+                match_obj = p7.match(line)
+                if match_obj:
+                    dict_val['conf_timeout'] = int(match_obj.groupdict()['conf_timeout'])
+                    continue
+
+                # Estimated Outstanding Accounting Transactions: 0
+                match_obj = p8.match(line)
+                if match_obj:
+                    dict_val['esti_outstand_accounting_transactions'] = int(match_obj.groupdict()['esti_outstand_accounting_transactions'])
+                    continue
+
+                # Dead Detect Time         : 10s
+                match_obj = p9.match(line)
+                if match_obj:
+                    dict_val['dead_detect_time_seconds'] = int(match_obj.groupdict()['dead_detect_time_seconds'])
+                    continue
+
+                # Computed Retransmit Tries: 10
+                match_obj = p10.match(line)
+                if match_obj:
+                    dict_val['computed_retransmit_tries'] = int(match_obj.groupdict()['computed_retransmit_tries'])
+                    continue
+
+                # Max Computed Outstanding Transactions: 2
+                match_obj = p11.match(line)
+                if match_obj:
+                    dict_val = ret_dict.setdefault('statistics', {})
+                    dict_val['max_computed_outstand_transaction'] = int(match_obj.groupdict()['max_computed_outstand_transaction'])
+                    continue
+
+                # Max Computed Dead Detect Time: 20s
+                match_obj = p12.match(line)
+                if match_obj:
+                    dict_val['max_computed_dead_detect_time_seconds'] = int(match_obj.groupdict()['max_computed_dead_detect_time_seconds'])
+                    continue
+
+                # Max Computed Retransmits : 20
+                match_obj = p13.match(line)
+                if match_obj:
+                    dict_val['max_computed_retransmit'] = int(match_obj.groupdict()['max_computed_retransmit'])
+                    continue
+
+            return ret_dict
+
+
+# ======================================================
+# Schema for 'show aaa sessions '
+# ======================================================
+
+class ShowAaaSessionsSchema(MetaParser):
+    """Schema for show aaa sessions"""
+
+    schema = {
+        'total_sessions': int,
+        'aaa_sessions': {
+            Any(): {
+                'session_id': int,
+                'unique_id': int,
+                'username': str,
+                'ip': str,
+                'idle_time': int,
+                'ct_call_handle': int,
+            },
+        },
+    }
+
+# ======================================================
+# Parser for 'show aaa sessions '
+# ======================================================
+class ShowAaaSessions(ShowAaaSessionsSchema):
+    """Parser for show aaa sessions"""
+
+    cli_command = 'show aaa sessions'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total sessions since last reload: 6
+        p1 = re.compile(r"^Total\s+sessions\s+since\s+last\s+reload:\s+(?P<total_sessions>\d+)$")
+        # Session Id: 4003
+        p2 = re.compile(r"^Session\s+Id:\s+(?P<session_id>\d+)$")
+        # Unique Id: 13
+        p2_1 = re.compile(r"^\s+Unique\s+Id:\s+(?P<unique_id>\d+)$")
+        # User Name: *not available*
+        p2_2 = re.compile(r"^\s+User\s+Name:\s+(?P<username>\S+\s+\S+)$")
+        # IP Address: 0.0.0.0
+        p2_3 = re.compile(r"^\s+IP\s+Address:\s+(?P<ip>(\d{1,3}\.){3}\d{1,3})$")
+        # Idle Time: 0
+        p2_4 = re.compile(r"^\s+Idle\s+Time:\s+(?P<idle_time>\d+)$")
+        # CT Call Handle: 0
+        p2_5 = re.compile(r"^\s+CT\s+Call\s+Handle:\s+(?P<ct_call_handle>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Total sessions since last reload: 6
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['total_sessions'] = int(dict_val['total_sessions'])
+                continue
+
+            # Session Id: 4003
+            match_obj = p2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_var = dict_val['session_id']
+                if 'aaa_sessions' not in ret_dict:
+                    aaa_sessions = ret_dict.setdefault('aaa_sessions', {})
+                if session_id_var not in ret_dict['aaa_sessions']:
+                    session_id_dict = ret_dict['aaa_sessions'].setdefault(session_id_var, {})
+                session_id_dict['session_id'] = int(dict_val['session_id'])
+                continue
+
+            # Unique Id: 13
+            match_obj = p2_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_dict['unique_id'] = int(dict_val['unique_id'])
+                continue
+
+            # User Name: *not available*
+            match_obj = p2_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_dict['username'] = dict_val['username']
+                continue
+
+            # IP Address: 0.0.0.0
+            match_obj = p2_3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_dict['ip'] = dict_val['ip']
+                continue
+
+            # Idle Time: 0
+            match_obj = p2_4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_dict['idle_time'] = int(dict_val['idle_time'])
+                continue
+
+            # CT Call Handle: 0
+            match_obj = p2_5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                session_id_dict['ct_call_handle'] = int(dict_val['ct_call_handle'])
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Schema for 'show aaa memory '
+# ======================================================
+
+class ShowAaaMemorySchema(MetaParser):
+    """Schema for show aaa memory"""
+
+    schema = {
+        'aaa_memory': {
+            Any(): {
+                'alloc_name': str,
+                'in_use': int,
+                'allocated': int,
+                'percentage': int,
+                'count': int,
+                'chunk': str,
+            },
+        },
+        'total_allocated': {
+            'total_mb': float,
+            'total_kb': int,
+            'total_bytes': int,
+        },
+        'low_memory': {
+            'auth_threshold': int,
+            'acc_threshold': int,
+            'unique_id_failure': int,
+            'local_server_pkt_drop': int,
+            'coa_pkt_drop': int,
+            'pod_pkt_drop': int,
+        },
+    }
+
+# ======================================================
+# Parser for 'show aaa memory '
+# ======================================================
+
+class ShowAaaMemory(ShowAaaMemorySchema):
+    """Parser for show aaa memory"""
+
+    cli_command = 'show aaa memory'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # AAA Acct Rec ch           :        252/10248      (  2%) [      3] Chunk
+        p1 = re.compile(r"^(?P<alloc_name>\S+(\s\S+)+)\s+:\s+(?P<in_use>\d+)/(?P<allocated>\d+)\s+\(\s+(?P<percentage>\d+)%\)\s+\[\s+(?P<count>\d+)\](\s+)?(?P<chunk>(\w+)?)$")
+        # Total allocated: 0.398 Mb, 408 Kb, 418356 bytes
+        p2 = re.compile(r"^Total\s+allocated:\s+(?P<total_mb>\S+)\s+Mb,\s+(?P<total_kb>\d+)\s+Kb,\s+(?P<total_bytes>\d+)\s+bytes$")
+        # Authentication low-memory threshold      : 3%
+        p3 = re.compile(r"^Authentication\s+low-memory\s+threshold\s+:\s+(?P<auth_threshold>\d+)%$")
+        # Accounting low-memory threshold          : 2%
+        p3_1 = re.compile(r"^Accounting\s+low-memory\s+threshold\s+:\s+(?P<acc_threshold>\d+)%$")
+        # AAA Unique ID Failure                    : 0
+        p3_2 = re.compile(r"^AAA\s+Unique\s+ID\s+Failure\s+:\s+(?P<unique_id_failure>\d+)$")
+        # Local server  Packet dropped             : 0
+        p3_3 = re.compile(r"^Local\s+server\s+Packet\s+dropped\s+:\s+(?P<local_server_pkt_drop>\d+)$")
+        # CoA  Packet dropped                      : 0
+        p3_4 = re.compile(r"^CoA\s+Packet\s+dropped\s+:\s+(?P<coa_pkt_drop>\d+)$")
+        # PoD  Packet dropped                      : 0
+        p3_5 = re.compile(r"^PoD\s+Packet\s+dropped\s+:\s+(?P<pod_pkt_drop>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # AAA Acct Rec ch           :        252/10248      (  2%) [      3] Chunk
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                alloc_name_var = dict_val['alloc_name']
+                if 'aaa_memory' not in ret_dict:
+                    aaa_memory = ret_dict.setdefault('aaa_memory', {})
+                if alloc_name_var not in ret_dict['aaa_memory']:
+                    alloc_name_dict = ret_dict['aaa_memory'].setdefault(alloc_name_var, {})
+                alloc_name_dict['alloc_name'] = dict_val['alloc_name']
+                alloc_name_dict['in_use'] = int(dict_val['in_use'])
+                alloc_name_dict['allocated'] = int(dict_val['allocated'])
+                alloc_name_dict['percentage'] = int(dict_val['percentage'])
+                alloc_name_dict['count'] = int(dict_val['count'])
+                alloc_name_dict['chunk'] = dict_val['chunk']
+                continue
+
+            # Total allocated: 0.398 Mb, 408 Kb, 418356 bytes
+            match_obj = p2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'total_allocated' not in ret_dict:
+                    total_allocated = ret_dict.setdefault('total_allocated', {})
+                total_allocated['total_mb'] = float(dict_val['total_mb'])
+                total_allocated['total_kb'] = int(dict_val['total_kb'])
+                total_allocated['total_bytes'] = int(dict_val['total_bytes'])
+                continue
+
+            # Authentication low-memory threshold      : 3%
+            match_obj = p3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['auth_threshold'] = int(dict_val['auth_threshold'])
+                continue
+
+            # Accounting low-memory threshold          : 2%
+            match_obj = p3_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['acc_threshold'] = int(dict_val['acc_threshold'])
+                continue
+
+            # AAA Unique ID Failure                    : 0
+            match_obj = p3_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['unique_id_failure'] = int(dict_val['unique_id_failure'])
+                continue
+
+            # Local server  Packet dropped             : 0
+            match_obj = p3_3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['local_server_pkt_drop'] = int(dict_val['local_server_pkt_drop'])
+                continue
+
+            # CoA  Packet dropped                      : 0
+            match_obj = p3_4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['coa_pkt_drop'] = int(dict_val['coa_pkt_drop'])
+                continue
+
+            # PoD  Packet dropped                      : 0
+            match_obj = p3_5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'low_memory' not in ret_dict:
+                    low_memory = ret_dict.setdefault('low_memory', {})
+                low_memory['pod_pkt_drop'] = int(dict_val['pod_pkt_drop'])
+                continue
+
+
+        return ret_dict

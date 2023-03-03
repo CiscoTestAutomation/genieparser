@@ -97,6 +97,22 @@ expected_output =  {
             "state": "DOWN",
             "time_left": "N/A",
             "vlan_id": 100
-        }
+        },
+        6: {
+            "age": "38959mn",
+            "client_id": "0000.0000.0000",
+            "dev_code": "DH6",
+            "filter": "no",
+            "in_crimson": "yes",
+            "interface": "Twe1/0/1",
+            "link_layer_address": "000a.000b.000c(D)",
+            "mode": "trunk",
+            "network_layer_address": "2001::1",
+            "policy": "",
+            "pref_level_code": 100,
+            "state": "DOWN",
+            "time_left": "123 s(456 s)",
+            "vlan_id": 100
+        } 
     }
     }

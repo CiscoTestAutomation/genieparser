@@ -46,7 +46,11 @@ expected_output = {
             'group': {
                 1: {
                     'description': 'single_Vrrp', 
-                    'state': 'MASTER', 
+                    'state': 'MASTER',
+                    'state_duration': {
+                        'minutes': 0, 
+                        'seconds': 23.134
+                    }, 
                     'virtual_ip_address': '10.50.10.104', 
                     'virtual_mac_address': '0000.5E00.0101', 
                     'advertise_interval_secs': 1.0, 

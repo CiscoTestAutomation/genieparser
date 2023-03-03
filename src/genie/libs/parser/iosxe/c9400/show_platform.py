@@ -573,8 +573,9 @@ class ShowModule(ShowModuleSchema):
         # Mod Ports Card Type                                   Model          Serial No.
         # ---+-----+--------------------------------------+--------------+--------------
         # 1   38   Cisco Catalyst 9500X-28C8D Switch           C9500X-28C8D     FDO25030SLN
-            
-        p2=re.compile(r'^(?P<mod>\d+) *(?P<ports>\d+) +(?P<card_type>.*) +(?P<model>\S+) +(?P<serial>\S+)$')
+        # 10  24   24-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-24XS    JAE21500658        
+    
+        p2=re.compile(r'^(?P<mod>[\d]+)\s+(?P<ports>[\d]+)\s+(?P<card_type>.*)\s+(?P<model>\S+)\s+(?P<serial>\S+)$')
                 
         # Mod MAC addresses                    Hw   Fw           Sw                 Status
         # ---+--------------------------------+----+------------+------------------+--------

@@ -1,0 +1,9 @@
+sh platform host-access-table g1/0/24
+ Host Access Table for Gi1/0/24
+ ==============================
+ Current feature:  dot1x
+
+ Source Address      vlan      Access Mode      feature    type
+ --------------------------------------------------------------
+ 001b.0c18.918d       100         permit         dot1x        dynamic
+ Default			ask

@@ -1,0 +1,7 @@
+MAC Address     IP Address       I/F       State        Role HA  Auth Name
+70b3.1791.4266  ---              Te1/1/0   online       Pri  Act N/A  LC9_RPD0_3x6_RACK4
+70b3.1791.423c  ---              Te9/1/0   online       Pri  Act N/A  LC9_RPD2_3x6_RACK4
+70b3.1791.4278  ---              Te9/1/0   online       Pri  Act N/A  LC9_RPD1_3x6_RACK4
+
+! = PTP clock out of phaselock occurred, ^ = Default password in use
+

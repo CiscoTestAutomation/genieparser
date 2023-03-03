@@ -1,0 +1,57 @@
+show  access-session event-logging mac 001b.0c18.918d 
+
+Client-Mac :001b.0c18.918d
+State      : EV_SESSION_AUTHZ_SUCCESS
+Count      : 196
+Id         : 3
+
+Timestamp              Src           Dest          Msg Type                                 Result
+---------------------  ------------  ------------  ---------------------------------------  ---------
+Sep/29  12:14:51:777   RCL_CLIENT    RCL           EV_SESSION_START                         EV_PASS
+Sep/29  12:14:51:777   SM_CLIENT     SM            EV_SESSION_CREATE                        EV_PASS
+Sep/29  12:14:51:778   SM            SM_CLIENT     EV_NEW_CLIENT_CB                         EV_PASS
+Sep/29  12:14:51:778   SM            BM            EV_BM_NEW_CLIENT_CB                      EV_PASS
+Sep/29  12:14:51:778   RCL           RCL_CLIENT    EV_NEW_CLIENT_CB                         EV_PASS
+Sep/29  12:14:51:778   SM            SM_CLIENT     EV_NEW_SESSION_CB                        EV_PASS
+Sep/29  12:14:51:778   SVM           EPM           EV_EPM_SESSION_CREATE                    EV_PASS
+Sep/29  12:14:51:778   SM            SM_CLIENT     EV_RAISE_PRE_EVENT_CB                    EV_PASS
+Sep/29  12:14:51:778   SM            SM_CLIENT     EV_SESSION_CREATE_RESP_CB                EV_PASS
+Sep/29  12:14:51:778   SM            SM_CLIENT     EV_START_RESP_CB                         EV_PASS
+Sep/29  12:14:51:778   RCL           RCL_CLIENT    EV_START_RESP_CB                         EV_PASS
+Sep/29  12:14:51:779   SM            DOT01X        EV_START_METHOD_CB                       EV_PASS
+Sep/29  12:14:51:779   SM            SET_STATE     EV_SESSION_RUNNING                       EV_PASS
+Sep/29  12:14:51:779   SM            SM_CLIENT     EV_RAISE_PRE_EVENT_CB                    EV_PASS
+Sep/29  12:14:51:779   DOT01X        CLIENT        EV_EAP_REQ_TX                            EV_PASS
+Sep/29  12:14:51:787   CLIENT        DOT01X        EV_EAP_ID_RESP_RX                        EV_PASS
+Sep/29  12:14:51:787   SM            SM_CLIENT     EV_RAISE_PRE_EVENT_CB                    EV_PASS
+Sep/29  12:14:51:787   SM            AAA_COORD     EV_AAA_REQUEST                           EV_PASS
+Sep/29  12:14:51:787   AAA_CLIENT    AAA_CORE      EV_AAA_REQUEST_RECEIVED                  EV_PASS
+Sep/29  12:14:51:788   RAD_CLIENT    RAD_SERVER    EV_AAA_RAD_REQUEST_SENT                  EV_PASS
+Sep/29  12:14:51:793   RAD_SERVER    RAD_CLIENT    EV_AAA_RAD_RESPONSE_RECEIVED             EV_PASS
+Sep/29  12:14:51:793   AAA_CORE      AAA_CLIENT    EV_AAA_RESPONSE_SENT                     EV_PASS
+Sep/29  12:14:51:793   AAA_COORD     SM            EV_AAA_CHALLENGE                         EV_PASS
+Sep/29  12:14:51:793   DOT01X        CLIENT        EV_EAP_REQ_TX                            EV_PASS
+Sep/29  12:14:51:797   CLIENT        DOT01X        EV_EAP_RESP_RX                           EV_PASS
+Sep/29  12:14:51:797   SM            AAA_COORD     EV_AAA_REQUEST                           EV_PASS
+Sep/29  12:14:51:797   AAA_CLIENT    AAA_CORE      EV_AAA_REQUEST_RECEIVED                  EV_PASS
+Sep/29  12:14:51:797   RAD_CLIENT    RAD_SERVER    EV_AAA_RAD_REQUEST_SENT                  EV_PASS
+Sep/29  12:14:51:799   RAD_SERVER    RAD_CLIENT    EV_AAA_RAD_RESPONSE_RECEIVED             EV_PASS
+Sep/29  12:14:51:799   AAA_CORE      AAA_CLIENT    EV_AAA_RESPONSE_SENT                     EV_PASS
+Sep/29  12:14:51:799   AAA_COORD     SM            EV_AAA_CHALLENGE                         EV_PASS
+Sep/29  12:14:51:799   DOT01X        CLIENT        EV_EAP_REQ_TX                            EV_PASS
+Sep/29  12:14:51:807   CLIENT        DOT01X        EV_EAP_RESP_RX                           EV_PASS
+Sep/29  12:14:51:807   SM            AAA_COORD     EV_AAA_REQUEST                           EV_PASS
+Sep/29  12:14:51:807   AAA_CLIENT    AAA_CORE      EV_AAA_REQUEST_RECEIVED                  EV_PASS
+Sep/29  12:14:51:807   RAD_CLIENT    RAD_SERVER    EV_AAA_RAD_REQUEST_SENT                  EV_PASS
+Sep/29  12:14:51:871   RAD_SERVER    RAD_CLIENT    EV_AAA_RAD_RESPONSE_RECEIVED             EV_PASS
+Sep/29  12:14:51:871   AAA_CORE      AAA_CLIENT    EV_AAA_RESPONSE_SENT                     EV_PASS
+Sep/29  12:14:51:871   SM            SM            EV_EAP_AUTHOR_RETAIN_ATTRS               EV_PASS
+Sep/29  12:14:51:871   AAA_COORD     SM            EV_AAA_FAILURE                           EV_FAIL
+Sep/29  12:14:51:871   SM            SM_CLIENT     EV_RAISE_PRE_EVENT_CB                    EV_PASS
+Sep/29  12:14:51:872   SM            SET_STATE     EV_SESSION_AUTHC_FAILED                  EV_FAIL
+Sep/29  12:14:51:872   SM            SM_CLIENT     EV_SESS_EVENTLOG_OUT_CB                  EV_PASS
+Sep/29  12:14:51:872   DOT01X        CLIENT        EV_DOT1X_SEND_CANNED_SUCCESS             EV_PASS
+Sep/29  12:14:51:872   DOT01X        CLIENT        EV_EAP_REQ_TX                            EV_PASS
+Sep/29  12:14:51:872   SM            DOT01X        EV_TERMINATE_METHOD_CB                   EV_PASS
+Sep/29  12:14:51:873   SM            SM_CLIENT     EV_RAISE_PRE_EVENT_CB                    EV_PASS
+Sep/29  12:14:51:873   SM            SM_CLIENT     EV_UNAUTHORIZE_CB                        EV_PASS

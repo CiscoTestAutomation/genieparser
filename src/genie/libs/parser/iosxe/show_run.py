@@ -399,6 +399,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('power_inline_port_priority'): str,
                 Optional('flow_monitor_input'): str,
                 Optional('flow_monitor_output'): str,
+                Optional('flow_monitor_input_v6'): str,
+                Optional('flow_monitor_output_v6'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -423,6 +425,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('stackwise_virtual_link'): int,
                 Optional('dual_active_detection'): bool,
                 Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
+                Optional('speed'): int,
+                Optional('speed_nonegotiate'): bool,
             }
         }
     }
@@ -611,7 +615,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p48 = re.compile(r'^switchport +block +multicast$')
 
         # switchport trunk allowed vlan 820,900-905
-        p49 = re.compile(r'^switchport +trunk +allowed +vlan (?P<vlans>[\S\s]+)$')
+        # switchport trunk allowed vlan add 905-908
+        p49 = re.compile(r'^switchport +trunk +allowed +vlan( +add)? (?P<vlans>[\S\s]+)$')
 
         # ip dhcp snooping trust
         p50 = re.compile(r'^ip +dhcp +snooping +trust$')
@@ -720,6 +725,18 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         #no ip dhcp snooping information option allow-untrusted
         p84 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
 
+        #ipv6 flow monitor monitor_ipv6_in sampler H_sampler input
+        p85 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_input_v6>[\S]+)\s+sampler\s+[\S]+\s+input$')
+
+        #ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
+        p86 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_output_v6>[\S]+)\s+sampler\s+[\S]+\s+output$')
+
+        # speed 25000
+        p87 = re.compile(r'^speed +(?P<speed>\d+)$')
+        
+        # speed nonegotiate
+        p88 = re.compile(r'^speed +(?P<speed_nonegotiate>nonegotiate)$')
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -1113,9 +1130,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 continue
 
             # switchport trunk allowed vlan 820,900-905
+            # switchport trunk allowed vlan add 905-908
             m = p49.match(line)
             if m:
                 group = m.groupdict()
+                if 'switchport_trunk_vlans' in intf_dict:
+                    group['vlans'] = intf_dict['switchport_trunk_vlans'] + ',' + group['vlans']
                 intf_dict.update({'switchport_trunk_vlans': group['vlans']})
                 continue
 
@@ -1400,6 +1420,34 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
                 continue
+
+            #ipv6 flow monitor monitor_ipv6_in input
+            m = p85.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_input_v6': group['flow_monitor_input_v6']})
+                continue
+
+            #ipv6 flow monitor monitor_ipv6_out output
+            m = p86.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
+                continue
+            
+            #speed  25000
+            m = p87.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed': int(group['speed'])})
+                continue
+            
+            #speed  nonegotiate
+            m = p88.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed_nonegotiate': True})
+                continue    
 
         return config_dict
 
@@ -2262,7 +2310,7 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa user-name
+#   * show running-config aaa user-name
 #   * show running-config aaa username
 # ==================================================
 class ShowRunningConfigAAAUsernameSchema(MetaParser):
@@ -2645,7 +2693,7 @@ class ShowRunningConfigFlowMonitor(ShowRunningConfigFlowMonitorSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa
+#   * show running-config aaa
 # ==================================================
 class ShowRunningConfigAAASchema(MetaParser):
     """

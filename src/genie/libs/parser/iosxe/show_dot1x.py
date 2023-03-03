@@ -4,6 +4,7 @@
      *  show dot1x all details
      *  show dot1x all statistics
      *  show dot1x all summary
+     *  show dot1x statistics
 """
 # Python
 import re
@@ -494,4 +495,143 @@ class ShowDot1xAllCount(ShowDot1xAllCountSchema):
                 ret_dict.setdefault('sessions', {})['total'] = \
                     int(m.groupdict()['total'])
                 continue
+        return ret_dict
+
+
+# ======================================================
+# Schema for 'show dot1x statistics '
+# ======================================================
+
+class ShowDot1xStatisticsSchema(MetaParser):
+    """Schema for show dot1x statistics"""
+
+    schema = {
+        'dot1x_stats': {
+            'rx_start': int,
+            'rx_logoff': int,
+            'rx_resp': int,
+            'rx_resp_id': int,
+            'rx_req': int,
+            'rx_invalid': int,
+            'rx_len_err': int,
+            'rx_total': int,
+            'tx_start': int,
+            'tx_logoff': int,
+            'tx_resp': int,
+            'tx_req': int,
+            're_tx_req': int,
+            're_tx_req_fail': int,
+            'tx_req_id': int,
+            're_tx_req_id': int,
+            're_tx_req_id_fail': int,
+            'tx_total': int,
+        },
+    }
+
+# ======================================================
+# Parser for 'show dot1x statistics '
+# ======================================================
+class ShowDot1xStatistics(ShowDot1xStatisticsSchema):
+    """Parser for show dot1x statistics"""
+
+    cli_command = 'show dot1x statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # RxStart = 2     RxLogoff = 0    RxResp = 14      RxRespID = 32
+        p1 = re.compile(r"^RxStart\s+=\s+(?P<rx_start>\d+)\s+RxLogoff\s+=\s+(?P<rx_logoff>\d+)\s+RxResp\s+=\s+(?P<rx_resp>\d+)\s+RxRespID\s+=\s+(?P<rx_resp_id>\d+)$")
+        # RxReq = 0       RxInvalid = 0   RxLenErr = 0
+        p1_1 = re.compile(r"^RxReq\s+=\s+(?P<rx_req>\d+)\s+RxInvalid\s+=\s+(?P<rx_invalid>\d+)\s+RxLenErr\s+=\s+(?P<rx_len_err>\d+)$")
+        # RxTotal = 53
+        p1_2 = re.compile(r"^RxTotal\s+=\s+(?P<rx_total>\d+)$")
+        # TxStart = 0     TxLogoff = 0    TxResp = 0
+        p1_3 = re.compile(r"^TxStart\s+=\s+(?P<tx_start>\d+)\s+TxLogoff\s+=\s+(?P<tx_logoff>\d+)\s+TxResp\s+=\s+(?P<tx_resp>\d+)$")
+        # TxReq = 16       ReTxReq = 0     ReTxReqFail = 0
+        p1_4 = re.compile(r"^TxReq\s+=\s+(?P<tx_req>\d+)\s+ReTxReq\s+=\s+(?P<re_tx_req>\d+)\s+ReTxReqFail\s+=\s+(?P<re_tx_req_fail>\d+)$")
+        # TxReqID = 36         ReTxReqID = 2       ReTxReqIDFail = 0
+        p1_5 = re.compile(r"^TxReqID\s+=\s+(?P<tx_req_id>\d+)\s+ReTxReqID\s+=\s+(?P<re_tx_req_id>\d+)\s+ReTxReqIDFail\s+=\s+(?P<re_tx_req_id_fail>\d+)$")
+        # TxTotal = 81
+        p1_6 = re.compile(r"^TxTotal\s+=\s+(?P<tx_total>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # RxStart = 2     RxLogoff = 0    RxResp = 14      RxRespID = 32
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_start'] = int(dict_val['rx_start'])
+                dot1x_stats['rx_logoff'] = int(dict_val['rx_logoff'])
+                dot1x_stats['rx_resp'] = int(dict_val['rx_resp'])
+                dot1x_stats['rx_resp_id'] = int(dict_val['rx_resp_id'])
+                continue
+
+            # RxReq = 0       RxInvalid = 0   RxLenErr = 0
+            match_obj = p1_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_req'] = int(dict_val['rx_req'])
+                dot1x_stats['rx_invalid'] = int(dict_val['rx_invalid'])
+                dot1x_stats['rx_len_err'] = int(dict_val['rx_len_err'])
+                continue
+
+            # RxTotal = 53
+            match_obj = p1_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_total'] = int(dict_val['rx_total'])
+                continue
+
+            # TxStart = 0     TxLogoff = 0    TxResp = 0
+            match_obj = p1_3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_start'] = int(dict_val['tx_start'])
+                dot1x_stats['tx_logoff'] = int(dict_val['tx_logoff'])
+                dot1x_stats['tx_resp'] = int(dict_val['tx_resp'])
+                continue
+
+            # TxReq = 16       ReTxReq = 0     ReTxReqFail = 0
+            match_obj = p1_4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_req'] = int(dict_val['tx_req'])
+                dot1x_stats['re_tx_req'] = int(dict_val['re_tx_req'])
+                dot1x_stats['re_tx_req_fail'] = int(dict_val['re_tx_req_fail'])
+                continue
+
+            # TxReqID = 36         ReTxReqID = 2       ReTxReqIDFail = 0
+            match_obj = p1_5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_req_id'] = int(dict_val['tx_req_id'])
+                dot1x_stats['re_tx_req_id'] = int(dict_val['re_tx_req_id'])
+                dot1x_stats['re_tx_req_id_fail'] = int(dict_val['re_tx_req_id_fail'])
+                continue
+
+            # TxTotal = 81
+            match_obj = p1_6.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_total'] = int(dict_val['tx_total'])
+                continue
+
+
         return ret_dict

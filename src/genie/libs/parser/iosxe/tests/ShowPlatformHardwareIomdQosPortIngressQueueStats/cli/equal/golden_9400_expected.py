@@ -1,0 +1,23 @@
+expected_output = {
+ 'data_port': 1,
+ 'queue': {0: {'buffers': 0,
+               'drop_th0': 0,
+               'drop_th1': 0,
+               'drop_th2': 0,
+               'enqueue_th0': 0,
+               'enqueue_th1': 0,
+               'enqueue_th2': 0,
+               'qebdrop': 0,
+               'sbufdrop': 0},
+           1: {'buffers': 0,
+               'drop_th0': 0,
+               'drop_th1': 0,
+               'drop_th2': 0,
+               'enqueue_th0': 0,
+               'enqueue_th1': 0,
+               'enqueue_th2': 4201076,
+               'qebdrop': 0,
+               'sbufdrop': 0}},
+ 'startingqueue': 0,
+ 'unit': 'bytes'
+ }

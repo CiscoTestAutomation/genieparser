@@ -1,0 +1,5 @@
+           if_id      vlan_id   pvlan_mode   pvlan_vlan   stp_state  vtp pruned          Untagged  
+-------------------------------------------------------------------------------------------------
+              32          100         none            1  forwarding          No                No  
+              20          100         none            1    learning          No                No  
+              19          100         none            1    learning          No                No  

@@ -1,0 +1,36 @@
+expected_output = {
+    "keys": {
+        1: {
+            "key_name": "test",
+            "key_type": {
+                "RSA KEYS": {
+                    "key": "not exportable",
+                    "key_data": [
+                        "30820222 300D0609 2A864886 F70D0101 01050003 82020F00 3082020A 02820201",
+                        "00B56613 5ACE5410 668243B8 A5E67E99 57825216 9B0145E1 631951FD 2B87B3BD",
+                        "64E988A7 C3EE8870 9C085F9D E68E33CA B33F00BD 1619D231 1D677F8F B7A062A9",
+                        "AA8FE839 500E30E0 5D3CFC34 DBEBBD41 73AF5D0B C88A0C46 1C0597C5 DD9FB57F",
+                        "29D23139 DD2A6AC2 533D72F2 2089B3B9 7FF1F7DD 849E66C7 7B4E7D7E 7E6F86E8",
+                        "84A1CFC8 873228BD E93EA65D 01A36C39 0F784E07 438E5165 54562C28 4D4F4A69",
+                        "FDBD5EF3 21B7BF64 B0EEB452 878A3E79 C35BBCF7 CF627DB7 F06585D3 3ED36F5B",
+                        "3C0D82AB 818E3189 86895525 949618F3 2C5AE1DF 32713910 C9960B64 8EE51C1F",
+                        "229BCAD4 02C13431 318AD58C 24AE37EB 6F3AC9C2 EEEB0A75 E1E63DD4 68F857D3",
+                        "60FF1741 B16BF10F 1FEB7D40 029D5A50 E3001E5B 660487C1 B28818B9 5D374DD0",
+                        "22441E42 14398E91 ABA69323 1A1A78E6 31E52C98 4B77C812 0D59A723 8A3A17F7",
+                        "76350D86 38A63DF7 E688DEF0 B7392220 E8F37E6E CA7CDECA 7FC6F283 D6B756F1",
+                        "1692DC88 7CB147FF 5A0DD8A0 FE871791 B7736E38 7550E27E DEC1772D 8AD5B8B3",
+                        "2910277D 23AE10A1 01106233 CB014202 9276E70D C731D1A2 7D598519 460EA1FF",
+                        "ED79EF07 C3DBE846 91F91E3E 5716B585 7E3295B2 3DEF610B DC890419 7C3F4B66",
+                        "F2BC3B97 278C61D5 6700528C 59FF9BD2 A01F83E1 0123A7C5 638D212C FCA5AD92",
+                        "C907010D 1D1776D8 09DDECE9 80A88D97 109A4C88 B0F85889 F379B628 4E9E0434",
+                        "B9020301 0001"
+                    ],
+                    "redundancy": "enabled",
+                    "storage_device": "private-config",
+                    "usage": "General Purpose Key"
+                }
+            },
+            "keypairgen_time": "06:51:40 UTC Aug 30 2022"
+        }
+    }
+}

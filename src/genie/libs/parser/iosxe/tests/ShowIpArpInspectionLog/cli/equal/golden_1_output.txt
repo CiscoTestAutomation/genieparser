@@ -1,0 +1,9 @@
+Total Log Buffer Size : 100
+Syslog rate : 10 entries per 120 seconds.
+Smartlog is not enabled
+
+
+Interface   Vlan  Sender MAC      Sender IP        Num Pkts   Reason        Time
+----------  ----  --------------  ---------------  ---------  ------------  ----
+Gi1/0/37    10    5006.0484.c213  10.1.1.60                1  DHCP Permit   16:35:37 UTC Fri Aug 26 2022
+Gi1/0/38    10    5006.0484.c213  10.1.1.60                1  DHCP Permit   16:35:37 UTC Fri Aug 26 2022

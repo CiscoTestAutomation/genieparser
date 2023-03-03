@@ -19,6 +19,9 @@ IOSXE parser for the following show commands:
    * show nat64 prefix stateful global
    * show nat64 prefix stateful interfaces,
    * show nat64 prefix stateful interfaces prefix {prefix}
+   * show ipv6 nd ra nat64-prefix
+   * show nat64 translations vrf {vrf_name}
+   * show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}
    
 '''
 # Python
@@ -61,6 +64,7 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
     show nat64 translations time created {time_stamp}
     show nat64 translations entry-type {session}
     show nat64 translations {verbose}
+    show nat64 translations vrf {vrf_name}
     """
 
     cli_command = [
@@ -70,7 +74,8 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
                     'show nat64 translations {ip_type} {address_type} {address}',
                     'show nat64 translations time created {time_stamp}',
                     'show nat64 translations entry-type {session}',
-                    'show nat64 translations {verbose}'                    
+                    'show nat64 translations {verbose}',
+                    'show nat64 translations vrf {vrf_name}'                   
                   ]
     
     def cli(self, 
@@ -83,6 +88,7 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
             time_stamp="",  
             session="", 
             verbose="", 
+            vrf_name="",
             output=None):
         
         if output is None:
@@ -98,6 +104,8 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
                 cmd = self.cli_command[5].format(session=session)
             elif verbose:
                 cmd = self.cli_command[6].format(verbose=verbose)
+            elif vrf_name:
+                cmd = self.cli_command[7].format(vrf_name=vrf_name)
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
@@ -189,7 +197,7 @@ class ShowNat64Translations(ShowNat64TranslationsSchema):
                 group = m.groupdict()
                 ret_dict['total_no_of_translations'] = int(group['total_no_of_translations'])
                 continue
-             
+     
         return ret_dict
               
 class ShowNat64TimeoutsSchema(MetaParser):
@@ -312,7 +320,8 @@ class ShowNat64StatisticsSchema(MetaParser):
                         'packets_translated': {
                             'v4_to_v6': int,
                             'v6_to_v4': int
-                        }
+                        },
+                        Optional('prefix_vrf_name'): str
                     }
                 }
             },
@@ -403,7 +412,10 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
         p3 = re.compile(r'^Packets translated \(IPv6 \-\> IPv4\)\: +(?P<v6_to_v4>(\d+)$)')
         
         # Prefix: 64:FF9B::/96
-        p4 = re.compile(r'^Prefix\: +(?P<prefix>(\S+))')
+        p4 = re.compile(r'^Prefix\: +(?P<prefix>(\S+))$')
+        
+        # Prefix: 2002:1::/96 - vrf nat64_vrf
+        p44 = re.compile(r'^Prefix\: +(?P<prefix>(\S+)) \- +vrf+ (?P<prefix_vrf_name>\S+)$')
         
         # Packets dropped: 0
         p5 = re.compile(r'^Packets +dropped+\: +(?P<packets_dropped>\d+)')
@@ -485,6 +497,18 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
                 pre_dict = global_dict.setdefault('prefix', {})
                 prefix_dict = pre_dict.setdefault(group['prefix'], {})
                 v4v6_dict = prefix_dict.setdefault('packets_translated', {})
+                continue
+                
+            # Prefix: 2002:1::/96 - vrf nat64_vrf
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                nat64_dict = ret_dict.setdefault('nat64_stats', {})
+                global_dict = nat64_dict.setdefault('global_statistics', {})
+                pre_dict = global_dict.setdefault('prefix', {})
+                prefix_dict = pre_dict.setdefault(group['prefix'], {})
+                v4v6_dict = prefix_dict.setdefault('packets_translated', {})
+                prefix_dict['prefix_vrf_name'] = group['prefix_vrf_name']
                 continue
         
             # Packets dropped: 0
@@ -612,7 +636,7 @@ class ShowNat64Statistics(ShowNat64StatisticsSchema):
                 group = m.groupdict()
                 cef_dict['dropped_pkts'] = int(group['dropped_pkts'])
                 continue
-                        
+                   
         return ret_dict
 
 class ShowNat64MappingsStaticAddressesSchema(MetaParser):
@@ -1159,10 +1183,12 @@ class ShowNat64PrefixStatefulGlobalSchema(MetaParser):
     schema = {
         'validation': str,
         'prefix': str,
+        Optional('prefix_vrf_name'): str,
         Any():{
             'index':{
                 Any():{
-                    'interface': str
+                    'interface': str,
+                    Optional('int_vrf_name'): str
                 }
             }
         }   
@@ -1190,11 +1216,18 @@ class ShowNat64PrefixStatefulGlobal(ShowNat64PrefixStatefulGlobalSchema):
         # Global Stateful Prefix: is not valid
         p2 = re.compile(r'^Global Stateful Prefix+: is +(?P<validation>[\w ]+)$')
         
+        # 2002:1::/96 - vrf nat64_vrf
+        p22 = re.compile(r'(?P<prefix>[\w\:\.]+[\/]+[\d]+) \- +vrf+ (?P<prefix_vrf_name>\S+)$')
+        
         # IFs Using Global Prefix
         # Twe1/0/3
         # Twe1/0/19
         # Twe2/0/9
         p3 = re.compile(r'^(?P<interface>\S+)$')
+        
+        # IFs Using Global Prefix
+        # Te2/2/0/19 - vrf nat64_vrf
+        p33 = re.compile(r'^(?P<interface>\S+) \- +vrf+ (?P<int_vrf_name>\S+)$')
         
         for line in output.splitlines():
             line = line.strip()
@@ -1213,6 +1246,14 @@ class ShowNat64PrefixStatefulGlobal(ShowNat64PrefixStatefulGlobalSchema):
                 group = m.groupdict()
                 ret_dict["validation"] = group["validation"]
                 continue
+            
+            # 2002:1::/96 - vrf nat64_vrf    
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["prefix"] = group["prefix"]
+                ret_dict["prefix_vrf_name"] = group["prefix_vrf_name"]
+                continue
         
             # IFs Using Global Prefix
             # Twe1/0/3
@@ -1224,6 +1265,18 @@ class ShowNat64PrefixStatefulGlobal(ShowNat64PrefixStatefulGlobalSchema):
                 prefix_global = ret_dict.setdefault('prefix_global', {})
                 index_dict = prefix_global.setdefault('index', {}).setdefault(index,{})
                 index_dict['interface'] = group['interface']
+                index += 1
+                continue
+            
+            # IFs Using Global Prefix
+            # Te2/2/0/19 - vrf nat64_vrf   
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_global = ret_dict.setdefault('prefix_global', {})
+                index_dict = prefix_global.setdefault('index', {}).setdefault(index, {})
+                index_dict['interface'] = group['interface']
+                index_dict['int_vrf_name'] = group['int_vrf_name']
                 index += 1
                 continue
 
@@ -1310,7 +1363,8 @@ class ShowNat64PrefixStatefulStaticRoutesSchema(MetaParser):
             'index':{
                 Any():{
                     'nat64_prefix': str,
-                    'static_route_ref_count': int
+                    'static_route_ref_count': int,
+                    Optional('vrf_name'): str
                 }
             }
         }   
@@ -1320,17 +1374,21 @@ class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSch
     """
     show nat64 prefix stateful static-routes,
     show nat64 prefix stateful static-routes prefix {prefix}
+    show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}
     """
 
     cli_command = [
                    'show nat64 prefix stateful static-routes',
-                   'show nat64 prefix stateful static-routes prefix {prefix}'
+                   'show nat64 prefix stateful static-routes prefix {prefix}',
+                   'show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}'
                   ]                 
     
-    def cli(self, prefix="", output=None):
+    def cli(self, prefix="", vrf_name="", output=None):
         
         if output is None:
-            if prefix:
+            if vrf_name and prefix:
+                cmd = self.cli_command[2].format(prefix=prefix,vrf_name=vrf_name)
+            elif prefix:
                 cmd = self.cli_command[1].format(prefix=prefix)
             else:
                 cmd = self.cli_command[0]
@@ -1343,6 +1401,11 @@ class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSch
         # NAT64 Prefix
         # 1001::/96
         p1 = re.compile(r'^(?P<nat64_prefix>[\w\:\.]+[\/]+[\d]+)$')
+        
+        # NAT64 Prefix
+        # VRF
+        # 2002:1::/96 vrf vrf1
+        p11 = re.compile(r'^(?P<nat64_prefix>[\w\:\.]+[\/]+[\d]+)+ vrf +(?P<vrf_name>\S+)$')
 
         # Static Route Ref-Count
         # 1
@@ -1361,6 +1424,18 @@ class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSch
                 index_dict['nat64_prefix'] = group['nat64_prefix']
                 continue
                 
+            # NAT64 Prefix
+            # VRF
+            # 2002:1::/96 vrf vrf1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_static_routes = ret_dict.setdefault('prefix_static_routes', {})
+                index_dict = prefix_static_routes.setdefault('index', {}).setdefault(index,{})
+                index_dict['nat64_prefix'] = group['nat64_prefix']
+                index_dict['vrf_name'] = group['vrf_name']
+                continue
+                
             # Static Route Ref-Count
             # 1
             m = p2.match(line)
@@ -1369,5 +1444,56 @@ class ShowNat64PrefixStatefulStaticRoutes(ShowNat64PrefixStatefulStaticRoutesSch
                 index_dict['static_route_ref_count'] = int(group['static_route_ref_count'])
                 index += 1
                 continue
-                
+         
         return ret_dict
+        
+        
+class ShowIpv6NdRaPrefixSchema(MetaParser):
+    """Schema for  show ipv6 nd ra nat64-prefix"""
+
+    schema = {
+            'index':{
+                Any():{
+                    'prefix': str,
+                    'prefix_length': str,
+                    'time': int,
+                    'interface': str
+                }
+            }  
+    }
+    
+class ShowIpv6NdRaPrefix(ShowIpv6NdRaPrefixSchema):
+    """
+    show ipv6 nd ra nat64-prefix
+    """
+
+    cli_command = 'show ipv6 nd ra nat64-prefix'                 
+    
+    def cli(self, output=None):
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}        
+        index = 1
+        
+        # 5000::/32 100  GigabitEthernet29
+        p1 = re.compile(r'^(?P<prefix>[\w\:\.]+)\s+(?P<prefix_length>[\/]+[\d]+)\s+(?P<time>\d+)\s+(?P<interface>\S+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 5000::/32 100  GigabitEthernet29
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict['prefix'] = group['prefix']
+                index_dict['prefix_length'] = group['prefix_length']
+                index_dict['time'] = int(group['time'])
+                index_dict['interface'] = group['interface']
+                index += 1
+                continue
+                
+        return ret_dict  
+               

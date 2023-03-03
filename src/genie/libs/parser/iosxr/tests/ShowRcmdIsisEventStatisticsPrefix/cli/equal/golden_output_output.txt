@@ -1,0 +1,12 @@
+Thu Aug 18 10:50:32.174 UTC
+ISIS process : isis1          
+Prefix Information                                                                        
+Priority - Events processed under critical/high/medium/low                                
+* - values from last event                                                                
+-------------------------------------------------------------------------------------------------------------------
+       Prefix        |   *Trigger Time    |  Add/Mod/Del  |   Priority    |   *Route   |*Cost |*Chg-Type |*Priority 
+-------------------------------------------------------------------------------------------------------------------
+  2.2.2.2/32          Aug 18 06:31:57.958       1/0/0          0/0/0/1          L1          20    Add       Low    
+  3.3.3.3/32          Aug 18 06:31:57.958       2/0/0          0/0/0/2          L1          30    Add       Low    
+  4.4.4.4/32          Aug 18 06:31:57.958       1/2/0          0/0/2/1          L1          30  Modify      Low    
+  5.5.5.5/32          Aug 18 06:31:57.958       1/0/0          0/0/0/1          L1          20    Add       Low    

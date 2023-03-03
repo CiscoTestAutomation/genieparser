@@ -1,0 +1,4 @@
+Interface/ID OPEN+ Nego* Fail-     Stage    Peer Address    Peer Name
+------------ --------------------- -------- --------------- --------------------
+Vi1.2        LCP+ IPCP+            LocalT   51.0.0.1
+Vi1.1        LCP+ IPV6CP+ IPV6CP+  LocalT   0.0.0.0

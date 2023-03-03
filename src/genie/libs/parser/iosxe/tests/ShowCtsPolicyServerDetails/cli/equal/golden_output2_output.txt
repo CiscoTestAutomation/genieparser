@@ -1,0 +1,10 @@
+show cts policy-server details name dt-ise
+server name   : dt-ise
+server status : inactive
+  ipv4 address     : 10.76.119.180 (reachable)
+  trustpoint       : tp246
+  port-num         : 9063
+  retransmit count : 3
+  timeout          : 15
+  app content type : json
+  trustpoint chain : not configured

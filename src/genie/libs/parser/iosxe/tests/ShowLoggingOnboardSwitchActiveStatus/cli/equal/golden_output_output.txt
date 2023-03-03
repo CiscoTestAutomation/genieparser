@@ -1,0 +1,28 @@
+sh logging onboard switch active status
+--------------------------------------------------------------------------------
+OBFL Application Status
+--------------------------------------------------------------------------------
+Application Uptime:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Message:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Voltage:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Temperature:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application POE:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Environment:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Counter:
+            Path: /obfl0/
+            Cli enable status: enabled
+Application Clilog:
+            Path: /obfl0/
+            Cli enable status: enabled

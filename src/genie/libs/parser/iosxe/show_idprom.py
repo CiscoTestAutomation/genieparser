@@ -3,10 +3,11 @@
 IOSXE parsers for the following show commands:
 
     * show idprom all 
+	* show idprom interface {interface}
 '''
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 import re
 
@@ -409,3 +410,274 @@ class ShowIdprom(ShowIdpromSchema):
                 continue
 
         return result_dict
+        
+class ShowIdpromInterfaceSchema(MetaParser):
+    """
+    Schema for show idprom interface {interface}
+    """
+    schema = {
+        'idprom_for_transceiver': {
+            'description': str, 
+            'transceiver_type': str, 
+            'product_identifier': str, 
+            'vendor_revision': str, 
+            'serial_number': str, 
+            'vendor_name': str,
+            'vendor_oui': str,
+            'clei_code': str,
+            'cisco_part_number': str,
+            'device_state': str, 
+            'date_code': str,
+            'connector_type': str, 
+            'encoding': str,
+            Optional('nominal_bitrate_per_channel'): str,
+        },
+    }
+              
+class ShowIdpromInterface(ShowIdpromInterfaceSchema):
+    """ Parser for show idprom interface {interface}"""
+
+    cli_command = 'show idprom interface {interface}'
+    
+    def cli(self, interface, output=None): 
+        if output is None:
+           # excute command to get output
+           output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        # initial variables
+        ret_dict = {}
+        
+        # IDPROM for transceiver
+        p1 = re.compile('^(?P<idprom_for_transceiver>IDPROM for transceiver)')
+        
+        # Description         = QSFP28 optics (type 134)
+        p2 = re.compile('^Description\s+=\s+(?P<description>.*)$')
+
+        # Transceiver Ty     = QSFP 100GE CU1M (464)
+        p3 = re.compile('^Transceiver Type:\s+=\s+(?P<transceiver_type>.*)$')
+
+        # Product Identifier (PID)   = QSFP-100G-CU1M
+        p4 = re.compile('^Product Identifier\s+\(PID\)\s+=\s+(?P<product_identifier>.*)$')
+ 
+        # Vendor Revision            = A
+        # Vendor Revision            = 1.0
+        p5 = re.compile('^Vendor Revision\s+=\s+(?P<vendor_revision>[\w.]+)$')
+
+        # Serial Number (SN)         = APF22340870-A
+        p6 = re.compile('^Serial Number\s+\(SN\)\s+=\s+(?P<serial_number>[\w\S]+)$')
+        
+        # Vendor Name                = CISCO-AMPHENOL
+        p7 = re.compile('^Vendor Name\s+=\s+(?P<vendor_name>[\w\S]+)$')
+
+        # Vendor OUI (IEEE company ID)     = 78.A7.14 (7907092)
+        p8 = re.compile('^Vendor OUI\s+\(IEEE company ID\)\s+=\s+(?P<vendor_oui>.*)$')
+        
+        # CLEI code      = CMPQACECAA
+        p9 = re.compile('^CLEI code\s+=\s+(?P<clei_code>[\w]+)$')
+    
+        # Cisco part number      = 37-1666-01
+        p10 = re.compile('^Cisco part number\s+=\s+(?P<cisco_part_number>[\d\S]+)$')
+
+        # Device State      = Enabled.
+        p11 = re.compile('^Device State\s+=\s+(?P<device_state>[\w\S]+)$')
+        
+        # Date code (yy/mm/dd)    = 18/08/25
+        p12 = re.compile('^Date code\s+\S+\s+=\s+(?P<date_code>[\d\S]+)$')
+
+        # Connector type      = No separable connector
+        # Connector type      = LC.
+        p13 = re.compile('^Connector type\s+=\s+(?P<connector_type>[\w\s.]+)$')
+
+        # Encoding           = 64B66B
+        # Encoding           = 8B10B (1)
+        p14= re.compile('^Encoding\s+=\s+(?P<encoding>.*)$')
+        
+        # Nominal bitrate per channel    = 25GE (25500 Mbits/s)
+        p15 = re.compile('^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>.*)$')
+
+        for line in output.splitlines():
+            line=line.strip()
+            
+            # IDPROM for transceiver
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('idprom_for_transceiver',{})
+                
+            # Description        = QSFP28 optics (type 134)
+            m=p2.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['description'] = group['description']
+                continue
+                
+            # Transceiver Ty     = QSFP 100GE CU1M (464)                
+            m=p3.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['transceiver_type'] = group['transceiver_type']
+                continue
+
+            # Product Identifier (PID)   = QSFP-100G-CU1M
+            m=p4.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['product_identifier'] = group['product_identifier']
+                continue
+
+            # Vendor Revision            = A
+            m=p5.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['vendor_revision'] = group['vendor_revision']
+                continue
+                
+            # Serial Number (SN)         = APF22340870-A
+            m=p6.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['serial_number'] = group['serial_number']
+                continue
+
+            # Vendor Name                = CISCO-AMPHENOL
+            m=p7.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['vendor_name'] = group['vendor_name']
+                continue
+                
+            # Vendor OUI (IEEE company ID)     = 78.A7.14 (7907092)
+            m=p8.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['vendor_oui'] = group['vendor_oui']
+                continue
+
+            # CLEI code        = CMPQACECAA
+            m=p9.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['clei_code'] = group['clei_code']
+                continue
+                
+            # Cisco part number      = 37-1666-01
+            m=p10.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['cisco_part_number'] = group['cisco_part_number']
+                continue  
+                
+            # Device State      = Enabled.
+            m=p11.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['device_state'] = group['device_state']
+                continue 
+
+            # Date code (yy/mm/dd)    = 18/08/25
+            m=p12.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['date_code'] = group['date_code']
+                continue                
+            
+            # Connector type      = No separable connector
+            m=p13.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['connector_type'] = group['connector_type']
+                continue    
+
+            # Encoding           = 64B66B
+            m=p14.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['encoding'] = group['encoding']
+                continue
+
+            # Nominal bitrate per channel    = 25GE (25500 Mbits/s)
+            m=p15.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['nominal_bitrate_per_channel'] = group['nominal_bitrate_per_channel']
+                continue				
+                
+        return ret_dict     
+
+
+# ==========================
+# Schema for:
+#  * 'show idprom tan switch {number}'
+#  * 'show idprom tan switch all'
+# ==========================
+class ShowIdpromTanSchema(MetaParser):
+    """Schema for:
+        show idprom tan switch {switch_num}
+        show idprom tan switch all"""
+
+    schema = {
+        'switch': {
+            Any(): {
+                'switch_num': int,
+                'part_num': str,
+                'revision_num': int,
+            },
+        }
+    }
+class ShowIdpromTan(ShowIdpromTanSchema):
+    """Parser for:
+        show idprom tan switch {switch_num}
+        show idprom tan switch all
+         """
+
+    cli_command = ['show idprom tan switch {switch_num}',
+                    'show idprom tan switch all']
+
+    def cli(self, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        # Switch 01 ---------
+        p1 = re.compile(r"^Switch\s+(?P<switch_num>\d+)$")
+        # Top Assy. Part Number           : 68-101195-01
+        p2 = re.compile(r"^Top\s+Assy.\s+Part\s+Number\s+:\s+(?P<part_num>\d+-\d+-\d+)$")
+        # Top Assy. Revision Number       : 31
+        p3 = re.compile(r"^Top\s+Assy.\s+Revision\s+Number\s+:\s+(?P<revision_num>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Switch 01 ---------
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                switch_var = dict_val['switch_num']
+                switch_group = ret_dict.setdefault('switch', {})
+                sw_dict = ret_dict['switch'].setdefault(switch_var, {})
+                sw_dict['switch_num'] = int(switch_var)
+                continue
+
+            # Top Assy. Part Number           : 68-101195-01
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                part_num_var = dict_val['part_num']
+                sw_dict['part_num'] = part_num_var
+                continue
+
+            # Top Assy. Revision Number       : 31
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                revision_part_num = dict_val['revision_num']
+                sw_dict['revision_num'] = int(revision_part_num)
+                continue
+
+
+        return ret_dict 

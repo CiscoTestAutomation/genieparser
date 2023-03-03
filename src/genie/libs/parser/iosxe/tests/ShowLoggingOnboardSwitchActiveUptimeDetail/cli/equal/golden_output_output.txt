@@ -1,0 +1,43 @@
+show logging onboard switch active uptime detail
+--------------------------------------------------------------------------------
+UPTIME SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+First customer power on : 11/23/2017 02:43:59
+Total uptime            :  0  years  49 weeks  5  days  15 hours  18 minutes
+Total downtime          :  2175 years  31 weeks  6  days  3  hours  23 minutes
+Number of resets        : 1585
+Number of slot changes  : 141
+Current reset reason    : PowerOn
+Current reset timestamp : 05/16/2015 21:52:58
+Current slot            : 1
+Chassis type            : 0
+Current uptime          :  0  years  0  weeks  3  days  16 hours  0  minutes
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+UPTIME CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+Time Stamp          | Reset                       | Uptime
+MM/DD/YYYY HH:MM:SS | Reason                      | years weeks days hours minutes
+--------------------------------------------------------------------------------
+05/16/2015 16:31:49   Reload Command                0     0     0     0     0
+05/16/2015 17:47:19   Reload Command                0     0     0     0     0
+05/16/2015 17:50:24   Reload Command                0     0     0     0     0
+05/16/2015 19:58:38   Reload Command                0     0     0     2     0
+05/16/2015 20:03:56   PowerOn                       0     0     0     0     0
+05/16/2015 20:19:01   Reload Command                0     0     0     0     10
+05/16/2015 20:24:20   Reload Command                0     0     0     0     0
+05/16/2015 20:29:21   Reload Command                0     0     0     0     0
+05/16/2015 20:32:56   Reload Command                0     0     0     0     0
+05/16/2015 20:36:08   Reload Command                0     0     0     0     0
+05/16/2015 20:39:37   Reload Command                0     0     0     0     0
+05/16/2015 20:54:33   Reload Command                0     0     0     0     10
+05/16/2015 20:59:51   Reload Command                0     0     0     0     0
+05/16/2015 21:04:50   Reload Command                0     0     0     0     0
+05/16/2015 21:08:24   Reload Command                0     0     0     0     0
+05/16/2015 21:11:36   Reload Command                0     0     0     0     0
+05/16/2015 21:39:56   Reload Command                0     0     0     0     0
+05/16/2015 21:43:00   Reload Command                0     0     0     0     0
+05/16/2015 21:47:39   Reload Command                0     0     0     0     0
+05/16/2015 21:52:58   PowerOn                       0     0     0     0     0
+--------------------------------------------------------------------------------

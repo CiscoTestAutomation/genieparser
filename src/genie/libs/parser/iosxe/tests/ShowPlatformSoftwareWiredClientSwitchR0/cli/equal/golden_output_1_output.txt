@@ -1,0 +1,6 @@
+sh platform software wired-client switch Ac r0     
+        ID  MAC Address     Fwd    Open Access   
+-----------------------------------------------
+0x13151bdb  001b.0c18.918d  Yes    No            
+0x19c3171c  cc7f.7505.5b2c  Yes    No            
+0x19e930dd  000e.83e5.3398  No     No 

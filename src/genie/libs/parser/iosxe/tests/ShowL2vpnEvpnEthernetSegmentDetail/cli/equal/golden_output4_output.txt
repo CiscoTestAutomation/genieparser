@@ -1,0 +1,10 @@
+EVPN Ethernet Segment ID: 0000.0000.0000.0000.0001
+  Interface:              Et0/1
+  Redundancy mode:        single-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    16
+  State:                  Port Down
+  Encapsulation:          none
+  Ordinal:                Not available
+  Core Isolation:         Yes (error disable)
+  Forwarder List:         

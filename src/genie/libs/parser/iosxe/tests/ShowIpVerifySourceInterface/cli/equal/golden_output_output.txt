@@ -1,0 +1,5 @@
+Interface  Filter-type  Filter-mode  IP-address       Mac-address        Vlan
+---------  -----------  -----------  ---------------  -----------------  ----
+Gi1/0/3      ip trk       active       40.1.1.24                           10   
+Gi1/0/3      ip trk       active       40.1.1.20                           10  
+Gi1/0/3      ip trk       active       40.1.1.21                           10 

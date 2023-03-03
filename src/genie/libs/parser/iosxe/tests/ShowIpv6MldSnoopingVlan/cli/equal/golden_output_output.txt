@@ -1,0 +1,21 @@
+Global MLD Snooping configuration:
+-------------------------------------------
+MLD snooping                 : Disabled
+Global PIM Snooping          : Disabled
+MLDv2 snooping               : Disabled
+Listener message suppression : Disabled
+TCN solicit query            : Disabled
+TCN flood query count        : 4
+Robustness variable          : 5
+Last listener query count    : 9
+Last listener query interval : 999
+
+Vlan 10:
+--------
+MLD snooping                        : Enabled
+Pim Snooping                        : Enabled
+MLD immediate leave                 : Disabled
+Explicit host tracking              : Disabled
+Robustness variable                 : 2
+Last listener query count           : 6
+Last listener query interval        : 1000

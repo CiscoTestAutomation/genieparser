@@ -36,6 +36,7 @@
 * 'show sdwan appqoe service-controllers'
 * 'show sdwan app-fwd cflowd flow-count'
 * 'show sdwan app-fwd cflowd statistics'
+* 'show sdwan app-fwd dpi flows'
 * 'show sdwan app-route sla-class'
 * 'show sdwan app-route sla-class name <name>'
 * 'show sdwan app-route stats local-color <color>'
@@ -50,13 +51,14 @@
 * 'show sdwan tunnel statistics ipsec'
 * 'show sdwan tunnel statistics pkt-dup'
 * 'show sdwan tunnel statistics table'
+* 'show sdwan utd dataplane config'
 '''
 
 # Python
 import re
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use, ListOf
 import genie.parsergen as pg
 from genie.libs.parser.viptela.show_bfd import ShowBfdSessions as ShowBfdSessions_viptela
 from genie.libs.parser.viptela.show_bfd import ShowBfdSummary as ShowBfdSummary_viptela
@@ -2809,92 +2811,92 @@ class ShowSdwanAppfwdCflowdStatistics(ShowSdwanAppfwdCflowdStatisticsSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-            ret_dict = {}
+        ret_dict = {}
+
+        # data_packets             :      1371257
+        p1 = re.compile(r'^data_packets\s+:+\s+(?P<data_packets>\d+)$')
+
+        # template_packets         :      5345
+        p2 = re.compile(r'^template_packets\s+:+\s+(?P<template_packets>\d+)$')
+
+        # total-packets            :      57938
+        p3 = re.compile(r'^total-packets\s+:+\s+(?P<total_packets>\d+)$')
+
+        # flow-refresh             :      31713
+        p4 = re.compile(r'^flow-refresh\s+:+\s+(?P<flow_refresh>\d+)$')
+
+        # flow-ageout              :      18416
+        p5 = re.compile(r'^flow-ageout\s+:+\s+(?P<flow_ageout>\d+)$')
+
+        # flow-end-detected        :      0
+        p6 = re.compile(r'^flow-end-detected\s+:+\s+(?P<flow_end_detected>\d+)$')
+
+        # flow-end-forced          :      0
+        p7 = re.compile(r'^flow-end-forced\s+:+\s+(?P<flow_end_forced>\d+)$')
+
+        # flow-rate-limit-drop     :      0
+        p8 = re.compile(r'^flow-rate-limit-drop\s+:+\s+(?P<flow_rate_limit_drop>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
 
             # data_packets             :      1371257
-            p1 = re.compile(r'^data_packets\s+:+\s+(?P<data_packets>\d+)$')
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                data_packets = int(group['data_packets'])
+                ret_dict['data_packets'] = data_packets
 
             # template_packets         :      5345
-            p2 = re.compile(r'^template_packets\s+:+\s+(?P<template_packets>\d+)$')
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                template_packets = int(group['template_packets'])
+                ret_dict['template_packets'] = template_packets
 
             # total-packets            :      57938
-            p3 = re.compile(r'^total-packets\s+:+\s+(?P<total_packets>\d+)$')
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                total_packets = int(group['total_packets'])
+                ret_dict['total_packets'] = total_packets
 
             # flow-refresh             :      31713
-            p4 = re.compile(r'^flow-refresh\s+:+\s+(?P<flow_refresh>\d+)$')
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_refresh = int(group['flow_refresh'])
+                ret_dict['flow_refresh'] = flow_refresh
 
             # flow-ageout              :      18416
-            p5 = re.compile(r'^flow-ageout\s+:+\s+(?P<flow_ageout>\d+)$')
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                flow_ageout = int(group['flow_ageout'])
+                ret_dict['flow_ageout'] = flow_ageout
 
             # flow-end-detected        :      0
-            p6 = re.compile(r'^flow-end-detected\s+:+\s+(?P<flow_end_detected>\d+)$')
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                flow_end_detected = int(group['flow_end_detected'])
+                ret_dict['flow_end_detected'] = flow_end_detected
 
             # flow-end-forced          :      0
-            p7 = re.compile(r'^flow-end-forced\s+:+\s+(?P<flow_end_forced>\d+)$')
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                flow_end_forced = int(group['flow_end_forced'])
+                ret_dict['flow_end_forced'] = flow_end_forced
 
             # flow-rate-limit-drop     :      0
-            p8 = re.compile(r'^flow-rate-limit-drop\s+:+\s+(?P<flow_rate_limit_drop>\d+)$')
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                flow_rate_limit_drop = int(group['flow_rate_limit_drop'])
+                ret_dict['flow_rate_limit_drop'] = flow_rate_limit_drop
 
-            for line in output.splitlines():
-                line = line.strip()
-
-                # data_packets             :      1371257
-                m = p1.match(line)
-                if m:
-                    group = m.groupdict()
-                    data_packets = int(group['data_packets'])
-                    ret_dict['data_packets'] = data_packets
-
-                # template_packets         :      5345
-                m = p2.match(line)
-                if m:
-                    group = m.groupdict()
-                    template_packets = int(group['template_packets'])
-                    ret_dict['template_packets'] = template_packets
-
-                # total-packets            :      57938
-                m = p3.match(line)
-                if m:
-                    group = m.groupdict()
-                    total_packets = int(group['total_packets'])
-                    ret_dict['total_packets'] = total_packets
-
-                # flow-refresh             :      31713
-                m = p4.match(line)
-                if m:
-                    group = m.groupdict()
-                    flow_refresh = int(group['flow_refresh'])
-                    ret_dict['flow_refresh'] = flow_refresh
-
-                # flow-ageout              :      18416
-                m = p5.match(line)
-                if m:
-                    group = m.groupdict()
-                    flow_ageout = int(group['flow_ageout'])
-                    ret_dict['flow_ageout'] = flow_ageout
-
-                # flow-end-detected        :      0
-                m = p6.match(line)
-                if m:
-                    group = m.groupdict()
-                    flow_end_detected = int(group['flow_end_detected'])
-                    ret_dict['flow_end_detected'] = flow_end_detected
-
-                # flow-end-forced          :      0
-                m = p7.match(line)
-                if m:
-                    group = m.groupdict()
-                    flow_end_forced = int(group['flow_end_forced'])
-                    ret_dict['flow_end_forced'] = flow_end_forced
-
-                # flow-rate-limit-drop     :      0
-                m = p8.match(line)
-                if m:
-                    group = m.groupdict()
-                    flow_rate_limit_drop = int(group['flow_rate_limit_drop'])
-                    ret_dict['flow_rate_limit_drop'] = flow_rate_limit_drop
-
-            return ret_dict
+        return ret_dict
 
 # =============================================
 # Parser Schema for 'show sdwan app-fwd cflowd flow-count'
@@ -5289,3 +5291,309 @@ class ShowSdwanPolicyFromVsmart(ShowSdwanPolicyFromVsmartSchema):
                 continue
 
         return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan utd dataplane config'
+# =======================================================================
+
+class ShowSdwanUtdDataplaneConfigSchema(MetaParser):
+
+    """Schema for "show sdwan utd dataplane config" """
+
+    schema = {
+        "utd_config_context": {
+            int: {
+                "context_flag": int,
+                "engine": str,
+                "state": str,
+                "sn_redirect": str,
+                "redirect_type": str,
+                "threat_inspection": str,
+                "defense_mode": str,
+                "domain_filtering": str,
+                "url_filtering": str,
+                "all_interface": str,
+                "file_inspection": str,
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show sdwan utd dataplane config'
+# ==============================================
+
+class ShowSdwanUtdDataplaneConfig(ShowSdwanUtdDataplaneConfigSchema):
+    """parser for "show sdwan utd dataplane config" """
+
+    cli_command = "show sdwan utd dataplane config"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # utd-dp config context 0
+        p1 = re.compile(r"^utd-dp+\s+config+\s+context+\s+(?P<context_number>\d+)$")
+
+        # context-flag      25493505
+        p2 = re.compile(r"^context-flag+\s+(?P<context_flag>\d+)$")
+
+        # engine            Standard
+        # state             enabled
+        # sn-redirect       fail-open
+        # redirect-type     divert
+        # threat-inspection not-enabled
+        # defense-mode      not-enabled
+        # domain-filtering  not-enabled
+        # url-filtering     not-enabled
+        # all-interface     enabled
+        # file-inspection   enabled
+        p3 = re.compile(r"^(?P<option_name>\S+)\s+(?P<option_value>\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # utd-dp config context 0
+            m1 = p1.match(line)
+            if m1:
+                groups = m1.groupdict()
+                config_context = parsed_dict.setdefault(
+                    "utd_config_context", {}
+                ).setdefault(int(groups["context_number"]), {})
+                continue
+
+            # context-flag      25493505
+            m2 = p2.match(line)
+            if m2:
+                groups = m2.groupdict()
+                config_context.update({"context_flag": int(groups["context_flag"])})
+                continue
+
+            # engine            Standard
+            # state             enabled
+            # sn-redirect       fail-open
+            # redirect-type     divert
+            # threat-inspection not-enabled
+            # defense-mode      not-enabled
+            # domain-filtering  not-enabled
+            # url-filtering     not-enabled
+            # all-interface     enabled
+            # file-inspection   enabled
+            m3 = p3.match(line)
+            if m3:
+                groups = m3.groupdict()
+                config_context.update(
+                    {groups["option_name"].replace("-", "_"): groups["option_value"]}
+                )
+                continue
+
+        return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan app-fwd dpi flows'
+# =======================================================================
+
+
+class ShowSdwanAppFwdDpiFlowsSchema(MetaParser):
+
+    """Schema for "show sdwan app-fwd dpi flows" """
+
+    schema = {
+        "vpn_id": {
+            Any(): ListOf(
+                {
+                    "source_ip": str,
+                    "destination_ip": str,
+                    "source_port": int,
+                    "destination_port": int,
+                    "dscp": int,
+                    "ip_protocol": int,
+                    "tcp_cntrl_bits": int,
+                    "icmp_opcode": int,
+                    "total_pkts": int,
+                    "total_bytes": int,
+                    "egress_intf_name": str,
+                    "ingress_intf_name": str,
+                    "application": str,
+                    "family": str,
+                    "drop_cause": str,
+                    "drop_octets": int,
+                    "drop_packets": int,
+                    "sla_not_met": int,
+                    "color_not_met": int,
+                    "queue_id": int,
+                    "tos": int,
+                    "dscp_output": int,
+                    "sampler_id": int,
+                    "fec_d_pkts": int,
+                    "fec_r_pkts": int,
+                    "pkt_dup_d_pkts_orig": int,
+                    "pkt_dup_d_pkts_dup": int,
+                    "pkt_dup_r_pkts": int,
+                    "pkt_cxp_d_pkts": int,
+                    "traffic_category": int,
+                    "service_area": int,
+                    "ssl_read_bytes": int,
+                    "ssl_written_bytes": int,
+                    "ssl_en_read_bytes": int,
+                    "ssl_en_written_bytes": int,
+                    "ssl_de_read_bytes": int,
+                    "ssl_de_written_bytes": int,
+                    "ssl_service_type": int,
+                    "ssl_traffic_type": int,
+                    "ssl_policy_action": int,
+                    "appqoe_action": int,
+                    "appqoe_sn_ip": str,
+                    "appqoe_pass_reason": int,
+                    "appqoe_dre_input_bytes": int,
+                    "appqoe_dre_input_packets": int,
+                    "appqoe_flags": int,
+                }
+            )
+        }
+    }
+
+
+# ==============================================
+# Parser for 'show sdwan app-fwd dpi flows'
+# ==============================================
+
+
+class ShowSdwanAppFwdDpiFlows(ShowSdwanAppFwdDpiFlowsSchema):
+    """parser for "show sdwan app-fwd dpi flows" """
+
+    cli_command = "show sdwan app-fwd dpi flows"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # app-fwd cflowd flows vpn 100 src-ip 184.118.1.123 dest-ip 192.168.101.5 src-port 80 dest-port 1360 dscp 32 ip-proto 6
+        p1 = re.compile(
+            r"^app-fwd+\s+cflowd+\s+flows+\s+vpn+\s+(?P<vpn_id>\d+)\s+src-ip+\s+(?P<source_ip>\S+)"
+            r"\s+dest-ip+\s+(?P<dest_ip>\S+)\s+src-port+\s+(?P<src_port>\d+)\s+dest-port+\s+"
+            r"(?P<dest_port>\d+)\s+dscp+\s+(?P<dscp>\d+)\s+ip-proto+\s+(?P<ip_proto>\d+)$"
+        )
+
+        # tcp-cntrl-bits           18
+        # icmp-opcode              0
+        # total-pkts               8
+        # total-bytes              448
+        # start-time               "Thu Oct 20 08:52:40 2022"
+        # egress-intf-name         Null
+        # ingress-intf-name        GigabitEthernet2
+        # application              unknown
+        # family                   network-service
+        # drop-cause               FirewallPolicy
+        # drop-octets              448
+        # drop-packets             8
+        # sla-not-met              0
+        # color-not-met            0
+        # queue-id                 2
+        # tos                      0
+        # dscp-output              0
+        # sampler-id               0
+        # fec-d-pkts               0
+        # fec-r-pkts               0
+        # pkt-dup-d-pkts-orig      0
+        # pkt-dup-d-pkts-dup       0
+        # pkt-dup-r-pkts           0
+        # pkt-cxp-d-pkts           0
+        # traffic-category         0
+        # service-area             0
+        # ssl-read-bytes           0
+        # ssl-written-bytes        0
+        # ssl-en-read-bytes        0
+        # ssl-en-written-bytes     0
+        # ssl-de-read-bytes        0
+        # ssl-de-written-bytes     0
+        # ssl-service-type         0
+        # ssl-traffic-type         0
+        # ssl-policy-action        0
+        # appqoe-action            0
+        # appqoe-sn-ip             0.0.0.0
+        # appqoe-pass-reason       0
+        # appqoe-dre-input-bytes   0
+        # appqoe-dre-input-packets 0
+        # appqoe-flags             0
+        p2 = re.compile(r"^(?P<name>\S+)\s+(?P<value>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # app-fwd cflowd flows vpn 100 src-ip 184.118.1.123 dest-ip 192.168.101.5 src-port 80 dest-port 1360 dscp 32 ip-proto 6
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                vpn_flows = ret_dict.setdefault("vpn_id", {}).setdefault(
+                    int(groups["vpn_id"]), []
+                )
+                flow = {
+                    "source_ip": groups["source_ip"],
+                    "destination_ip": groups["dest_ip"],
+                    "source_port": int(groups["src_port"]),
+                    "destination_port": int(groups["dest_port"]),
+                    "dscp": int(groups["dscp"]),
+                    "ip_protocol": int(groups["ip_proto"]),
+                }
+                vpn_flows.append(flow)
+                continue
+
+            # tcp-cntrl-bits           18
+            # icmp-opcode              0
+            # total-pkts               8
+            # total-bytes              448
+            # start-time               "Thu Oct 20 08:52:40 2022"
+            # egress-intf-name         Null
+            # ingress-intf-name        GigabitEthernet2
+            # application              unknown
+            # family                   network-service
+            # drop-cause               FirewallPolicy
+            # drop-octets              448
+            # drop-packets             8
+            # sla-not-met              0
+            # color-not-met            0
+            # queue-id                 2
+            # tos                      0
+            # dscp-output              0
+            # sampler-id               0
+            # fec-d-pkts               0
+            # fec-r-pkts               0
+            # pkt-dup-d-pkts-orig      0
+            # pkt-dup-d-pkts-dup       0
+            # pkt-dup-r-pkts           0
+            # pkt-cxp-d-pkts           0
+            # traffic-category         0
+            # service-area             0
+            # ssl-read-bytes           0
+            # ssl-written-bytes        0
+            # ssl-en-read-bytes        0
+            # ssl-en-written-bytes     0
+            # ssl-de-read-bytes        0
+            # ssl-de-written-bytes     0
+            # ssl-service-type         0
+            # ssl-traffic-type         0
+            # ssl-policy-action        0
+            # appqoe-action            0
+            # appqoe-sn-ip             0.0.0.0
+            # appqoe-pass-reason       0
+            # appqoe-dre-input-bytes   0
+            # appqoe-dre-input-packets 0
+            # appqoe-flags             0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                value = groups["value"]
+                flow.update(
+                    {
+                        groups["name"].replace("-", "_"): int(value)
+                        if value.isnumeric()
+                        else value
+                    }
+                )
+                continue
+
+        return ret_dict

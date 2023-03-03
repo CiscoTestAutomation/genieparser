@@ -1,0 +1,26 @@
+show ip admission cache 
+Authentication Proxy Cache
+Legend:
+  ^ - Sleeping Client
+Total Sessions: 101 Init Sessions: 1
+ Client Mac 000a.aaaa.0001 Client IP 0.0.0.0 IPv6 , State INIT, Method Webauth
+ Client Mac 1222.1000.0002 Client IP 16.0.0.2 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0003 Client IP 16.0.0.3 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0004 Client IP 16.0.0.4 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0005 Client IP 16.0.0.5 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0006 Client IP 16.0.0.6 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0007 Client IP 16.0.0.7 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0008 Client IP 16.0.0.8 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0009 Client IP 16.0.0.9 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000a Client IP 16.0.0.10 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000b Client IP 16.0.0.11 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000c Client IP 16.0.0.12 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000d Client IP 16.0.0.13 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000e Client IP 16.0.0.14 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.000f Client IP 16.0.0.15 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0010 Client IP 16.0.0.16 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0011 Client IP 16.0.0.17 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0012 Client IP 16.0.0.18 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0013 Client IP 16.0.0.19 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0014 Client IP 16.0.0.20 IPv6 , State AUTHZ, Method Webauth
+ Client Mac 1222.1000.0015 Client IP 16.0.0.21 IPv6 , State AUTHZ, Method Webauth

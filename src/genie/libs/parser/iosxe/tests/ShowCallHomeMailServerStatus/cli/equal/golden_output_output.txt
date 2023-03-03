@@ -1,0 +1,2 @@
+Mail-server[1]: Address: ott-ads-035 Priority: 1  Secure: none [Not Available]
+Mail-server[2]: Address: ott-ads-085 Priority: 2  Secure: tls [Not Available]

@@ -54,7 +54,11 @@ expected_output = {
                             },
                             "redistribution": {
                                 "static": {"subnets": "subnets", "enabled": True},
-                                "max_prefix": {"prefix_thld": 75},
+                                "max_prefix": {
+                                    "num_of_prefix": 5000,
+                                    "prefix_thld": 90,
+                                    "warn_only": True,
+                                    },
                                 "connected": {"subnets": "subnets", "enabled": True},
                             },
                             "nssa": True,
@@ -109,6 +113,7 @@ expected_output = {
                                 "max_lsa_warning_only": False,
                                 "max_lsa_current_count": 0,
                                 "max_lsa_limit": 5000,
+                                "max_lsa_threshold_value": 75,
                             },
                             "spf_control": {
                                 "incremental_spf": False,

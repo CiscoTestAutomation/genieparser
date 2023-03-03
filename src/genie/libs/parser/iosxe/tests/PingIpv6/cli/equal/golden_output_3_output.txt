@@ -1,0 +1,12 @@
+Output Interface: TenGigabitEthernet1/0/5
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to FF08::10, timeout is 2 seconds:
+Packet sent with a source address of 2012:AA:23::2
+
+Request 0 timed out
+Request 1 timed out
+Request 2 timed out
+Request 3 timed out
+Request 4 timed out
+Success rate is 0 percent (0/5)
+0 multicast replies and 0 errors.

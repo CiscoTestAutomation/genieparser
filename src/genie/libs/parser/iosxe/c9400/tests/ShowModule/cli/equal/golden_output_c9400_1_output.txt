@@ -1,0 +1,36 @@
+
+Chassis Type: C9410R              
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAD235008KN
+2   48   48-Port 90W BT 10/100/1000 (RJ-45)          C9400-LC-48H     JAE231008HV
+3   48   48-Port POE+ 10/100/1000 (RJ-45)            C9400-LC-48P     JAE21390C3Y
+4   48   48-Port UPOE w/ 24p mGig 24p RJ-45          C9400-LC-48UX    JAE22280Q02
+5   13   Supervisor 1 XL Module with 25G             C9400-SUP-1XL-Y  JAD241502CM
+6   13   Supervisor 1 XL Module with 25G             C9400-SUP-1XL-Y  JAD241502CX
+7   24   24-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-24XS    JAE223605HX
+8   24   24-Port 1 Gigabit Ethernet (SFP)            C9400-LC-24S     JAE24380XZU
+9   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAE220602CR
+10  24   24-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-24XS    JAE21500658
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   7C31.0EAF.62B4 to 7C31.0EAF.62E3 1.1  17.8.1r[FC1]  17.06.03           ok         
+2   706D.15B3.1F64 to 706D.15B3.1F93 0.5  17.8.1r[FC1]  17.06.03           ok         
+3   707D.B9CF.FD7C to 707D.B9CF.FDAB 0.6  17.8.1r[FC1]  17.06.03           ok         
+4   BC26.C7D2.1060 to BC26.C7D2.108F 1.0  17.8.1r[FC1]  17.06.03           ok         
+5   502F.A8C9.D3AC to 502F.A8C9.D3B8 1.0  17.8.1r[FC1]  17.06.03           ok         
+6   502F.A8C9.D3B6 to 502F.A8C9.D3C2 1.0  17.8.1r[FC1]  17.06.03           ok         
+7   00B7.71FB.5C84 to 00B7.71FB.5C9B 1.0  17.8.1r[FC1]  17.06.03           ok         
+8   E41F.7BD1.1158 to E41F.7BD1.116F 1.0  17.8.1r[FC1]  17.06.03           ok         
+9   7069.5A5D.67F0 to 7069.5A5D.681F 1.1  17.8.1r[FC1]  17.06.03           ok         
+10  4C77.6DBF.6A20 to 4C77.6DBF.6A37 1.0  17.8.1r[FC1]  17.06.03           ok         
+
+Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+---+-------------------+---------------+---------------+------------------
+5   Active              sso             sso              Active           
+6   Standby             sso             sso              Standby Hot      
+
+Chassis MAC address range: 44 addresses from 502f.a8c9.d380 to 502f.a8c9.d3ab 
+

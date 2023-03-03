@@ -2396,9 +2396,15 @@ class ShowIsisInterfaceSchema(MetaParser):
                         Optional('bfd_min_interval'): int,
                         Optional('bfd_multiplier'): int,
                         Optional('bandwidth'): int,
+                        Optional('total_bandwidth'): int,
                         Optional('circuit_type'): str,
                         Optional('media_type'): str,
                         Optional('circuit_number'): int,
+                        Optional('delay_normalization'): {
+                            'interval': int,
+                            'offset': int
+                        },
+                        Optional('link_loss'): str,
                         Optional('rsi_srlg'): str,
                         Optional('next_p2p_iih_in'): int,
                         Optional('extended_circuit_number'): int,
@@ -2440,26 +2446,39 @@ class ShowIsisInterfaceSchema(MetaParser):
                         },
                         Optional('topology'): {
                             Any(): {
-                                'adjacency_formation': str,
-                                'state': str,
-                                'prefix_advertisement': str,
+                                Optional('adjacency_formation'): str,
+                                Optional('state'): str,
+                                Optional('prefix_advertisement'): str,
                                 Optional('protocol_state'): str,
-                                'metric': {
+                                Optional('metric'): {
                                     'level': {
                                         Any(): int
                                     }
                                 },
-                                'weight': {
+                                Optional('metric_fallback'):{
+                                    'bandwidth':{
+                                        'level': {
+                                            Any(): str
+                                        }
+                                    },
+                                    'anomaly':{
+                                        'level': {
+                                            Any(): str
+                                        }
+                                    }
+                                },
+                                Optional('weight'): {
                                     'level': {
                                         Any(): int
                                     }
                                 },
-                                'mpls': {
+                                Optional('mpls'): {
                                     'mpls_max_label_stack': str,
                                     'ldp_sync': {
                                         'level': {
                                             Any(): str,
-                                        }
+                                        },
+                                        Optional('status'): str
                                     },
                                 },
                                 Optional('frr'): {
@@ -2485,8 +2504,8 @@ class ShowIsisInterfaceSchema(MetaParser):
                         Optional('address_family'): {
                             Any(): {
                                 'state': str,
-                                'forwarding_address': list,
-                                'global_prefix': list,
+                                Optional('forwarding_address'): list,
+                                Optional('global_prefix'): list,
                                 Optional('protocol_state'): str,
                             },
                         }
@@ -2716,6 +2735,33 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # IfName: Hu0/0/0/1 IfIndex: 0x55
         r55 = re.compile(r'^IfName: +(?P<if_name>\S+) +IfIndex: +(?P<if_index>\S+)$')
+
+        # LDPv4 Sync Status:    Achieved
+        # LDPv6 Sync Status:    Not Achieved
+        r56 = re.compile(r'^(?P<ldp_type>LDPv(4|6))\s+Sync\s+Status:\s+(?P<status>[\w\s]+)$')
+
+        # Total bandwidth:                0
+        # Total bandwidth:                1000000
+        r57 = re.compile(r'Total\s+bandwidth\s*:\s*(?P<total_bandwidth>\d+)')
+
+        # Metric fallback:
+        r58 = re.compile(r'Metric\s+fallback:')
+
+        # Bandwidth (L1/L2):    Inactive/Inactive
+        r59 = re.compile(r'Bandwidth\s+\(L(?P<level_1>\d+)/L'
+                         r'(?P<level_2>\d+)\)\s*:\s*(?P<bandwidth_level_1>\w+)\/(?P<bandwidth_level_2>\w+)')
+        
+        # Anomaly (L1/L2):    Inactive/Inactive
+        r60 = re.compile(r'Anomaly\s+\(L(?P<level_1>\d+)/L'
+                         r'(?P<level_2>\d+)\)\s*:\s*(?P<anomaly_level_1>\w+)\/(?P<anomaly_level_2>\w+)')
+
+        # Delay Normalization:      Interval:0 Offset:0
+        r61 = re.compile(r'Delay\s+Normalization:\s*Interval:(?P<interval>'
+                         r'\d+)\s+Offset:(?P<offset>\d+)')
+
+        # Link Loss:                -
+        # Link Loss:                1
+        r62 = re.compile(r'Link\s+Loss:\s*(?P<link_loss>[\d-]+)')
 
         parsed_output = {}
         interface_flag = False
@@ -3428,6 +3474,89 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     setdefault(if_name, {})
                 underlying_interface.update({'index': if_index})
 
+                continue
+
+            # LDPv4 Sync Status:    Achieved
+            # LDPv6 Sync Status:    Not Achieved
+            result = r56.match(line)
+            if result:
+                group = result.groupdict()
+                state_status = group['status']
+                sync_status_dict = mpls_dict\
+                    .setdefault('ldp_sync', {})
+                
+                sync_status_dict['status'] = state_status
+                continue
+
+            # Total bandwidth:                0
+            # Total bandwidth:                1000000
+            result = r57.match(line)
+            if result:
+                group = result.groupdict()
+                total_bandwidth = int(group['total_bandwidth'])
+                interface_dict['total_bandwidth'] = total_bandwidth
+                continue
+
+            # Metric fallback:
+            result = r58.match(line)
+            if result:
+                metric_fallback_dict = topology_dict.setdefault('metric_fallback', {})
+                metric_fallback_flag = True
+                continue
+
+            # Bandwidth (L1/L2):    Inactive/Inactive
+            result = r59.match(line)
+            if result:
+                group = result.groupdict()
+                if metric_fallback_flag:
+                    level_1 = int(group['level_1'])
+                    level_2 = int(group['level_2'])
+                    bandwidth_level_1 = group['bandwidth_level_1']
+                    bandwidth_level_2 = group['bandwidth_level_2']
+                    bandwidth_level_dict = metric_fallback_dict\
+                        .setdefault('bandwidth', {})\
+                        .setdefault('level', {})
+
+                    bandwidth_level_dict[level_1] = bandwidth_level_1
+                    bandwidth_level_dict[level_2] = bandwidth_level_2
+                continue
+
+            # Anomaly (L1/L2):      Inactive/Inactive
+            result = r60.match(line)
+            if result:
+                group = result.groupdict()
+                if metric_fallback_flag:
+                    level_1 = int(group['level_1'])
+                    level_2 = int(group['level_2'])
+                    anomaly_level_1 = group['anomaly_level_1']
+                    anomaly_level_2 = group['anomaly_level_2']
+                    anomaly_level_dict = metric_fallback_dict\
+                        .setdefault('anomaly', {})\
+                        .setdefault('level', {})
+
+                    anomaly_level_dict[level_1] = anomaly_level_1
+                    anomaly_level_dict[level_2] = anomaly_level_2
+                continue
+
+            # Delay Normalization:      Interval:0 Offset:0
+            result = r61.match(line)
+            if result:
+                group = result.groupdict()
+                interval = int(group['interval'])
+                offset = int(group['offset'])
+                delay_normalization_dict = interface_dict\
+                    .setdefault('delay_normalization', {})
+                delay_normalization_dict['interval'] = interval
+                delay_normalization_dict['offset'] = offset
+                continue
+
+            # Link Loss:                -
+            # Link Loss:                1
+            result = r62.match(line)
+            if result:
+                group = result.groupdict()
+                link_loss = group['link_loss']
+                interface_dict['link_loss'] = link_loss
                 continue
 
         return parsed_output

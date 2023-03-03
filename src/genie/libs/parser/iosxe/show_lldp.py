@@ -7,6 +7,7 @@
      *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
+     *  show lldp errors
 """
 import re
 
@@ -92,7 +93,7 @@ class ShowLldpEntrySchema(MetaParser):
                     Any(): {
                         'neighbors': {
                             Any(): {                        
-                                'chassis_id': str,
+                                Optional('chassis_id'): str,
                                 'port_id': str,
                                 'neighbor_id': str,
                                 Optional('port_description'): str,
@@ -739,3 +740,69 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
             continue
 
         return parsed_output
+
+
+class ShowLldpErrorsSchema(MetaParser):
+    """
+    Schema for show lldp errors
+    """
+    schema = {
+        'memory': int,
+        'encapsulation': int,
+        'input_queue': int,
+        'table': int
+    }
+
+
+class ShowLldpErrors(ShowLldpErrorsSchema):
+    """
+    Parser for show lldp errors
+    """
+    cli_command = 'show lldp errors'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        ret_dict = dict()
+
+        # Total memory allocation failures: 0
+        p0 = re.compile(r'^Total\s+memory\s+allocation\s+failures:\s+(?P<memory>\d+)$')
+
+        # Total encapsulation failures: 0
+        p1 = re.compile(r'^Total\s+encapsulation\s+failures:\s+(?P<encapsulation>\d+)$')
+
+        # Total input queue overflows: 0
+        p2 = re.compile(r'^Total\s+input\s+queue\s+overflows:\s+(?P<input_queue>\d+)$')
+
+        # Total table overflows: 0
+        p3 = re.compile(r'^Total\s+table\s+overflows:\s+(?P<table>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total memory allocation failures: 0
+            match = p0.match(line)
+            if match:
+                ret_dict['memory'] = int(match.groupdict()['memory'])
+                continue
+
+            # Total encapsulation failures: 0           
+            match = p1.match(line)
+            if match:
+                ret_dict['encapsulation'] = int(match.groupdict()['encapsulation'])
+                continue
+
+            # Total input queue overflows: 0
+            match = p2.match(line)
+            if match:
+                ret_dict['input_queue'] = int(match.groupdict()['input_queue'])
+                continue
+            
+            # Total table overflows: 0
+            match = p3.match(line)
+            if match:
+                ret_dict['table'] = int(match.groupdict()['table'])
+                continue
+
+        return ret_dict

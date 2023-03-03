@@ -1,0 +1,2 @@
+Ingress IPv4 Forward             (0xb5000003):  2686665498 frames
+Ingress IPv4 Forward from CPU    (0xe5000004):           0 frames

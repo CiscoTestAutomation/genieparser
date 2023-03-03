@@ -1,0 +1,15 @@
+BGP routing table information for VRF default, address family IPv6 Unicast
+BGP table version is 177, Local Router ID is 1.1.1.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - best2
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+*>r110:110:110::110/128
+                      0::                      0        100      32768 ?
+*>e122:122::122:122/128
+                      99:99:99::99                                  30 2 i
+  e123:123::123:123/128
+                      99:99:99::99                                  10 2 i
+*>i                   98:98:98::98                      100         20 3 2 i
+

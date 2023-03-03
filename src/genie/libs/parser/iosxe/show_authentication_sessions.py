@@ -174,6 +174,8 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                         Optional('ipv6_address'): str,
                         'ipv4_address': str,
                         Optional('user_name'): str,
+                        Optional('device_type'): str,
+                        Optional('device_name'): str,
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
                         Optional('restart_timeout'): {
@@ -220,6 +222,7 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                             },
                             Optional('security_policy'): str,
                             Optional('security_status'): str,
+                            Optional('interface_template'): str
                         },
                         Optional('method_status'): {
                             Any(): {
@@ -279,7 +282,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
 
         # Template: CRITICAL_VLAN (priority 150)
         # Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
-        p3 = re.compile(r'^(?:Service +)?Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
+        p3 = re.compile(r'^(?P<template_type>Service|Interface)?\s*Template: +(?P<template>\w+)\s*(\(priority +(?P<priority>[0-9]+)\))?$')
 
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
@@ -447,7 +450,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                               'handle', 'current_policy', 'authorized_by',
                               'periodic_acct_timeout',
                               'session_uptime', 'timeout_action', 'ip_address',
-                              'idle_timeout', 'vlan_policy']
+                              'idle_timeout', 'vlan_policy', 'device_type', 'device_name']
 
                 group = m.groupdict()
                 key = re.sub(r'( |-)', '_', group['argument'].lower())
@@ -475,7 +478,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                         mac_dict = ret_dict.setdefault('interfaces', {})
                         value_dict = mac_dict.setdefault(group['value'], {})
                         intf_dict = value_dict.setdefault('mac_address', {})
-                        
+                    continue
+
                 elif (key not in known_list) and policies_flag:
                     policies_dict = mac_dict.setdefault('server_policies', {})
                     index_dict = policies_dict.setdefault(index, {})
@@ -483,13 +487,18 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     index_dict.update({'policies': group['value']})
                     index += 1
                     
-                continue
+                    continue
  
             # Template: CRITICAL_VLAN (priority 150)
+            # Interface Template: IP_PHONE_INTERFACE_TEMPLATE
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                template_dict = mac_dict.setdefault('local_policies', {}).setdefault('template', {})
+                local_policies_dict = mac_dict.setdefault('local_policies', {})
+                if group['template_type'] == 'Interface':
+                    local_policies_dict.setdefault('interface_template', group['template'])
+                    continue
+                template_dict = local_policies_dict.setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
                 priority_dict.update({'priority': int(group['priority'])})
                 continue
@@ -632,4 +641,136 @@ class AuthenticationDisplayConfigMode(AuthenticationDisplayConfigModeSchema):
                 ret_dict.setdefault('current_config_mode', group['current_config_mode'])
                 continue
         
+        return ret_dict
+
+'''
+Device#show access-session info
+Interface    MAC Address    M:D:S    Vlan     IPv4        Policy               User-Role
+-----------------------------------------------------------------------------------------
+Gi3/0/11     0015.0100.0001 D1x:D:AZ  UA        200.1.0.1 Dot1x                UA        
+Gi3/0/11     0015.0100.0002 D1x:D:AZ  UA        200.1.0.2 Dot1x                UA        
+Gi3/0/3      2894.0feb.9280 D1x:U:UZ  UA       UA         Dot1x                UA        
+Gi3/0/3      34db.fde5.34ab D1x:V:UZ  UA       UA         Dot1x                UA
+'''
+
+# ==================================================================================
+# Schema for:
+#                * 'show access-session info'
+#                * 'show access-session info switch {switch} r0'
+# ==================================================================================
+
+# ==============================================
+# Parser for 'show access-session info'
+# ==============================================
+class ShowAccessSessionsInfoSchema(MetaParser):
+    """Schema for show access-session info
+            show access-session info switch {switch} r0
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'interface': str,
+                'client': {
+                    Any(): {
+                        'client': str,
+                        'method': str,
+                        'domain': str,
+                        'status': str,
+                        'vlan': str,
+                        'ipv4': str,
+                        'policy': str,
+                        'role': str,
+                    }
+                }
+            }
+        },
+        Optional('session_count'): int,
+    }
+
+class ShowAccessSessionsInfo(ShowAccessSessionsInfoSchema):
+    """Parser for 'show access-session info'
+                    'show access-session info switch {switch} r0'
+    """
+
+    cli_command = ['show access-session info', 'show access-session info switch {sw} r0']
+
+    def cli(self, sw='', output=None):
+
+        if output is None:
+            # Build command
+            if sw:
+                cmd = self.cli_command[1].format(sw=sw)
+            else:
+                cmd = self.cli_command[0]
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # initial return dictionary
+
+        ret_dict = {}
+
+        # initial regexp pattern
+
+        #Interface    MAC Address    M:D:S    Vlan     IPv4        Policy               User-Role
+        p1 = re.compile(r'^Interface +MAC +Address +M:D:S +Vlan +IPv4 +Policy +User-Role')
+
+        # Matching patterns
+        #Gi3/0/11     0015.0100.0001 D1x:D:AZ  UA        200.1.0.1 Dot1x                UA
+        #Gi3/0/11     0015.0100.0006 D1x:D:AZ  UA      200.1.0.190 Dot1x                ABCDEFGH..
+        #Gi2/0/7      0010.9400.0003 D1x:D:AZ 1001 101.100.100.201 WA_Dot1xMabWa_conc.. USERABCD
+        #Gi3/0/3      2894.0feb.9280 D1x:D:AZ 1001  101.100.100.98 Dot1x                USERABCD
+        #Gi3/0/3      34db.fde5.34ab D1x:V:AZ  UA       UA         Dot1x                CP-6941-..
+
+        p2 = re.compile(r'^(?P<interface>\S+) +'
+                            '(?P<client>\w+\.\w+\.\w+) +'
+                            '(?P<mds>[\w/]+\:\w+\:\w+) +'
+                            '(?P<vlan>\w+) +'
+                            '(?P<ipv4>[\w\.]+) +'
+                            '(?P<policy>\S+) +'
+                            '(?P<role>.*)$')
+
+        # *Session count = 2* 
+
+        p3 = re.compile(r'(?:\*)?Session +[Cc]ount +\= '
+                        r'+(?P<session_count>\d+)(?:\*)?$')
+
+        for line in show_output.splitlines():
+            line = line.strip()
+
+            if p1.match(line):
+                continue
+
+            m = p2.match(line)
+
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['interface'] = interface
+                client = group['client']
+                client_dict = intf_dict.setdefault('client', {}).setdefault(client, {})
+                client_dict.update({'client': client})
+
+                x = group['mds'].split(':')
+                client_dict['method'] = x[0]
+                client_dict['domain'] = x[1]
+                client_dict['status'] = x[2]
+                client_dict['vlan'] = group['vlan']
+                client_dict['ipv4'] = group['ipv4']
+                client_dict['policy'] = group['policy']
+                client_dict['role'] = group['role']
+
+                continue
+
+            # *Session count = 2*
+
+            m3 = p3.match(line)
+            if m3:
+                count = int(m3.groupdict()['session_count'])
+                ret_dict.update({'session_count': count})
+                continue
+
         return ret_dict
