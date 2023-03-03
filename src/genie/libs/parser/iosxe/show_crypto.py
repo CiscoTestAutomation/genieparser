@@ -6118,13 +6118,13 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         ret_dict = {}
 
         # IPv4 Crypto IKEv2  SA  
-        p1 = re.compile(r'^IPv4 Crypto IKEv2 SA$')
+        p1 = re.compile(r'^IPv4 Crypto IKEv2\s+SA$')
 
         # IPv6 Crypto IKEv2  SA 
         p2 = re.compile(r'^IPv6 Crypto IKEv2 SA$')
 
         # 1         66.66.66.1/500        66.66.66.2/500        none/none            READY
-        p3 = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<local_ip>[\w.]+)/(?P<local_port>\d+)\s+(?P<remote_ip>[\w.]+)/(?P<remote_port>\d+)\s+(?P<fvrf>\w+)/(?P<ivrf>\w+)\s+(?P<status>[\w]+)$')
+        p3 = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<local_ip>[\w.]+)/(?P<local_port>\d+)\s+(?P<remote_ip>[\w.]+)/(?P<remote_port>\d+)\s+(?P<fvrf>\w+)/(?P<ivrf>\w+)\s+(?P<status>\w+)$')
 
         # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
         p4 = re.compile(r'^Encr:\s*(?P<encryption>[\w-]+),\s*keysize:\s*(?P<keysize>\d+),\s*PRF:\s*(?P<prf>\w+),\s*Hash:\s*(?P<hash>\w+),\s*DH Grp:(?P<dh_group>\d+),\s*Auth sign:\s*(?P<auth_sign>\w+),\s*Auth verify:\s*(?P<auth_verify>\w+)')
