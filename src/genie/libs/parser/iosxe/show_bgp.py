@@ -3685,7 +3685,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 neighbor = group['neighbor']
                 vrf = group['vrf']
                 # if no vrf is configured - set vrf to 'default'
-                if vrf == None:
+                if not vrf:
                     vrf = 'default'
 
                 # Add to neighbors list
