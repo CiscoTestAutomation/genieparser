@@ -1,0 +1,258 @@
+#show ip bgp all neighbors
+For address family: IPv4 Unicast
+
+For address family: IPv6 Unicast
+
+For address family: VPNv4 Unicast
+BGP neighbor is 10.10.10.1,  vrf Admin,  remote AS 4200000001, external link
+  BGP version 4, remote router ID 10.0.1.1
+  BGP state = Established, up for 00:21:10
+  Last read 00:00:07, last write 00:00:00, hold time is 90, keepalive interval is 30 seconds
+  Neighbor sessions:
+    1 active, is not multisession capable (disabled)
+  Neighbor capabilities:
+    Route refresh: advertised and received(new)
+    Four-octets ASN Capability: advertised and received
+    Address family IPv4 Unicast: advertised and received
+    Enhanced Refresh Capability: advertised
+    Multisession Capability:
+    Stateful switchover support enabled: NO for session 1
+  Message statistics:
+    InQ depth is 0
+    OutQ depth is 0
+
+                         Sent       Rcvd
+    Opens:                  1          1
+    Notifications:          0          0
+    Updates:                2          2
+    Keepalives:            49         44
+    Route Refresh:          0          0
+    Total:                 52         47
+  Do log neighbor state changes (via global configuration)
+  Default minimum time between advertisement runs is 0 seconds
+
+  Address tracking is enabled, the RIB does have a route to 10.10.10.1
+  Route to peer address reachability Up: 1; Down: 0
+    Last notification 08:25:04
+  Connections established 17; dropped 16
+  Last reset 00:23:58, due to Active open failed
+  External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+  Interface associated: GigabitEthernet1.100 (peering address in same link)
+  Transport(tcp) path-mtu-discovery is enabled
+  Graceful-Restart is disabled
+  SSO is disabled
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 1
+Local host: 10.10.10.2, Local port: 34272
+Foreign host: 10.10.10.1, Foreign port: 179
+Connection tableid (VRF): 1
+Maximum output segment queue size: 50
+
+Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+
+Event Timers (current time is 0x1D210E7):
+Timer          Starts    Wakeups            Next
+Retrans            51          0             0x0
+TimeWait            0          0             0x0
+AckHold            47         44             0x0
+SendWnd             0          0             0x0
+KeepAlive           0          0             0x0
+GiveUp              0          0             0x0
+PmtuAger            1          1             0x0
+DeadWait            0          0             0x0
+Linger              0          0             0x0
+ProcessQ            0          0             0x0
+
+iss: 1176688694  snduna: 1176689761  sndnxt: 1176689761
+irs: 2154790871  rcvnxt: 2154791884
+
+sndwnd:  32768  scale:      0  maxrcvwnd:  16384
+rcvwnd:  15372  scale:      0  delrcvwnd:   1012
+
+SRTT: 999 ms, RTTO: 1009 ms, RTV: 10 ms, KRTT: 0 ms
+minRTT: 3 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+uptime: 1270382 ms, Sent idletime: 73 ms, Receive idletime: 68 ms
+Status Flags: active open
+Option Flags: VRF id set, nagle, path mtu capable
+IP Precedence value : 6
+
+Datagrams (max data segment is 1024 bytes):
+Rcvd: 97 (out of order: 0), with data: 46, total data bytes: 1012
+Sent: 97 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 51, total data bytes: 1066
+
+ Packets received in fast path: 0, fast processed: 0, slow path: 0
+ fast lock acquisition failures: 0, slow path: 0
+TCP Semaphore      0x7F3C800B64D8  FREE
+
+BGP neighbor is 10.10.11.1,  vrf CustA-VPN1,  remote AS 4200000001,  local AS 4200000101 no-prepend replace-as, external link
+  BGP version 4, remote router ID 10.0.1.1
+  BGP state = Established, up for 00:21:21
+  Last read 00:00:19, last write 00:00:23, hold time is 90, keepalive interval is 30 seconds
+  Neighbor sessions:
+    1 active, is not multisession capable (disabled)
+  Neighbor capabilities:
+    Route refresh: advertised and received(new)
+    Four-octets ASN Capability: advertised and received
+    Address family IPv4 Unicast: advertised and received
+    Enhanced Refresh Capability: advertised
+    Multisession Capability:
+    Stateful switchover support enabled: NO for session 1
+  Message statistics:
+    InQ depth is 0
+    OutQ depth is 0
+
+                         Sent       Rcvd
+    Opens:                  1          1
+    Notifications:          0          0
+    Updates:                3          3
+    Keepalives:            48         44
+    Route Refresh:          0          0
+    Total:                 52         48
+  Do log neighbor state changes (via global configuration)
+  Default minimum time between advertisement runs is 0 seconds
+
+  Address tracking is enabled, the RIB does have a route to 10.10.11.1
+  Route to peer address reachability Up: 1; Down: 0
+    Last notification 08:25:05
+  Connections established 17; dropped 16
+  Last reset 00:24:12, due to Active open failed
+  External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+  Interface associated: GigabitEthernet1.101 (peering address in same link)
+  Transport(tcp) path-mtu-discovery is enabled
+  Graceful-Restart is disabled
+  SSO is disabled
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 1
+Local host: 10.10.11.2, Local port: 39949
+Foreign host: 10.10.11.1, Foreign port: 179
+Connection tableid (VRF): 2
+Maximum output segment queue size: 50
+
+Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+
+Event Timers (current time is 0x1D21195):
+Timer          Starts    Wakeups            Next
+Retrans            51          0             0x0
+TimeWait            0          0             0x0
+AckHold            46         42             0x0
+SendWnd             0          0             0x0
+KeepAlive           0          0             0x0
+GiveUp              0          0             0x0
+PmtuAger            1          1             0x0
+DeadWait            0          0             0x0
+Linger              0          0             0x0
+ProcessQ            0          0             0x0
+
+iss: 3531560020  snduna: 3531561124  sndnxt: 3531561124
+irs: 1970766160  rcvnxt: 1970767239
+
+sndwnd:  32768  scale:      0  maxrcvwnd:  16384
+rcvwnd:  16346  scale:      0  delrcvwnd:     38
+
+SRTT: 999 ms, RTTO: 1009 ms, RTV: 10 ms, KRTT: 0 ms
+minRTT: 3 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+uptime: 1281819 ms, Sent idletime: 19347 ms, Receive idletime: 19547 ms
+Status Flags: active open
+Option Flags: VRF id set, nagle, path mtu capable
+IP Precedence value : 6
+
+Datagrams (max data segment is 1024 bytes):
+Rcvd: 96 (out of order: 0), with data: 46, total data bytes: 1078
+Sent: 96 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 50, total data bytes: 1103
+
+ Packets received in fast path: 0, fast processed: 0, slow path: 0
+ fast lock acquisition failures: 0, slow path: 0
+TCP Semaphore      0x7F3C800B6268  FREE
+
+BGP neighbor is 10.10.21.6,  vrf CustA-VPN1,  remote AS 65111,  local AS 4200000101, external link
+  BGP version 4, remote router ID 10.10.21.6
+  BGP state = Established, up for 08:07:20
+  Last read 00:00:51, last write 00:00:05, hold time is 180, keepalive interval is 60 seconds
+  Neighbor sessions:
+    1 active, is not multisession capable (disabled)
+  Neighbor capabilities:
+    Route refresh: advertised and received(new)
+    Four-octets ASN Capability: advertised and received
+    Address family IPv4 Unicast: advertised and received
+    Enhanced Refresh Capability: advertised and received
+    Multisession Capability:
+    Stateful switchover support enabled: NO for session 1
+  Message statistics:
+    InQ depth is 0
+    OutQ depth is 0
+
+                         Sent       Rcvd
+    Opens:                  1          1
+    Notifications:          0          0
+    Updates:               38          2
+    Keepalives:           519        536
+    Route Refresh:          0          0
+    Total:                558        539
+  Do log neighbor state changes (via global configuration)
+  Default minimum time between advertisement runs is 0 seconds
+
+  Address tracking is enabled, the RIB does have a route to 10.10.21.6
+  Route to peer address reachability Up: 1; Down: 0
+    Last notification 08:19:32
+  Connections established 2; dropped 1
+  Last reset 08:07:21, due to Peer closed the session of session 1
+  External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+  Interface associated: GigabitEthernet2 (peering address in same link)
+  Transport(tcp) path-mtu-discovery is enabled
+  Graceful-Restart is disabled
+  SSO is disabled
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 1
+Local host: 10.10.21.5, Local port: 179
+Foreign host: 10.10.21.6, Foreign port: 16600
+Connection tableid (VRF): 2
+Maximum output segment queue size: 50
+
+Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+
+Event Timers (current time is 0x1D21234):
+Timer          Starts    Wakeups            Next
+Retrans           553          0             0x0
+TimeWait            0          0             0x0
+AckHold           538        525             0x0
+SendWnd             0          0             0x0
+KeepAlive           0          0             0x0
+GiveUp              0          0             0x0
+PmtuAger            0          0             0x0
+DeadWait            0          0             0x0
+Linger              0          0             0x0
+ProcessQ            0          0             0x0
+
+iss:  925402839  snduna:  925414452  sndnxt:  925414452
+irs: 1467114123  rcvnxt: 1467124443
+
+sndwnd:  15049  scale:      0  maxrcvwnd:  16384
+rcvwnd:  16308  scale:      0  delrcvwnd:     76
+
+SRTT: 1000 ms, RTTO: 1003 ms, RTV: 3 ms, KRTT: 0 ms
+minRTT: 0 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+uptime: 29240881 ms, Sent idletime: 5527 ms, Receive idletime: 5322 ms
+Status Flags: passive open, gen tcbs
+Option Flags: VRF id set, nagle, path mtu capable
+IP Precedence value : 6
+
+Datagrams (max data segment is 1460 bytes):
+Rcvd: 1090 (out of order: 0), with data: 539, total data bytes: 10319
+Sent: 1089 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 554, total data bytes: 11612
+
+ Packets received in fast path: 0, fast processed: 0, slow path: 0
+ fast lock acquisition failures: 0, slow path: 0
+TCP Semaphore      0x7F3C800B6338  FREE
+
+
+For address family: IPv4 Multicast
+
+For address family: L2VPN E-VPN
+
+For address family: VPNv4 Multicast
+
+For address family: MVPNv4 Unicast
+
+For address family: MVPNv6 Unicast
+
+For address family: VPNv4 Flowspec

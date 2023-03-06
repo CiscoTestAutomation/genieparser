@@ -3256,6 +3256,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
         # BGP neighbor is 10.4.11.2, remote AS 101.101, external link
+        # BGP neighbor is 10.10.11.1, vrf CustA-VPN1, remote AS 4200000001, local AS 4200000101 no-prepend replace-as, external link
         p2_3 = re.compile(r'^BGP +neighbor +is +(?P<neighbor>(\S+)),'
                            '(?: +vrf +(?P<vrf>(\S+)),)?'
                            ' +remote +AS +(?P<remote_as>([\d\.]+)),'
@@ -3677,11 +3678,15 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
             # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
             # BGP neighbor is 10.4.11.2, remote AS 101.101, external link
+            # BGP neighbor is 10.10.11.1, vrf CustA-VPN1, remote AS 4200000001, local AS 4200000101 no-prepend replace-as, external link
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
                 neighbor = group['neighbor']
-                vrf = 'default'
+                vrf = group['vrf']
+                # if no vrf is configured - set vrf to 'default'
+                if not vrf:
+                    vrf = 'default'
 
                 # Add to neighbors list
                 list_of_neighbors.append(neighbor)
