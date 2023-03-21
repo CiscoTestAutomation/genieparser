@@ -3,6 +3,8 @@
 NXOS parsers for the following show commands:
     * show logging logfile
     * show logging logfile | include {include}
+    * show logging level
+    * show logging level {facility}
 '''
 
 # Python
@@ -106,12 +108,11 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
                 cmd = self.cli_command[1]
 
             # Execute the command
-            out = self.device.execute(cmd)
+            output = self.device.execute(cmd)
 
-        else:
-            out = output
-
-        p = re.compile(r'(?P<facility>\S+)\s+'
+        # Example
+        # acllog                  2                       1
+        p0 = re.compile(r'(?P<facility>\S+)\s+'
                         '(?P<default_severity>\d)\s+'
                         '(?P<current_session_severity>\d)')
         ret_dict = {}
@@ -119,7 +120,7 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p.match(line)
+            m = p0.match(line)
             if m:
                 if 'facility' not in ret_dict:
                     ret_dict['facility'] = {}
