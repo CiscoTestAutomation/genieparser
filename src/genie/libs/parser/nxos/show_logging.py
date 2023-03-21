@@ -84,9 +84,11 @@ class ShowLoggingLevelSchema(MetaParser):
     '''
 
     schema = { 'facility':
-                { Any():
+                { 
+                Any():
                     { 'default_severity': int,
-                      'current_session_severity': int }
+                      'current_session_severity': int
+                       }
                 }
             }
 
@@ -100,12 +102,12 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
 
     def cli(self, facility='', output=None):
 
-        if (output is None):
+        if output is None:
             # Build the command
             if facility:
-                cmd = self.cli_command[0].format(facility=facility)
+                cmd = self.cli_command[1].format(facility=facility)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
 
             # Execute the command
             output = self.device.execute(cmd)
