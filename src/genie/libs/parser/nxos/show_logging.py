@@ -119,7 +119,7 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
                         '(?P<current_session_severity>\d)')
         ret_dict = {}
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             m = p0.match(line)
