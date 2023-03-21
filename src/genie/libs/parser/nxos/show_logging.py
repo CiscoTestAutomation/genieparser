@@ -124,7 +124,8 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
 
             m = p0.match(line)
             if m:
-                facility_dict = ret_dict.setdefault('facility', {}).setdefault(m.groupdict()['facility'], {})
+                facility = m.groupdict()['facility']
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
 
                 for x in ['default_severity', 'current_session_severity']:
                     x_val = int(m.groupdict()[x])
