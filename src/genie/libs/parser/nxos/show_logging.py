@@ -84,7 +84,7 @@ class ShowLoggingLevelSchema(MetaParser):
     '''
 
     schema = { 'facility':
-                { 
+                {
                 Any():
                     { 'default_severity': int,
                       'current_session_severity': int
@@ -124,12 +124,7 @@ class ShowLoggingLevel(ShowLoggingLevelSchema):
 
             m = p0.match(line)
             if m:
-                if 'facility' not in ret_dict:
-                    ret_dict['facility'] = {}
-
-                facility = m.groupdict()['facility']
-                if facility not in ret_dict['facility']:
-                    ret_dict['facility'][facility] = {}
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(m.groupdict()['facility'], {})
 
                 for x in ['default_severity', 'current_session_severity']:
                     x_val = int(m.groupdict()[x])
