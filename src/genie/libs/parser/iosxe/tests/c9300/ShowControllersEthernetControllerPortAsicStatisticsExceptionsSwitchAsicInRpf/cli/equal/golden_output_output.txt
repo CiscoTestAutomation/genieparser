@@ -1,0 +1,5 @@
+show controllers ethernet Controller port-asic statistics exceptions switch 1 asic 1 | in RPF
+RPF_UNICAST_FAIL                                                   6445519
+RPF_UNICAST_FAIL_SUPPRESS                                                0
+RPF_UNICAST_CHECK_INCOMPLETE                                             0
+RPF_MULTICAST_FAIL                                                       0

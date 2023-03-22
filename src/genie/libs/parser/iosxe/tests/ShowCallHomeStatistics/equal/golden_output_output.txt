@@ -1,0 +1,56 @@
+Message Types    Total                Email                HTTP
+-------------   -------------------- -------------------- ------------------
+Total Success   0                    0                    0                    
+    Config      0                    0                    0                    
+    Crash       0                    0                    0                    
+    Diagnostic  0                    0                    0                    
+    Environment 0                    0                    0                    
+    Inventory   0                    0                    0                    
+    Snapshot    0                    0                    0                    
+    SysLog      0                    0                    0                    
+    Test        0                    0                    0                    
+    Request     0                    0                    0                    
+    Send-CLI    0                    0                    0                    
+    SCH         0                    0                    0                    
+
+Total In-Queue  0                    0                    0                    
+    Config      0                    0                    0                    
+    Crash       0                    0                    0                    
+    Diagnostic  0                    0                    0                    
+    Environment 0                    0                    0                    
+    Inventory   0                    0                    0                    
+    Snapshot    0                    0                    0                    
+    SysLog      0                    0                    0                    
+    Test        0                    0                    0                    
+    Request     0                    0                    0                    
+    Send-CLI    0                    0                    0                    
+    SCH         0                    0                    0                    
+
+Total Failed    3                    0                    3                    
+    Config      0                    0                    0                    
+    Crash       0                    0                    0                    
+    Diagnostic  0                    0                    0                    
+    Environment 0                    0                    0                    
+    Inventory   1                    0                    1                    
+    Snapshot    0                    0                    0                    
+    SysLog      2                    0                    2                    
+    Test        0                    0                    0                    
+    Request     0                    0                    0                    
+    Send-CLI    0                    0                    0                    
+    SCH         0                    0                    0                    
+
+Total Ratelimit
+      -dropped  0                    0                    0                    
+    Config      0                    0                    0                    
+    Crash       0                    0                    0                    
+    Diagnostic  0                    0                    0                    
+    Environment 0                    0                    0                    
+    Inventory   0                    0                    0                    
+    Snapshot    0                    0                    0                    
+    SysLog      0                    0                    0                    
+    Test        0                    0                    0                    
+    Request     0                    0                    0                    
+    Send-CLI    0                    0                    0                    
+    SCH         0                    0                    0                    
+
+Last call-home message sent time: n/a

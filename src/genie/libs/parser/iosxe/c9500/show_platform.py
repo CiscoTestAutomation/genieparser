@@ -966,13 +966,14 @@ class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
 
     """ Parser for show platform software fed switch active ifm mappings"""
 
-    cli_command = ['show platform software fed {switch} {state} ifm mappings','show platform software fed active ifm mappings']
+    cli_command = ['show platform software fed switch {state} ifm mappings',
+                   'show platform software fed active ifm mappings']
 
-    def cli(self, switch="", state="", output=None):
+    def cli(self, state="", output=None):
        
         if output is None:
-            if switch and state:
-                cmd = self.cli_command[0].format(switch=switch,state=state)            
+            if state:
+                cmd = self.cli_command[0].format(state=state)            
             else:
                 cmd = self.cli_command[1]
          

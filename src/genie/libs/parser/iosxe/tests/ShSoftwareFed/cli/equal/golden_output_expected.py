@@ -1,0 +1,83 @@
+expected_output = {
+    "intf_id": "0x0000000000000561",
+    "intf_name": "HundredGigE1/6/0/19",
+    "intf_block_pointer": "0x7feaa50bbc28",
+    "intf_block_state": "Ready",
+    "intf_state": "Enabled",
+    "intf_admin_mode": "Admin Up",
+    "intf_status": "NPD",
+    "int_ref_cnt": 1,
+    "interface_type": {
+    "intf_type": "ETHER",
+    "port_type": "ROUTE PORT",
+    "port_location": "LOCAL",
+    "slot": 13,
+    "unit": 0,
+    "slot_unit": 19,
+    "snmp_index": 119,
+    "gpn": 979,
+    "ec_channel": 0,
+    "ec_index": 0,
+    "ipv4_mtu": 2000,
+    "ipv6_mtu": 0,
+    "ipv4_vrf_id": 0,
+    "ipv6_vrf_id": 65535,
+    "protocol_flags": "0x0003 [ ipv4 ipv6 ]",
+    "misc_flags": "0x0041 [ ipv4 --- ]",
+    "icmpv4_flags": "0x03 [ unreachable redirect ]",
+    "icmpv6_flags": "0x03 [ unreachable redirect ]",
+    "mac_address": "6c:b2:ae:4a:54:c5",
+    "qos_trust_type": "3 (DSCP)"
+    },
+    "ref_count": "1 (feature Ref Counts + 1)",
+    "port_phy_sub": {
+    "affinity": "local",
+    "lpn": 19,
+    "gpn": 979,
+    "speed": "40GB",
+    "type": "IFM_PORT_TYPE_L3",
+    "mtu": 2022,
+    "ac_profile": "IFM_AC_PROFILE_DEFAULT"
+    },
+    "port_sub": {
+    "mac_port_oid": 4444,
+    "system_port_oid": 4448,
+    "system_port_gid": 223,
+    "ethernet_port_oid": 4459,
+    "vog_oid": 4446
+    },
+    "platform_sub": {
+    "asic": 0,
+    "core": 5,
+    "asic_port": 0,
+    "asic_sub_port": 65535,
+    "ifg_id": 0,
+    "mac_num": 211,
+    "first_serdes": 10,
+    "last_serdes": 11,
+    "fc_mode": 0,
+    "fec_mode": 0,
+    "context_id": 0
+    },
+    "port_l2_sub": {
+    "port_mode": "port_mode_dynamic",
+    "port_mode_set": "No",
+    "vlan": 0,
+    "ethertype": 8100,
+    "bd_vlan": 0,
+    "status": 0,
+    "ac_profile": "IFM_AC_PROFILE_DEFAULT"
+    },
+    "port_l3_sub": {
+    "vrf_id": 0,
+    "ipv4_routing": "Yes",
+    "ipv6_routing": "No",
+    "mpls": "No",
+    "pimv4": "No",
+    "pimv6": "No",
+    "ipv4_mtu": 2018,
+    "ipv6_mtu": 18,
+    "l3_srv": 4312,
+    "l3_srv_oid": 5489
+    }
+    } 

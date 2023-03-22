@@ -8696,12 +8696,16 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 # Schema for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighborSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     schema = {
@@ -8724,25 +8728,35 @@ class ShowIpOspfNeighborSchema(MetaParser):
 # Parser for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
     ''' Parser for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     cli_command = [
         'show ip ospf neighbor {interface}',
-        'show ip ospf neighbor']
+        'show ip ospf neighbor',
+        'show ip ospf {process_id} neighbor',
+        'show ip ospf {process_id} neighbor {interface}']
     exclude = ['dead_time']
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface='', output=None, process_id=''):
 
         if output is None:
             # Execute command on device
-            if interface:
+            if interface and process_id:
+                cmd = self.cli_command[3].format(process_id=process_id, interface=interface)
+            elif interface:
                 cmd = self.cli_command[0].format(interface=interface)
+            elif process_id:
+                cmd = self.cli_command[2].format(process_id=process_id)
             else:
                 cmd = self.cli_command[1]
 

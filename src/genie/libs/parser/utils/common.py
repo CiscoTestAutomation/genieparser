@@ -3,11 +3,13 @@
 # python
 import re
 import os
+import sys
 import json
 import math
 import logging
 import warnings
 import importlib
+import pkg_resources
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
@@ -20,6 +22,7 @@ from genie.metaparser.util import merge_dict
 from .extension import ExtendParsers
 
 PYATS_EXT_PARSER = 'pyats.libs.external.parser'
+ENTRY_POINT_NAME = 'genie.libs.parser'
 
 log = logging.getLogger(__name__)
 
@@ -44,6 +47,96 @@ class ParserNotFound(Exception):
         )
 
 
+def deprecated_add_parser(parser, os_name):
+    """
+    *** DEPRECATED This is only here for backward compatibility ***
+
+    Dynamically add the parser class found in module `mod` for the given
+    network OS name `os_name`
+    Notes
+    -----
+    The parser class is presumed to have a class attribute `cli_command` which
+    is a list of command to add into the genie parser framework.
+    Parameters
+    ----------
+    parser : class
+        The parser class that implements a MetaParser
+    os_name : str
+        The NOS name for which the parser is supported, for example "nxos"
+    """
+    global parser_data
+
+    try:
+        parser_data = parser_data or {}
+    except NameError:
+        parser_data = {}
+
+    mod = sys.modules[parser.__module__]
+    module_name = mod.__name__.rsplit('.', 1)[-1]
+    package = mod.__package__
+
+    cli_commands = parser.cli_command
+    if isinstance(cli_commands, str):
+        cli_commands = [cli_commands]
+
+    for cmd in cli_commands:
+
+        if cmd not in parser_data:
+            parser_data[cmd] = {}
+            log.debug(f'Adding parser for command {cmd} os {os_name} '
+                      f'using {package}.{module_name}.{parser.__name__}')
+        else:
+            log.warning(f'Overriding parser for command {cmd} os {os_name} '
+                        f'using {package}.{module_name}.{parser.__name__}')
+
+        parser_data[cmd][os_name] = {
+            'module_name': module_name,
+            'package': package,
+            'class': parser.__name__
+        }
+
+
+def deprecated_parser_loading(parser_package):
+    """
+    *** DEPRECATED This is only here for backward compatibility ***
+
+    Enables external packages to dynamically add parsers using the setuptools
+    entry_point mechanism.  The developer is required to add the following to
+    their setup() invocation:
+
+        setup(...
+            entry_points={
+                'genie.libs.parser': [
+                    "packagename = module.function"
+                ]
+            }
+        )
+
+    where <packagename> is the name of their specific package <module> is the
+    module within their package that contains the function <function> is a
+    callable that returns a dictionary of parsers
+
+    Notes
+    -----
+    The following is an example User provided function that returns a dictionary
+    of parser to be added into the genie framework.  The key is the os_name, for
+    example 'nxos', and the value is a list of MetaParser class definitions.
+
+        def add_my_parsers():
+            return {
+                'iosxe': [
+                    iosxe.show_interface_transceiver.ShowInterfaceTransceiver
+                ], 'nxos': [
+                    nxos.show_interface_transceiver.ShowInterfaceTransceiver
+                ]
+            }
+    """
+    parser_dict = parser_package()
+    for os_name, parser_list in parser_dict.items():
+        for parser in parser_list:
+            deprecated_add_parser(parser=parser, os_name=os_name)
+
+
 def _load_parser_json():
     '''get all parser data in json file'''
 
@@ -54,41 +147,64 @@ def _load_parser_json():
         parsers = os.path.join(mod.__path__[0], 'parsers.json')
     except Exception:
         parsers = ''
+
     if not os.path.isfile(parsers):
         log.warning('parsers.json does not exist, make sure you '
                     'are running with latest version of '
                     'genie.libs.parsers')
-        parser_data = {}
-    else:
-        try:
-            # Open all the parsers in json file
-            with open(parsers) as f:
-                try:
-                    parser_data = json.load(f)
-                except JSONDecodeError:
-                    log.error(
-                        banner(
-                            "parser json file could be corrupted. Please try 'make json'"
-                        ))
-                    raise
-        except Exception:
-            log.error(f'Could not load parser json from file {parsers}',
-                      exc_info=True)
-            return {}
+        return {}
 
-        # check if provided external parser packages
-        ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
-                             os.environ.get(PYATS_EXT_PARSER.upper().replace('.', '_'))
-        if ext_parser_package:
-            ext = ExtendParsers(ext_parser_package)
-            ext.extend()
+    try:
+        # Open all the parsers in json file
+        with open(parsers) as f:
+            try:
+                parser_data = json.load(f)
+            except JSONDecodeError:
+                log.error(
+                    banner(
+                        "parser json file could be corrupted. Please try 'make json'"
+                    ))
+                raise
+    except Exception:
+        log.error(f'Could not load parser json from file {parsers}',
+                    exc_info=True)
+        return {}
 
-            ext.output.pop('tokens', None)
-            summary = ext.output.pop('extend_info', None)
+    ext_parser_packages = []
 
-            merge_dict(parser_data, ext.output, update=True)
-            log.debug("External parser counts: {}\nSummary:\n{}".format(
-                len(summary), json.dumps(summary, indent=2)))
+    ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
+    if ext_parser_package_conf:
+        ext_parser_packages.append(cfg.get(PYATS_EXT_PARSER))
+
+    PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
+    ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
+    if ext_parser_package_env:
+        ext_parser_packages_from_env = ext_parser_package_env.split(',')
+        ext_parser_packages.extend(ext_parser_packages_from_env)
+
+    for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
+        parser_package = ep.load()
+        if callable(parser_package):
+            log.warning(
+                f'{ep.name}: callable parser loading is deprecated. '
+                'Please create an abstracted package instead.')
+            deprecated_parser_loading(parser_package)
+        else:
+            ext_parser_packages.append(ep.module_name)
+
+    log.debug(f'External parser packages: {ext_parser_packages}')
+    for ext_parser_package in ext_parser_packages:
+        log.debug(f'Extending {ext_parser_package}')
+        ext = ExtendParsers(ext_parser_package)
+        ext.extend()
+
+        ext.output.pop('tokens', None)
+        summary = ext.output.pop('extend_info', None)
+
+        merge_dict(parser_data, ext.output, update=True)
+        log.debug("External parser {} count: {}\nSummary: {}\n".format(
+            ext_parser_package, len(summary),
+            json.dumps(summary, indent=2)))
 
     return parser_data
 

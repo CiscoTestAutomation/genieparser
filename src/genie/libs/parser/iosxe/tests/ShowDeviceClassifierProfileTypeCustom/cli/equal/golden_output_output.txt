@@ -1,0 +1,4 @@
+Valid     Type       Profile Name                                mCon  ID
+----------------------------------------------------------------------------
+Valid     Custom      DEVICE_TYPE_A                               0     0
+Valid     Custom      DEVICE_TYPE_B                               0     0

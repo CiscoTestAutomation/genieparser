@@ -1,0 +1,11 @@
+Port 1 (GigabitEthernet1/0/1) of VLAN0100 is root forwarding 
+Port path cost 20000, Port priority 128, Port Identifier 128.1. 
+Designated root has priority 24577, address 40f0.78ca.d200 
+Designated bridge has priority 32868, address 00a5.bf53.d400 
+Designated port id is 128.97, designated path cost 14 
+Timers: message age 15, forward delay 0, hold 0 
+Number of transitions to forwarding state: 3 
+The port is in the portfast mode 
+Link type is point-to-point by default 
+Bpdu guard is enabled 
+BPDU: sent 12, received 21

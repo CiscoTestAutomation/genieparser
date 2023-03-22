@@ -1,5 +1,13 @@
+'''show_romvar.py
+IOSXE parsers for the following commands
+    * show romvar 
+    * show romvar switch <switch_number>
+'''
+
+# python
 import re
 
+# Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
@@ -7,6 +15,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # ================
 # Schema for:
 #  * 'show romvar'
+#  * 'show romvar switch <switch_number>'
 # ================
 class ShowRomvarSchema(MetaParser):
     """Schema for show romvar."""
@@ -61,17 +70,23 @@ class ShowRomvarSchema(MetaParser):
 # ================
 # Parser for:
 #  * 'show romvar'
+#  * 'show romvar switch <switch_number>'
 # ================
 class ShowRomvar(ShowRomvarSchema):
     """Parser for show romvar"""
 
-    cli_command = "show romvar"
+    cli_command = ["show romvar",
+                   "show romvar switch {switch_number}"]
 
-    def cli(self, output=None):
+    def cli(self, switch_number=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if not switch_number:
+                output = self.device.execute(self.cli_command[0])
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_number=switch_number))
         else:
             output=output
+
 
         # ROMMON variables:
         #
@@ -578,3 +593,4 @@ class ShowRomvar(ShowRomvarSchema):
                 continue
 
         return romvar_dict
+

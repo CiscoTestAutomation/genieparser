@@ -1,0 +1,46 @@
+show cdp interface
+Thu Jan 12 10:22:51.801 UTC
+GigabitEthernet0/0/0/0 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/1 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/2 is Administratively Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/10 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/11 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/16 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/17 is Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+GigabitEthernet0/0/0/18 is Administratively Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+TenGigE0/0/2/0 is Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+TenGigE0/0/2/1 is Up
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds
+TenGigE0/0/2/2 is Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds

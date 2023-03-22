@@ -4,7 +4,8 @@ expected_output = {
     'eMMC' : {
         'mid' : "'Micron'", 
         'pnm' : "'Q2J55L'", 
-        'sn'  : '0x00000001', 
-        'nist' : 'PURGE'
+        'sn'  : '0x00000001',
+        'status' : 'SUCCESS', 
+        'nist' : 'PURGE',
     }
 }

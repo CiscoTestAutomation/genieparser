@@ -45,7 +45,8 @@ TRUSTED_HOST  = pyats-pypi.cisco.com
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES = xmltodict requests
+# aiohttp requires charset-normalizer<3.0.0
+DEPENDENCIES = xmltodict requests charset-normalizer==2.1.1
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet

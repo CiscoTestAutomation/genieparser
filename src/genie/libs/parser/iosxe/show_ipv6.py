@@ -1022,9 +1022,9 @@ class ShowIpv6MfibSchema(MetaParser):
             {Any():
                 {'address_family':
                     {Any():
-                        {'multicast_group':
+                        {Optional('multicast_group'):
                             {Any():
-                                {'source_address':
+                                {Optional('source_address'):
                                     {Any():
                                        {
                                             Optional('oif_ic_count'): Or(str,int),
@@ -2077,3 +2077,78 @@ class ShowIpv6StaticRecursive(ShowIpv6StaticRecursiveSchema):
 
         return ret_dict
 
+# ====================================================
+#  schema for show ipv6 mld snooping
+# ====================================================
+class showIpv6MldSnoopingSchema(MetaParser):
+    """Schema for show ipv6 mld snooping
+    """
+    schema = {
+        'global_mld_snooping_configuration': {
+            'mld_snooping': str,
+            'global_pim_snooping': str,
+            'mldv2_snooping': str,
+            'listener_message_suppression': str,
+            'tcn_solicit_query': str,
+            'tcn_flood_query_count': str,
+            'robustness_variable': str,
+            'last_listener_query_count': str,
+            'last_listener_query_interval': str,
+        },
+        'vlans':{  
+            Any(): {
+                'mld_snooping': str,
+                'robustness_variable': str,
+                'last_listener_query_count': str,
+                'last_listener_query_interval': str,
+                'pim_snooping': str,
+                'mld_immediate_leave': str,
+                Optional('explicit_host_tracking'): str
+            }
+        },            
+    }
+
+# ====================================================
+#   Parser for show ipv6 mld snooping
+# ====================================================
+class showIpv6MldSnooping(showIpv6MldSnoopingSchema):
+    """parser for show ipv6 mld snooping
+    """
+    cli_command = 'show ipv6 mld snooping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command) 
+
+        # Global MLD Snooping configuration
+        p1 = re.compile(r'^Global MLD Snooping configuration:$')
+        # Vlan 1
+        p2 = re.compile(r'^Vlan +(?P<vlan>\d+):$')
+        # MLD snooping                        : Disabled
+        p3 = re.compile(r'^(?P<key>.*) +: +(?P<value>.*)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Global MLD Snooping configuration:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                dest_dict = ret_dict.setdefault('global_mld_snooping_configuration',{})
+                continue
+            # Vlan 1:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dest_dict = ret_dict.setdefault('vlans',{}).setdefault('vlan_' + group['vlan'],{})
+                continue
+            # Pim Snooping                        : Disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().strip().replace(' ', '_')
+                dest_dict[key] = group['value']
+                continue
+
+        return ret_dict

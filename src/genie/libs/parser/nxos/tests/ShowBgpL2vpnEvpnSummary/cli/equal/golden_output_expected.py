@@ -51,6 +51,19 @@ expected_output = {
                                     'time': '01:42:47',
                                     'state': 'established',
                                     'prefixreceived': 12,
+                                },
+                                '90:90:90::3': {
+                                    'neighbor': '90:90:90::3',
+                                    'version': 4,
+                                    'msgrecvd': 200,
+                                    'msgsent': 300,
+                                    'neighbortableversion': 400,
+                                    'inq': 0,
+                                    'outq': 0,
+                                    'remoteas': 500,
+                                    'time': '03:52:17',
+                                    'state': 'established',
+                                    'prefixreceived': 1200,
                                 }
                             }
                         }

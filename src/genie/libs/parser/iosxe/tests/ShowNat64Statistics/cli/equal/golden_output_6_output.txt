@@ -1,0 +1,27 @@
+NAT64 Statistics
+
+Number of NAT64 enabled interfaces: 2
+
+Number of packets translated by stateful NAT64:
+        Packets translated (IPv4 -> IPv6): 0
+        Packets translated (IPv6 -> IPv4): 0
+
+Global Statistics
+Prefix: 64:FF9B::/96
+        Packets translated (IPv4 -> IPv6): 0
+        Packets translated (IPv6 -> IPv4): 0
+        Packets dropped: 0
+Prefix: 2002:1::/96 - vrf nat64_vrf
+        Packets translated (IPv4 -> IPv6): 0
+        Packets translated (IPv6 -> IPv4): 0
+        Packets dropped: 0
+
+NAT64 Interface Statistics
+
+Total active translations: 1(1 static, 0 dynamic,0 extended)
+Active sessions: 0
+Number of expired entries: 0
+
+Hits: 0 Misses: 0
+
+Dynamic Mapping Statistics

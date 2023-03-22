@@ -1,0 +1,7 @@
+Detail:
+
+MAC_Address    Port_Id  Cert Parent Proto ProfileType Profile Name              Device Name
+=========================================================================
+7488.bbb1.6d80  GigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+7488.bbb1.6d83  GigabitEthernet1/0/3 20   1   CL M   Built-in Cisco-Switch                 C9200L-24T-4G
+7488.bbb1.7d7f  GigabitEthernet1/0/3 20   1   C  M   Built-in Cisco-Switch                 1

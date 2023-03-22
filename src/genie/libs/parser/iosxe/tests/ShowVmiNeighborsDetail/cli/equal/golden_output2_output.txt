@@ -1,0 +1,76 @@
+             2 vmi1 Neighbors
+
+
+vmi1   IPV6 Address=FE80::21E:E5FF:FE26:E700
+       IPV6 Global Addr=::
+       IPV4 Address=211.0.0.1, Uptime=2w5d
+       Output pkts=0, Input pkts=0
+       No Session Metrics have been received for this neighbor.
+       Transport PPPoE, Session ID=49
+       INTERFACE STATS: 
+          VMI Interface=vmi1, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          V-Access intf=Virtual-Access2.9, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          Physical intf=GigabitEthernet0/0/0, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+
+PPPoE Flow Control Stats
+ Local Credits: 65486   Peer Credits: 65535   Local Scaling Value 65534 bytes
+ Credit Grant Threshold: 28000    Max Credits per grant: 65535 
+ Credit Starved Packets: 0
+ PADG xmit Seq Num: 16393     PADG Timer index: 1654622 
+ PADG last rcvd Seq Num: 0 
+ PADG last nonzero Seq Num: 16222 
+ PADG last nonzero rcvd amount: 25
+ PADG Timers: (ms)   [0]-1000    [1]-2000    [2]-3000    [3]-4000    [4]-5000 
+ PADG xmit: 1654791  rcvd: 0
+ PADC xmit: 4291690496  rcvd: 1654791
+ In-band credit pkt xmit: 0 rcvd: 0
+ Last credit packet snapshot
+  PADG xmit: seq_num = 16393, fcn = 65535, bcn = 0
+  PADC rcvd: seq_num = 16393, fcn = 65486, bcn = 65535
+  PADG rcvd: seq_num = 0, fcn = 7, bcn = 45148
+  PADC xmit: seq_num = 508153, fcn = 65534, bcn = 0
+  In-band credit pkt xmit: fcn = 0, bcn = 0
+  In-band credit pkt rcvd: fcn = 0, bcn = 0
+    ==== PADQ Statistics ====
+     PADQ xmit: 0  rcvd: 0 
+
+
+vmi1   IPV6 Address=FE80::21E:BDFF:FEF0:3A00
+       IPV6 Global Addr=::
+       IPV4 Address=221.0.0.1, Uptime=2w5d
+       Output pkts=0, Input pkts=0
+       No Session Metrics have been received for this neighbor.
+       Transport PPPoE, Session ID=50
+       INTERFACE STATS: 
+          VMI Interface=vmi1, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          V-Access intf=Virtual-Access2.10, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          Physical intf=GigabitEthernet0/0/0, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+
+PPPoE Flow Control Stats
+ Local Credits: 65495   Peer Credits: 65533   Local Scaling Value 65534 bytes
+ Credit Grant Threshold: 28000    Max Credits per grant: 65535 
+ Credit Starved Packets: 0
+ PADG xmit Seq Num: 16383     PADG Timer index: 1654612 
+ PADG last rcvd Seq Num: 0 
+ PADG last nonzero Seq Num: 16212 
+ PADG last nonzero rcvd amount: 25
+ PADG Timers: (ms)   [0]-1000    [1]-2000    [2]-3000    [3]-4000    [4]-5000 
+ PADG xmit: 1654781  rcvd: 0
+ PADC xmit: 4292280320  rcvd: 1654781
+ In-band credit pkt xmit: 0 rcvd: 0
+ Last credit packet snapshot
+  PADG xmit: seq_num = 16383, fcn = 65535, bcn = 0
+  PADC rcvd: seq_num = 16383, fcn = 65495, bcn = 65535
+  PADG rcvd: seq_num = 0, fcn = 7, bcn = 16657
+  PADC xmit: seq_num = 494276, fcn = 65533, bcn = 0
+  In-band credit pkt xmit: fcn = 0, bcn = 0
+  In-band credit pkt rcvd: fcn = 0, bcn = 0
+    ==== PADQ Statistics ====
+     PADQ xmit: 0  rcvd: 0 
+

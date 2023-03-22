@@ -460,6 +460,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p5_1 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+) +\(primary: +(?P<primary_ip>[\w\.\:]+)\)')
         p5_2 = re.compile(r'^\s*Anycast-Interface: +(?P<anycast_if>[\w\/]+) +\(secondary: +(?P<secondary_ip>[\w\.\:]+)\)')
 
+        # Source - Interface: loopback1(primary: 100: 100:100::6, secondary: 0.0.0.0)
+        p5_3 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'                      
+                        ' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
         p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
@@ -538,6 +541,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 m = p5.match(line)
                 m_1 = p5_1.match(line)
                 m_2 = p5_2.match(line)
+                m_3 = p5_3.match(line)
                 if m:
                     group = m.groupdict()
                     nve_dict.update({k:v for k,v in group.items()})
@@ -551,6 +555,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'anycast_if': group2.pop('anycast_if')})
                     nve_dict.update({'secondary_ip': group2.pop('secondary_ip')})
                     continue
+                if m_3:
+                    group3 = m_3.groupdict()
+                    nve_dict.update({k:v for k,v in group3.items()})
 
                 m = p5.match(line)
                 if m:

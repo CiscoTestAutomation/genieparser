@@ -1,0 +1,7 @@
+Proto   Original IPv4           Translated IPv4
+        Translated IPv6         Original IPv6
+------------------------------------------------------------
+---     ---                     ---
+        5.5.5.5         2009::2
+
+Total number of translations: 1

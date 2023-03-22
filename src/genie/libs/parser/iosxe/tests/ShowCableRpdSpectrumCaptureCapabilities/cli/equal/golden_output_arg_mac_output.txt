@@ -1,0 +1,24 @@
+----------------------------------------------------
+RPD ID                         : 70b3.1791.4278
+NumSacs                        : 1
+SacIndex                       : 0
+
+SacDescription                 : Wideband Spectrum Analysis Circuit, frequency range 0-204.8 MHz
+MaxCaptureSpan                 : 409600000 Hz
+MinimumCaptureFrequency        : 0 Hz
+MaximumCaptureFrequency        : 409600000 Hz
+SupportedTriggerModes          : |freeRunning|
+SupportedOutputFormats         : |timeIQ|fftPower|fftIQ|fftAmplitude|
+SupportedWindowFormats         : |hann|blackmanHarris|hamming|
+SupportsAveraging              : Support
+SupportedAggregationMethods    : None
+SupportsSpectrumQualification  : Not Support
+MaxNumBins                     : 4096
+MinNumBins                     : 256
+MinRepeatPeriod                : 25000 us
+SupportedTrigChanTypes         : |SC-QAM|OFDMA|
+PwType                         : |PNM PW|
+LowestCapturePort              : 0
+HighestCapturePort             : 1
+SupportsScanningCapture        : Not Support
+MinScanningRepeatPeriod        : 0 ms

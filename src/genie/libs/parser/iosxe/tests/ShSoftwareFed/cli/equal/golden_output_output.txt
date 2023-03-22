@@ -1,0 +1,82 @@
+Interface IF_ID         : 0x0000000000000561
+Interface Name          : HundredGigE1/6/0/19
+Interface Block Pointer : 0x7feaa50bbc28
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Admin mode    : Admin Up
+Interface Status        : NPD
+Interface Ref-Cnt       : 1
+Interface Type          : ETHER
+        Port Type         : ROUTE PORT
+        Port Location     : LOCAL
+        Slot              : 13
+        Unit              : 0
+        Slot Unit         : 19
+        SNMP IF Index     : 119
+        GPN               : 979
+        EC Channel        : 0
+        EC Index          : 0
+        IPv4 MTU          : 2000
+        IPv6 MTU          : 0
+        IPv4 VRF ID       : 0
+        IPv6 VRF ID       : 65535
+        Protocol flags    : 0x0003 [ ipv4 ipv6 ]
+        Misc flags        : 0x0041 [ ipv4 --- ]
+        ICMPv4 flags      : 0x03 [ unreachable redirect ]
+        ICMPv6 flags      : 0x03 [ unreachable redirect ]
+        Mac Address       : 6c:b2:ae:4a:54:c5
+        QoS Trust Type    : 3 (DSCP)
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+        Port Physical Subblock
+                Affinity .......... [local]
+                LPN ............... [19]
+                GPN ............... [979]
+                Speed ............. [40GB]
+                type .............. [IFM_PORT_TYPE_L3]
+                MTU ............... [2022]
+                ac profile ........ [IFM_AC_PROFILE_DEFAULT]
+        Port Subblock [0]
+                Mac port oid................... [4444]
+                System port oid................ [4448]
+                System port gid................ [223]
+                Ethernet port oid.............. [4459]
+                Voq oid........................ [4446]
+        Platform Subblock
+                Asic.............. [0]
+                Core.............. [5]
+                Asic Port......... [0]
+                Asic Sub Port..... [65535]
+                Ifg Id............ [0]
+                Mac Num........... [211]
+                First Serdes...... [10]
+                Last Serdes....... [11]
+                FC Mode........... [0]
+                FEC Mode.......... [0]
+                Context Id........ [0]
+        Port L2 Subblock
+                L2 Port Mode ................ [port_mode_dynamic]
+                L2 Port Mode set............. [No]
+                Default vlan ................ [0]
+                Ethertype.................... [8100]
+                untagged port bd vlan ....... [0]
+                status....................... [0]
+                ac profile .................. [IFM_AC_PROFILE_DEFAULT]
+        Port L3 Subblock
+                VRF ID .................. [0]
+                IPv4 Routing Enabled .... [Yes]
+                IPv6 Routing Enabled .... [No]
+                MPLS Enabled ............ [No]
+                Pimv4 Enabled ........... [No]
+                Pimv6 Enabled ........... [No]
+                IPv4 MTU ................ [2018]
+                IPv6 MTU ................ [18]
+                L3 srv port gid ......... [4312]
+                L3 srv port oid ......... [5489]
+Events Log
+[2022/10/07 05:59:13.614] Create Skipped
+[2022/10/07 05:59:13.622] Created
+[2022/10/07 05:59:13.629] XCVR enable
+[2022/10/07 05:59:13.629] Port mode enable
+[2022/10/07 05:59:13.629] Mode Dynamic
