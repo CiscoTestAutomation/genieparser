@@ -1,0 +1,11 @@
+Tag 1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+spine2-ott-lisp-c9k-127 \
+                L1L2 Gi1/0/2       10.10.12.2      UP    24       0A
+spine1-c9k-100  L1 Gi1/0/1       10.10.11.2      UP    26       0A
+Tag 2:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+ott-lisp-c9k-127 \
+                L1L2 Twe1/0/2      20.20.22.2      UP    24       0B
+ott-lisp-c9k-100 \
+                L2 Twe1/0/1      20.20.21.2      UP    22       0B

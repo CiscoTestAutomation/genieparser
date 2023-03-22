@@ -1,0 +1,7 @@
+Multicast                               : Enabled
+AP Capwap Multicast                     : Multicast
+AP Capwap IPv4 Multicast group Address  : 239.1.1.1
+AP Capwap IPv6 Multicast group Address  : ff11::1
+Wireless Broadcast                      : Enabled
+Wireless Multicast non-ip-mcast         : Enabled
+Wireless Multicast link-local           : Enabled

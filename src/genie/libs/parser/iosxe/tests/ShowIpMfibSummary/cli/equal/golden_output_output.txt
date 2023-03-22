@@ -1,0 +1,6 @@
+Default
+ 8 prefixes (8/0/0 fwd/non-fwd/deleted)
+ 22 ioitems (22/0/0 fwd/non-fwd/deleted)
+ Forwarding prefixes: [0 (S,G), 5 (*,G), 3 (*,G/m)]
+ Table id 0x0, instance 0x7FBB9847BDB8
+ Database: epoch 2

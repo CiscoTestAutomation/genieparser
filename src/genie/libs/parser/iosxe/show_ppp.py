@@ -2,6 +2,7 @@
 IOSXE parsers for the following show commands:
     * 'show ppp statistics'
     * 'show pppatm session'
+    * 'show ppp all'
 """
 # Python
 import re
@@ -621,4 +622,56 @@ class ShowPppAtmSession(ShowPppAtmSessionSchema):
 
         return parsed_dict
 
+class ShowPppAllSchema(MetaParser):
+    ''' Schema for:
+            show ppp all
+    '''
+    schema = {
+            Optional('interface'): {
+                Optional(Any()): {
+                    Optional('open'): str,
+                    Optional('nego'): str,
+                    Optional('fail'): str,
+                    Optional('stage'): str,
+                    Optional('peeraddress'): str,
+                }
+            }
+     }
+# =============================================
+# Parser for 'show ppp all'
+# =============================================
+
+class ShowPppAll(ShowPppAllSchema):
+    """ parser for "show ppp all" """
+
+    cli_command = "show ppp all"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        #Vi1.2        LCP+ IPCP+ IPV6CP+    LocalT   51.0.0.1
+        #Vi1.1        LCP+ IPV6CP+          LocalT   0.0.0.0
+
+        p1 = re.compile(r'^(?P<interface>(PPPoE|Vi\d+\.\d+))\s+(?P<open>(LCP\+))\s+(?P<nego>(IPCP\+|IPV6CP\+))\s+(?P<fail>(IPV6CP\+|IPCP\+|\s+))\s+(?P<stage>(LocalT))\s+(?P<peeraddress>(\d+\.\d+\.\d+\.\d+))')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Vi1.1        LCP+ IPCP+ IPV6CP+    LocalT   81.0.0.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('interface', {})
+                parsed_dict['interface'].setdefault(group['interface'], {})
+                parsed_dict['interface'][group['interface']]['open'] = group['open']
+                parsed_dict['interface'][group['interface']]['nego'] = group['nego']
+                parsed_dict['interface'][group['interface']]['fail'] = group['fail']
+                parsed_dict['interface'][group['interface']]['stage'] = group['stage']
+                parsed_dict['interface'][group['interface']]['peeraddress'] = group['peeraddress']
+                continue
+
+        return parsed_dict
 

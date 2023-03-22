@@ -346,13 +346,13 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
     def test_prefix_single_character_search(self):
         self.assertEqual(common._fuzzy_search_command('s e ipv6 n d', False)[0][0], 
                                             'show eigrp ipv6 neighbors detail')
-        self.assertEqual(common._fuzzy_search_command('s e e p', False)[0][0], 
+        self.assertEqual(common._fuzzy_search_command('s e e private', False)[0][0], 
                                         'show evpn ethernet-segment private')
 
     def test_prefix_single_character_search_regex(self):
         self.assertEqual(common._fuzzy_search_command('s e ipv6 n d', True)[0][0], 
                                             'show eigrp ipv6 neighbors detail')
-        self.assertEqual(common._fuzzy_search_command('s e e p', True)[0][0], 
+        self.assertEqual(common._fuzzy_search_command('s e e private', True)[0][0], 
                                         'show evpn ethernet-segment private')
         self.assertEqual(len(common._fuzzy_search_command('s e (ipv4|ipv6) n d',
                                                                     True)), 2)

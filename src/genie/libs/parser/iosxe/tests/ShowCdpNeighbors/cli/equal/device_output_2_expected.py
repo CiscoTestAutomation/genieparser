@@ -25,6 +25,7 @@ expected_output = {
                 "platform": "RP1",
                 "port_id": "Ethernet0/0",
             },
-        }
+        },
+        'total_entries': 3
     }
 }

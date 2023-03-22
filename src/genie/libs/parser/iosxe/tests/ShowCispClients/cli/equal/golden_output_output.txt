@@ -1,0 +1,16 @@
+Authenticator Client Table is Empty
+
+Supplicant Client Table:
+------------------------
+   MAC Address     VLAN    Interface
+   ---------------------------------
+   0c75.bdc7.e8c3   20          Gi1/6
+   5254.dd36.03e9   1           Gi1/10
+   5254.dd72.137e   1           Gi1/10
+   6c03.099f.ff11   1           Gi1/10
+   6c50.4d03.e294   1           Gi1/10
+   6c50.4d03.e2c1   1           Gi1/10
+   f8b7.e2e4.0aa2   40          Gi1/2
+   f8b7.e2e4.0aa8   1           Gi1/8
+   f8b7.e2e5.12eb   1           Gi1/10
+   f8b7.e2e5.3f2b   1           Vl1

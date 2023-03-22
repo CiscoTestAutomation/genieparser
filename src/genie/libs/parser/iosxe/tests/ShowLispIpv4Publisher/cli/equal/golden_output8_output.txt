@@ -1,0 +1,4 @@
+206-PxTR#show lisp 0 instance-id 4100 ipv4 publisher
+LISP Publisher Information
+Publisher                               State                          Session                       PubSub State
+101.101.101.101                         No ETR MS                      Up                            Established

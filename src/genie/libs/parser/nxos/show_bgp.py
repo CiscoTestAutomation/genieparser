@@ -10384,7 +10384,8 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         # BGP community entries [1/32], BGP clusterlist entries [3/12]
         #
         # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        # 172.16.205.8      4   200     130     139      155    0    0 02:05:01 0L2ROUTE Summary
+        # 172.16.205.8    4   200     130     139      155    0    0 02:05:01 0
+        # 90:90:90::3     4   500     200     300      400    0    0 03:52:17 0
 
         p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
@@ -10403,7 +10404,7 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                         ' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
 
         p7 = re.compile(
-            r'^\s*(?P<neighborid>[\d\.]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
+            r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
             ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
             ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
 

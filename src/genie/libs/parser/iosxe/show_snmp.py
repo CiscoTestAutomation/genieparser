@@ -1201,3 +1201,97 @@ class ShowEnvironmentStack(ShowEnvironmentStackSchema):
                 continue
 
         return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show controllers power inline module'
+# ==========================================================================================
+
+class ShowControllersPowerInlineModuleSchema(MetaParser):
+    """
+    Schema for
+        * 'show controllers power inline module'
+    """
+
+    schema = {
+        'alchemy_instance': {
+            Any():{
+                'address': str,
+                'type': {
+                    Any(): {
+                        int: str
+                    },
+                },
+                'poe_command_id': {
+                    Any(): {
+                        int: int
+                    },
+                },
+            },
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'show controllers power inline module'
+# ==========================================================================================
+
+class ShowControllersPowerInlineModule(ShowControllersPowerInlineModuleSchema):
+    """
+    Parser for
+        * 'show controllers power inline module'
+    """
+    cli_command = 'show controllers power inline module {module}'
+
+    def cli(self, module, output=None):
+        cmd = self.cli_command.format(module=module)
+
+        if output is None:
+            output = self.device.execute(cmd)
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # Alchemy instance 0, address 0
+        p1 = re.compile(r'^Alchemy instance (?P<alchemy_instance>\S+), address (?P<address>\S+)$')
+
+        # Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+        p2 = re.compile(r'^ *(?P<cmd_id>[\w\s]+) on each port *: *(?P<val>[\w\s\-]+) *$')
+
+        # Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+        p3 = re.compile(r'^ *(?P<type>[\w\s]+): *(?P<val>[\w\s\-]+) *$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Alchemy instance 0, address 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('alchemy_instance',{}).setdefault(group['alchemy_instance'],{})
+                root_dict['address'] = group['address']
+                continue
+
+            # Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                cmd_dict = root_dict.setdefault('poe_command_id',{}).setdefault(group['cmd_id'],{})
+                cmd_dict.update({
+                    k:int(v)
+                    for k, v in enumerate(
+                        group['val'].split(),1)
+                })
+                continue
+
+            # Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict = root_dict.setdefault('type',{}).setdefault(group['type'].strip(),{})
+                type_dict.update({
+                    k:v
+                    for k, v in enumerate(
+                        group['val'].split(),1)
+                })
+                continue
+
+        return ret_dict

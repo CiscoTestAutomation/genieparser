@@ -2,8 +2,8 @@
 IOSXE parsers for the following show commands:
     
     * 'show logging onboard switch <switch_num> clilog'  
-    * 'show logging onboard Switch active status'
-    * 'show logging onboard switch <switch_num|active> uptime detail'
+    * 'show logging onboard Switch <switch_num> status'
+    * 'show logging onboard switch <switch_num> uptime detail'
     * 'show logging onboard switch <switch_num> <include> continuous'
 '''
 
@@ -55,8 +55,10 @@ class ShowLoggingOnboardSwitchClilog(ShowLoggingOnboardSwitchClilogSchema):
             output = self.device.execute(self.cli_command.format(switch=switch))
         
         ret_dict = {}
-        #1    clear obfl switch 3 environment
-        p1 = re.compile(r'(?P<count>\d)\s+(?P<command>clear+\s+obfl+\s+switch+\s+\d+\s+.*)')
+
+        # 1    clear obfl switch 3 environment
+        # 1    clear obfl switch 1
+        p1 = re.compile(r'(?P<count>\d)\s+(?P<command>clear+\s+obfl+\s+switch+\s+\d+(\s+.*)?)')
         
         for line in output.splitlines():
             line = line.strip()
@@ -74,7 +76,7 @@ class ShowLoggingOnboardSwitchClilog(ShowLoggingOnboardSwitchClilogSchema):
 
 class ShowLoggingOnboardSwitchActiveStatusSchema(MetaParser):
     '''Schema for:
-        show logging onboard switch active status
+        show logging onboard switch {switch_num} status
     '''
     schema={
         'application':{
@@ -89,16 +91,16 @@ class ShowLoggingOnboardSwitchActiveStatusSchema(MetaParser):
 class ShowLoggingOnboardSwitchActiveStatus(ShowLoggingOnboardSwitchActiveStatusSchema):
     """
     Parser for :
-        'show logging onboard Switch active status'
+        'show logging onboard Switch {switch_num} status'
     """
     
-    cli_command = 'show logging onboard switch active status'
+    cli_command = 'show logging onboard switch {switch_num} status'
     
-    def cli(self, output=None): 
+    def cli(self,switch_num="",output=None): 
 
         if output is None:
-            output = self.device.execute(self.cli_command)
-              
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+            
         ret_dict ={}
         #Application Clilog:
         p1 = re.compile('^Application (?P<application>\S+):$')
@@ -140,7 +142,7 @@ class ShowLoggingOnboardSwitchActiveStatus(ShowLoggingOnboardSwitchActiveStatusS
 class ShowLoggingOnboardSwitchActiveUptimeDetailSchema(MetaParser):
 
     '''Schema for:
-        'show logging onboard switch active uptime detail'
+        'show logging onboard switch {switch_num} uptime detail'
     '''
     
     schema={
@@ -180,17 +182,17 @@ class ShowLoggingOnboardSwitchActiveUptimeDetailSchema(MetaParser):
 class ShowLoggingOnboardSwitchActiveUptimeDetail(ShowLoggingOnboardSwitchActiveUptimeDetailSchema):
     """
     Parser for :
-        'show logging onboard switch active uptime detail'
+        'show logging onboard switch {switch_num} uptime detail'
     """
 
-    cli_command = "show logging onboard switch active uptime detail"
-
-				   
-    def cli(self,output=None): 
+    cli_command = "show logging onboard switch {switch_num} uptime detail"
+    
+    
+    def cli(self,switch_num="",output=None): 
 
         if output is None: 
             # Build and Execute the command 
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
        
         ret_dict ={}
         
@@ -344,7 +346,7 @@ class ShowLoggingOnboardSwitchContinuousSchema(MetaParser):
     '''
 
     schema={
-        'application':str,
+        Optional('application'):str,
         Optional('temperature_sensors'):{
             Any():{
                 'id': int,
@@ -444,3 +446,346 @@ class ShowLoggingOnboardSwitchContinuous(ShowLoggingOnboardSwitchContinuousSchem
                 continue
                 
         return ret_dict
+
+class ShowLoggingOnboardSwitchEnvironmentContinuousSchema(MetaParser):
+    ''' Schema for: 'show logging onboard switch <switch_num> environment continuous' '''
+
+    schema={
+        "event":{
+            Any():{
+                "time":str,
+                "device_name":str,
+                "date":str,
+                "ios_version":str,
+                "fw_ver_bias_ver":int,
+                Any():{
+                    "tan":str,
+                    "serial_no":str
+                }
+            },
+        }
+    }
+
+class ShowLoggingOnboardSwitchEnvironmentContinuous(ShowLoggingOnboardSwitchEnvironmentContinuousSchema):
+    """
+    Parser for :
+        'show logging onboard switch <switch_num> environment continuous'
+    """
+
+    cli_command = 'show logging onboard switch {switch_num} environment continuous'
+
+    def cli(self, switch_num="", output=None): 
+
+        if output is None: 
+            # Build and Execute the command 
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+
+        ret_dict = {}
+
+        #11/24/2022 05:56:13                    NA          Port-0          0       Rmv 
+        p1=re.compile(r'^(?P<date>\d+/+\d+/\d+)+\s+(?P<time>\d+.+\d+.\d+)\s+(?P<device_name>\S+)\s+(?P<ios_version>\S+)\s+(?P<fw_ver_bias_ver>\S+)\s+(?P<event>\S+)$')
+
+        #V01 STACK-T1-50CM         Stack-Cable LCC2131G3TH 
+        p2=re.compile(r'^(?P<vid_pid>\S+\s+STACK+.\S+)+\s+(?P<tan>\S+)+\s(?P<serial_no>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #11/24/2022 05:56:13                    NA          Port-0          0       Rmv 
+            m = p1.match(line)
+            if m :
+                group = m.groupdict()
+                event = group['event']
+                sub_dict = ret_dict.setdefault("event",{}).setdefault(event,{})
+                sub_dict['time'] = group['time']
+                sub_dict['device_name'] = group['device_name']
+                sub_dict['date'] = group['date']
+                sub_dict['ios_version'] = group['ios_version']
+                sub_dict['fw_ver_bias_ver'] = int(group['fw_ver_bias_ver'])
+                continue
+
+            #V01 STACK-T1-50CM         Stack-Cable LCC2131G3TH  
+            m = p2.match(line)
+            if m :
+                group = m.groupdict()
+                vid_pid = group['vid_pid']  
+                sub_dict1 = sub_dict.setdefault(vid_pid,{})
+                sub_dict1['tan'] = group['tan']
+                sub_dict1['serial_no'] = group['serial_no']
+                continue
+            
+        return ret_dict
+
+class ShowLoggingOnboardSwitchDetailSchema(MetaParser):
+    """Schema for show logging onboard switch [switch_num|Active] [temperature|voltage] detail
+                """
+
+    schema = {
+        Optional('number_of_sensors'): int,
+        'sensors': {
+            Any(): {
+                'sensor_id': int,
+                'normal_range_min': int,
+                'normal_range_max': int,
+                'maximum_sensor_value': int
+            },
+        }
+    }
+
+class ShowLoggingOnboardSwitchDetail(ShowLoggingOnboardSwitchDetailSchema):
+    """Schema for show logging onboard switch [switch_num|Active] [temperature|voltage|poe] detail
+                """
+
+    cli_command = 'show logging onboard switch {switch_num} {feature} detail'
+
+    def cli(self, switch_num="" , feature="" , output=None):
+        if output is None:
+            # Build and Execute the command
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num,feature=feature))
+
+        ret_dict = {}
+
+        #Number of sensors          : 20
+        p1 = re.compile(r'^Number +of +sensors +: +(?P<number_of_sensors>\d+)$')
+
+        #--------------------------------------------------------------------------------
+        #Sensor                    ID         Normal Range          Maximum Sensor Value
+        #--------------------------------------------------------------------------------
+        #PS1 Vout                  0          0 - 5                 56
+        #PS1 Vin                   1          0 - 5                 215
+        #PS1 CURin                 2          0 - 5                 16
+        #PS1 Curout                3          0 - 5                 31
+        #PS1 POWin                 4          0 - 5                 202
+
+        p2 = re.compile(r'^(?P<sensors>.+?)\s+(?P<sensor_id>\d+)\s+(?P<normal_range_min>\d+) - (?P<normal_range_max>\d+)\s+(?P<maximum_sensor_value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Number of sensors          : 20
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_sensors'] = int(group['number_of_sensors'])
+                continue
+
+            #PS1 POWin                 4          0 - 5                 202
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sensors = group.pop('sensors')
+                temp_dict = ret_dict.setdefault('sensors', {}).setdefault(sensors, {})
+                temp_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+
+class ShowLoggingOnboardSwitch(ShowLoggingOnboardSwitchDetail):
+    '''
+        Parser for show logging onboard switch [switch_num|Active] [temperature|voltage|poe]
+    '''
+
+    cli_command = 'show logging onboard switch {switch_num} {feature}'
+
+    def cli(self, switch_num="" , feature="" , output=None):
+        return super().cli(switch_num=switch_num, feature=feature, output=output)
+
+
+class ShowLoggingOnboardSwitchMessageDetailSchema(MetaParser):
+    '''Schema for:
+        'show logging onboard switch 1 message detail'
+    '''   
+    schema={
+        'message_summary':{
+            Any():ListOf(str),
+          },        
+    }
+
+class ShowLoggingOnboardSwitchMessageDetail(ShowLoggingOnboardSwitchMessageDetailSchema):
+    '''Schema for:
+        'show logging onboard switch 1 message detail'
+    ''' 
+    cli_command = 'show logging onboard switch {switch_num} message detail'
+				   
+    def cli(self,switch_num="", output=None): 
+
+        if output is None: 
+            # Build and Execute the command
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+        
+        ret_dict = {}
+
+        #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_NOT_PRESENT :  >254 LAST  OBFL PS-FAN NOT PRESENT : FEP fan PS-2
+        #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_PRESENT :  >254 LAST  OBFL PS-FAN PRESENT : FEP fan PS-1
+
+        p1 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\:+.*)$')		
+	
+        for line in output.splitlines():
+            line = line.strip()
+            sub_dict = ret_dict.setdefault("message_summary",{})
+
+            #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_PRESENT :  >254 LAST  OBFL PS-FAN PRESENT : FEP fan PS-1
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                if group['time'] not in sub_dict.keys():
+                    sub_dict[group['time']]=[group['info']]
+                else:
+                    sub_dict[group['time']].append(group['info'])
+                continue
+
+        return ret_dict
+
+class ShowEnvironmentFanSchema(MetaParser):
+
+    schema = {
+        "switch": {
+            Any(): {
+                "fan": {
+                    Any(): {
+                        "speed": int,
+                        "state": str,
+                        "airflow_direction": str
+                    },
+                    
+                },
+                "fan_ps1": str,
+                "fan_ps2": str
+            }
+        }
+    }
+
+class ShowEnvironmentFan(ShowEnvironmentFanSchema):
+    """
+    Parser for :
+        'ShowEnvironmentFan'
+    """
+    cli_command = 'show environment fan'
+    
+    def cli(self,switch="",output=None): 
+
+        if output is None:
+            # Build the command
+            output = self.device.execute(self.cli_command.format(switch=switch))
+     
+        ret_dict = {}
+        for line in output.splitlines():
+            line=line.strip()
+            
+            #Switch   FAN     Speed   State   Airflow direction
+            #---------------------------------------------------
+            # 1       1     5600      OK     Front to Back
+            # 1       2     5600      OK     Front to Back
+
+            p1=re.compile(r'^(?P<switch>\d)+\s+(?P<fan>\d)+\s+(?P<speed>\d+)\s+(?P<state>\S+)\s+(?P<airflow_direction>\S+\s+\S+\s+\S+)$')
+
+            #FAN PS-1 is OK
+            p2=re.compile(r'^FAN+\s+PS-1+\s+\S+\s+(?P<fan_ps1>\S+)$')
+
+            #FAN PS-2 is NOT PRESENT
+            p3=re.compile(r'^FAN+\s+PS-2+\s+\S+\s+(?P<fan_ps2>\S+.*)$')
+
+            # 1       2     5600      OK     Front to Back
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                fan = int(group["fan"])
+                switch = int(group["switch"])
+                sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                sub_dict1 = sub_dict.setdefault('fan', {}).setdefault(fan, {})
+                sub_dict1.setdefault('speed', int(group['speed']))
+                sub_dict1.setdefault('state', group['state'])
+                sub_dict1.setdefault('airflow_direction', group['airflow_direction'])
+                continue
+            
+            #FAN PS-1 is OK    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                fan_ps1 = group['fan_ps1'] 
+                sub_dict['fan_ps1'] = fan_ps1
+                continue
+            
+            #FAN PS-2 is NOT PRESENT
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fan_ps2 = group['fan_ps2']
+                sub_dict['fan_ps2'] = fan_ps2
+                continue
+    
+        return ret_dict
+
+class ShowEnvironmentPowerAllSchema(MetaParser):
+
+    schema={
+        "switch": {
+            Any(): {
+                "pid": str,
+                "serial": str,
+                "status": str,
+                "sys_pwr": str,
+                "poe_pwr": str,
+                "watts": int,
+                "switch": {
+                    Any(): {
+                        "pid": str
+                    }
+                }
+            },
+            
+        }
+    }
+
+class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
+    """
+    Parser for :
+        'show environment power all'
+    """
+    cli_command = ['show environment power all','show environment power switch {switch_num}']
+    
+    def cli(self,switch_num="",output=None): 
+
+        if output is None:
+            # Build the command
+            if switch_num:
+                output = self.device.execute(self.cli_command[1].format(switch_num=switch_num))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        ret_dict={}
+        for line in output.splitlines():
+            line=line.strip()
+
+            #1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+            p1=re.compile(r'^(?P<sw>\d\S)+\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\S+)\s+(?P<sys_pwr>\w+)+\s+(?P<poe_pwr>\S+)\s+(?P<watts>\S+)$')
+       
+            #1B  Not Present
+            p2=re.compile(r'^(?P<sw>\d+\S)\s+(?P<pid>Not Present)$')
+
+            #1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+            m = p1.match(line)
+            if m:
+                group=m.groupdict()
+                switch = group['sw']
+                sub_dict = ret_dict.setdefault('switch',{}).setdefault(switch,{})
+                sub_dict['pid'] = group['pid'] 
+                sub_dict['serial'] = group['serial']
+                sub_dict['status'] = group['status']
+                sub_dict['sys_pwr'] = group['sys_pwr']
+                sub_dict['poe_pwr'] = group['poe_pwr']
+                sub_dict['watts'] = int(group['watts'])
+                continue
+            
+            #1B  Not Present
+            m = p2.match(line)
+            if m:
+                group=m.groupdict()
+                switch = group['sw']
+                sub_dict1 = sub_dict.setdefault('switch', {}).setdefault(switch, {})
+                sub_dict1['pid'] = group['pid']
+                continue
+
+        return ret_dict
+

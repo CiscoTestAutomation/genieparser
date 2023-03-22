@@ -2,6 +2,7 @@
 IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
     * show hw-module slot {slot} port-group mode
+    * show hw-module usbflash1 security status
 '''
 
 # Python
@@ -252,7 +253,18 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['led_ports'].split():
                     port = (port.split(':'))
                     port_led_dict = root_dict.setdefault('port_led_status',{})
-                    port_led_dict.update({port[0]: port[1]})
+                    port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
+                continue
+            
+            # STATUS: (10) Gi1/1:BLINK_GREEN-BLACK Gi1/2:BLACK-BLINK_AMBER Gi1/3:BLACK Gi1/4:BLINK_AMBER Gi1/5:BLINK_AMBER Gi1/6:BLINK_AMBER Gi1/7:BLINK_AMBER Gi1/8:BLINK_AMBER Gi1/9:BLINK_AMBER Gi1/10:BLINK_GREEN
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
+                for port in group['led_ports'].split():
+                    port = (port.split(':'))
+                    port_led_dict = root_dict.setdefault('status',{})
+                    port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
             
             # STATUS: (10) Gi1/1:BLINK_GREEN-BLACK Gi1/2:BLACK-BLINK_AMBER Gi1/3:BLACK Gi1/4:BLINK_AMBER Gi1/5:BLINK_AMBER Gi1/6:BLINK_AMBER Gi1/7:BLINK_AMBER Gi1/8:BLINK_AMBER Gi1/9:BLINK_AMBER Gi1/10:BLINK_GREEN
@@ -435,4 +447,43 @@ class ShowHwModuleSlotPortGroupMode(ShowHwModuleSlotPortGroupModeSchema):
                     'mode' : str(group['mode']),
                 })
                 continue
+        return ret_dict
+
+
+class ShowHwModuleUsbflash1SecuritySchema(MetaParser):
+    '''Schema for show hw-module usbflash1 security status'''
+    schema = {
+        'switch': {
+            Any(): {
+                'auth_status': str
+            }
+        }
+    }
+
+
+class ShowHwModuleUsbflash1Security(ShowHwModuleUsbflash1SecuritySchema):
+    '''Parser for show hw-module usbflash1 security status'''
+
+    cli_command = ['show hw-module usbflash1 switch {switch_num} security status', 'show hw-module usbflash1 security status']
+
+    def cli(self, switch_num='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(switch_num = switch_num) if switch_num else self.cli_command[1])
+        
+        # 1                    USB Not Present
+        # 2                    USB Not Present
+        # 3                    USB Not Present
+        p1 = re.compile(r'^(?P<switch>\d+)\s+(?P<auth_status>.+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 1                    USB Not Present
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {'auth_status': m.groupdict()['auth_status']})
+                continue
+        
         return ret_dict

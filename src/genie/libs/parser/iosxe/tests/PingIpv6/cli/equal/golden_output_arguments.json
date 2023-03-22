@@ -1,0 +1,4 @@
+{
+    "addr": "FF08::10",
+    "interface": "GigabitEthernet1/0/1"
+}

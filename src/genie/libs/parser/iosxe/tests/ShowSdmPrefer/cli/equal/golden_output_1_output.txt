@@ -1,0 +1,40 @@
+Showing SDM Template Info
+
+This is the NAT template.
+  Number of VLANs:                                     4094
+  Unicast MAC addresses:                               32768
+  Overflow Unicast MAC addresses:                      1024
+  L2 Multicast entries:                                8192
+  Overflow L2 Multicast entries:                       512
+  L3 Multicast entries:                                8192
+  Overflow L3 Multicast entries:                       512
+  Directly connected routes:                           24576
+  Indirect routes:                                     8192
+  Security Access Control Entries:                     5120
+  QoS Access Control Entries:                          1024
+  Policy Based Routing ACEs:                           5120
+  Netflow Input ACEs:                                  256
+  Netflow Output ACEs:                                 768
+  Flow SPAN ACEs:                                      1024
+  Tunnels:                                             512
+  LISP Instance Mapping Entries:                       512
+  Control Plane Entries:                               512
+  Input Netflow flows:                                 32768
+  Output Netflow flows:                                32768
+  SGT/DGT (or) MPLS VPN entries:                       8192
+  SGT/DGT (or) MPLS VPN Overflow entries:              512
+  Wired clients:                                       2048
+  MACSec SPD Entries:                                  256
+  VRF:                                                 256
+  MPLS Labels:                                         2048
+  MPLS L3 VPN Routes VRF Mode:                         7168
+  MPLS L3 VPN Routes Prefix Mode:                      8192
+  MVPN MDT Tunnels:                                    256
+  L2 VPN EOMPLS Attachment Circuit:                    256
+  MAX VPLS Bridge Domains :                            128
+  MAX VPLS Peers Per Bridge Domain:                    32
+  MAX VPLS/VPWS Pseudowires :                          1024
+
+These numbers are typical for L2 and IPv4 features.
+Some features such as IPv6, use up double the entry size;
+so only half as many entries can be created.

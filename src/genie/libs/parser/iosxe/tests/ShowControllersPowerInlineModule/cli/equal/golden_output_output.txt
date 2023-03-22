@@ -1,0 +1,84 @@
+  Alchemy instance 0, address 0
+
+ Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Pending evt flag: N     N     N     N     N     N     N     N     N     N     N     N    
+ Current State         : Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto Auto
+                       : 1    1    1    1    1    1    1    1    1    1    1    1   
+ Spare Current State   : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Current Event         : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Current Event   : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Timers                : 7    7    7    7    17   7    7    7    7    31   7    10  
+ Spare Timers          : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Error State           : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Error State     : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Error Code            : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Error Code      : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Power Status          : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Power Status    : N     N     N     N     N     N     N     N     N     N     N     N    
+ Auto Config           : Y     Y     Y     Y     Y     Y     Y     Y     Y     Y     Y     Y    
+ Spare Auto Config     : N     N     N     N     N     N     N     N     N     N     N     N    
+ Disconnect            : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Disconnect      : N     N     N     N     N     N     N     N     N     N     N     N    
+ Detection Status      : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Detection Status: unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Current Class         : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Current Class   : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Tweetie debug         : FF   0    0    0   
+ POE Commands pending at sub:
+     Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 1 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 2 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 3 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+  Alchemy instance 1, address E
+
+ Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Pending evt flag: N     N     N     N     N     N     N     N     N     N     N     N    
+ Current State         : Auto Auto Auto Auto Auto Auto Auto Auto Suht Auto Auto Auto
+                       : 1    1    1    1    1    1    1    1    0    1    1    1   
+ Spare Current State   : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Current Event         : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Current Event   : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Timers                : 7    7    7    7    7    7    7    7    0    7    7    7   
+ Spare Timers          : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Error State           : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Error State     : Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht Suht
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Error Code            : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Error Code      : -    -    -    -    -    -    -    -    -    -    -    -   
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Power Status          : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Power Status    : N     N     N     N     N     N     N     N     N     N     N     N    
+ Auto Config           : Y     Y     Y     Y     Y     Y     Y     Y     Y     Y     Y     Y    
+ Spare Auto Config     : N     N     N     N     N     N     N     N     N     N     N     N    
+ Disconnect            : N     N     N     N     N     N     N     N     N     N     N     N    
+ Spare Disconnect      : N     N     N     N     N     N     N     N     N     N     N     N    
+ Detection Status      : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Detection Status: unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Current Class         : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Spare Current Class   : unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn unkn
+                       : 0    0    0    0    0    0    0    0    0    0    0    0   
+ Tweetie debug         : 0    0    0    0   
+ POE Commands pending at sub:
+     Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 1 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 2 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+     Command 3 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   

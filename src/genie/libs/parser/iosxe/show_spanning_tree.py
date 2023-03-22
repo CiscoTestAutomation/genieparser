@@ -1130,6 +1130,7 @@ class ShowSpanningTreeInterfaceDetailSchema(MetaParser):
         'interface': str,
         'port': str,
         'vlan': str,
+        'port_span_mode': str,
         'path_cost': int,
         'port_priority': int,
         'port_id': str,
@@ -1140,12 +1141,12 @@ class ShowSpanningTreeInterfaceDetailSchema(MetaParser):
         'dport_id': str,
         'des_path_cost': int,
         'forward_trans': int,
-        'port_mode': str,
-        'bpdu_guard': str,
+        Optional('port_mode'): str,
+        Optional('bpdu_guard'): str,
         'link_type': str,
-        'bpdu_filter': str,
-        'root_guard': str,
-        'loop_guard': str,
+        Optional('bpdu_filter'): str,
+        Optional('root_guard'): str,
+        Optional('loop_guard'): str,
         'timers': {
             'message_age': int,
             'forward_delay': int,
@@ -1170,7 +1171,7 @@ class ShowSpanningTreeInterfaceDetail(ShowSpanningTreeInterfaceDetailSchema):
 
         # Port 13 (TwoGigabitEthernet1/0/13) of VLAN0001 is designated forwarding
         p1 = re.compile(r"^Port\s+(?P<port>\d+)\s+\((?P<interface>\S+)\)\s+of\s+("
-                        r"?P<vlan>\S+)\s+is\s+designated\s+forwarding$")
+                        r"?P<vlan>\S+)\s+is\s+(?P<port_span_mode>.+)$")
 
         #    Port path cost 20000, Port priority 128, Port Identifier 128.13.
         p2 = re.compile(r"^Port\s+path\s+cost\s+(?P<path_cost>\d+),\s+Port\s+priority\s+(?P<port_priority>\d+),"
@@ -1226,6 +1227,7 @@ class ShowSpanningTreeInterfaceDetail(ShowSpanningTreeInterfaceDetailSchema):
                 ret_dict['interface'] = dict_val['interface']
                 ret_dict['port'] = dict_val['port']
                 ret_dict['vlan'] = dict_val['vlan']
+                ret_dict['port_span_mode'] = dict_val['port_span_mode']
                 continue
 
             #    Port path cost 20000, Port priority 128, Port Identifier 128.13.
@@ -1333,7 +1335,7 @@ class ShowSpanningTreeInterfaceDetail(ShowSpanningTreeInterfaceDetailSchema):
 
 
 class ShowSpanningTreeInterfaceSchema(MetaParser):
-    """Schema for show spanning tree interface"""
+    """Schema for show spanning-tree interface"""
 
     schema = {
         'vlan': {
@@ -1351,7 +1353,7 @@ class ShowSpanningTreeInterfaceSchema(MetaParser):
 class ShowSpanningTreeInterface(ShowSpanningTreeInterfaceSchema):
     """Parser for show spanning tree interface"""
 
-    cli_command = 'show spanning tree interface {interface}'
+    cli_command = 'show spanning-tree interface {interface}'
 
     def cli(self, interface='', output=None):
         if output is None:

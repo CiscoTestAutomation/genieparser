@@ -1,0 +1,5 @@
+Vlan Type
+---- -----------------
+500  primary          
+501  community        
+502  isolated

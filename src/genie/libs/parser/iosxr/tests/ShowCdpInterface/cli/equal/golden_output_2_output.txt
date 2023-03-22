@@ -1,0 +1,6 @@
+show cdp interface TenGigE0/0/2/0
+Thu Jan 12 10:26:51.643 UTC
+TenGigE0/0/2/0 is Down
+  Encapsulation ether
+  Sending CDP packets every 60 seconds
+  Holdtime is 180 seconds

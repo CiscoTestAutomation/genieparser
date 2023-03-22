@@ -93,7 +93,7 @@ class ShowLldpEntrySchema(MetaParser):
                     Any(): {
                         'neighbors': {
                             Any(): {                        
-                                'chassis_id': str,
+                                Optional('chassis_id'): str,
                                 'port_id': str,
                                 'neighbor_id': str,
                                 Optional('port_description'): str,

@@ -1,0 +1,1 @@
+Total no of vlan mappings configured: 1

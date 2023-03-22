@@ -1,0 +1,26 @@
+expected_output = {
+   "tag":{
+      "1":{
+         "flex_algo":{
+            "0":{
+               "delay":5000,
+               "runningl1":"FALSE",
+               "runningl2":"FALSE",
+               "state":"Segment-Routing"
+            },
+            "128":{
+               "delay":5000,
+               "runningl1":"FALSE",
+               "runningl2":"NA",
+               "state":"Segment-Routing"
+            },
+            "129":{
+               "delay":5000,
+               "runningl1":"FALSE",
+               "runningl2":"NA",
+               "state":"Segment-Routing"
+            }
+         }
+      }
+   }
+}

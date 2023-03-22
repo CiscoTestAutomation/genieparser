@@ -1,0 +1,15 @@
+
+Vlan11 - Group 2 - Address-Family IPv6
+  State is MASTER
+  State duration 49.507 secs
+  Virtual IP address is FE80:11::3
+  Virtual MAC address is 0000.5E00.0202
+  Advertisement interval is 110 msec
+  Preemption enabled
+  Priority is 150
+  State change reason is VRRP_PRIORITY
+  Master Router is FE80::2AAF:FDFF:FEEA:CCDF (local), priority is 150
+  Master Advertisement interval is 110 msec (expires in 89 msec)
+  Master Down interval is unknown
+  FLAGS: 1/1
+  

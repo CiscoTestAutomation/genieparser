@@ -1,0 +1,59 @@
+
+204-MSMR#show lisp all instance-id 101 ipv4 server detail internal
+=====================================================
+Output for router lisp 0
+=====================================================
+LISP Site Registration Information
+
+Site name: xtr1
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+  EID-prefix: 192.168.0.1/32 instance-id 101
+    First registered:     01:12:41
+    Last registered:      01:12:41
+    Routing table tag:    0
+    Origin:               Dynamic, more specific of 192.168.0.0/24
+    Merge active:         No
+    Proxy reply:          Yes
+    TTL:                  1d00h
+    State:                complete
+    Registration errors:
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 10.16.2.2
+      last registered 01:12:41, proxy-reply, map-notify
+      TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
+      state complete, no security-capability
+      xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
+      site-ID unspecified
+      sourced by reliable transport
+      Locator  Local  State      Pri/Wgt  Scope
+      10.16.2.2 yes    up          50/50   IPv4 none
+
+Site name: xtr2
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+  EID-prefix: 192.168.9.0/24 instance-id 101
+    First registered:     01:55:47
+    Last registered:      01:55:47
+    Routing table tag:    0
+    Origin:               Configuration
+    Merge active:         No
+    Proxy reply:          Yes
+    TTL:                  1d00h
+    State:                complete
+    Registration errors:
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 1000:1000:1000:1000::
+      last registered 01:55:47, proxy-reply, map-notify
+      TTL 1d00h, no merge, hash-function sha1, nonce 0xB06AE31D-0x6ADB0BA5
+      state complete, no security-capability
+      xTR-ID 0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D
+      site-ID unspecified
+      sourced by reliable transport
+      Locator                Local  State      Pri/Wgt  Scope
+      1000:1000:1000:1000::  yes    up          50/50   IPv4 none
+        

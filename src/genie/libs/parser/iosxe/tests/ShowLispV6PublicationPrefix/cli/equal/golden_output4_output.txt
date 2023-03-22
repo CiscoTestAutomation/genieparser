@@ -1,0 +1,29 @@
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
+
+  EID-prefix: 2001:192:168:1::71/128
+    First published:      00:26:03
+    Last published:       00:26:02
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 100.100.100.100:4342
+      last published 00:26:02, TTL never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0x84FB57F7-0x5707006C-0x0869FD13-0xFDDB56D5
+      site-ID unspecified
+      Domain-ID unset
+      Multihoming-ID unspecified
+      Locator      Pri/Wgt  State     Encap-IID 
+      11.11.11.11   10/10   up        -         
+
+    Publisher 1000:1000:1000:1000:1000:1000:1000:1000.4342
+      last published 00:26:03, TTL never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0x84FB57F7-0x5707006C-0x0869FD13-0xFDDB56D5
+      site-ID unspecified
+      Domain-ID unset
+      Multihoming-ID unspecified
+      Locator       Pri/Wgt  State     Encap-IID 
+      1111:1111::   10/10   up        -         
