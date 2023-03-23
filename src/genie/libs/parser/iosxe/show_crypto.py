@@ -1041,7 +1041,7 @@ class ShowCryptoSessionSchema(MetaParser):
         },
     }
 }
-                                
+
 class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
     """Super Parser for 
@@ -1076,7 +1076,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
         #Peer: 11.0.1.2 port 500
         #Peer: 11.0.1.2 port 500 fvrf: (none) ivrf: (none)
-        p8=re.compile(r'^Peer\:\s+(?P<peer>[\d\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
+        # Peer: 2001:db8:4:4::4 port 500
+        p8=re.compile(r'^Peer\:\s+(?P<peer>(?:\d{1,3}\.){3}\d{1,3}|[A-Fa-f\d:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
         
         # Phase1_id: 11.0.1.2
         p9=re.compile(r'^\s*Phase1\_id\:\s+(?P<phase_id>\S+)$')
@@ -1087,8 +1088,11 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         # Session ID: 0  
         p11=re.compile(r'^\s*Session\s+ID\:\s+(?P<session_id>\d+)$')
 
-        #IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active
-        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[\d\.\:]+)\/(?P<local_port>\d+)')
+        # match on line starting where first word starts IKEv1/IKEv2 - optionally get the IPv4 remote ip and port
+        # IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active
+        # IKEv2 SA: local 2001:101:0:1::1/500
+
+        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)\s+SA:\s+local\s+(?P<local>(?:\d{1,3}\.){3}\d{1,3}|[A-Fa-f\d:]+)\/(?P<local_port>\d+)(\s+remote\s+(?P<remote>[\d\.:\[\]]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)\s*)?$')
 
         #  Capabilities:(none) connid:1025 lifetime:03:04:13
         p13=re.compile(r'^\s*Capabilities\:\(*(?P<capabilities>\w+)+\)*\s+connid\:(?P<conn_id>\d+)\s+lifetime\:(?P<lifetime>[\d\:]+)$')
@@ -1106,7 +1110,7 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p17=re.compile(r'^\s*Outbound\:\s+\#pkts\s+enc\'ed\s+(?P<outbound_pkts_enc>\d+)\s+drop\s+(?P<outbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<outbound_life_kb>[\w\s]+)\/(?P<outbound_life_secs>[\d a-z\/\,]+)$')
 
         #remote 2001:101:0:1::2/500 Active
-        p18=re.compile(r'.*remote\s+(?P<remote>[\d\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
+        p18=re.compile(r'.*remote\s+(?P<remote_ipv6>(?:\d{1,3}\.){3}\d{1,3}|[A-Fa-f\d:]+)\/(?P<remote_port_ipv6>\d+)\s+(?P<conn_status_ipv6>\w+)')
         
         ret_dict = {}
         check_flag = 1
@@ -1207,7 +1211,7 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
                 groups=m11.groupdict()
                 session_id= groups['session_id']
             
-            #IKE SA: local 10.1.1.4/500
+            #IKE SA: local 10.1.1.4/500 remote 10.1.1.3/500 Active
             m12= p12.match(line)
             if m12:
                 groups=m12.groupdict()
@@ -1222,6 +1226,10 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
                 ike_params_dict['local'] =groups['local']
                 ike_params_dict['local_port'] =groups['local_port']
+                ike_params_dict['remote'] = str(groups['remote'])
+                ike_params_dict['remote_port']= str(groups['remote_port'])
+                ike_params_dict['sa_status']= str(groups['conn_status'])
+                
                 ike_params_dict['version']= groups['version']
                 if session_id is not None:
                     ike_params_dict['session_id']= session_id
@@ -1230,9 +1238,15 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
             m18= p18.match(line)
             if m18:
                 groups=m18.groupdict()
-                ike_params_dict['remote'] = groups['remote']
-                ike_params_dict['remote_port']= groups['remote_port']
-                ike_params_dict['sa_status']= groups['conn_status']
+
+                # ipv6 remote information is shown on next line in CLI output - p17 match created the SA key index as there is always a local too then
+                # ike_index was indexed - substract 1 to get previous key and correct SA
+                ike_version_dict= ike_dict['ike_sa']
+                ike_params_dict=ike_version_dict[str(ike_index-1)]
+                
+                ike_params_dict['remote'] = str(groups['remote_ipv6'])
+                ike_params_dict['remote_port']= str(groups['remote_port_ipv6'])
+                ike_params_dict['sa_status']= str(groups['conn_status_ipv6'])
 
             #Capabilities:D connid:1042 lifetime:05:50:03
             m13= p13.match(line)
@@ -1345,56 +1359,6 @@ class ShowCryptoSessionLocal(ShowCryptoSessionSuperParser, ShowCryptoSessionSche
         if output is None:
             output = self.device.execute(self.cli_command)
         return super().cli(output=output)
-
-class ShowCryptoSessionIvrf(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
-    '''Parser for:
-        * 'show crypto session ivrf {ivrf}'
-    '''
- 
-    cli_command = "show crypto session ivrf {ivrf}"
-
-    def cli(self, ivrf='', output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command.format(ivrf=ivrf))
-        return super().cli(output=output)
-
-class ShowCryptoSessionIvrfDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
-    '''Parser for:
-        * 'show crypto session ivrf {ivrf} detail'
-    '''
-
-    cli_command = "show crypto session ivrf {ivrf} detail"
-
-    def cli(self, ivrf='', output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command.format(ivrf=ivrf))
-        return super().cli(output=output)
-
-class ShowCryptoSessionFvrf(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
-    '''Parser for:
-        * 'show crypto session fvrf {fvrf}'
-    '''
- 
-    cli_command = "show crypto session fvrf {fvrf}"
-
-    def cli(self, fvrf='', output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command.format(fvrf=fvrf))
-        return super().cli(output=output)
-
-class ShowCryptoSessionFvrfDetail(ShowCryptoSessionSuperParser, ShowCryptoSessionSchema):
-    '''Parser for:
-        * 'show crypto session fvrf {fvrf} detail'
-    '''
-
-    cli_command = "show crypto session fvrf {fvrf} detail"
-
-    def cli(self, fvrf='', output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command.format(fvrf=fvrf))
-        return super().cli(output=output)
-
-
 # =================================================
 #  Schema for 'show crypto ipsec sa count'
 # =================================================
