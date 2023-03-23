@@ -1,6 +1,7 @@
 expected_output= {
     "interface": {
-        "Tunnel0": {
+        "1": {
+            "interface":"Tunnel0",
             "profile": "polaris-test",
             "uptime": "00:27:42",
             "session_status": "UP-ACTIVE",

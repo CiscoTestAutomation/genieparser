@@ -1,6 +1,7 @@
 expected_output = {
 	'interface': {
-		'Tunnel2': {
+		'1': {
+			'interface': 'Tunnel2',
 			'peer': {
 				'70.70.70.70': {
 					'port': {

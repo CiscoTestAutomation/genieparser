@@ -1,0 +1,26 @@
+Crypto session current status
+
+Interface: Tunnel3111
+Session status: DOWN
+Peer: 192.168.1.1 port 500 
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.25.0/255.255.255.128 
+        Active SAs: 0, origin: crypto map
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.25.0/255.255.255.128 
+        Active SAs: 0, origin: crypto map
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.26.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.26.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+  IPSEC FLOW: permit ip 100.75.0.0/255.255.255.192 192.168.25.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+  IPSEC FLOW: permit ip host 100.74.10.1 192.168.25.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+
+Interface: Tunnel3111
+Profile: ISAKMP-inner-LOC_A
+Session status: DOWN-NEGOTIATING
+Peer: 192.168.1.1 port 500 
+  Session ID: 0  
+  IKEv1 SA: local 94.140.184.80/500 remote 192.168.1.1/500 Inactive 
+  Session ID: 0  
+  IKEv1 SA: local 94.140.184.80/500 remote 192.168.1.1/500 Inactive

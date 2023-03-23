@@ -1,6 +1,7 @@
 expected_output= {
     "interface": {
-        "Tunnel13": {
+        "1": {
+            "interface":"Tunnel13",
             "profile": "GS-GRE:ISAKMP", 
             "peer": {
                 "11.0.2.1": {

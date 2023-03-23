@@ -1,6 +1,7 @@
 expected_output= {
     "interface": {
-        "Tunnel0": {
+        "1": {
+            "interface":"Tunnel0",
             "session_status": "UP-ACTIVE",
             "peer": {
                 "10.1.1.3": {

@@ -7,3 +7,11 @@ Peer: 11.0.1.1 port 500
   IKEv1 SA: local 11.0.1.2/500 remote 11.0.1.1/500 Active 
   IPSEC FLOW: permit 47 host 11.0.1.2 host 11.0.1.1 
         Active SAs: 2, origin: crypto map
+
+Interface: GigabitEthernet0/1
+Session status: UP-ACTIVE
+Peer: 2001:db8:4:4::4 port 500
+  IKEv1 SA: local 2001:db8:2:2::2/500 
+      remote 2001:db8:4:4::4/500 Active
+  IPSEC FLOW: permit ipv6 2001:db8:2:2::/64 2001:db8:5:5::/64
+   Active SAs: 2, origin: crypto map
