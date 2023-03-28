@@ -2,7 +2,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 from genie import parsergen
-
+from genie.libs.parser.utils.common import Common
 
 class ShowIpv6MldSnoopingGroupsSchema(MetaParser):
     """
@@ -340,4 +340,42 @@ class ShowIpv6MldSnoopingMrouter(ShowIpv6MldSnoopingMrouterSchema):
                 del vlan_dict['vlan']
                 ret_dict.setdefault('vlan', {}).update({vlan: vlan_dict})
         
+        return ret_dict
+
+class ShowIpv6MldSnoopingMrouterVlanSchema(MetaParser):
+    """Schema for show ipv6 mld snooping mrouter vlan {vlanid}"""
+
+    schema = {
+        'mld': {
+            Any(): {
+                'vlan': str
+            },
+        },
+    }
+
+class ShowIpv6MldSnoopingMrouterVlan(ShowIpv6MldSnoopingMrouterVlanSchema):
+
+    """Parser for show ipv6 mld snooping mrouter vlan {vlanid}"""
+
+    cli_command = ['show ipv6 mld snooping mrouter vlan {vlanid}']
+
+    def cli(self, vlanid="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(vlanid=vlanid))
+
+        #  100    Tw1/0/13(static)
+        p1 = re.compile(r"^(?P<vlan>\d+)\s+(?P<ports>[\w\/\.]+)[\(\)\w]+$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #  100    Tw1/0/13(static)
+            m = p1.match(line)
+            if m:
+                ports_var = Common.convert_intf_name(m.groupdict()['ports'])
+                ports_dict = ret_dict.setdefault('mld', {}).setdefault(ports_var, {})
+                ports_dict['vlan'] = m.groupdict()['vlan']
+                continue
         return ret_dict

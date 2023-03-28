@@ -980,8 +980,6 @@ class ShowCryptoPkiTrustpointsStatus(ShowCryptoPkiTrustpointsStatusSchema):
 
         return ret_dict
 
-
-
 class ShowCryptoSessionSchema(MetaParser):
     ''' Schema for show crypto session detail
         Schema for show crypto session'''
@@ -995,7 +993,7 @@ class ShowCryptoSessionSchema(MetaParser):
             Optional("group"): str,
             Optional("assigned_address"):str,
             "session_status": str,
-            "peer":{
+            Optional("peer"):{
                 Any():
                 {
                     "port":{
@@ -1005,7 +1003,7 @@ class ShowCryptoSessionSchema(MetaParser):
                         Optional("ivrf"): str,
                         Optional("phase1_id"): str,
                         Optional("desc"): str,
-                        "ike_sa":{
+                        Optional("ike_sa"):{
                             Any():
                             {
                                 "local": str,
@@ -1020,7 +1018,7 @@ class ShowCryptoSessionSchema(MetaParser):
                                 Optional("session_id"): str
                             },
                         },
-                        "ipsec_flow": {
+                        Optional("ipsec_flow"): {
                             Any():
                                 {
                                 "active_sas": int,
@@ -1077,7 +1075,7 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
         #Peer: 11.0.1.2 port 500
         #Peer: 11.0.1.2 port 500 fvrf: (none) ivrf: (none)
-        p8=re.compile(r'^Peer\:\s+(?P<peer>[\d\.]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
+        p8=re.compile(r'^Peer\:\s+(?P<peer>[\d\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
         
         # Phase1_id: 11.0.1.2
         p9=re.compile(r'^\s*Phase1\_id\:\s+(?P<phase_id>\S+)$')
@@ -1088,8 +1086,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         # Session ID: 0  
         p11=re.compile(r'^\s*Session\s+ID\:\s+(?P<session_id>\d+)$')
 
-        #IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active 
-        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[\d\.]+)\/(?P<local_port>\d+)\s+remote\s+(?P<remote>[\d\.]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)$')
+        #IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active
+        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[\d\.\:]+)\/(?P<local_port>\d+)')
 
         #  Capabilities:(none) connid:1025 lifetime:03:04:13
         p13=re.compile(r'^\s*Capabilities\:\(*(?P<capabilities>\w+)+\)*\s+connid\:(?P<conn_id>\d+)\s+lifetime\:(?P<lifetime>[\d\:]+)$')
@@ -1101,11 +1099,13 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p15=re.compile(r'^\s*Active\s+SAs\:\s+(?P<active_sa>\d+)\,\s+origin\:\s+(?P<origin>[\w\s]+)$')
 
         #Inbound:  #pkts dec'ed 4172534851 drop 0 life (KB/Sec) KB Vol Rekey Disabled/2576
-        p16=re.compile(r'^\s*Inbound\:\s+\#pkts\s+dec\'ed\s+(?P<inbound_pkts_dec>\d+)\s+drop\s+(?P<inbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<inbound_life_kb>[\w\s]+)\/(?P<inbound_life_secs>\w+)$')
+        p16=re.compile(r'^\s*Inbound\:\s+\#pkts\s+dec\'ed\s+(?P<inbound_pkts_dec>\d+)\s+drop\s+(?P<inbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<inbound_life_kb>[\w\s]+)\/(?P<inbound_life_secs>[\d a-z\/\,]+)$')
 
         #Outbound: #pkts enc'ed 4146702954 drop 0 life (KB/Sec) KB Vol Rekey Disabled/2576
-        p17=re.compile(r'^\s*Outbound\:\s+\#pkts\s+enc\'ed\s+(?P<outbound_pkts_enc>\d+)\s+drop\s+(?P<outbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<outbound_life_kb>[\w\s]+)\/(?P<outbound_life_secs>\w+)$')
+        p17=re.compile(r'^\s*Outbound\:\s+\#pkts\s+enc\'ed\s+(?P<outbound_pkts_enc>\d+)\s+drop\s+(?P<outbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<outbound_life_kb>[\w\s]+)\/(?P<outbound_life_secs>[\d a-z\/\,]+)$')
 
+        #remote 2001:101:0:1::2/500 Active
+        p18=re.compile(r'.*remote\s+(?P<remote>[\d\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
         
         ret_dict = {}
         check_flag = 1
@@ -1203,7 +1203,7 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
                 groups=m11.groupdict()
                 session_id= groups['session_id']
             
-            #IKE SA: local 10.1.1.4/500 remote 10.1.1.3/500 Active
+            #IKE SA: local 10.1.1.4/500
             m12= p12.match(line)
             if m12:
                 groups=m12.groupdict()
@@ -1218,12 +1218,17 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
                 ike_params_dict['local'] =groups['local']
                 ike_params_dict['local_port'] =groups['local_port']
-                ike_params_dict['remote'] = groups['remote']
-                ike_params_dict['remote_port']= groups['remote_port']
-                ike_params_dict['sa_status']= groups['conn_status']
                 ike_params_dict['version']= groups['version']
                 if session_id is not None:
                     ike_params_dict['session_id']= session_id
+
+            #remote 2001:101:0:1::2/500 Active
+            m18= p18.match(line)
+            if m18:
+                groups=m18.groupdict()
+                ike_params_dict['remote'] = groups['remote']
+                ike_params_dict['remote_port']= groups['remote_port']
+                ike_params_dict['sa_status']= groups['conn_status']
 
             #Capabilities:D connid:1042 lifetime:05:50:03
             m13= p13.match(line)
@@ -1396,6 +1401,7 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     "dh_grp": int,
                     "auth_sign": str,
                     "auth_verify": str,
+                    Optional("qr"): str,
                     "life_time": int,
                     "active_time": int,
                     "ce_id": int,
@@ -1422,7 +1428,8 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     Optional("cisco_trust_security_sgt"): str,
                     Optional("initiator_of_sa"): str,
                     Optional("pushed_ip"): str,
-                    Optional("remote_subnets"): list
+                    Optional("remote_subnets"): list,
+                    Optional("quantum_resistance"): str
                 }
             }
         }
@@ -1443,8 +1450,8 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         r1 = "^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
         p1 = re.compile(r1)
 
-        # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
-        r2 = "^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)$"
+        # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
+        r2 = "^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
         p2 = re.compile(r2)
 
         # Life/Active Time: 86400/12689 sec
@@ -1467,12 +1474,12 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         r7 = "^Local id: +(?P<local_id>[\w\d\S]+)$"
         p7 = re.compile(r7)
 
-        # Remote id: 22.1.1.2
-        r8 = "^Remote id: +(?P<remote_id>[\d\.]+)$"
+        # Remote id: hostname.remoteid.example.com
+        r8 = "^Remote id: +(?P<remote_id>[\w\d\S]+)$"
         p8 = re.compile(r8)
 
         # Local req msg id:  214            Remote req msg id:  6
-        r9 = "^Local req msg id:  +(?P<local_reg_msg_id>[\d]+) +Remote req msg id:  +(?P<remote_req_msg_id>[\d]+)$"
+        r9 = "^Local req msg id: +(?P<local_reg_msg_id>[\d]+) +Remote req msg id: +(?P<remote_req_msg_id>[\d]+)$"
         p9 = re.compile(r9)
 
         # Local next msg id: 214            Remote next msg id: 6
@@ -1480,7 +1487,7 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         p10 = re.compile(r10)
 
         # Local req queued:  214            Remote req queued:  6
-        r11 = "^Local req queued:  +(?P<local_req_queued>[\d]+) +Remote req queued:  +(?P<remote_req_queued>[\d]+)$"
+        r11 = "^Local req queued: +(?P<local_req_queued>[\d]+) +Remote req queued: +(?P<remote_req_queued>[\d]+)$"
         p11 = re.compile(r11)
 
         # Local window:      5              Remote window:      5
@@ -1523,6 +1530,10 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         r21 = "^(?P<remote_subnets>[0-9\.\s]+)$"
         p21 = re.compile(r21)
 
+        # Quantum Resistance Enabled
+        r22 = "^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
+        p22 = re.compile(r22)
+
         ret_dict={}
         for line in output.splitlines():
             line=line.strip()
@@ -1536,11 +1547,11 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
                 master_dict.update(group)
                 remote_subnets_dict = master_dict.setdefault('remote_subnets', [])
                 continue
-            # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+            # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                group = {k: v.lower() for k, v in group.items()}
+                group = {k: v.lower() for k, v in group.items() if v is not None}
                 group['dh_grp'] = int(group['dh_grp'])
                 group['keysize'] = int(group['keysize'])
                 master_dict.update(group)
@@ -1676,6 +1687,12 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
             if m:
                 group = m.groupdict()
                 remote_subnets_dict.append(group['remote_subnets'])
+            # Quantum Resistance Enabled
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue                
         return ret_dict
 
 

@@ -1,0 +1,14 @@
+show logging onboard switch 1 environment continuous
+--------------------------------------------------------------------------------
+ENVIRONMENT CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS Device Name        IOS Version F/W Ver BIOSVer RAM(KB) Event
+                    ------------------------------------------------------------
+                    VID PID                  TAN          Serial No
+--------------------------------------------------------------------------------
+11/29/2022 08:09:23                    NA          Port-0          0       Rmv
+                    V01 STACK-T1-50CM         Stack-Cable MOC2133A4BP
+11/29/2022 08:09:37                    NA          Port-0          0       Ins
+                    V01 STACK-T1-50CM         Stack-Cable MOC2133A4BP
+
+--------------------------------------------------------------------------------

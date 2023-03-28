@@ -1542,7 +1542,8 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         p9 = re.compile(r'^Core +Isolation: +(?P<core_iso>[\w\(\) ]+)$')
 
         # RD:                     4.4.4.3:1
-        p10 = re.compile(r'^RD: +(?P<rd>[0-9\.:]+)$')
+        # RD:                     Not set
+        p10 = re.compile(r'^RD: +(?P<rd>[0-9\.:\w ]+)$')
 
         # Export-RTs:           100:2
         p11 = re.compile(r'^Export-RTs: +(?P<export_rt>[0-9: ]+)$')
@@ -1633,6 +1634,7 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 eth_seg.update({'core_isolation': group['core_iso']})
                 continue
             #  RD:                     4.4.4.3:1
+            #  RD:                     Not set
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -2064,10 +2066,12 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         p5 = re.compile(r'^Ethernet Tag ID:\s+(?P<eth_tag>\d+)$')
 
         # Next Hop(s):                L:17 Ethernet1/0 service instance 12
+        # Next Hop(s):                V:1000111 BD-VIF1112
+        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:-]+)$')
         #                             L:17 3.3.3.1
         #                             L:17 5.5.5.1
-        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
-        p7 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
+        #                             V:1000111 BD-VIF1112
+        p7 = re.compile(r'^(?P<next_hop>[\w\/\s\.:-]+)$')
 
         # Local Address:              4.4.4.1
         p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')

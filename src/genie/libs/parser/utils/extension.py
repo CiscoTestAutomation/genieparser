@@ -17,6 +17,8 @@ class ExtendParsers(object):
         self.package = package
         # Figure out location of package so you can walk it
         self.module_loc = importlib.import_module(package).__path__[0]
+        self.package_location = self.module_loc
+        log.debug(f'Parser extension: {package} {self.package_location}')
 
     @staticmethod
     def _find_parsers(mod):
@@ -96,4 +98,5 @@ class ExtendParsers(object):
 
     def extend(self):
         # Walk all file in there and go through the parsers
+        log.debug(f'Parser module: {self.module_loc}')
         self._recursive_find(pathlib.Path(self.module_loc), [])

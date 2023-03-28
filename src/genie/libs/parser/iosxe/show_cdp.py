@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
+    * 'show cdp'
 
 '''
 
@@ -25,15 +26,19 @@ class ShowCdpNeighborsSchema(MetaParser):
     '''
 
     schema = {
-        'cdp':
-            {Optional('index'):
-                {Any():
-                    {Optional('device_id'): str,
-                     Optional('local_interface'): str,
-                     Optional('hold_time'): int,
-                     Optional('capability'): str,
-                     Optional('platform'): str,
-                     Optional('port_id'): str, }, }, },
+        'cdp': {
+            Optional('index'): {
+                Any(): {
+                    Optional('device_id'): str,
+                    Optional('local_interface'): str,
+                    Optional('hold_time'): int,
+                    Optional('capability'): str,
+                    Optional('platform'): str,
+                    Optional('port_id'): str
+                }
+            },
+            'total_entries': int
+        }
     }
 
 
@@ -99,6 +104,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
                         r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
 
+        # Total cdp entries displayed : 13
+        p6 = re.compile(r'^Total cdp entries displayed :\s+(?P<total_entries>\d+)$')
         device_id_index = 0
         parsed_dict = {}
 
@@ -162,6 +169,11 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                     device_dict['port_id'] = Common \
                         .convert_intf_name(intf=group['port_id'].strip())
                 continue
+            
+            # Total cdp entries displayed : 13
+            m = p6.match(line)
+            if m:
+                parsed_dict['cdp']['total_entries'] = int(m.groupdict()['total_entries'])
 
         return parsed_dict
 
@@ -775,3 +787,56 @@ class ShowCdpEntry(ShowCdpEntrySchema):
                 continue
         
         return meta_dict
+
+
+class ShowCdpSchema(MetaParser):
+    '''Schema for show cdp'''
+    schema = {
+        'interval': int,
+        'holdtime': int,
+        'cdpv2': str
+    }
+
+
+class ShowCdp(ShowCdpSchema):
+    '''Parser for show cdp'''
+
+    cli_command = 'show cdp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Sending CDP packets every 60 seconds
+        p1 = re.compile(r'^Sending CDP packets every (?P<interval>\d+) seconds$')
+
+        # Sending a holdtime value of 180 seconds
+        p2 = re.compile(r'^Sending a holdtime value of (?P<holdtime>\d+) seconds$')
+
+        # Sending CDPv2 advertisements is  enabled
+        p3 = re.compile(r'^Sending CDPv2 advertisements is\s+(?P<cdpv2>\w+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Sending CDP packets every 60 seconds
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('interval', int(m.groupdict()['interval']))
+                continue
+
+            # Sending a holdtime value of 180 seconds
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('holdtime', int(m.groupdict()['holdtime']))
+                continue
+            
+            # Sending CDPv2 advertisements is  enabled
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('cdpv2', m.groupdict()['cdpv2'])
+                continue
+    
+        return ret_dict

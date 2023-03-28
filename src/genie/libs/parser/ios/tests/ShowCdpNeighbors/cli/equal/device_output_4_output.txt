@@ -9,4 +9,5 @@ Port ID
 
 device4      Eth 0          141                  RP1      Eth 0/0
 device5      Eth 0            164                  7206      Eth 1/0
-    
+
+Total cdp entries displayed : 2

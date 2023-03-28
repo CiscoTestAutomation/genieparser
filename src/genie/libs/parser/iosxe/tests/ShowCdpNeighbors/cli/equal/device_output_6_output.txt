@@ -16,3 +16,5 @@ ott-bgp-laas(JAF1429BAKA)
                     Eth1/39/2      159    R S I s   N7K-C7010     Eth9/30       
 ott-bgp-laas(JAF1429BAKA)
                     Eth1/39/3      158    R S I s
+
+Total cdp entries displayed : 6

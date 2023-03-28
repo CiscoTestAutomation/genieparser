@@ -1,0 +1,54 @@
+SPINE#show monitor capture test buffer detailed 
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+Frame 1: 1000 bytes on wire (8000 bits), 1000 bytes captured (8000 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 27, 2022 12:19:51.280889000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1666853391.280889000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.000000000 seconds]
+    Frame Number: 1
+    Frame Length: 1000 bytes (8000 bits)
+    Capture Length: 1000 bytes (8000 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:cmd:ethertype:ip:data]
+Ethernet II, Src: 00:a7:42:d7:4c:ff (00:a7:42:d7:4c:ff), Dst: 01:00:5e:00:00:06 (01:00:5e:00:00:06)
+    Destination: 01:00:5e:00:00:06 (01:00:5e:00:00:06)
+        Address: 01:00:5e:00:00:06 (01:00:5e:00:00:06)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...1 .... .... .... .... = IG bit: Group address (multicast/broadcast)
+    Source: 00:a7:42:d7:4c:ff (00:a7:42:d7:4c:ff)
+        Address: 00:a7:42:d7:4c:ff (00:a7:42:d7:4c:ff)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: CiscoMetaData (0x8909)
+Cisco MetaData
+    Version: 1
+    Length: 1
+    Options: 0x0001
+    SGT: 50 
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 50.0.0.20, Dst: 226.0.0.6
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 978
+    Identification: 0x0000 (0)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 63
+    Protocol: any host internal protocol (61)
+    Header checksum: 0x63d5 [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 50.0.0.20
+    Destination: 226.0.0.6

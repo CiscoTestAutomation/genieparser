@@ -1,0 +1,15 @@
+MAC Address     I/F       State        Role HA  Auth IP Address
+0027.900a.ff68  Te6/1/0   online       Pri  Act N/A  2002::7979:7943
+0027.900a.ff68  Te6/1/2   offline      Aux  Act N/A  2002::7979:7943
+0027.900b.0dc6  Te6/1/0   online       Pri  Act N/A  2002::C08C:28A3
+0027.900b.0dc6  Te6/1/2   online       Aux  Act N/A  2002::C08C:28A3
+0027.900b.0e26  Te6/1/0   online       Pri  Act N/A  2002::C08C:28C4
+0027.900b.0e26  Te6/1/2   !online      Aux  Act N/A  2002::C08C:28C4
+7872.5d49.bdda  Te6/1/0   online       Pri  Act N/A  2002::C08C:2852
+7872.5d49.bf7e  Te6/1/0   online       Pri  Act N/A  2002::7878:789E
+7872.5d49.bfa2  Te6/1/0   online       Pri  Act N/A  2002::C08C:2820
+f4db.e6b4.eaae  Te6/1/0   online       Pri  Act N/A  2002::C0AF:AF74
+f4db.e6b4.eaae  Te6/1/2   !online      Aux  Act N/A  2002::C0AF:AF74
+
+! = PTP clock out of phaselock occurred, ^ = Default password in use
+

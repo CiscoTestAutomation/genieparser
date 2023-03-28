@@ -1,0 +1,20 @@
+show lldp entry *
+------------------------------------------------
+Local Intf: Tw1/0/16
+Local Intf service instance: -
+Port id: Te1/0/6
+Port Description - not advertised
+System Name - not advertised
+System Description - not advertised
+
+Time remaining: 96 seconds
+System Capabilities - not advertised
+Enabled Capabilities - not advertised
+Management Addresses - not advertised
+Auto Negotiation - not supported
+Physical media capabilities - not advertised
+Media Attachment Unit type - not advertised
+Vlan ID: - not advertised
+Peer Source MAC: a03d.6ea4.6f06
+
+Total entries displayed: 2

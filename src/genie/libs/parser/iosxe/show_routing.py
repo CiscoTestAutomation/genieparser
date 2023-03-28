@@ -225,7 +225,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict['Destination'] = ['DCE']
         source_protocol_dict['Redirect'] = ['NDr']
         source_protocol_dict['omp'] = ['m']
-
+        source_protocol_dict['nat_dia'] = ['n', 'Nd']
 
         result_dict = {}
 

@@ -1,0 +1,11 @@
+Wed Dec 21 08:55:54.022 UTC
+
+* Indicates MADJ interface
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPF 500
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+1.102.1.1       1     INIT/DROTHER    00:00:38    192.168.1.2     GigabitEthernet0/0/0/1.10
+
+Total neighbor count: 1

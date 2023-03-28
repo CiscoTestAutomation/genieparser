@@ -1,0 +1,9 @@
+MAC Address                   : aabb.0000.0002
+Reference Count               : 1
+Epoch                         : 0
+Producer                      : BGP
+Flags                         : None
+Adjacency                     : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
+PD Adjacency                  : MPLS_UC   PL:5(2) T:MPLS_UC [MAC]16@2.2.2.1 ...
+Packets                       : 0
+Bytes                         : 0

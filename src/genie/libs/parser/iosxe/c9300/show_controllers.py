@@ -85,3 +85,41 @@ class ShowControllersEthernetControllersPhyDetail(ShowControllersEthernetControl
         if registers_dict:
             parsed_dict['phy_registers'] = registers_dict
         return parsed_dict
+
+class ShowControllersEthernetControllerPortAsicStatisticsExceptionsSwitchAsicInRpfSchema(MetaParser):
+    """Schema for show controllers ethernet-controller port-asic statistics exceptions switch {switch_num} asic {asic_val} | in RPF"""
+
+    schema = {
+        'controllers':{
+            Any() : {
+            'value': str,
+          }
+        }
+      }
+
+class ShowControllersEthernetControllerPortAsicStatisticsExceptionsSwitchAsicInRpf(ShowControllersEthernetControllerPortAsicStatisticsExceptionsSwitchAsicInRpfSchema):
+      """Parser for show controllers ethernet-controller port-asic statistics exceptions switch <switch_num> asic <asic_val> | in RPF"""
+
+      cli_command = 'show controllers ethernet-controller port-asic statistics exceptions switch {switch_num} asic {asic_val} | in RPF'
+
+      def cli(self,switch_num="",asic_val="", output=None):
+          if output is None:
+              cmd = self.cli_command.format(switch_num=switch_num,asic_val=asic_val)
+              #output = self.device.execute(self.cli_command).format(switch_num=switch_num,asic_val=asic_val)
+              output = self.device.execute(cmd)
+              # RPF_UNICAST_FAIL                                                   6445519
+              p1 = re.compile(r"^(?P<rpf>\S+)\s+(?P<value>\d+)$")
+
+              ret_dict = {}
+
+              for line in output.splitlines():
+              # RPF_UNICAST_FAIL                                                   6445519
+                  m = p1.match(line)
+                  if m:
+                      dict_val = m.groupdict()
+                      rpf = dict_val['rpf']
+                      sub_dict = ret_dict.setdefault("controllers",{}).setdefault(rpf,{})
+                      sub_dict['value'] = dict_val['value']
+                      continue
+
+              return ret_dict 

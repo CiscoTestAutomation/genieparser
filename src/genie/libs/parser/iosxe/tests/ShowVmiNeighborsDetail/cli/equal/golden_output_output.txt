@@ -1,0 +1,46 @@
+              1 vmi1 Neighbors
+
+
+vmi1   IPV6 Address=FE80::21E:7AFF:FEC6:7900
+       IPV6 Global Addr=::
+       IPV4 Address=121.0.0.1, Uptime=03:00:14
+       Output pkts=0, Input pkts=0
+       METRIC DATA: Total rcvd=2, Avg arrival rate (ms)=31026
+          CURRENT: MDR=5528000 bps, CDR=2764000 bps
+                   Lat=1 ms, Res=100, RLQ=90, load=1
+          MDR      Max=5528000 bps, Min=5528000 bps, Avg=5528000 bps
+          CDR      Max=2764000 bps, Min=2764000 bps, Avg=2764000 bps
+          Latency  Max=1, Min=1, Avg=1 (ms)
+          Resource Max=100%, Min=100%, Avg=100%
+          RLQ      Max=90, Min=90, Avg=90
+          Load     Max=1%, Min=0%, Avg=0%
+       Transport PPPoE, Session ID=1
+       INTERFACE STATS: 
+          VMI Interface=vmi1, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          V-Access intf=Virtual-Access1.1, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+          Physical intf=GigabitEthernet0/0/0, 
+             Input qcount=0, drops=0, Output qcount=0, drops=0
+
+PPPoE Flow Control Stats
+ Local Credits: 65534   Peer Credits: 65535   Local Scaling Value 65534 bytes
+ Credit Grant Threshold: 28000    Max Credits per grant: 65535 
+ Credit Starved Packets: 0
+ PADG xmit Seq Num: 10817     PADG Timer index: 12784 
+ PADG last rcvd Seq Num: 0 
+ PADG last nonzero Seq Num: 12784 
+ PADG last nonzero rcvd amount: 0
+ PADG Timers: (ms)   [0]-1000    [1]-2000    [2]-3000    [3]-4000    [4]-5000 
+ PADG xmit: 10815  rcvd: 0
+ PADC xmit: 4294770688  rcvd: 10815
+ In-band credit pkt xmit: 0 rcvd: 0
+ Last credit packet snapshot
+  PADG xmit: seq_num = 10817, fcn = 65535, bcn = 1
+  PADC rcvd: seq_num = 10817, fcn = 65534, bcn = 65535
+  PADG rcvd: seq_num = 0, fcn = 0, bcn = 3352
+  PADC xmit: seq_num = 3307, fcn = 1952, bcn = 0
+  In-band credit pkt xmit: fcn = 0, bcn = 0
+  In-band credit pkt rcvd: fcn = 0, bcn = 0
+    ==== PADQ Statistics ====
+     PADQ xmit: 0  rcvd: 1 

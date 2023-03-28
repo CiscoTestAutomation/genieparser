@@ -1,0 +1,4 @@
+
+ Switch#    USB Authentication Status
+-------------------------------------------------------
+1                    USB Not Present

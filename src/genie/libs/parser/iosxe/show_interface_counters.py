@@ -94,3 +94,84 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
             for p,k in zip(r,l):
                 res_dict[main_key][port][p.lower()]=int(k.lower())
         return res_dict                
+
+# ==============================================================================
+# Schema for show interfaces counters errors
+# ==============================================================================
+class ShowInterfacesCountersErrorsSchema(MetaParser):
+    """Schema for show interfaces counters errors"""
+
+    schema = {
+        "ports": {
+            Any(): {
+                "align_err": int,
+                "fcs_err": int,
+                "xmit_err": int,
+                "rcv_err": int,
+                "under_size": int,
+                "out_discards": int,
+                "single_col": int,
+                "multi_col": int,
+                "late_col": int,
+                "excess_col": int,
+                "carri_sen": int,
+                "runts": int,
+
+            }
+        }
+    }
+
+class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
+
+    """Parser for show interfaces counters errors"""
+
+    cli_command = ['show interfaces counters errors']
+
+    def cli(self, output=None):
+        cmd = self.cli_command[0]
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        
+        ret_dict = {}
+
+        # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+        p1 = re.compile(r'^(?P<port_name>\S+) +(?P<align_err>\d+) +(?P<fcs_err>\d+) +(?P<xmit_err>\d+) +(?P<rcv_err>\d+) +(?P<under_size>\d+) +(?P<out_discards>\d+)$')
+        # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts 
+        p2 = re.compile(r'^Port +Single-Col +Multi-Col +Late-Col +Excess-Col +Carri-Sen +Runts$')
+        # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+        p3 = re.compile(r'^(?P<port_name>\S+) +(?P<single_col>\d+) +(?P<multi_col>\d+) +(?P<late_col>\d+) +(?P<excess_col>\d+) +(?P<carri_sen>\d+) +(?P<runts>\d+)$')
+        extra_counters = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+            m = p1.match(line)
+            if m and not extra_counters:
+                group = m.groupdict()
+                ports = ret_dict.setdefault('ports',{}).setdefault(group['port_name'],{})
+                ports['align_err'] = int(group['align_err'])
+                ports['fcs_err'] = int(group['fcs_err'])
+                ports['xmit_err'] = int(group['xmit_err'])
+                ports['rcv_err'] = int(group['rcv_err'])
+                ports['under_size'] = int(group['under_size'])
+                ports['out_discards'] = int(group['out_discards'])
+                continue
+            # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts 
+            m = p2.match(line)
+            if m:
+                extra_counters = True
+                continue
+            # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+            m = p3.match(line)
+            if m and extra_counters:
+                group = m.groupdict()
+                ret_dict['ports'][group['port_name']]['single_col'] = int(group['single_col'])
+                ret_dict['ports'][group['port_name']]['multi_col'] = int(group['multi_col'])
+                ret_dict['ports'][group['port_name']]['late_col'] = int(group['late_col'])
+                ret_dict['ports'][group['port_name']]['excess_col'] = int(group['excess_col'])
+                ret_dict['ports'][group['port_name']]['carri_sen'] = int(group['carri_sen'])
+                ret_dict['ports'][group['port_name']]['runts'] = int(group['runts'])
+                continue
+
+        return ret_dict

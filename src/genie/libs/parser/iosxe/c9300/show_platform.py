@@ -8,7 +8,7 @@ import logging
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 
 
 # ============================
@@ -386,4 +386,204 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
                 group = m.groupdict()
                 switch_id_dict['stack_cable_b_authentication'] = group['stack_cable_b_authentication']
         return result_dict
+
+class ShowLicenseAuthorizationSchema(MetaParser):
+
+    schema={
+        "overall status":{
+          "active":{
+            "pid": str,
+            "sn": str
+            }
+          },
+        "status": str,
+        "purchased_licenses": str
+    }
+
+class ShowLicenseAuthorization(ShowLicenseAuthorizationSchema):
+    """
+    Parser for :
+        'ShowLicenseAuthorization'
+    """
+    cli_command = 'show license authorization'
+
+    def cli(self,output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #Active: PID:C9300-24UX,SN:FCW2147L0C5
+        p1 = re.compile(r'^Active:\s+PID:(?P<pid>\S+)+SN:(?P<sn>\S+).*$') 
+
+        #Status: NOT INSTALLED
+        p2 = re.compile(r'^Status:\s(?P<status>\S+\s+\S+).*$')
+
+        #No Purchase Information Available
+        p3 = re.compile(r'^(?P<purchased_licenses>\S+\s+Purchase+\s+\S+\s+\S+).*$')
+
+        for line in output.splitlines():
+            line=line.strip()
+
+            #Active: PID:C9300-24UX,SN:FCW2147L0C5
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict=ret_dict.setdefault("overall status",{}).setdefault("active",{})
+                pid = group['pid']
+                sn = group['sn']
+                sub_dict['pid'] = pid
+                sub_dict['sn'] = sn
+                continue
+
+            #Status: NOT INSTALLED
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                ret_dict['status'] = status
+                continue
+
+            #No Purchase Information Available    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                purchased_licenses = group['purchased_licenses']
+                ret_dict['purchased_licenses'] = purchased_licenses
+                continue
+
+        return ret_dict
+
+# ============================================================
+# Parser for 'show diagnostics status '
+# ============================================================ 
+
+class ShowDiagnosticStatusSchema(MetaParser):
+    """Schema for show diagnostics status"""
+
+    schema = {
+        'diagnostic_status':{
+            'card': int,
+            'description': str,
+            'run_by': str
+        },
+        "current_running_test":{
+          Any():{
+            'run_by': str
+          }
+        }
+    }
+
+class ShowDiagnosticStatus(ShowDiagnosticStatusSchema):
+    """Schema for show diagnostics status"""
+
+    cli_command = 'show diagnostic status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #1      C9300-24UX                        DiagThermalTest                 <HM>
+        p1 = re.compile(r'^(?P<card>\d)+\s+(?P<description>\S+)+\s+\S+\s+.(?P<run_by>\w+).*$')
+
+        # DiagFanTest                     <HM>
+        p2 = re.compile(r"^(?P<current_running_test>\S+\s+)<HM>$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #1      C9300-24UX                        DiagThermalTest                 <HM>
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                card  = int(group['card'])
+                description = group['description']
+                run = group['run_by']
+                sub_dict = ret_dict.setdefault("diagnostic_status",{})
+                sub_dict['card'] = card
+                sub_dict['description'] = description
+                sub_dict['run_by'] = run
+                continue
+
+            # DiagFanTest                     <HM>
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_running_test = group['current_running_test'].strip()
+                tmp_dict = ret_dict.setdefault("current_running_test",{}).setdefault(current_running_test,{})
+                tmp_dict['run_by'] = run
+                continue
+
+        return ret_dict
+
+# ===========================================================================================
+# Parser for 'show platform hardware fedswitch active fwd-asic resource asic all cpp-vbin all'
+# ===========================================================================================
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceAsicAllCppVbinAllSchema(MetaParser):
+    """show platform hardware fed switch active fwd-asic resource asic all cpp-vbin all"""
+
+    schema={
+       "asic":{
+          Any():{
+             "cpp_virtual_bin":{
+                Any():{
+                   "definition": ListOf(str)
+                }
+             }
+          }
+       }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceAsicAllCppVbinAll(ShowPlatformHardwareFedSwitchActiveFwdAsicResourceAsicAllCppVbinAllSchema):
+    """show platform hardware fed switch active fwd-asic resource asic all cpp-vbin all"""
+
+    cli_command = 'show platform hardware fed switch active fwd-asic resource asic all cpp-vbin all'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #ASIC#0:
+        p1=re.compile(r'^(?P<asic>ASIC.*)$')
+
+        #CPP Virtual Bin (CPP_VBIN) [0]
+        p2=re.compile(r'^(?P<cpp_virtual_bin>CPP.*)$')
+
+        #virtualBin0 = 0x1
+        p3=re.compile(r'^(?P<virtual>virtual+.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #ASIC#0:	
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                sub_dict = ret_dict.setdefault("asic",{}).setdefault(asic,{})
+                continue
+
+            #CPP Virtual Bin (CPP_VBIN) [0]		
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                cpp_virtual_bin = group['cpp_virtual_bin']
+                sub_dict1 = sub_dict.setdefault('cpp_virtual_bin',{}).setdefault(cpp_virtual_bin,{})
+                def_list = sub_dict1.setdefault('definition', [])
+                continue
+
+            #virtualBin0 = 0x1
+            m = p3.match(line)
+            if m and m.groupdict()['virtual'] != 'exit':
+                def_list.append(m.groupdict()['virtual'])
+                continue
+
+        return ret_dict
 

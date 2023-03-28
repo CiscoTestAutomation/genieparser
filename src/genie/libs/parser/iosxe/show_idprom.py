@@ -3,7 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * show idprom all 
-	* show idprom interface {mode}
+	* show idprom interface {interface}
 '''
 
 from genie.metaparser import MetaParser
@@ -413,7 +413,7 @@ class ShowIdprom(ShowIdpromSchema):
         
 class ShowIdpromInterfaceSchema(MetaParser):
     """
-    Schema for show idprom interface {mode}
+    Schema for show idprom interface {interface}
     """
     schema = {
         'idprom_for_transceiver': {
@@ -435,14 +435,14 @@ class ShowIdpromInterfaceSchema(MetaParser):
     }
               
 class ShowIdpromInterface(ShowIdpromInterfaceSchema):
-    """ Parser for show idprom interface {mode}"""
+    """ Parser for show idprom interface {interface}"""
 
-    cli_command = 'show idprom interface {mode}'
+    cli_command = 'show idprom interface {interface}'
     
-    def cli(self, mode, output=None): 
+    def cli(self, interface, output=None): 
         if output is None:
            # excute command to get output
-           output = self.device.execute(self.cli_command.format(mode=mode))
+           output = self.device.execute(self.cli_command.format(interface=interface))
             
         # initial variables
         ret_dict = {}
@@ -603,3 +603,81 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
                 continue				
                 
         return ret_dict     
+
+
+# ==========================
+# Schema for:
+#  * 'show idprom tan switch {number}'
+#  * 'show idprom tan switch all'
+# ==========================
+class ShowIdpromTanSchema(MetaParser):
+    """Schema for:
+        show idprom tan switch {switch_num}
+        show idprom tan switch all"""
+
+    schema = {
+        'switch': {
+            Any(): {
+                'switch_num': int,
+                'part_num': str,
+                'revision_num': int,
+            },
+        }
+    }
+class ShowIdpromTan(ShowIdpromTanSchema):
+    """Parser for:
+        show idprom tan switch {switch_num}
+        show idprom tan switch all
+         """
+
+    cli_command = ['show idprom tan switch {switch_num}',
+                    'show idprom tan switch all']
+
+    def cli(self, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        # Switch 01 ---------
+        p1 = re.compile(r"^Switch\s+(?P<switch_num>\d+)$")
+        # Top Assy. Part Number           : 68-101195-01
+        p2 = re.compile(r"^Top\s+Assy.\s+Part\s+Number\s+:\s+(?P<part_num>\d+-\d+-\d+)$")
+        # Top Assy. Revision Number       : 31
+        p3 = re.compile(r"^Top\s+Assy.\s+Revision\s+Number\s+:\s+(?P<revision_num>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Switch 01 ---------
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                switch_var = dict_val['switch_num']
+                switch_group = ret_dict.setdefault('switch', {})
+                sw_dict = ret_dict['switch'].setdefault(switch_var, {})
+                sw_dict['switch_num'] = int(switch_var)
+                continue
+
+            # Top Assy. Part Number           : 68-101195-01
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                part_num_var = dict_val['part_num']
+                sw_dict['part_num'] = part_num_var
+                continue
+
+            # Top Assy. Revision Number       : 31
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                revision_part_num = dict_val['revision_num']
+                sw_dict['revision_num'] = int(revision_part_num)
+                continue
+
+
+        return ret_dict 

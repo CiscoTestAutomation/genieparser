@@ -1,0 +1,3 @@
+MLD Route Summary
+  No. of (*,G) routes = 9
+  No. of (S,G) routes = 0

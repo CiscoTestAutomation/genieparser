@@ -31,6 +31,7 @@ expected_output = {
                                             "status_codes": "*>",
                                             "transfer_pathid": "0x0",
                                             "weight": "32768",
+                                            "update_group": [1, 3]
                                         }
                                     },
                                     "paths": "1 available, best #1, table VRF100",
@@ -207,6 +208,7 @@ expected_output = {
                                             "status_codes": "*>",
                                             "transfer_pathid": "0x0",
                                             "weight": "32768",
+                                            "update_group": [2, 3]
                                         }
                                     },
                                     "paths": "1 available, best #1, table VRF200",
