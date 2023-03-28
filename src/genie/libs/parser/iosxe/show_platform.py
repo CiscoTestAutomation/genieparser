@@ -11,6 +11,7 @@ IOSXE parsers for the following show commands:
     * 'show boot'
     * 'show switch detail'
     * 'show switch'
+    * 'show switch virtual'
     * 'show environment all'
     * 'show platform software fed switch {switch_type} mpls rlist'
     * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
@@ -3384,6 +3385,127 @@ class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
     """Parser for show switch."""
     cli_command = 'show switch'
 
+class ShowSwitchVirtualSchema(MetaParser):
+    """ Schema for 'show switch virtual' """
+    schema = {
+       'switch_virtual': {
+           'mode': str,
+           Optional('domain_number'): int,
+           Optional('switches') : {
+               Any(): {
+                   'role': str
+               }
+            } 
+        } 
+    }
+    
+class ShowSwitchVirtual(ShowSwitchVirtualSchema):
+    """Parser for 'show switch virtual' """
+    cli_command = 'show switch virtual'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        parsed_dict = {}
+        
+        if not out:
+            return parsed_dict    
+        
+        # Pattern for Switch Mode
+        # Switch mode                  : Virtual Switch
+        # Switch Mode : Standalone
+        p1 = re.compile(r"^Switch [Mm]ode\s*:\s*(?P<mode>[\w\s]+)$")
+        
+        # Pattern for Virtual Switch Domain Number
+        # Virtual switch domain number : 123
+        p2 = re.compile(r"^Virtual switch domain number\s*:\s*(?P<domain_number>.*)$")
+        
+        # Pattern for Local Switch Number
+        # Local switch number          : 1
+        p3_1 = re.compile(r"^Local switch number\s*:\s*(?P<local_switch>\d+).*$")
+        
+        # Pattern for Local Switch Operational Role
+        # Local switch operational role: Virtual Switch Active
+        p3_2 = re.compile(r"^Local switch operational role\s*:\s*Virtual Switch (?P<local_switch_role>\w+).*$")
+        
+        # Pattern for Peer Switch Number
+        # Peer switch number           : 2
+        p4_1 = re.compile(r"^Peer switch number\s*:\s*(?P<peer_switch>\d+).*$")
+        
+        # Pattern for Peer Switch Operational Role
+        # Peer switch operational role : Virtual Switch Standby
+        p4_2 = re.compile(r"^Peer switch operational role\s*:\s*Virtual Switch (?P<peer_switch_role>\w+).*$")
+
+        current_switch = '0'
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+            
+            # Mode
+            # Switch mode                  : Virtual Switch
+            # Switch Mode : Standalone
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict["mode"] = group["mode"]
+            
+            # Domain Number
+            # Virtual switch domain number : 123
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict["domain_number"] = int(group["domain_number"])
+            
+            # Local Switch
+            # Local switch number          : 1
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                current_switch = str(group["local_switch"])
+                if "switches" not in parsed_dict.keys():
+                    parsed_dict["switches"] = {}
+                if current_switch not in parsed_dict["switches"].keys():
+                    parsed_dict["switches"][current_switch] = {}
+            
+            # Local Switch Role
+            # Local switch operational role: Virtual Switch Active
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                if ("switches" in parsed_dict.keys() and
+                    current_switch in parsed_dict["switches"].keys() and
+                    ("role" not in parsed_dict["switches"][current_switch].keys() or
+                     group["local_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
+                    parsed_dict["switches"][current_switch]["role"] = group["local_switch_role"]
+            
+            # Peer Switch
+            # Peer switch number          : 2
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                current_switch = str(group["peer_switch"])
+                if "switches" not in parsed_dict.keys():
+                    parsed_dict["switches"] = {}
+                if current_switch not in parsed_dict["switches"].keys():
+                    parsed_dict["switches"][current_switch] = {}
+            
+            # Peer Switch Role
+            # Peer switch operational role: Virtual Switch Standby
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                if ("switches" in parsed_dict.keys() and
+                    current_switch in parsed_dict["switches"].keys() and
+                    ("role" not in parsed_dict["switches"][current_switch].keys() or
+                     group["peer_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
+                    parsed_dict["switches"][current_switch]["role"] = group["peer_switch_role"]            
+
+        return {"switch_virtual": parsed_dict }
 
 # ===================================================
 # Schema for
