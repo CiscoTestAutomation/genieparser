@@ -255,6 +255,11 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('backup_disable_delay'): int,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
+                                            Optional('load_balance_hashing'): str,
+                                            Optional('flow_label_flags'): {
+                                                'configured': str,
+                                                'negotiated': str
+                                            },
                                             Optional('mpls'): {
                                                 Any(): {
                                                     'local': str,
@@ -408,7 +413,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # packet totals: send 98
         p6 = re.compile(r'^packet +totals: +send +(?P<send>\d+)$')
-        
+
         # packet totals: receive 98
         p6_1 = re.compile(r'^packet +totals: +receive +(?P<receive>\d+)$')
 
@@ -431,11 +436,11 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
         p8 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +'
             '(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
-        
+
         # EVPN: neighbor 10.154.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
         p8_1 = re.compile(r'^EVPN: +neighbor +(?P<neighbor>\S+), +PW +ID: +'
             '(?P<pw_id>[\S ]+), +ac-id +(?P<ac_id>\d+), +state +is +(?P<state>[\S ]+)$')
-        
+
         # PW class not set, XC ID 0x5000001
         p9 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+), +XC +ID +(?P<xc_id>\S+)$')
 
@@ -455,6 +460,12 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # PW Status TLV in use
         p13_1 = re.compile(r'^PW +Status +TLV +(?P<status_tlv>[\S ]+)$')
+
+        # Load Balance Hashing: src-dst-ip
+        p13_2 = re.compile(r'Load Balance Hashing: (?P<load_balance_hashing>\S+)$')
+
+        # Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+        p14_0 = re.compile(r'Flow Label flags configured \((?P<configured>[\S ]+)\), negotiated \((?P<negotiated>[\S ]+)\)$')
 
         # MPLS         Local                          Remote
         # EVPN         Local                          Remote
@@ -563,18 +574,18 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         for line in out.splitlines():
             original_line = line
             line = line.strip()
-            
+
             # Avoid show commands : show l2vpn xconnect detail
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
             m = p22.match(line)
             if m:
                 continue
-            
+
             # Statistics:
             m = p37.match(line)
             if m:
                 continue
-            
+
             # Wed Oct  2 14:36:55.184 EDT
             m = p38.match(line)
             if m:
@@ -623,7 +634,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 mp2mp_dict.update({'state': state})
                 label_found = False
                 continue
-            
+
             # Monitor-Session: pw-span-test, state is configured
             m = p2.match(line)
             if m:
@@ -647,7 +658,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault(ac, {})
                 current_dict.update({'state': state})
                 continue
-            
+
             # Type Ethernet
             m = p4.match(line)
             if m:
@@ -670,7 +681,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     msti = int(group['msti'])
                     current_dict.update({'msti': msti})
                 continue
-            
+
             # packet totals: send 98
             m = p6.match(line)
             if m:
@@ -690,7 +701,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault('packet_totals', {}). \
                     update({'receive': receive})
                 continue
-            
+
             # packets: received 3, sent 0
             m = p6_2.match(line)
             if m:
@@ -712,7 +723,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault('byte_totals', {}). \
                     update({'send': send})
                 continue
-            
+
             # byte totals: receive 98
             m = p7_1.match(line)
             if m:
@@ -756,7 +767,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 state = group['state']
                 if not pw_backup:
                     current_dict = xc_dict.setdefault('pw', {})
-                
+
                 current_dict = current_dict.setdefault('neighbor', {}). \
                         setdefault(neighbor, {}). \
                         setdefault('id', {}). \
@@ -774,7 +785,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 ac_id = int(group['ac_id'])
                 state = group['state']
                 current_dict = xc_dict.setdefault('evpn', {})
-                
+
                 current_dict = current_dict.setdefault('neighbor', {}). \
                         setdefault(neighbor, {}). \
                         setdefault('id', {}). \
@@ -783,7 +794,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'state': state})
                 current_dict.update({'ac_id': ac_id})
                 continue
-            
+
             # PW class not set, XC ID 0x5000001
             m = p9.match(line)
             if m:
@@ -803,7 +814,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'encapsulation': encapsulation})
                 current_dict.update({'protocol': protocol})
                 continue
-            
+
             # PW type Ethernet, control word enabled, interworking none
             m = p11.match(line)
             if m:
@@ -840,6 +851,21 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'status_tlv': sequencing})
                 continue
 
+            # Load Balance Hashing: src-dst-ip
+            m = p13_2.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict['load_balance_hashing'] = group['load_balance_hashing']
+
+            # Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+            m = p14_0.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict['flow_label_flags'] = {
+                    'configured': group['configured'],
+                    'negotiated': group['negotiated']
+                }
+
             # MPLS         Local                          Remote
             # EVPN         Local                          Remote
             m = p14.match(line)
@@ -847,7 +873,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 label_name = group['label_name'].lower()
                 continue
-            
+
             # Create time: 20/11/2007 21:45:06 (00:53:31 ago)
             m = p16.match(line)
             if m:
@@ -855,7 +881,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 create_time = group['create_time']
                 current_dict.update({'create_time': create_time})
                 continue
-            
+
             # Last time status changed: 20/11/2007 22:38:14 (00:00:23 ago)
             m = p17.match(line)
             if m:
@@ -863,7 +889,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 last_time_status_changed = group['last_time_status_changed']
                 current_dict.update({'last_time_status_changed': last_time_status_changed})
                 continue
-            
+
             # Backup PW:
             m = p18.match(line)
             if m:
@@ -871,7 +897,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 pw_backup = True
                 interface_found = False
                 continue
-            
+
             # ------------ ------------------------------ -----------------------------
             m = p19.match(line)
             if m:
@@ -885,7 +911,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             m = p21.match(line)
             if m:
                 continue
-            
+
             # Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
             m = p23.match(line)
             if m:
@@ -897,7 +923,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 xc_dict.update({'remote_ce_id': remote_ce_id})
                 xc_dict.update({'discovery_state': discovery_state})
                 continue
-            
+
             # Type VLAN; Num Ranges: 1
             m = p24.match(line)
             if m:
@@ -915,7 +941,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 vlan_ranges = group['vlan_ranges'].replace(' ', '').split(',')
                 current_dict.update({'vlan_ranges': vlan_ranges})
                 continue
-            
+
             # VPN ID: 100
             m = p27.match(line)
             if m:
@@ -1035,7 +1061,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 current_dict.update({'lsp': group['lsp']})
                 continue
-            
+
             #              (LSP ping verification)               
             #                                             (none)
             #              (control word)                 (control word)
@@ -1054,7 +1080,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     # Start and end index of Local section
                     local_start_index = mpls_items[1][0]
                     local_end_index = mpls_items[1][1]
-                    
+
                     # Start and end index of Remote section
                     remote_start_index = mpls_items[2][0]
                     remote_end_index = mpls_items[2][1]
@@ -1064,7 +1090,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                                     replace('-', '_').
                                     replace(' ', '_').
                                     lower())
-                    
+
                     local_value = (original_line[local_start_index:local_end_index])
                     local_value = local_value.replace('(',''). \
                                         replace(')', ''). \
