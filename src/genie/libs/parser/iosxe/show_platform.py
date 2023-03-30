@@ -3460,6 +3460,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
             if m:
                 group = m.groupdict()
                 parsed_dict["mode"] = group["mode"]
+                continue
             
             # Domain Number
             # Virtual switch domain number : 123
@@ -3467,6 +3468,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
             if m:
                 group = m.groupdict()
                 parsed_dict["domain_number"] = int(group["domain_number"])
+                continue
             
             # Local Switch
             # Local switch number          : 1
@@ -3478,6 +3480,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
                     parsed_dict["switches"] = {}
                 if current_switch not in parsed_dict["switches"].keys():
                     parsed_dict["switches"][current_switch] = {}
+                continue
             
             # Local Switch Role
             # Local switch operational role: Virtual Switch Active
@@ -3489,6 +3492,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
                     ("role" not in parsed_dict["switches"][current_switch].keys() or
                      group["local_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
                     parsed_dict["switches"][current_switch]["role"] = group["local_switch_role"]
+                continue
             
             # Peer Switch
             # Peer switch number          : 2
@@ -3500,6 +3504,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
                     parsed_dict["switches"] = {}
                 if current_switch not in parsed_dict["switches"].keys():
                     parsed_dict["switches"][current_switch] = {}
+                continue
             
             # Peer Switch Role
             # Peer switch operational role: Virtual Switch Standby
@@ -3511,6 +3516,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
                     ("role" not in parsed_dict["switches"][current_switch].keys() or
                      group["peer_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
                     parsed_dict["switches"][current_switch]["role"] = group["peer_switch_role"]            
+                continue
 
         return {"switch_virtual": parsed_dict }
 
