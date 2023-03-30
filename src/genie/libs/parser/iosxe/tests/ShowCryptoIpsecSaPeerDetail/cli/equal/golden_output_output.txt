@@ -6,7 +6,6 @@ interface: Tunnel11
    remote ident (addr/mask/prot/port): (17.0.1.1/255.255.255.255/47/0)
    current_peer 17.0.1.1 port 500
      PERMIT, flags={origin_is_acl,}
-    #pkts encaps: 728, #pkts encrypt: 728, #pkts digest: 728
     #pkts decaps: 761, #pkts decrypt: 761, #pkts verify: 761
     #pkts compressed: 0, #pkts decompressed: 0
     #pkts not compressed: 0, #pkts compr. failed: 0

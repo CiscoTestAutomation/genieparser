@@ -1,0 +1,18 @@
+show ptp platform servo
+Mon Jan 23 17:14:57.692 UTC
+Servo status: Running
+Servo stat_index: 2
+Device status: PHASE_LOCKED
+Servo Mode: Hybrid
+Servo log level: 0
+Phase Alignment Accuracy: 15 ns
+Sync timestamp updated: 7234957
+Sync timestamp discarded: 0
+Delay timestamp updated: 7234986
+Delay timestamp discarded: 0
+Previous Received Timestamp T1: 1674494194.372882824  T2: 1674494194.372885045  T3: 1674494194.393917627  T4: 1674494194.393919880  
+Last Received Timestamp T1: 1674494194.434948634  T2: 1674494194.434950855  T3: 1674494194.455931312  T4: 1674494194.455933565  
+Offset from master: -0 secs, 16 nsecs
+Mean path delay   :  0 secs, 2237 nsecs
+setTime():17  stepTime():1497  adjustFreq():4891 adjustFreqTime():2627841 
+Last setTime: 1.000000000 flag:1  Last stepTime:59056684, Last adjustFreq:6984 

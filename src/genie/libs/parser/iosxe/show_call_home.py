@@ -1,7 +1,8 @@
 import re
-
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
+from genie.libs.parser.utils.common import Common
+from genie.parsergen import oper_fill_tabular
 
 # ==========================================================================================
 # Parser Schema for 'show call-home version'
@@ -359,6 +360,699 @@ class ShowCallHomeProfileAll(ShowCallHomeProfileAllSchema):
                 group_dict['severity'] = group['severity']
                 continue
 
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show call-home alert-group'
+# ==========================================================================================
+
+class ShowCallHomeAlertGroupSchema(MetaParser):
+    """Schema for show call-home alert-group"""
+
+    schema = {
+        'available_alert_groups':{
+            'keyword': {
+                Any(): {
+                    'state': str,
+                    'description': str,                 
+                },                
+            },
+        }
+    
+    } 
+            
+
+# ==========================================================================================
+# Parser for 'show call-home alert-group'
+# ==========================================================================================
+
+class ShowCallHomeAlertGroup(ShowCallHomeAlertGroupSchema):
+    """Parser for show call-home alert-group"""
+    
+    cli_command = 'show call-home alert-group'
+    
+    def cli(self, output=None):
+        if output is None:
+            # Execute command to get output from device  
+            output = self.device.execute(self.cli_command)
+        # Available alert groups:
+        p1 = re.compile(r'^Available alert groups:$')    
+        #     crash                    Enable  crash and traceback info          
+        p2 = re.compile(r'^(?P<Keyword>\w+) +(?P<State>\S+) +(?P<Description>(.*?))$')    
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Available alert groups:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                alert_groups_dic = ret_dict.setdefault('available_alert_groups',{}).setdefault('keyword',{})
+                continue
+            #     crash                    Enable  crash and traceback info          
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                alert_groups_dict = alert_groups_dic.setdefault(group['Keyword'],{})
+                alert_groups_dict['state'] = group['State']
+                alert_groups_dict['description'] = group['Description']
+                continue    
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show call-home diagnostic-signature'
+# ==========================================================================================
+
+class ShowCallHomeDiagnosticSignatureSchema(MetaParser):
+    """Schema for show call-home diagnostic-signature"""
+    schema = {
+        'current_diagnostic_signature_settings':{
+            'diagnostic_signature': str,
+            'profile': {
+                'name': str,
+                'status': str,                 
+            },
+            'downloading_url': str,
+            'environment_variable': str,
+            'downloaded_dses': {
+                'ds_id':{
+                    Any():{
+                        Optional('ds_name'): str,
+                        Optional('revision_status'): str,
+                        Optional('last_update'): str,
+                    }
+                }
+
+            }
+        }
+    } 
+
+# ==========================================================================================
+# Parser for 'show call-home diagnostic-signature'
+# ==========================================================================================
+
+class ShowCallHomeDiagnosticSignature(ShowCallHomeDiagnosticSignatureSchema):
+    """Parser for show call-home diagnostic-signature"""
+    cli_command = 'show call-home diagnostic-signature'
+    
+    def cli(self, output=None):
+        if output is None:
+            # Execute command to get output from device  
+            output = self.device.execute(self.cli_command)
+        #  Diagnostic-signature: enabled                 
+        p1 = re.compile(r'^Diagnostic-signature: +(?P<Diagnostic_mode>\w+)$')
+        # Profile: CiscoTAC-1 (status: INACTIVE)
+        p2 = re.compile(r'^(?P<profile>\S+): +(?P<name>\S+) +(?P<status>\S+): +(?P<type>(.*?)\))$')
+        # Downloading  URL(s):  https://tools.cisco.com/its/service/oddce/services/DDCEService
+        p3 = re.compile(r'^(?P<Downloading>(\S+ +\S+)): +(?P<url>\S+)$')
+        # Environment variable:
+        # if there is no value assign it to value "Not yet set up"
+        p4 = re.compile(r'^(?P<env>Environment variable):$')
+        # if there is a value assign it to that value
+        # Environment variable: xxxx
+        p5 = re.compile(r'^(?P<env2>Environment variable): +(?P<var>\S+)$')
+        # Downloaded DSes:
+        p6 = re.compile(r'^(?P<DSes>Downloaded DSes):$')
+        # xxxx    yyyyy      zzzzz      wwwww
+        p7 = re.compile(r'^(?P<id>\S+) +(?P<name>\S+) +(?P<status>\S+) + (?P<update>\S+)$')    
+
+        # initial variables
+        ret_dict = {}
+
+        for line in output[1:].splitlines():
+            line = line.strip()
+            #  Diagnostic-signature: enabled                 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                diagnostic = ret_dict.setdefault('current_diagnostic_signature_settings',{})
+                diagnostic['diagnostic_signature'] = group['Diagnostic_mode']
+                continue
+            # Profile: CiscoTAC-1 (status: INACTIVE)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                profile = diagnostic.setdefault('profile',{})
+                profile['name'] = group['name']
+                profile['status'] = re.sub(r"\)",'',group['type'])  # remove extra bracket 
+                continue
+            # Downloading  URL(s):  https://tools.cisco.com/its/service/oddce/services/DDCEService
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                diagnostic['downloading_url'] = group['url']
+                continue
+            # Environment variable:
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                diagnostic['environment_variable'] = 'Not yet set up'
+                continue
+            # Environment variable: xxxx
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                diagnostic['environment_variable'] = group['var']
+                continue
+            # Downloaded DSes:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                Downloaded_DSes = diagnostic.setdefault('downloaded_dses',{})
+                ds_id = Downloaded_DSes.setdefault('ds_id',{})
+                continue
+            # xxxx    yyyyy      zzzzz      wwwww
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ds_id['ds_id'] = group['id']
+                ds_id['ds_name'] = group['name']
+                ds_id['revision_status'] = group['status']
+                ds_id['last_update'] = group['update']
+                continue
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show call-home events'
+# ==========================================================================================
+
+class ShowCallHomeEventsSchema(MetaParser):
+    """Schema for show call-home events"""
+    schema = {
+        'active_event_list':{
+            Any():{
+                'profile': str,
+                'alert_group': str,
+                'internal': int,  
+                'index': str, 
+                'severity': str, 
+                Optional('subscription'): str,  
+                Optional('last_triggered_time'): str, 
+            },              
+        },
+    } 
+# ==========================================================================================
+# Parser for 'show call-home events'
+# ==========================================================================================
+
+class ShowCallHomeEvents(ShowCallHomeEventsSchema):
+    """Parser for show call-home events"""
+    cli_command = 'show call-home events'
+    
+    def cli(self, output=None):
+        if output is None:
+            # Execute command to get output from device  
+            output = self.device.execute(self.cli_command)
+        # CiscoTAC-1                      configuration  29    /31        normal        periodic            
+        # CiscoTAC-1                      configuration  29    /31        normal        periodic            12:00:00
+        p1 = re.compile(r'^(?P<profile>\S+) +(?P<alert_group>\S+) +(?P<internal>\S+) +(?P<index>\S+) +(?P<severity>\S+) +(?P<subscription>\S+)( +(?P<time>\S+?))?$')
+        ret_dict = {}
+        counter = 0 #counter for events 
+        for line in output[1:].splitlines():
+            line = line.strip()
+            # CiscoTAC-1                      configuration  29    /31        normal        periodic            12:00:00
+            m = p1.match(line)
+            if m:
+                counter = counter + 1
+                group = m.groupdict()
+                active_events = ret_dict.setdefault('active_event_list',{})
+                profile = active_events.setdefault(counter,{})
+                profile['profile'] = group['profile']
+                profile['alert_group'] = group['alert_group']
+                profile['internal'] = int(group['internal'])
+                profile['index'] = group['index']
+                profile['severity'] = group['severity']
+                if group['subscription'] is not None:
+                    profile['subscription'] = group['subscription']
+                if group['time'] is not None:
+                    profile['last_triggered_time'] = group['time']
+                continue
+        return ret_dict
+        
+# ==========================================================================================
+# Parser Schema for 'show call-home detail'
+# ==========================================================================================
+
+class ShowCallHomeDetailSchema(MetaParser):
+    """Schema for show call-home detail"""
+    schema = {
+        'settings':{
+            'current_call_home_settings' : {
+                'call_home_feature': str,
+                'call_home_message_from_address': str,
+                'call_home_message_reply_to_address': str,
+                'vrf_for_call_home_messages': str,
+                'contact_person_email_address': str,
+                'contact_person_phone_number': str,
+                'street_address': str,
+                Optional('preferred_message_format'): str,
+                'customer_id': str,
+                'contract_id' : str,
+                'site_id' : str,
+                'source_ip_address' : str,
+                'source_interface' : str,
+                Optional('mail_server'): str,
+                'http_proxy' : str,
+                Optional('http_secure') : str,
+                'server_identity_check': str,
+                'http_resolve_hostname' : str,
+                'diagnostic_signature' : {
+                    'mode' : str,
+                    Optional('profile') : str,
+                    Optional('status') : str,
+                },
+                'smart_licensing_messages' : {
+                    'mode' : str,
+                    Optional('profile') : str,
+                    Optional('status') : str,
+                },
+                'aaa_authorization' : str,
+                'aaa_authorization_username' : str,
+                'data_privacy' : str,
+                'syslog_throttling' : str,
+                'rate_limit' : str,
+                'snapshot_command' : str,
+            },
+            'available_alert_groups':{
+                'Keyword': {
+                    Any(): {
+                        'state': str,
+                        'description': str,                 
+                    },                
+                },
+            },
+            'profiles':{
+                Any():{
+                    'status': str,
+                    'mode': str,
+                    'reporting_Data': str,
+                    'preferred_message_format': str,
+                    'message_size_limit': str,
+                    'transport_method': str,
+                    Optional('email_address'): str,
+                    Optional('http_address'): str,
+                    Optional('other_address'): str,
+                    Optional('periodic_inventory_info_message_is_scheduled'): str,
+                    Optional('periodic_configuration_info_message_is_scheduled'): str,
+                    'alert_group':{
+                        Any(): {
+                            Optional('severity'): str,
+                        },
+                    },
+                    'syslog_pattern':{
+                        Any(): {
+                            Optional('severity'): str,
+                        },
+                    },
+                },
+            },
+        },
+    } 
+# ==========================================================================================
+# Parser for 'show call-home detail'
+# ==========================================================================================
+class ShowCallHomeDetail(ShowCallHomeDetailSchema):
+    """Parser for show call-home detail"""
+    cli_command = 'show call-home detail'
+    
+    def cli(self, output=None):
+        if output is None:
+            # Execute command to get output from device  
+            output = self.device.execute(self.cli_command)
+        #   call home feature : enable
+        p1 = re.compile(r'^(?P<key>call home feature ): (?P<value>(.*?))$')
+        #     call home message's from address: Not yet set up
+        p1_1 = re.compile(r'^(?P<key>call home message\'s from address): (?P<value>(.*?))$')
+        #     call home message's reply-to address: Not yet set up
+        p1_2 = re.compile(r'^(?P<key>call home message\'s reply-to address): (?P<value>(.*?))$')
+        #     vrf for call-home messages: Not yet set up
+        p1_3 = re.compile(r'^(?P<key>vrf for call-home messages): (?P<value>(.*?))$')
+        #     contact person's email address: sch-smart-licensing@cisco.com
+        p1_4 = re.compile(r'^(?P<key>contact person\'s email address): (?P<value>(.*?))$')
+        #     contact person's phone number: Not yet set up
+        p1_5 = re.compile(r'^(?P<key>contact person\'s phone number): (?P<value>(.*?))$')
+        #     street address: Not yet set up
+        p1_6 = re.compile(r'^(?P<key>street address): (?P<value>(.*?))$')
+        #     customer ID: Not yet set up
+        p1_7 = re.compile(r'^(?P<key>customer ID): (?P<value>(.*?))$')
+        #     contract ID: Not yet set up
+        p1_8 = re.compile(r'^(?P<key>contract ID): (?P<value>(.*?))$')
+        #     site ID: Not yet set up
+        p1_9 = re.compile(r'^(?P<key>site ID): (?P<value>(.*?))$')
+        #     source ip address: Not yet set up
+        p1_10 = re.compile(r'^(?P<key>source ip address): (?P<value>(.*?))$')
+        #     http secure: xxxxx
+        p1_11 = re.compile(r'^(?P<key>http secure): (?P<value>(.*?))$')
+        #     source interface: Not yet set up
+        p1_12 = re.compile(r'^(?P<key>source interface): (?P<value>(.*?))$')
+         #   Mail-server: Not yet set up
+        p1_13_1 = re.compile(r'^Mail-server: +(?P<addr>(.*?))$')
+        #     http proxy: Not yet set up
+        p1_15 = re.compile(r'^(?P<key>http proxy): (?P<value>(.*?))$')
+        #       server identity check: enabled
+        p1_16 = re.compile(r'^(?P<key>server identity check): (?P<value>(.*?))$')
+        #     http resolve-hostname: default
+        p1_17 = re.compile(r'^(?P<key>http resolve-hostname): (?P<value>(.*?))$')
+        #     Diagnostic signature: enabled
+        p1_18 = re.compile(r'^(?P<Diagnostic>Diagnostic signature): (?P<Diagnostic_mode>(.*?))$')
+        #     Profile: muskan (status: INACTIVE)
+        p1_19 = re.compile(r'^(?P<profile>Profile): +(?P<name>\S+) +(?P<status>\S+): +(?P<type>(.*?)\))$')
+        #     Smart licensing messages: enabled
+        p1_20 = re.compile(r'^(?P<smart>Smart licensing messages): (?P<smart_mode>(.*?))$')
+        #     aaa-authorization: disable
+        p1_21 = re.compile(r'^(?P<key>aaa-authorization): (?P<value>(.*?))$')
+        #     aaa-authorization username: callhome (default)
+        p1_22 = re.compile(r'^(?P<key>aaa-authorization username): (?P<value>(.*?))$')
+        #     data-privacy: normal
+        p1_23 = re.compile(r'^(?P<key>data-privacy): (?P<value>(.*?))$')
+        #     syslog throttling: enable
+        p1_24 = re.compile(r'^(?P<key>syslog throttling): (?P<value>(.*?))$')
+        #     Rate-limit: 20 message(s) per minute
+        p1_25 = re.compile(r'^(?P<key>Rate-limit): (?P<value>(.*?))$')
+        #     Snapshot command: Not yet set up
+        p1_26 = re.compile(r'^(?P<key>Snapshot command): (?P<value>(.*?))$')
+        #     Keyword                  State   Description
+        p2 = re.compile(r'^(?P<Keyword>\w+) +(?P<State>\w+) +(?P<Description>(\w+|\w+( +\w+)+))$')    
+        # profile matches
+        p3 = re.compile(r'^(?P<profile_name>Profile Name): +(?P<profileName>(.*?))$')
+        #     Profile status: INACTIVE
+        p4 = re.compile(r'^(?P<profile>Profile status): +(?P<name>(.*?))$')
+        #     Profile mode: Full Reporting
+        p5 = re.compile(r'^(?P<profile>Profile mode): +(?P<name>(.*?))$')
+        #     Reporting Data: Smart Call Home, Smart Licensing
+        p6 = re.compile(r'^(?P<profile>Reporting Data): +(?P<name>(.*?))$')
+        #     Preferred Message Format: xml
+        p7 = re.compile(r'^(?P<profile>Preferred Message Format): +(?P<name>(.*?))$')
+        #     Message Size Limit: 3145728 Bytes
+        p8 = re.compile(r'^(?P<profile>Message Size Limit): +(?P<name>(.*?))$')
+        #     Transport Method: http
+        p9 = re.compile(r'^(?P<profile>Transport Method): +(?P<name>(.*?))$')
+        #     Email address(es): Not yet set up
+        p10 = re.compile(r'^(?P<profile>Email address(es)): +(?P<name>(.*?))$')
+        #     Other address(es): default
+        p11 = re.compile(r'^(?P<profile>Other address(es)): +(?P<name>(.*?))$')
+        #     HTTP  address: https://tools.cisco.com/its/service/oddce/services/DDCEService
+        p12 = re.compile(r'^(?P<profile>HTTP address): +(?P<name>(.*?))$')
+        #     Periodic inventory info message is scheduled every 1 day of the month at 09:00
+        p13 = re.compile(r'^(?P<key>Periodic inventory info message is scheduled) +(?P<value>(.*?))$')
+        #     Periodic configuration info message is scheduled every 1 day of the month at 09:15
+        p14 = re.compile(r'^(?P<key>Periodic configuration info message is scheduled) +(?P<value>(.*?))$')
+        # N/A                       N/A
+        p15 = re.compile(r'^(?P<key>(?!.*--)[\S]+) +(?P<value>\S+) *$')
+        #  Alert-group               Severity\r\n'
+        p16 = re.compile(r'^(?P<key>Alert-group) +(?P<value>Severity)$')
+        #  Syslog-Pattern            Severity
+        p17 = re.compile(r'^(?P<key>Syslog-Pattern) +(?P<value>Severity)$')
+        
+        alert_flag = False
+        syslog_flag = False
+        
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()  
+            #   call home feature : enable
+            m = p1.match(line)
+            if m:
+                group = m.groupdict() 
+                all_settings = ret_dict.setdefault('settings',{})
+                settings = all_settings.setdefault('current_call_home_settings', {})
+                settings['call_home_feature'] = group['value']
+                continue
+            #     call home message's from address: Not yet set up
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['call_home_message_from_address'] = group['value']
+                continue
+            #     call home message's reply-to address: Not yet set up
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['call_home_message_reply_to_address'] = group['value']
+                continue
+            #     vrf for call-home messages: Not yet set up
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['vrf_for_call_home_messages'] = group['value']
+                continue
+            #     contact person's email address: sch-smart-licensing@cisco.com
+            m = p1_4.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['contact_person_email_address'] = group['value']
+                continue
+            #     contact person's phone number: Not yet set up
+            m = p1_5.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['contact_person_phone_number'] = group['value']
+                continue
+            #     street address: Not yet set up
+            m = p1_6.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['street_address'] = group['value']
+                continue
+            #     customer ID: Not yet set up
+            m = p1_7.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['customer_id'] = group['value']
+                continue
+            #     contract ID: Not yet set up
+            m = p1_8.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['contract_id'] = group['value']
+                continue
+            #     site ID: Not yet set up
+            m = p1_9.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['site_id'] = group['value']
+                continue
+            #     source ip address: Not yet set up
+            m = p1_10.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['source_ip_address'] = group['value']
+                continue
+            #     http secure: xxxxx
+            m = p1_11.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['http_secure'] = group['value']
+                continue
+            #     source interface: Not yet set up
+            m = p1_12.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['source_interface'] = group['value']
+                continue
+            #     Mail-server: Mpt yet setup
+            m = p1_13_1.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['mail_server'] = group['addr']
+                continue
+            #     http proxy: Not yet set up
+            m = p1_15.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['http_proxy'] = group['value']
+                continue
+            #       server identity check: enabled
+            m = p1_16.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['server_identity_check'] = group['value']
+                continue
+            #     http resolve-hostname: default
+            m = p1_17.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['http_resolve_hostname'] = group['value']
+                continue
+            #     Diagnostic signature: enabled
+            m = p1_18.match(line)
+            if m:   
+                Diagnostic_flag = True
+                group = m.groupdict() 
+                Diagnostic = settings.setdefault('diagnostic_signature',{})
+                Diagnostic['mode'] = group['Diagnostic_mode']
+                continue
+            #     Profile: muskan (status: INACTIVE)
+            m = p1_19.match(line)
+            if m and Diagnostic_flag:   
+                group = m.groupdict() 
+                Diagnostic['profile'] = group['name']
+                Diagnostic['status'] = re.sub(r"\)",'',group['type']) 
+                Diagnostic_flag = False
+                continue
+            if m and smart_licensing_flag:   
+                group = m.groupdict() 
+                smart_licensing['profile'] = group['name']
+                smart_licensing['status'] = re.sub(r"\)",'',group['type']) 
+                smart_licensing_flag = False
+                continue
+            #     Smart licensing messages: enabled
+            m = p1_20.match(line)
+            if m:   
+                smart_licensing_flag = True
+                group = m.groupdict() 
+                smart_licensing = settings.setdefault('smart_licensing_messages',{})
+                smart_licensing['mode'] = group['smart_mode']
+                continue
+            #     aaa-authorization: disable
+            m = p1_21.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['aaa_authorization'] = group['value']
+                continue
+            #     aaa-authorization username: callhome (default)
+            m = p1_22.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['aaa_authorization_username'] = group['value']
+                continue
+            #     data-privacy: normal
+            m = p1_23.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['data_privacy'] = group['value']
+                continue
+            #     syslog throttling: enable
+            m = p1_24.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['syslog_throttling'] = group['value']
+                continue
+            #     Rate-limit: 20 message(s) per minute
+            m = p1_25.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['rate_limit'] = group['value']
+                continue
+            #     Snapshot command: Not yet set up
+            m = p1_26.match(line)
+            if m:
+                group = m.groupdict() 
+                settings['snapshot_command'] = group['value']
+                continue
+            #     Keyword                  State   Description
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                alert_groups_dic = all_settings.setdefault('available_alert_groups',{}).setdefault('Keyword',{})
+                alert_groups_dict = alert_groups_dic.setdefault(group['Keyword'],{})
+                alert_groups_dict['state'] = group['State']
+                alert_groups_dict['description'] = group['Description']
+                continue  
+            # profile matches
+            m = p3.match(line)
+            if m:   
+                syslog_flag = False # stop adding syslog for previous profile to avoid wrond data to be stored
+                group = m.groupdict() 
+                profiles = all_settings.setdefault('profiles', {})
+                profile = profiles.setdefault(group['profileName'], {})
+                continue
+            #     Profile status: INACTIVE
+            m = p4.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['status'] = group['name']
+                continue
+            #     Profile mode: Full Reporting
+            m = p5.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['mode'] = group['name']
+                continue
+            #     Reporting Data: Smart Call Home, Smart Licensing
+            m = p6.match(line)
+            if m :   
+                group = m.groupdict() 
+                profile['reporting_Data'] = group['name']
+                continue
+            #     Preferred Message Format: xml
+            m = p7.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['preferred_message_format'] = group['name']
+                continue
+            #     Message Size Limit: 3145728 Bytes
+            m = p8.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['message_size_limit'] = group['name']
+                continue
+            #     Transport Method: http
+            m = p9.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['transport_method'] = group['name']
+                continue
+            #     Email address(es): Not yet set up
+            m = p10.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['email_address'] = group['name']
+                continue
+            #     Other address(es): default
+            m = p11.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['other_address'] = group['name']
+                continue
+            #     HTTP  address: https://tools.cisco.com/its/service/oddce/services/DDCEService
+            m = p12.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['http_address'] = group['name']
+                continue
+            #     Periodic inventory info message is scheduled every 1 day of the month at 09:00
+            m = p13.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['periodic_inventory_info_message_is_scheduled'] = group['value']
+                continue
+            #     Periodic configuration info message is scheduled every 1 day of the month at 09:15
+            m = p14.match(line)
+            if m:   
+                group = m.groupdict() 
+                profile['periodic_configuration_info_message_is_scheduled'] = group['value']
+                continue
+            #  Alert-group               Severity\r\n'
+            m = p16.match(line)
+            if m:   
+                alert_flag = True
+                group = m.groupdict() 
+                alert_group = profile.setdefault('alert_group',{})
+                continue
+            #  Syslog-Pattern            Severity
+            m = p17.match(line)
+            if m:   
+                syslog_flag = True
+                alert_flag = False
+                group = m.groupdict() 
+                Syslog_Pattern = profile.setdefault('syslog_pattern',{})
+                continue
+            # N/A    N/A
+            m = p15.match(line)
+            if m and alert_flag:   
+                group = m.groupdict() 
+                alert = alert_group.setdefault(group['key'],{})
+                alert['severity'] = group['value']
+                continue
+            if m and syslog_flag:   
+                group = m.groupdict() 
+                syslog = Syslog_Pattern.setdefault(group['key'],{})
+                syslog['severity'] = group['value']
+                continue
         return ret_dict
 
 # ==========================================================================================

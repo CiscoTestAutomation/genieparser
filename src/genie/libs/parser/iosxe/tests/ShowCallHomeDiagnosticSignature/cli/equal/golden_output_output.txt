@@ -1,0 +1,11 @@
+Current diagnostic-signature settings:
+ Diagnostic-signature: enabled
+ Profile: muskan (status: INACTIVE)
+ Downloading  URL(s):  http://linkedin.com
+ Environment variable:
+           Not yet set up
+
+Downloaded DSes:
+                                                             Last Update
+DS ID    DS Name                         Revision Status     (GMT-07:00)
+-------- ------------------------------- -------- ---------- -------------------

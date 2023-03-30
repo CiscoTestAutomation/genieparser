@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> groups detail
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
+    * show ipv6 mld snooping querier
 """
 
 # Python
@@ -625,3 +626,91 @@ class ShowIpv6MldGroupsSummary(ShowIpv6MldGroupsSummarySchema):
                 route_dict.setdefault('routes', int(group['routes']))
 
         return ret_dict
+
+
+# ============================================
+# Schema for 'show ipv6 mld snooping querier'
+# ============================================
+class ShowIpv6MldSnoopingQuerierSchema(MetaParser):
+    """ Schema for show ipv6 mld snooping querier """
+    schema = {
+        'vlan': {
+            int: {
+                'ipv6_address': {
+                    str: {
+                        'version': str,
+                        'port': str,
+                    },
+                }
+            },
+        },
+    }
+
+# ==================================================
+# Parser for 'show ipv6 mld snooping querier'
+# ==================================================
+class ShowIpv6MldSnoopingQuerier(ShowIpv6MldSnoopingQuerierSchema):
+    """ Parser for show ipv6 mld snooping querier """
+
+    cli_command = "show ipv6 mld snooping querier"
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        parsed_dict = {}
+
+        # initial regexp pattern
+        #101       FE80::A      v2         Switch
+        p1 = re.compile(r'^[a-zA-Z\/\s-]*(?P<vlan_id>\d+)\s+(?P<ip_addr>[0-9a-fA-F\.:]+)\s+(?P<version>[v\d,]+)\s+(?P<port>[\w:\/\s]+)$')
+        #101       FE80:0:9D36:F78B:A8BB:CCFF:FE00:400
+        p2 = re.compile(r'^[a-zA-Z\/\s-]*(?P<vlan_id>\d+)\s+(?P<ip_addr>[0-9a-fA-F\.:]+)\s*\\*$')
+        #v2         Switch
+        p3 = re.compile(r'^(?P<version>v[\d,]+)\s+(?P<port>[\w:\/\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #101       FE80::A      v2         Switch
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('vlan', {})
+                vlan = parsed_dict['vlan'].setdefault(int(group['vlan_id']), {})
+                vlan_ip = vlan.setdefault('ipv6_address', {})
+                vlan_ip.update(
+                    {
+                        group['ip_addr']: {
+                            'version': group['version'],
+                            'port': group['port']
+                    }
+                })
+                continue
+
+            #101       FE80:0:9D36:F78B:A8BB:CCFF:FE00:400
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ip_addr = group['ip_addr']
+                vlan_id = int(group['vlan_id'])
+                continue
+
+            #v2         Switch
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('vlan', {})
+                vlan = parsed_dict['vlan'].setdefault(vlan_id, {})
+                vlan_ip = vlan.setdefault('ipv6_address', {})
+                vlan_ip.update(
+                    {
+                        ip_addr: {
+                            'version': group['version'],
+                            'port': group['port']
+                    }
+                })
+                continue
+
+        return parsed_dict

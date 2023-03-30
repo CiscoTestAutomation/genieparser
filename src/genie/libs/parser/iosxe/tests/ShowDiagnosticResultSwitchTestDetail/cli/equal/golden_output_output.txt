@@ -1,0 +1,226 @@
+show diagnostic result switch 1 test all detail
+
+Current bootup diagnostic level: minimal
+
+
+  Test results: (. = Pass, F = Fail, U = Untested)
+
+  ___________________________________________________________________________
+
+    1) DiagGoldPktTest:
+
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U
+
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    2) TestThermal ---------------------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 247
+          Last test testing type ------> Health Monitoring
+          Last test execution time ----> May 24 2022 14:06:52
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> May 24 2022 14:06:52
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+   
+    3) TestFantray ---------------------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 220
+          Last test testing type ------> Health Monitoring
+          Last test execution time ----> May 24 2022 14:06:04
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> May 24 2022 14:06:04
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+    
+    4) TestPhyLoopback:
+
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U
+
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    5) DiagScratchRegisterTest ---------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 26758
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 11:38:38
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 11:38:38
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________ 
+
+    6) TestUnusedPortLoopback: 
+          
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U 
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U
+
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a 
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    7) TestPortTxMonitoring: 
+
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U 
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  .
+
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 26818
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 13:08:40
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 13:08:40
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    8) TestConsistencyCheckL2 ----------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 26818
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 13:08:40
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 13:08:40
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    9) TestConsistencyCheckL3 ----------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 26818
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 13:08:40
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 13:08:40
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+   10) TestConsistencyCheckMcast -------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 26818
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 13:08:40
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 13:08:40
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+   11) TestConsistencyCheckL2m ---------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 335
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 12:23:38
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 12:23:38
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+   12) TestConsistencyCheckL3m ---------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 309
+          Last test testing type ------> Health Monitoring 
+          Last test execution time ----> Feb 01 2023 11:53:38
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> Feb 01 2023 11:53:38
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+   13) DiagStackCableTest --------------> U
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a 
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+   14) DiagMemoryTest ------------------> U
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a 
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________

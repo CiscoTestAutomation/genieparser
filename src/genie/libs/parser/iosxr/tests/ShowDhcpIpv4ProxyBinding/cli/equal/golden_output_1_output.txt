@@ -1,0 +1,7 @@
+show dhcp ipv4 proxy binding
+Mon Feb  6 09:51:21.930 UTC
+
+                                           Lease                                                
+ MAC Address      IP Address      State    Remaining       Interface          VRF      Sublabel 
+--------------  --------------  ---------  ---------  -------------------  ---------  ----------
+58ac.7881.ab02  0.0.0.0         SELECTING  6          Gi0/0/0/0.2002       DHCP-VRF   0x0       

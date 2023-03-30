@@ -18,6 +18,7 @@ IOSXR parsers for the following show commands:
     * show isis instance {instance} hostname
     * show isis segment-routing srv6 locators
     * show isis instance {instance} segment-routing srv6 locators
+    * show isis instance {process_id} neighbors
 """
 
 # Python
@@ -324,13 +325,17 @@ class ShowIsisNeighborsSchema(MetaParser):
 class ShowIsisNeighbors(ShowIsisNeighborsSchema):
     """Parser for show isis neighbors"""
 
-    cli_command = 'show isis neighbors'
+    cli_command = ['show isis instance {process_id} neighbors',
+                   'show isis neighbors']
 
-    def cli(self, output=None):
+    def cli(self, process_id=None, output=None):
+
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if process_id:
+                command = self.cli_command[0].format(process_id=process_id)
+            else:
+                command = self.cli_command[1]
+            output = self.device.execute(command)
 
         isis_neighbors_dict = {}
         vrf = 'default'
@@ -345,7 +350,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
         # Total neighbor count: 1
         p3 = re.compile(r'^Total\sneighbor\scount:\s+(?P<neighbor_count>\S+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # IS-IS 4445 neighbors:

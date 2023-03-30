@@ -1,0 +1,71 @@
+asr1k-24#sh isis teapp policy 
+ISIS SR Policy Endpoints:
+Tag 200:
+
+    Codes: SS - Strict SPF, SP - Default SPF
+           r - relative, a - absolute, c - constant, n - none
+
+Endpoint IP     Level/System-ID    Interface                           Metric     Attributes Last Updated      
+1.1.1.1         -                  Tunnel96616                         0                SP:n 01:09:33          
+                                   GigabitEthernet0/0/7                0                SP:n 01:09:31          
+                                   Tunnel96795                         0                SP:n 01:09:29          
+                                   Tunnel96890                         0                SP:n 01:09:28          
+                                   Tunnel96986                         0                SP:n 01:09:27          
+                                   Tunnel97090                         0                SP:n 01:09:26          
+                                   Tunnel97187                         0                SP:n 01:09:26          
+                                   Tunnel97234                         0                SP:n 01:09:26          
+                                   Tunnel97235                         0                SP:n 01:09:26          
+                                   Tunnel97236                         0                SP:n 01:09:26          
+                                   Tunnel97237                         0                SP:n 01:09:26          
+                                   Tunnel97238                         0                SP:n 01:09:26          
+                                   Tunnel97239                         0                SP:n 01:09:26          
+                                   Tunnel97240                         0                SP:n 01:09:25          
+                                   Tunnel97241                         0                SP:n 01:09:25          
+                                   Tunnel97242                         0                SP:n 01:09:25          
+                                   Tunnel97243                         0                SP:n 01:09:25          
+                                   Tunnel97244                         0                SP:n 01:09:25          
+                                   Tunnel97245                         0                SP:n 01:09:25          
+                                   Tunnel97246                         0                SP:n 01:09:25          
+                                   Tunnel97247                         0                SP:n 01:09:25          
+                                   Tunnel97248                         0                SP:n 01:09:25          
+                                   Tunnel97249                         0                SP:n 01:09:25          
+                                   Tunnel97250                         0                SP:n 01:09:25          
+                                   Tunnel97251                         0                SP:n 01:09:25          
+                                   Tunnel97252                         0                SP:n 01:09:25          
+                                   Tunnel97253                         0                SP:n 01:09:25          
+                                   Tunnel97254                         0                SP:n 01:09:25          
+ISIS SR Policy Endpoints:
+Tag 1:
+
+    Codes: SS - Strict SPF, SP - Default SPF
+           r - relative, a - absolute, c - constant, n - none
+
+Endpoint IP     Level/System-ID    Interface                           Metric     Attributes Last Updated      
+1.1.1.1         L2/asr1k-34.00     Tunnel96616                         0                SS:r 01:09:33          
+                                   Tunnel96703                         0                SP:a 01:09:31          
+                                   Tunnel96795                         0                SS:c 01:09:29          
+                                   Tunnel96890                         0                SP:n 01:09:28          
+                                   Tunnel96986                         0                SP:n 01:09:27          
+                                   Tunnel97090                         0                SP:n 01:09:26          
+                                   Tunnel97187                         0                SP:n 01:09:26          
+                                   Tunnel97234                         0                SP:n 01:09:26          
+                                   Tunnel97235                         0                SP:n 01:09:26          
+                                   Tunnel97236                         0                SP:n 01:09:26          
+                                   Tunnel97237                         0                SP:n 01:09:26          
+                                   Tunnel97238                         0                SP:n 01:09:26          
+                                   Tunnel97239                         0                SP:n 01:09:26          
+                                   Tunnel97240                         0                SP:n 01:09:25          
+                                   Tunnel97241                         0                SP:n 01:09:25          
+                                   Tunnel97242                         0                SP:n 01:09:25          
+                                   Tunnel97243                         0                SP:n 01:09:25          
+                                   Tunnel97244                         0                SP:n 01:09:25          
+                                   Tunnel97245                         0                SP:n 01:09:25          
+                                   Tunnel97246                         0                SP:n 01:09:25          
+                                   Tunnel97247                         0                SP:n 01:09:25          
+                                   Tunnel97248                         0                SP:n 01:09:25          
+                                   Tunnel97249                         0                SP:n 01:09:25          
+                                   Tunnel97250                         0                SP:n 01:09:25          
+                                   Tunnel97251                         0                SP:n 01:09:25          
+                                   Tunnel97252                         0                SP:n 01:09:25          
+                                   Tunnel97253                         0                SP:n 01:09:25          
+                                   Tunnel97254                         0                SP:n 01:09:25 

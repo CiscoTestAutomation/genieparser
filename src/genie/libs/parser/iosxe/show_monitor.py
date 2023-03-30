@@ -692,13 +692,13 @@ class ShowMonitorCaptureBuffer(ShowMonitorCaptureBufferSchema):
             output = self.device.execute(self.cli_command.format(capture_name=capture_name),timeout=180)
 
         # 1   0.000000 f4:db:e6:5b:97:04 -> 01:80:c2:00:00:00 STP 60 RST. Root = 32768/805/6c:b2:ae:49:6a:40  Cost = 0  Port = 0x8185
-        p1 = re.compile(r'^(?P<pck_no>\d+) +(?P<time>[\d\.]+) +(?P<scr_mac_address>[\da-f\:\.]+) +-> +(?P<dst_mac_address>[\da-f\:\.]+) +(?P<protocol>[A-Z]+) +(?P<packet_size>[0-9]+) +(?P<data>.*)$')
+        # 2   2.999988     10.1.1.2 -> 233.252.252.127 IPv4 96 Fragmented IP protocol (proto=UDP 17, off=1480, ID=93f1)
+        p1 = re.compile(r'^(?P<pck_no>\d+) +(?P<time>[\d\.]+) +(?P<scr_mac_address>[\da-f\:\.]+) +-> +(?P<dst_mac_address>[\da-f\:\.]+) +(?P<protocol>[\w]+) +(?P<packet_size>[0-9]+) +(?P<data>.*)$')
 
         ret_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
-
             # Capture duration - 56 seconds
             m = p1.match(line)
             if m:

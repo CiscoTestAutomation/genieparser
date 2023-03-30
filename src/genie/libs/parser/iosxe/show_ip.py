@@ -2237,8 +2237,8 @@ class ShowIpMrib(ShowIpMribSchema):
                      ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
                      '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
 
-        # GigabitEthernet2/0/6 Flags: A NS 
-        # Tunnel1 Flags: A NS  		 
+        # GigabitEthernet2/0/6 Flags: A NS
+        # Tunnel1 Flags: A NS
         # Vlan500 Flags: A      VXLAN Encap/Decap       Next-hop: (0.0.0.0, 1.4.0.0)
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
                          '\s+Flags\: +(?P<ingress_flags>A[\sA-UW-Z0-9]+|[\s\w]+ +A[\sA-UW-Z0-9]+|A$)')
@@ -2968,7 +2968,7 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
                 cmd = self.cli_command[0]
 
             output = self.device.execute(cmd)
-        
+
         parsed_dict = {}
 
         # for number of bindings
@@ -3025,6 +3025,8 @@ class ShowIpDhcpServerStatisticsSchema(MetaParser):
         'relay_bindings_active': int,
         'relay_bindings_terminated': int,
         'relay_bindings_selecting': int,
+        Optional('dhcp_relay_ack_drop') : int,
+        Optional('dhcp_discovers_dropped') : int,
         'message_received': {
             'bootrequest': int,
             'dhcpdiscover': int,
@@ -3146,6 +3148,12 @@ class ShowIpDhcpServerStatistics(ShowIpDhcpServerStatisticsSchema):
 
         # message=['message_recieved','message_sent','message_forward']
         p31 = re.compile(r'^Message\s+(?P<state>(Received|Sent|Forwarded))\s*')
+
+        # DHCP Relay ACK drop          0
+        p32 = re.compile(r"^DHCP\s+Relay\s+ACK\s+drop\s+(?P<dhcp_relay_ack_drop>\d+)$")
+
+        # DHCP Discovers dropped       15261506
+        p33 = re.compile(r"^DHCP\s+Discovers\s+dropped\s+(?P<dhcp_discovers_dropped>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -3370,6 +3378,19 @@ class ShowIpDhcpServerStatistics(ShowIpDhcpServerStatisticsSchema):
                 parsed_dict['dhcp_dpm_statistics']['classname_callbacks_received'] = int(group['classname_callbacks_received'])
                 continue
 
+            # DHCP Relay ACK drop          0
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['dhcp_relay_ack_drop'] = int(group['dhcp_relay_ack_drop'])
+                continue
+
+            # DHCP Discovers dropped       15261506
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['dhcp_discovers_dropped'] = int(group['dhcp_discovers_dropped'])
+                continue
         return parsed_dict
 
 # ====================================================
@@ -3722,10 +3743,10 @@ class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
 # ==============================================
 # Parser for 'show ip nhrp stats'
 #            'show ip nhrp stats {tunnel}'
-#            'show nhrp stats {tunnel}', 
+#            'show nhrp stats {tunnel}',
 #            'show ipv6 nhrp stats {tunnel}'
 #            'show ipv6 nhrp stats'
-#            'show nhrp stats'   
+#            'show nhrp stats'
 # ==============================================
 
 class ShowIpNhrpStatsSchema(MetaParser):
@@ -3735,7 +3756,7 @@ class ShowIpNhrpStatsSchema(MetaParser):
                   show ipv6 nhrp stats {tunnel}
                   show ipv6 nhrp stats
                   show nhrp stats
-                                     
+
     """
     schema = {
         'interface': {
@@ -3828,22 +3849,22 @@ class ShowIpNhrpStats(ShowIpNhrpStatsSchema):
     """Parser for 'show nhrp stats',
                   'show ip nhrp stats',
                   'show ipv6 nhrp stats',
-                  'show nhrp stats {tunnel}', 
-                  'show ip nhrp stats {tunnel}', 
-                  'show ipv6 nhrp stats {tunnel}'                     
+                  'show nhrp stats {tunnel}',
+                  'show ip nhrp stats {tunnel}',
+                  'show ipv6 nhrp stats {tunnel}'
     """
     cli_command = ['show nhrp stats','show {ip_type} nhrp stats','show nhrp stats {tunnel}','show {ip_type} nhrp stats {tunnel}']
     def cli(self, tunnel= None, ip_type= None, output=None):
         if output is None:
             if tunnel is None and ip_type is None:
                 cmd = self.cli_command[0]
-            elif ip_type and tunnel is None:   
+            elif ip_type and tunnel is None:
                 cmd = self.cli_command[1].format(ip_type=ip_type)
-            elif ip_type is None and tunnel:                 
+            elif ip_type is None and tunnel:
                 cmd = self.cli_command[2].format(tunnel=tunnel)
             elif tunnel and ip_type:
-                cmd = self.cli_command[3].format(ip_type=ip_type,tunnel=tunnel)                            
-           
+                cmd = self.cli_command[3].format(ip_type=ip_type,tunnel=tunnel)
+
             # get output from device
             output = self.device.execute(cmd)
 
@@ -3971,15 +3992,15 @@ class ShowIpNhrpStats(ShowIpNhrpStatsSchema):
             line = line.strip()
 
             # Tunnel100
-            if not tunnel :  
+            if not tunnel :
                 m1 = p1.match(line)
                 if m1:
                     group = m1.groupdict()
-                    tunnel_int_dict = interface_dict.setdefault(group['interface'], {})            
+                    tunnel_int_dict = interface_dict.setdefault(group['interface'], {})
                     continue
             else:
                 tunnel_int_dict = interface_dict.setdefault(tunnel, {})
-                        
+
             # Interface State Event Stats:
             m2 = p2.match(line)
             if m2:
@@ -5628,7 +5649,7 @@ class ShowIpDhcpSnoopingBindingTotalNumber(ShowIpDhcpSnoopingBindingTotalNumberS
             parsed_dict['dhcp_snooping_binding']['total_number'] = int(group['total_number'])
 
         return parsed_dict
-        
+
 # ================================================
 # Schema for 'show ip dhcp snooping | include gleaning'
 # ================================================
@@ -5645,7 +5666,7 @@ class ShowIpDhcpSnoopingGleaningSchema(MetaParser):
 class ShowIpDhcpSnoopingGleaning(ShowIpDhcpSnoopingGleaningSchema):
 
     ''' Parser for "show ip dhcp binding | count Active"
-    Switch DHCP gleaning is enabled|disabled    
+    Switch DHCP gleaning is enabled|disabled
     '''
     cli_command = 'show ip dhcp snooping | include gleaning'
 
@@ -5893,7 +5914,7 @@ class ShowIpCefSummary(ShowIpCefSummarySchema):
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
-            
+
             # Vrf red
             m = p1.match(line)
             if m:
@@ -5909,7 +5930,7 @@ class ShowIpCefSummary(ShowIpCefSummarySchema):
                 group = {k: int(v) for k, v in group.items() if v is not None}
                 prefix_dict.update(group)
                 continue
-            
+
             # Table id 0x1E000001
             m = p3.match(line)
             if m:
@@ -5919,7 +5940,7 @@ class ShowIpCefSummary(ShowIpCefSummarySchema):
             # Database epoch:        0 (6 entries at this epoch)
             m = p4.match(line)
             if m:
-              vrf_dict.update({'epoch': int(m.groupdict()['epoch'])}) 
+              vrf_dict.update({'epoch': int(m.groupdict()['epoch'])})
               continue
 
         return ret_dict
@@ -6041,7 +6062,7 @@ class ShowIpDnsView(ShowIpDnsViewSchema):
                 continue
 
         return parsed_dict
-        
+
 
 # ======================================================
 # Schema for 'show ip admission cache '
@@ -6201,7 +6222,7 @@ class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
 
         # Vlan 10:
         p0 = re.compile(r"^Vlan\s+(?P<vlan>\d+):\s*$")
-        
+
         # IGMP snooping : Enabled
         p1 = re.compile(r"^IGMP\s+snooping\s+:\s+(?P<igmp_snooping>\w+)$")
 
@@ -6255,7 +6276,7 @@ class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
             m = p0.match(line)
             if m:
                 vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(m.groupdict()['vlan'], {})
-            
+
             # IGMP snooping : Enabled
             m = p1.match(line)
             if m:
@@ -6263,7 +6284,7 @@ class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
                     "igmp_snooping": m.groupdict()["igmp_snooping"]
                 })
                 continue
-            
+
             # Global PIM Snooping : Disabled
             m = p2.match(line)
             if m:
@@ -6361,7 +6382,7 @@ class ShowIpIgmpSnoopingDetail(ShowIpIgmpSnoopingDetailSchema):
 # ======================================================
 
 class ShowIpVerifySourceSchema(MetaParser):
-      
+
     """Schema for show ip verify source"""
 
     schema = {
@@ -6371,7 +6392,7 @@ class ShowIpVerifySourceSchema(MetaParser):
                 'filter_type': str,
                 'filter_mode': str,
                 'vlan':str,
-
+                Optional('mac_address'): str
             },
         },
     }
@@ -6387,20 +6408,25 @@ class ShowIpVerifySource(ShowIpVerifySourceSchema):
                 output = self.device.execute(self.cli_command[1].format(interface_name=interface_name))
             else:
                 output = self.device.execute(self.cli_command[0])
-               
-        #Gi1/0/3      ip trk       active       40.1.1.24                           10  
-        p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip\s+\S+)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<vlan>\d+)$") 
-  
+
+        # Gi1/0/3      ip trk       active       40.1.1.24                           10
+        # Gi1/0/13   ip-mac       active       10.1.1.101       00:0A:00:0B:00:01  10
+        p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip\s?\S+)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<mac_address>\S+)?\s+(?P<vlan>[\d,]*)$")
+
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
-            # Gi1/0/3      ip trk       active       40.1.1.24                           10   
+            # Gi1/0/3      ip trk       active       40.1.1.24                           10
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
-                int_name_var = dict_val['ip_address']
-                del dict_val['ip_address']
-                ret_dict.setdefault('ip_address', {}).setdefault(int_name_var, dict_val) 
+                ip_dict = ret_dict.setdefault('ip_address', {}).setdefault(dict_val['ip_address'], {})
+                ip_dict['interface_name'] = dict_val['interface_name']
+                ip_dict['filter_type'] = dict_val['filter_type']
+                ip_dict['filter_mode'] = dict_val['filter_mode']
+                ip_dict['vlan'] = dict_val['vlan']
+                if dict_val['mac_address']:
+                    ip_dict['mac_address'] = dict_val['mac_address']
                 continue
 
         return ret_dict

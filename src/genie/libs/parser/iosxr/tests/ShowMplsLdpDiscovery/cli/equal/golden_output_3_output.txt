@@ -1,0 +1,23 @@
+show mpls ldp discovery
+Fri Feb 10 07:56:54.143 UTC
+
+Local LDP Identifier: 1.100.1.2:0
+Discovery Sources:
+  Interfaces:
+    Bundle-Ether10 : xmit/recv
+      VRF: 'default' (0x60000000)
+      LDP Id: 1.100.1.1:0, Transport address: 1.100.1.1
+          Hold time: 15 sec (local:15 sec, peer:15 sec)
+          Established: Feb 10 05:18:32.242 (02:38:22 ago)
+
+    GigabitEthernet0/0/0/1 : xmit/recv
+      VRF: 'default' (0x60000000)
+      LDP Id: 1.100.1.1:0, Transport address: 1.100.1.1
+          Hold time: 15 sec (local:15 sec, peer:15 sec)
+          Established: Feb 10 05:18:24.440 (02:38:29 ago)
+
+  Targeted Hellos:
+    1.100.1.2 -> 1.100.1.1 (active/passive), xmit/recv
+      LDP Id: 1.100.1.1:0
+          Hold time: 90 sec (local:90 sec, peer:90 sec)
+          Established: Feb 10 05:18:28.903 (02:38:25 ago)

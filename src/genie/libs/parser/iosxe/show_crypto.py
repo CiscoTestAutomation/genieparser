@@ -4567,6 +4567,9 @@ class ShowCryptoIpsecSaDetailSchema(MetaParser):
                             Optional('pkts_decompress_failed'): int,
                             Optional('pkts_decompressed'): int,
                             Optional('pkts_decrypt'): int,
+                            Optional('pkts_encaps'):int,
+                            Optional('pkts_encrypt'):int,
+                            Optional('pkts_digest'): int,
                             Optional('pkts_not_compressed'): int,
                             Optional('pkts_not_decompressed'): int,
                             Optional('pkts_verify'): int,
@@ -4659,7 +4662,7 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
         p7 = re.compile(r'^(?P<action>\w+), +flags=\{(?P<acl>[\w\_\-\,]+)\}$')
 
         # #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4
-        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_decaps>\d+).*: +(?P<pkts_decrypt>\d+).*: +(?P<pkts_verify>\d+)$')
+        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_encaps>\d+).*: +(?P<pkts_encrypt>\d+).*: +(?P<pkts_digest>\d+)$')
 
         # #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4
         p9 = re.compile(r'^#pkts decaps: +(?P<pkts_decaps>\d+).*: +(?P<pkts_decrypt>\d+).*: +(?P<pkts_verify>\d+)$')
@@ -13244,6 +13247,110 @@ class ShowCryptoIkev2Performance(ShowCryptoIkev2PerformanceSchema):
                 process_dict = exchange_dict.setdefault(processing_type, {})
                 process_dict.update({'value':  int(group['value'])})
                 process_dict.update({'percentage':  int(group['percentage'])})
+                continue
+
+        return ret_dict
+
+
+
+ # ======================================================
+ # Parser for 'show crypto pki trustpoints '
+ # ======================================================
+
+class ShowCryptoPkiTrustpointsSchema(MetaParser):
+    """Schema for show crypto pki trustpoints"""
+
+    schema = {
+        'trustpoints': {
+            Any(): {
+                'issuing_ca': {
+                    'subject': {
+                        Optional('cn'): str,
+                        Optional('o'): str,
+                        }
+                    },
+                "serial_number_in_hex": str,
+                "comment": str
+                },
+            },
+        }
+
+
+
+class ShowCryptoPkiTrustpoints(ShowCryptoPkiTrustpointsSchema):
+    """Parser for show crypto pki trustpoints"""
+
+    cli_command = 'show crypto pki trustpoints'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Trustpoint SLA-TrustPoint:
+        p1 = re.compile(r"^Trustpoint\s+(?P<name>\S+):$")
+        #     Subject Name:
+        p2 = re.compile(r"^(?P<subject_name>Subject\s+Name:)$")
+        #     cn=Cisco Licensing Root CA
+        p3 = re.compile(r"^cn=(?P<cn>.+)$")
+        #     o=Cisco
+        p4 = re.compile(r"^o=(?P<o>.+)$")
+        #           Serial Number (hex): 01
+        p5 = re.compile(r"^Serial\s+Number\s+\(hex\):\s+(?P<serial_number_in_hex>[0-9a-fA-F]+)$")
+        #     Certificate configured.
+        p6 = re.compile(r"^(?P<comment>.+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Trustpoint SLA-TrustPoint:
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_var = dict_val['name']
+                ret_dict.setdefault('trustpoints', {})
+                name_dict = ret_dict['trustpoints'].setdefault(name_var, {})
+                name_dict['issuing_ca'] = {"subject": {}}
+                continue
+
+            # Subject Name:
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                continue
+
+            # cn=Cisco Licensing Root CA
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_dict["issuing_ca"]["subject"]['cn'] = dict_val['cn']
+                continue
+
+            # o=Cisco
+            m = p4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_dict["issuing_ca"]["subject"]['o'] = dict_val['o']
+                continue
+
+            # Serial Number (hex): 01
+            m = p5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_dict['serial_number_in_hex'] = dict_val['serial_number_in_hex']
+                continue
+
+            # Subject Name:
+            m = p6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if 'comment' in name_dict:
+                    name_dict['comment'] = name_dict['comment'] + \
+                        " \n " + dict_val['comment']
+                else:
+                    name_dict['comment'] = dict_val['comment']
+
                 continue
 
         return ret_dict
