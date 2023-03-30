@@ -3507,7 +3507,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
                 parsed_dict.setdefault("switches", {}).setdefault(current_switch, {}).setdefault("role", group["peer_switch_role"])
                 continue
 
-        return {"switch_virtual": parsed_dict }
+        return parsed_dict
 
 # ===================================================
 # Schema for
