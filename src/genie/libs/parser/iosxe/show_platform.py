@@ -3476,10 +3476,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
             if m:
                 group = m.groupdict()
                 current_switch = str(group["local_switch"])
-                if "switches" not in parsed_dict.keys():
-                    parsed_dict["switches"] = {}
-                if current_switch not in parsed_dict["switches"].keys():
-                    parsed_dict["switches"][current_switch] = {}
+                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {})
                 continue
             
             # Local Switch Role
@@ -3487,11 +3484,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
             m = p3_2.match(line)
             if m:
                 group = m.groupdict()
-                if ("switches" in parsed_dict.keys() and
-                    current_switch in parsed_dict["switches"].keys() and
-                    ("role" not in parsed_dict["switches"][current_switch].keys() or
-                     group["local_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
-                    parsed_dict["switches"][current_switch]["role"] = group["local_switch_role"]
+                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {}).setdefault("role", group["local_switch_role"])
                 continue
             
             # Peer Switch
@@ -3511,11 +3504,7 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
             m = p4_2.match(line)
             if m:
                 group = m.groupdict()
-                if ("switches" in parsed_dict.keys() and
-                    current_switch in parsed_dict["switches"].keys() and
-                    ("role" not in parsed_dict["switches"][current_switch].keys() or
-                     group["peer_switch_role"] != parsed_dict["switches"][current_switch]["role"])):
-                    parsed_dict["switches"][current_switch]["role"] = group["peer_switch_role"]            
+                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {}).setdefault("role", group["peer_switch_role"])
                 continue
 
         return {"switch_virtual": parsed_dict }
