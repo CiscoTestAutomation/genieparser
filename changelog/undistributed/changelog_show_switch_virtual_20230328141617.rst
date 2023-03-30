@@ -2,5 +2,5 @@
                             New
 --------------------------------------------------------------------------------
 * IOSXE
-    * New ShowSwitchVirtual:
+    * Added ShowSwitchVirtual:
         * show switch virtual
