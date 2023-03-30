@@ -2950,6 +2950,13 @@ class ShowRunningConfigNveSchema(MetaParser):
                     'action': str,
                     Optional('vlans'): list,
                 },
+                Optional('helper_address'): {
+                    Any(): {
+                       'ip_address': str, 
+                        Optional('reachable_over'): str,
+                    }
+                },
+                Optional('dhcp_relay_source'): str,
             },
         },
 
@@ -3173,6 +3180,14 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   private-vlan mapping add 303-307,309,440
         p3_15 = re.compile(r'^private\-vlan +mapping *(?P<action>add|remove)? *(?P<vlan_id>[\d\-,]+)$')
 
+        #   ip helper-address 10.1.1.1
+        #   ip helper-address global 10.1.1.1
+        #   ip helper-address vrf green 10.1.1.1
+        p3_16 = re.compile(r'^ip +helper\-address +((?P<reachable_over>(global|vrf \S+)) +)?(?P<ip>[\d.]+)$')
+
+        #   ip dhcp relay source-interface Loopback12
+        p3_17 = re.compile(r'^ip +dhcp +relay +source\-interface +(?P<if_name>\S+)$')
+
         #   router bgp 65535.65535
         p4_0 = re.compile(r'^router +bgp +(?P<asn>[\d.]+)$')
 
@@ -3261,6 +3276,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         nve_flag=False
         intf_flag=False
         if_others_dict = {}
+        helper_address_idx = 0
 
         for line in output.splitlines():
             line = line.strip()
@@ -3381,6 +3397,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if 'Vlan' in m.groupdict()['if_name']:
                     if_name = ''    # shares same key field
                     nve_flag=False  # nve dont need all the fields of svi
+                    helper_address_idx = 0
                     svis = m.groupdict()['if_name'][4:]
 
                     if svis in ret_dict['vlans']:
@@ -3520,6 +3537,29 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         if group['action']:
                             current_dict['mapped_private_vlan']['action'] = group['action']
                         continue
+
+            if svis:
+
+                #   ip helper-address 10.1.1.1
+                #   ip helper-address global 10.1.1.1
+                #   ip helper-address vrf green 10.1.1.1
+                m = p3_16.match(line)
+                if m:
+                    helper_address_idx +=1
+                    group = m.groupdict()
+
+                    svi_dict.setdefault('helper_address', {}).setdefault(helper_address_idx, {}).setdefault('ip_address', group['ip'])
+
+                    if group['reachable_over']:
+                        svi_dict.setdefault('helper_address', {}).setdefault(helper_address_idx, {}).setdefault('reachable_over', group['reachable_over'])
+                    continue
+
+                #   ip dhcp relay source-interface Loopback12
+                m = p3_17.match(line)
+                if m:
+                    svi_dict['dhcp_relay_source'] = m.groupdict()['if_name']
+                    continue
+
 
             if vlan or if_name:
 
@@ -3783,6 +3823,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     continue
 
         return ret_dict
+
 
 class ShowRunRouteSchema(MetaParser):
 

@@ -1,0 +1,23 @@
+R1#sh isis teapp policy
+ISIS SR Policy Endpoints:
+Tag null:
+ISIS SR Policy Endpoints:
+Tag 1:
+
+    Codes: SS - Strict SPF, SP - Default SPF
+           r - relative, a - absolute, c - constant, n - none
+
+Endpoint IP     Level/System-ID    Interface                           Metric     Attributes Last Updated      
+15.0.0.15       L1/R5.00           Tunnel69562                         0                SS:n 1w2d              
+16.0.0.16       L1/R6.00           Tunnel69563                         0                SS:n 1w2d              
+5.5.5.5         L1/R5.00           Tunnel70546                         0                SS:n 1w2d              
+                                   Tunnel70550                         0                SS:n 1w2d              
+                                   Tunnel70548                         0                SS:n 1w2d              
+                                   Tunnel70549                         0                SS:n 1w2d              
+                                   Tunnel70552                         0                SS:n 1w2d              
+                                   Tunnel69821                         0                SS:n 1w2d              
+                                   Tunnel69774                         0                SS:n 1w2d              
+                                   Tunnel69637                         0                SS:n 1w2d              
+                                   Tunnel69789                         0                SS:n 1w2d              
+                                   Tunnel69939                         0                SS:n 1w2d              
+                                   Tunnel70091                         0                SS:n 1w2d     

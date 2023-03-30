@@ -1,0 +1,12 @@
+Building configuration...
+
+User Defined Service-Template
+=============================
+
+
+    Name                     :  test
+    Description              :  test func
+    VLAN                     :  5
+    VNID                     :  testrun
+    MDNS POLICY              :  NONE!
+end

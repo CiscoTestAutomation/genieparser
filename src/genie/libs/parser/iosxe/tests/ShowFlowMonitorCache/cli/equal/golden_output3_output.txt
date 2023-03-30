@@ -1,0 +1,15 @@
+Device#show flow monitor fnf cache
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                               3
+
+  Flows added:                                  11
+  Flows aged:                                    8
+    - Active timeout      (    15 secs)          7
+    - Inactive timeout    (    15 secs)          1
+
+IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP PROT
+===============  ===============  =============  =============  =======
+30.1.1.6         224.0.0.5                    0              0       89
+200.1.1.100      100.1.1.100                  0              0       17
+200.1.1.100      100.1.1.100               1024           1024       17

@@ -1,0 +1,15 @@
+Active event list:
+ Profile                         Alert Group     Internal Index  Severity       Subscription  Last Triggered Time
+ ----------------------------------------------------------------------------------------------------------------
+ CiscoTAC-1                      configuration  29    /31        normal        periodic    
+ CiscoTAC-1                      crash          30    /32        debugging     normal      
+ CiscoTAC-1                      crash          31    /33        debugging     normal      
+ CiscoTAC-1                      crash          32    /34        debugging     normal      
+ CiscoTAC-1                      diagnostic     33    /35        minor         normal      
+ CiscoTAC-1                      environment    34    /36        warning       normal      
+ CiscoTAC-1                      inventory      35    /37        normal        normal      
+ CiscoTAC-1                      inventory      36    /38        normal        normal      
+ CiscoTAC-1                      inventory      37    /39        normal        periodic    
+ CiscoTAC-1                      syslog         38    /40        warning       pattern     
+ CiscoTAC-1                      syslog         39    /41        major         pattern     
+ CiscoTAC-1                      test           40    /42        normal        normal      

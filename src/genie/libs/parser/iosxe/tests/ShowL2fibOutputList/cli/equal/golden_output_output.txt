@@ -1,0 +1,49 @@
+show l2fib output-list  
+
+ID   BD   Port Flags                
+
+---- ---- ---- --------------------  
+
+1055 31   3    flood list           
+
+1056 32   3    flood list           
+
+1057 33   3    flood list           
+
+1058 34   3    flood list           
+
+1059 35   3    flood list           
+
+1060 36   3    flood list           
+
+1061 37   3    flood list           
+
+1062 38   3    flood list           
+
+1063 39   3    flood list           
+
+1064 40   3    flood list           
+
+1065 41   3    flood list           
+
+1066 42   3    flood list           
+
+1067 43   3    flood list           
+
+1068 44   3    flood list           
+
+1069 45   3    flood list           
+
+1070 46   3    flood list           
+
+1071 47   3    flood list           
+
+1072 48   3    flood list           
+
+1073 49   3    flood list           
+
+1074 50   3    flood list           
+
+1225 201  3    flood list           
+
+1226 202  3    flood list 

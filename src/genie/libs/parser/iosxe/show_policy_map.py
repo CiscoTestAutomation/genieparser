@@ -164,6 +164,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('cir_be_bytes'): int,
                                         Optional('pir_bc_bytes'): int,
                                         Optional('pir_be_bytes'): int,
+                                        Optional('rate_bps'): int,
+                                        Optional('burst_bytes'): int,
                                         Optional('police_bps'): int,
                                         Optional('police_limit'): int,
                                         Optional('extended_limit'): int,
@@ -612,7 +614,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p1 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                        'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
+                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*))$')
         
         # GigabitEthernet0/1/5 : Service Group 1
         p1_0 = re.compile(r'^(?P<top_level>(Giga.*)): +Service Group +(?P<service_group>(\d+))$')
@@ -684,6 +686,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # cir 10000000000 bps, bc 30000000 bytes, be 60000000 bytes
         p8_5 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +bc +(?P<pir_bc_bytes>(\d+)) bytes, +be +(?P<cir_be_bytes>(\d+)) bytes$')
+
+        # rate 1000000000 bps, burst 1024000 bytes
+        p8_6 = re.compile(r'^rate (?P<rate_bps>\d+) bps, burst (?P<burst_bytes>\d+) bytes$')
 
         # conformed 8 packets, 800 bytes; actions:
         p9 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
@@ -1162,6 +1167,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['pir_bc_bytes'] = int(m.groupdict()['pir_bc_bytes'])
                 police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
+                continue
+
+            # rate 1000000000 bps, burst 1024000 bytes
+            m = p8_6.match(line)
+            if m:
+                police_dict['rate_bps'] = int(m.groupdict()['rate_bps'])
+                police_dict['burst_bytes'] = int(m.groupdict()['burst_bytes'])
                 continue
 
             # conformed 8 packets, 800 bytes; actions:
@@ -1737,7 +1749,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 class_dict['fair_queue_limit_per_flow'] = int(m.groupdict()['queue_limit'])
 
-        
         return ret_dict
 
 

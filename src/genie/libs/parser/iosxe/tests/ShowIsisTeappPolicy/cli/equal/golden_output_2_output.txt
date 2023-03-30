@@ -1,0 +1,26 @@
+R1#sh isis teapp policy 5.5.5.5
+ISIS SR Policy Endpoints:
+Tag null:
+ISIS SR Policy Endpoints:
+Tag 1:
+ 5.5.5.5 - System-id: R5.00 level: 1
+   Tunnel67529 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67531 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67534 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67527 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67532 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel66639 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:23          
+   Tunnel66750 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:25          
+   Tunnel66861 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:25          
+   Tunnel66972 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:24          
+   Tunnel67083 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:24          
+   Tunnel67194 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:23          
+   Tunnel67305 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:23          
+   Tunnel67416 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67535 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67546 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel67556 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22          
+   Tunnel66573 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:23          
+   Tunnel66584 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:25          
+   Tunnel66595 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:25                  
+   Tunnel66562 - Flags: 0 (SPF) Metric-mode: None Last update: 20:48:30 

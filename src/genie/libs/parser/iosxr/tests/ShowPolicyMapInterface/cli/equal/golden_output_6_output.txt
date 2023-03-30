@@ -1,0 +1,394 @@
+RP/0/RP0/CPU0:CEG2#show policy-map interface Bundle-Ether203
+Thu Dec  8 00:38:10.753 EST
+
+Bundle-Ether203 input: SERVICE-BPS
+
+Class IPV4-PACKET-IS-00
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :          3086575071/203713961618         0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-CS1
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF11
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-CS2
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF21
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF22
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF23
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF31
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF32
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF33
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF41
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF42
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-AF43
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV4-PACKET-IS-45
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV4-PACKET-IS-EF
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV4-PACKET-IS-CS6
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :              318505/285021873            0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :              318505/285021873            0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV4-PACKET-IS-CATCH-ALL
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class MPLS-PACKET-IS-00
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                 127/24130                0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class MPLS-PACKET-IS-01
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class MPLS-PACKET-IS-03
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :             6017012/1624593240           0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class MPLS-PACKET-IS-05
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class MPLS-PACKET-IS-06
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :              219590/167414590            0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :              219590/167414590            0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV6-PACKET-IS-00
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :          1028858309/88481814574          0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-CS1
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF11
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-CS2
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF21
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF22
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF23
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF31
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF32
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF33
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF41
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF42
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-AF43
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class IPV6-PACKET-IS-45
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV6-PACKET-IS-EF
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :                   0/0                    0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV6-PACKET-IS-CS6
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :              107288/69032563             0
+    Transmitted         : N/A
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :              107288/69032563             0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+Class IPV6-PACKET-IS-CATCH-ALL
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         : N/A
+    Total Dropped       : N/A
+
+Bundle-Ether203 output: TX-QOS-RAN
+
+Class TRAFFIC-CLASS-1-DSCP
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                4682/1370725              0
+    Transmitted         :                4682/1370729              0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524738
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                4682/1370729              0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+    WRED profile for WRED Curve 1
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+    WRED profile for WRED Curve 2
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+Class TRAFFIC-CLASS-1-EXP
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                 127/24130                0
+    Transmitted         :                 127/24130                0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524739
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                 127/24130                0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+    WRED profile for WRED Curve 1
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+Class TRAFFIC-CLASS-2-DSCP
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                 240/61408                0
+    Transmitted         :                 240/61408                0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524740
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                 240/61408                0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+    WRED profile for WRED Curve 1
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+    WRED profile for WRED Curve 2
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+Class TRAFFIC-CLASS-2-EXP
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :             6017012/1648661288           0
+    Transmitted         :             6017012/1648661288           0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524741
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :             6017012/1648661288           0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+    WRED profile for WRED Curve 1
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+Class TRAFFIC-CLASS-3
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         :                   0/0                    0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524742
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                   0/0                    0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+    WRED profile for WRED Curve 1
+    RED Transmitted (packets/bytes)            : N/A
+    RED random drops(packets/bytes)            : 0/0
+    RED maxthreshold drops(packets/bytes)      : N/A
+    RED ecn marked & transmitted(packets/bytes): N/A
+Class TRAFFIC-CLASS-4
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :             1441490/355556995            0
+    Transmitted         :             1441493/355557232            0
+    Total Dropped       :                   0/0                    0
+  Policing statistics                (packets/bytes)     (rate - kbps)
+    Policed(conform)    :             1441490/355556995            0
+    Policed(exceed)     :                   0/0                    0
+    Policed(violate)    :                   0/0                    0
+    Policed and dropped :                   0/0
+  Queueing statistics
+    Queue ID                             : 524736
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :             1441493/355557232            0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+Class class-default
+  Classification statistics          (packets/bytes)     (rate - kbps)
+    Matched             :                   0/0                    0
+    Transmitted         :                   0/0                    0
+    Total Dropped       :                   0/0                    0
+  Queueing statistics
+    Queue ID                             : 524743
+    High watermark                       : N/A
+    Inst-queue-len  (packets)            : 0
+    Avg-queue-len                        : N/A
+    Taildropped(packets/bytes)           : 0/0
+    Queue(conform)      :                   0/0                    0
+    Queue(exceed)       :                   0/0                    0
+    RED random drops(packets/bytes)      : 0/0
+
+RP/0/RP0/CPU0:CEG2#

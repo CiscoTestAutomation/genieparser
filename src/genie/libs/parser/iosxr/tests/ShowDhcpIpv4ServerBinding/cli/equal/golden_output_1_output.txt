@@ -1,0 +1,7 @@
+show dhcp ipv4 server binding
+Mon Feb  6 10:15:46.937 UTC
+
+                                           Lease                                                
+ MAC Address      IP Address      State    Remaining       Interface          VRF      Sublabel 
+--------------  --------------  ---------  ---------  -------------------  ---------  ----------
+58ac.7881.ab02  172.16.1.2      BOUND      82910      Gi0/0/0/0.1001       DHCP-SERVER-LOCAL 0x0       
