@@ -532,3 +532,52 @@ class ShowVrfDetail(ShowVrfDetailSuperParser):
 
         return super().cli(output=out)
 # vim: ft=python et sw=4
+
+
+'''
+ShowVRFIPv6.py
+'''
+
+# ====================================================
+#  schema for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6Schema(MetaParser):
+    """Schema for show vrf ipv6 {vrf}"""
+    schema = {
+        Any(): 
+        {
+            'default_rd': str,
+            'protocols': str,
+            'interface': str,
+        }   
+    }
+
+# ====================================================
+#  parser for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6(ShowVRFIPv6Schema):
+    """Parser for :
+        show vrf ipv6 <vrf>"""
+
+    cli_command = 'show vrf ipv6 {vrf}'
+
+    def cli(self, vrf='',output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+            
+        res_dict = {}
+        p1 = re.compile(r'^(?P<vrf>[\w\d]+)+\s+(?P<default_rd>[\d\:\d]+)+\s+(?P<protocols>[\w\,\w]+)\s+\s\s(?P<interface>[\w\d]+)*$')
+        for line in output.splitlines():
+            line = line.strip()
+            # vrf21                                21:1              ipv4,ipv6   Vl21'''
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                res_dict.setdefault(groups['vrf'], {})
+                vrf_dict = res_dict[groups['vrf']]
+                vrf_dict.update({
+                'default_rd' : groups['default_rd'],
+                'protocols' : groups['protocols'],
+                'interface' : groups['interface'],})
+
+        return res_dict

@@ -1,0 +1,44 @@
+BGP routing table entry for [3][172.11.1.22:99][0][32][172.11.1.1]/17, version 264
+Paths: (1 available, best #1, table evi_99)
+  Flag: 0x100
+  Not advertised to any peer
+  Refresh Epoch 2
+  Local, imported path from [3][172.11.1.1:99][0][32][172.11.1.1]/17 (global)
+    172.11.1.1 (metric 30) (via default) from 172.11.1.11 (172.11.1.11)
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+      Extended Community: RT:9999:99 ENCAP:8
+      Originator: 172.11.2.1, Cluster list: 172.11.1.11
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200199, tunnel identifier: < Tunnel Endpoint: 172.11.1.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jan 22 2023 07:59:46 UTC
+BGP routing table entry for [3][172.11.1.22:99][0][32][172.11.1.2]/17, version 265
+Paths: (1 available, best #1, table evi_99)
+  Flag: 0x100
+  Not advertised to any peer
+  Refresh Epoch 2
+  Local, imported path from [3][172.11.1.2:99][0][32][172.11.1.2]/17 (global)
+    172.11.1.2 (metric 30) (via default) from 172.11.1.11 (172.11.1.11)
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+      Extended Community: RT:9999:99 ENCAP:8
+      Originator: 172.11.1.2, Cluster list: 172.11.1.11
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200199, tunnel identifier: < Tunnel Endpoint: 172.11.1.2 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jan 22 2023 07:59:46 UTC
+BGP routing table entry for [3][172.11.1.22:99][0][32][172.11.1.22]/17, version 83
+Paths: (1 available, best #1, table evi_99)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    0.0.0.0 (via default) from 0.0.0.0 (172.11.1.22)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: RT:65001:99 ENCAP:8
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200199, tunnel identifier: 0000 0000
+      Local irb vxlan vtep:
+        vrf:not found, l3-vni:0
+        local router mac:0000.0000.0000
+        core-irb interface:(not found)
+        vtep-ip:172.11.1.22
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jan 22 2023 07:58:35 UTC
+

@@ -103,9 +103,9 @@ class ShowParserStatisticsSchema(MetaParser):
                 'function': str,
                 'time': int,
                 'command': str,
-                'date': str,
-                'time_with_seconds': str,
-                'time_zone': str,
+                Optional('date'): str,
+                Optional('time_with_seconds'): str,
+                Optional('time_zone'): str,
             }
         },
         'parser_last_bootup_cache_hits': {
@@ -152,7 +152,7 @@ class ShowParserStatistics(ShowParserStatisticsSchema):
         p6 = re.compile(r'^Bulksync time:+\s+(?P<bulksync_time>\d+)$')
 
         # Top 10 commands
-        p7 = re.compile(r'(?P<function>\S+)\s+(?P<time_ms>\d+)\s+(?P<command>.*)\s*(?P<date>\d{4}\/\d+\/\d+)\s+(?P<time_with_seconds>\d+:\d+:\d+.\d+)\s+(?P<timezone>\w+)')
+        p7 = re.compile(r'(?P<function>0[xX][A-Fa-f0-9]+)\s+(?P<time_ms>\d+)\s+(?P<command>.*?)(\s*(?P<date>\d{4}\/\d+\/\d+)\s+(?P<time_with_seconds>\d+:\d+:\d+.\d+)\s+(?P<timezone>\w+))?$')
 
         # Bootup hits
         p8 = re.compile(r'^Bootup hits:+\s+(?P<bootup_time>\d+)$')
@@ -223,9 +223,10 @@ class ShowParserStatistics(ShowParserStatisticsSchema):
                 top_commands.setdefault('time', int(group['time_ms']))
                 top_commands.setdefault('command', group['command'])
                 top_commands.update({'command': group['command'].strip()})
-                top_commands.setdefault('date', group['date'])
-                top_commands.setdefault('time_with_seconds', group['time_with_seconds'])
-                top_commands.setdefault('time_zone', group['timezone'])
+                if group['date']:
+                    top_commands.setdefault('date', group['date'])
+                    top_commands.setdefault('time_with_seconds', group['time_with_seconds'])
+                    top_commands.setdefault('time_zone', group['timezone'])
                 continue
 
             # Bootup hits

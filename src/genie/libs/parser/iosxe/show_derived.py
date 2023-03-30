@@ -32,7 +32,10 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
                 Optional('tunnel_source'): str,
                 Optional('tunnel_mode'): str,
                 Optional('tunnel_destination'): str,
-                Optional('tunnel_ipsec_profile'): str
+                Optional('tunnel_ipsec_profile'): str,
+                Optional('description'): str,
+                Optional('switchport_mode'): str,
+                Optional('allowed_vlan'): str
             },
         },
     }
@@ -95,6 +98,15 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
         # tunnel protection ipsec profile ipsec_global_profile
         p12 = re.compile(
             r"^tunnel\s+protection\s+ipsec\s+profile\s+(?P<tunnel_ipsec_profile>[\S\s]+)$")
+
+        # description Sourcing interface template beta
+        p13 = re.compile(r"^description\s+(?P<description>[\S\s]+)$")
+        
+        # switchport trunk allowed vlan 3
+        p14 = re.compile(r"^switchport trunk allowed vlan\s+(?P<allowed_vlan>\S+)$")
+        
+        # switchport mode trunk
+        p15 = re.compile(r"^switchport mode\s+(?P<switchport_mode>\w+)$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -171,5 +183,19 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
             if m:
                 intf_dict['tunnel_ipsec_profile'] = m.groupdict()['tunnel_ipsec_profile']
                 continue
-            
+
+            m = p13.match(line)
+            if m:
+                intf_dict['description'] = m.groupdict()['description']
+                continue
+
+            m = p14.match(line)
+            if m:
+                intf_dict['allowed_vlan'] = m.groupdict()['allowed_vlan']
+                continue
+
+            m = p15.match(line)
+            if m:
+                intf_dict['switchport_mode'] = m.groupdict()['switchport_mode']
+                continue
         return ret_dict

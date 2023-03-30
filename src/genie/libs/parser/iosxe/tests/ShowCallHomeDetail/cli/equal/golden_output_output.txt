@@ -1,0 +1,75 @@
+ Current call home settings:
+     call home feature : disable
+     call home message's from address: Not yet set up
+     call home message's reply-to address: Not yet set up
+ 
+     vrf for call-home messages: Not yet set up
+ 
+     contact person's email address: Not yet set up
+           
+     contact person's phone number: Not yet set up
+     street address: Not yet set up
+     customer ID: Not yet set up
+     contract ID: Not yet set up
+     site ID: Not yet set up
+           
+     source ip address: Not yet set up
+     source interface: Not yet set up
+     Mail-server: Not yet set up
+     http proxy: Not yet set up
+     http secure:
+       server identity check: enabled
+     http resolve-hostname: default
+           
+     Diagnostic signature: enabled
+     Profile: CiscoTAC-1 (status: INACTIVE)
+           
+     Smart licensing messages: disabled
+           
+     aaa-authorization: disable
+     aaa-authorization username: callhome (default)
+     data-privacy: normal
+     syslog throttling: enable
+           
+     Rate-limit: 20 message(s) per minute
+           
+     Snapshot command: Not yet set up
+           
+ Available alert groups:
+     Keyword                  State   Description
+     ------------------------ ------- -------------------------------
+     configuration            Enable  configuration info
+     crash                    Enable  crash and traceback info
+     diagnostic               Enable  diagnostic info
+     environment              Enable  environmental info
+     inventory                Enable  inventory info
+     snapshot                 Enable  snapshot info
+     syslog                   Enable  syslog info
+           
+ Profiles: 
+           
+ Profile Name: CiscoTAC-1
+     Profile status: INACTIVE
+     Profile mode: Full Reporting
+     Reporting Data: Smart Call Home, Smart Licensing
+     Preferred Message Format: xml
+     Message Size Limit: 3145728 Bytes
+     Transport Method: email
+     Email address(es): callhome@cisco.com
+     Other address(es): default
+           
+     Periodic configuration info message is scheduled every 1 day of the month at 09:15
+           
+     Periodic inventory info message is scheduled every 1 day of the month at 09:00
+           
+     Alert-group               Severity
+     ------------------------  ------------
+     crash                     debugging   
+     diagnostic                minor       
+     environment               warning     
+     inventory                 normal      
+           
+     Syslog-Pattern            Severity
+     ------------------------  ------------
+     APF-.-WLC_.*              warning     
+     .*                        major       

@@ -1,0 +1,6 @@
+Building configuration...
+
+Template Name : abcdefghijklmnopqrstuvwxyz123456789
+Template Definition :
+!
+end

@@ -1,0 +1,39 @@
+ HundredGigE1/0/5
+
+  Service-policy input: map1
+
+    Class-map: cs1 (match-all)
+      0 packets
+      Match:  dscp cs1 (8)
+      police:
+          rate 1000000000 bps, burst 1024000 bytes
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: cs2 (match-all)
+      0 packets
+      Match:  dscp cs2 (16)
+      police:
+          rate 1000000000 bps, burst 1024000 bytes
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: cs5 (match-all)
+      105392304 packets
+      Match:  dscp cs5 (40)
+      police:
+          rate 1000000000 bps, burst 1024000 bytes
+        conformed 6955892064 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 64863000 bps, exceeded 0000 bps
+      QoS Set
+        dscp cs4
+

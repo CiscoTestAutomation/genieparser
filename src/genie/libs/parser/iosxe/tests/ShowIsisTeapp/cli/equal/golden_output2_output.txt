@@ -1,0 +1,9 @@
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved
+
+asr1k-34#show isis teapp
+Tag vrf_blue:
+Tag null:
+ISIS TE Attr PM Information:
+Et0/0: IDB num:2 Min:1 Max:999 Avg:399 Var:414
+Et0/1: IDB num:3 Min:1 Max:999 Avg:399 Var:414

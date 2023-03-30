@@ -1,0 +1,5 @@
+TCG status summary:
+Loc Interface             IIF-ID           Dir State:(cfg,opr) Policy              
+--- --------------------- ---------------- --- --------------- --------------------
+L:3 GigabitEthernet3/0/3  0x0000000000006a OUT VALID,SET_INHW  pm1
+L:3 GigabitEthernet3/0/4  0x0000000000006b OUT VALID,SET_INHW  pm1

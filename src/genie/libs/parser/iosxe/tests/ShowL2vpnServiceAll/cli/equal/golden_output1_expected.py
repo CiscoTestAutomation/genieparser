@@ -1,7 +1,13 @@
+# golden_output_expected.py
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
 expected_output = {
     "vpls_name": {
         "VPLS-2053": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100003": {
                     "priority": 0,
@@ -20,6 +26,7 @@ expected_output = {
         },
         "VPLS-2052": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100002": {
                     "priority": 0,
@@ -38,6 +45,7 @@ expected_output = {
         },
         "VPLS-2071": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100209": {
                     "priority": 0,
@@ -56,6 +64,7 @@ expected_output = {
         },
         "VPLS-2058": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100008": {
                     "priority": 0,
@@ -74,6 +83,7 @@ expected_output = {
         },
         "VPLS-2067": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100205": {
                     "priority": 0,
@@ -92,6 +102,7 @@ expected_output = {
         },
         "VPLS-2061": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100224": {
                     "priority": 0,
@@ -110,6 +121,7 @@ expected_output = {
         },
         "VPLS-2069": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100019": {
                     "priority": 0,
@@ -128,6 +140,7 @@ expected_output = {
         },
         "VPLS-2064": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100202": {
                     "priority": 0,
@@ -146,6 +159,7 @@ expected_output = {
         },
         "VPLS-2070": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100020": {
                     "priority": 0,
@@ -164,6 +178,7 @@ expected_output = {
         },
         "VPLS-2057": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100220": {
                     "priority": 0,
@@ -182,6 +197,7 @@ expected_output = {
         },
         "VPLS-2055": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100005": {
                     "priority": 0,
@@ -200,6 +216,7 @@ expected_output = {
         },
         "VPLS-2056": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100006": {
                     "priority": 0,
@@ -218,6 +235,7 @@ expected_output = {
         },
         "VPLS-2051": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100001": {
                     "priority": 0,
@@ -236,6 +254,7 @@ expected_output = {
         },
         "VPLS-2059": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100009": {
                     "priority": 0,
@@ -254,6 +273,7 @@ expected_output = {
         },
         "VPLS-2063": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100226": {
                     "priority": 0,
@@ -272,6 +292,7 @@ expected_output = {
         },
         "VPLS-2060": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100010": {
                     "priority": 0,
@@ -290,6 +311,7 @@ expected_output = {
         },
         "VPLS-2068": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100018": {
                     "priority": 0,
@@ -308,6 +330,7 @@ expected_output = {
         },
         "VPLS-2066": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100016": {
                     "priority": 0,
@@ -326,6 +349,7 @@ expected_output = {
         },
         "VPLS-2062": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100012": {
                     "priority": 0,
@@ -344,6 +368,7 @@ expected_output = {
         },
         "VPLS-2065": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100015": {
                     "priority": 0,
@@ -362,6 +387,7 @@ expected_output = {
         },
         "VPLS-2054": {
             "state": "UP",
+            "description": "none",
             "interface": {
                 "pw100217": {
                     "priority": 0,

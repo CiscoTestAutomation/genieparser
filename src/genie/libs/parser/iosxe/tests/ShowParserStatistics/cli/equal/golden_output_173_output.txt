@@ -1,0 +1,25 @@
+show parser statistics
+Last configuration file parsed: Number of Commands: 15, Time: 5 ms
+
+Parser cache: enabled, 253 hits, 890 misses
+
+Active startup time:           0       
+Standby startup time:          0       
+Copy to running-config time:   0       
+Bulksync time:                 233     
+Top 10 slowest command:
+  Function    Time (ms)   Command
+  0x562ECABA2200    112         show file systems
+  0x562ECABA2200    112         show file systems
+  0x562ECCCB5A50    206         vrf forwarding Mgmt-vrf
+  0x562ECA487050    310         show running-config all
+  0x562ECABA8120    944         dir flash:
+  0x562ECABA8120    949         dir flash:
+  0x562ECA481F40    1340        en
+  0x562ECA481F40    1725        en
+  0x562ECA397150    4257        connect 3
+  0x562EC582FFD0    6614        show version running
+Parser last bootup cache hits:
+  Bootup hits: 75
+  Bootup misses: 414
+  Bootup clear parser cache: 21

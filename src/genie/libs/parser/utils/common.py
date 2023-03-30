@@ -198,7 +198,10 @@ def _load_parser_json():
         ext = ExtendParsers(ext_parser_package)
         ext.extend()
 
-        ext.output.pop('tokens', None)
+        # tokens are not used for lookup
+        ext.output.pop('tokens', [])
+
+        # extend_info is only used for summary information
         summary = ext.output.pop('extend_info', None)
 
         merge_dict(parser_data, ext.output, update=True)
@@ -315,7 +318,7 @@ def _fuzzy_search_command(search,
                           device=None):
     """ Find commands that match the search criteria.
 
-        Args: 
+        Args:
             search (`str`): the search query
             fuzzy (`bool`): whether or not fuzzy mode should be used
             os (`str`): the device os that the search space is limited to
@@ -401,7 +404,7 @@ def _fuzzy_search_command(search,
 def _is_regular_token(token):
     """ Checks if a token is regular (does not contain regex symbols).
 
-        Args: 
+        Args:
             token (`str`): the token to be tested
 
         Returns:
@@ -439,8 +442,8 @@ def _matches_fuzzy(i,
                    score=0):
     """ Compares between given tokens and command to see if they match.
 
-        Args: 
-            i (`int`): current end of tokens 
+        Args:
+            i (`int`): current end of tokens
             j (`int`): current index of command tokens
             tokens (`list`): the search tokens
             command (`str`): the command to be compared with
