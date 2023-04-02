@@ -3395,14 +3395,12 @@ class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
 class ShowSwitchVirtualSchema(MetaParser):
     """ Schema for 'show switch virtual' """
     schema = {
-       'switch_virtual': {
-           'mode': str,
-           Optional('domain_number'): int,
-           Optional('switches') : {
-               Any(): {
-                   'role': str
-               }
-            } 
+        'mode': str,
+        Optional('domain_number'): int,
+        Optional('switches') : {
+            Any(): {
+                'role': str
+            }
         } 
     }
     
