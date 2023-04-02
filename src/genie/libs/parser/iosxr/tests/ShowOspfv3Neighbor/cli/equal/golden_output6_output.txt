@@ -1,0 +1,6 @@
+Neighbors for OSPFv3 100
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+1.100.1.2       1     INIT/DROTHER         00:00:33    35              GigabitEthernet0/0/0/1
+
+Total neighbor count: 1

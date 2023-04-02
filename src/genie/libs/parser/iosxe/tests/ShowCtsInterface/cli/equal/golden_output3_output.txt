@@ -1,0 +1,31 @@
+Global Dot1x feature is Disabled
+Interface TenGigabitEthernet1/0/6:
+    CTS is enabled, mode:    MANUAL
+    IFC state:               OPEN
+    Interface Active for       1w5d
+    Authentication Status:   NOT APPLICABLE
+        Peer identity:       "unknown"
+        Peer's advertised capabilities: ""
+    Authorization Status:    SUCCEEDED
+        Peer SGT:            2000
+        Peer SGT assignment: Trusted
+    SAP Status:              NOT APPLICABLE
+    Propagate SGT:           Enabled
+    Cache Info:
+        Expiration            : N/A
+        Cache applied to link : NONE
+
+    Statistics:
+        authc success:              0
+        authc reject:               0
+        authc failure:              0
+        authc no response:          0
+        authc logoff:               0
+        sap success:                0
+        sap fail:                   0
+        authz success:              0
+        authz fail:                 0
+        port auth fail:             0
+
+    L3 IPM:   disabled.
+

@@ -1,0 +1,8 @@
+
+asr1k-34#show isis teapp
+Tag null:
+Tag 1:
+ISIS TE Attr PM Information:
+Et0/0: IDB num:2 Min:0 Max:0 Min-max-anomaly:0 Avg:0 Avg-anomaly:0 Var:0
+Is-Loss-set:1 Loss:166666 Loss-anomaly:0
+

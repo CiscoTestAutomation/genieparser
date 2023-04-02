@@ -284,6 +284,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   &    10.69.0.0 [1/0] via 10.34.0.1
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        # B   +    10.55.0.0 [20/0] via 10.144.0.1 (vrf-blue), 00:00:09
         # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
         # ND  ::/0 [2/0]
         # NDp 2001:103::/64 [2/0]
@@ -291,29 +292,33 @@ class ShowIpRoute(ShowIpRouteSchema):
             p3 = re.compile(
                 r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
-                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
             # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\-\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
-            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
 
         else:
             p3 = re.compile(
                 r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]\s|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
-                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
                 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
             # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
-            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
 
         #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
         p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
@@ -520,6 +525,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                         updated = m.groupdict()['date']
 
                     #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
                     if m.groupdict()['nh_vrf']:
                         nh_vrf = m.groupdict()['nh_vrf']
                     route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
@@ -613,6 +619,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                         updated = m.groupdict()['date']
 
                     #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
                     if m.groupdict()['nh_vrf']:
                         nh_vrf = m.groupdict()['nh_vrf']
 

@@ -1,0 +1,39 @@
+MATM counters
+
+Total non-cpu mac entries       : 3
+Mac Learn SPI Msg Count         : 0
+Mac Learn SPI Err Count         : 0
+Mac Delete SPI Msg Count        : 0
+Mac Delete SPI Err Count        : 0
+Mac Learn Count                 : 2325
+Mac Add Count                   : 2336
+Mac AL add Count                : 2327
+Mac Del Count                   : 1300
+Mac AL Del Count                : 2324
+Mac Move Count                  : 0
+Mac AL Move Count               : 0
+Mac Clear Count                 : 7
+Mac Del all count               : 3269
+Mac table create Count          : 12
+Mac VP event Count              : 84
+Mac Update info Count           : 0
+Mac Vlan age config Event Count : 0
+Mac Vlan Link Event Count       : 54
+Mac SVI linkEvent Count         : 35
+Mac Bsync Event Count           : 0
+Mac Isync Event Count           : 0
+Mac Recon Start Count           : 0
+Mac Recon Event Count           : 0
+Mac IFM event Count             : 2158
+Mac FEC Event Count             : 12
+Mac Aging Tick Count            : 0
+Mac Retry event Count           : 0
+Mac Hw Update Err Count         : 0
+Mac In retryQ Count             : 0
+Mac Polling Timer Count         : 0
+Mac Lisp Local Add Count        : 0
+Mac Lisp Remote Add Count       : 0
+Mac Lisp Local Move Count       : 0
+Mac Lisp Remote Move Count      : 0
+Mac Lisp Delete Count           : 0
+Mac VPLS move from/to Count     : 0

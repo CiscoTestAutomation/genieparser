@@ -1,0 +1,19 @@
+Building configuration...
+
+User Defined Service-Template
+=============================
+
+
+    Name                     :  webauth-global-inactive
+    Description              :  NONE
+    VLAN                     :  NONE
+    VNID                     :  NONE
+    Inactivity-Timer         :  3600 sec
+    MDNS POLICY              :  NONE!
+
+    Name                     :  sdsdsds
+    Description              :  dsds sdsds
+    VLAN                     :  5
+    VNID                     :  sjdsnd
+    MDNS POLICY              :  NONE!
+end

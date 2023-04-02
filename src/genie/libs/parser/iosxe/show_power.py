@@ -443,7 +443,8 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
         # Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
         # Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
         # Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD
-        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>[\w\/]+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>.*)$')
+        # Tw1/0/25    auto   n/a  lldp-shutdown 0.0       0.0       0  
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>[\w\/]+)\s+(?P<oper_state>[\,\-\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s*(?P<device>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1019,7 +1020,8 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
         p2 = re.compile(r'^\s*Inline\sPower\sMode:\s+(?P<inline_power_mode>\w+)$')
 
         # Operational status (Alt-A,B): on,off
-        p3 = re.compile(r'^\s*Operational\s+status.*:\s+(?P<operational_status>[\w\,]+)$')
+        # Operational status (Alt-A,B): lldp-shutdown
+        p3 = re.compile(r'^\s*Operational\s+status.*:\s+(?P<operational_status>\S+)$')
 
         # Device Detected: yes
         p4 = re.compile(r'^\s*Device\s+Detected:\s+(?P<device_detected>\w+)$')

@@ -927,10 +927,11 @@ class ShowLispService(ShowLispServiceSchema):
         # Proxy-ITR Router (PITR):             disabled
         # Proxy-ETR Router (PETR):             disabled
         # Proxy-ETR Router (PETR):             enabled RLOCs: 10.10.10.10
+        # Proxy-ITR Router (PITR):             enabled RLOCs: 2001:21:21:21::21
         p4 = re.compile(r'Proxy\-(ITR|ETR) +Router +\((?P<proxy_type>(PITR|PETR))\)'
                         r'*: +(?P<proxy_itr_router>(enabled|disabled))'
                         r'(?: +RLOCs: +(?P<proxy_itr_rloc>'
-                        r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})))?$')
+                        r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|[a-fA-F\d\:]+))?$')
 
         # ITR local RLOC (last resort):             *** NOT FOUND ***
         p5 = re.compile(r'^ITR +local +RLOC +\(last +resort\):\s+'
@@ -1001,22 +1002,24 @@ class ShowLispService(ShowLispServiceSchema):
         p23 = re.compile(r'^Publication-Subscription:\s+(?P<role>enabled|disabled)$')
 
         # Publisher(s):                           *** NOT FOUND ***
-        p24 = re.compile(r'^Publisher\(s\):\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+        # Publisher(s):                           2001:4:4:4::4
+        p24 = re.compile(r'^Publisher\(s\):\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)')
 
         # Subscriber(s):                           *** NOT FOUND ***
-        p25 = re.compile(r'^Subscriber\(s\):\s+(?P<subscribers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+        # Subscriber(s):                           2001:4:4:4::4
+        p25 = re.compile(r'^Subscriber\(s\):\s+(?P<subscribers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)')
 
         # ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
         p26 = re.compile(r'ITR +Map\-Resolver\(s\) *: +(?P<mr_address>(.*))$')
 
         #                                      10.84.66.66 *** not reachable ***
-        p26_1 = re.compile(r'^(?P<prefix_list>([0-9\.\:]+))(?: +\*.*)?$')
+        p26_1 = re.compile(r'^(?P<prefix_list>([0-9\.\:]+)|([a-fA-F\d\:]+))(?: +\*.*)?$')
 
         # ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
         p27 = re.compile(r'ETR +Map\-Server\(s\) *: +(?P<ms_address>(.*))$')
 
         #                                      10.84.66.66 (never)
-        p27_1 = re.compile(r'^(?P<prefix_list>([0-9\.\:]+))(?: +\((?P<uptime>(\S+))\))?$')
+        p27_1 = re.compile(r'^(?P<prefix_list>([0-9\.\:]+)|([a-fA-F\d\:]+))(?: +\((?P<uptime>(\S+))\))?$')
 
         # xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
         p28 = re.compile(r'^xTR-ID *: +(?P<xtr_id>(\S+))$')
@@ -2048,7 +2051,7 @@ class ShowLispServiceSummarySchema(MetaParser):
 # ====================================================
 class ShowLispServiceSummary(ShowLispServiceSummarySchema):
 
-    ''' Parser for: 
+    ''' Parser for:
         * show lisp service {service} summary
         * show lisp {lisp_id} service {service} summary
         * show lisp locator-table {locator_table} service {service} summary
@@ -2057,7 +2060,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
 
     cli_command = ['show lisp service {service} summary',
                    'show lisp {lisp_id} service {service} summary',
-                   'show lisp locator-table {locator_table} service {service} summary', 
+                   'show lisp locator-table {locator_table} service {service} summary',
                    'show lisp locator-table vrf {vrf} service {service} summary']
 
     def cli(self, service, lisp_id=None, locator_table=None, vrf=None, output=None):
@@ -3678,7 +3681,7 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
 
         # Number of rejected EID-prefixes due to limit:     0
         p60 = re.compile(r'^Number of rejected EID-prefixes due to limit:\s+'
-                         r'(?P<rejected_eid_prefix_due_to_limit>\d+)$') 
+                         r'(?P<rejected_eid_prefix_due_to_limit>\d+)$')
 
         # Number of data signals processed:                 2 (+ dropped 0)
         p61 = re.compile(r'^Number of data signals processed:\s+'
@@ -5460,7 +5463,7 @@ class ShowLispIpv4Publication(ShowLispIpv4PublicationSchema):
         p7 = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s+\S+\s+\S+\s+\S+\s+(?P<encap_iid>\S+)")
 
         for line in output.splitlines():
-            
+
             #Publication Information for LISP 0 EID-table vrf red (IID 4100)
             m=p1.match(line)
             if m:
@@ -5555,7 +5558,7 @@ class ShowLispIpv6Publication(ShowLispIpv4PublicationSchema):
 
         #Publication Information for LISP 0 EID-table vrf red (IID 4100)
         p1 = re.compile(r"^Publication\s+Information\s+for\s+LISP\s+"
-                        r"(?P<lisp_id>\d+)\s+EID-table\s+vrf\s+red\s+"
+                        r"(?P<lisp_id>\d+)\s+EID-table\s+vrf\s+\S+\s+"
                         r"\(IID\s+(?P<instance_id>\d+)\)$")
 
         #Entries total 2
@@ -5565,17 +5568,20 @@ class ShowLispIpv6Publication(ShowLispIpv4PublicationSchema):
         p3 = re.compile(r"^\S+\s+\S+\s+(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3})")
 
         #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p4 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))\s+")
+        p4 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+))\s+")
 
         #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p5 = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s+(?P<last_published>\S+)")
+        p5 = re.compile(r"^((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))"
+                        r"\s+(?P<last_published>\S+)")
 
         #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p6 = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s+\S+\s+[a-fA-F\d\:]+"
-                        r"\/\d{1,3}\s+(?P<rloc>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})")
+        p6 = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)\s+"
+                        r"\S+\s+[a-fA-F\d\:]+\/\d{1,3}\s+"
+                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|[a-fA-F\d\:]+)")
 
         #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p7 = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s+\S+\s+\S+\s+\S+\s+(?P<encap_iid>\S+)")
+        p7 = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|"
+                        r"[a-fA-F\d\:]+)\s+\S+\s+\S+\s+\S+\s+(?P<encap_iid>\S+)")
 
         for line in output.splitlines():
 
@@ -5922,11 +5928,11 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
         # LISP IPv4 imported routes for EID-table vrf blue (IID 102)
         # LISP IPv4 imported routes for LISP 1 EID-table vrf red (IID 105)
         p1 = re.compile(r'LISP +IPv(?P<v4_v6>[4-6]) +imported +routes +for(\sLISP\s)?(?P<lisp_id>\d)? +EID-table(\svrf)? +(?P<vrf>.+) +\(+IID +(?P<instance_id>\d+)+\)$')
-        
+
         # Config: 2, Entries: 1 (limit 5000)
         p2 = re.compile(r'Config: +(?P<config>\d+), +Entries: +(?P<entries>\d+) +\(+limit+ (?P<limit>\d+)+\)$')
 
-        # 50.1.1.0/24               00:00:13  static                          installed 
+        # 50.1.1.0/24               00:00:13  static                          installed
         p3 = re.compile(r'(?P<eid>[\da-fA-F.:]+\/\d+\S+) +(?P<uptime>\S+) +(?P<source>.+\S+) +(?P<rloc>.+\S+)? +(?P<cached>none|installed|replaced|full\S+)+(?P<state>.+)?$')
 
         for line in output.splitlines():
@@ -5948,7 +5954,7 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
                 instance_id_dict = \
                     lisp_id_dict.setdefault('instance_id', {})\
                                 .setdefault(instance_id, {})
-    
+
                 instance_id_dict.update({'eid_table': group['vrf']})
                 continue
 
@@ -5969,14 +5975,14 @@ class ShowLispRouteImportMapCacheSuperParser(ShowLispRouteImportMapCacheSchema):
                eid_dict = \
                    instance_id_dict.setdefault('eids',{})\
                                    .setdefault(group['eid'],{})
-             
-               eid_dict.update({'uptime': group['uptime']})  
+
+               eid_dict.update({'uptime': group['uptime']})
                eid_dict.update({'source': group['source']})
                eid_dict.update({'cache_db': group['cached']})
 
                if group['rloc'] != None:
-                   eid_dict.update({'rloc_set': group['rloc']})         
-               
+                   eid_dict.update({'rloc_set': group['rloc']})
+
                if group['state'] != None:
                    eid_dict.update({'state': group['state']})
 
@@ -6077,7 +6083,7 @@ class ShowLispIpv6RouteImportMapCache(ShowLispRouteImportMapCacheSuperParser,Sho
 
       def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None,
             eid_table=None, eid=None, vrf=None, eid_prefix=None):
-          
+
           if output is None:
              if lisp_id and instance_id and eid:
                  output = self.device.execute(self.cli_command[4].\
@@ -6335,7 +6341,7 @@ class ShowLispIpv6Away(ShowLispEidAwaySuperParser, ShowLispEidAwaySchema):
         show lisp eid-table vrf {eid_table} ipv6 away {eid}
         show lisp eid-table vrf {eid_table} ipv6 away {eid_prefix}
     '''
-    
+
     cli_command = [
         'show lisp instance-id {instance_id} ipv6 away',
         'show lisp instance-id {instance_id} ipv6 away {eid}',
@@ -6349,7 +6355,7 @@ class ShowLispIpv6Away(ShowLispEidAwaySuperParser, ShowLispEidAwaySchema):
         'show lisp eid-table {eid_table} ipv6 away',
         'show lisp eid-table {eid_table} ipv6 away {eid}',
         'show lisp eid-table {eid_table} ipv6 away {eid_prefix}',
-        'show lisp eid-table vrf {vrf} ipv6 away', 
+        'show lisp eid-table vrf {vrf} ipv6 away',
         'show lisp eid-table vrf {vrf} ipv6 away {eid}',
         'show lisp eid-table vrf {vrf} ipv6 away {eid_prefix}'
     ]
@@ -6385,7 +6391,7 @@ class ShowLispIpv6Away(ShowLispEidAwaySuperParser, ShowLispEidAwaySchema):
                 output = self.device.execute(self.cli_command[7].\
                                                 format(locator_table=locator_table, \
                                                    instance_id=instance_id, \
-                                                   eid=eid)) 
+                                                   eid=eid))
             elif locator_table and instance_id and eid_prefix:
                 output = self.device.execute(self.cli_command[8].\
                                                 format(locator_table=locator_table, \
@@ -6653,14 +6659,14 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         p1 = re.compile(r'^Output +for +router +lisp +(?P<lisp_id>(\S+))'
                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        # 23.23.23.23    ETR Map-Server not found      Down            Off
-        # 23.23.23.23    Unreachable                   Down            Off
-        # 23.23.23.23    Reachable                     Down            Off
-        # 23.23.23.23    No ETR MS                     Down            Off
-        p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F.:]+)\s+'
-                        r'(?P<state>ETR Map-Server not found|Unreachable'
-                        r'|Reachable|No ETR MS)\s+(?P<session>\w+)\s+'
-                        r'(?P<pubsub_state>\w+)$')
+        # 23.23.23.23                             ETR Map-Server not found       Down            Off
+        # 23.23.23.23                             Unreachable       Down                         Off
+        # 23.23.23.23                             Reachable       Down
+        # 2001:199:199:199::199                   ETR Map-Server  Down            Off
+        # 101.101.101.101                         No ETR MS        Up            Established
+        p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F\.:]+)\s+(?P<state>ETR Map-Server '
+                        r'not found|ETR Map-Server|Unreachable|Reachable|No ETR MS)\s+'
+                        r'(?P<session>\w+)\s+(?P<pubsub_state>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -6885,8 +6891,9 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                         r"\(IID\s+(?P<instance_id>\d+)\)$")
 
         #EID-prefix: 192.168.1.71/32
-        p2 = re.compile(r"^EID-prefix:\s+(?P<eid_prefixes>(\d{1,3}\.\d{1,3}\.\d{1,3}"
-                        r"\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3}))$")
+        # EID-prefix: 2001:172:168:1::/64
+        p2 = re.compile(r"^EID-prefix:\s+(?P<eid_prefixes>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}"
+                        r"|[a-fA-F\d\:]+\/\d{1,3})|([a-fA-F\d\:]+\/\d{1,3}))$")
 
         #First published:      03:05:56
         p3 = re.compile(r"^First\s+published:\s+(?P<first_published>\S+)$")
@@ -6902,8 +6909,9 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         p6 = re.compile(r"^Exported\s+to:\s+(?P<exported_to>[\s\S]+)$")
 
         #Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
-        p7 = re.compile(r"^Publisher\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
-                        r":(?P<port>\d+),\s+last\s+published\s+"
+        #Publisher 2001:13:13:13::13.4342, last published 00:03:35, TTL never, Expires: never
+        p7 = re.compile(r"^Publisher\s+(?P<publishers>((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?"
+                        r"|([a-fA-F\d\:]+)))?\.?\:?(?P<port>\d+),\s+last\s+published\s+"
                         r"(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\w+)")
 
         #publisher epoch 1, entry epoch 1
@@ -6929,19 +6937,20 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         p14 = re.compile(r"^Multihoming-ID\s+(?P<multihoming_id>\S+)")
 
         # Merge Locator Information
-        # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address 
-        # 100.88.88.88    20/90   up        -          0       100.77.77.77 
+        # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+        # 100.88.88.88    20/90   up        -          0       100.77.77.77
         p15 = re.compile(r"^(?P<merged_locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)\s+"
                          r"(?P<rdp_len>\d+)\s+(?P<src_add>\S+)$")
 
         #100.88.88.88  100/50   up        -                   [-]
-        p16 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
+        p16 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
                          r"\s+(?P<rdp>\S+)")
 
         #100.88.88.88  100/50   up        -                   1/1       44
-        p17 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
+        #2001:2:2:2::2   50/50   up        -                  1/1       44
+        p17 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
                          r"|\s+(?P<domain_id>\d+)\/(?P<multihoming_id>\d+)\s+(?P<metric>\d+)")
 
@@ -6959,7 +6968,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         p21 = re.compile(r"^Publisher\s+(?P<publishers>[a-fA-F\d\:]+)\.(?P<port>\d+)$")
 
         #last published 16:02:47, TTL never
-        p22 = re.compile(r"^last\s+published\s+(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\S+)")
+        p22 = re.compile(r"^last\s+published\s+(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\w+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -6978,6 +6987,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 continue
 
             #EID-prefix: 192.168.1.71/3
+            #EID-prefix: 2001:172:168:1::/64
             m = p2.match(line)
             if m:
                 if not lisp_id and instance_id != "*":
@@ -7028,6 +7038,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 continue
 
             #Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
+            #Publisher 2001:4:4:4::4.4342, last published 00:00:52, TTL never, Expires: never'
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
@@ -7102,8 +7113,8 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 continue
 
             # Merge Locator Information
-            # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address 
-            # 100.88.88.88    20/90   up        -          0       100.77.77.77 
+            # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+            # 100.88.88.88    20/90   up        -          0       100.77.77.77
             m = p15.match(line)
             if m:
                 groups = m.groupdict()
@@ -7438,10 +7449,10 @@ class ShowLispSubscriberSuperParser(ShowLispSubscriberSchema):
         # 66.66.66.66:54087         IID
         # 77.77.77.77:54123         IID
         # 100.110.110.110:45676     IID        200 , 10
-        p3 = re.compile(r'^(?P<subscriber_ip>[\da-fA-F.:]+):(?P<port>\d+)'
-                        r'\s+(?P<type>\S+)(\s+(?P<affinity_id_x>\d+))?'
-                        r'(\s+,\s+(?P<affinity_id_y>\d+))?')
-
+        # 2001:10:10:10::10.49787   IID        -
+        p3 = re.compile(r'^(?P<subscriber_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+                        r'|[a-fA-F\d\:]+):?\.?(?P<port>\d+)\s+(?P<type>\S+)'
+                        r'(\s+(?P<affinity_id_x>\d+))?(\s+,\s+(?P<affinity_id_y>\d+))?')
 
         for line in output.splitlines():
             line = line.strip()
@@ -8505,6 +8516,12 @@ class ShowLispIpv4PublisherRlocSchema(MetaParser):
      * show lisp eid-table {eid_table} ipv4 publisher {publisher_id}
      * show lisp eid-table vrf {vrf} ipv4 publisher {publisher_id}
      * show lisp eid-table vrf ipv4 publisher {publisher_id}
+     * show lisp {lisp_id} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp locator-table {locator_table} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp eid-table {eid_table} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf {vrf} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf ipv6 publisher {publisher_id}
     '''
 
     schema = {
@@ -8541,49 +8558,25 @@ class ShowLispIpv4PublisherRlocSchema(MetaParser):
 
 
 
-class ShowLispIpv4PublisherRloc(ShowLispIpv4PublisherRlocSchema):
-    ''' Schema for
+class ShowLispIpv4v6PublisherRloc(ShowLispIpv4PublisherRlocSchema):
+
+    ''' Parser for
      * show lisp {lisp_id} instance-id {instance_id} ipv4 publisher {publisher_id}
      * show lisp locator-table {locator_table} instance-id {instance_id} ipv4 publisher {publisher_id}
      * show lisp instance-id {instance_id} ipv4 publisher {publisher_id}
      * show lisp eid-table {eid_table} ipv4 publisher {publisher_id}
      * show lisp eid-table vrf {vrf} ipv4 publisher {publisher_id}
      * show lisp eid-table vrf ipv4 publisher {publisher_id}
+     * show lisp {lisp_id} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp locator-table {locator_table} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp eid-table {eid_table} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf {vrf} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf ipv6 publisher {publisher_id}
     '''
-
-    cli_command = [
-        'show lisp {lisp_id} instance-id {instance_id} ipv4 publisher {publisher_id}',
-        'show lisp locator-table {locator_table} instance-id {instance_id} ipv4 publisher {publisher_id}',
-        'show lisp instance-id {instance_id} ipv4 publisher {publisher_id}',
-        'show lisp eid-table {eid_table} ipv4 publisher {publisher_id}',
-        'show lisp eid-table vrf {vrf} ipv4 publisher {publisher_id}',
-        'show lisp eid-table vrf ipv4 publisher {publisher_id}',
-    ]
 
     def cli(self, output=None, lisp_id=None, instance_id=None, publisher_id=None, locator_table=None,
             eid_table=None, vrf=None):
-
-        if output is None:
-            if lisp_id and instance_id and publisher_id:
-                cmd = self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id,\
-                                                 publisher_id=publisher_id)
-
-            elif locator_table and instance_id and publisher_id:
-                cmd = self.cli_command[1].format(locator_table=locator_table, instance_id=instance_id,\
-                                                 publisher_id=publisher_id)
-            elif instance_id and publisher_id:
-                cmd = self.cli_command[2].format(instance_id=instance_id, publisher_id=publisher_id)
-
-            elif eid_table and publisher_id:
-                cmd = self.cli_command[3].format(eid_table=eid_table, publisher_id=publisher_id)
-
-            elif vrf and publisher_id:
-                cmd = self.cli_command[4].format(vrf=vrf, publisher_id=publisher_id)
-
-            else:
-                cmd = self.cli_command[5].format(publisher_id=publisher_id)
-
-            output = self.device.execute(cmd)
 
         # Initialize dictionary
         ret_dict = {}
@@ -8623,15 +8616,18 @@ class ShowLispIpv4PublisherRloc(ShowLispIpv4PublisherRlocSchema):
                         r'(?P<epoch>\d+),\sEntries\stotal\s(?P<entries>\d+)$')
 
         # 0.0.0.0/0, Epoch: 0, Last Published: 5d22h
-        p4 = re.compile(r'^(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})'\
+        # 2001:172:168:1::/64, Epoch: 0, Last Published: 00:00:43
+        p4 = re.compile(r'^(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3})'\
                         r',\sEpoch:\s(?P<eid_epoch>\d+),\sLast Published:\s+(?P<last_pub_time>.+)$')
 
         # TTL: never, State unknown-eid-forward
         p5 = re.compile(r'^TTL:\s(?P<ttl>\S+),\sState\s(?P<eid_state>\S+)$')
 
         # 203.203.203.203  255/10   up        -
-        p6 = re.compile(r'^(?P<rloc_set>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<priority>\d+)\/'\
-                        r'(?P<weight>\d+)\s+(?P<rloc_state>\S+)\s+(?P<encap_iid>\S+)$')
+        # 2001:2:2:2::2   50/50   up        -
+        p6 = re.compile(r'(?P<rloc_set>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+                        r'|[a-fA-F\d\:]+)\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+'
+                        r'(?P<rloc_state>\S+)\s+(?P<encap_iid>\S+)$')
 
 
         for line in output.splitlines():
@@ -8712,6 +8708,99 @@ class ShowLispIpv4PublisherRloc(ShowLispIpv4PublisherRlocSchema):
 
         return ret_dict
 
+
+class ShowLispIpv4PublisherRloc(ShowLispIpv4v6PublisherRloc):
+
+    ''' Parser for
+     * show lisp {lisp_id} instance-id {instance_id} ipv4 publisher {publisher_id}
+     * show lisp locator-table {locator_table} instance-id {instance_id} ipv4 publisher {publisher_id}
+     * show lisp instance-id {instance_id} ipv4 publisher {publisher_id}
+     * show lisp eid-table {eid_table} ipv4 publisher {publisher_id}
+     * show lisp eid-table vrf {vrf} ipv4 publisher {publisher_id}
+     * show lisp eid-table vrf ipv4 publisher {publisher_id}
+    '''
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ipv4 publisher {publisher_id}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv4 publisher {publisher_id}',
+        'show lisp instance-id {instance_id} ipv4 publisher {publisher_id}',
+        'show lisp eid-table {eid_table} ipv4 publisher {publisher_id}',
+        'show lisp eid-table vrf {vrf} ipv4 publisher {publisher_id}',
+        'show lisp eid-table vrf ipv4 publisher {publisher_id}',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, publisher_id=None, locator_table=None,
+            eid_table=None, vrf=None):
+
+        if output is None:
+            if lisp_id and instance_id and publisher_id:
+                cmd = self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id,\
+                                                 publisher_id=publisher_id)
+
+            elif locator_table and instance_id and publisher_id:
+                cmd = self.cli_command[1].format(locator_table=locator_table, instance_id=instance_id,\
+                                                 publisher_id=publisher_id)
+            elif instance_id and publisher_id:
+                cmd = self.cli_command[2].format(instance_id=instance_id, publisher_id=publisher_id)
+
+            elif eid_table and publisher_id:
+                cmd = self.cli_command[3].format(eid_table=eid_table, publisher_id=publisher_id)
+
+            elif vrf and publisher_id:
+                cmd = self.cli_command[4].format(vrf=vrf, publisher_id=publisher_id)
+
+            else:
+                cmd = self.cli_command[5].format(publisher_id=publisher_id)
+
+            output = self.device.execute(cmd)
+        return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
+
+
+class ShowLispIpv6PublisherRloc(ShowLispIpv4v6PublisherRloc):
+
+    ''' Parser for
+     * show lisp {lisp_id} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp locator-table {locator_table} instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp instance-id {instance_id} ipv6 publisher {publisher_id}
+     * show lisp eid-table {eid_table} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf {vrf} ipv6 publisher {publisher_id}
+     * show lisp eid-table vrf ipv6 publisher {publisher_id}
+    '''
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ipv6 publisher {publisher_id}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ipv6 publisher {publisher_id}',
+        'show lisp instance-id {instance_id} ipv6 publisher {publisher_id}',
+        'show lisp eid-table {eid_table} ipv6 publisher {publisher_id}',
+        'show lisp eid-table vrf {vrf} ipv6 publisher {publisher_id}',
+        'show lisp eid-table vrf ipv6 publisher {publisher_id}',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, publisher_id=None, locator_table=None,
+            eid_table=None, vrf=None):
+
+        if output is None:
+            if lisp_id and instance_id and publisher_id:
+                cmd = self.cli_command[0].format(lisp_id=lisp_id, instance_id=instance_id,\
+                                                 publisher_id=publisher_id)
+
+            elif locator_table and instance_id and publisher_id:
+                cmd = self.cli_command[1].format(locator_table=locator_table, instance_id=instance_id,\
+                                                 publisher_id=publisher_id)
+            elif instance_id and publisher_id:
+                cmd = self.cli_command[2].format(instance_id=instance_id, publisher_id=publisher_id)
+
+            elif eid_table and publisher_id:
+                cmd = self.cli_command[3].format(eid_table=eid_table, publisher_id=publisher_id)
+
+            elif vrf and publisher_id:
+                cmd = self.cli_command[4].format(vrf=vrf, publisher_id=publisher_id)
+
+            else:
+                cmd = self.cli_command[5].format(publisher_id=publisher_id)
+
+            output = self.device.execute(cmd)
+        return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
 
 class ShowLispSessionCapabilitySchema(MetaParser):
 
@@ -8970,7 +9059,7 @@ class ShowLispV6SMRParser(ShowLispV4SMRParser):
 
 class ShowLispEthernetMapCachePrefixSchema(MetaParser):
 
-    ''' Schema for 
+    ''' Schema for
       * show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}
       * show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}
       * show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}
@@ -9004,7 +9093,7 @@ class ShowLispEthernetMapCachePrefixSchema(MetaParser):
                                         "weight": int,
                                         "encap_iid": str,
                                         "last_state_change": {
-                                            "time": str, 
+                                            "time": str,
                                             "count": int
                                         },
                                         "last_route_reach_change": {
@@ -9016,7 +9105,7 @@ class ShowLispEthernetMapCachePrefixSchema(MetaParser):
                                             "weight": str,
                                         },
                                         "rloc_probe_sent": {
-                                            "time": str, 
+                                            "time": str,
                                             "rtt": int,
                                             "rtt_unit": str,
                                         },
@@ -9032,7 +9121,7 @@ class ShowLispEthernetMapCachePrefixSchema(MetaParser):
 
 
 class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
-    ''' Parser for 
+    ''' Parser for
         * show lisp instance-id {instance_id} ethernet map-cache {eid_prefix}
         * show lisp {lisp_id} instance-id {instance_id} ethernet map-cache {eid_prefix}
         * show lisp eid-table vlan {vlan_id} ethernet map-cache {eid_prefix}
@@ -9046,7 +9135,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
         'show lisp locator-table {locator_table} ethernet map-cache {eid_prefix}'
     ]
 
-    def cli(self, output=None, lisp_id=None, instance_id=None, eid_prefix=None, vlan_id=None, 
+    def cli(self, output=None, lisp_id=None, instance_id=None, eid_prefix=None, vlan_id=None,
             locator_table=None):
 
         if output is None:
@@ -9059,13 +9148,13 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                 cmd = self.cli_command[2].format(vlan_id=vlan_id, eid_prefix=eid_prefix)
             else:
                 cmd = self.cli_command[3].format(locator_table=locator_table, eid_prefix=eid_prefix)
-        
+
             output = self.device.execute(cmd)
 
 
         # Initialize dictionary
         ret_dict = {}
-        
+
         # To handle lisp_id
         if not lisp_id or isinstance(lisp_id, str):
             lisp_id = 0
@@ -9157,7 +9246,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                     'entries': int(group['entries'])
                 })
                 continue
-            
+
             # 0017.0100.0001/48, uptime: 01:09:06, expires: 22:50:53, via map-reply, complete, local-to-site
             m = p3.match(line)
             if m:
@@ -9176,7 +9265,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                 group = m.groupdict()
                 eid_prefix_dict.update({'source_type': group['source_type']})
                 continue
-            
+
             # State: complete, last modified: 01:09:06, map-source: 1.1.1.10
             m = p5.match(line)
             if m:
@@ -9186,7 +9275,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                     'source_ip': group['source_ip']
                 })
                 continue
-            
+
             # Active, Packets out: 139(0 bytes), counters are not accurate (~ 00:00:01 ago)
             m = p6.match(line)
             if m:
@@ -9200,7 +9289,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                 group = m.groupdict()
                 eid_prefix_dict.update({'encap': group['encap']})
                 continue
-            
+
             # 1.1.1.10  01:09:06  up      10/10        -
             m = p8.match(line)
             if m:
@@ -9216,7 +9305,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                     'encap_iid': group['encap_iid']
                 })
                 continue
-            
+
             # Last up-down state change:         01:09:06, state change count: 1
             m = p9.match(line)
             if m:
@@ -9238,7 +9327,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                     'count': int(group['count'])
                 })
                 continue
-            
+
             # Last priority / weight change:     never/never
             m = p11.match(line)
             if m:
@@ -9249,7 +9338,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                     'weight': group['weight']
                 })
                 continue
-            
+
             # Last RLOC-probe sent:            01:09:06 (rtt 1ms)
             m = p12.match(line)
             if m:
@@ -9949,8 +10038,8 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
 class ShowLispEthernetDatabaseSchema(MetaParser):
 
     ''' Schema for
-        * show lisp instance-id <instance_id> ethernet database 
-        * show lisp <lisp_id> instance-id <instance_id> ethernet database 
+        * show lisp instance-id <instance_id> ethernet database
+        * show lisp <lisp_id> instance-id <instance_id> ethernet database
         * show lisp eid-table vlan <vlan> ethernet database
         * show lisp locator-table <locator_table> instance_id <instance_id> ethernet database
     '''
@@ -9995,8 +10084,8 @@ class ShowLispEthernetDatabaseSchema(MetaParser):
 
 class ShowLispEthernetDatabase(ShowLispEthernetDatabaseSchema):
     ''' Parser for
-        * show lisp instance-id <instance_id> ethernet database 
-        * show lisp <lisp_id> instance-id <instance_id> ethernet database 
+        * show lisp instance-id <instance_id> ethernet database
+        * show lisp <lisp_id> instance-id <instance_id> ethernet database
         * show lisp eid-table vlan <vlan> ethernet database
         * show lisp locator-table <locator_table> instance_id <instance_id> ethernet database
     '''
@@ -10120,7 +10209,7 @@ class ShowLispEthernetDatabase(ShowLispEthernetDatabaseSchema):
 
             #1.1.1.10   10/10   cfg-intf   site-self, reachable
             m = p7.match(line)
-            if m:	
+            if m:
                 groups = m.groupdict()
                 locators = groups['locators']
                 priority = int(groups['priority'])
@@ -10238,7 +10327,7 @@ class ShowLispEidWatch(ShowLispEidWatchSchema):
                 instance_id_container = lisp_dict.setdefault('lisp_id', {}) \
                                                  .setdefault(lisp_id, {})
                 instance_id_dict = instance_id_container.setdefault('instance_id', {})
-                
+
                 # At this point we don't know instance_id yet
                 dummy_instance_id_dict = instance_id_dict.setdefault('dummy_instance_id', {})
                 continue
@@ -11079,7 +11168,7 @@ class ShowLispInstanceIdDNStatistics(ShowLispInstanceIdDNStatisticsSchema):
         # LISP EID Statistics for instance ID 16777214
         p2 = re.compile(r"^LISP\s+EID\s+Statistics\s+for\s+instance\s+ID\s+(?P<instance_id>\d+)$")
 
-        # Active DN IAF count:                              1 
+        # Active DN IAF count:                              1
         p3 = re.compile(r"^Active\s+DN\s+IAF\s+count:\s+(?P<iaf_count>\d+)$")
 
         # Active DN local eid map count:                    1
@@ -12838,7 +12927,7 @@ class ShowLispExtranetSummarySchema(MetaParser):
                     'max_allowed_ipv4_prefix' : int,
                     'total_ipv4_prefix':int,
                     'max_allowed_ipv6_prefix' : int,
-                    'total_ipv6_prefix':int, 
+                    'total_ipv6_prefix':int,
                     'extranet_name': {
                         str: {
                             'provider_iid': int,
@@ -12874,7 +12963,7 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 output = self.device.execute(self.cli_command[1].format(lisp_id))
             else:
                 output = self.device.execute(self.cli_command[0])
-        
+
         parsed_dict = {}
 
         # Total extranets: 1
@@ -12935,9 +13024,9 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 lisp_id = 0
             else:
                 lisp_id = int(lisp_id)
-            
+
             lisp_id_dict = parsed_dict.setdefault('lisp_id', {}).setdefault(lisp_id, {})
-            
+
             # Total extranets: 1
             m = p1.match(line)
             if m:
@@ -12969,7 +13058,7 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 max_allowed_ipv6_prefix = int(groups['MAX_ALLOWED_IPV6_PREFIX'])
                 lisp_id_dict.update({'max_allowed_ipv6_prefix': max_allowed_ipv6_prefix})
                 continue
-            
+
             # Total Extranet IPV6 EID prefixes      : 0
             m = p5.match(line)
             if m:
@@ -12977,7 +13066,7 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 total_ipv6_prefix = int(groups['TOTAL_IPV6_PREFIX'])
                 lisp_id_dict.update({'total_ipv6_prefix': total_ipv6_prefix})
                 continue
-            
+
             # Extranet name: ext1
             m = p6.match(line)
             if m:
@@ -12985,7 +13074,7 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 ext_name = groups['EXTRANET_NAME']
                 ext_dict = lisp_id_dict.setdefault('extranet_name', {}).setdefault(ext_name, {})
                 continue
-            
+
             # Provider Instance ID: 111
             m = p7.match(line)
             if m:
@@ -12999,7 +13088,7 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 groups = m.groupdict()
                 provider_ipv4_prefix_count = int(groups['PROVIDER_IPV4_PREFIX_COUNT'])
                 ext_dict.update({'provider_ipv4_prefix_count': provider_ipv4_prefix_count})
-            
+
             # Total Provider IPV6 EID prefixes : 0
             m = p9.match(line)
             if m:
@@ -13014,40 +13103,40 @@ class ShowLispExtranetSummary(ShowLispExtranetSummarySchema):
                 provider_total_prefix_count = int(groups['PROVIDER_TOTAL_PREFIX_COUNT'])
                 ext_dict.update({'provider_total_prefix_count': provider_total_prefix_count})
 
-            # Total Subscriber Instances : 1    
-            m = p11.match(line)   
+            # Total Subscriber Instances : 1
+            m = p11.match(line)
             if m:
                 groups = m.groupdict()
                 subscriber_inst_count = int(groups['SUBSCRIBER_INST_COUNT'])
-                ext_dict.update({'subscriber_inst_count': subscriber_inst_count})  
-            
+                ext_dict.update({'subscriber_inst_count': subscriber_inst_count})
+
             # Total Subscriber IPV4 EID prefixes  : 4
             m = p12.match(line)
             if m:
                 groups = m.groupdict()
                 subscriber_ipv4_prefix_count = int(groups['SUBSCRIBER_IPV4_PREFIX_COUNT'])
-                ext_dict.update({'subscriber_ipv4_prefix_count': subscriber_ipv4_prefix_count})   
-            
+                ext_dict.update({'subscriber_ipv4_prefix_count': subscriber_ipv4_prefix_count})
+
             # Total Subscriber IPV6 EID prefixes  : 0
             m = p13.match(line)
             if m:
                 groups = m.groupdict()
                 subscriber_ipv6_prefix_count = int(groups['SUBSCRIBER_IPV6_PREFIX_COUNT'])
-                ext_dict.update({'subscriber_ipv6_prefix_count': subscriber_ipv6_prefix_count}) 
-            
+                ext_dict.update({'subscriber_ipv6_prefix_count': subscriber_ipv6_prefix_count})
+
             # Total Subscriber EID prefixes  : 4
             m = p14.match(line)
             if m:
                 groups = m.groupdict()
                 subscriber_total_prefix_count = int(groups['SUBSCRIBER_TOTAL_PREFIX_COUNT'])
-                ext_dict.update({'subscriber_total_prefix_count': subscriber_total_prefix_count}) 
+                ext_dict.update({'subscriber_total_prefix_count': subscriber_total_prefix_count})
 
             # Total IPV4 EID prefixes : 4
             m = p15.match(line)
             if m:
                 groups = m.groupdict()
                 total_ipv4_prefix_count = int(groups['TOTAL_IPV4_PREFIX_COUNT'])
-                ext_dict.update({'total_ipv4_prefix_count': total_ipv4_prefix_count}) 
+                ext_dict.update({'total_ipv4_prefix_count': total_ipv4_prefix_count})
 
             # Total IPV6 EID prefixes  : 0
             m = p16.match(line)
@@ -13129,7 +13218,7 @@ class ShowLispSiteDetailSuperParserSchema(MetaParser):
                                                 'locators': {
                                                     str: {
                                                         'local': str,
-                                                        'state': str, 
+                                                        'state': str,
                                                         'priority': int,
                                                         'weight': int,
                                                         'scope': str,
@@ -13141,7 +13230,7 @@ class ShowLispSiteDetailSuperParserSchema(MetaParser):
                                         Optional('merged_locators'): {
                                             str: {
                                                 'local': str,
-                                                'state': str, 
+                                                'state': str,
                                                 'priority': int,
                                                 'weight': int,
                                                 'scope': str,
@@ -13264,10 +13353,10 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
         # 22.22.22.22  yes    up          10/10   IPv4 none     [-]
         p24 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
                          r"(?P<local>yes|no)\s+(?P<state>\S+)\s+(?P<priority>\d+)"
-                         r"\/(?P<weight>\d+)\s+(?P<scope>IPv4)\snone\s+(?P<rdp>\S+)$")  
+                         r"\/(?P<weight>\d+)\s+(?P<scope>IPv4)\snone\s+(?P<rdp>\S+)$")
 
         # Merged locators
-        #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP             
+        #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP
         #  100.99.99.99  yes    up          10/50   IPv4 none    100.99.99.99:30343       [-]
         p25 = re.compile(r"^(?P<merged_locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)|([a-fA-F\d\:]+))\s+"
                          r"(?P<local>yes|no)\s+(?P<state>\S+)\s+(?P<priority>\d+)"
@@ -13431,31 +13520,31 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
 
             # ETR 22.22.22.22:27643, last registered 00:45:42, proxy-reply, map-notify
             m = p17.match(line)
-            
+
             if m:
                 port = 0
                 groups = m.groupdict()
-                
+
                 if groups['etrp']:
 
                     etrp = str(groups['etrp'])
                     (etr,port) = etrp.split(":")
-                    
+
                 elif groups['etr']:
                     etr = groups['etr']
 
                 etr_dict = instance_dict.setdefault('etr',{})\
                                         .setdefault(etr,{})
-                
+
                 if port != 0:
                    etr_dict.update({'port':int(port)})
-                
+
                 last_registered = groups['last_registered']
                 proxy_reply = groups['proxy_reply']
                 map_notify = groups['map_notify']
                 proxy_reply_bool = proxy_reply == "proxy-reply"
                 map_notify_bool = bool(re.search("map-notify",map_notify))
-                
+
                 etr_dict.update({'last_registered':last_registered,
                                  'proxy_reply':proxy_reply_bool,
                                  'map_notify':map_notify_bool})
@@ -13575,7 +13664,7 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                 continue
 
             # Merged locators
-            #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP             
+            #  Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP
             #  100.99.99.99  yes    up          10/50   IPv4 none    100.99.99.99:30343       [-]
             m = p25.match(line)
             if m:
@@ -13646,7 +13735,7 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                 map_notify = groups['map_notify']
                 proxy_reply_bool = proxy_reply == "proxy-reply"
                 map_notify_bool = bool(re.search("map-notify",map_notify))
-                
+
                 etr_dict.update({'last_registered':last_registered,
                                  'proxy_reply':proxy_reply_bool,
                                  'map_notify':map_notify_bool})
@@ -14717,10 +14806,11 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         # Proxy-ITR Router (PITR):             disabled
         # Proxy-ETR Router (PETR):             disabled
         # Proxy-ETR Router (PETR):             enabled RLOCs: 10.10.10.10
+        # Proxy-ITR Router (PITR):             enabled RLOCs: 2001:10:10:10::10
         p6 = re.compile(r'Proxy\-(ITR|ETR) +Router +\((?P<proxy_type>(PITR|PETR))\)'
                         r'*: +(?P<proxy_itr_router>(enabled|disabled))'
                         r'(?: +RLOCs: +(?P<proxy_itr_rloc>'
-                        r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})))?$')
+                        r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|[a-fA-F\d\:]+))?$')
 
         # ITR local RLOC (last resort):             *** NOT FOUND ***
         p7 = re.compile(r'^ITR +local +RLOC +\(last +resort\):\s+'
@@ -14729,7 +14819,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         # ITR use proxy ETR RLOC(Encap IID):        1.1.1.1 (self), 66.66.66.66
         p8 = re.compile(r'^ITR\s+use +proxy +ETR +RLOC\(Encap IID\) *'
                         r': +(?P<use_proxy_etr_rloc_1>[\d.]+ *'
-                        r'(\(self\))?),? *(?P<use_proxy_etr_rloc_2>[\d.]+)?$')
+                        r'(\(self\))?),? *(?P<use_proxy_etr_rloc_2>([\d.]+)|([a-fA-F\d\:]+))?$')
 
         # ITR Solicit Map Request (SMR):       accept and process
         p9 = re.compile(r'^ITR +Solicit +Map +Request +\(SMR\) *:'
@@ -14792,7 +14882,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         p25 = re.compile(r'^Publication-Subscription:\s+(?P<role>enabled|disabled)$')
 
         # Publisher(s):                           *** NOT FOUND ***
-        p26 = re.compile(r'^Publisher\(s\):\s+(?P<publishers>\s+[\d.:]+)(?: +.*)?$')
+        p26 = re.compile(r'^Publisher\(s\):\s+(?P<publishers>[\d.:]+)(?: +.*)?$')
 
         # Subscriber(s):                           *** NOT FOUND ***
         p27 = re.compile(r'^Subscriber\(s\):\s+(?P<subscribers>.*)')
@@ -14997,7 +15087,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 proxy_list = itr_dict.setdefault('use_proxy_etr_rloc',[])
                 if group['use_proxy_etr_rloc_1']:
                     use_proxy_etr_rloc_val = group['use_proxy_etr_rloc_1']
-                    proxy_list.append(use_proxy_etr_rloc_val) 
+                    proxy_list.append(use_proxy_etr_rloc_val)
                 if group['use_proxy_etr_rloc_2']:
                     use_proxy_etr_rloc_val = group['use_proxy_etr_rloc_2']
                     proxy_list.append(use_proxy_etr_rloc_val)
@@ -16046,7 +16136,7 @@ class ShowLispInstanceIdServiceStatisticsSchema(MetaParser):
 
 
 class ShowLispInstanceIdServiceStatistics(ShowLispInstanceIdServiceStatisticsSchema):
-    ''' Parser for 
+    ''' Parser for
     * show lisp instance-id {instance_id} {service} statistics
     * show lisp {lisp_id} {instance_id} {service} statistics
     * show lisp locator-table {locator_table} instance-id {instance_id} {service} statistics'''
@@ -17607,7 +17697,7 @@ class ShowLispInstanceServerRARSchema(MetaParser):
         * show lisp {lisp_id} instance-id {instance_id} ethernet server reverse-address-resolution
         * show lisp instance-id {instance_id} ethernet server reverse-address-resolution
     """
-    schema = { 
+    schema = {
         'lisp_id': {
             int: {
                 'instance_id': {
@@ -17701,13 +17791,13 @@ class ShowLispInstanceServerRAR(ShowLispInstanceServerRARSchema):
 
 
 class ShowLispInstanceServerRARDetailSchema(MetaParser):
-    """ Parser for show lisp instance ethernet server reverse-address-resolution detail  
+    """ Parser for show lisp instance ethernet server reverse-address-resolution detail
         * show lisp {lisp_id} instance-id {instance_id} ethernet server reverse-address-resolution detail
         * show lisp {lisp_id} instance-id {instance_id} ethernet server reverse-address-resolution {mac}
         * show lisp instance-id {instance_id} ethernet server reverse-address-resolution detail
         * show lisp instance-id {instance_id} ethernet server reverse-address-resolution {mac}
     """
-    schema = { 
+    schema = {
         'lisp_id': {
             int: {
                 'instance_id': {
@@ -17720,11 +17810,11 @@ class ShowLispInstanceServerRARDetailSchema(MetaParser):
                                 'last_registered': str,
                                 'registration_failures': {
                             str : {
-                                'auth_failures' : int 
+                                'auth_failures' : int
                             }
                         },
                         'etr': {
-                            str : { 
+                            str : {
                                 'last_registered' : str,
                                 'ttl': str,
                                 'xtr_id': str,
@@ -17735,10 +17825,10 @@ class ShowLispInstanceServerRARDetailSchema(MetaParser):
                         }
                     }
                }
-            }    
+            }
         }
     }
-}        
+}
 
 
 
@@ -17900,7 +17990,7 @@ class ShowLispInstanceServerRARDetail(ShowLispInstanceServerRARDetailSchema):
                 reg_fail_dict['auth_failures'] = int(group['auth_failures'])
                 etr_dict = eid_dict.setdefault('etr',{}).setdefault('local',{})
                 continue
-           
+
             m=p9.match(line)
             if m:
                 group = m.groupdict()
@@ -18293,7 +18383,7 @@ class ShowLispPublicationConfigPropSuperParser(ShowLispPublicationConfigPropSupe
 
 class ShowLispPublicationConfigPropV4Parser(ShowLispPublicationConfigPropSuperParser):
 
-    ''' Parser for 
+    ''' Parser for
     * show lisp {lisp_id} instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
     * show lisp instance-id {instance_id} ipv4 publication config-propagation {eid_prefix}',
     * show lisp instance-id {instance_id} ipv4 publication config-propagation detail',
@@ -18321,7 +18411,7 @@ class ShowLispPublicationConfigPropV4Parser(ShowLispPublicationConfigPropSuperPa
 
 class ShowLispPublicationConfigPropV6Parser(ShowLispPublicationConfigPropSuperParser):
 
-    ''' Parser for 
+    ''' Parser for
     * show lisp {lisp_id} instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
     * show lisp instance-id {instance_id} ipv6 publication config-propagation {eid_prefix}',
     * show lisp instance-id {instance_id} ipv6 publication config-propagation detail',
@@ -18400,8 +18490,8 @@ class ShowLispDatabaseConfigPropSuperParser(ShowLispDatabaseConfigPropSuperSchem
 
     """
     Parser for
-    * show lisp instance-id {instance_id} ipv4 database config-propagation 
-    * show lisp instance-id {instance_id} ipv6 database config-propagation 
+    * show lisp instance-id {instance_id} ipv4 database config-propagation
+    * show lisp instance-id {instance_id} ipv6 database config-propagation
     """
 
     def cli(self, instance_id, lisp_id=None, eid_prefix=None, output=None):
@@ -18567,7 +18657,7 @@ class ShowLispDatabaseConfigPropV4Parser(ShowLispDatabaseConfigPropSuperParser):
 
     """
     Parser for
-    * show lisp instance-id {instance_id} ipv4 database config-propagation 
+    * show lisp instance-id {instance_id} ipv4 database config-propagation
     * show lisp {lisp_id} instance-id {instance_id} ipv4 database config-propagation'
     * show lisp instance-id {instance_id} ipv4 database config-propagation {eid_prefix}
     """

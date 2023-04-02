@@ -1,0 +1,11 @@
+Flags: I -- IGMP snooping, S -- Static, P -- PIM snooping, A -- ASM mode
+
+Vlan      Group/source             Type        Version     Port List
+-----------------------------------------------------------------------
+103       227.1.1.1                I           v3          Tu0 
+
+SourceIP       Expires   Uptime    Inc/Exc Hosts  Port List 
+----------------------------------------------------------
+192.168.1.111  00:00:36  00:01:24  1/0            Tu0 
+192.168.1.112  00:00:36  00:01:24  1/0            Tu0 
+192.168.11.11  stopped   00:02:32  1/0

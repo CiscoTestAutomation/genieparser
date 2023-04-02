@@ -958,13 +958,13 @@ class ShowVlanPrivateVlanType(ShowVlanPrivateVlanTypeSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        # 500  primary          
+        # 500  primary
         p1 = re.compile(r"^(?P<vlan_id>\d+)\s+(?P<type>\w+)$")
         ret_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
-            # 500  primary          
+            # 500  primary
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -991,7 +991,7 @@ class ShowVlanDot1qTagNative(ShowVlanDot1qTagNativeSchema):
     cli_command = 'show vlan dot1q tag native'
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)    
+            output = self.device.execute(self.cli_command)
         ret_dict = {}
 
         # *************************
@@ -1075,6 +1075,74 @@ class ShowPlatformSoftwareFedActiveVtIfId(ShowPlatformSoftwareFedActiveVtIfIdSch
                 if_dict['cvlan_id'] = int(group['cvlan_id'])
                 if_dict['svlan_id'] = int(group['svlan_id'])
                 if_dict['action'] = int(group['action'])
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show vlan mapping '
+# ======================================================
+
+class ShowVlanMappingSchema(MetaParser):
+    """Schema for show VLAN Mapping"""
+
+    schema = {
+        'no_of_vlans': int,
+        'interface': {
+            Any(): {
+                'vlan': {
+                    Any(): {
+                        'trans_vlan': int,
+                        'operation': str
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowVlanMapping(ShowVlanMappingSchema):
+    """Parser for show vlan mapping"""
+
+    cli_command = 'show vlan mapping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total no of vlan mappings configured: 1
+        p1 = re.compile(r"^Total\s+no\s+of\s+vlan\s+mappings\s+configured:\s+(?P<no_of_vlans>\d+)$")
+        # Interface Po6:
+        p2 = re.compile(r"^Interface\s+(?P<interface>\S+):$")
+        # 20                                    30             1-to-1
+        p3 = re.compile(r"^(?P<vlan_map>\d+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Total no of vlan mappings configured: 1
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['no_of_vlans'] = int(dict_val['no_of_vlans'])
+                continue
+
+            # Interface Po6:
+            m = p2.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                continue
+
+            # 20                                    30             1-to-1
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_dict = intf_dict.setdefault('vlan', {}).setdefault(dict_val['vlan_map'], {})
+                vlan_dict['trans_vlan'] = int(dict_val['trans_vlan'])
+                vlan_dict['operation'] = dict_val['operation']
                 continue
 
         return ret_dict

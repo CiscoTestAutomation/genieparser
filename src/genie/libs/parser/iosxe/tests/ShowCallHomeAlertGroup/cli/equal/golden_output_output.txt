@@ -1,0 +1,10 @@
+Available alert groups:
+    Keyword                  State   Description
+    ------------------------ ------- -------------------------------
+    configuration            Enable  configuration info
+    crash                    Enable  crash and traceback info
+    diagnostic               Enable  diagnostic info
+    environment              Enable  environmental info
+    inventory                Enable  inventory info
+    snapshot                 Enable  snapshot info
+    syslog                   Enable  syslog info
