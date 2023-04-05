@@ -3403,13 +3403,22 @@ class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
 class ShowSwitchVirtualSchema(MetaParser):
     """ Schema for 'show switch virtual' """
     schema = {
-        'mode': str,
-        Optional('domain_number'): int,
-        Optional('switches') : {
-            Any(): {
-                'role': str
+        Optional('vss_member_id'): {
+            Optional(Any()): {
+                'role': str, 
+                'mode': str,
+                'domain_number': int,
+                'local_switch': {
+                    'switch_number': int,
+                    'operational_role': str
+                },
+                'peer_switch': {
+                    'switch_number': int,
+                    'operational_role': str
+                } 
             }
-        } 
+        },
+        Optional('mode'): str,
     }
     
 class ShowSwitchVirtual(ShowSwitchVirtualSchema):
@@ -3427,90 +3436,107 @@ class ShowSwitchVirtual(ShowSwitchVirtualSchema):
         if not out:
             return parsed_dict    
         
+        # Pattern for VSS member
+        # Executing the command on VSS member switch role = VSS Active, id = 1
+        # Executing the command on VSS member switch role = VSS Standby, id = 2
+        p1 = re.compile(r"^Executing the command on VSS member switch role = (?P<vss_member_role>[\w\s]+), id = (?P<vss_member_id>[\d]+)$")
+        
         # Pattern for Switch Mode
         # Switch mode                  : Virtual Switch
         # Switch Mode : Standalone
-        p1 = re.compile(r"^Switch [Mm]ode\s*:\s*(?P<mode>[\w\s]+)$")
+        p2 = re.compile(r"^Switch [Mm]ode\s*:\s*(?P<mode>[\w\s]+)$")
         
         # Pattern for Virtual Switch Domain Number
         # Virtual switch domain number : 123
-        p2 = re.compile(r"^Virtual switch domain number\s*:\s*(?P<domain_number>.*)$")
+        p3 = re.compile(r"^Virtual switch domain number\s*:\s*(?P<domain_number>.*)$")
         
         # Pattern for Local Switch Number
         # Local switch number          : 1
-        p3_1 = re.compile(r"^Local switch number\s*:\s*(?P<local_switch>\d+).*$")
+        p4 = re.compile(r"^Local switch number\s*:\s*(?P<local_switch_number>\d+).*$")
         
         # Pattern for Local Switch Operational Role
         # Local switch operational role: Virtual Switch Active
-        p3_2 = re.compile(r"^Local switch operational role\s*:\s*Virtual Switch (?P<local_switch_role>\w+).*$")
+        p5 = re.compile(r"^Local switch operational role\s*:\s*(?P<local_switch_role>[\w\s]+).*$")
         
         # Pattern for Peer Switch Number
         # Peer switch number           : 2
-        p4_1 = re.compile(r"^Peer switch number\s*:\s*(?P<peer_switch>\d+).*$")
+        p6 = re.compile(r"^Peer switch number\s*:\s*(?P<peer_switch_number>\d+).*$")
         
         # Pattern for Peer Switch Operational Role
         # Peer switch operational role : Virtual Switch Standby
-        p4_2 = re.compile(r"^Peer switch operational role\s*:\s*Virtual Switch (?P<peer_switch_role>\w+).*$")
+        p7 = re.compile(r"^Peer switch operational role\s*:\s*(?P<peer_switch_role>[\w\s]+).*$")
 
-        current_switch = '0'
+        current_member_id = 0
         for line in out.splitlines():
             if line:
                 line = line.strip()
             else:
                 continue
             
-            # Mode
-            # Switch mode                  : Virtual Switch
-            # Switch Mode : Standalone
+            # VSS member
+            # Executing the command on VSS member switch role = VSS Active, id = 1
+            # Executing the command on VSS member switch role = VSS Standby, id = 2
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                parsed_dict["mode"] = group["mode"]
+                current_member_id = int(group["vss_member_id"])
+                local_switch_number = 0
+                peer_switch_number = 0
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("role", group["vss_member_role"])
+                continue
+            
+            # Mode
+            # Switch mode                  : Virtual Switch
+            # Switch Mode : Standalone
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if current_member_id == 0:
+                    parsed_dict["mode"] = group["mode"]
+                else:
+                    parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("mode", group["mode"])
                 continue
             
             # Domain Number
             # Virtual switch domain number : 123
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
-                parsed_dict["domain_number"] = int(group["domain_number"])
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("domain_number", int(group["domain_number"]))
                 continue
             
             # Local Switch
             # Local switch number          : 1
-            m = p3_1.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
-                current_switch = str(group["local_switch"])
-                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {})
+                local_switch_number = int(group["local_switch_number"])
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("local_switch", {}).setdefault("switch_number", local_switch_number)
                 continue
             
             # Local Switch Role
             # Local switch operational role: Virtual Switch Active
-            m = p3_2.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
-                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {}).setdefault("role", group["local_switch_role"])
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("local_switch", {}).setdefault("operational_role", group["local_switch_role"])
                 continue
             
             # Peer Switch
             # Peer switch number          : 2
-            m = p4_1.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
-                current_switch = str(group["peer_switch"])
-                if "switches" not in parsed_dict.keys():
-                    parsed_dict["switches"] = {}
-                if current_switch not in parsed_dict["switches"].keys():
-                    parsed_dict["switches"][current_switch] = {}
+                peer_switch_number =int(group["peer_switch_number"])
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("peer_switch", {}).setdefault("switch_number", peer_switch_number)
                 continue
             
             # Peer Switch Role
             # Peer switch operational role: Virtual Switch Standby
-            m = p4_2.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
-                parsed_dict.setdefault("switches", {}).setdefault(current_switch, {}).setdefault("role", group["peer_switch_role"])
+                parsed_dict.setdefault("vss_member_id", {}).setdefault(current_member_id, {}).setdefault("peer_switch", {}).setdefault("operational_role", group["peer_switch_role"])
                 continue
 
         return parsed_dict

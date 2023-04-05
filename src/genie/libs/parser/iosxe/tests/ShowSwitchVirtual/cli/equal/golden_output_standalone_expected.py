@@ -1,3 +1,3 @@
 expected_output = {
-    "mode": "Standalone"
+    'mode': 'Standalone'
 }
