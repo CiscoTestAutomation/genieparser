@@ -1,0 +1,3 @@
+Switch Mode : Standalone
+ Not in Virtual Switch mode due to:
+  Domain ID is not configured
