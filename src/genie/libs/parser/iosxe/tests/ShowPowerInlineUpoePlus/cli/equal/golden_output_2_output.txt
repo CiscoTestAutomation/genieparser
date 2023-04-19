@@ -1,0 +1,10 @@
+Device IEEE Mode - BT
+
+Codes: DS - Dual Signature device, SS - Single Signature device
+       SP - Single Pairset device
+
+Interface   Admin  Type Oper-State       Power(Watts)     Class   Device Name
+            State       Alt-A,B       Allocated Utilized  Alt-A,B
+----------- ------ ---- ------------- --------- --------- ------- -----------
+
+Tw1/0/25    auto   n/a  lldp-shutdown 0.0       0.0       0 

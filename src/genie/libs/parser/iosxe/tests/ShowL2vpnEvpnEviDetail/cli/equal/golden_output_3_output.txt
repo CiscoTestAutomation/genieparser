@@ -1,0 +1,110 @@
+# golden_output_3_expected.py
+#
+# Copyright (c) 2021-2022 by Cisco Systems, Inc.
+# All rights reserved.
+
+show l2vpn evpn evi 7 detail
+EVPN instance:       7 (VLAN Based)
+  RD:                1.1.1.2:7 (auto)
+  Import-RTs:        1:7
+  Export-RTs:        1:7
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Static
+  Encapsulation:     vxlan
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Re-originate RT5:  Disabled
+  Adv. Multicast:    Enabled (global)
+  Vlan:              107
+    Protected:       False
+    Ethernet-Tag:    0
+    State:           Established
+    Flood Suppress:  Attached
+    Core If:
+    Access If:
+    NVE If:
+    RMAC:            0000.0000.0000
+    Core Vlan:       0
+    L2 VNI:          20107
+    L3 VNI:          0
+    VTEP IP:         UNKNOWN
+    Sec. VTEP IP:    UNKNOWN
+    MCAST IP:        UNKNOWN
+    Pseudoports:
+      Ethernet0/0 service instance 107
+        Routes: 1 MAC, 3 MAC/IP
+      Ethernet0/3 service instance 107
+        Routes: 1 MAC, 0 MAC/IP
+      Ethernet1/0 service instance 107
+        Routes: 0 MAC, 0 MAC/IP
+
+EVPN instance:       10 (VLAN Based)
+  RD:                10.10.10.10:10 (auto)
+  Import-RTs:        1:10 
+  Export-RTs:        1:10 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress (global)
+  Encapsulation:     vxlan
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Re-originate RT5:  Disabled
+  Adv. Multicast:    Disabled (global)
+  Vlan:              10
+    Ethernet-Tag:    0
+    State:           Established
+    Flood Suppress:  Attached
+    Core If:         
+    Access If:       
+    NVE If:          nve1
+    RMAC:            0000.0000.0000
+    Core Vlan:       0
+    L2 VNI:          39100
+    L3 VNI:          0
+    VTEP IP:         1.10.10.10
+    Pseudoports:
+      pseudowire100002 (Access VFI VFI10: Peer 5.5.5.5, VC 10) (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+      pseudowire100003 (Access VFI VFI10: Peer 15.15.15.15, VC 10) (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+    Peers:
+      1.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      1.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 0 EAD
+
+EVPN instance:       20 (VLAN Based)
+  RD:                10.10.10.10:20 (auto)
+  Import-RTs:        1:20 
+  Export-RTs:        1:20 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress (global)
+  Encapsulation:     vxlan
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Re-originate RT5:  Disabled
+  Adv. Multicast:    Disabled (global)
+  Vlan:              20
+    Ethernet-Tag:    0
+    State:           Established
+    Flood Suppress:  Attached
+    Core If:         
+    Access If:       
+    NVE If:          nve1
+    RMAC:            0000.0000.0000
+    Core Vlan:       0
+    L2 VNI:          39200
+    L3 VNI:          0
+    VTEP IP:         1.10.10.10
+    Pseudoports:
+      pseudowire100005 (Access VFI VFI20: Peer 5.5.5.5, VC 20) (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+      pseudowire100006 (Access VFI VFI20: Peer 15.15.15.15, VC 20) (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+    Peers:
+      1.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      1.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 0 EAD

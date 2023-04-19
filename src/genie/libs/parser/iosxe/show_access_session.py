@@ -23,7 +23,7 @@ from genie.libs.parser.utils.common import Common
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_authentication_sessions import \
-						ShowAuthenticationSessionsInterfaceDetails
+						ShowAuthenticationSessionsInterfaceDetails, ShowAuthenticationSessions
 
 # ====================================
 # Parser for 'show access-session'
@@ -129,7 +129,24 @@ class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetai
         # Call super
         return super().cli(output=show_output, interface=interface)
 
-                                                                                                                                                                                                                                                                                                                                           
+class ShowAccessSessionInterface(ShowAuthenticationSessions):
+    '''
+        Parser for the following show commands:
+            * show access-session interface {interface} details
+    '''
+    cli_command = 'show access-session interface {interface}'
+    def cli(self, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            show_output = self.device.execute(cmd)
+        else:
+           show_output = output
+
+        # Call super
+        return super().cli(output=show_output, interface=interface)
+
+
 # ====================================
 # Parser for 'show access-session brief'
 # ====================================

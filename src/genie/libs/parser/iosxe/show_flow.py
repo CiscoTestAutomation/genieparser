@@ -220,8 +220,16 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('timestamp_abs_last'): str,
             },
         },
+        Optional('proto_entries'): {
+            Any(): {
+                'ip_src_addr': str,
+                'ip_dst_addr': str,
+                'src_port': int,
+                'dst_port': int,
+                'ip_port': int,
+            }
+        },
     }
-
 
 # =========================================================
 # Parser for 'show flow monitor {name} cache'
@@ -272,6 +280,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         p8 = re.compile(r'^(?P<ip_vrf_id_input>\d+ +\(\S+\)) +(?P<ipv4_src_addr>\S+) '
                         r'+(?P<ipv4_dst_addr>\S+) +(?P<intf_input>\S+) '
                         r'+(?P<intf_output>\S+) +(?P<pkts>\d+)$')
+
+        # 30.1.1.6         224.0.0.5                    0              0       89
+        p8_1 = re.compile(r'^(?P<ip_src_addr>\S+) +(?P<ip_dst_addr>\S+) +(?P<src_port>\d+) +(?P<dst_port>\d+) +(?P<ip_port>\d+)$')
 
         # IP VRF ID INPUT:           0          (DEFAULT)
         p9 = re.compile(r'^IP VRF ID INPUT: +(?P<id>[\S\s]+)$')
@@ -326,7 +337,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
 
         # ipv4 destination mask:     /0
         p26 = re.compile(r'^ipv4 destination mask: +(?P<ipv4_dst_mask>\S+)$')
-        
+
         # tcp flags:                 0x00
         p27 = re.compile(r'^tcp flags: +(?P<tcp_flags>\S+)$')
 
@@ -418,6 +429,20 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 entry_dict.update({'intf_input': Common.convert_intf_name(group['intf_input'])})
                 entry_dict.update({'intf_output': Common.convert_intf_name(group['intf_output'])})
                 entry_dict.update({'pkts': int(group['pkts'])})
+                entry_dict_created = True
+                continue
+
+            # 30.1.1.6         224.0.0.5                    0              0       89
+            m = p8_1.match(line)
+            if m:
+                index += 1
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('proto_entries', {}).setdefault(index, {})
+                entry_dict.update({'ip_src_addr': group['ip_src_addr']})
+                entry_dict.update({'ip_dst_addr': group['ip_dst_addr']})
+                entry_dict.update({'src_port': int(group['src_port'])})
+                entry_dict.update({'dst_port': int(group['dst_port'])})
+                entry_dict.update({'ip_port': int(group['ip_port'])})
                 entry_dict_created = True
                 continue
 

@@ -3397,3 +3397,347 @@ class ShowIsisMicroloopAvoidanceFlexAlgo(ShowIsisMicroloopAvoidanceFlexAlgoSchem
                  flex_dict['runningl2']=group['RunningL2']
                  continue
         return ret_dict 
+
+class ShowIsisTeappSchema(MetaParser):
+    schema = {
+        "tag": {
+            Any(): {
+                Optional("topology_id"): str,
+                Optional("type"): str,
+                Optional("enabled"): bool,
+                Optional("router_id"): str,
+                Optional("interface"): {
+                    Any(): { #interface name
+                        "hdl": str,
+                        "affinity": {
+                            "set": int,
+                            "affinity_bits": int
+                        },
+                        "te_metrics": {
+                            "set": int,
+                            "te_metric": int
+                        },
+                        "extended_affinity": {
+                            "set": int,
+                            "length": int
+                        }
+                    }
+                },
+                Optional("te_attr_pm_info"): {
+                    Any(): { #interface name
+                        "idb_num": int,
+                        "min": int,
+                        "max": int,
+                        Optional("min_max_anomaly"): int,
+                        "avg": int,
+                        Optional("avg_anomaly"): int,
+                        "var": int,
+                        Optional("is_loss_set"): int,
+                        Optional("loss"): int,
+                        Optional("loss_anomaly"): int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisTeapp(ShowIsisTeappSchema):
+    '''Parser for show isis teapp'''
+
+    cli_command = 'show isis teapp'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Tag 1:
+        p1 = re.compile(r'^Tag\s+(?P<tag>\S+):$')
+
+        # ISIS TEAPP Information: Topology(ID:0x0) Type:SRTE, Enabled:1, Router ID:1.1.1.1
+        p2 = re.compile(r'^ISIS TEAPP Information: Topology\(ID:(?P<id>\S+)\) '
+                        r'Type:(?P<type>\w+),\s+Enabled:(?P<enabled>\S+),\s+'
+                        r'Router ID:(?P<router_id>\d+\.\d+\.\d+\.\d+)$')
+        
+        # Interface(hdl:0xF): GigabitEthernet0/0/7
+        p3 = re.compile(r'^Interface\(hdl:(?P<hdl>\S+)\):\s(?P<interface>\S+)$')
+
+        # Affinity: set 0, affinity_bits 0
+        p4 = re.compile(r'^Affinity:\s+set\s+(?P<set>\d+),\s+affinity_bits\s+(?P<affinity_bits>\d+)$')
+
+        # TE Metric: set 0, te_metric 4294967295
+        p5 = re.compile(r'^TE Metric: set\s+(?P<set>\d+),\s+te_metric\s+(?P<te_metric>\d+)$')
+
+        # Extended Affinity: set 0, length 0,
+        p6 = re.compile(r'^Extended Affinity: set\s+(?P<set>\d+),\s+length\s+(?P<length>\d+),$')
+
+        # Gi0/0/7: IDB num:15 Min:30 Max:30 Min-max-anomaly:0 Avg:30 Avg-anomaly:0 Var:0
+        p7 = re.compile(r'^(?P<interface>\S+): IDB num:(?P<idb_num>\d+)\s+'
+                        r'Min:(?P<min>\d+)\s+Max:(?P<max>\d+)\s+'
+                        r'(Min-max-anomaly:(?P<min_max_anomaly>\d+)\s+)?'
+                        r'Avg:(?P<avg>\d+)\s+'
+                        r'(Avg-anomaly:(?P<avg_anomaly>\d+)\s+)?'
+                        r'Var:(?P<var>\d+)$')
+
+        # Is-Loss-set:1 Loss:299999 Loss-anomaly:1
+        p8 = re.compile(r'^Is-Loss-set:(?P<is_loss_set>\d+)\s+Loss:(?P<loss>\d+)\s+'
+                        r'Loss-anomaly:(?P<loss_anomaly>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag = group["tag"]
+                ret_dict.setdefault("tag", {}).setdefault(tag, {})
+                continue 
+            
+            # ISIS TEAPP Information: Topology(ID:0x0) Type:SRTE, Enabled:1, Router ID:1.1.1.1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag] = {
+                    "topology_id": group["id"],
+                    "type": group["type"],
+                    "enabled": (group["enabled"] == "1"),
+                    "router_id": group["router_id"],
+                    "interface": {},
+                }
+                continue 
+
+            # Interface(hdl:0xF): GigabitEthernet0/0/7
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                hdl = group["hdl"]
+                interface = group["interface"]
+                intr_dict =  {
+                    "hdl": hdl,
+                    "affinity": {},
+                    "te_metrics": {},
+                    "extended_affinity": {}
+                }
+                ret_dict["tag"][tag]["interface"].setdefault(interface, intr_dict)
+                continue 
+
+            # Affinity: set 0, affinity_bits 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                affinity_set = group["set"]
+                affinity_bits = group["affinity_bits"]
+                ret_dict["tag"][tag]["interface"][interface]["affinity"]["set"] = int(affinity_set)
+                ret_dict["tag"][tag]["interface"][interface]["affinity"]["affinity_bits"] = int(affinity_bits)
+                continue 
+
+            # TE Metric: set 0, te_metric 4294967295
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag]["interface"][interface]["te_metrics"]["set"] = int(group["set"])
+                ret_dict["tag"][tag]["interface"][interface]["te_metrics"]["te_metric"] = int(group["te_metric"])
+                continue 
+
+            # Extended Affinity: set 0, length 0,
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag]["interface"][interface]["extended_affinity"]["set"] = int(group["set"])
+                ret_dict["tag"][tag]["interface"][interface]["extended_affinity"]["length"] = int(group["length"])
+                continue 
+
+            if "ISIS TE Attr PM Information" in line:
+                ret_dict["tag"][tag]["te_attr_pm_info"] = {}
+
+                continue 
+
+            # Gi0/0/7: IDB num:15 Min:30 Max:30 Min-max-anomaly:1 Avg:30 Avg-anomaly:1 Var:0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group["interface"]
+                te_interface_dict = {
+                    "idb_num": int(group["idb_num"]),
+                    "min": int(group["min"]),
+                    "max": int(group["max"]),
+                    "avg": int(group["avg"]),
+                    "var": int(group["var"])
+                }
+
+                if group["min_max_anomaly"]:
+                    te_interface_dict["min_max_anomaly"] = int(group["min_max_anomaly"])
+                if group["avg_anomaly"]:
+                    te_interface_dict["avg_anomaly"] = int(group["avg_anomaly"])
+
+                ret_dict["tag"][tag]["te_attr_pm_info"].setdefault(interface, te_interface_dict)
+                continue 
+
+            # Is-Loss-set:1 Loss:299999 Loss-anomaly:1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tag"][tag]["te_attr_pm_info"][interface]["is_loss_set"] = int(group["is_loss_set"])
+                ret_dict["tag"][tag]["te_attr_pm_info"][interface]["loss"] = int(group["loss"])
+                ret_dict["tag"][tag]["te_attr_pm_info"][interface]["loss_anomaly"] = int(group["loss_anomaly"])
+                continue
+
+
+        return ret_dict
+
+class ShowIsisTeappPolicySchema(MetaParser):
+    schema = {
+        "tag": {
+            Any(): {
+                Optional("endpoints"): {
+                    Any(): {
+                        Optional("level"): str,
+                        Optional("host"): str,
+                        "interfaces": {
+                            Any(): {
+                                Optional("flag"): int,
+                                Optional("sid_type"): str,
+                                Optional("metric_mode"): str,
+                                Optional("metric"): int,
+                                "last_updated": str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIsisTeappPolicy(ShowIsisTeappPolicySchema):
+    '''parser for show isis teapp policy'''
+    cli_command = ['show isis teapp policy',
+                   'show isis teapp policy {endpoint}']
+
+    def cli(self, endpoint="", output=None):
+        if output is None:
+            if endpoint:
+                out = self.device.execute(self.cli_command[1].format(endpoint=endpoint))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+        codes = {"n": "none", "r" : "relative", "c": "constant", "a": "absolute", "SS": "strict-spf", "SP": "spf", }
+
+        # Tag 1:
+        p1 = re.compile(r'^Tag\s+(?P<tag>\S+):$')
+
+        # 1.1.1.1         L2/asr1k-34.00     Tunnel96616                         0                SP:n 01:09:33          
+        p2 = re.compile(r'^(?P<ip>[\d.]+)\s+(?P<level>-|L1|L2|L1L2)(/(?P<sys_id>\S+))?\s+'
+                        r'(?P<interface>\w+[/\d]+)\s+(?P<metric>\d+)\s+'
+                        r'(?P<attributes>(SP|SS):(n|r|a|c))\s+(?P<last_updated>\S+)$')
+
+        #                                     Tunnel96703                         0                SP:n 01:09:31  
+        #                                    Tunnel70550                         0                SS:n 1w2d                      
+        p3 = re.compile(r'^(?P<interface>\w+[/\d]+)\s+(?P<metric>\d+)\s+'
+                        r'(?P<attributes>(SP|SS):(n|r|a|c))\s+(?P<last_updated>\S+)$')
+
+        # 16.0.0.16 - System-id: R6.00 level: 1
+        p4 = re.compile(r'^(?P<ip>[\d.]+)\s+-\s+System-id:\s+(?P<host>\S+)\s+level:\s+(?P<level>\d+)$')
+
+        # Tunnel67528 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:04:06 
+        p5 = re.compile(r'^(?P<interface>.+)\s+-\s+Flags:\s+(?P<flags>0|1)\s+'
+                        r'(\((?P<sid_type>\S+)\)){0,1}\s+Metric-mode:\s+(?P<metric_mode>(Absolute|Constant|Relative|None|Unknown))\s+'
+                        r'Last\s+update:\s+(?P<last_update>\S+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag = group["tag"]
+                ret_dict.setdefault("tag", {}).setdefault(tag, {}).setdefault("endpoints", {})
+                continue 
+
+            #   1.1.1.1         L2/asr1k-34.00     Tunnel96616                         0                SP:n 01:09:33   
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                endpoint = group["ip"]
+                level = group["level"]
+                sys_id = group["sys_id"]
+                interface = group["interface"]
+                metric = group["metric"]
+                attribute_code = group["attributes"].split(":")
+                last_updated = group["last_updated"]
+
+                ret_dict["tag"][tag]["endpoints"].setdefault(endpoint, {}).setdefault("interfaces", {})
+                if level != "-":
+                    ret_dict["tag"][tag]["endpoints"][endpoint]["level"] = level 
+                if sys_id is not None:
+                    ret_dict["tag"][tag]["endpoints"][endpoint]["host"] = sys_id 
+
+                intrf_dict = {
+                    "metric": int(metric),
+                    "sid_type": codes[attribute_code[0]],
+                    "metric_mode": codes[attribute_code[1]],
+                    "last_updated": last_updated
+                }
+                ret_dict["tag"][tag]["endpoints"][endpoint]["interfaces"].setdefault(interface, intrf_dict)
+                continue
+
+            #                                    Tunnel96703                         0                SP:n 01:09:31     
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group["interface"]
+                metric = group["metric"]
+                attribute_code = group["attributes"].split(":")
+                last_updated = group["last_updated"]
+                intrf_dict = {
+                    "metric": int(metric),
+                    "sid_type": codes[attribute_code[0]],
+                    "metric_mode": codes[attribute_code[1]],
+                    "last_updated": last_updated
+                }
+                ret_dict["tag"][tag]["endpoints"][endpoint]["interfaces"].setdefault(interface, intrf_dict)
+                continue
+            
+            if endpoint:
+                # Tunnel67528 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:04:06 
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    ip = group["ip"]
+                    level = "L" + group["level"]
+                    host = group["host"]
+                    ret_dict["tag"][tag]["endpoints"].setdefault(ip, {}).setdefault("interfaces", {})
+                    ret_dict["tag"][tag]["endpoints"][endpoint]["level"] = level
+                    ret_dict["tag"][tag]["endpoints"][endpoint]["host"] = host 
+                    continue
+                
+                # Tunnel67528 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:04:06 
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    interface = group["interface"]
+                    flag = int(group["flags"])
+                    metric_mode = group["metric_mode"].lower()
+                    last_update = group["last_update"]
+                    
+                    intrf_dict = {
+                        "flag": flag,
+                        "metric_mode": metric_mode,
+                        "last_updated": last_update
+                    }
+                    ret_dict["tag"][tag]["endpoints"][endpoint]["interfaces"].setdefault(interface, intrf_dict)
+
+                    if "sid_type" in group:
+                        spf = group["sid_type"].lower()
+                        ret_dict["tag"][tag]["endpoints"][endpoint]["interfaces"][interface].setdefault("sid_type", spf)
+                    continue
+
+        return ret_dict

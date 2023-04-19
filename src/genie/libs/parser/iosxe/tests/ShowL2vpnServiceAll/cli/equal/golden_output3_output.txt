@@ -1,0 +1,13 @@
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
+
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPWS name: TEST, State: UP
+  Te0/3/0                        Te0/3/0:5516(Eth VLAN)          0     UP  UP
+  pw100039           CA          10.67.120.222:670055516(MPLS)   1     UP  UP
+  pw100040           CA          10.68.120.222:670055516(MPLS)   2     SB  IA
+VPWS name: Test_incomplete, State: Incomplete

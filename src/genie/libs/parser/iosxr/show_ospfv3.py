@@ -31,7 +31,7 @@ class ShowOspfv3NeighborSchema(MetaParser):
                         'dead_time': str,
                         'address': str,
                         'interface': str,
-                        'up_time': str
+                        Optional('up_time'): str
                     }
                 },
                 Optional('total_neighbor_count'): int

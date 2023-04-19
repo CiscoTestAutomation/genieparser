@@ -1200,15 +1200,15 @@ class ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema(MetaParser):
 class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema):
     """ Parser for show platform hardware fed switch <> qos dscp-cos counters <interface> """
 
-    cli_command = ['show platform hardware fed switch {switch_num} qos dscp-cos counters interface {interface}','show platform hardware fed switch {switch_type} qos dscp-cos counters interface {interface}']
-    def cli(self, interface, switch_num="", switch_type="", output=None):
+    cli_command = ['show platform hardware fed {switch} {switch_var} qos dscp-cos counters interface {interface}',
+    'show platform hardware fed {switch_var} qos dscp-cos counters interface {interface}']
+
+    def cli(self, interface, switch_var, switch="", output=None):
         if output is None:
-            if switch_num is not None:
-                cmd = self.cli_command[0].format(switch_num=switch_num,interface=interface)
-            elif switch_type is not None:
-                cmd = self.cli_command[1].format(switch_type=switch_type,interface=interface)
+            if switch:
+                cmd = self.cli_command[0].format(switch= switch, switch_var=switch_var, interface=interface)              
             else:
-                raise TypeError('Must pass either switch_num or switch_type')
+                cmd = self.cli_command[1].format(switch_var=switch_var, interface=interface)
             output = self.device.execute(cmd)
 
         # Init vars

@@ -1,4 +1,5 @@
 {
     "interface": "HundredGigE1/0/1",
-    "switch_num": "1"
+    "switch_var": "active",
+    "switch": "switch"
 }

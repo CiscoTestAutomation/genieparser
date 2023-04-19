@@ -1,0 +1,36 @@
+# golden_output_1_expected.py
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+EVPN instance:       1 (VLAN Based)
+  RD:                20.20.20.20:1 (auto)
+  Import-RTs:        1:1 
+  Export-RTs:        1:1 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Static (global)
+  Encapsulation:     vxlan
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Re-originate RT5:  Disabled
+  Adv. Multicast:    Enabled (global)
+  Vlan:              100
+    Ethernet-Tag:    0
+    State:           Established
+    Flood Suppress:  Attached
+    Core If:         
+    Access If:       Vlan100
+    NVE If:          nve1
+    RMAC:            0000.0000.0000
+    Core Vlan:       0
+    L2 VNI:          10000
+    L3 VNI:          0
+    VTEP IP:         1.20.20.20
+    MCAST IP:        227.0.0.1
+    VRF:             
+    IPv4 IRB:        Enabled (Asymmetric)
+    IPv6 IRB:        Disabled
+    Pseudoports:
+      AppGigabitEthernet4/0/1 service instance 100
+        Routes: 1 MAC, 1 MAC/IP

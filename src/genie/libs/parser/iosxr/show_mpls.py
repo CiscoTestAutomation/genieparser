@@ -275,6 +275,17 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                                             Optional('transport_ip_addr'): str
                                         }
                                     }
+                                },
+                            }
+                        },
+                        Optional('targeted_hellos'): {
+                            Any(): {
+                                Any(): {
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
+                                    Optional('active'): bool,
+                                    Optional('passive'): bool,
+                                    Optional('active/passive'): bool
                                 }
                             }
                         }
@@ -500,6 +511,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'xmit': True if group['xmit'] else False})
                 targeted_dict.update({'recv': True if group['recv'] else False})
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
+                targeted_dict.update({'passive': True if group['status'] == 'passive' else False})
+                targeted_dict.update({'active/passive': True if group['status'] == 'active/passive' else False})
                 continue
             
         return result_dict

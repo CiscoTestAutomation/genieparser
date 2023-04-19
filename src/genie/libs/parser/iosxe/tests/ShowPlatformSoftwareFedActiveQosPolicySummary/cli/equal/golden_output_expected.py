@@ -1,0 +1,22 @@
+expected_output = {
+    "cg_id":{
+        15212688:{
+            "classes":22,
+            "targets":33,
+            "child":0,
+            "cfg_err":0,
+            "in_hw":33,
+            "op_error":0,
+            "policy_name":"system-cpp-policy"
+        },
+        10366368:{
+            "classes":24,
+            "targets":384,
+            "child":0,
+            "cfg_err":0,
+            "in_hw":384,
+            "op_error":0,
+            "policy_name":"DNA-MARKING_IN"
+        }
+    }
+}
