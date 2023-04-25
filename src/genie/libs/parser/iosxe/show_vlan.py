@@ -894,7 +894,7 @@ class ShowVlanPrivateVlanSchema(MetaParser):
     schema = {
         'private': {
             Any(): {
-                'ports': str,
+                Optional('ports'): str,
                 'type': str,
                 'sec': str,
                 'primary': str,
@@ -911,7 +911,8 @@ class ShowVlanPrivateVlan(ShowVlanPrivateVlanSchema):
             output = self.device.execute(self.cli_command)
 
         # 500     501       community         Twe1/0/7, Twe1/0/8, Twe1/0/33
-        p1 = re.compile(r"^(?P<primary>\d+)\s+(?P<sec>\d+)\s+(?P<type>\w+)\s+(?P<ports>.*)$")
+        # 500     501       isolated
+        p1 = re.compile(r"^(?P<primary>\d+)\s+(?P<sec>\d+)\s+(?P<type>\w+)+?(?P<ports>.*)$")
 
         ret_dict = {}
 
@@ -924,12 +925,12 @@ class ShowVlanPrivateVlan(ShowVlanPrivateVlanSchema):
                 sec_var = dict_val['sec']
                 private = ret_dict.setdefault('private', {})
                 sec_dict = ret_dict['private'].setdefault(sec_var, {})
-                sec_dict['ports'] = dict_val['ports']
+                if dict_val['ports']:
+                    sec_dict['ports'] = dict_val['ports'].strip()
                 sec_dict['type'] = dict_val['type']
                 sec_dict['sec'] = dict_val['sec']
                 sec_dict['primary'] = dict_val['primary']
                 continue
-
 
         return ret_dict
 
@@ -1146,3 +1147,4 @@ class ShowVlanMapping(ShowVlanMappingSchema):
                 continue
 
         return ret_dict
+

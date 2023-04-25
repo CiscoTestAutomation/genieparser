@@ -1,0 +1,13 @@
+Forward Mapping
+==================
+
+Cvlan-id      Translated vlan-id
+----------------------------------
+20            30
+
+Reverse Mapping
+==================
+
+Svlan-id      Translated vlan-id
+----------------------------------
+30            20

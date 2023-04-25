@@ -1,0 +1,8 @@
+                                                                                       D
+MAC Address    IP Address      I/F           MAC               Prim  RxPwr  Timing Num I
+                                             State             Sid   (dBmV) Offset CPE P
+d4b9.2f6e.f2b0 101.113.1.15    C2/0/0/UB     w-online(pt)      1     15.00  1407   0   N
+d4b9.2f6e.f428 101.113.1.14    C2/0/0/UB     w-online(pt)      2     15.00  1384   0   N
+9058.515c.a3e8 101.113.1.10    C2/0/0/UB     w-online(pt)      3     15.00  1342   0   N
+d4b9.2f6e.f2cc 101.113.1.12    C2/0/0/UB     w-online(pt)      4     15.00  1393   0   N
+d4b9.2f6e.f564 101.113.1.17    C2/0/1/UB     w-online(pt)      1     20.00  1345   0   N

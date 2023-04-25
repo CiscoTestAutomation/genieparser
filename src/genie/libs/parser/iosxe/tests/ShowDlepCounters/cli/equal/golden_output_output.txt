@@ -1,0 +1,86 @@
+DLEP Counters for TenGigabitEthernet0/0/1
+
+Last Clear Time =
+
+DLEP Version = RFC 8175
+DLEP Local IP=19.19.19.151:55113
+DLEPv5 TCP Port = 55114
+
+Peer Counters:
+ RX Peer Discovery     0      TX Peer Offer             0
+ RX Peer Offer         0      TX Peer Discovery         0
+ RX Peer Init          0      TX Peer Init Ack          0
+ RX Peer Init Ack      1      TX Peer Init              1
+ RX Heartbeat          33     TX Heartbeat              33
+ RX Peer Terminate     0      TX Peer Terminate Ack     0
+ RX Peer Terminate Ack 0      TX Peer Terminate         0
+
+Neighbor Counters:
+ RX Neighbor Up        1      TX Neighbor Up Ack        1
+ RX Metric             0
+ RX Neighbor Down      0      TX Neighbor Down Ack      0
+ RX Neighbor Down Ack  0      TX Neighbor Down          0
+
+Exception Counters:
+ RX Invalid Message    0      RX Unknown Message        0
+ Pre-Existing Neighbor 0      Neighbor Resource Error   0
+ Neighbor Not Found    0      Neighbor Msg Peer Not Up  0
+
+Timer Counters:
+ Peer Heartbeat Timer         33
+ Peer Terminate Ack Timer     0
+ Neighbor Terminate Ack Timer 0
+ Neighbor Activity Timer      0
+ Radio Connect Timer          0
+
+
+DLEP Counters for TenGigabitEthernet0/0/2.200
+
+Last Clear Time =
+
+DLEP Version = RFC 8175
+DLEP Local IP=18.18.18.111:21115
+DLEPv5 TCP Port = 21116
+
+Peer Counters:
+ RX Peer Discovery     0      TX Peer Offer             0
+ RX Peer Offer         0      TX Peer Discovery         0
+ RX Peer Init          0      TX Peer Init Ack          0
+ RX Peer Init Ack      1      TX Peer Init              1
+ RX Heartbeat          32     TX Heartbeat              32
+ RX Peer Terminate     0      TX Peer Terminate Ack     0
+ RX Peer Terminate Ack 0      TX Peer Terminate         0
+
+Neighbor Counters:
+ RX Neighbor Up        1      TX Neighbor Up Ack        1
+ RX Metric             0
+ RX Neighbor Down      0      TX Neighbor Down Ack      0
+ RX Neighbor Down Ack  0      TX Neighbor Down          0
+
+Exception Counters:
+ RX Invalid Message    0      RX Unknown Message        0
+ Pre-Existing Neighbor 0      Neighbor Resource Error   0
+ Neighbor Not Found    0      Neighbor Msg Peer Not Up  0
+
+Timer Counters:
+ Peer Heartbeat Timer         32
+ Peer Terminate Ack Timer     0
+ Neighbor Terminate Ack Timer 0
+ Neighbor Activity Timer      0
+ Radio Connect Timer          0
+
+Single Timer Wheel "Manet Infra Wheel"
+  Granularity      = 250 msec
+  Wheel size       = 4096
+  Spoke index      = 1196
+  Tick count       = 119980
+  Flags            = 0x00
+  Active timers    = 2
+  High water mark  = 3
+  Started timers   = 8391
+  Restarted timers = 7
+  Cancelled timers = 22
+  Expired timers   = 8360
+  Long timers      = 0
+  Long timer revs  = 0
+  Timer suspends   = 0

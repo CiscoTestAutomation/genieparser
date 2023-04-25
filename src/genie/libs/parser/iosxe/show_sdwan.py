@@ -4,6 +4,8 @@
 * 'show sdwan appqoe nat-statistics'
 * 'show sdwan appqoe rm-resources'
 * 'show sdwan appqoe flow all'
+* 'show sdwan appqoe status'
+* 'show sdwan appqoe service-chain status'
 * 'show sdwan bfd history'
 * 'show sdwan bfd sessions'
 * 'show sdwan bfd summary'
@@ -5597,3 +5599,360 @@ class ShowSdwanAppFwdDpiFlows(ShowSdwanAppFwdDpiFlowsSchema):
                 continue
 
         return ret_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan appqoe status'
+# =======================================================================
+
+class ShowSdwanAppqoeStatusSchema(MetaParser):
+
+    """Schema for "show sdwan appqoe status" """
+
+    schema = {
+        "appqoe_status": str,
+        "sslproxy_status": str,
+        "tcpproxy_status": str,
+        "service_chain_status": str,
+        "resource_mgr_status": str        
+    }
+
+# ==============================================
+# Parser for 'show sdwan appqoe status'
+# ==============================================
+
+class ShowSdwanAppqoeStatus(ShowSdwanAppqoeStatusSchema):
+    """parser for "show sdwan appqoe status" """
+
+    cli_command = "show sdwan appqoe status"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # APPQOE Status : YELLOW
+        p1 = re.compile(r"^APPQOE\s+Status\s+:\s+(?P<appqoe_st>\S+)$")
+
+        # SSLPROXY : YELLOW
+        p2 = re.compile(r"^SSLPROXY\s+:\s+(?P<ssl_st>\S+)$")
+
+        # TCPPROXY : GREEN
+        p3 = re.compile(r"^TCPPROXY\s+:\s+(?P<tcp_st>\S+)$")
+
+        # SERVICE CHAIN : GREEN
+        p4 = re.compile(r"^SERVICE\s+CHAIN\s+:\s+(?P<sc_st>\S+)$")
+
+        # RESOURCE MANAGER : GREEN
+        p5 = re.compile(r"^RESOURCE\s+MANAGER\s+:\s+(?P<rm_st>\S+)$")
+
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # APPQOE Status : YELLOW
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"appqoe_status": groups["appqoe_st"]})
+                continue
+
+            # SSLPROXY : YELLOW
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"sslproxy_status": groups["ssl_st"]})
+                continue
+
+            # TCPPROXY : GREEN
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"tcpproxy_status": groups["tcp_st"]})
+                continue
+
+            # SERVICE CHAIN : GREEN
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"service_chain_status": groups["sc_st"]})
+                continue
+
+            # RESOURCE MANAGER : GREEN
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"resource_mgr_status": groups["rm_st"]})
+                continue
+        return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan appqoe service-chain status'
+# =======================================================================
+
+class ShowSdwanAppqoeServiceChainStatusSchema(MetaParser):
+
+    """Schema for "show sdwan appqoe service-chain status" """
+
+    schema = {
+        "snort_state": str,
+        "dre_state": str,
+        "httpopt_state": str       
+    }
+
+# ==============================================
+# Parser for 'show sdwan appqoe service-chain status'
+# ==============================================
+
+class ShowSdwanAppqoeServiceChainStatus(ShowSdwanAppqoeServiceChainStatusSchema):
+    """parser for "show sdwan appqoe service-chain status" """
+
+    cli_command = "show sdwan appqoe service-chain status"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # SNORT Connection          UP
+        p1 = re.compile(r"^SNORT\s+Connection\s+(?P<snort_con_state>\S+)$")
+
+        # DRE   Connection          UP
+        p2 = re.compile(r"^DRE\s+Connection\s+(?P<dre_con_state>\S+)$")
+
+        # HTTPOPT   Connection    DOWN
+        p3 = re.compile(r"^HTTPOPT\s+Connection\s+(?P<httpopt_con_state>\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SNORT Connection          UP
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"snort_state": groups["snort_con_state"]})
+                continue
+
+            # DRE   Connection          UP
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"dre_state": groups["dre_con_state"]})
+                continue
+
+            # HTTPOPT   Connection    DOWN
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"httpopt_state": groups["httpopt_con_state"]})
+                continue
+
+        return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show sdwan appqoe dreopt status'
+# =======================================================================
+
+class ShowSdwanAppqoeDreoptStatusSchema(MetaParser):
+
+    """Schema for "show sdwan appqoe dreopt status" """
+
+    schema = {
+        "dre_id": str,
+        "dre_uptime": str,
+        "health_status": str,
+        "health_change_reason": str,
+        "last_health_change_time": str,
+        "notification_send_time": str,
+        "dre_cache_status": str,
+        "disk_cache_usage": str,
+        "disk_latency": str,
+        "profile_type": str,
+        "max_connections": int,
+        "max_fanout": int,
+        "disk_size": str,
+        "memory_size": str,
+        "cpu_cores": int,
+        "disk_encryption": str
+    }
+
+# ==============================================
+# Parser for 'show sdwan appqoe dreopt status'
+# ==============================================
+
+class ShowSdwanAppqoeDreoptStatus(ShowSdwanAppqoeDreoptStatusSchema):
+    """parser for "show sdwan appqoe dreopt status" """
+
+    cli_command = "show sdwan appqoe dreopt status"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # DRE ID                                           : 52:54:dd:bd:23:b2-0184aba9c593-79a4a29c
+        p1 = re.compile(r"^DRE\s+ID\s+:\s+(?P<id>\S+)$")
+
+        # DRE uptime                                       : 07:10:46:10
+        p2 = re.compile(r"^DRE\s+uptime\s+:\s+(?P<uptime>\S+)$")
+
+        # Health status                                    : GREEN
+        p3 = re.compile(r"^Health\s+status\s+:\s+(?P<status>\S+)$")
+
+        # Health status change reason                      : None
+        p4 = re.compile(r"^Health\s+status\s+change\s+reason\s+:\s+(?P<ch_reason>\S+)$")
+
+        # Last health status change time                   : 07:10:46:10
+        p5 = re.compile(r"^Last\s+health\s+status\s+change\s+time\s+:\s+(?P<ch_time>\S+)$")
+
+        # Last health status notification sent time        : 1 second
+        p6 = re.compile(r"^Last\s+health\s+status\s+notification\s+sent\s+time\s+:\s+(?P<send_time>\d+\s+\S+)$")
+        
+        # DRE cache status                                 : Active
+        p7 = re.compile(r"^DRE\s+cache\s+status\s+:\s+(?P<cache_st>\S+)$")
+
+        # Disk cache usage                                 : 0%
+        p8 = re.compile(r"^Disk\s+cache\s+usage\s+:\s+(?P<cache_use>\d+%)$")
+
+        # Disk latency                                     : 0 ms
+        p9 = re.compile(r"^Disk\s+latency\s+:\s+(?P<latency>\d+\sms)$")
+
+        # Profile type                               : S
+        p10 = re.compile(r"^Profile type\s+:\s+(?P<type>\S+)$")
+        
+        # Maximum connections                        : 750
+        p11 = re.compile(r"^Maximum\s+connections\s+:\s+(?P<connection>\d+)$")
+
+        # Maximum fanout                             : 35
+        p12 = re.compile(r"^Maximum\s+fanout\s+:\s+(?P<fanout>\d+)$")
+
+        # Disk size                                  : 60 GB
+        p13 = re.compile(r"^Disk\s+size\s+:\s+(?P<d_size>\d+\s\S+)$")
+
+        # Memory size                                : 2048 MB
+        p14 = re.compile(r"^Memory\s+size\s+:\s+(?P<m_size>\d+\s\S+)$")
+
+        # CPU cores                                  : 1
+        p15 = re.compile(r"^CPU\s+cores\s+:\s+(?P<cores>\d+)$")
+
+        # Disk encryption                            : ON
+        p16 = re.compile(r"^Disk\s+encryption\s+:\s+(?P<encr>\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DRE ID                                           : 52:54:dd:bd:23:b2-0184aba9c593-79a4a29c
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"dre_id": groups["id"]})
+                continue
+
+            # DRE   Connection          UP
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"dre_uptime": groups["uptime"]})
+                continue
+
+            # Health status                                    : GREEN
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"health_status": groups["status"]})
+                continue
+
+            # Health status change reason                      : None
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"health_change_reason": groups["ch_reason"]})
+                continue
+
+            # Last health status change time                   : 07:10:46:10
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"last_health_change_time": groups["ch_time"]})
+                continue
+
+            # Last health status notification sent time        : 1 second
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"notification_send_time": groups["send_time"]})
+                continue
+
+            # DRE cache status                                 : Active
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"dre_cache_status": groups["cache_st"]})
+                continue
+
+            # Disk cache usage                                 : 0%
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"disk_cache_usage": groups["cache_use"]})
+                continue
+
+            # Disk latency                                     : 0 ms
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"disk_latency": groups["latency"]})
+                continue
+
+            # Profile type                               : S
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"profile_type": groups["type"]})
+                continue
+
+            # Maximum connections                        : 750
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"max_connections": int(groups["connection"])})
+                continue
+
+            # Maximum fanout                             : 35
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"max_fanout": int(groups["fanout"])})
+                continue
+
+            # Disk size                                  : 60 GB
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"disk_size": groups["d_size"]})
+                continue
+
+            # Memory size                                : 2048 MB
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"memory_size": groups["m_size"]})
+                continue
+
+            # CPU cores                                  : 1
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"cpu_cores": int(groups["cores"])})
+                continue
+
+            # Disk encryption                            : ON
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"disk_encryption": groups["encr"]})
+                continue
+
+        return parsed_dict

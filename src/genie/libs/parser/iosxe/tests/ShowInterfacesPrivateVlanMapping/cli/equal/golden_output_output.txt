@@ -1,0 +1,7 @@
+show interfaces private-vlan mapping
+Interface Secondary VLAN Type
+--------- -------------- -----------------
+vlan70    71             community
+vlan500   501            isolated
+vlan500   502            community
+vlan600   601            isolated

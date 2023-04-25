@@ -1,0 +1,5 @@
+                                                                                       D
+MAC Address    IP Address      I/F           MAC               Prim  RxPwr  Timing Num I Dev
+                                             State             Sid   (dBmV) Offset CPE P Class
+9058.515c.c978 101.115.1.12    C9/0/1/UB     w-online(pt)      1     10.00  470    0   N CM
+9058.515c.c994 101.115.1.11    C9/0/1/UB     w-online(pt)      2     10.00  403    0   N CM

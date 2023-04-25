@@ -1,0 +1,14 @@
+COS for Encapsulated Packets: 5
+Drop Threshold for Encapsulated Packets: 0
+
+Port                Protocol           Shutdown              Drop                  Status
+                                       Threshold             Threshold
+                   (cdp/lldp/stp/vtp)(cdp/lldp/stp/vtp)    (cdp/lldp/stp/vtp)
+                   (pagp/lacp/udld)  (pagp/lacp/udld)      (pagp/lacp/udld)
+------------------- ----------------  --------------------- --------------------- -----------
+Gi1/0/17            cdp lldp stp vtp    40/----/  40/  40     30/  20/  20/  20   up
+                    pagp lacp udld    ----/----/----        ----/----/----
+Gi1/0/18            cdp lldp stp vtp    40/----/  40/  40     30/  20/  20/  20   up
+                    pagp lacp udld    ----/----/----        ----/----/----
+Gi1/0/19            cdp lldp --- vtp  ----/----/  40/  40     30/  20/  20/  20   up
+                    ---- ---- udld    ----/----/----        ----/----/----

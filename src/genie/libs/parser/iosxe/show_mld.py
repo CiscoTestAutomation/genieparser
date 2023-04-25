@@ -627,7 +627,6 @@ class ShowIpv6MldGroupsSummary(ShowIpv6MldGroupsSummarySchema):
 
         return ret_dict
 
-
 # ============================================
 # Schema for 'show ipv6 mld snooping querier'
 # ============================================
@@ -714,3 +713,47 @@ class ShowIpv6MldSnoopingQuerier(ShowIpv6MldSnoopingQuerierSchema):
                 continue
 
         return parsed_dict
+
+# ========================================================
+# Parser for 'show ipv6 mld groups'
+# ========================================================
+
+class ShowIpv6MldGroupsSchema(MetaParser):
+    """
+    Schema for 'show ipv6 mld groups'
+    """
+
+    schema = {
+        'mld_groups': {
+            Any(): {
+                'intf': str,
+                'uptime': str,
+                'expires': str,
+            },
+        }
+    }
+
+class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
+    """
+    Parser for 'show ipv6 mld groups'
+    """
+    cli_command = 'show ipv6 mld groups'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        mld_dict = {}
+        
+        # FF1E::         Vlan10         00:00:27  not used
+        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[not used]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mld_dict.setdefault('mld_groups', {}).setdefault(group.pop('group'), group)
+        return mld_dict
+

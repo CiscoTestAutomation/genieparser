@@ -356,6 +356,7 @@ class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
             Optional("reachable"): int,
             Optional("stale"): int,
             Optional("down"): int,
+            Optional("incomplete"): int,
             "total": int,
         },
         "device": {
@@ -418,6 +419,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  REACHABLE  : 1
         #  STALE      : 2
         #  DOWN       : 1
+        #  INCOMPLETE : 1
         #    total    : 4
         binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
 
@@ -429,11 +431,14 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
         # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
         # DH4 10.0.0.2                                 000b.000c.000d(D)      Gi1/0/1    access     100 ( 100)      0024       45mn       STALE      221 s(7177 s)    no         yes          000b.000c.000d
+        # DH4 110.0.0.3                                0001.0003.0002(R)      Gi1/0/23   access     110 ( 110)      0024       3mn        REACHABLE  12 s try 0(6722 s) no         yes          0001.0003.0002     (unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)
         device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
                                          r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
                                          r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
-                                         r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss)|(\d+\s+s\(\d+\s+s\)))?'
+                                         r'\s+(?P<state>(\S+))\s+'
+                                         r'(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|'
+                                         r'(\d+\ss)|(\d+\s+s\(\d+\s+s\))|(\d+\s+s\s+try\s+\d+\(\d+\s+s\)))?'         
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
                                          r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
 

@@ -1,0 +1,14 @@
+============================================================
+   SDK: Egress QOS Profile information
+============================================================
+  OID: 0x4B1C
+  Ref Count: 1
+  No of  Counter: 5
+  Marking source: Tag
+  Need filter table update: UPTODATE
+  Tunnel Mode: RE-EVALUATE
+
+  DSCP      Remap   ETOS    EPCP    EExp   ILE   CounterOffset
+  ----      -----   ----    ----    ----   ---   -------------
+   24         32     136     3       3      Y       4     
+   40         56     224     5       5      Y       2 

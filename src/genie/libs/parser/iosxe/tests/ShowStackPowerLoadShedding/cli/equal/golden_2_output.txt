@@ -1,0 +1,19 @@
+Power Stack Stack Stack Total Rsvd Alloc Sw_Avail Num Num
+Name Mode Topolgy Pwr(W) Pwr(W) Pwr(W) Pwr(W) SW PS
+-------------------- ------ ------- ------ ------ ------ ------ ----- -----
+Powerstack-1 SP-PS Stndaln 1100 0 505 595 1 1    
+Powerstack-2 SP-PS Stndaln 715 0 312 403 1 1     
+Powerstack-3 SP-PS Stndaln 1100 0 243 857 1 1    
+Powerstack-4 SP-PS Stndaln 1100 0 575 525 1 1   
+Powerstack-5 SP-PS Stndaln 1100 0 575 525 1 1     
+
+Power Stack Priority Consumd Consumd Consumd Alloc Alloc
+SW Name Sw-Hi-Lo Sw(W) Hi(W) Lo(W) Hi(W) Lo(W)
+-- -------------------- -------- ------- ------- ------- ------- -------
+1 Powerstack-1 2-11-20 108 0.0 0.0 0.0 0.0   
+2 Powerstack-5 4-13-22 124 0.0 0.0 0.0 0.0
+3 Powerstack-6 4-13-22 160 0.0 0.0 0.0 0.0
+4 Powerstack-7 4-13-22 148 0.0 0.0 0.0 0.0     
+5 Powerstack-8 4-13-22 159 0.0 0.0 0.0 0.0
+-- -------------------- -------- ------- ------- ------- ------- -------
+Totals: 110 0.0 0.0 0.0 0.0

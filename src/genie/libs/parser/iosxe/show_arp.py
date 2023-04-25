@@ -1671,7 +1671,7 @@ class ShowIpArpInspectionLogSchema(MetaParser):
     schema = {
         'buffer_size': int,
         'syslog_rate': str,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'interface': str,
                 'vlan_id': int,

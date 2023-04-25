@@ -2406,7 +2406,9 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         #  Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         #  2001:DB8:20:4:6::6
         #           4          400      67      73       66    0    0 01:03:11        5
-        p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
+        #  *2001::100:1:2:1
+        #                  4        65001       7       7      198    0    0 00:00:02        1
+        p10 = re.compile(r'^(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
                           ' +(?P<as>[0-9]+(\.\d+)?) +(?P<msg_rcvd>[0-9]+)'

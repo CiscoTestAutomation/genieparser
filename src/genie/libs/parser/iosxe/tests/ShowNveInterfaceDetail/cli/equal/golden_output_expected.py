@@ -8,7 +8,7 @@ expected_output = {
     'num_l3vni_cp': 30,
     'oper_state': 'Down',
     'src_intf': {
-        'Loopback1 ': {
+        'Loopback1': {
             'primary_ip': '1.1.1.2',
             'vrf': '0',
         },

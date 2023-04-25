@@ -2,6 +2,7 @@ expected_output = {
     "vrf": {
         "vrf1": {
             "interfaces": ["GigabitEthernet1/0/1"],
+            "route_distinguisher": "<not set>"
         },
         "vrf2": {
             "protocols": ["ipv4", "ipv6"],
@@ -18,6 +19,7 @@ expected_output = {
         "Mgmt-intf": {
             "interfaces": ["GigabitEthernet0"],
             "protocols": ["ipv4", "ipv6"],
+            "route_distinguisher": "<not set>"
         },
         "rb-bcn-lab": {
             "interfaces": ["Loopback9", "TenGigabitEthernet0/0/1"],

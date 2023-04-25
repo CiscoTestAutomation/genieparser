@@ -1,0 +1,8 @@
+# golden_output_output.txt
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+EVI   VLAN  Interface Version   Filter  (Source, Group)
+----- ----- --------- --------- ------- ---------------
+103   103   Gi1/0/1   IGMPv2    N/A     (*, 227.1.1.1)

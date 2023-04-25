@@ -1,0 +1,9 @@
+202-XTR#show lisp all instance-id 101 ipv6 smr
+=====================================================
+Output for router lisp 0
+=====================================================
+LISP SMR Table for router lisp 0 (red) IID 101
+Entries: 1
+
+Prefix                                  Producer
+A1:192:168::/64                         local EID

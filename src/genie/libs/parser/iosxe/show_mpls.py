@@ -25,6 +25,7 @@
         *  show mpls forwarding-table <prefix>
         *  show mpls forwarding-table interface tunnel <tunnelid>
         *  show mpls forwarding-table detail
+        *  show mpls forwarding-table summary
         *  show mpls forwarding-table vrf <vrf>
         *  show mpls forwarding-table vrf <vrf> detail
         *  show mpls interfaces
@@ -38,6 +39,7 @@
         *  show mpls traffic-eng tunnels {tunnel}
         *  show mpls traffic-eng tunnels
         *  show mpls traffic-eng tunnels brief
+        *  show mpls traffic-eng autoroute
 """
 
 import re
@@ -4388,6 +4390,283 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
                 downstream_generic_label_region.update({
                     'min_label': int(group['min_label']),
                     'max_label': int(group['max_label'])})
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show mpls traffic-eng autoroute '
+# ======================================================
+
+class ShowMplsTrafficEngAutorouteSchema(MetaParser):
+    """Schema for show mpls traffic-eng autoroute"""
+
+    schema = {
+        'status': str,
+        Optional('destination'): str,
+        Optional('protocol'): str,
+        Optional('number_of_tunnels'): str,
+        Optional('tunnel'): {
+            Optional('tunnel_number'): str,
+            Optional('load_balance_metric'): str,
+            Optional('nexthop'): str,
+            Optional('flags'): str,
+        },
+    }
+
+class ShowMplsTrafficEngAutoroute(ShowMplsTrafficEngAutorouteSchema):
+    """Parser for show mpls traffic-eng autoroute"""
+
+    cli_command = 'show mpls traffic-eng autoroute'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # MPLS TE autorouting enabled
+        p1 = re.compile(r"^MPLS\s+TE\s+autorouting\s+(?P<status>\w+)|:.+$")
+        #   destination 2.2.2.2, area ospf 1  area 0, has 1 tunnels
+        p2 = re.compile(r"^destination\s+(?P<destination>(\d{1,4}\.){3}\d{1,4}),\s+(?P<protocol>.+),\s+has\s+(?P<number_of_tunnels>\d+)\s+tunnels$")
+        #     Tunnel100   (load balancing metric 4000000, nexthop 2.2.2.2)
+        p3 = re.compile(r"^(?P<tunnel_number>\S+)\s+\(load\s+balancing\s+metric\s+(?P<load_balance_metric>\d+),\s+nexthop\s+(?P<nexthop>(\d{1,3}\.){3}\d{1,3})\)$")
+        #                 (flags: Announce)
+        p3_1 = re.compile(r"^\(flags:\s+(?P<flags>\w+)\)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # MPLS TE autorouting enabled
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['status'] = dict_val['status']
+                continue
+
+            #   destination 2.2.2.2, area ospf 1  area 0, has 1 tunnels
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['destination'] = dict_val['destination']
+                ret_dict['protocol'] = dict_val['protocol']
+                ret_dict['number_of_tunnels'] = dict_val['number_of_tunnels']
+                continue
+
+            #     Tunnel100   (load balancing metric 4000000, nexthop 2.2.2.2)
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                tunnel = ret_dict.setdefault('tunnel', {})
+                tunnel['tunnel_number'] = dict_val['tunnel_number']
+                tunnel['load_balance_metric'] = dict_val['load_balance_metric']
+                tunnel['nexthop'] = dict_val['nexthop']
+                continue
+
+            #                 (flags: Announce)
+            m = p3_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                tunnel = ret_dict.setdefault('tunnel', {})
+                tunnel['flags'] = dict_val['flags']
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show mpls forwarding-table summary '
+# ======================================================
+
+class ShowMplsForwardingTableSummarySchema(MetaParser):
+    """Schema for show mpls forwarding-table summary"""
+
+    schema = {
+        'total_label': int,
+    }
+
+class ShowMplsForwardingTableSummary(ShowMplsForwardingTableSummarySchema):
+    """Parser for show mpls forwarding-table summary"""
+
+    cli_command = 'show mpls forwarding-table summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 9 total labels
+        p1 = re.compile(r"^(?P<total_label>\d+)\s+total\s+labels$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9 total labels
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['total_label'] = int(dict_val['total_label'])
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show mpls traffic-eng link-management advertisements '
+# ======================================================
+class ShowMplsTrafficEngLinkManagementAdvertisementsSchema(MetaParser):
+    """Schema for show mpls traffic-eng link-management advertisements"""
+
+    schema = {
+        'link_id': {
+            Any(): {
+                'interface': str,
+                'link_subnet_type': str,
+                'link_ip_address': str,
+                'designated_router': str,
+                'te_metric': int,
+                'igp_metric': int,
+                'srlgs': str,
+                'physical_bandwidth': int,
+                'reserved_global_bandwidth': int,
+                'reserved_sub_bandwidth': int,
+                'attribute_flags': str,
+                'downstream': {
+                    Any(): {
+                        'global_pool': int,
+                        'sub_pool': int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMplsTrafficEngLinkManagementAdvertisements(ShowMplsTrafficEngLinkManagementAdvertisementsSchema):
+    """Parser for show mpls traffic-eng link-management advertisements"""
+
+    cli_command = 'show mpls traffic-eng link-management advertisements'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Link ID::  2 (Port-channel60)
+        p1 = re.compile(r"^Link\s+ID::\s+(?P<link_id>\d+)\s+\((?P<interface>\S+)\)$")
+        
+        # Link Subnet Type:     Broadcast
+        p2 = re.compile(r"^Link\s+Subnet\s+Type:\s+(?P<link_subnet_type>\w+)$")
+        
+        # Link IP Address:      195.1.1.1
+        p3 = re.compile(r"^Link\s+IP\s+Address:\s+(?P<link_ip_address>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # Designated Router:    195.1.1.1
+        p4 = re.compile(r"^Designated\s+Router:\s+(?P<designated_router>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # TE metric:            1
+        p5 = re.compile(r"^TE\s+metric:\s+(?P<te_metric>\d+)$")
+        
+        # IGP metric:           1
+        p6 = re.compile(r"^IGP\s+metric:\s+(?P<igp_metric>\d+)$")
+        
+        # SRLGs:                None
+        p7 = re.compile(r"^SRLGs:\s+(?P<srlgs>\w+)$")
+        
+        # Physical Bandwidth:   80000000 kbits/sec
+        p8 = re.compile(r"^Physical\s+Bandwidth:\s+(?P<physical_bandwidth>\d+)\s+kbits\/sec$")
+        
+        # Res. Global BW:       50000 kbits/sec
+        p9 = re.compile(r"^Res\.\s+Global\s+BW:\s+(?P<reserved_global_bandwidth>\d+)\s+kbits\/sec$")
+        
+        # Res. Sub BW:          0 kbits/sec
+        p10 = re.compile(r"^Res\.\s+Sub\s+BW:\s+(?P<reserved_sub_bandwidth>\d+)\s+kbits\/sec$")
+
+        # Attribute Flags:      0x00000000
+        p11 = re.compile(r"^Attribute Flags:\s+(?P<attribute_flags>\w+)$")
+
+        # Reservable Bandwidth[0]:        50000            0 kbits/sec
+        p12 = re.compile(r"^(?P<bandwidth_name>.+)\[(?P<count>\d+)\]:\s+(?P<global_pool>\d+)\s+(?P<sub_pool>\d+) kbits\/sec$")
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Link ID::  2 (Port-channel60)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                link_dict = ret_dict.setdefault('link_id', {}).setdefault(dict_val['link_id'], {})
+                link_dict['interface'] = dict_val['interface']
+                continue
+
+            # Link Subnet Type:     Broadcast
+            m = p2.match(line)
+            if m:
+                link_dict['link_subnet_type'] = m.groupdict()['link_subnet_type']
+                continue
+
+            # Link IP Address:      195.1.1.1
+            m = p3.match(line)
+            if m:
+                link_dict['link_ip_address'] = m.groupdict()['link_ip_address']
+                continue
+
+            # Designated Router:    195.1.1.1
+            m = p4.match(line)
+            if m:
+                link_dict['designated_router'] = m.groupdict()['designated_router']
+                continue
+
+            # TE metric:            1
+            m = p5.match(line)
+            if m:
+                link_dict['te_metric'] = int(m.groupdict()['te_metric'])
+                continue
+
+            # IGP metric:           1
+            m = p6.match(line)
+            if m:
+                link_dict['igp_metric'] = int(m.groupdict()['igp_metric'])
+                continue
+
+            # SRLGs:                None
+            m = p7.match(line)
+            if m:
+                link_dict['srlgs'] = m.groupdict()['srlgs']
+                continue
+
+            # Physical Bandwidth:   80000000 kbits/sec
+            m = p8.match(line)
+            if m:
+                link_dict['physical_bandwidth'] = int(m.groupdict()['physical_bandwidth'])
+                continue
+
+            # Res. Global BW:       50000 kbits/sec
+            m = p9.match(line)
+            if m:
+                link_dict['reserved_global_bandwidth'] = int(m.groupdict()['reserved_global_bandwidth'])
+                continue
+
+            # Res. Sub BW:          0 kbits/sec
+            m = p10.match(line)
+            if m:
+                link_dict['reserved_sub_bandwidth'] = int(m.groupdict()['reserved_sub_bandwidth'])
+                continue
+
+            # Attribute Flags:      0x00000000
+            m = p11.match(line)
+            if m:
+                link_dict['attribute_flags'] = m.groupdict()['attribute_flags']
+                continue
+
+            # Reservable Bandwidth[0]:        50000            0 kbits/sec
+            m = p12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name = f"{dict_val['bandwidth_name'].lower().replace(' ', '_')}_{dict_val['count']}"
+                band_dict = link_dict.setdefault('downstream', {}).setdefault(name, {})
+                band_dict['global_pool'] = int(dict_val['global_pool'])
+                band_dict['sub_pool'] = int(dict_val['sub_pool'])
                 continue
 
         return ret_dict
