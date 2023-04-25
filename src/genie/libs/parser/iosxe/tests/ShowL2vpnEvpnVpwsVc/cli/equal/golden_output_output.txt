@@ -1,0 +1,27 @@
+# Copyright (c) 2021-2022 by Cisco Systems, Inc.
+# All rights reserved.
+
+EVPN name: vc100, state: up, type: point-to-point
+  EVPN ID: 100
+  VPWS Service Instance ID: Source 1, Target 2
+  Labels: Local 16, Remote 16
+  Next Hop Address: 20.20.20.20
+  Associated member interface Et1/2 up, Et1/2 status is up
+  Output interface: Et0/0, imposed label stack {25 16}
+  Preferred path: not configured  
+  Default path: active
+  Dataplane:
+    SSM segment/switch IDs: 12292/4096 (used), PWID: 1
+  Rx Counters
+    0 input transit packets, 0 bytes
+    0 drops
+  Tx Counters
+    0 output transit packets, 0 bytes
+    0 drops
+  5 VC FSM state transitions, Last 5 shown
+    Prov: Idle -> Prov, Sat May 08 10:38:19.829 (00:03:34 ago)
+    EviUp: Prov -> LocWait, Sat May 08 10:38:39.078 (00:03:15 ago)
+    LocUp: LocWait -> RemWait, Sat May 08 10:38:39.089 (00:03:15 ago)
+    RemUp: RemWait -> Act, Sat May 08 10:39:43.557 (00:02:10 ago)
+    DpUp: Act -> Est, Sat May 08 10:39:43.558 (00:02:10 ago)
+

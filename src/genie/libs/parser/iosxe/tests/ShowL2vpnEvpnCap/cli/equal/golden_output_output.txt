@@ -1,0 +1,33 @@
+# golden_output_output.txt
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+EVPN Platform Capabilities
+ VLAN-based EVPN Instance: supported
+ VLAN-bundle EVPN Instance: supported
+ VLAN-aware EVPN Instance: supported
+ Ingress replication type: supported
+ Point-to-multipoint replication type: not supported
+ Multipoint-to-multipoint replication type: not supported
+ Static replication type: supported
+ Per-BD MPLS label allocation mode: supported
+ Per-CE MPLS label allocation mode: supported
+ Per-EVI MPLS label allocation mode: supported
+ Address resolution flooding suppression: supported
+ DHCP Relay flooding suppression: not supported
+ VLAN configuration mode: supported
+ MPLS encapsulation: supported
+ VxLAN encapsulation: supported
+ Multi-homing aliasing: supported
+ VPLS stitching: supported
+ VPLS seamless integration: not supported
+ Multi-homing all active redundancy mode: supported
+ Multi-homing single active redundancy mode: supported
+ Ethernet Segment old config model: not supported
+ IP local learning: supported
+ VPLS stitching single-active dual-homing: supported
+ Layer 2 Tenant Routed Multicast IPv4: supported
+ Layer 2 Tenant Routed Multicast IPv6: supported
+ Layer 2 multicast source specific forwarding: supported
+ VPWS Preferred Path SRTE Policy: not supported

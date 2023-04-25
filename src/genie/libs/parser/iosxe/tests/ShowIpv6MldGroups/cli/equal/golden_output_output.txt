@@ -1,0 +1,5 @@
+show ipv6 mld groups
+MLD Connected Group Membership
+Group Address                           Interface                                             Uptime    Expires
+FF1E::                                  Vlan10                                               00:57:06  not used
+FF1F::                                  Vlan10                                               00:57:06  not used

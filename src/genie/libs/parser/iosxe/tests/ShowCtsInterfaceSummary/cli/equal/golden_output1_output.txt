@@ -1,0 +1,6 @@
+CTS Interfaces
+---------------------
+Interface                      Mode    IFC-state dot1x-role peer-id    IFC-cache    Critical-Authentication
+-----------------------------------------------------------------------------
+Twe1/0/12                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 

@@ -1,0 +1,61 @@
+  ============================================================
+   NPD: Ingress QOS Profile information
+  ============================================================
+  OID: 0xFE
+  Ref Count: 0
+  No of  Counter: 0
+  No of meters: 0
+  Tunnel Mode: PIPE
+  Need filter table update: CREATED
+
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+  ----      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       0         0       0   G     N      0    
+   2          2       0         0       0   G     N      0    
+   3          3       0         0       0   G     N      0    
+   4          4       0         0       0   G     N      0    
+   5          5       0         0       0   G     N      0    
+   6          6       0         0       0   G     N      0    
+   7          7       0         0       0   G     N      0    
+   8          8       1         0       0   G     N      0       
+
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   -------   -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       0         0       0   G     N      0    
+   2          2       1         0       0   G     N      0    
+   3          3       1         0       0   G     N      0    
+   4          4       2         0       0   G     N      0    
+   5          5       2         0       0   G     N      0    
+   6          6       3         0       0   G     N      0    
+   7          7       3         0       0   G     N      0    
+   8          8       4         0       7   G     N      0    
+   9          9       4         0       7   G     N      0    
+   10         10      5         0       7   G     N      0    
+   11         11      5         0       7   G     N      0       
+
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   ---      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       1         0       0   G     N      0    
+   2          2       2         0       0   G     N      0    
+   3          3       3         0       0   G     N      0    
+   4          4       4         0       0   G     N      0    
+   5          5       5         0       0   G     N      0    
+   6          6       6         0       0   G     N      0    
+   7          7       7         0       0   G     N      0    
+
+  ============================================================
+   NPD: Bind Information
+  ============================================================
+  Port Type: L2
+  IQP counter size: 0
+  IQP Counter OID: 0x0
+  Meter Type: EXACT
+  Meter set OID: 0x0
+  No of meters: 0
+  System port OID: 0x5ED
+  Port OID: 0x5E9
+  Speed: 10000000000
+  Port Internal State: Active

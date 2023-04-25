@@ -24,6 +24,8 @@ class ShowIpRouteDistributor(MetaParser):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
 
+    exclude = ['updated']
+
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
         if output is None:
@@ -69,6 +71,8 @@ class ShowIpv6RouteDistributor(MetaParser):
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    
+    exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
         
@@ -295,9 +299,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
-            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\-\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20
+            # B        1.1.1.10 [200/0] via FC01:101:8:E007:: (default:ipv6), 1d15h
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[0-9a-fA-F\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[dh\d\:]+)+(, +(?P<interface>[\w]+))?$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
@@ -2422,10 +2426,10 @@ class ShowIpCefInternalSchema(MetaParser):
                                 Optional('subblocks'): {
                                   Any(): {
                                       'rr_source': list,
-                                      'non_eos_chain_loadinfo': str,
-                                      'per-session': bool,
-                                      'flags': str,
-                                      'locks': int,
+                                      Optional('non_eos_chain_loadinfo'): str,
+                                      Optional('per-session'): bool,
+                                      Optional('flags'): str,
+                                      Optional('locks'): int,
                                   }
                                 },
                                 Optional('ifnums'): {
@@ -3429,3 +3433,50 @@ class ShowRibClient(ShowRibClientSchema):
                 
         return ret_dict
 
+# ==========================================================================================
+# Parser Schema for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotdSchema(MetaParser):
+    """
+    Schema for
+        * 'show banner motd'
+    """
+
+    schema = {
+        'banner_motd': str
+    }
+
+# ==========================================================================================
+# Parser for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotd(ShowBannerMotdSchema):
+    """
+    Parser for
+        * 'show banner motd'
+    """
+    cli_command = 'show banner motd'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # initializing dictionary
+        ret_dict = {}
+
+        # cisco banner test msg
+        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # cisco banner test msg
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['banner_motd'] = group['banner']
+                continue
+
+        return ret_dict

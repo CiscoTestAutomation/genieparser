@@ -1,0 +1,4 @@
+Type escape sequence to abort.
+Tracing the route to 1100::2
+
+  1 1100::2 0 msec 0 msec

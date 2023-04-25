@@ -295,3 +295,42 @@ class ShowIpMfibSummary(ShowIpMfibSummarySchema):
                 ret_dict['star_g_m_entry'] = dict_val['star_g_m_entry']
                 continue
         return ret_dict
+
+# ======================================================
+# Parser for 'show ipv6 mfib summary '
+# ======================================================
+
+class ShowIpv6MfibSummarySchema(MetaParser):
+    """Schema for show ipv6 mfib summary"""
+
+    schema = {
+        's_g_entry': int,
+        'star_g_entry': int,
+        'star_g_m_entry': int,
+    }
+
+class ShowIpv6MfibSummary(ShowIpv6MfibSummarySchema):
+    """Parser for show ipv6 mfib summary"""
+
+    cli_command = 'show ipv6 mfib summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        #  Forwarding prefixes: [0 (S,G), 5 (*,G), 3 (*,G/m)]
+        p1 = re.compile(r"^Forwarding\s+prefixes:\s+\[(?P<s_g_entry>\d+)\s+\(S,G\),\s+(?P<star_g_entry>\d+)\s+\(\*,G\),\s+(?P<star_g_m_entry>\d+)\s+\(\*,G/m\)\]$")
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  Forwarding prefixes: [0 (S,G), 5 (*,G), 3 (*,G/m)]
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['s_g_entry'] = int(dict_val['s_g_entry'])
+                ret_dict['star_g_entry'] = int(dict_val['star_g_entry'])
+                ret_dict['star_g_m_entry'] = int(dict_val['star_g_m_entry'])
+                continue
+        return ret_dict

@@ -1,6 +1,8 @@
 """
 IOSXE C9300 parsers for the following show commands:
     * show inventory
+    * 'show platform software fed {state} matm macTable vlan {vlan}'
+    * 'show platform software fed {switch} {state} matm macTable vlan {vlan}'
 """
 # Python
 import re
@@ -9,6 +11,7 @@ import logging
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
+from genie.libs.parser.utils.common import Common
 
 
 # ============================
@@ -587,3 +590,227 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceAsicAllCppVbinAll(ShowPl
 
         return ret_dict
 
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'voq_id': {
+                    Any(): {
+                        'packets': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'bytes': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'slice': {
+                            Any(): {
+                                'sms_bytes': int,
+                                'hbm_blocks': int,
+                                'hbm_bytes': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterface(ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema):
+    """Parser for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface}',
+        'show platform hardware fed switch {switch_num} qos queue stats interface {interface}']
+
+    def cli(self, interface, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num, interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            
+            output = self.device.execute(cmd)
+
+        # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+        p1 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/]+)\s+.*$')
+
+        # 0      | Enqueued |                        1194566957 |                       78841419162 |
+        # | Dropped  |                                 0 |                                 0 |
+        # | Total    |                        1194566957 |                       78841419162 |
+        # |----------|-----------------------------------------------------------------------|
+        p2 = re.compile(r'^(?P<voq_id>\d+)?\s*\|\s+(?P<header>\w+)\s+\|\s+(?P<packets>\d+)\s+\|\s+(?P<bytes>\d+)\s+\|$')
+
+        # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+        p3 = re.compile(r'^\|\s+Slice\s+\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|'
+                    r'\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+        
+        # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        p4 = re.compile(r'^\|\s*(?P<slice_type>SMS Bytes|HBM Blocks|HBM Bytes)\s*\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|'
+            r'\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+            
+            # 0      | Enqueued |                        1194566957 |                       78841419162 |
+            # | Dropped  |                                 0 |                                 0 |
+            # | Total    |                        1194566957 |                       78841419162 |
+            # |----------|-----------------------------------------------------------------------|
+            m = p2.match(line)
+            if m:
+                res_dict = m.groupdict()
+                if res_dict['voq_id']:
+                    voq_dict = int_dict.setdefault('voq_id', {}).setdefault(res_dict['voq_id'], {})
+                
+                pkts_dict = voq_dict.setdefault('packets', {})
+                bytes_dict = voq_dict.setdefault('bytes', {})
+                pkts_dict.setdefault(res_dict['header'].lower(), int(res_dict['packets']))
+                bytes_dict.setdefault(res_dict['header'].lower(), int(res_dict['bytes']))
+                continue
+
+            # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+            m = p3.match(line)
+            if m:
+                slice_dict = voq_dict.setdefault('slice', {})
+                slice_dict0 = slice_dict.setdefault(m.groupdict()['slice0'], {})
+                slice_dict1 = slice_dict.setdefault(m.groupdict()['slice1'], {})
+                slice_dict2 = slice_dict.setdefault(m.groupdict()['slice2'], {})
+                slice_dict3 = slice_dict.setdefault(m.groupdict()['slice3'], {})
+                slice_dict4 = slice_dict.setdefault(m.groupdict()['slice4'], {})
+                slice_dict5 = slice_dict.setdefault(m.groupdict()['slice5'], {})
+                continue
+            
+            # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+            m = p4.match(line)
+            if m:
+                grp_output = m.groupdict()
+                slice_type = grp_output['slice_type'].replace(' ', '_').lower()
+                slice_dict0.setdefault(slice_type, int(grp_output['slice0']))
+                slice_dict1.setdefault(slice_type, int(grp_output['slice1']))
+                slice_dict2.setdefault(slice_type, int(grp_output['slice2']))
+                slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
+                slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
+                slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceClear(ShowPlatformHardwareFedSwitchQosQueueStatsInterface):
+    """Parser for show platform hardware fed switch {switch} qos queue stats interface {interface} clear"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface} clear',
+            'show platform hardware fed switch {switch_num} qos queue stats interface {interface} clear']
+
+    def cli(self, interface, switch_num=None, output=None):
+
+        return super().cli(interface=interface, switch_num=switch_num, output=output)
+
+
+class ShowPlatformSoftwareFedMatmMactableVlanSchema(MetaParser):
+    """Schema for show platform software fed {state} matm macTable vlan {vlan}"""
+
+    schema = {
+        "total_mac_address": int,
+        "summary":{
+            "total_secure_address": int,
+            "total_drop_address": int,
+            "total_lisp_local_address": int,
+            "total_lisp_remote_address": int
+        },
+        "type":{
+            Any(): str
+        }
+    }
+
+
+class ShowPlatformSoftwareFedMatmMactableVlan(ShowPlatformSoftwareFedMatmMactableVlanSchema):
+    """Parser for show platform software fed {state} matm macTable vlan {vlan}"""
+
+    cli_command = ['show platform software fed {state} matm macTable vlan {vlan}',
+                'show platform software fed {switch} {state} matm macTable vlan {vlan}']
+
+    def cli(self, state, vlan, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, state=state, vlan=vlan)
+            else:
+                cmd = self.cli_command[0].format(state=state, vlan=vlan)
+            output = self.device.execute(cmd)
+
+        # Total Mac number of addresses:: 34
+        p1 = re.compile(r"^Total Mac number of addresses::\s+(?P<total_mac_address>\d+)$")
+
+        # Total number of secure addresses:: 0 
+        p2 = re.compile(r"^Total number of secure addresses::\s+(?P<total_secure_address>\d+)$")
+
+        # Total number of drop addresses:: 0
+        p3 = re.compile(r"^Total number of drop addresses::\s+(?P<total_drop_address>\d+)$")
+
+        # Total number of lisp local addresses:: 0
+        p4 = re.compile(r"^Total number of lisp local addresses::\s+(?P<total_lisp_local_address>\d+)$")
+
+        # Total number of lisp remote addresses:: 0
+        p5 = re.compile(r"^Total number of lisp remote addresses::\s+(?P<total_lisp_remote_address>\d+)$")
+
+        # MAT_LISP_REMOTE_ADDR 0x1000000  MAT_VPLS_ADDR        0x2000000  MAT_LISP_GW_ADDR     0x4000000
+        p6 = re.compile(r"(?P<key>[\w_\-]+)\s+(?P<value>[\w_\-]+)")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Total Mac number of addresses:: 34
+            m = p1.match(line)
+            if m:
+                ret_dict['total_mac_address'] = int(m.groupdict()['total_mac_address'])
+                continue
+
+            # Total number of secure addresses:: 0 
+            m = p2.match(line)
+            if m:
+                summary_dict = ret_dict.setdefault('summary', {})
+                summary_dict['total_secure_address'] = int(m.groupdict()['total_secure_address'])
+                continue
+
+            # Total number of drop addresses:: 0
+            m = p3.match(line)
+            if m:
+                summary_dict['total_drop_address'] = int(m.groupdict()['total_drop_address'])
+                continue
+
+            # Total number of lisp local addresses:: 0
+            m = p4.match(line)
+            if m:
+                summary_dict['total_lisp_local_address'] = int(m.groupdict()['total_lisp_local_address'])
+                continue
+
+            # Total number of lisp remote addresses:: 0
+            m = p5.match(line)
+            if m:
+                summary_dict['total_lisp_remote_address'] = int(m.groupdict()['total_lisp_remote_address'])
+                continue
+
+            # MAT_LISP_REMOTE_ADDR 0x1000000  MAT_VPLS_ADDR        0x2000000  MAT_LISP_GW_ADDR     0x4000000
+            m = p6.finditer(line)
+            if m:
+                type_dict = ret_dict.setdefault('type', {})
+                [type_dict.update({each_pair.groupdict()['key'].lower():each_pair.groupdict()['value']}) for each_pair in m]
+                continue
+
+        return ret_dict

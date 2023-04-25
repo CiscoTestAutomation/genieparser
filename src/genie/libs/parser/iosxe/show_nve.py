@@ -6,7 +6,7 @@ IOSXE parsers for the following show commands:
     * 'show nve peers interface nve {nve}'
     * 'show nve peers peer-ip {peer_ip}'
     * 'show nve peers vni {vni}'
-    * 'show nve interface nve {nve_num} detail'
+    * 'show nve interface {nve_intf} detail'
     * 'show nve vni'
     * 'show nve vni {vni}'
 
@@ -17,7 +17,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or, Schema
+from genie.metaparser.util.schemaengine import Any, Optional
 from genie.parsergen import oper_fill_tabular
 
 
@@ -53,6 +53,7 @@ class ShowNvePeersSchema(MetaParser):
             },
         },
     }
+
 
 # ============================================
 # Super Parser for:
@@ -137,13 +138,14 @@ class ShowNvePeers(ShowNvePeersSchema):
 
         return res_dict
 
+
 # ====================================================
-#  schema for show nve interface nve {nve_num} detail
+#  schema for show nve interface {nve_intf} detail
 # ====================================================
 class ShowNveInterfaceDetailSchema(MetaParser):
     '''Schema for:
 
-    * 'show nve interface nve {nve_num} detail'
+    * 'show nve interface {nve_intf} detail'
     '''
 
     schema = {
@@ -151,6 +153,9 @@ class ShowNveInterfaceDetailSchema(MetaParser):
         'admin_state': str,
         'oper_state': str,
         'encap': str,
+        # mcast_encap is optional for backwards compatibility with older
+        # version show outputs.
+        Optional('mcast_encap'): str,
         'bgp_host_reachability': str,
         'vxlan_dport': int,
         'num_l3vni_cp': int,
@@ -159,6 +164,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
         Optional('src_intf'): {
             Any(): {
                 'primary_ip': str,
+                Optional('secondary_ip'): str,
                 'vrf': str,
             }
         },
@@ -174,53 +180,75 @@ class ShowNveInterfaceDetailSchema(MetaParser):
         }
     }
 
+
 # ============================================
 # Parser for:
-# * show nve interface nve {nve_num} detail
+# * show nve interface {nve_intf} detail
 # ============================================
 class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
     ''' Parser for the following show commands:
 
-    * 'show nve interface nve {nve_num} detail'
+    * 'show nve interface {nve_intf} detail'
     '''
 
-    cli_command = ['show nve interface nve {nve_num} detail']
+    cli_command = ['show nve interface {nve_intf} detail']
 
-    def cli(self, nve_num=None, output=None):
+    # nve_num argument is kept for backwards compatibility with previous
+    # version of parser when calling directly.
+    def cli(self, nve_intf=None, nve_num=None, output=None):
 
         if output is None:
-            if nve_num:
-                output = self.device.execute(self.cli_command[0].format(nve_num=nve_num))
+            if nve_num and nve_intf == None:
+                nve_intf = 'nve {nve_num}'.format(nve_num=nve_num)
+
+            if nve_intf:
+                output = self.device.execute(self.cli_command[0].format(nve_intf=nve_intf))
             else:
-                return
+                return {}
 
         parsed_dict = {}
 
         # Interface: nve1, State: Admin Up, Oper Down, Encapsulation: Vxlan,
+        # Interface: nve1, State: Admin Up, Oper Down
         p1 = re.compile(r'^Interface:\s+(?P<interface>[a-zA-Z0-9 ]+),'
                         r'\s+State:\s+Admin\s+(?P<admin_state>[\w]+),'
-                        r'\s+Oper\s+(?P<oper_state>[\w\s]+),'
-                        r'\s+Encapsulation:\s+(?P<encap>[\w]+),$')
+                        r'\s+Oper\s+(?P<oper_state>[\w\s]+)(,'
+                        r'\s+Encapsulation:\s+(?P<encap>[\w]+),)?$')
+
+        # Encapsulation: Vxlan IPv4
+        # Encapsulation: Vxlan dual stack prefer IPv4
+        p2 = re.compile(r'^Encapsulation:\s+(?P<encap>[\w ]+)$')
+
+        # Multicast BUM encapsulation: Vxlan IPv4
+        p3 = re.compile(r'^Multicast BUM encapsulation:\s+(?P<encap>[\w ]+)$')
 
         # BGP host reachability: Enabled, VxLAN dport: 4789
-        p2 = re.compile(r'^BGP host reachability:\s+(?P<bgp_host_reachability>[\w]+),'
-                        r'\s+VxLAN dport:\s+(?P<vxlan_dport>[\d]+)$')
+        p4 = re.compile(r'^BGP host reachability:\s+(?P<bgp_host_reachability>[\w]+),'
+                        r'\s+VxLAN dport:\s+(?P<vxlan_dport>\d+)$')
 
         # VNI number: L3CP 30 L2CP 3 L2DP 0
-        p3 = re.compile(r'^VNI number:\s+L3CP\s+(?P<num_l3vni_cp>[\d]+)'
+        p5 = re.compile(r'^VNI number:\s+L3CP\s+(?P<num_l3vni_cp>[\d]+)'
                         r'\s+L2CP\s+(?P<num_l2vni_cp>[\d]+)'
                         r'\s+L2DP\s+(?P<num_l2vni_dp>[\d]+)$')
 
-        # source-interface: Loopback1 (primary:1.1.1.2 vrf:0)
-        p4 = re.compile(r'^source-interface:\s+(?P<src_intf>[a-zA-Z0-9 ]+)'
-                        r'\(primary:(?P<primary_ip>[0-9a-fA-F\.:]+)\s'
-                        r'+vrf:(?P<vrf>[a-zA-Z0-9 ]+)\)$')
+        # source-interface: Loopback2 (primary: 1.1.1.3 vrf: 0)
+        # source-interface: Loopback1 (primary: UNKNOWN vrf: 0)
+        p6 = re.compile(r'^source-interface:\s+(?P<src_intf>[a-zA-Z0-9]+)\s+'
+                        r'\(primary:\s*(?P<primary_ip>UNKNOWN|[0-9a-fA-F\.:]+)\s+'
+                        r'vrf:\s*(?P<vrf>[a-zA-Z0-9]+)\)$')
+
+        # source-interface: Loopback1 (primary: ABCD:1::2 1.1.1.2 vrf:0)
+        p6_1 = re.compile(r'^source-interface:\s+(?P<src_intf>[a-zA-Z0-9]+)\s+'
+                          r'\(primary:\s*(?P<primary_ip>[0-9a-fA-F\.:]+)\s+'
+                          r'(?P<secondary_ip>[0-9a-fA-F\.:]+)\s+'
+                          r'vrf:\s*(?P<vrf>[a-zA-Z0-9]+)\)$')
 
         # tunnel interface: Tunnel0
-        p5 = re.compile(r'^tunnel interface:\s+(?P<tunnel_intf>[a-zA-Z0-9 ]+)$')
+        # tunnel interface: Tunnel1 Tunnel4
+        p7 = re.compile(r'^tunnel interface:\s+(?P<tunnel_intf>[a-zA-Z0-9 ]+)$')
 
         # 1          11          0          0
-        p6 = re.compile(r'^(?P<pkts_in>[\d]+)\s+(?P<bytes_in>[\d]+)\s'
+        p8 = re.compile(r'^(?P<pkts_in>[\d]+)\s+(?P<bytes_in>[\d]+)\s'
                         r'+(?P<pkts_out>[\d]+)\s+(?P<bytes_out>[\d]+)$')
 
         for line in output.splitlines():
@@ -229,17 +257,34 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
             # Interface: nve1, State: Admin Up, Oper Down, Encapsulation: Vxlan,
+            # Interface: nve1, State: Admin Up, Oper Down
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 parsed_dict.update({'interface': group['interface'],
                                     'admin_state': group['admin_state'],
-                                    'oper_state': group['oper_state'],
-                                    'encap': group['encap']})
+                                    'oper_state': group['oper_state']})
+                if 'encap' in group:
+                    parsed_dict.update({'encap': group['encap']})
+                continue
+
+            # Encapsulation: Vxlan IPv4
+            # Encapsulation: Vxlan dual stack prefer IPv4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'encap': group['encap']})
+                continue
+
+            # Multicast BUM encapsulation: Vxlan IPv4
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'mcast_encap': group['encap']})
                 continue
 
             # BGP host reachability: Enabled, VxLAN dport: 4789
-            m = p2.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 parsed_dict.update({'bgp_host_reachability': group['bgp_host_reachability'],
@@ -247,7 +292,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
             # VNI number: L3CP 0 L2CP 3 L2DP 0
-            m = p3.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 parsed_dict.update({'num_l3vni_cp': int(group['num_l3vni_cp']),
@@ -256,7 +301,8 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
             # source-interface: Loopback1 (primary:1.1.1.2 vrf:0)
-            m = p4.match(line)
+            # source-interface: Loopback1 (primary: UNKNOWN vrf: 0)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 src_intf = parsed_dict.setdefault('src_intf', {})
@@ -267,8 +313,22 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                                  })
                 continue
 
+            # source-interface: Loopback1 (primary: ABCD:1::2 1.1.1.2 vrf:0)
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                src_intf = parsed_dict.setdefault('src_intf', {})
+                src_intf.update({group['src_intf'] : {
+                                        'primary_ip': group['primary_ip'],
+                                        'secondary_ip': group['secondary_ip'],
+                                        'vrf': group['vrf']
+                                    }
+                                 })
+                continue
+
             # tunnel interface: Tunnel0
-            m = p5.match(line)
+            # tunnel interface: Tunnel1 Tunnel4
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 tunnel_intf_dict = parsed_dict.setdefault('tunnel_intf', {})
@@ -277,7 +337,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
             #          1          11          0          0
-            m = p6.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 tunnel_intf_dict.update({tunnel_intf: {
@@ -292,6 +352,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
         return parsed_dict
+
 
 # ====================================================
 #  schema for show nve vni
@@ -316,6 +377,7 @@ class ShowNveVniSchema(MetaParser):
             }
         }
     }
+
 
 # ====================================================
 #  Parser for show nve vni

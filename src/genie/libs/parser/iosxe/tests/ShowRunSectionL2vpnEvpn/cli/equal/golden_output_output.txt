@@ -1,0 +1,24 @@
+# golden_output_output.txt
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+l2vpn evpn
+ replication-type ingress
+ flooding-suppression address-resolution disable
+ flooding-suppression dhcp-relay disable
+ router-id Loopback2
+ multihoming aliasing disable
+ default-gateway advertise
+ multicast advertise
+l2vpn evpn instance 1 vlan-based
+ encapsulation vxlan
+ replication-type static
+ default-gateway advertise disable
+ multicast advertise enable
+l2vpn evpn instance 2 vlan-based
+ address-family l2vpn evpn
+  neighbor 99.99.99.99 activate
+  neighbor 99.99.99.99 send-community both
+  advertise l2vpn evpn
+  advertise l2vpn evpn

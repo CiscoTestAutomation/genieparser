@@ -8,6 +8,7 @@
      *  show lldp neighbors detail
      *  show lldp traffic
      *  show lldp errors
+     *  show lldp custom-information
 """
 import re
 
@@ -806,3 +807,91 @@ class ShowLldpErrors(ShowLldpErrorsSchema):
                 continue
 
         return ret_dict
+
+class ShowLldpCustomInformationSchema(MetaParser):
+    """Schema for show lldp custom-information"""
+    schema = {
+        Optional('management_vlan'): int,
+        Optional('network_hash'): str,
+        Optional('management_ip'): str,
+        Optional('management_ipv6'): str,
+        Optional('system_name'): {
+           Any(): { 
+               'name':str,
+              },
+           },
+    }
+
+
+class ShowLldpCustomInformation(ShowLldpCustomInformationSchema):
+    """Parser for show lldp custom-information"""
+
+    cli_command = 'show lldp custom-information'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern based on the output
+        # Management VLAN: 100
+        p1 = re.compile(r'Management\sVLAN: +(?P<vlan>\d+)$')
+        
+        # Custom  network hash: check
+        p2 = re.compile(r'Custom\s*network\shash: +(?P<network_hash>\w+)$')
+        
+        # Management IPv4: 10.0.0.1  20.0.0.1
+        p3 = re.compile(r'Management\sIP\S*: +(?P<ip_string>[\S*\s*]*)$')
+        
+        # Management IPv6: 10::1  20::1
+        p4 = re.compile(r'Management\sIPv6: +(?P<ipv6_string>[\S*\s*]*)$')
+        
+        # Switch-id 1 system-name: check
+        p5 = re.compile(r'Switch-id +(?P<switch_id>\d+) system-name: (?P<system_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Management VLAN: 100
+            m = p1.match(line)
+            if m:
+                vlan = m.groupdict()['vlan']
+                ret_dict['management_vlan'] = int(vlan)
+                continue
+
+            # Custom network hash: check
+            m = p2.match(line)
+            if m:
+                network_hash = m.groupdict()['network_hash']
+                ret_dict['network_hash'] = network_hash
+                continue
+
+            # Management IPv6
+            m = p4.match(line)
+            if m: 
+                ipv6_string = m.groupdict()['ipv6_string']
+                ret_dict['management_ipv6'] = ipv6_string
+                continue
+
+            # Management IPv4
+            m = p3.match(line)
+            if m:
+                ipv4_string = m.groupdict()['ip_string']
+                ret_dict['management_ip'] = ipv4_string
+                continue
+
+            # System name
+            m = p5.match(line)
+            if m:
+                switch_id = int(m.groupdict()['switch_id'])
+                system_name = m.groupdict()['system_name']
+                sub_dict = ret_dict.setdefault('system_name', {}).setdefault(switch_id, {})
+                sub_dict.update({'name':system_name})
+
+                continue
+
+        return ret_dict
+

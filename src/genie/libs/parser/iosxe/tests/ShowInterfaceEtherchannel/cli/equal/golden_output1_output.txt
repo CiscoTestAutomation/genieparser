@@ -1,0 +1,6 @@
+Port state    = Up Mstr In-Bndl
+Channel group = 2           Mode = On              Gcchange = -
+Port-channel  = Po2         GC   =   -             Pseudo port-channel = Po2
+Port index    = 0           Load = 0x00            Protocol =    -
+
+Age of the port in the current state: 0d:00h:00m:29s

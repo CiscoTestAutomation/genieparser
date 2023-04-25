@@ -134,46 +134,67 @@ class ShowHardwareLedSchema(MetaParser):
     Schema for show hardware led
     """
     schema = {
+        Optional('current_mode'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
                 'beacon': str,
-                'port_led_status':{
+                Optional('master'): str,
+                Optional('port_led_status'):{
                     str: str
                     },
-                'rj45_console':str,
-                'fantray_status':{
-                    int : str
-                    },
-                'power_supply_beacon_status':{
-                    int : str
-                    },
-                'system_psu':str,
-                'system_fan':str,
+                Optional('port_duplex'): {
+                    Any(): str
                 },
+                Optional('port_speed'): {
+                    Any(): str,
+                },
+                Optional('stack_port'): {
+                    Any(): str
+                },
+                Optional('poe_port'): {
+                    Any(): str
+                },
+                'rj45_console':str,
+                Optional('fantray_status'):{
+                    int : str
+                },
+                Optional('power_supply_beacon_status'):{
+                    int : str
+                },
+                Optional('system_psu'):str,
+                Optional('system_fan'):str,
+                Optional('stack_power'): str,
+                Optional('xps'): str,
+                Optional('usb_console'): str
             },
+        },
         Optional('system'):str,
         Optional('status'):{
-                    str: str
-                    },
+            str: str
+        },
         Optional('number_of_ports_in_status'):str,
         Optional('express_setup'):str,
         Optional('dc_a'):str,
         Optional('dc_b'):str,
         Optional('alarm-out'):str,
         Optional('alarm-in1'):str,
-        Optional('alarm-in2'):str,
-        }     
+        Optional('alarm-in2'):str
+    }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
     """ Parser for show hardware led"""
 
-    cli_command = 'show hardware led'
+    cli_command = ['show hardware led', 'show hardware led {stack} {switch_num}']
     
-    def cli(self, output=None): 
+    def cli(self, stack=None, switch_num=None, output=None): 
         if output is None:
-            output = self.device.execute(self.cli_command)
-
+            if stack and switch_num:
+                cmd = self.cli_command[1].format(stack=stack,switch_num=switch_num)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+            
         # initial variables
         ret_dict = {}
         root_dict = ret_dict
@@ -222,6 +243,37 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # ALARM-IN2: GREEN
         p11 = re.compile('^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
+        # Current Mode: STATUS
+        p12 = re.compile('^Current Mode:\s+(?P<status>\w+)$')
+
+        # MASTER: GREEN
+        p13 = re.compile('^MASTER:\s+(?P<master>\w+)$')
+
+        # DUPLEX: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
+        # Tw1/0/4:GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
+        p14 = re.compile('^DUPLEX:\s+\S+\s+(?P<duplex>((\S+:\S+\s*))+)$')
+
+        # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
+        # Tw1/0/4:BLINK_GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
+        p15 = re.compile('^SPEED:\s+\S+\s+(?P<speed>((\S+:\S+\s*))+)$')
+
+        # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
+        # Tw1/0/4:BLACK Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK
+        p16 = re.compile('^STACK:\s+\S+\s+(?P<stack_port>((\S+:\S+\s*))+)$')
+
+        # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
+        # Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK Tw1/0/9:BLACK
+        p17 = re.compile('^POE:\s+\S+\s+(?P<poe>((\S+:\S+\s*))+)$')
+
+        # STACK POWER: BLACK
+        p18 = re.compile('^STACK POWER:\s+(?P<stack_power>\w+)$')
+
+        # XPS: BLACK
+        p19 = re.compile('^XPS:\s+(?P<xps>\w+)$')
+
+        # USB CONSOLE: BLACK
+        p20 = re.compile('^USB CONSOLE:\s+(?P<usb_console>\w+)$')
+
         for line in output.splitlines():
             line = line.strip()
             
@@ -260,10 +312,10 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
+                ret_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
                 for port in group['led_ports'].split():
                     port = (port.split(':'))
-                    port_led_dict = root_dict.setdefault('status',{})
+                    port_led_dict = ret_dict.setdefault('status',{})
                     port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
             
@@ -271,10 +323,10 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
+                ret_dict.update({'number_of_ports_in_status' : group['port_nums_in_status']})
                 for port in group['led_ports'].split():
                     port = (port.split(':'))
-                    port_led_dict = root_dict.setdefault('status',{})
+                    port_led_dict = ret_dict.setdefault('status',{})
                     port_led_dict.update({port[0]: port[1]})
                 continue
 
@@ -305,13 +357,13 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p7_1.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({'dc_a': group['dc_a']})
+                ret_dict.update({'dc_a': group['dc_a']})
 
             #DC-B: BLACK
             m = p7_2.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({'dc_b': group['dc_b']})
+                ret_dict.update({'dc_b': group['dc_b']})
 
             # SYSTEM PSU: AMBER
             m = p8.match(line)
@@ -331,7 +383,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({'express_setup' : group['express_setup']})
+                ret_dict.update({'express_setup' : group['express_setup']})
                 continue
 
             #ALARM-OUT: GREEN
@@ -339,8 +391,88 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                root_dict.update({group['alarm'].lower() : group['alarm_color']})
+                ret_dict.update({group['alarm'].lower() : group['alarm_color']})
+            
+            # Current Mode: STATUS
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'current_mode' : group['status']})
+                continue
 
+            
+            # MASTER: GREEN
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'master' : group['master']})
+                continue
+
+            # DUPLEX: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
+            # Tw1/0/4:GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                # root_dict = ret_dict.setdefault('switch',{}).setdefault(int(group['switch_num']),{})
+                for port in group['duplex'].split():
+                    port = (port.split(':'))
+                    port_duplex_dict = root_dict.setdefault('port_duplex', {})
+                    port_duplex_dict.update({port[0]: port[1]})
+                continue
+
+            # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
+            # Tw1/0/4:BLINK_GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                for port in group['speed'].split():
+                    port = (port.split(':'))
+                    speed_dict = root_dict.setdefault('port_speed', {})
+                    speed_dict.update({port[0]: port[1]})
+                continue
+
+            # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
+            # Tw1/0/4:BLACK Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                for port in group['stack_port'].split():
+                    port = (port.split(':'))
+                    stack_dict = root_dict.setdefault('stack_port', {})
+                    stack_dict.update({port[0]: port[1]})
+                continue
+
+            # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
+            # Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK Tw1/0/9:BLACK
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                for port in group['poe'].split():
+                    port = (port.split(':'))
+                    poe_dict = root_dict.setdefault('poe_port', {})
+                    poe_dict.update({port[0]: port[1]})
+                continue
+
+            # STACK POWER: BLACK
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'stack_power': group['stack_power']})
+                continue
+
+            # XPS: BLACK
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'xps': group['xps']})
+                continue
+
+            # USB CONSOLE: BLACK
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict.update({'usb_console': group['usb_console']})
+                continue
         return ret_dict
 
 

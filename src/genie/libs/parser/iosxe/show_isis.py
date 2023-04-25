@@ -22,6 +22,7 @@ IOSXE parsers for the following show commands:
     * show isis rib {source_ip} {subnet_mask}
     * show isis rib redistribution
     * show isis microloop-avoidance flex-algo {flexId}
+    * show isis srv6 locators detail
 """
 
 # Python
@@ -462,7 +463,6 @@ class ShowIsisDatabaseSchema(MetaParser):
             }
         }
     }
-
 class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
     """
         Super Parser for 
@@ -1758,6 +1758,7 @@ class ShowIsisAdjacencyStaggerAll(ShowIsisAdjacencyStagger):
 
 class ShowIsisTopologySchema(MetaParser):
     """Schema for show isis topology
+                  show isis {address_family} topology
                   show isis topology flex-algo {flex_id}"""
     schema = {
         "tag": {
@@ -1784,15 +1785,19 @@ class ShowIsisTopologySchema(MetaParser):
 
 class ShowIsisTopology(ShowIsisTopologySchema):
     '''Parser for show isis topology
+                  show isis {address_family} topology
                   show isis topology flex-algo {flex_id}'''
 
     cli_command = ['show isis topology',
+                   'show isis {address_family} topology',
                    'show isis topology flex-algo {flex_id}']
 
-    def cli(self, flex_id="", output=None):
+    def cli(self, flex_id="", address_family=None, output=None):
         if output is None:
             if flex_id:
-                out = self.device.execute(self.cli_command[1].format(flex_id=flex_id))
+                out = self.device.execute(self.cli_command[2].format(flex_id=flex_id))
+            elif address_family:
+                out = self.device.execute(self.cli_command[1].format(address_family=address_family))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -3398,6 +3403,7 @@ class ShowIsisMicroloopAvoidanceFlexAlgo(ShowIsisMicroloopAvoidanceFlexAlgoSchem
                  continue
         return ret_dict 
 
+
 class ShowIsisTeappSchema(MetaParser):
     schema = {
         "tag": {
@@ -3739,5 +3745,83 @@ class ShowIsisTeappPolicy(ShowIsisTeappPolicySchema):
                         spf = group["sid_type"].lower()
                         ret_dict["tag"][tag]["endpoints"][endpoint]["interfaces"][interface].setdefault("sid_type", spf)
                     continue
+
+        return ret_dict
+
+class ShowIsisSrv6LocatorsDetailSchema(MetaParser):
+    """
+    Schema for 'show isis srv6 locators detail'
+    """
+    schema = {
+        'tag': {
+          Any(): {
+            'loc_name': {
+                Any(): {
+                 'prefix': str,
+                 'level': str,
+                 'level1_metric': int,
+                 'level2_metric': int,
+                 Optional('end_sids'): str,
+                },
+            },
+          }
+        }
+    }
+
+class ShowIsisSrv6LocatorsDetail(ShowIsisSrv6LocatorsDetailSchema):
+    """ Parser for show isis srv6 locators detail"""
+
+    cli_command = 'show isis srv6 locators detail'
+
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        #Tag null:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        #Name             Prefix                                         Level
+        #----             ------                                         -----
+        #loc1             FCCC:CCC1:C3::/48                              1-2
+        #loc1             -                                              1-2
+        p2 = re.compile(r'(?P<loc_name>\S+)\s+(?P<prefix>([a-fA-F0-9:])+/\d+|\-)\s+(?P<level>\S+)')
+
+        #Level-1 metric: 0
+        #Level-2 metric: 0
+        p3 = re.compile(r'^(Level-(?P<level_name>\d+) metric):\s+(?P<level_metric>\d+)$')
+
+        #End-SIDs:
+        #FCCC:CCC1:C3::
+        p4 = re.compile(r'^\s*(?P<end_sids>([a-fA-F0-9:]+))\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tag null:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{},).setdefault((group['tag']),{})
+
+            #loc1             FCCC:CCC1:C3::/48                              1-2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                loc_name_dict = root_dict.setdefault('loc_name',{}).setdefault((group['loc_name']),{})
+                loc_name_dict['prefix'] = group['prefix']
+                loc_name_dict['level']  = group['level']
+
+            m = p3.match(line)
+            if m :
+                group = m.groupdict()
+                loc_name_dict['level'+str(group['level_name'])+'_metric']  = int(group['level_metric'])
+
+            m = p4.match(line)
+            if m :
+                group = m.groupdict()
+                loc_name_dict['end_sids']  = group['end_sids']
 
         return ret_dict

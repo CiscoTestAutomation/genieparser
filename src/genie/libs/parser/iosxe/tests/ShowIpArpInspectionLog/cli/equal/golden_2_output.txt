@@ -1,0 +1,7 @@
+Total Log Buffer Size : 100
+Syslog rate : 10 entries per 120 seconds.
+Smartlog is not enabled
+
+
+Interface   Vlan  Sender MAC      Sender IP        Num Pkts   Reason        Time
+----------  ----  --------------  ---------------  ---------  ------------  ----

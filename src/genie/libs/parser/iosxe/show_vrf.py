@@ -30,7 +30,8 @@ class ShowVrfSchema(MetaParser):
             Any(): {
                 Optional('route_distinguisher'): str,
                 Optional('protocols'): list,
-                Optional('interfaces'): list
+                Optional('interfaces'): list,
+                Optional('being_deleted'): bool
             }
         }
     }
@@ -62,8 +63,9 @@ class ShowVrf(ShowVrfSchema):
         # vpn4                             100:2                 ipv4,ipv6
         # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
-        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)'
-                        r'(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
+        # ce1                              <being deleted>       ipv4,ipv6   Et1/0
+        # * ce1                              2:2                   ipv4,ipv6
+        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -81,6 +83,7 @@ class ShowVrf(ShowVrfSchema):
             # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
             #                                                                    Te0/0/1
             # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+            # * ce1                              2:2                   ipv4,ipv6
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -89,8 +92,7 @@ class ShowVrf(ShowVrfSchema):
                 vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
 
                 rd = groups['rd']
-                if 'not set' not in rd:
-                    vrf_dict.update({'route_distinguisher': rd})
+                vrf_dict.update({'route_distinguisher': rd})
 
                 if groups['protocols']:
                     protocols = groups['protocols'].split(',')
@@ -100,6 +102,9 @@ class ShowVrf(ShowVrfSchema):
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
+
+                if groups['being_deleted']:
+                    vrf_dict.update({'being_deleted': True})
                 continue
 
             # Lo300

@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * show device classifier attached mac-address {mac_address}
     * show device classifier attached interface <interface> detail
     * show device classifier profile type custom
+    * show device classifier attached detail
 """
 
 # Python
@@ -145,8 +146,9 @@ class ShowDeviceSensor(ShowDeviceSensorSchema):
 
         return ret_dict
 
-class ShowDeviceClassifierAttachedInterfaceDetailSchema(MetaParser):
-    '''Schema for show device classifier attached interface {interface} detail'''
+
+class ShowDeviceClassifierAttachedDetailSchema(MetaParser):
+    '''Schema for show device classifier attached detail'''
 
     schema = {
         'mac_address': {
@@ -163,14 +165,14 @@ class ShowDeviceClassifierAttachedInterfaceDetailSchema(MetaParser):
     }
 
 
-class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedInterfaceDetailSchema):
-    '''Parser for show device classifier attached interface {interface} detail'''
+class ShowDeviceClassifierAttachedDetail(ShowDeviceClassifierAttachedDetailSchema):
+    '''Parser for show device classifier attached detail'''
 
-    cli_command = 'show device classifier attached interface {interface} detail'
+    cli_command = 'show device classifier attached detail'
 
-    def cli(self, interface=None, output=None):
+    def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(interface=interface))
+            output = self.device.execute(self.cli_command)
 
         # 0016.47cd.9ab1  GigabitEthernet2/0/48 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
         p1 = re.compile(r'^(?P<mac_address>[a-f0-9\.]+)\s+(?P<port_id>\S+)\s+(?P<cert>\d+)\s+'
@@ -196,6 +198,19 @@ class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedIn
                 continue
 
         return ret_dict
+
+
+class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedDetail):
+    '''Parser for show device classifier attached interface {interface} detail'''
+
+    cli_command = 'show device classifier attached interface {interface} detail'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        return super().cli(output=output)
+
 
 # ======================================================
 # Parser for 'show device classifier attached interface <intf>

@@ -1159,3 +1159,49 @@ class ShowIpIgmpVrfSnoopingGroups(ShowIpIgmpVrfSnoopingGroupsSchema):
                 group_dict.setdefault('port_list', port_list)
                 count += 1
         return ret_dict
+
+# ========================================================
+# Parser for 'show ip igmp groups'
+# ========================================================
+
+class ShowIpIgmpGroupsSchema(MetaParser):
+    """
+    Schema for 'show ip igmp groups'
+    """
+
+    schema = {
+        'igmp_groups': {
+            Any(): {
+                'intf': str,
+                'uptime': str,
+                'expires': str,
+                'last_reporter': str,
+            },
+        }
+    }
+
+
+class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
+    """
+    Parser for 'show ip igmp groups'
+    """
+    cli_command = 'show ip igmp groups'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        igmp_dict = {}
+        
+        # 228.0.8.204      Vlan10                   00:02:26  00:02:45  60.1.1.2
+        p1=re.compile(r'^(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 228.0.8.204      Vlan10                   00:02:26  00:02:45  60.1.1.2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
+        return igmp_dict

@@ -66,7 +66,8 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
         ret_dict = {}
 
         for line in output.splitlines():
-
+            line = line.strip()
+            
             # Powerstack-6 SP-PS Stndaln 1100 0 505 595 1 1
             m = p1.match(line)
             if m:
@@ -113,6 +114,5 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
                 totals_dict['alloc_hi'] = float(dict_val['alloc_hi'])
                 totals_dict['alloc_lo'] = float(dict_val['alloc_lo'])
                 continue
-
 
         return ret_dict

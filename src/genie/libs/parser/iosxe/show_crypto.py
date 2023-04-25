@@ -1747,7 +1747,6 @@ class ShowCryptoIkev2SaRemote(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSc
             output = self.device.execute(self.cli_command.format(ip_address=ip_address))
         return super().cli(output=output)
 
-
 # =====================================
 # Schema for:
 #  * 'show crypto entropy status' 
@@ -1787,7 +1786,8 @@ class ShowCryptoEntropyStatus(ShowCryptoEntropyStatusSchema):
 		#1 ACT-2                 HW  Working  384
 		#2 randfill              SW  Working  128(*)
         #3 getrandombytes        SW  Working  160(*)
-        p1 = re.compile(r"^(?P<count>\d+)\s+(?P<source>\S+)\s+(?P<type>\S+)\s+(?P<status>\S+)(\s+|\s+(?P<requests>\d+)\s+)(?P<entropy_bits>(\S+|\d+\/\d+\s+\(\*\)))$")
+        #1 CPU jitter           Prim Working      3     256/768   ----> Above 17.10
+        p1 = re.compile(r"^(?P<count>\d+)\s+(?P<source>[\w\-\ ?]+)\s+ (?P<type>SW|HW|Phy|NPhy|Prim)\s+(?P<status>\S+)(\s+|\s+(?P<requests>\d+)\s+)(?P<entropy_bits>(\S+|\d+\/\d+\s+\(\*\)))$")
 							
 	    #Fresh entropy collected once every 60 minutes
         p2 = re.compile(r'^Fresh +entropy +collected +once +every +(?P<total>[\d\s\w]+)$')
@@ -1810,7 +1810,7 @@ class ShowCryptoEntropyStatus(ShowCryptoEntropyStatusSchema):
                 count = int(group["count"])
                 entry_dict.update(
                     { int(count) : {
-                        "source" : group["source"],
+                        "source" : group["source"].strip(),
                         "type" : group["type"],
                         "status" : group["status"],
                         "requests" : str(group["requests"]),

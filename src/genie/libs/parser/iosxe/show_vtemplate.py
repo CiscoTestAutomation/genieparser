@@ -20,7 +20,7 @@ class ShowVtemplateSchema(MetaParser):
 
     schema = {
         'virtual_access_subinterface_creation': str, 
-        'vt1': {
+        Any() : {
             'active_interface': int, 
             'active_sub_interface': int, 
             'sub_interface_capable': str, 
