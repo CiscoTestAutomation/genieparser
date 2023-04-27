@@ -1571,6 +1571,87 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
         return interface_dict
 
 
+class ShowIpv6InterfaceBriefPipeIpSchema(MetaParser):
+    """Schema for show ipv6 interface brief | include <WORD>"""
+    schema = {'interface':
+                {Any():
+                    {Optional('ipv6_address'): str,
+                    Optional('interface_status'): str,
+                    Optional('protocol_status'): str}
+                },
+            }
+
+
+class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBriefPipeIpSchema):
+    """Parser for:
+     show ipv6 interface brief | include <WORD>
+     parser class implements detail parsing mechanisms for cli
+
+     In reality, the 'include' would only show the IPv6 address without
+     interface information. This class mimics the IPv4 behavior by executing
+
+     show ipv6 interface brief
+
+     And parsing the address <> interface name mapping to generate a similar
+     output. Also note that because link-local addresses may be statically
+     defined for interfaces, and every interface can have the same LL
+     address, this implementation supports parsing for fe80:: addresses
+     and will return every matching interface.
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    cli_command = 'show ipv6 interface brief'
+
+    def cli(self, ip=None, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        interface_dict = {}
+
+        # GigabitEthernet1       [up/up]
+        #     FE80::5054:FF:FE18:9003
+        #     2001:DB8:C15:C0::10
+
+        p1 = re.compile(r'^s*(?P<interface>[a-zA-Z0-9\/\.\-]+)\s+'
+                        r'\[(?P<interface_status>[a-z\s]+)\/'
+                        r'(?P<protocol_status>[a-z]+)\]$')
+
+        p2 = re.compile(r'^\s*(?P<ipv6_address>[a-fA-F\d\:]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                interface_status = m.groupdict()['interface_status']
+                protocol_status = m.groupdict()['protocol_status']
+                continue
+
+            m = p2.match(line)
+            if m:
+                if str(ip).upper() == m.groupdict()['ipv6_address'].strip():
+                    if 'interface' not in interface_dict:
+                        interface_dict['interface'] = {}
+                    if interface not in interface_dict['interface']:
+                        interface_dict['interface'][interface] = {}
+                    interface_dict['interface'][interface]['interface_status'] = \
+                        interface_status
+                    interface_dict['interface'][interface]['protocol_status'] = \
+                        protocol_status
+                    interface_dict['interface'][interface]['ipv6_address'] = \
+                        m.groupdict()['ipv6_address'].strip()
+                    continue
+
+        return interface_dict
+
+
 class ShowInterfacesSwitchportSchema(MetaParser):
     """Schema for:
         * show interfaces switchport
