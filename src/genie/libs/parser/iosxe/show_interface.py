@@ -11,6 +11,7 @@
     * show ip interface
     * show interfaces <interface>
     * show ipv6 interface
+    * show ipv6 interface brief | include {ip}
     * show interfaces accounting
     * show interfaces link
     * show interfaces {interface} link
@@ -39,6 +40,7 @@ import re
 import unittest
 from genie import parsergen
 from collections import defaultdict
+from ipaddress import IPv6Address, AddressValueError
 
 from pyats.log.utils import banner
 import xmltodict
@@ -1605,11 +1607,16 @@ class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBriefPipeIpSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = 'show ipv6 interface brief | include {ipv6}'
+    cli_command = 'show ipv6 interface brief | include {ip}'
 
     def cli(self, ip=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            try:
+                ip = IPv6Address(ip).compressed
+            except AddressValueError:
+                pass
+            actual_cli = "show ipv6 interface brief"
+            out = self.device.execute(actual_cli)
         else:
             out = output
         interface_dict = {}
