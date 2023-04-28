@@ -1605,7 +1605,7 @@ class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBriefPipeIpSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = 'show ipv6 interface brief'
+    cli_command = 'show ipv6 interface brief | include {ipv6}'
 
     def cli(self, ip=None, output=None):
         if output is None:
@@ -1615,13 +1615,11 @@ class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBriefPipeIpSchema):
         interface_dict = {}
 
         # GigabitEthernet1       [up/up]
-        #     FE80::5054:FF:FE18:9003
-        #     2001:DB8:C15:C0::10
-
         p1 = re.compile(r'^s*(?P<interface>[a-zA-Z0-9\/\.\-]+)\s+'
                         r'\[(?P<interface_status>[a-z\s]+)\/'
                         r'(?P<protocol_status>[a-z]+)\]$')
 
+        #     2001:DB8:C15:C0::10
         p2 = re.compile(r'^\s*(?P<ipv6_address>[a-fA-F\d\:]+)$')
 
         for line in out.splitlines():
