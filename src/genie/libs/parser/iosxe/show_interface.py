@@ -1583,8 +1583,8 @@ class ShowIpv6InterfaceBriefSchema(MetaParser):
             Any(): {
                 Optional('ipv6_address'): Or(str, list),
                 Optional('link_local'): str,
-                'interface_status': str,
-                'protocol_status': str
+                Optional('interface_status'): str,
+                Optional('protocol_status'): str
             }
         }
     }
@@ -1606,6 +1606,10 @@ class ShowIpv6InterfaceBrief(ShowIpv6InterfaceBriefSchema):
 
     def cli(self, output=None):
         if output is None:
+            # If this class is inherited, make sure the intended cli_command
+            # is not replaced.
+            if issubclass(self.__class__.__base__, ShowIpv6InterfaceBrief):
+                self.__class__.cli_command = "show ipv6 interface brief"
             out = self.device.execute(self.cli_command)
         else:
             out = output
@@ -1665,8 +1669,6 @@ class ShowIpv6InterfaceBrief(ShowIpv6InterfaceBriefSchema):
         return interface_dict
 
 
-
-# class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBriefPipeIpSchema):
 class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBrief):
     """Parser for:
      show ipv6 interface brief | include <WORD>
@@ -1723,7 +1725,9 @@ class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBrief):
 
         if query_result:
             interface_dict['interface'] = {}
-            interface_dict['interface'].update({k: out['interface'][k] for k in query_result})
+            interface_dict['interface'].update(
+                {k: out['interface'][k] for k in query_result}
+            )
 
         return interface_dict
 
