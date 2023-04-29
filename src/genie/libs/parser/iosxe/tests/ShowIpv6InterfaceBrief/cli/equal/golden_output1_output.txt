@@ -1,0 +1,15 @@
+inet-rtr1#show ipv6 int br
+GigabitEthernet1       [up/up]
+    FE80::5054:FF:FE18:9003
+    2001:DB8:0:C15:C0:11:2300:2
+    2001:DB8:C15:C0::10
+GigabitEthernet2       [up/up]
+    unassigned
+GigabitEthernet3       [up/up]
+    unassigned
+GigabitEthernet4       [up/up]
+    unassigned
+GigabitEthernet5       [up/up]
+    unassigned
+Loopback0              [up/up]
+    FE80::10

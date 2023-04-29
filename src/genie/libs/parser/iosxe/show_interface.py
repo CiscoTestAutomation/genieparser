@@ -11,6 +11,8 @@
     * show ip interface
     * show interfaces <interface>
     * show ipv6 interface
+    * show ipv6 interface brief
+    * show ipv6 interface brief | include {ip}
     * show interfaces accounting
     * show interfaces link
     * show interfaces {interface} link
@@ -39,6 +41,7 @@ import re
 import unittest
 from genie import parsergen
 from collections import defaultdict
+from ipaddress import IPv6Address, AddressValueError
 
 from pyats.log.utils import banner
 import xmltodict
@@ -64,7 +67,9 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Default, \
                                          Use
 # import parser utils
+from genie.utils import Dq
 from genie.libs.parser.utils.common import Common
+
 
 logger = logging.getLogger(__name__)
 
@@ -1567,6 +1572,162 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
                     m.groupdict()['protocol_status']
 
                 continue
+
+        return interface_dict
+
+
+class ShowIpv6InterfaceBriefSchema(MetaParser):
+    """Schema for show ipv6 interface brief"""
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('ipv6_address'): Or(str, list),
+                Optional('link_local'): str,
+                Optional('interface_status'): str,
+                Optional('protocol_status'): str
+            }
+        }
+    }
+
+
+class ShowIpv6InterfaceBrief(ShowIpv6InterfaceBriefSchema):
+    """Parser for:
+     show ipv6 interface brief
+     parser class implements detail parsing mechanisms for cli
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    cli_command = 'show ipv6 interface brief'
+
+    def cli(self, output=None):
+        if output is None:
+            # If this class is inherited, make sure the intended cli_command
+            # is not replaced.
+            if issubclass(self.__class__.__base__, ShowIpv6InterfaceBrief):
+                self.__class__.cli_command = "show ipv6 interface brief"
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        interface_dict = {}
+
+        # GigabitEthernet1       [up/up]
+        p1 = re.compile(r'^s*(?P<interface>[a-zA-Z0-9\/\.\-]+)\s+'
+                        r'\[(?P<interface_status>[a-z\s]+)\/'
+                        r'(?P<protocol_status>[a-z]+)\]$')
+
+        #     unassigned
+        p2 = re.compile(f'^\s*unassigned$')
+
+        #     FE80::5054:FF:FE0A:5B0E
+        p3 = re.compile(r'^\s*(?P<link_local>[fF][eE]80\:+[a-fA-F\d\:]+)$')
+
+        #     2001:DB8:C15:C0::10
+        p4 = re.compile(r'^\s*(?P<ipv6_address>[a-fA-F\d\:]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+                if interface not in interface_dict['interface']:
+                    interface_dict['interface'][interface] = {}
+                interface_dict['interface'][interface]['interface_status'] = \
+                    m.groupdict()['interface_status']
+                interface_dict['interface'][interface]['protocol_status'] = \
+                    m.groupdict()['protocol_status']
+                if 'ipv6_address' not in interface_dict['interface'][interface]:
+                    interface_dict['interface'][interface]['ipv6_address'] = []
+                continue
+
+            m = p2.match(line)
+            if m:
+                interface_dict['interface'][interface]['ipv6_address'] = \
+                    line.strip()
+                continue
+
+            m = p3.match(line)
+            if m:
+                interface_dict['interface'][interface]['link_local'] = \
+                    m.groupdict()['link_local']
+                continue
+
+            m = p4.match(line)
+            if m:
+                interface_dict['interface'][interface]['ipv6_address'].append(
+                    m.groupdict()['ipv6_address'].strip()
+                )
+                continue
+
+        return interface_dict
+
+
+class ShowIpv6InterfaceBriefPipeIp(ShowIpv6InterfaceBrief):
+    """Parser for:
+     show ipv6 interface brief | include <WORD>
+     parser class implements detail parsing mechanisms for cli
+
+     In reality, the 'include' would only show the IPv6 address without
+     interface information. This class mimics the IPv4 behavior by executing
+
+     show ipv6 interface brief
+
+     And parsing the address <> interface name mapping to generate a similar
+     output. Also note that because link-local addresses may be statically
+     defined for interfaces, and every interface can have the same LL
+     address, this implementation supports parsing for fe80:: addresses
+     and will return every matching interface.
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    cli_command = 'show ipv6 interface brief | include {ip}'
+
+    def cli(self, ip=None, output=None):
+        if output is None:
+            try:  # Ensure the v6 address is an instance of IPv6Address
+                ip = IPv6Address(ip)
+            except AddressValueError:
+                pass
+            out = super().cli(output)
+        else:
+            out = output
+        interface_dict = {}
+
+        if ip.is_link_local:
+            # If link local, check for the address in the link_local value
+            query_result = Dq(out).contains_key_value(
+                'link_local',
+                ip.compressed,
+                value_regex=True,
+                ignore_case_value=True
+            ).get_values('interface')
+        else:
+            # Otherwise, search the ipv6_address list for a match
+            query_result = Dq(out).contains(
+                'ipv6_address'
+            ).contains(
+                ip.compressed,
+                regex=True,
+                ignore_case=True
+            ).get_values('interface')
+
+        if query_result:
+            interface_dict['interface'] = {}
+            interface_dict['interface'].update(
+                {k: out['interface'][k] for k in query_result}
+            )
 
         return interface_dict
 
