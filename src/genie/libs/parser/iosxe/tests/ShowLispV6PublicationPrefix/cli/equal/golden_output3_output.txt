@@ -1,0 +1,56 @@
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
+ * Indicates the selected rlocs used by consumers
+
+  EID-prefix: 2001:192:168:1::/64
+    First published:      13:38:54
+    Last published:       13:35:53
+    State:                complete
+    Exported to:          prefix-list, RIB
+
+    Publisher 100.77.77.77:4342, last published 13:35:53, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state complete
+                                 xTR-ID 0xA68BE4A7-0xBAC522DA-0x2C7C0C7C-0x62D298A1
+                                 site-ID unspecified
+                                 Domain-ID 1
+                                 Multihoming-ID 1
+      Locator       Pri/Wgt  State     Encap-IID  RDP       
+      100.88.88.88   10/50   up        -          [-]       
+      100.99.99.99   10/50   up        -          [1]       
+
+    Publisher 100.78.78.78:4342, last published 13:35:53, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state complete
+                                 xTR-ID 0xA68BE4A7-0xBAC522DA-0x2C7C0C7C-0x62D298A1
+                                 site-ID unspecified
+                                 Domain-ID 1
+                                 Multihoming-ID 1
+      Locator       Pri/Wgt  State     Encap-IID  RDP       
+      100.88.88.88   10/50   up        -          [-]       
+      100.99.99.99   10/50   up        -          [1]       
+          
+    Publisher 100.44.44.44:4342, last published 13:38:54, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state complete
+                                 xTR-ID 0xD0C06D20-0xAF0B90F4-0x19419FE7-0x33E596CD
+                                 site-ID unspecified
+                                 Domain-ID 1
+                                 Multihoming-ID 1
+      Locator       Pri/Wgt  State     Encap-IID  RDP       
+      100.99.99.99   10/50   up        -          [-]       
+          
+    Publisher 100.55.55.55:4342, last published 13:38:54, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state complete
+                                 xTR-ID 0xD0C06D20-0xAF0B90F4-0x19419FE7-0x33E596CD
+                                 site-ID unspecified
+                                 Domain-ID 1
+                                 Multihoming-ID 1
+      Locator       Pri/Wgt  State     Encap-IID  RDP       
+      100.99.99.99   10/50   up        -          [-]       
+          
+  Merge Locator Information
+      Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address 
+      100.88.88.88    20/90   up        -          0       100.77.77.77 
+      100.99.99.99*   10/50   up        -          0       100.44.44.44 
+      100.99.99.99    10/50   up        -          1       100.77.77.77 

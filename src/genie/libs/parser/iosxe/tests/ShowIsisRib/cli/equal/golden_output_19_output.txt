@@ -1,0 +1,19 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Routes under majornet 6.0.0.0/8:
+
+Flex-algo 128
+
+6.6.6.6/32  prefix attr X:0 R:1 N:1  source router id: 6.6.6.6  SID index 623 - Bound
+  [115/ia/40] via 12.1.1.2(Ethernet0/1) R2.00-00, from 2.2.2.2, tag 0
+     prefix attr: X:0 R:1 N:1
+     Source router id: 6.6.6.6
+      Prefix-SID index: 623, R:1 N:1 P:1 E:0 V:0 L:0
+     label: 16623
+  [115/ia/40] via 13.1.1.2(Ethernet0/2) R3.00-00, from 3.3.3.3, tag 0
+     prefix attr: X:0 R:1 N:1
+     Source router id: 6.6.6.6
+      Prefix-SID index: 623, R:1 N:1 P:1 E:0 V:0 L:0
+     label: 16623
+

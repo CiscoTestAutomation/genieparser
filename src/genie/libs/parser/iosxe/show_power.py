@@ -15,6 +15,7 @@ IOSXE parsers for the following show command:
     * 'show power inline consumption {interface}'
     * 'show power'
     * 'show power {detail}'
+    * 'show power inline module {module}'
 """
 
 import re
@@ -442,7 +443,8 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
         # Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
         # Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
         # Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD
-        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>[\w\/]+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>.*)$')
+        # Tw1/0/25    auto   n/a  lldp-shutdown 0.0       0.0       0  
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>[\w\/]+)\s+(?P<oper_state>[\,\-\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s*(?P<device>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1018,7 +1020,8 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
         p2 = re.compile(r'^\s*Inline\sPower\sMode:\s+(?P<inline_power_mode>\w+)$')
 
         # Operational status (Alt-A,B): on,off
-        p3 = re.compile(r'^\s*Operational\s+status.*:\s+(?P<operational_status>[\w\,]+)$')
+        # Operational status (Alt-A,B): lldp-shutdown
+        p3 = re.compile(r'^\s*Operational\s+status.*:\s+(?P<operational_status>\S+)$')
 
         # Device Detected: yes
         p4 = re.compile(r'^\s*Device\s+Detected:\s+(?P<device_detected>\w+)$')
@@ -1367,4 +1370,70 @@ class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
                 intf_dict.update(group)
                 continue
 
+        return ret_dict
+
+# ======================================================
+# Parser for 'show power inline module {moduleNum}'
+# ======================================================
+
+class ShowPowerInlineModuleSchema(MetaParser):
+    """Schema for show power inline module {moduleNum}"""
+    schema = {
+        'module': {
+            Any(): {
+                'mod': str,
+                'available_power': str,
+                'used_power': str,
+                'remaining_power': str,
+            },
+        },
+        'interfaces': {
+            Any(): {
+                'admin': str,
+                'oper': str,
+                'power': str,
+                'device': str,
+                'class': str,
+                'max': str,
+            },
+        },
+    }
+
+
+class ShowPowerInlineModule(ShowPowerInlineModuleSchema):
+    """Parser for show power inline module {moduleNum}"""
+
+    cli_command = ['show power inline module {moduleNum}']
+
+    def cli(self, moduleNum='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(moduleNum=moduleNum))
+
+        # 1           675.0       16.6       658.4
+        p1 = re.compile(r"^(?P<mod>\d+)\s+(?P<available_power>\S+)\s+(?P<used_power>\S+)\s+(?P<remaining_power>\S+)$")
+        # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
+        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>\w+)\s+(?P<power>\d+\.\d+)\s+(?P<device>\S+)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # 1           675.0       16.6       658.4
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                mod_var = dict_val['mod']
+                mod_dict = ret_dict.setdefault('module', {}).setdefault(mod_var, {})
+                mod_dict['mod'] = dict_val['mod']
+                mod_dict['available_power'] = dict_val['available_power']
+                mod_dict['used_power'] = dict_val['used_power']
+                mod_dict['remaining_power'] = dict_val['remaining_power']
+                continue
+
+            # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_var = Common.convert_intf_name(dict_val.pop('interface'))
+                ret_dict.setdefault('interfaces', {}).setdefault(interface_var, dict_val)
+                continue
         return ret_dict

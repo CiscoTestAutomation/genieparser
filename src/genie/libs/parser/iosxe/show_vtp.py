@@ -149,7 +149,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         p3 = re.compile(r'^VTP +Domain +Name +: +(?P<val>\S+)$')
 
         # VTP Pruning Mode                : Disabled
-        p4 = re.compile(r'^VTP +Pruning +Mode +: +(?P<val>\w+)$')
+        # VTP Pruning Mode                : 1
+        p4 = re.compile(r'^VTP +Pruning +Mode +: +(?P<val>.*)$')
 
         # VTP Traps Generation            : Disabled
         p5 = re.compile(r'^VTP +Traps +Generation +: +(?P<val>\w+)$')
@@ -246,12 +247,12 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             if m:
                 ret_dict['vtp']['domain_name'] = m.groupdict()['val']
                 continue
-        
+            
             # VTP Pruning Mode                : Disabled
             m = p4.match(line)
             if m:
                 ret_dict['vtp']['pruning_mode'] = False if 'disable' in \
-                                                    m.groupdict()['val'].lower() else True
+                                                m.groupdict()['val'].lower() else True
                 continue
 
             # VTP Traps Generation            : Disabled

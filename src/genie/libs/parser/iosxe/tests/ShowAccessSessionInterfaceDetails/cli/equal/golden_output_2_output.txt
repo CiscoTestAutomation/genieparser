@@ -1,0 +1,22 @@
+Interface: GigabitEthernet1/0/24
+IIF-ID: 0x228B23BB
+MAC Address: 0012.7fae.9662
+IPv6 Address: Unknown
+IPv4 Address: Unknown
+Device-type: Cisco-IP-Phone-7971
+Device-name: Cisco IP Phone 7971
+Status: Unauthorized
+Domain: UNKNOWN
+Oper host mode: multi-auth
+Oper control dir: both
+Session timeout: N/A
+Common Session ID: 0000000000000032E325469F
+Acct Session ID: Unknown
+Handle: 0x5000002d
+Current Policy: BUILTIN_AUTOCONF_POLICY
+
+Local Policies:
+Interface Template: IP_PHONE_INTERFACE_TEMPLATE
+Server Policies:
+
+Method status list: empty

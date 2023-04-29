@@ -1,0 +1,11 @@
+show mac address-table notification change
+MAC Notification Feature is Disabled on the switch
+Interval between Notification Traps : 1 secs
+Number of MAC Addresses Added : 0
+Number of MAC Addresses Removed : 0
+Number of Notifications sent to NMS : 0
+Maximum Number of entries configured in History Table : 1
+Current History Table Length : 0
+MAC Notification Traps are Disabled
+History Table contents
+----------------------

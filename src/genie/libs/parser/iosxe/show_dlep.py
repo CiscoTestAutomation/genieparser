@@ -6,6 +6,8 @@ IOSXE parsers for the following show commands:
     * 'show dlep neighbors {interface}'
     * 'show dlep clients'
     * 'show dlep clients {interface}'
+    * 'show dlep counters'
+    * 'show dlep config {interface}'
 
 '''
 
@@ -438,4 +440,290 @@ class ShowDlepClients(ShowDlepClientsSchema):
             if m:
                 ret_dict['interface'][intf][clint]['supported_metrics']['link_mdr_tx_metric_in_bps'] = int(m.groupdict()['val'])
         
+        return ret_dict
+
+
+class ShowDlepCountersSchema(MetaParser):
+    """ Schema for 'show dlep counters' """
+    
+    schema = {
+        Any(): {
+            'dlep_version': str, 
+            'dlep_local_ip': str, 
+            'dlepv5_tcp_port': str, 
+            'peer_counters': {
+
+                'rx_peer_discovery': int, 
+                'tx_peer_offer': int,
+                'rx_peer_offer': int, 
+                'tx_peer_discovery': int, 
+                'rx_peer_init': int, 
+                'tx_peer_init_ack': int, 
+                'rx_peer_init_ack': int, 
+                'tx_peer_init': int, 
+                'rx_heartbeat': int, 
+                'tx_heartbeat': int, 
+                'rx_peer_terminate': int, 
+                'tx_peer_terminate_ack': int, 
+                'rx_peer_terminate_ack': int, 
+                'tx_peer_terminate': int
+            }, 
+            'neighbor_counters': {
+
+                'rx_neighbor_up': int, 
+                'tx_neighbor_up_ack': int, 
+                'rx_metric': int, 
+                'rx_neighbor_down': int, 
+                'tx_neighbor_down_ack': int, 
+                'rx_neighbor_down_ack': int, 
+                'tx_neighbor_down': int
+            }, 
+            'exception_counters': {
+
+                'rx_invalid_message': int, 
+                'rx_unknown_message': int, 
+                'pre-existing_neighbor': int, 
+                'neighbor_resource_error': int, 
+                'neighbor_not_found': int, 
+                'neighbor_msg_peer_not_up': int
+            }, 
+            'timer_counters': {
+
+                'peer_heartbeat_timer': int, 
+                'peer_terminate_ack_timer': int, 
+                'neighbor_terminate_ack_timer': int, 
+                'neighbor_activity_timer': int, 
+                'radio_connect_timer': int
+            }
+        }, 
+            'single_timer_wheel_manet_infra_wheel': {
+
+                'granularity_msec': int, 
+                'wheel_size': int, 
+                'spoke_index': int, 
+                'tick_count': int, 
+                'flags': str, 
+                'active_timers': int, 
+                'high_water_mark': int, 
+                'started_timers': int, 
+                'restarted_timers': int, 
+                'cancelled_timers': int, 
+                'expired_timers': int, 
+                'long_timers': int, 
+                'long_timer_revs': int, 
+                'timer_suspends': int
+            }
+    }
+
+
+class ShowDlepCounters(ShowDlepCountersSchema):
+    """
+    Parser for 'show dlep counters' 
+    """
+
+    cli_command = "show dlep counters"
+
+    
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # DLEP Counters for Interface 
+        
+        # DLEP Counters for TenGigabitEthernet0/0/0
+        p1 = re.compile(r'^(?P<counter_title1>\w+\s+\w+\s+\w+\s+)(?P<val1>\w+\/\d\/\d(\.\d+)?)$')
+        # DLEP Version = RFC 8175 
+        p2 = re.compile(r'^(?P<counter_title2>DLEP.*)=(?P<val2>.*)$')
+        # Peer Counters:  
+        p3 = re.compile(r'^(?P<counter_title3>\w+\s\w+):$')
+        # RX Peer Discovery     0      TX Peer Offer             0 
+        p4 = re.compile(r'^(?P<counter_title4>\w+\W?\w+\s+(\w+\s+){1,5})(?P<val3>\d+)\s+(?P<counter_title5>\w+\s+(\w+\s+){1,5})?(?P<val4>\d+)?$')
+        # Peer Heartbeat Timer         369
+        p5 = re.compile(r'^(?P<counter_title6>\w+\s+(\w+\s+){1,4})(?P<val5>\d+)$')
+        # Single Timer Wheel "Manet Infra Wheel"
+        p6 = re.compile(r'^(?P<counter_title7>\w+\s+(\w+\s+){1,4}"(\w+\s?){1,4})"$')
+        # Wheel size       = 4096
+        p7 = re.compile(r'^(?P<counter_title8>(\w+\s+){1,4})=(?P<val6>\s+\d+\s?(\w+){0,1})$')
+          
+        for lines in output.splitlines():
+            line = lines.strip()
+            # DLEP Counters for TenGigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                title1 = m.groupdict()['counter_title1'].strip().lower().replace(" ", "_")
+                par1 = m.groupdict()['val1'].strip()
+                interf = title1 + "_" + par1
+                ret_dict.setdefault(interf, {})
+                continue
+                  
+            # DLEP Version = RFC 8175
+            m = p2.match(line)
+            if m:
+                title2 = m.groupdict()['counter_title2'].strip().lower().replace(" ", "_")
+                par2 = m.groupdict()['val2'].strip()
+                ret_dict[interf][title2] = par2
+                continue
+           
+            # Peer Counters:       
+            m = p3.match(line)
+            if m:
+                title3 = m.groupdict()['counter_title3'].strip().lower().replace(" ", "_")
+                ret_dict[interf].setdefault(title3, {})
+                continue
+            
+            # RX Peer Discovery     0      TX Peer Offer             0      
+            m = p4.match(line)
+            if m:
+                title4 = m.groupdict()['counter_title4'].strip().lower().replace(" ", "_")
+                par4 = m.groupdict()['val3'].strip()
+                ret_dict[interf][title3][title4] = int(par4)
+                title5 = m.groupdict()['counter_title5'].strip().lower().replace(" ", "_")
+                par5 = m.groupdict()['val4'].strip()
+                ret_dict[interf][title3][title5] = int(par5)
+                continue
+            
+            # Peer Heartbeat Timer         369      	  
+            m = p5.match(line)
+            if m:
+                title6 = m.groupdict()['counter_title6'].strip().lower().replace(" ", "_")
+                par6 = m.groupdict()['val5'].strip()
+                ret_dict[interf][title3][title6] = int(par6)
+                continue
+            
+            # Parses (Single Timer Wheel "Manet Infra Wheel") as header   
+            m = p6.match(line)
+            if m:
+                title7 = m.groupdict()['counter_title7'].strip().lower().replace(" ", "_").replace("\"", "")
+                ret_dict.setdefault(title7, {})
+                continue
+            
+            # Wheel size       = 4096      
+            m = p7.match(line)
+            if m:
+                title8 = m.groupdict()['counter_title8'].strip().lower().replace(" ", "_")
+                par8 = m.groupdict()['val6'].strip()
+                if "granularity" == title8:
+                    title8 = title8 + "_msec"
+                    par8 = par8.split(' ')[0]
+                if par8.isnumeric():
+                    par8 = int(par8)
+                ret_dict[title7][title8] = par8
+                continue
+
+        return ret_dict
+                  
+
+class ShowDlepConfigInterfaceSchema(MetaParser):
+    """Schema for 'show dlep config {interface}'"""
+
+    schema = {
+        'version': str,
+        'local_ip': str,
+        'tcp_port': int,
+        'virtual_template': int,
+        'timers': {
+            'missed_heartbeat_threshold': int,
+            'peer_terminate_ack_timeout': int,
+            'heartbeat_interval': int,
+            'discovery_interval': int,
+            'session_ack_timeout': int,
+            'neighbor_activity_timeout': int,
+            'neighbor_down_ack_timeout': int
+        }
+    }
+
+
+class ShowDlepConfigInterface(ShowDlepConfigInterfaceSchema):
+    """
+    Parser for 'show dlep config {interface}'
+    """
+
+    cli_command = 'show dlep config {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # DLEP Version = RFC 8175
+        p1 = re.compile(r'^DLEP Version = (?P<version>.*)$')
+
+        # DLEP Local IP=9.9.9.151:55113
+        p2 = re.compile(r'^DLEP Local IP=(?P<local_ip>.*)$')
+
+        # DLEPv27 TCP Port = 55114
+        p3 = re.compile(r'^DLEPv27 TCP Port = (?P<tcp_port>.*)$')
+
+        # Virtual template=1
+        p4 = re.compile(r'^Virtual template=(?P<virtual_template>.*)$')
+
+        # Missed heartbeat threshold=2, Peer Terminate ACK timeout=10
+        p5 = re.compile(r'^Missed heartbeat threshold=(?P<missed_heartbeat_threshold>[0-9]+), Peer Terminate ACK timeout=(?P<peer_terminate_ack_timeout>[0-9]+)$')
+
+        # Heartbeat interval=5, Discovery interval =5, Session Ack timeout=10
+        p6 = re.compile(r'^Heartbeat interval=(?P<heartbeat_interval>[0-9]+), Discovery interval =(?P<discovery_interval>[0-9]+), Session Ack timeout=(?P<session_ack_timeout>[0-9]+)$')
+
+        # Neighbor activity timeout=0, Neighbor Down ACK timeout=10
+        p7 = re.compile(r'^Neighbor activity timeout=(?P<neighbor_activity_timeout>[0-9]+), Neighbor Down ACK timeout=(?P<neighbor_down_ack_timeout>[0-9]+)$')
+
+        for line_raw in out.splitlines():
+            line = line_raw.strip()
+
+            # DLEP Version = RFC 8175
+            m = p1.match(line)
+            if m:
+                ret_dict['version'] = m.groupdict()['version']
+                continue
+
+            # DLEP Local IP=9.9.9.151:55113
+            m = p2.match(line)
+            if m:
+                ret_dict['local_ip'] = m.groupdict()['local_ip']
+                continue
+
+            # DLEPv27 TCP Port = 55114
+            m = p3.match(line)
+            if m:
+                ret_dict['tcp_port'] = int(m.groupdict()['tcp_port'])
+                continue
+
+            # Virtual template=1
+            m = p4.match(line)
+            if m:
+                ret_dict['virtual_template'] = int(m.groupdict()['virtual_template'])
+                continue
+
+            # Missed heartbeat threshold=2, Peer Terminate ACK timeout=10
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.setdefault('timers', {})
+                ret_dict['timers']['missed_heartbeat_threshold'] = int(groups['missed_heartbeat_threshold'])
+                ret_dict['timers']['peer_terminate_ack_timeout'] = int(groups['peer_terminate_ack_timeout'])
+                continue
+
+            # Heartbeat interval=5, Discovery interval =5, Session Ack timeout=10
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.setdefault('timers', {})
+                ret_dict['timers']['heartbeat_interval'] = int(groups['heartbeat_interval'])
+                ret_dict['timers']['discovery_interval'] = int(groups['discovery_interval'])
+                ret_dict['timers']['session_ack_timeout'] = int(groups['session_ack_timeout'])
+                continue
+
+            # Neighbor activity timeout=0, Neighbor Down ACK timeout=10
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.setdefault('timers', {})
+                ret_dict['timers']['neighbor_activity_timeout'] = int(groups['neighbor_activity_timeout'])
+                ret_dict['timers']['neighbor_down_ack_timeout'] = int(groups['neighbor_down_ack_timeout'])
+                continue
+
         return ret_dict

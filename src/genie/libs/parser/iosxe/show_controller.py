@@ -3,11 +3,15 @@
 IOSXE parsers for the following show commands:
 
     * 'show controller VDSL {interface}'
+    * 'show controller ethernet-controller {interface}'
+    * 'show controller ethernet-controller'
 '''
 
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 
 class ShowControllerVDSLSchema(MetaParser):
@@ -755,3 +759,92 @@ class ShowControllers(ShowControllersSchema):
                 interfaces_dict['output_pause_frames'] = output_pause_frames
 
         return config_dict
+    
+
+class ShowControllerEthernetControllerSchema(MetaParser):
+    """Schema for show controller ethernet-controller {interface}"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'last_updated': str,
+                'transmit': {
+                    Any(): int
+                },
+                'receive': {
+                    Any(): int
+                }
+            }
+        }
+
+    }
+
+
+class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
+    """Parser for show controller ethernet-controller {interface}"""
+
+    cli_command = ['show controller ethernet-controller', 
+        'show controller ethernet-controller {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
+        # Transmit                  GigabitEthernet1/0/3          Receive 
+        p1 = re.compile(r'^Transmit\s+(?P<interface>[\w\/]+)\s+Receive$')
+
+        # 32199124 Total bytes                     1608886 Total bytes              
+        # 78979 Unicast frames                        2 Unicast frames           
+        # 5054660 Unicast bytes                       136 Unicast bytes 
+        p2 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_string>[\w\s\>\(\)]+(frame[s]*|bytes|dropped|truncated|successful))\s+(?P<receive_value>\d+)\s+(?P<receive_key_string>[\w\s\>\(\)]+)$')
+
+        # 0 Gold frames successful   
+        # 0 1 collision frames  
+        p3 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_string>[\w\s\>\(\)]+)$')
+        
+        # LAST UPDATE 561 msecs AGO
+        p4 = re.compile(r'^LAST UPDATE (?P<last_updated>[\w\s]+) AGO$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transmit                  GigabitEthernet1/0/3          Receive 
+            m = p1.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                continue
+            
+            # 32199124 Total bytes                     1608886 Total bytes              
+            # 78979 Unicast frames                        2 Unicast frames           
+            # 5054660 Unicast bytes                       136 Unicast bytes
+            m = p2.match(line)
+            if m:
+                trans_dict = int_dict.setdefault('transmit', {})
+                receive_dict = int_dict.setdefault('receive', {})
+                transmit_key_string = m.groupdict()['transmit_key_string'].strip().replace(' ', '_').lower()
+                receive_key_string = m.groupdict()['receive_key_string'].strip().replace(' ', '_').lower()
+                trans_dict.setdefault(transmit_key_string, int(m.groupdict()['transmit_value']))
+                receive_dict.setdefault(receive_key_string, int(m.groupdict()['receive_value']))
+                continue
+            
+            # 0 Gold frames successful   
+            # 0 1 collision frames 
+            m = p3.match(line)
+            if m:
+                transmit_key_string = m.groupdict()['transmit_key_string'].replace(' ', '_').lower()
+                int_dict.setdefault('transmit', {}).setdefault(transmit_key_string, int(m.groupdict()['transmit_value']))
+                continue
+        
+            # LAST UPDATE 561 msecs AGO
+            m = p4.match(line)
+            if m:
+                int_dict.setdefault('last_updated', m.groupdict()['last_updated'])
+        
+        return ret_dict

@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> groups detail
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
+    * show ipv6 mld snooping querier
 """
 
 # Python
@@ -587,3 +588,172 @@ class ShowIpv6MldSnoopingAddressCount(ShowIpv6MldSnoopingAddressCountSchema):
                 igmp_groups_count_dict['mld_groups_count'] = int(group['mld_groups_count'])
 
         return ret_dict
+
+
+class ShowIpv6MldGroupsSummarySchema(MetaParser):
+    '''Schema for show ipv6 mld groups summary'''
+    schema = {
+        'route': {
+            Any(): {
+                'routes': int
+            }
+        }
+    }
+
+
+class ShowIpv6MldGroupsSummary(ShowIpv6MldGroupsSummarySchema):
+    '''Parser for show ipv6 mld groups summary'''
+
+    cli_command = 'show ipv6 mld groups summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # No. of (*,G) routes = 9
+        p1 = re.compile(r'^No\. of \((?P<route>.+)\) routes =\s(?P<routes>\d+)$')
+
+        ret_dict = dict()
+        for line in output.splitlines():
+            line = line.strip()
+
+            # No. of (S,G) routes = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict = ret_dict.setdefault('route', {}).setdefault(group['route'], {})
+                route_dict.setdefault('routes', int(group['routes']))
+
+        return ret_dict
+
+# ============================================
+# Schema for 'show ipv6 mld snooping querier'
+# ============================================
+class ShowIpv6MldSnoopingQuerierSchema(MetaParser):
+    """ Schema for show ipv6 mld snooping querier """
+    schema = {
+        'vlan': {
+            int: {
+                'ipv6_address': {
+                    str: {
+                        'version': str,
+                        'port': str,
+                    },
+                }
+            },
+        },
+    }
+
+# ==================================================
+# Parser for 'show ipv6 mld snooping querier'
+# ==================================================
+class ShowIpv6MldSnoopingQuerier(ShowIpv6MldSnoopingQuerierSchema):
+    """ Parser for show ipv6 mld snooping querier """
+
+    cli_command = "show ipv6 mld snooping querier"
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        parsed_dict = {}
+
+        # initial regexp pattern
+        #101       FE80::A      v2         Switch
+        p1 = re.compile(r'^[a-zA-Z\/\s-]*(?P<vlan_id>\d+)\s+(?P<ip_addr>[0-9a-fA-F\.:]+)\s+(?P<version>[v\d,]+)\s+(?P<port>[\w:\/\s]+)$')
+        #101       FE80:0:9D36:F78B:A8BB:CCFF:FE00:400
+        p2 = re.compile(r'^[a-zA-Z\/\s-]*(?P<vlan_id>\d+)\s+(?P<ip_addr>[0-9a-fA-F\.:]+)\s*\\*$')
+        #v2         Switch
+        p3 = re.compile(r'^(?P<version>v[\d,]+)\s+(?P<port>[\w:\/\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #101       FE80::A      v2         Switch
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('vlan', {})
+                vlan = parsed_dict['vlan'].setdefault(int(group['vlan_id']), {})
+                vlan_ip = vlan.setdefault('ipv6_address', {})
+                vlan_ip.update(
+                    {
+                        group['ip_addr']: {
+                            'version': group['version'],
+                            'port': group['port']
+                    }
+                })
+                continue
+
+            #101       FE80:0:9D36:F78B:A8BB:CCFF:FE00:400
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ip_addr = group['ip_addr']
+                vlan_id = int(group['vlan_id'])
+                continue
+
+            #v2         Switch
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('vlan', {})
+                vlan = parsed_dict['vlan'].setdefault(vlan_id, {})
+                vlan_ip = vlan.setdefault('ipv6_address', {})
+                vlan_ip.update(
+                    {
+                        ip_addr: {
+                            'version': group['version'],
+                            'port': group['port']
+                    }
+                })
+                continue
+
+        return parsed_dict
+
+# ========================================================
+# Parser for 'show ipv6 mld groups'
+# ========================================================
+
+class ShowIpv6MldGroupsSchema(MetaParser):
+    """
+    Schema for 'show ipv6 mld groups'
+    """
+
+    schema = {
+        'mld_groups': {
+            Any(): {
+                'intf': str,
+                'uptime': str,
+                'expires': str,
+            },
+        }
+    }
+
+class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
+    """
+    Parser for 'show ipv6 mld groups'
+    """
+    cli_command = 'show ipv6 mld groups'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        mld_dict = {}
+        
+        # FF1E::         Vlan10         00:00:27  not used
+        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[not used]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mld_dict.setdefault('mld_groups', {}).setdefault(group.pop('group'), group)
+        return mld_dict
+

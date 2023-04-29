@@ -77,6 +77,10 @@ class ShowBfdSession(ShowBfdSessionSchema):
         p4 = re.compile(
             r'(?P<hw>[No|Yes]+) +(?P<npu>\S+)')
 
+        #Gi0/0/0/1.10        192.168.1.2     0s               10s(2s*5)        INIT
+        p5 = re.compile(
+            r'^(?P<intf>\S+) +(?P<dest>\d+\.\d+\.\d+\.\d+) +(?P<echo_total_msec>\d+\w+) +(?P<async_total_msec>\d+\w+)\((?P<async_msec>\d+\w+)\*(?P<async_multiplier>\d+)\) +(?P<state>\S+)')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -162,6 +166,36 @@ class ShowBfdSession(ShowBfdSessionSchema):
                 group = m.groupdict()
                 bfd_dict.update({'hardware': group['hw']})
                 bfd_dict.update({'npu': group['npu']})
+                continue
+
+            #Gi0/0/0/1.10        192.168.1.2     0s               10s(2s*5)        INIT
+            m = p5.match(line)
+
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['intf'])
+                destaddress = group['dest']
+                bfd_dict = result_dict.setdefault('interface',{}).setdefault(interface,{}).setdefault('dest_ip_address',{}).setdefault(destaddress,{})
+                if group['echo_total_msec'] and re.findall(r'\d+ms',group['echo_total_msec']) != []:
+                    group['echo_total_msec'] = group['echo_total_msec'].rstrip('ms')
+                    bfd_dict.update({'echo_total_msec': int(group['echo_total_msec'])})
+                else:
+                    group['echo_total_msec'] = int(group['echo_total_msec'].rstrip('s'))*1000
+                    bfd_dict.update({'echo_total_msec': int(group['echo_total_msec'])})
+                if group['async_total_msec'] and re.findall(r'\d+ms',group['async_total_msec']) != []:
+                    group['async_total_msec'] = group['async_total_msec'].rstrip('ms')
+                    bfd_dict.update({'async_total_msec': int(group['async_total_msec'])})
+                else:
+                    group['async_total_msec'] = int(group['async_total_msec'].rstrip('s'))*1000
+                    bfd_dict.update({'async_total_msec': int(group['async_total_msec'])})
+                if group['async_msec'] and re.findall(r'\d+ms',group['async_msec']) != []:
+                    group['async_msec'] = group['async_msec'].rstrip('ms')
+                    bfd_dict.update({'async_msec': int(group['async_msec'])})
+                else:
+                    group['async_msec'] = int(group['async_msec'].rstrip('s'))*1000
+                    bfd_dict.update({'async_msec': int(group['async_msec'])})
+                bfd_dict.update({'async_multiplier': int(group['async_multiplier'])})
+                bfd_dict.update({'state': group['state']})
                 continue
 
         return result_dict

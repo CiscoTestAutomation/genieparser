@@ -425,6 +425,18 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('stackwise_virtual_link'): int,
                 Optional('dual_active_detection'): bool,
                 Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
+                Optional('speed'): int,
+                Optional('speed_nonegotiate'): bool,
+                Optional('isis'): {
+                    Optional('network'): str,
+                    Optional(Or('ipv4', 'ipv6')): {
+                        Optional('level'): {
+                            Optional(Or('level-1', 'level-2')): {
+                                Optional('metric'): int,
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -728,6 +740,23 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         #ipv6 flow monitor monitor_ipv6_out sampler H_sampler output
         p86 = re.compile(r'^ipv6\s+flow\s+monitor\s+(?P<flow_monitor_output_v6>[\S]+)\s+sampler\s+[\S]+\s+output$')
+
+        # speed 25000
+        p87 = re.compile(r'^speed +(?P<speed>\d+)$')
+        
+        # speed nonegotiate
+        p88 = re.compile(r'^speed +(?P<speed_nonegotiate>nonegotiate)$')
+
+        # isis network point-to-point
+        p89 = re.compile(r'^isis +network +(?P<isis_network>\S+)$')
+
+        # isis metric 22 level-1
+        # isis metric 22 level-2
+        p90 = re.compile(r'^isis +metric +(?P<isis_v4_metric>\d+) +(?P<isis_v4_level>\S+)$')
+
+        # isis ipv6 metric 33 level-1
+        # isis ipv6 metric 22 level-2
+        p91 = re.compile(r'^isis +ipv6 +metric +(?P<isis_v6_metric>\d+) +(?P<isis_v6_level>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1426,10 +1455,64 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
                 continue
+            
+            #speed  25000
+            m = p87.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed': int(group['speed'])})
+                continue
+            
+            #speed  nonegotiate
+            m = p88.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'speed_nonegotiate': True})
+                continue    
 
+            # isis network point-to-point
+            m = p89.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('network', group['isis_network'])
+
+            # isis metric 22 level-1
+            # isis metric 22 level-2
+            m = p90.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('ipv4', {}).setdefault('level', {}).setdefault(group['isis_v4_level'], {}).setdefault('metric', int(group['isis_v4_metric']))
+
+            # isis ipv6 metric 33 level-1
+            # isis ipv6 metric 22 level-2
+            m = p91.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('ipv6', {}).setdefault('level', {}).setdefault(group['isis_v6_level'], {}).setdefault('metric', int(group['isis_v6_metric']))
 
         return config_dict
 
+
+# ==============
+# Parser for:
+#  * 'show running-config all | section ^interface'
+# =================
+class ShowRunInterfaceAllSectionInterface(ShowRunInterface,
+                          ShowRunInterfaceSchema):
+    '''Parser for show running-config all | section ^interface'''
+
+    cli_command = 'show running-config all | section ^interface'
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command.format()
+
+            show_output = self.device.execute(cmd)
+
+        else:
+            show_output = output
+
+        return super().cli(output=show_output)
 
 # =================
 # Schema for:
@@ -2289,7 +2372,7 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa user-name
+#   * show running-config aaa user-name
 #   * show running-config aaa username
 # ==================================================
 class ShowRunningConfigAAAUsernameSchema(MetaParser):
@@ -2672,7 +2755,7 @@ class ShowRunningConfigFlowMonitor(ShowRunningConfigFlowMonitorSchema):
 
 # ==================================================
 # Schema for:
-# 	* show running-config aaa
+#   * show running-config aaa
 # ==================================================
 class ShowRunningConfigAAASchema(MetaParser):
     """
@@ -2929,6 +3012,13 @@ class ShowRunningConfigNveSchema(MetaParser):
                     'action': str,
                     Optional('vlans'): list,
                 },
+                Optional('helper_address'): {
+                    Any(): {
+                       'ip_address': str, 
+                        Optional('reachable_over'): str,
+                    }
+                },
+                Optional('dhcp_relay_source'): str,
             },
         },
 
@@ -2960,10 +3050,14 @@ class ShowRunningConfigNveSchema(MetaParser):
                 Optional('ip_addr_state'): str,
                 Optional('host_reachability_protocol'): str,
                 Optional('source_interface'): str,
+                Optional('vxlan_encapsulation'): {
+                    Optional('encapsulation_type'): str,
+                },
                 Optional('vni'): {
                     Optional('l2vni'): {
                         Any(): {
                             Optional('replication_mcast'): str,
+                            Optional('replication_mcast_ipv6'): str,
                             Optional('replication_type'): str,
                         },
                     },
@@ -3110,11 +3204,17 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   source-interface loopback1
         p3_3 = re.compile(r'^source\-interface +(?P<source_if>\w+)$')
 
+        #   vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+        #   vxlan encapsulation ipv6
+        p3_3_1 = re.compile(r'^vxlan encapsulation +(?P<type>dual-stack|ipv6|ipv4)(.*)?$')
+
         #   member vni 5000 vrf green
         #   member vni 6000 ingress-replication
         #   member vni 10000 mcast-group 227.0.0.1
         #   member evpn-instance 1 vni 6000
-        p3_4 = re.compile(r'^member +(evpn\-instance +(?P<evi>\d+) )?vni (?P<vni>[\d\-]+)( +vrf\s+(?P<vrf>\w+))?( +(?P<type>ingress\-replication|mcast\-group\s+(?P<mcast_group>[\d.]+)))?$')
+        #   member vni 10101 mcast-group 225.0.0.101 FF0E:225::101
+        #   member vni 10101 mcast-group FF0E:225::101
+        p3_4 = re.compile(r'^member +(evpn\-instance +(?P<evi>\d+) )?vni (?P<vni>[\d\-]+)( +vrf\s+(?P<vrf>\w+))?( +(?P<type>ingress\-replication|mcast\-group\s+(?P<mcast_group>([\d.]+))?(\s+)?(?P<mcast_group_ipv6>[\da-fA-F:]+)?))?$')
 
         # no shutdown
         p3_5 = re.compile(r'^no +shutdown$')
@@ -3152,6 +3252,14 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   private-vlan mapping add 303-307,309,440
         p3_15 = re.compile(r'^private\-vlan +mapping *(?P<action>add|remove)? *(?P<vlan_id>[\d\-,]+)$')
 
+        #   ip helper-address 10.1.1.1
+        #   ip helper-address global 10.1.1.1
+        #   ip helper-address vrf green 10.1.1.1
+        p3_16 = re.compile(r'^ip +helper\-address +((?P<reachable_over>(global|vrf \S+)) +)?(?P<ip>[\d.]+)$')
+
+        #   ip dhcp relay source-interface Loopback12
+        p3_17 = re.compile(r'^ip +dhcp +relay +source\-interface +(?P<if_name>\S+)$')
+
         #   router bgp 65535.65535
         p4_0 = re.compile(r'^router +bgp +(?P<asn>[\d.]+)$')
 
@@ -3179,7 +3287,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   address-family l2vpn evpn
         #   address-family ipv4
         #   address-family ipv4 vrf green
-        p4_8 = re.compile(r'^address\-family +(?P<family_name>l2vpn evpn|ipv4|ipv6)(\s+vrf +(?P<vrf_name>\S+))?$')
+        #   address-family ipv4 mvpn
+        #   address-family ipv6 mvpn
+        p4_8 = re.compile(r'^address\-family +(?P<family_name>l2vpn evpn|ipv4|ipv6|ipv4 mvpn|ipv6 mvpn)(\s+vrf +(?P<vrf_name>\S+))?$')
 
         #   bgp additional-paths select all
         p4_9 = re.compile(r'^bgp +additional\-paths +select +all$')
@@ -3188,18 +3298,22 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         p4_10 = re.compile(r'^bgp +additional\-paths +(?P<option>send|receive|send receive)$')
 
         #   neighbor 10.5.5.50 activate
-        p4_11 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +activate$')
+        #   neighbor FD00:172:16:255::1 activate
+        p4_11 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +activate$')
 
         #   neighbor 10.5.5.50 send-community both
-        p4_12 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +send\-community +(?P<community_attr>both|extended|standard)$')
+        #   neighbor FD00:172:16:255::1 send-community extended
+        p4_12 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +send\-community +(?P<community_attr>both|extended|standard)$')
 
         #   neighbor 10.5.5.50 additional-paths send
-        p4_13 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +additional\-paths +(?P<option>send|receive|send receive)$')
+        #   neighbor FD00:172:16:255::1 additional-paths send
+        p4_13 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +additional\-paths +(?P<option>send|receive|send receive)$')
 
         #   neighbor 10.5.5.50 advertise additional-paths best 2
         #   neighbor 10.5.5.50 advertise additional-paths group-best
         #   neighbor 10.5.5.50 advertise additional-paths all group-best
-        p4_14 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +advertise +additional\-paths +(?P<option>.*)$')
+        #   neighbor FD00:172:16:255::1 advertise additional-paths best 2
+        p4_14 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +advertise +additional\-paths +(?P<option>.*)$')
 
         #   advertise l2vpn evpn
         p4_15 = re.compile(r'^advertise +l2vpn +evpn$')
@@ -3240,6 +3354,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         nve_flag=False
         intf_flag=False
         if_others_dict = {}
+        helper_address_idx = 0
 
         for line in output.splitlines():
             line = line.strip()
@@ -3360,6 +3475,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if 'Vlan' in m.groupdict()['if_name']:
                     if_name = ''    # shares same key field
                     nve_flag=False  # nve dont need all the fields of svi
+                    helper_address_idx = 0
                     svis = m.groupdict()['if_name'][4:]
 
                     if svis in ret_dict['vlans']:
@@ -3376,6 +3492,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         if_name = m.groupdict().pop('if_name')
                         intf_flag=True
                         if_dict = if_others_dict.setdefault('interfaces', {}).setdefault(if_name, {})
+
                 else:
                     if_name = m.groupdict().pop('if_name')
                     svis = ''           # shares same key field
@@ -3418,12 +3535,21 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     current_dict.update({'source_interface': m.groupdict()['source_if']})
                     continue
 
+                #   vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+                #   vxlan encapsulation ipv6
+                m = p3_3_1.match(line)
+                if m:
+                    current_dict = current_dict.setdefault('vxlan_encapsulation', {}).setdefault(
+                        'encapsulation_type', m.groupdict()['type'])
+                    continue
+
                 # no shutdown
                 m = p3_5.match(line)
                 if m:
                     current_dict['shutdown'] = False
                     continue
                 if nve_flag == False:
+                    
                     #   vrf forwarding green
                     m = p3_7.match(line)
                     if m:
@@ -3435,6 +3561,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             if_others_dict['interfaces'].pop(if_name)
                             if_name = ''    # tranferred from interfaces to overlay_interfaces
                         continue
+
                     #   ip address 192.168.1.201 255.255.255.0
                     #   ip address 192.168.1.202 255.255.255.0 secondary
                     m = p3_8.match(line)
@@ -3445,7 +3572,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict.setdefault('secondary_ip_address', []).append(ip_addr)
                         else:
                             current_dict['ipv4'] = ip_addr
-
                         continue
 
                     #   ipv6 address 2001:DB8:201::201/64
@@ -3455,31 +3581,37 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         ipv6_addr = group['ipv6']+group['mask']
                         current_dict.setdefault('ipv6', []).append(ipv6_addr)
                         continue
+
                     #   ipv6 enable
                     m = p3_10.match(line)
                     if m:
                         current_dict['ipv6_enable'] = True
                         continue
+
                     #   mac-address aabb.cc01.f100
                     m = p3_11.match(line)
                     if m:
                         current_dict['mac_addr'] = m.groupdict()['mac']
                         continue
+
                     #   ip unnumbered Loopback0
                     m = p3_12.match(line)
                     if m:
                         current_dict['unnumbered_interface'] = m.groupdict()['if_loopback']
                         continue
+
                     #   no autostate
                     m = p3_13.match(line)
                     if m:
                         current_dict['autostate'] = False
                         continue
+
                     #   ip pim sparse-mode
                     m = p3_14.match(line)
                     if m:
                         current_dict['pim_enable'] = True
                         continue
+
                     #   private-vlan mapping 222-224
                     #   private-vlan mapping add 303-307,309,440
                     m = p3_15.match(line)
@@ -3500,12 +3632,37 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict['mapped_private_vlan']['action'] = group['action']
                         continue
 
+            if svis:
+
+                #   ip helper-address 10.1.1.1
+                #   ip helper-address global 10.1.1.1
+                #   ip helper-address vrf green 10.1.1.1
+                m = p3_16.match(line)
+                if m:
+                    helper_address_idx +=1
+                    group = m.groupdict()
+
+                    svi_dict.setdefault('helper_address', {}).setdefault(helper_address_idx, {}).setdefault('ip_address', group['ip'])
+
+                    if group['reachable_over']:
+                        svi_dict.setdefault('helper_address', {}).setdefault(helper_address_idx, {}).setdefault('reachable_over', group['reachable_over'])
+                    continue
+
+                #   ip dhcp relay source-interface Loopback12
+                m = p3_17.match(line)
+                if m:
+                    svi_dict['dhcp_relay_source'] = m.groupdict()['if_name']
+                    continue
+
+
             if vlan or if_name:
 
                 #   member vni 5000 vrf green
                 #   member vni 6000 ingress-replication
                 #   member vni 10000 mcast-group 227.0.0.1
                 #   member evpn-instance 1 vni 6000
+                #   member vni 10101 mcast-group 225.0.0.101 FF0E:225::101
+                #   member vni 10101 mcast-group FF0E:225::101
                 m = p3_4.match(line)
                 if m:
                     group = m.groupdict()
@@ -3535,7 +3692,11 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     if group['type']:
                         repl_type = group['type'].split(' ')
                         if repl_type[0] == 'mcast-group':
-                            current_dict.update({'replication_type': 'static', 'replication_mcast': repl_type[1]})
+                            current_dict.update({'replication_type': 'static'})
+                            if group['mcast_group']:
+                                current_dict.update({'replication_mcast': group['mcast_group']})
+                            if group['mcast_group_ipv6']:
+                                current_dict.update({'replication_mcast_ipv6': group['mcast_group_ipv6']})
                         elif repl_type[0] == 'ingress-replication':
                             current_dict.update({'replication_type': repl_type[0]})
                     continue
@@ -3697,9 +3858,12 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     continue
 
             if bgp_asn or vrf_defn:
+
                 #   address-family l2vpn evpn
                 #   address-family ipv4
                 #   address-family ipv4 vrf green
+                #   address-family ipv4 mvpn
+                #   address-family ipv6 mvpn
                 m = p4_8.match(line)
                 if m:
                     group = m.groupdict()
@@ -3762,6 +3926,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     continue
 
         return ret_dict
+
 
 class ShowRunRouteSchema(MetaParser):
 
@@ -4069,5 +4234,106 @@ class ShowRunSectionBgp(ShowRunSectionBgpSchema):
                 if m:
                     af_dict.update({'default_info_originate': True})
                     continue
+
+        return ret_dict
+
+# =================================================
+# Schema for:
+#   * 'show running-config | section vrf definition'
+# ==================================================
+
+class ShowRunSectionVrfDefinitionSchema(MetaParser):
+    """Schema for show running-config | section vrf definition"""
+
+    schema = {
+        Optional('vrf'): {
+            Any(): {
+                Optional('rd'): str,
+                Optional('address_family'): {
+                    str: {
+                        Optional('route_target'): ListOf({
+                            'rt': str,
+                            'type': str,
+                            Optional('stitching'): bool,
+                        })
+                    },
+                },
+            },
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#   * 'show running-config | section vrf definition'
+# ===================================
+
+class ShowRunSectionVrfDefinition(ShowRunSectionVrfDefinitionSchema):
+    """Parser for show running-config | section vrf definition"""
+
+    cli_command = 'show running-config | section vrf definition'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # vrf definition ce1
+        p0 = re.compile(r'^vrf +definition +(?P<vrf>\S+)$')
+
+        #  rd 2:2
+        p1 = re.compile(r'^rd +(?P<rd>[\d:]+)$')
+
+        #   address-family ipv4
+        #   address-family ipv4 unicast
+        p2 = re.compile(r'^address\-family +(?P<af>ipv4|ipv6|ipv4 unicast|ipv4 multicast|ipv6 unicast|ipv6 multicast)$')
+
+        # route-target import 3:201
+        # route-target export 1:201
+        # route-target both 65000:100
+        # route-target export 100:1 stitching
+        p3 = re.compile(r'^route\-target +(?P<type>import|export|both) +(?P<rt>[\d:]+)(\s+(?P<stitch>stitching))?$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf definition ce1
+            m = p0.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                continue
+
+            #  rd 2:2
+            m = p1.match(line)
+            if m:
+                rd = m.groupdict()['rd']
+                vrf_dict.setdefault('rd', rd)
+                continue
+
+            #   address-family ipv4
+            #   address-family ipv4 unicast
+            m = p2.match(line)
+            if m:
+                af = m.groupdict()['af']
+                af_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})
+                continue
+
+            # route-target import 3:201
+            # route-target export 1:201
+            # route-target both 65000:100
+            # route-target export 100:1 stitching
+            m = p3.match(line)
+            if m:
+                rt_type = m.groupdict()['type']
+                rt = m.groupdict()['rt']
+                stitch = m.groupdict()['stitch']
+                rt_list = af_dict.setdefault('route_target', [])
+                if stitch:
+                    rt_list.append({'rt': rt, 'type': rt_type, 'stitching': True})
+                else:
+                    rt_list.append({'rt': rt, 'type': rt_type})
+                continue
 
         return ret_dict

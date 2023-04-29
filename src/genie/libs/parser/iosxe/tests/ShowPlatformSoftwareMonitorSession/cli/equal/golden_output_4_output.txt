@@ -1,0 +1,37 @@
+Span Session 1 (FED Session 1):
+  Type:      ERSPAN Source
+  Prev type: ERSPAN Source
+  Ingress Src Ports: Fif2/0/3
+  Egress Src Ports: 
+  Ingress Local Src Ports: (null)
+  Egress Local Src Ports: (null)
+  Destination Ports: 
+  Ingress Src Vlans:
+  Egress Src Vlans: 
+  Ingress Up Src Vlans: (null)
+  Egress Up Src Vlans:  (null)
+  Src Trunk filter Vlans:
+  RSPAN dst vlan: 0
+  RSPAN src vlan: 0
+  RSPAN src vlan sav: 0
+  Dest port encap = 0x0000
+  Dest port ingress encap = 0x0000
+  Dest port ingress vlan = 0x0
+  SrcSess: 1  DstSess: 0 DstPortCfgd: 0  RspnDstCfg: 0  RspnSrcVld: 0
+  DstCliCfg: 0  DstPrtInit: 0  PsLclCfgd: 0
+  Flags: 0x00000001 PSPAN
+  Remote dest port: 0   Dest port group: 0
+  FSPAN disabled
+  FSPAN not notified
+  ERSPAN Id    : 101
+  ERSPAN Org Ip: 40.1.1.1
+  ERSPAN Dst Ip: 40.1.1.2
+  ERSPAN Org Ipv6: ::
+  ERSPAN Dst Ipv6: ::
+  ERSPAN Ip Ttl: 255
+  ERSPAN DSCP  : 0
+  ERSPAN Ipv6 flow label: 0
+  ERSPAN MTU   : 9000
+  ERSPAN VRFID   : 0
+  ERSPAN State : Enabled
+  ERSPAN Tun id: 1263

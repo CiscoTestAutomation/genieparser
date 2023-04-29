@@ -1,0 +1,7 @@
+Number of Fabric Clients : 3
+
+MAC Address    AP Name                          Type ID   State              Protocol Method     L2 VNID    RLOC IP
+----------------------------------------------------------------------------------------------------------------------
+dca6.3249.1877 AP-E6-25C0                       WLAN 18   Run                11n(2.4) Dot1x      8189       1.1.1.1
+dca6.3249.2e7d AP-E6-25C0                       RLAN 10   IP Learn           11n(2.4) MAB        8189       2.2.2.2
+dca6.3249.4d6e AP-E6-25C0                       WLAN 1    Webauth Pending    11n(2.4) Dot1x      8189       3.3.3.3

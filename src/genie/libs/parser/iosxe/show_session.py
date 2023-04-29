@@ -16,6 +16,7 @@ class ShowLineSchema(MetaParser):
         'tty': {
             Any(): {
                 'active': bool,
+                Optional('line'): int,
                 'type': str,
                 Optional('tx'): int,
                 Optional('rx'): int,
@@ -51,25 +52,64 @@ class ShowLine(ShowLineSchema):
         #     Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
         #       1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
         # *     2 VTY              -    -      -    -    -      3       0     0/0       -
-        p1 = re.compile(r'^((?P<busy>\*) +)?(?P<tty>\d+)'
+
+        # Tty   Line Typ     Tx/Rx    A Modem  Roty AccO AccI  Uses  Noise Overruns  Int
+        # 0/0/0    2 TTY   9600/9600  -    -      -    -    -   746     61    0/0      -
+        # 0/0/3    5 TTY 115200/115200-    -      -    -    -   606 197460 14906/0      -
+        # *  322  322 VTY              -    -      -    -    -  1366      0    0/0      -
+        p1 = re.compile(r'^((?P<busy>\*) *)?(?P<tty>[\d\/]+)( +(?P<line>\d+))?'
                          ' +(?P<type>\w+)( +(?P<tx>\d+)\/(?P<rx>\d+))?'
-                         ' +(?P<a>[\w\-]+) +(?P<modem>[\w\-]+)'
+                         ' *(?P<a>[\w\-]+) +(?P<modem>[\w\-]+)'
                          ' +(?P<roty>[\w\-]+) +(?P<acco>[\w\-]+)'
                          ' +(?P<acci>[\w\-]+) +(?P<uses>\d+)'
                          ' +(?P<noise>\d+) +(?P<overruns>[\d\/]+)'
                          ' +(?P<int>[\w\-]+)$')
 
+        idx = 0
         for line in out.splitlines():
             line = line.strip()
 
             #     Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
             #       1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
             # *     2 VTY              -    -      -    -    -      3       0     0/0       -
+
+            # Tty   Line Typ     Tx/Rx    A Modem  Roty AccO AccI  Uses  Noise Overruns  Int
+            # 0/0/0    2 TTY   9600/9600  -    -      -    -    -   746     61    0/0      -
+            #  0/0/3    5 TTY 115200/115200-    -      -    -    -   606 197460 14906/0      -
+            # *  322  322 VTY              -    -      -    -    -  1366      0    0/0      -
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                tty_dict = ret_dict.setdefault('tty', {})
                 tty = group['tty']
-                tty_dict = ret_dict.setdefault('tty', {}).setdefault(tty, {})
+                lineno = group['line']
+
+                # Logic for duplicate tty entries
+                #  0/0/1    3 TTY   9600/9600  -    -      -    -    -   349     36    0/0      -
+                #  0/0/1   12 TTY   9600/9600  -    -      -    -    -   394    336    0/0      -
+                #  0/0/1   13 TTY   9600/9600  -    -      -    -    -   460    342    0/0      -
+                #  0/0/1   14 TTY   9600/9600  -    -      -    -    -   624    138    0/0      -
+                if tty in tty_dict:
+                    # if mod/slot/line syntax, try to calculate the line number
+                    tty_keys = tty.split('/')
+                    if tty_keys:
+                        tty_line = tty_keys[-1]
+                        tty_line = int(tty_line) * 10
+                        tty_line += idx
+                        tty = '/'.join(tty_keys[:2]) + f'/{tty_line}'
+                    # fallback to the linenumber
+                    elif lineno:
+                        tty += f'_{lineno}'
+                    # or fallback to the index
+                    else:
+                        tty += f'_{idx}'
+                    idx += 1
+                else:
+                    idx = 0
+                tty_dict = tty_dict.setdefault(tty, {})
+                if lineno:
+                    tty_dict['line'] = int(lineno)
+
                 if group['busy']:
                     tty_dict['active'] = True
                 else:

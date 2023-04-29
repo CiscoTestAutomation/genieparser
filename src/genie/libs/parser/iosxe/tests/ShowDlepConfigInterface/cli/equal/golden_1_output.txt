@@ -1,0 +1,13 @@
+DLEP Configuration for TenGigabitEthernet0/0/0
+
+DLEP Peer Description -
+DLEP Version = RFC 8175
+DLEP Local IP=9.9.9.151:55113
+DLEPv27 TCP Port = 55114
+ Virtual template=1
+ Timers (all values are in seconds):
+ Missed heartbeat threshold=2, Peer Terminate ACK timeout=10
+ Dlepv27 Applicable configs(in seconds):
+ Heartbeat interval=5, Discovery interval =5, Session Ack timeout=10
+ Neighbor activity timeout=0, Neighbor Down ACK timeout=10
+

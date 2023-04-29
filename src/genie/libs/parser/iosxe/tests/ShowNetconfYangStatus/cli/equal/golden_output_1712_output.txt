@@ -1,0 +1,10 @@
+show netconf-yang status
+netconf-yang: disabled
+netconf-yang candidate-datastore: disabled
+netconf-yang side-effect-sync: enabled
+netconf-yang ssh port: 830
+netconf-yang turbocli: disabled
+netconf-yang ssh hostkey algorithms: rsa-sha2-256,rsa-sha2-512,ssh-rsa
+netconf-yang ssh encryption algorithms: aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,aes256-cbc
+netconf-yang ssh MAC algorithms: hmac-sha2-256,hmac-sha2-512,hmac-sha1
+netconf-yang ssh KEX algorithms: diffie-hellman-group14-sha1,diffie-hellman-group14-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512

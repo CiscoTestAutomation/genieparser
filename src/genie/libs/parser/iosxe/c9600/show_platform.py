@@ -13,6 +13,7 @@ IOSXE c9500 parsers for the following show commands:
    * show platform software fed switch standby acl usage | include {acl_name}
    * show platform software fed switch standby acl usage
    * show platform hardware fed switch standby fwd-asic resource tcam utilization
+   * show platform software bp crimson statistics
 '''
 
 # Python
@@ -878,6 +879,151 @@ class ShowPlatformSwitchStandbyTcamUtilization(ShowPlatformTcamUtilizationswitch
 
         return ret_dict
 
+# ============================================================================
+#  Parser for
+#  * 'show platform software bp crimson statistics'
+# ============================================================================
+class ShowPlatformSoftwareBpCrimsonStatisticsSchema(MetaParser):
+    """
+    Schema for show platform software bp crimson statistics
+    """
+    schema = {
+        'bp_crimson_statistics':{
+            Any():str,
+        },
+        'bp_svl_crimson_statistics':{
+            Any():str,
+        },
+        'bp_remote_db_statistics':{
+            'get_requests':{
+                Any():str,
+        },
+            'set_requests':{
+                Any():str,
+        },
+            'in_progress_requests':{
+                Any():str,
+        },
+            'dbal_response_time':{
+            'max_(ms)': int,
+        },
+            'record_free_failures':{
+                Any():str,
+            },
+        },
+    }
+class ShowPlatformSoftwareBpCrimsonStatistics(ShowPlatformSoftwareBpCrimsonStatisticsSchema):
+    """ Parser for show platform software bp crimson statistics"""
+
+    cli_command = 'show platform software bp crimson statistics'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # BP Crimson Statistics
+        p1 = re.compile(r'^(?P<bp_crimson_statistics>BP Crimson Statistics)$')
+
+        # Initialized            : Yes
+        p2 = re.compile(r'^(?P<description>[\w\'\s]+)\:\s+(?P<value>\w+)$')
+
+        # BP SVL Crimson Statistics
+        p3 = re.compile(r'^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$')
+
+        # BP Remote DB Statistics
+        p4 = re.compile(r'^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$')
+
+        # GET Requests
+        p5 = re.compile(r'^(?P<get_requests>GET Requests\:)$')
+
+        # SET Requests
+        p6 = re.compile(r'^(?P<set_requests>SET Requests\:)$')
+
+        # In Progress Requests
+        p7 = re.compile(r'^(?P<in_progress_requests>In Progress Requests\:)$')
+
+        # DBAL Response Time
+        p8 = re.compile(r'^(?P<dbal_response_time>DBAL Response Time\:)$')
+
+        #MAX (ms)         : 115
+        p9 = re.compile(r'MAX .ms.\s+\:\s+(?P<MAX>\d+)')
+
+        # Record Free Failures
+        p10 = re.compile('^(?P<record_free_failures>Record Free Failures\:)$')
+
+        for line in output.splitlines():
+            line=line.strip()
+            # BP Crimson Statistics
+            m=p1.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_crimson_statistics',{})
+                continue
+
+            # Initialized            : Yes
+            m=p2.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict[group['description']] = group['value']
+                continue
+
+            # BP SVL Crimson Statistics
+            m=p3.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_svl_crimson_statistics',{})
+                continue
+
+            # BP Remote DB Statistics
+            m=p4.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                continue
+
+            # GET Requests 
+            m=p5.match(line)
+            if m:
+                root_dict = root_dict.setdefault('get_requests',{})
+                continue
+
+            # SET Requests  
+            m=p6.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                root_dict = root_dict.setdefault('set_requests',{})
+                continue
+
+            # In Progress Requests
+            m=p7.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                root_dict = root_dict.setdefault('in_progress_requests',{})
+                continue
+
+            # DBAL Response Time
+            m=p8.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                root_dict = root_dict.setdefault('dbal_response_time',{})
+                continue
+
+            # MAX (ms)          
+            m=p9.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['max_(ms)']=int(group['MAX'])
+
+            # Record Free Failures
+            m=p10.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                root_dict = root_dict.setdefault('record_free_failures',{})
+                continue
+
+        return ret_dict
+
 # ======================================================================================
 # Schema for 'show platform software memory switch <switch number> alloc callsite brief'
 # ======================================================================================
@@ -1054,15 +1200,15 @@ class ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema(MetaParser):
 class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwitchQosDscpcosCountersSchema):
     """ Parser for show platform hardware fed switch <> qos dscp-cos counters <interface> """
 
-    cli_command = ['show platform hardware fed switch {switch_num} qos dscp-cos counters interface {interface}','show platform hardware fed switch {switch_type} qos dscp-cos counters interface {interface}']
-    def cli(self, interface, switch_num="", switch_type="", output=None):
+    cli_command = ['show platform hardware fed {switch} {switch_var} qos dscp-cos counters interface {interface}',
+    'show platform hardware fed {switch_var} qos dscp-cos counters interface {interface}']
+
+    def cli(self, interface, switch_var, switch="", output=None):
         if output is None:
-            if switch_num is not None:
-                cmd = self.cli_command[0].format(switch_num=switch_num,interface=interface)
-            elif switch_type is not None:
-                cmd = self.cli_command[1].format(switch_type=switch_type,interface=interface)
+            if switch:
+                cmd = self.cli_command[0].format(switch= switch, switch_var=switch_var, interface=interface)              
             else:
-                raise TypeError('Must pass either switch_num or switch_type')
+                cmd = self.cli_command[1].format(switch_var=switch_var, interface=interface)
             output = self.device.execute(cmd)
 
         # Init vars
@@ -1192,10 +1338,10 @@ class ShowPlatformSoftwareFedSwitchActivEAclUsage(ShowPlatformSoftwareFedSwitchA
 
 # =========================================================
 #  Schema for
-#  * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+#  * 'show platform hardware fed {switch} active fwd-asic resource tcam utilization'
 # =========================================================
 class ShowPlatformTcamUtilizationswitchActiveSchema(MetaParser):
-    """Schema for show platform hardware fed switch active fwd-asic resource tcam utilization """
+    """Schema for show platform hardware fed {switch} active fwd-asic resource tcam utilization """
     schema = {
         'asic': {
             Any(): {
@@ -1224,18 +1370,16 @@ class ShowPlatformTcamUtilizationswitchActiveSchema(MetaParser):
 
 # =========================================================
 #  Parser for
-#  * 'show platform hardware fed sw active fwd-asic resource tcam utilization'
+#  * 'show platform hardware fed {switch} active fwd-asic resource tcam utilization'
 # =========================================================
 class ShowPlatformSwitchActiveTcamUtilization(ShowPlatformTcamUtilizationswitchActiveSchema):
-    """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
+    """Parser for show platform hardware fed {switch} active fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+    cli_command = 'show platform hardware fed {switch} active fwd-asic resource tcam utilization'
 
-    def cli(self, output=None):
+    def cli(self, switch='switch', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
-        else:
-            output = output
+            output = self.device.execute(self.cli_command.format(switch=switch))
 
         # initial return dictionary
         ret_dict = {}
@@ -1286,3 +1430,4 @@ class ShowPlatformSwitchActiveTcamUtilization(ShowPlatformTcamUtilizationswitchA
                 continue
 
         return ret_dict        
+

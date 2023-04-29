@@ -2,6 +2,10 @@
 IOSXE parser for the following show command
 	* show service-group state
 	* show service-group stats
+        * show service-group traffic-stats
+        * show service-insertion type appqoe service-node-group
+        * show service-insertion type appqoe cluster-summary
+        * show service-template
 '''
 
 # Python
@@ -605,6 +609,52 @@ class ShowServiceInsertionTypeAppqoeClusterSummary(ShowServiceInsertionTypeAppqo
                 last_dict_ptr.update({'site_id':site_id})
                 sn_err = groups['sn_error'].strip().replace('-', '_').replace(' ', '_').replace(':', '').lower()
                 last_dict_ptr.update({'error':sn_err})
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show service-template '
+# ======================================================
+
+class ShowServiceTemplateSchema(MetaParser):
+    """Schema for show service-template"""
+
+    schema = {
+        'policy': {
+            Any(): {
+                'policy_name': str,
+                'description': str,
+            },
+        },
+    }
+
+class ShowServiceTemplate(ShowServiceTemplateSchema):
+    """Parser for show service-template"""
+
+    cli_command = 'show service-template'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # DEFAULT_LINKSEC_POLICY_MUST_SECURE               NONE                     
+        p1 = re.compile(r"^(?P<policy_name>\S+)\s+(?P<description>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DEFAULT_LINKSEC_POLICY_MUST_SECURE               NONE                     
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                policy_name_var = dict_val['policy_name']
+                policy = ret_dict.setdefault('policy', {})
+                policy_name_dict = policy.setdefault(policy_name_var, {})
+                policy_name_dict['policy_name'] = dict_val['policy_name']
+                policy_name_dict['description'] = dict_val['description']
                 continue
 
         return ret_dict

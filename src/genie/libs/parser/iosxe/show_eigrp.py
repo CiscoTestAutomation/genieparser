@@ -1270,3 +1270,98 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySch
             output = self.device.execute(cmd)
         
         return super().cli(output=output, address_family='ipv4', vrf=vrf)
+
+# ==========================================================================================
+# Parser Schema for 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+# ==========================================================================================
+
+class ShowEigrpAddressFamilyIpv6VrfNeighborsSchema(MetaParser):
+    """
+    Schema for
+        * 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+    """
+
+    schema = {
+        'eigrp_ipv6_vr': str,
+        'address_family_neighbor_as': int,
+        'vrf': {
+            'h' : {
+                int: {
+                    Optional('address'): {
+                        Any(): Any()
+                    },
+                    'interface': str,
+                    'hold_uptime_sec': int,
+                    'uptime': str,
+                    'srtt_ms': int,
+                    'rto': int,
+                    'q_cnt': int,
+                    'seq_num': int
+                }
+            }
+        },
+    }
+
+# ==========================================================================================
+# Parser for 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+# ==========================================================================================
+
+class ShowEigrpAddressFamilyIpv6VrfNeighbors(ShowEigrpAddressFamilyIpv6VrfNeighborsSchema):
+    """
+    Parser for
+        * 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+    """
+    cli_command = 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+
+    def cli(self, vrf, num, interface, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf, num=num, interface=interface))
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(200)
+        p1 = re.compile(r'^EIGRP-IPv6 VR\((?P<vr>[\w\s]+)\) Address-Family Neighbors for AS\((?P<as>\d+)\)$')
+
+        # 0   Link-local address:     Gi1/0/1                  11 00:12:46 1598  5000  0  3
+        p2 = re.compile(r'^(?P<h>\d+)\s+(?P<add_type>[\S\s]+):\s+(?P<interface>\S+)\s+(?P<hold>\d+)\s+(?P<uptime>\S+)\s+(?P<srtt>\d+)\s+(?P<rto>\d+)\s+(?P<q_cnt>\d+)\s+(?P<seq_num>\d+)$')
+
+        # FE80::2A5:BFFF:FE53:D442
+        p3 = re.compile(r'\s*(?P<address>[\w\:]+)$')
+        add_type =""
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(200)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['eigrp_ipv6_vr'] = group['vr']
+                ret_dict['address_family_neighbor_as'] = int(group['as'])
+                continue
+
+            # 0   Link-local address:     Gi1/0/1                  11 00:12:46 1598  5000  0  3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('vrf',{}).setdefault('h',{}).setdefault(int(group['h']),{})
+                add_type = group['add_type']
+                add_dict = root_dict.setdefault('address',{})
+                root_dict['interface'] = group['interface']
+                root_dict['hold_uptime_sec'] = int(group['hold'])
+                root_dict['uptime'] = group['uptime']
+                root_dict['srtt_ms'] = int(group['srtt'])
+                root_dict['rto'] = int(group['rto'])
+                root_dict['q_cnt'] = int(group['q_cnt'])
+                root_dict['seq_num'] = int(group['seq_num'])
+                continue
+
+            # FE80::2A5:BFFF:FE53:D442
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict[add_type]= group['address']
+                continue
+
+        return ret_dict

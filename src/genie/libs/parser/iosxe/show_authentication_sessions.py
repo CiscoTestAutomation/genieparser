@@ -174,6 +174,8 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                         Optional('ipv6_address'): str,
                         'ipv4_address': str,
                         Optional('user_name'): str,
+                        Optional('device_type'): str,
+                        Optional('device_name'): str,
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
                         Optional('restart_timeout'): {
@@ -220,6 +222,7 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                             },
                             Optional('security_policy'): str,
                             Optional('security_status'): str,
+                            Optional('interface_template'): str
                         },
                         Optional('method_status'): {
                             Any(): {
@@ -279,7 +282,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
 
         # Template: CRITICAL_VLAN (priority 150)
         # Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
-        p3 = re.compile(r'^(?:Service +)?Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
+        p3 = re.compile(r'^(?P<template_type>Service|Interface)?\s*Template: +(?P<template>\w+)\s*(\(priority +(?P<priority>[0-9]+)\))?$')
 
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
@@ -447,7 +450,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                               'handle', 'current_policy', 'authorized_by',
                               'periodic_acct_timeout',
                               'session_uptime', 'timeout_action', 'ip_address',
-                              'idle_timeout', 'vlan_policy']
+                              'idle_timeout', 'vlan_policy', 'device_type', 'device_name']
 
                 group = m.groupdict()
                 key = re.sub(r'( |-)', '_', group['argument'].lower())
@@ -475,7 +478,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                         mac_dict = ret_dict.setdefault('interfaces', {})
                         value_dict = mac_dict.setdefault(group['value'], {})
                         intf_dict = value_dict.setdefault('mac_address', {})
-                        
+                    continue
+
                 elif (key not in known_list) and policies_flag:
                     policies_dict = mac_dict.setdefault('server_policies', {})
                     index_dict = policies_dict.setdefault(index, {})
@@ -483,13 +487,18 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     index_dict.update({'policies': group['value']})
                     index += 1
                     
-                continue
+                    continue
  
             # Template: CRITICAL_VLAN (priority 150)
+            # Interface Template: IP_PHONE_INTERFACE_TEMPLATE
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                template_dict = mac_dict.setdefault('local_policies', {}).setdefault('template', {})
+                local_policies_dict = mac_dict.setdefault('local_policies', {})
+                if group['template_type'] == 'Interface':
+                    local_policies_dict.setdefault('interface_template', group['template'])
+                    continue
+                template_dict = local_policies_dict.setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
                 priority_dict.update({'priority': int(group['priority'])})
                 continue

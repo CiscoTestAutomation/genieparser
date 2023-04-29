@@ -1,0 +1,227 @@
+scorpion-R1#sh inventory
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 15:27:42.809 EST Thu Feb 2 2023
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-60L4D Chassis"
+PID: C9500X-60L4D      , VID: V00  , SN: FDO25230EYD
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-60L4D Switch"
+PID: C9500X-60L4D      , VID: V00  , SN: FDO25230EYD
+
+NAME: "FiftyGigE1/0/1", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH1                     
+
+NAME: "FiftyGigE1/0/2", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH2                     
+
+NAME: "FiftyGigE1/0/3", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH3                     
+
+NAME: "FiftyGigE1/0/4", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH4                     
+
+NAME: "FiftyGigE1/0/5", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH5                     
+
+NAME: "FiftyGigE1/0/6", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH6                     
+
+NAME: "FiftyGigE1/0/7", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH7                     
+
+NAME: "FiftyGigE1/0/8", DESCR: "SFP 50GE CU2_5M"
+PID: QDD-8S50-CU2.5M     , VID: V01  , SN: TED2639590G-CH8                     
+
+NAME: "FiftyGigE1/0/9", DESCR: "SFP 25GE AOC5M"
+PID: SFP-25G-AOC5M       , VID: V02  , SN: FIW252205J3-A                       
+
+NAME: "FiftyGigE1/0/10", DESCR: "SFP 50GE LRS"
+PID: SFP-50G-LR-S        , VID: V01  , SN: CGC25310002                         
+
+NAME: "FiftyGigE1/0/12", DESCR: "SFP 25GE CU1M"
+PID: SFP-H25G-CU1M       , VID: V01  , SN: APF254001V4                         
+
+NAME: "FiftyGigE1/0/13", DESCR: "SFP 25GE CU3M"
+PID: SFP-H25G-CU3M       , VID: V01  , SN: APF254104JE                         
+
+NAME: "FiftyGigE1/0/14", DESCR: "SFP 25GE CU2.5M"
+PID: SFP-H25G-CU2.5M     , VID: V01  , SN: LCC2513G1XX                         
+
+NAME: "FiftyGigE1/0/16", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: LCC2449G6TJ-CH2                     
+
+NAME: "FiftyGigE1/0/17", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: LCC2449G6TJ-CH3                     
+
+NAME: "FiftyGigE1/0/18", DESCR: "SFP 25GE CU2M"
+PID: SFP-H25G-CU2M       , VID: V01  , SN: LCC2538G2UF                         
+
+NAME: "FiftyGigE1/0/19", DESCR: "SFP 50GE SRS"
+PID: SFP-50G-SR-S        , VID: V01  , SN: ACW25170ME3                         
+
+NAME: "FiftyGigE1/0/21", DESCR: "SFP 50GE SL"
+PID: SFP-50G-SL          , VID: V01  , SN: ACW25170MD3                         
+
+NAME: "FiftyGigE1/0/22", DESCR: "SFP 25GE AOC3M"
+PID: SFP-25G-AOC3M       , VID: V02  , SN: INL2529A987-B                       
+
+NAME: "FiftyGigE1/0/23", DESCR: "SFP 10/25GE CSR-S"
+PID: SFP-10/25G-CSR-S    , VID: V03  , SN: FNS25470K7G                         
+
+NAME: "FiftyGigE1/0/24", DESCR: "SFP 25GE AOC1M"
+PID: SFP-25G-AOC1M       , VID: V01  , SN: FOF220600T7-B                       
+
+NAME: "FiftyGigE1/0/29", DESCR: "SFP 25GE AOC10M"
+PID: SFP-25G-AOC10M      , VID: V02  , SN: FIW251502LU-A                       
+
+NAME: "FourHundredGigE1/0/31", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF22331572-B                       
+
+NAME: "FourHundredGigE1/0/32", DESCR: "QSFP 100GE CU5M"
+PID: QSFP-100G-CU5M      , VID: V01  , SN: APF25120G2C-B                       
+
+NAME: "FiftyGigE1/0/36", DESCR: "10GE SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AVD2312940V                         
+
+NAME: "FiftyGigE1/0/37", DESCR: "SFP 25GE CU1M"
+PID: SFP-H25G-CU1M       , VID: V01  , SN: APF254001V4                         
+
+NAME: "FiftyGigE1/0/39", DESCR: "SFP 25GE CU4M"
+PID: SFP-H25G-CU4M       , VID: V01  , SN: APF251906CY                         
+
+NAME: "FiftyGigE1/0/40", DESCR: "SFP 25GE CU2.5M"
+PID: SFP-H25G-CU2.5M     , VID: V01  , SN: LCC2513G1XX                         
+
+NAME: "FiftyGigE1/0/41", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH1                     
+
+NAME: "FiftyGigE1/0/42", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH2                     
+
+NAME: "FiftyGigE1/0/43", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH3                     
+
+NAME: "FiftyGigE1/0/44", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH4                     
+
+NAME: "FiftyGigE1/0/45", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH5                     
+
+NAME: "FiftyGigE1/0/46", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH6                     
+
+NAME: "FiftyGigE1/0/47", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH7                     
+
+NAME: "FiftyGigE1/0/48", DESCR: "SFP 50GE CU1M"
+PID: QDD-8S50-CU1M       , VID: V01  , SN: TED26394S0N-CH8                     
+
+NAME: "FiftyGigE1/0/49", DESCR: "10GE LR"
+PID: SFP-10G-LR-X        , VID: V01  , SN: OPM2515012Y                         
+
+NAME: "FiftyGigE1/0/50", DESCR: "SFP 10/25GE CSR-S"
+PID: SFP-10/25G-CSR-S    , VID: V03  , SN: FNS25470K67                         
+
+NAME: "FiftyGigE1/0/51", DESCR: "SFP 25GE AOC3M"
+PID: SFP-25G-AOC3M       , VID: V02  , SN: INL2529A987-A                       
+
+NAME: "FiftyGigE1/0/52", DESCR: "SFP 25GE AOC2M"
+PID: SFP-25G-AOC2M       , VID: V02  , SN: FIW254202KD-A                       
+
+NAME: "FiftyGigE1/0/53", DESCR: "10GE CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V03  , SN: MDM231700W5-CH1                     
+
+NAME: "FiftyGigE1/0/54", DESCR: "10GE CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V03  , SN: MDM231700W5-CH2                     
+
+NAME: "FiftyGigE1/0/55", DESCR: "SFP 50GE LRS"
+PID: SFP-50G-LR-S        , VID: V01  , SN: CGC25310001                         
+
+NAME: "FiftyGigE1/0/56", DESCR: "10GE CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V03  , SN: MDM231700W5-CH3                     
+
+NAME: "FiftyGigE1/0/57", DESCR: "10GE CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V03  , SN: MDM231700W5-CH4                     
+
+NAME: "FiftyGigE1/0/59", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: APF260100VT-CH1                     
+
+NAME: "FiftyGigE1/0/60", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: APF260100VT-CH2                     
+
+NAME: "FiftyGigE1/0/61", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: APF260100VT-CH3                     
+
+NAME: "FiftyGigE1/0/62", DESCR: "SFP 25GE CU2M"
+PID: QSFP-4SFP25G-CU2M   , VID: V01  , SN: APF260100VT-CH4                     
+
+NAME: "FourHundredGigE1/0/33/1", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/2", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/3", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/4", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/5", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/6", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/7", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/33/8", DESCR: "QSFP-DD 8XSFP50G CU1M"
+PID: QDD-8x50G-CU1M      , VID: V01  , SN: TED26394S0N                         
+
+NAME: "FourHundredGigE1/0/34/1", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/2", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/3", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/4", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/5", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/6", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/7", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "FourHundredGigE1/0/34/8", DESCR: "QSFP-DD 8XSFP50G CU2_5M"
+PID: QDD-8x50G-CU2.5M    , VID: V01  , SN: TED2639590G                         
+
+NAME: "Power Supply Module 1", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Reverse Air Flow Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS25146128
+
+NAME: "Power Supply Module 2", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Reverse Air Flow Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS2514612T
+
+NAME: "Fan Tray 1", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NBJ
+
+NAME: "Fan Tray 2", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NNN
+
+NAME: "Fan Tray 3", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140N7D
+
+NAME: "Fan Tray 4", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NBR
+
+NAME: "Fan Tray 5", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140N6Y
+
+NAME: "Fan Tray 6", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NCX

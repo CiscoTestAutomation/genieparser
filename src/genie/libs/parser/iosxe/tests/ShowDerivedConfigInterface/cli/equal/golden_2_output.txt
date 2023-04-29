@@ -1,0 +1,9 @@
+ Building configuration...
+
+Derived configuration : 140 bytes
+!
+interface GigabitEthernet1/0/1
+ description Sourcing interface template beta
+ switchport trunk allowed vlan 3
+ switchport mode trunk
+end

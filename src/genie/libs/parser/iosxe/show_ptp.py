@@ -492,6 +492,7 @@ class ShowPtpPortInterfaceSchema(MetaParser):
             Optional('sync_fault_limit'): int,                                  
         },
         Optional('ptp_role_primary'): str,
+        Optional('ptp_destination_mac'): str,
         Optional('local_port_priority'): int
     }
 
@@ -508,7 +509,7 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
 
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
- 	    
+
         #PTP PORT DATASET: TenGigabitEthernet1/0/33
         p1 = re.compile(r'^PTP\sPORT\sDATASET\:\s(?P<interface>\S+)$')  
         
@@ -556,6 +557,9 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
         
         #Local port priority : 128
         p16 = re.compile(r'^Local\sport\spriority\s\:\s(?P<local_port_priority>\d+)$')
+
+        #ptp destination mac : 01.01.01.01.01.0A
+        p17 = re.compile(r'^ptp\sdestination\smac\s\:\s(?P<ptp_dest_mac>\S+)$')
 
         # initial return dictionary
         ret_dict ={}
@@ -676,6 +680,13 @@ class ShowPtpPortInterface(ShowPtpPortInterfaceSchema):
             if m:
                 local_port_priority = m.groupdict()['local_port_priority']
                 ret_dict['local_port_priority'] = int(local_port_priority)
+                continue
+
+            #ptp destination mac : 01.80.C2.00.00.0E
+            m = p17.match(line)
+            if m:
+                ptp_destination_mac = m.groupdict()['ptp_dest_mac']
+                ret_dict['ptp_destination_mac'] = ptp_destination_mac
                 continue
         return ret_dict
 

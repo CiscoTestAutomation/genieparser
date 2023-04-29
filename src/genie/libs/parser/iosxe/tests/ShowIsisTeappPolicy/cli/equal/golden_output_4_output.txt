@@ -1,0 +1,9 @@
+R1#sh isis teapp policy 5.5.5.5
+ISIS SR Policy Endpoints:
+Tag null:
+ISIS SR Policy Endpoints:
+Tag 1:
+ 5.5.5.5 - System-id: R5.00 level: 1
+   no interface - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 1w2d         
+   Tunnel67531 - Flags: 1 (Strict-SPF) Metric-mode: None Last update: 20:48:22                    
+   Tunnel66562 - Flags: 0 (SPF) Metric-mode: None Last update: 20:48:30 

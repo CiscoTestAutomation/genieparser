@@ -1,0 +1,23 @@
+MAC_Address    Port_Id  Cert Parent Proto ProfileType Profile Name              Device Name
+=========================================================================
+0002.0304.0506  AppGigabitEthernet1/0/2 0    0      M   Max Type Un-Classified Device         Unknown Device
+0476.b0d7.9102  TenGigabitEthernet1/0/3 10   0   CL M   Custom   DEVICE_TYPE_B                cisco C9300-24UXB
+0476.b0d7.9105  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+0476.b0d7.9165  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+0476.b0d7.9176  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+189c.5d1c.b09d  TenGigabitEthernet1/0/1 20   1   C  M   Default  Cisco-Switch                 cisco WS-C3850-48P
+189c.5d1c.b09f  TenGigabitEthernet1/0/3 20   1   C  M   Default  Cisco-Switch                 cisco WS-C3850-48P
+34ed.1b7e.1c56  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+3c51.0eb8.6482  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+c4b2.397a.c9c2  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+c4b2.397a.c9d8  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+c4b2.397a.c9f6  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+e8eb.34e3.a382  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+e8eb.34e3.b401  TenGigabitEthernet1/0/1 10   0   CL M   Custom   DEVICE_TYPE_B                cisco C9300-24UX
+e8eb.34e3.b404  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+e8eb.34e3.b406  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+e8eb.34e3.b458  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+e8eb.34e3.b464  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+f86b.d967.0cc2  TenGigabitEthernet1/0/3 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+f86b.d967.0ce6  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+f87a.414b.5883  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC   

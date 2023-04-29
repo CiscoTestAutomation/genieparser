@@ -33,6 +33,7 @@ expected_output = {
                                             "ext_community": "RT:65109:4093",
                                             "recipient_pathid": "0",
                                             "transfer_pathid": "0x0",
+                                            "update_group": [17, 18]
                                         }
                                     },
                                 }

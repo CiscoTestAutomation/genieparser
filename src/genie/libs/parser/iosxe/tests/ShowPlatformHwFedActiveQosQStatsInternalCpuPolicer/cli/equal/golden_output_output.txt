@@ -1,0 +1,146 @@
+SG-HA#show platform hardware fed standby qos queue stats internal cpu policer
+
+                         CPU Queue Statistics
+============================================================================================
+                                              (default) (set)     Queue        Queue
+QId PlcIdx  Queue Name                Enabled   Rate     Rate      Drop(Bytes)  Drop(Frames)
+--------------------------------------------------------------------------------------------
+0    11     DOT1X Auth                  Yes     1000      1000     0            0
+1    1      L2 Control                  Yes     2000      2000     0            0
+2    14     Forus traffic               Yes     4000      4000     0            0
+3    0      ICMP GEN                    Yes     750       750      0            0
+4    2      Routing Control             Yes     5500      5500     0            0
+5    14     Forus Address resolution    Yes     4000      4000     0            0
+6    0      ICMP Redirect               Yes     750       750      0            0
+7    16     Inter FED Traffic           Yes     2000      2000     0            0
+8    4      L2 LVX Cont Pack            Yes     1000      1000     0            0
+9    19     EWLC Control                Yes     13000     13000    0            0
+10   16     EWLC Data                   Yes     2000      2000     0            0
+11   13     L2 LVX Data Pack            Yes     1000      1000     0            0
+12   0      BROADCAST                   Yes     750       750      0            0
+13   10     Openflow                    Yes     250       250      0            0
+14   13     Sw forwarding               Yes     1000      1000     0            0
+15   8      Topology Control            Yes     16000     16000    0            0
+16   12     Proto Snooping              Yes     2000      2000     0            0
+17   6      DHCP Snooping               Yes     500       500      0            0
+18   13     Transit Traffic             Yes     1000      1000     0            0
+19   10     RPF Failed                  Yes     250       250      0            0
+20   15     MCAST END STATION           Yes     2000      2000     0            0
+21   13     LOGGING                     Yes     1000      1000     0            0
+22   7      Punt Webauth                Yes     1000      1000     0            0
+23   18     High Rate App               Yes     13000     13000    0            0
+24   10     Exception                   Yes     250       250      0            0
+25   3      System Critical             Yes     1000      1000     0            0
+26   10     NFL SAMPLED DATA            Yes     250       250      0            0
+27   2      Low Latency                 Yes     5500      5500     0            0
+28   10     EGR Exception               Yes     250       250      0            0
+29   5      Stackwise Virtual OOB       Yes     8000      8000     0            0
+30   9      MCAST Data                  Yes     500       500      0            0
+31   3      Gold Pkt                    Yes     1000      1000     0            0
+
+* NOTE: CPU queue policer rates are configured to the closest hardware supported value
+
+                      CPU Queue Policer Statistics
+====================================================================
+Policer    Policer Accept   Policer Accept  Policer Drop  Policer Drop
+  Index         Bytes          Frames        Bytes          Frames
+-------------------------------------------------------------------
+0          0                0               0             0
+1          0                0               0             0
+2          0                0               0             0
+3          0                0               0             0
+4          0                0               0             0
+5          0                0               0             0
+6          0                0               0             0
+7          0                0               0             0
+8          0                0               0             0
+9          0                0               0             0
+10         0                0               0             0
+11         0                0               0             0
+12         0                0               0             0
+13         0                0               0             0
+14         0                0               0             0
+15         0                0               0             0
+16         0                0               0             0
+17         0                0               0             0
+18         0                0               0             0
+19         0                0               0             0
+
+                  Second Level Policer Statistics
+====================================================================
+20         0                0               0             0
+21         0                0               0             0
+
+Policer Index Mapping and Settings
+--------------------------------------------------------------------
+level-2   :   level-1                      (default)   (set)
+PlcIndex  :   PlcIndex                       rate      rate
+--------------------------------------------------------------------
+20        :   1  2  8                        17000     17000
+21        :   0 4 7 9 10 11 12 13 14 15      6000      6000
+====================================================================
+
+               Second Level Policer Config
+====================================================================
+    level-1 level-2                            level-2
+QId PlcIdx  PlcIdx  Queue Name                 Enabled
+--------------------------------------------------------------------
+0    11      21      DOT1X Auth                  Yes
+1    1       20      L2 Control                  Yes
+2    14      21      Forus traffic               Yes
+3    0       21      ICMP GEN                    Yes
+4    2       20      Routing Control             Yes
+5    14      21      Forus Address resolution    Yes
+6    0       21      ICMP Redirect               Yes
+7    16      -       Inter FED Traffic           No
+8    4       21      L2 LVX Cont Pack            Yes
+9    19      -       EWLC Control                No
+10   16      -       EWLC Data                   No
+11   13      21      L2 LVX Data Pack            Yes
+12   0       21      BROADCAST                   Yes
+13   10      21      Openflow                    Yes
+14   13      21      Sw forwarding               Yes
+15   8       20      Topology Control            Yes
+16   12      21      Proto Snooping              Yes
+17   6       -       DHCP Snooping               No
+18   13      21      Transit Traffic             Yes
+19   10      21      RPF Failed                  Yes
+20   15      21      MCAST END STATION           Yes
+21   13      21      LOGGING                     Yes
+22   7       21      Punt Webauth                Yes
+23   18      -       High Rate App               No
+24   10      21      Exception                   Yes
+25   3       -       System Critical             No
+26   10      21      NFL SAMPLED DATA            Yes
+27   2       20      Low Latency                 Yes
+28   10      21      EGR Exception               Yes
+29   5       -       Stackwise Virtual OOB       No
+30   9       21      MCAST Data                  Yes
+31   3       -       Gold Pkt                    No
+
+                        CPP Classes to queue map
+======================================================================================
+PlcIdx CPP Class                                :  Queues
+--------------------------------------------------------------------------------------
+0      system-cpp-police-data                   :  ICMP GEN/ BROADCAST/ ICMP Redirect/
+10     system-cpp-police-sys-data               :  Openflow/ Exception/ EGR Exception/ NFL SAMPLED DATA/ RPF Failed/
+13     system-cpp-police-sw-forward             :  Sw forwarding/ LOGGING/ L2 LVX Data Pack/ Transit Traffic/
+9      system-cpp-police-multicast              :  MCAST Data/
+15     system-cpp-police-multicast-end-station  :  MCAST END STATION /
+7      system-cpp-police-punt-webauth           :  Punt Webauth/
+1      system-cpp-police-l2-control             :  L2 Control/
+2      system-cpp-police-routing-control        :  Routing Control/ Low Latency/
+3      system-cpp-police-system-critical        :  System Critical/ Gold Pkt/
+4      system-cpp-police-l2lvx-control          :  L2 LVX Cont Pack/
+8      system-cpp-police-topology-control       :  Topology Control/
+11     system-cpp-police-dot1x-auth             :  DOT1X Auth/
+12     system-cpp-police-protocol-snooping      :  Proto Snooping/
+6      system-cpp-police-dhcp-snooping          :  DHCP Snooping/
+14     system-cpp-police-forus                  :  Forus Address resolution/ Forus traffic/
+5      system-cpp-police-stackwise-virt-control :  Stackwise Virtual OOB/
+16     system-cpp-default                       :  Inter FED Traffic/ EWLC Data/
+18     system-cpp-police-high-rate-app          :  High Rate App/
+19     system-cpp-police-ewlc-control           :  EWLC Control/
+20     system-cpp-police-ios-routing            :  L2 Control/ Topology Control/ Routing Control/ Low Latency/
+21     system-cpp-police-ios-feature            :  ICMP GEN/ BROADCAST/ ICMP Redirect/ L2 LVX Cont Pack/ Proto Snooping/ Punt Webauth/ MCAST Data/ Transit Traffic/ DOT1X Auth/ Sw forwarding/ LOGGING/ L2 LVX Data Pack/ Forus traffic/ Forus Address resolution/ MCAST END STATION / Openflow/ Exception/ EGR Exception/ NFL SAMPLED DATA/ RPF Failed/
+SG-HA#

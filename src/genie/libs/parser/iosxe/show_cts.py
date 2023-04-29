@@ -2289,13 +2289,14 @@ class ShowCtsInterfaceSchema(MetaParser):
 class ShowCtsInterface(ShowCtsInterfaceSchema):
     """Parser for show cts interface"""
 
-    cli_command = 'show cts interface'
+    cli_command = ['show cts interface', 'show cts interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None,output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if interface:
+                output = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
 
@@ -2379,7 +2380,7 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         # L3_IPM:   disabled.
         p26 = re.compile(r'^L3 IPM:\s+(?P<l3_ipm>\S+).')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Global Dot1x feature is Disabled
@@ -3847,3 +3848,60 @@ class ShowPlatformSoftwareFedActiveAclSgacl(ShowPlatformSoftwareFedActiveAclSgac
                 index += 1
                 
         return ret_dict
+# ==============================================
+# Parser for 'show cts interface summary'
+# ==============================================
+class ShowCtsInterfaceSummarySchema(MetaParser):
+    """Schema for show cts interface summary
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'mode': str,
+                'ifc_state': str,
+                'dot1x_role': str,
+                'peer_id': str,
+                'ifc_cache': str,
+                'critical_authentication': str
+            }
+        }
+    }
+
+
+class ShowCtsInterfaceSummary(ShowCtsInterfaceSummarySchema):
+    """Parser for 'show cts interface summary'
+    """
+    cli_command = 'show cts interface summary'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        # CTS Interfaces
+        # ---------------------
+        # Interface                      Mode    IFC-state dot1x-role peer-id    IFC-cache    Critical-Authentication
+        # -----------------------------------------------------------------------------
+        # Twe1/0/12                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        p1 = re.compile(r'^(?P<interface>\w+\d+/\d+/\d+)\s+(?P<mode>\S+)\s+(?P<ifc_state>\S+)\s+(?P<dot1x_role>\S+)\s+(?P<peer_id>\S+)\s+(?P<ifc_cache>\S+)\s+(?P<critical_authentication>\S+)$')     
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()  
+                final_dict = ret_dict.setdefault('interface', {}).setdefault(group["interface"], {})
+                final_dict.update({
+                    "mode": group["mode"],
+                    "ifc_state": group["ifc_state"],
+                    "dot1x_role": group["dot1x_role"],
+                    "peer_id": group["peer_id"],
+                    "ifc_cache": group["ifc_cache"],
+                    "critical_authentication": group["critical_authentication"]})          
+        return ret_dict
+

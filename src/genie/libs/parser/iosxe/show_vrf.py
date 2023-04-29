@@ -30,7 +30,8 @@ class ShowVrfSchema(MetaParser):
             Any(): {
                 Optional('route_distinguisher'): str,
                 Optional('protocols'): list,
-                Optional('interfaces'): list
+                Optional('interfaces'): list,
+                Optional('being_deleted'): bool
             }
         }
     }
@@ -62,8 +63,9 @@ class ShowVrf(ShowVrfSchema):
         # vpn4                             100:2                 ipv4,ipv6
         # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
-        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)'
-                        r'(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
+        # ce1                              <being deleted>       ipv4,ipv6   Et1/0
+        # * ce1                              2:2                   ipv4,ipv6
+        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -81,6 +83,7 @@ class ShowVrf(ShowVrfSchema):
             # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
             #                                                                    Te0/0/1
             # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+            # * ce1                              2:2                   ipv4,ipv6
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -89,8 +92,7 @@ class ShowVrf(ShowVrfSchema):
                 vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
 
                 rd = groups['rd']
-                if 'not set' not in rd:
-                    vrf_dict.update({'route_distinguisher': rd})
+                vrf_dict.update({'route_distinguisher': rd})
 
                 if groups['protocols']:
                     protocols = groups['protocols'].split(',')
@@ -100,6 +102,9 @@ class ShowVrf(ShowVrfSchema):
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
+
+                if groups['being_deleted']:
+                    vrf_dict.update({'being_deleted': True})
                 continue
 
             # Lo300
@@ -532,3 +537,52 @@ class ShowVrfDetail(ShowVrfDetailSuperParser):
 
         return super().cli(output=out)
 # vim: ft=python et sw=4
+
+
+'''
+ShowVRFIPv6.py
+'''
+
+# ====================================================
+#  schema for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6Schema(MetaParser):
+    """Schema for show vrf ipv6 {vrf}"""
+    schema = {
+        Any(): 
+        {
+            'default_rd': str,
+            'protocols': str,
+            'interface': str,
+        }   
+    }
+
+# ====================================================
+#  parser for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6(ShowVRFIPv6Schema):
+    """Parser for :
+        show vrf ipv6 <vrf>"""
+
+    cli_command = 'show vrf ipv6 {vrf}'
+
+    def cli(self, vrf='',output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+            
+        res_dict = {}
+        p1 = re.compile(r'^(?P<vrf>[\w\d]+)+\s+(?P<default_rd>[\d\:\d]+)+\s+(?P<protocols>[\w\,\w]+)\s+\s\s(?P<interface>[\w\d]+)*$')
+        for line in output.splitlines():
+            line = line.strip()
+            # vrf21                                21:1              ipv4,ipv6   Vl21'''
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                res_dict.setdefault(groups['vrf'], {})
+                vrf_dict = res_dict[groups['vrf']]
+                vrf_dict.update({
+                'default_rd' : groups['default_rd'],
+                'protocols' : groups['protocols'],
+                'interface' : groups['interface'],})
+
+        return res_dict

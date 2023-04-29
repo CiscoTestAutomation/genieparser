@@ -1,0 +1,10 @@
+COS for Encapsulated Packets: 5
+
+Port                Protocol    Shutdown  Drop      Encaps    Decaps    Drop
+                                Threshold Threshold Counter   Counter   Counter
+------------------- ----------- --------- --------- --------- --------- ---------
+Gi1/0/20            cdp             40        30            7         1         0
+                    lldp          ----        20            4         3         0
+                    stp             40        20          485       207         7
+                    vtp             40        20            1         0         0
+                    udld          ----      ----            0         0         0

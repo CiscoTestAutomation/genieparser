@@ -1,0 +1,23 @@
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved
+
+asr1k-34#show isis teapp 
+Tag 1:
+   ISIS TEAPP Information: Topology(ID:0x0) Type:SRTE, Enabled:1, Router ID:1.1.1.1
+ Topology Id:0x0 Teapp_type:SRTE
+   Interface(hdl:0xF): GigabitEthernet0/0/7
+    Affinity: set 0, affinity_bits 0
+    TE Metric: set 0, te_metric 4294967295
+    Extended Affinity: set 0, length 0, 
+   ISIS TE Attr PM Information:
+    Gi0/0/7: IDB num:15 Min:30 Max:30 Avg:30 Var:0
+    Gi0/3/0: IDB num:16 Min:30 Max:30 Avg:30 Var:0
+Tag 2:
+   ISIS TEAPP Information: Topology(ID:0x2) Type:SRTE, Enabled:0, Router ID:2.2.2.2
+ Topology Id:0x2 Teapp_type:SRTE
+   Interface(hdl:0xF): Tunnel65537
+    Affinity: set 0, affinity_bits 0
+    TE Metric: set 0, te_metric 4294967295
+    Extended Affinity: set 0, length 0, 
+   ISIS TE Attr PM Information:
+    Tunnel65537: IDB num:15 Min:30 Max:30 Avg:30 Var:0

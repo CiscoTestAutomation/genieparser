@@ -17,6 +17,7 @@ expected_output = {
                 "platform": "WS-C3850-",
                 "port_id": "TenGigabitEthernet1/1/4",
             },
-        }
+        },
+        'total_entries': 2
     }
 }

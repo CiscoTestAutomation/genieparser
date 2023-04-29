@@ -1,0 +1,4 @@
+show capability feature monitor erspan-destination
+ERSPAN Destination Session:ERSPAN Destination Session Supported: TRUE
+Maximum No of ERSPAN destination session: 8
+ERSPAN Header Type supported: II and III

@@ -1,0 +1,1 @@
+MPLS TE autorouting enabled

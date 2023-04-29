@@ -1,0 +1,106 @@
+Frame 1: 1496 bytes on wire (11968 bits), 80 bytes captured (640 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2022 17:21:14.938988000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1666180274.938988000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.000000000 seconds]
+    Frame Number: 1
+    Frame Length: 1496 bytes (11968 bits)
+    Capture Length: 80 bytes (640 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:data]
+Ethernet II, Src: fa:88:8e:78:00:02 (fa:88:8e:78:00:02), Dst: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+    Destination: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+        Address: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: fa:88:8e:78:00:02 (fa:88:8e:78:00:02)
+        Address: fa:88:8e:78:00:02 (fa:88:8e:78:00:02)
+        .... ..1. .... .... .... .... = LG bit: Locally administered address (this is NOT the factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 49.1.1.2, Dst: 91.4.1.1
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 1482
+    Identification: 0xf519 (62745)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: Unknown (253)
+    Header checksum: 0x3215 [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 49.1.1.2
+    Destination: 91.4.1.1
+Data (46 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+    Data: 000000000000000000000000000000000000000000000000b^@&
+    [Length: 46]
+
+Frame 2: 1496 bytes on wire (11968 bits), 80 bytes captured (640 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2022 17:21:14.939868000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1666180274.939868000 seconds
+    [Time delta from previous captured frame: 0.000880000 seconds]
+    [Time delta from previous displayed frame: 0.000880000 seconds]
+    [Time since reference or first frame: 0.000880000 seconds]
+    Frame Number: 2
+    Frame Length: 1496 bytes (11968 bits)
+    Capture Length: 80 bytes (640 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:data]
+Ethernet II, Src: fa:88:8e:78:00:02 (fa:88:8e:78:00:02), Dst: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+    Destination: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+        Address: 00:a7:42:86:06:bf (00:a7:42:86:06:bf)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: fa:88:8e:78:00:02 (fa:88:8e:78:00:02)
+        Address: fa:88:8e:78:00:02 (fa:88:8e:78:00:02)
+        .... ..1. .... .... .... .... = LG bit: Locally administered address (this is NOT the factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 49.1.1.2, Dst: 91.4.1.1
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 1482
+    Identification: 0xf51a (62746)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: Unknown (253)
+    Header checksum: 0x3214 [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 49.1.1.2
+    Destination: 91.4.1.1
+Data (46 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+    Data: 000000000000000000000000000000000000000000000000b^@&
+    [Length: 46]
+          

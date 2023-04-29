@@ -24,6 +24,8 @@ class ShowIpRouteDistributor(MetaParser):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
 
+    exclude = ['updated']
+
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
         if output is None:
@@ -69,6 +71,8 @@ class ShowIpv6RouteDistributor(MetaParser):
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    
+    exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
         
@@ -225,7 +229,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict['Destination'] = ['DCE']
         source_protocol_dict['Redirect'] = ['NDr']
         source_protocol_dict['omp'] = ['m']
-
+        source_protocol_dict['nat_dia'] = ['n', 'Nd']
 
         result_dict = {}
 
@@ -284,6 +288,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   &    10.69.0.0 [1/0] via 10.34.0.1
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        # B   +    10.55.0.0 [20/0] via 10.144.0.1 (vrf-blue), 00:00:09
         # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
         # ND  ::/0 [2/0]
         # NDp 2001:103::/64 [2/0]
@@ -291,29 +296,33 @@ class ShowIpRoute(ShowIpRouteSchema):
             p3 = re.compile(
                 r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
-                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
-            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20
+            # B        1.1.1.10 [200/0] via FC01:101:8:E007:: (default:ipv6), 1d15h
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[0-9a-fA-F\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[dh\d\:]+)+(, +(?P<interface>[\w]+))?$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
-            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
 
         else:
             p3 = re.compile(
                 r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]\s|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
-                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
                 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
             # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
-            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$') 
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
 
         #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
         p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
@@ -520,6 +529,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                         updated = m.groupdict()['date']
 
                     #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
                     if m.groupdict()['nh_vrf']:
                         nh_vrf = m.groupdict()['nh_vrf']
                     route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
@@ -613,6 +623,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                         updated = m.groupdict()['date']
 
                     #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
                     if m.groupdict()['nh_vrf']:
                         nh_vrf = m.groupdict()['nh_vrf']
 
@@ -2415,10 +2426,10 @@ class ShowIpCefInternalSchema(MetaParser):
                                 Optional('subblocks'): {
                                   Any(): {
                                       'rr_source': list,
-                                      'non_eos_chain_loadinfo': str,
-                                      'per-session': bool,
-                                      'flags': str,
-                                      'locks': int,
+                                      Optional('non_eos_chain_loadinfo'): str,
+                                      Optional('per-session'): bool,
+                                      Optional('flags'): str,
+                                      Optional('locks'): int,
                                   }
                                 },
                                 Optional('ifnums'): {
@@ -3422,3 +3433,50 @@ class ShowRibClient(ShowRibClientSchema):
                 
         return ret_dict
 
+# ==========================================================================================
+# Parser Schema for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotdSchema(MetaParser):
+    """
+    Schema for
+        * 'show banner motd'
+    """
+
+    schema = {
+        'banner_motd': str
+    }
+
+# ==========================================================================================
+# Parser for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotd(ShowBannerMotdSchema):
+    """
+    Parser for
+        * 'show banner motd'
+    """
+    cli_command = 'show banner motd'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # initializing dictionary
+        ret_dict = {}
+
+        # cisco banner test msg
+        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # cisco banner test msg
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['banner_motd'] = group['banner']
+                continue
+
+        return ret_dict

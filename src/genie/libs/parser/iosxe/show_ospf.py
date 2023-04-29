@@ -8696,12 +8696,16 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 # Schema for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighborSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     schema = {
@@ -8724,25 +8728,35 @@ class ShowIpOspfNeighborSchema(MetaParser):
 # Parser for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
     ''' Parser for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     cli_command = [
         'show ip ospf neighbor {interface}',
-        'show ip ospf neighbor']
+        'show ip ospf neighbor',
+        'show ip ospf {process_id} neighbor',
+        'show ip ospf {process_id} neighbor {interface}']
     exclude = ['dead_time']
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface='', output=None, process_id=''):
 
         if output is None:
             # Execute command on device
-            if interface:
+            if interface and process_id:
+                cmd = self.cli_command[3].format(process_id=process_id, interface=interface)
+            elif interface:
                 cmd = self.cli_command[0].format(interface=interface)
+            elif process_id:
+                cmd = self.cli_command[2].format(process_id=process_id)
             else:
                 cmd = self.cli_command[1]
 
@@ -10655,3 +10669,610 @@ class ShowIpOspfNsr(ShowIpOspfNsrSchema):
                 continue
 
         return ret_dict
+
+# ====================
+# Schema for:
+#  * 'show ip ospf database database-summary'
+# ====================
+class ShowIpOspfDatabaseDatabaseSummarySchema(MetaParser):
+    ''' Schema for "show ip ospf database database-summary" '''
+
+    schema = {
+        Optional('instance'): {
+            Any(): {    # OSPF PID
+                'router_id': str,
+                'area_summary': {
+                    Any(): {     # Area Num
+                        'router': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'network': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_net': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_asbr': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_7_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'prefixes_redist_type_7': int,
+                        'opaque_link': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_area': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'subtotal': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                    }   
+                },
+                'process_summary': {
+                    Any(): {         # OSPF PID
+                        'router': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'network': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_net': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_asbr': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_7_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_link': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_area': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_5_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'prefixes_redist_type_5': int,
+                        'opaque_as': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'total': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'non_self': int
+                    }   
+                }
+            }
+        }
+    }
+
+
+
+# ====================
+# Parser for:
+#  * 'show ip ospf database database-summary'
+# ====================
+class ShowIpOspfDatabaseDatabaseSummary(ShowIpOspfDatabaseDatabaseSummarySchema):
+    ''' Parser for "show ip ospf database database-summary" '''
+
+    #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+
+    # Area 0 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      0        0        0       
+
+    # Area 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      0        0        0       
+
+    # Process 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Type-5 Ext    0        0        0       
+    #       Prefixes redistributed in Type-5  0
+    #   Opaque AS     0        0        0       
+    #   Total         0        0        0       
+    #   Non-self      0       
+
+    #             OSPF Router with ID (102.102.102.102) (Process ID 202)
+
+    # Area 0 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        2        0        0       
+    #   Network       1        0        0       
+    #   Summary Net   2        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      5        0        0       
+
+    # Area 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        2        0        0       
+    #   Network       1        0        0       
+    #   Summary Net   2        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      5        0        0       
+
+    # Process 202 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        4        0        0       
+    #   Network       2        0        0       
+    #   Summary Net   4        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Type-5 Ext    0        0        0       
+    #       Prefixes redistributed in Type-5  0
+    #   Opaque AS     0        0        0       
+    #   Total         10       0        0       
+    #   Non-self      3       
+
+    cli_command = 'show ip ospf database database-summary'
+
+    # Define a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # Define RegExes for each possible kind of line
+
+        #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<ospf_pid>(\d+))\)$')
+
+        # Area 0 database summary
+        p2 = re.compile(r'^Area +(?P<area_no>(\d+)) +database +summary$')
+
+        #   Router        0        0        0 
+        p3 = re.compile(r'^Router +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Network       0        0        0       
+        p4 = re.compile(r'^Network +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Summary Net   0        0        0       
+        p5 = re.compile(r'^Summary +Net +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Summary ASBR  0        0        0       
+        p6 = re.compile(r'^Summary +ASBR +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Type-7 Ext    0        0        0       
+        p7 = re.compile(r'^Type-7 +Ext +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #     Prefixes redistributed in Type-7  0
+        p8 = re.compile(r'^Prefixes +redistributed +in +Type-7 +(?P<prefixes_redist_type_7>(\d+))$')
+
+        #   Opaque Link   0        0        0       
+        p9 = re.compile(r'^Opaque +Link +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Opaque Area   0        0        0       
+        p10 = re.compile(r'^Opaque +Area +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Subtotal      0        0        0       
+        p11 = re.compile(r'^Subtotal +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        # Process 1 database summary
+        p12 = re.compile(r'^Process +(?P<ospf_pid>(\d+)) +database +summary$')
+  
+        #   Type-5 Ext    0        0        0      
+        p13 = re.compile(r'^Type-5 +Ext +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #       Prefixes redistributed in Type-5  0
+        p14 = re.compile(r'^Prefixes +redistributed +in +Type-5 +(?P<prefixes_redist_type_5>(\d+))$')
+
+        #   Opaque AS     0        0        0       
+        p15 = re.compile(r'^Opaque +AS +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Total         0        0        0       
+        p16 = re.compile(r'^Total +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Non-self      0   
+        p17 = re.compile(r'^Non-self +(?P<non_self_count>(\d+)) *$')
+
+
+        area_summary_update = False
+        process_summary_update = False
+
+        ospf_instance_dict = None
+        ospf_area_summary_dict = None
+        ospf_process_summary_dict = None
+
+
+        # Iterate over output lines to check which pattern is matched
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Try matching pattern 1
+            #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_instance_dict = parsed_dict.setdefault("instance",{}).setdefault(group["ospf_pid"],{})
+                ospf_instance_dict.update({
+                    'router_id': group["router_id"],
+                    'area_summary': {},
+                    'process_summary': {}
+                })
+                continue
+
+            # Try matching pattern 2
+            # Area 0 database summary
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area_summary_dict = ospf_instance_dict['area_summary'].setdefault(group["area_no"],{})
+                area_summary_update = True
+                process_summary_update = False
+                ospf_area_summary_dict.update({
+                    'router': None,
+                    'network': None,
+                    'summary_net': None,
+                    'summary_asbr': None,
+                    'type_7_ext': None,
+                    'prefixes_redist_type_7': None,
+                    'opaque_link': None,
+                    'opaque_area': None,
+                    'subtotal': None
+                })
+                continue
+
+            # Try matching pattern 3
+            #   Router        0        0        0 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'router': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'router': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 4
+            #   Network       0        0        0       
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'network': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'network': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 5
+            #   Summary Net   0        0        0       
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'summary_net': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'summary_net': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 6
+            #   Summary ASBR  0        0        0       
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'summary_asbr': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'summary_asbr': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 7
+            #   Type-7 Ext    0        0        0       
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'type_7_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'type_7_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 8
+            #     Prefixes redistributed in Type-7  0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'prefixes_redist_type_7': int(group["prefixes_redist_type_7"])
+                    })
+
+                continue
+
+            # Try matching pattern 9
+            #   Opaque Link   0        0        0       
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'opaque_link': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_link': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 10
+            #   Opaque Area   0        0        0       
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'opaque_area': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_area': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 11
+            #   Subtotal      0        0        0       
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'subtotal': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 12
+            # Process 1 database summary
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_process_summary_dict = ospf_instance_dict['process_summary'].setdefault(group["ospf_pid"],{})
+                process_summary_update = True
+                area_summary_update = False
+                ospf_process_summary_dict.update({
+                    'router': None,
+                    'network': None,
+                    'summary_net': None,
+                    'summary_asbr': None,
+                    'type_7_ext': None,
+                    'opaque_link': None,
+                    'opaque_area': None,
+                    'type_5_ext': None,
+                    'prefixes_redist_type_5': None,
+                    'opaque_as': None,
+                    'total': None,
+                    'non_self': None
+                })
+                continue
+
+            # Try matching pattern 13
+            #   Type-5 Ext    0        0        0      
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'type_5_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 14
+            #       Prefixes redistributed in Type-5  0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'prefixes_redist_type_5': int(group["prefixes_redist_type_5"])
+                    })
+                continue
+
+            # Try matching pattern 15
+            #   Opaque AS     0        0        0       
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_as': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 16
+            #   Total         0        0        0       
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'total': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 17
+            #   Non-self      0   
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'non_self': int(group["non_self_count"])
+                    })
+                continue
+        
+            
+        return parsed_dict

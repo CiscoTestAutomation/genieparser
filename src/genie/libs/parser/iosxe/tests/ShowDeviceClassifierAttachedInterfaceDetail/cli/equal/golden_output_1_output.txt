@@ -1,0 +1,7 @@
+Detail:
+
+MAC_Address    Port_Id  Cert Parent Proto ProfileType Profile Name              Device Name
+=========================================================================
+0016.47cd.9ab1  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+001b.5452.d947  TenGigabitEthernet1/0/1 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
+5006.0484.5b1d  TenGigabitEthernet1/0/1 20   1   C  M   Default  Cisco-Switch                 cisco WS-C3850-48P

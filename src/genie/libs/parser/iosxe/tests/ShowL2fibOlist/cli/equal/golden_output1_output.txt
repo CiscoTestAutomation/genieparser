@@ -1,0 +1,8 @@
+ID                            : 61
+Bridge Domain                 : 500
+Reference Count               : 1
+Flags                         : flood list
+Port Count                    : 3
+Port(s)                       : BD_PORT   Et0/0:500
+                              : BD_PORT   Et0/3:500
+                              : BD_PORT   Et1/0:500

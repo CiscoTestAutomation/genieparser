@@ -164,6 +164,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('cir_be_bytes'): int,
                                         Optional('pir_bc_bytes'): int,
                                         Optional('pir_be_bytes'): int,
+                                        Optional('rate_bps'): int,
+                                        Optional('burst_bytes'): int,
                                         Optional('police_bps'): int,
                                         Optional('police_limit'): int,
                                         Optional('extended_limit'): int,
@@ -612,7 +614,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p1 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                        'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
+                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*))$')
         
         # GigabitEthernet0/1/5 : Service Group 1
         p1_0 = re.compile(r'^(?P<top_level>(Giga.*)): +Service Group +(?P<service_group>(\d+))$')
@@ -684,6 +686,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # cir 10000000000 bps, bc 30000000 bytes, be 60000000 bytes
         p8_5 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +bc +(?P<pir_bc_bytes>(\d+)) bytes, +be +(?P<cir_be_bytes>(\d+)) bytes$')
+
+        # rate 1000000000 bps, burst 1024000 bytes
+        p8_6 = re.compile(r'^rate (?P<rate_bps>\d+) bps, burst (?P<burst_bytes>\d+) bytes$')
 
         # conformed 8 packets, 800 bytes; actions:
         p9 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
@@ -1162,6 +1167,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['pir_bc_bytes'] = int(m.groupdict()['pir_bc_bytes'])
                 police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
+                continue
+
+            # rate 1000000000 bps, burst 1024000 bytes
+            m = p8_6.match(line)
+            if m:
+                police_dict['rate_bps'] = int(m.groupdict()['rate_bps'])
+                police_dict['burst_bytes'] = int(m.groupdict()['burst_bytes'])
                 continue
 
             # conformed 8 packets, 800 bytes; actions:
@@ -1737,7 +1749,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 class_dict['fair_queue_limit_per_flow'] = int(m.groupdict()['queue_limit'])
 
-        
         return ret_dict
 
 
@@ -2788,6 +2799,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
         p16 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
         count=0
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -2846,7 +2858,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
                 class_line_type = None
                 queue_stats = 0
                 class_map = m.groupdict()['class_map']
-                class_map_dict = policy_name_dict.setdefault('class_map', {}).\
+                common_dict = class_map_dict = policy_name_dict.setdefault('class_map', {}).\
                                                   setdefault(class_map, {})
                 class_map_dict['match_evaluation'] =  m.groupdict()['match_all']
                 continue
@@ -2863,7 +2875,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 priority_level_status = True
                 priority_level = m.groupdict()['priority_level']
-                priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
+                common_dict = priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
                 priority_dict['queueing'] = queueing_val
                 continue
 
@@ -2928,19 +2940,19 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
             # queue limit 62500 bytes
             m = p8.match(line)
             if m:
-                class_map_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                common_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
                 continue
                 
             # (total drops) 0
             m = p9.match(line)
             if m:
-                class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                common_dict['total_drops'] = int(m.groupdict()['total_drops'])
                 continue
             
             # (bytes output) 0
             m = p10.match(line)
             if m:
-                class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                common_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
                 continue
                 
             # shape (average) cir 474656, bc 1899, be 1899
@@ -3021,5 +3033,3 @@ class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperPar
         
         # Call super      
         return super().cli(output=output, interface=interface, class_name=class_name)
-
-

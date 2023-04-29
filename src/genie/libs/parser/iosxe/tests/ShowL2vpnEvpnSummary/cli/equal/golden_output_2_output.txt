@@ -1,0 +1,44 @@
+# golden_output_2_expected.py
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+L2VPN EVPN
+  EVPN Instances (excluding point-to-point): 6
+    VLAN Aware:   2
+    VLAN Based:   2
+    VLAN Bundle:  2
+  Bridge Domains: 10
+  BGP: ASN 1, address-family l2vpn evpn configured
+  Router ID: 10.10.10.10
+  Label Allocation Mode: Per-BD
+  Global Replication Type: Ingress
+  ARP/ND Flooding Suppression: Enabled
+  Connectivity to Core: UP
+  MAC Duplication: seconds 180 limit 5
+  MAC Addresses: 40
+    Local:     20
+    Remote:    20
+    Duplicate: 0
+  IP Duplication: seconds 180 limit 5
+  IP Addresses: 40
+    Local:     20
+    Remote:    20
+    Duplicate: 0
+  Advertise Default Gateway: No
+  Default Gateway Addresses: 0
+   Local:      0
+   Remote:     0
+  Maximum number of Route Targets per EAD-ES route: 200
+  Multi-home aliasing: Enabled
+  Global IP Local Learn: Enabled
+  IP local learning limits
+    IPv4: 4 addresses per-MAC
+    IPv6: 12 addresses per-MAC
+  IP local learning timers
+    Down:      10 minutes
+    Poll:      1 minutes
+    Reachable: 5 minutes
+    Stale:     30 minutes
+  Auto route-target: evi-id based
+  Advertise Multicast: No

@@ -105,6 +105,7 @@ IOSXE parsers for the following show commands:
     * show bgp {address_family} {route}
     * show ip bgp {address_family} rd {rd} {route}
     * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
+    * show bgp l2vpn evpn evi {evi_id} route-type {route_type}
 '''
 
 # Python
@@ -238,7 +239,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         #  *>   [3][3001:1][*][*][1.1.1.1]/14
-        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+        # *m   [2][2.2.2.2:1][0][48][000C293B2157][0][*]/20
+        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|m|\s)+)?'
                           r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-\*]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
@@ -1048,8 +1050,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
         # 3
         # 38         44         45
-        p6_3 = re.compile(r'^(?P<group1>(\d+))'
-                          r'(?: +(?P<group2>(\d+)) +(?P<group3>(\d+)))?$')
+        p6_3 = re.compile(r'(?P<group1>(\d+))'
+                          r'(?: +(?P<group2>(\d+)))?(?: +(?P<group3>(\d+)))?')
 
         # Refresh Epoch 1
         p7 = re.compile(r'^Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
@@ -1658,12 +1660,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             m = p6_3.match(line)
             if m and next_line_update_group:
                 group = m.groupdict()
-                if group['group2'] and group['group3']:
+                if group['group2'] or group['group3']:
                     update_group = []
                     for item in group:
-                        update_group.append(int(group[item]))
-                        # in-place sort is more efficient
-                        update_group.sort()
+                        if group[item]:
+                            update_group.append(int(group[item]))
+                            # in-place sort is more efficient
+                            update_group.sort()
                 else:
                     update_group = int(group['group1'])
                 next_line_update_group = False
@@ -2403,7 +2406,9 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         #  Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         #  2001:DB8:20:4:6::6
         #           4          400      67      73       66    0    0 01:03:11        5
-        p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
+        #  *2001::100:1:2:1
+        #                  4        65001       7       7      198    0    0 00:00:02        1
+        p10 = re.compile(r'^(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
                           ' +(?P<as>[0-9]+(\.\d+)?) +(?P<msg_rcvd>[0-9]+)'
@@ -3254,6 +3259,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
         # BGP neighbor is 10.4.11.2, remote AS 101.101, external link
+        # BGP neighbor is 10.10.11.1, vrf CustA-VPN1, remote AS 4200000001, local AS 4200000101 no-prepend replace-as, external link
         p2_3 = re.compile(r'^BGP +neighbor +is +(?P<neighbor>(\S+)),'
                            '(?: +vrf +(?P<vrf>(\S+)),)?'
                            ' +remote +AS +(?P<remote_as>([\d\.]+)),'
@@ -3675,11 +3681,15 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
             # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
             # BGP neighbor is 10.4.11.2, remote AS 101.101, external link
+            # BGP neighbor is 10.10.11.1, vrf CustA-VPN1, remote AS 4200000001, local AS 4200000101 no-prepend replace-as, external link
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
                 neighbor = group['neighbor']
-                vrf = 'default'
+                vrf = group['vrf']
+                # if no vrf is configured - set vrf to 'default'
+                if not vrf:
+                    vrf = 'default'
 
                 # Add to neighbors list
                 list_of_neighbors.append(neighbor)
@@ -7750,3 +7760,275 @@ class ShowIpBgpMdtVrf(ShowBgpSuperParser, ShowBgpSchema):
 
         # Call Super
         return super().cli(output=output, address_family=address_family, vrf=vrf)
+
+
+
+# ======================================================
+# Parser for 'show bgp l2vpn evpn evi {evi_id} route-type {route_type} '
+# ======================================================
+
+class ShowBgpL2vpnEvpnEviRouteTypeSchema(MetaParser):
+    """Schema for show bgp l2vpn evpn evi {evi_id} route-type {route_type}"""
+
+    schema = {
+        'bgp_routing_table': str,
+	'version': {
+            Any():{
+                'evi_num': str,
+                'advertise': str,
+                'refresh': str,
+                Optional('import_path'): str,
+                'vtep_loopback': str,
+                'dist_loopback': str,
+                Optional('origin'): str,
+                Optional('metric'): int,
+                Optional('local_pref'): int,
+                Optional('community'): str,
+                'extended_community': str,
+                'encap': int,
+                Optional('originator'): str,
+                Optional('cluster_list'): str,
+                'pmsi_flags': str,
+                'tunnel_type': str,
+                'length': int,
+                'vni_id': int,
+                'tunnel_id': str,
+                Optional('vrf'): str,
+                Optional('l3_vni'): int,
+                Optional('local_router_mac'): str,
+                Optional('core_irb_intf'): str,
+                Optional('vtep_ip'): str,
+                'rx_path_id': str,
+                'tx_path_id': str,
+                'date_time': str,
+            },
+        }
+    }
+
+class ShowBgpL2vpnEvpnEviRouteType(ShowBgpL2vpnEvpnEviRouteTypeSchema):
+    """Parser for show bgp l2vpn evpn evi {evi_id} route-type {route_type}"""
+
+    cli_command = 'show bgp l2vpn evpn evi {evi_id} route-type {route_type}'
+
+    def cli(self, evi_id, route_type, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(evi_id=evi_id, route_type=route_type))
+
+        # BGP routing table entry for [3][172.11.1.22:99][0][32][172.11.1.1]/17, version 264
+        p1 = re.compile(r"^BGP\s+routing\s+table\s+entry\s+for\s+\[+\d+\]+\[+(?P<bgp_routing_table>(\d{1,3}\.){3}\d{1,3}\:\d+)+\]+\S+\s+version+\s(?P<version>\S+)$")
+
+        # Paths: (1 available, best #1, table evi_99)
+        p2 = re.compile(r"^Paths:\s+\(1\s+available,\s+best\s+#1,\s+table\s+(?P<evi_num>\S+)\)$")
+
+        # Not advertised to any peer
+        p3_1 = re.compile(r"^(?P<advertise>\S+\s+\S+)\s+to\s+any\s+peer$")
+
+        # Advertised to update-groups:
+        p3_2 = re.compile(r"^(?P<advertise>\S+)\s+to\s+update-+groups:$")
+
+        # Refresh Epoch 1
+        p4 = re.compile(r"^Refresh\s+(?P<refresh>\S+\s+\d+)$")
+
+        # Local, imported path from [3][172.11.1.2:99][0][32][172.11.1.2]/17 (global)
+        p5 = re.compile(r"^Local,+\s+imported\s+path\s+from\s+(?P<import_path>\S+)+\s+\(+global\)$")
+
+        # 172.11.1.2 (metric 30) (via default) from 172.11.1.11 (172.11.1.11)
+        p6 = re.compile(
+            r"^(?P<vtep_loopback>\S+)\s+\(+metric\s+\d+\)+\s+\(via\s+default+\)+\s+from+\s+(?P<dist_loopback>\S+)\s+\S+$")
+
+        # 0.0.0.0 (via default) from 0.0.0.0 (172.11.1.22)
+        p6_1 = re.compile(r"^(?P<vtep_loopback>(\d{1,3}\.){3}\d{1,3})+\s+\(+via\s+default\)+\s+from\s+(?P<dist_loopback>(\d{1,3}\.){3}\d{1,3})\s+\S+$")
+
+        #      Origin incomplete, metric 0, localpref 100, valid, internal, best
+        p7 = re.compile(
+            r"^Origin\s+(?P<origin>\w+),\s+metric\s+(?P<metric>\d+),\s+localpref\s+(?P<local_pref>\d+),\s+valid,\s+internal,\s+best$")
+
+        # Community: 999:999
+        p7_1 = re.compile(r"^Community:\s+(?P<community>\S+)$")
+
+        #      Extended Community: RT:9999:99 ENCAP:8
+        p8 = re.compile(r"^Extended\s+Community:\s+(?P<extended_community>\S+)\s+ENCAP:(?P<encap>\d+)$")
+
+        #      Originator: 172.11.2.1, Cluster list: 172.11.1.11
+        p9 = re.compile(
+            r"^Originator:\s+(?P<originator>(\d{1,3}\.){3}\d{1,3}),\s+Cluster\s+list:\s+(?P<cluster_list>(\d{1,3}\.){3}\d{1,3})$")
+
+        #      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200199, tunnel identifier: < Tunnel Endpoint: 172.11.1.1 >
+        p10 = re.compile(
+            r"PMSI\s+Attribute:\s+Flags:(?P<pmsi_flags>\S+),\s+Tunnel\s+type:+(?P<tunnel_type>\w+),\s+length\s+(?P<length>\d+),\s+vni:+(?P<vni_id>\d+),\s+tunnel\s+identifier:\s+(?P<tunnel_id>.*)$")
+
+        # Local irb vxlan vtep:
+        p11 = re.compile(r"^Local\s+irb\s+(?P<vxlan_vtep>\w+\s+\w+)$")
+
+        #        vrf:not found, l3-vni:0
+        p12 = re.compile(r"^vrf:+(?P<vrf>\w+\s+\w+),\s+l3-vni:+(?P<l3_vni>\d+)$")
+
+        #        local router mac:0000.0000.0000
+        p13 = re.compile(r"^local\s+router\s+mac:+(?P<local_router_mac>\S+)$")
+
+        #        core-irb interface:(not found)
+        p14 = re.compile(r"^core-irb\s+interface:+(?P<core_irb_intf>\S+\s+\S+)$")
+
+        #        vtep-ip:172.11.1.22
+        p15 = re.compile(r"^vtep-ip:+(?P<vtep_ip>\S+)$")
+
+        #      rx pathid: 0, tx pathid: 0x0
+        p16 = re.compile(r"^rx\s+pathid:\s+(?P<rx_path_id>\S+),\s+tx\s+pathid:\s+(?P<tx_path_id>\S+)$")
+
+        #      Updated on Jan 22 2023 07:59:46 UTC
+        p17 = re.compile(r"^Updated\s+on\s+(?P<date_time>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # BGP routing table entry for [3][172.11.1.22:99][0][32][172.11.1.1]/17, version 264
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'bgp_routing_table': group['bgp_routing_table']})
+                version = int(group['version'])
+                bgp_dict = ret_dict.setdefault('version', {})
+                version_dict = bgp_dict.setdefault(version, {})
+                continue
+
+            # Paths: (1 available, best #1, table evi_99)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'evi_num': group['evi_num']})
+                continue
+
+            # Not advertised to any peer
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['advertise'] = group['advertise']
+                continue
+
+            # Advertised to update-groups:
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['advertise'] = group['advertise']
+                continue
+
+            # Refresh Epoch 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['refresh'] = group['refresh']
+                continue
+
+            # Local, imported path from [3][172.11.1.2:99][0][32][172.11.1.2]/17 (global)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['import_path'] = group['import_path']
+                continue
+
+            # 172.11.1.2 (metric 30) (via default) from 172.11.1.11 (172.11.1.11)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['vtep_loopback'] = group['vtep_loopback']
+                version_dict['dist_loopback'] = group['dist_loopback']
+                continue
+
+            # 0.0.0.0 (via default) from 0.0.0.0 (172.11.1.22)
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['vtep_loopback'] = group['vtep_loopback']
+                version_dict['dist_loopback'] = group['dist_loopback']
+                continue
+
+            #      Origin incomplete, metric 0, localpref 100, valid, internal, best
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['origin'] = group['origin']
+                version_dict['metric'] = int(group['metric'])
+                version_dict['local_pref'] = int(group['local_pref'])
+                continue
+
+            #  Community: 999:999
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['community'] = group['community']
+                continue
+
+            #      Extended Community: RT:9999:99 ENCAP:8
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['extended_community'] = group['extended_community']
+                version_dict['encap'] = int(group['encap'])
+                continue
+
+            #      Originator: 172.11.2.1, Cluster list: 172.11.1.11
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['originator'] = group['originator']
+                version_dict['cluster_list'] = group['cluster_list']
+                continue
+
+            #      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200199, tunnel identifier: < Tunnel Endpoint: 172.11.1.1 >
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['pmsi_flags'] = group['pmsi_flags']
+                version_dict['tunnel_type'] = group['tunnel_type']
+                version_dict['length'] = int(group['length'])
+                version_dict['vni_id'] = int(group['vni_id'])
+                version_dict['tunnel_id'] = group['tunnel_id']
+                continue
+
+            #        vrf:not found, l3-vni:0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['vrf'] = group['vrf']
+                version_dict['l3_vni'] = int(group['l3_vni'])
+                continue
+
+            #        local router mac:0000.0000.0000
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['local_router_mac'] = group['local_router_mac']
+                continue
+
+            #        core-irb interface:(not found)
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['core_irb_intf'] = group['core_irb_intf']
+                continue
+
+            #        vtep-ip:172.11.1.22
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['vtep_ip'] = group['vtep_ip']
+                continue
+
+            #      rx pathid: 0, tx pathid: 0x0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['rx_path_id'] = group['rx_path_id']
+                version_dict['tx_path_id'] = group['tx_path_id']
+                continue
+
+            #      Updated on Jan 22 2023 07:59:46 UTC
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict['date_time'] = group['date_time']
+                continue
+
+        return ret_dict

@@ -1,0 +1,8 @@
+show lisp instance-id 101 ipv4 database 192.168.1.0/24
+LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf red (IID 101), LSBs: 0x0
+Entries total 1, no-route 0, inactive 0, do-not-register 0
+
+192.168.1.0/24, locator-set RLOC
+  Uptime: 00:00:36, Last-change: 00:00:10
+  Domain-ID: local
+  Service-Insertion: N/A

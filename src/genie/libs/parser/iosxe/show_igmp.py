@@ -12,6 +12,7 @@ IOSXE parsers for the following show commands:
     * show ip igmp snooping mrouter
     * show ip igmp snooping querier
     * show ip igmp snooping groups
+    * show ip igmp vrf {vrf} snooping groups
 """
 
 # Python
@@ -20,6 +21,8 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.libs.parser.utils.common import Common
+from genie.parsergen import oper_fill_tabular
 
 
 # ==============================================
@@ -890,29 +893,140 @@ class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-
-            #801       225.6.1.1                igmp        v2          pw100155
-            p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>\w+)$')
+            # 801       225.6.1.1                igmp        v2          pw100155
+            # 10        225.1.1.1                igmp        v2          Tw1/0/4, Tw1/0/25
+            p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>[\S,\s]+)$')
 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-
-                ret_dict = igmp_dict.setdefault('igmp_groups', {})
-
-                group_ip = group['group_ip']
-                vlan_id = group['vlan_id']
-                type = group['type']
-                port = group['port']
-                version = group['version']
-
-                ret_dict[group_ip] = {}
-                ret_dict[group_ip]['vlan_id'] = vlan_id
-                ret_dict[group_ip]['type'] = type
-                ret_dict[group_ip]['version'] = version
-                ret_dict[group_ip]['port'] = port
+                igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group_ip'), group)
 
         return igmp_dict
+
+
+# =====================================================================
+# Schema for 'show ip igmp snooping groups vlan <vlan> <group> sources'
+# ====================================================================
+class ShowIpIgmpSnoopingGroupsVlanSourcesSchema(MetaParser):
+    """ Schema for show ip igmp snooping groups vlan <vlan> <group> sources """
+    schema = {
+        'source_ip': {
+            str: {
+                'port_list': str,
+            }
+        },
+    }
+
+
+# =====================================================================
+# Parser for 'show ip igmp snooping groups vlan <vlan> <group> sources'
+# =====================================================================
+class ShowIpIgmpSnoopingGroupsVlanSources(
+        ShowIpIgmpSnoopingGroupsVlanSourcesSchema):
+    """ Parser for show ip igmp snooping groups vlan <vlan> <group> sources """
+
+    cli_command = ['show ip igmp snooping groups vlan {vlan} {group} sources']
+
+    def cli(self, vlan=None, group=None, output=None):
+
+        cmd = self.cli_command[0].format(vlan=vlan, group=group)
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        parsed_dict = {}
+
+        if 'SourceIP' not in out:
+            return parsed_dict
+
+        out = out[out.index('SourceIP'):]
+
+        # initial regexp pattern
+        # 192.168.11.11 00:01:31 00:02:32 1/0 Et0/2
+        p1 = re.compile(r'^(?P<source>[0-9a-fA-F\.:]+)\s+[\d:\w]+\s+[\d:\w]+'
+                        r'\s+\d+\/\d+\s+(?P<port_list>[\w\/:]+)$')
+        # 192.168.11.11 stopped 00:02:32 1/0
+        p2 = re.compile(r'^(?P<source>[0-9a-fA-F\.:]+)\s+[\d:\w]+'
+                        r'\s+[\d:\w]+\s+\d+\/\d+$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # 192.168.11.11 00:01:31 00:02:32 1/0 Et0/2
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                parsed_dict.setdefault('source_ip', {})
+                parsed_dict['source_ip'].update({
+                    group_dict['source']: {
+                        'port_list': group_dict['port_list'],
+                    }
+                })
+                continue
+
+            # 192.168.11.11 stopped 00:02:32 1/0
+            m = p2.match(line)
+            if m:
+                group_dict = m.groupdict()
+                parsed_dict.setdefault('source_ip', {})
+                parsed_dict['source_ip'].update({
+                    group_dict['source']: {
+                        'port_list': '',
+                    }
+                })
+                continue
+
+        return parsed_dict
+
+
+# ===================================================================
+# Schema for 'show ip igmp snooping groups vlan <vlan> <group> hosts'
+# ===================================================================
+class ShowIpIgmpSnoopingGroupsVlanHostsSchema(MetaParser):
+    """ Schema for show ip igmp snooping groups vlan <vlan> <group> hosts"""
+    schema = {
+        Any(): {
+            'host_addr': str,
+            'filter': str,
+            'expire': str,
+            'uptime': str,
+            'sources': str,
+        },
+    }
+
+
+# ===================================================================
+# Parser for 'show ip igmp snooping groups vlan <vlan> <group> hosts'
+# ===================================================================
+class ShowIpIgmpSnoopingGroupsVlanHosts(
+        ShowIpIgmpSnoopingGroupsVlanHostsSchema):
+    """ Parser for show ip igmp snooping groups vlan <vlan> <group> hosts """
+
+    cli_command = ['show ip igmp snooping groups vlan {vlan} {group} hosts']
+
+    def cli(self, vlan=None, group=None, output=None):
+        cmd = self.cli_command[0].format(vlan=vlan, group=group)
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = oper_fill_tabular(
+            header_fields=["Host \(MAC\/IP\)", "Filter mode",
+                           "Expires", "Uptime", "# Sources"],
+            label_fields=['host_addr', 'filter', 'expire', 'uptime', 'sources'],
+            index=[0], device_output=out, device_os='iosxe'
+        ).entries
+
+        return parsed_dict
+
 
 # ========================================================
 # Parser for 'show ip igmp vrf vrf3001 groups'
@@ -999,3 +1113,95 @@ class ShowIpIgmpSnoopingGroupsCount(ShowIpIgmpSnoopingGroupsCountSchema):
                 igmp_groups_count_dict['igmp_groups_count'] = int(group['igmp_groups_count'])
 
         return ret_dict
+
+
+class ShowIpIgmpVrfSnoopingGroupsSchema(MetaParser):
+    '''Schema for show ip igmp vrf {vrf} snooping groups'''
+    schema = {
+        Any(): {
+            'vlan': int,
+            'group': str,
+            'type': str,
+            'version': str,
+            'port_list': list
+        }
+    }
+
+
+class ShowIpIgmpVrfSnoopingGroups(ShowIpIgmpVrfSnoopingGroupsSchema):
+    '''Parser for show ip igmp vrf {vrf} snooping groups'''
+
+    cli_command = 'show ip igmp vrf {vrf} snooping groups'
+
+    def cli(self, vrf="", output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+
+        # 10        232.1.1.1                igmp        v3          Te1/0/3
+        p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<group>\S+)\s+(?P<type>\S+)\s+(?P<version>\S+)\s+(?P<port_list>[\w/\.\s]+)$')
+
+        ret_dict = {}
+        count = 1
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 10        232.1.1.1                igmp        v3          Te1/0/3
+            m = p1.match(line)
+            if m:
+                output = m.groupdict()
+                group_dict = ret_dict.setdefault(str(count), {})
+                group_dict.setdefault('vlan', int(output['vlan']))
+                group_dict.setdefault('group', output['group'])
+                group_dict.setdefault('type', output['type'])
+                group_dict.setdefault('version', output['version'])
+                port_list = [Common.convert_intf_name(intf) for intf in re.findall(r'[\w/\.]+', output['port_list'])]
+                group_dict.setdefault('port_list', port_list)
+                count += 1
+        return ret_dict
+
+# ========================================================
+# Parser for 'show ip igmp groups'
+# ========================================================
+
+class ShowIpIgmpGroupsSchema(MetaParser):
+    """
+    Schema for 'show ip igmp groups'
+    """
+
+    schema = {
+        'igmp_groups': {
+            Any(): {
+                'intf': str,
+                'uptime': str,
+                'expires': str,
+                'last_reporter': str,
+            },
+        }
+    }
+
+
+class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
+    """
+    Parser for 'show ip igmp groups'
+    """
+    cli_command = 'show ip igmp groups'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        igmp_dict = {}
+        
+        # 228.0.8.204      Vlan10                   00:02:26  00:02:45  60.1.1.2
+        p1=re.compile(r'^(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 228.0.8.204      Vlan10                   00:02:26  00:02:45  60.1.1.2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
+        return igmp_dict

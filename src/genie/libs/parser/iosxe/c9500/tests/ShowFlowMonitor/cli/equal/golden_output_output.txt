@@ -1,0 +1,49 @@
+show flow monitor
+Flow Monitor FLOW_MONITOR_V4_IN:
+  Description:       User defined
+  Flow Record:       FLOWS_V4_INPUT
+  Flow Exporter:     FLOW_COLLECTOR
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     60 secs
+    Active Timeout:       180 secs
+
+
+Flow Monitor FLOW_MONITOR_V4_OUT:
+  Description:       User defined
+  Flow Record:       FLOWS_V4_OUTPUT
+  Flow Exporter:     FLOW_COLLECTOR
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     60 secs
+    Active Timeout:       180 secs
+
+
+Flow Monitor FLOW_MONITOR_V6_IN:
+  Description:       User defined
+  Flow Record:       FLOWS_V6_INPUT
+  Flow Exporter:     FLOW_COLLECTOR
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               allocated
+    Size:                 10000 entries
+    Inactive Timeout:     60 secs
+    Active Timeout:       180 secs
+
+
+Flow Monitor FLOW_MONITOR_V6_OUT:
+  Description:       User defined
+  Flow Record:       FLOWS_V6_OUTPUT
+  Flow Exporter:     FLOW_COLLECTOR
+  Cache:
+    Type:                 normal (Platform cache)
+    Status:               not allocated
+    Size:                 10000 entries
+    Inactive Timeout:     60 secs
+    Active Timeout:       180 secs
+
+

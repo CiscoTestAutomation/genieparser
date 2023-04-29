@@ -1,0 +1,4 @@
+Sessions for VRF default, total: 5, established: 2
+Peer                           State      Up/Down        In/Out   Users  RTT(ms)
+201.201.201.201:22400          Up         00:05:12       14/16    4      125
+202:202:202:202::.13541        Up         00:05:12       12/13    4      125

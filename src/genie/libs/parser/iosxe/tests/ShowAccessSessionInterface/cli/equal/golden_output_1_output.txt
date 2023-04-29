@@ -1,0 +1,23 @@
+show access-session interface TenGigabitEthernet3/0/1
+Interface                MAC Address    Method  Domain  Status Fg  Session ID
+--------------------------------------------------------------------------------------------
+Te3/0/1                  50f7.222b.f673 N/A     UNKNOWN Unauth      07001BAC0000000C82D79139
+Te3/0/1                  cc98.9114.9d9e N/A     UNKNOWN Unauth      000000000000000B82D759B9
+
+Key to Session Events Blocked Status Flags:
+
+  A - Applying Policy (multi-line status for details)
+  D - Awaiting Deletion
+  F - Final Removal in progress
+  I - Awaiting IIF ID allocation
+  P - Pushed Session
+  R - Removing User Profile (multi-line status for details)
+  U - Applying User Profile (multi-line status for details)
+  X - Unknown Blocker
+
+Runnable methods list:
+  Handle  Priority  Name
+      13         5  dot1xSup
+       1         5  dot1x
+       2        10  webauth
+      14        15  mab

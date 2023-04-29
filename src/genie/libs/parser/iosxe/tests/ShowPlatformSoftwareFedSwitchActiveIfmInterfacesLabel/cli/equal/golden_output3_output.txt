@@ -1,0 +1,10 @@
+Interface                         IF_ID               State
+----------------------------------------------------------------------
+LISP0.4103                        0x0000054d          Ready
+LISP0.4100                        0x00000565          Ready
+LISP0.4101                        0x00000567          Ready
+LISP0.4099                        0x00000569          Ready
+LISP0.4102                        0x0000056b          Ready
+LISP0.4104                        0x0000056d          Ready
+LISP0.4105                        0x0000056f          Ready
+LISP0.4122                        0x00000577          Ready

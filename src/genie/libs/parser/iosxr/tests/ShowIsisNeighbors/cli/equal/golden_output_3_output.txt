@@ -1,0 +1,9 @@
+show isis instance 10 neighbors
+Thu Feb  2 08:35:23.776 UTC
+
+IS-IS 10 neighbors:
+System Id      Interface        SNPA           State Holdtime Type IETF-NSF
+PE-9001-1      BE10.10          5087.890d.27c3 Up    20       L2   Capable 
+PE-9001-1      Gi0/0/0/1.19     28c7.cebd.7c23 Up    25       L2   Capable 
+
+Total neighbor count: 2

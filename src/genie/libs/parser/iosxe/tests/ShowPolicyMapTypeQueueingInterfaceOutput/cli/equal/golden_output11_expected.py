@@ -35,20 +35,26 @@ expected_output = {
                                 'shape_type': 'average',
                                 'target_shape_rate': 1000000000
                                 }
-                            },
-                            'queue_stats_for_all_priority_classes': {
-                                'priority_level': {
-                                     '1': {
-                                        'queueing': True
-                                        },
-                                      '2': {
-                                          'queueing': True
-                                          }
-                                      }
+                        },
+                        'queue_stats_for_all_priority_classes': {
+                            'priority_level': {
+                                '1': {
+                                    'queueing': True,
+                                    'queue_limit_bytes': 96000,
+                                    'total_drops': 0,
+                                    'bytes_output': 0
+                                },
+                                '2': {
+                                    'queueing': True,
+                                    'queue_limit_bytes': 96000,
+                                    'total_drops': 0,
+                                    'bytes_output': 0
                                 }
                             }
+                        }
                     }
-                },
+                }
+            },
             'output': {
                 'policy_name': {
                     'parent': {
@@ -58,7 +64,7 @@ expected_output = {
                                 'match': ['any'],
                                 'match_evaluation': 'match-any',
                                 'packets': 0,
-                                'queue_limit_bytes': 96000,
+                                'queue_limit_bytes': 7500000,
                                 'queueing': True,
                                 'shape_bc_bps': 8000000,
                                 'shape_be_bps': 8000000,
@@ -66,13 +72,11 @@ expected_output = {
                                 'shape_type': 'average',
                                 'target_shape_rate': 2000000000,
                                 'total_drops': 0
-                                }
                             }
                         }
                     }
                 }
             }
         }
-    
-   }
-    
+    }  
+}

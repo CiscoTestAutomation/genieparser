@@ -1,0 +1,29 @@
+expected_output = {
+   "reload_fast_supported":"Yes",
+   "reload_fast_platform_stauts":"Not started yet",
+   "stack_configuration":"Yes",
+   "eligibility_check":{
+      "autoboot_enabled":{
+         "status":"Yes"
+      },
+      "install_mode":{
+         "status":"Yes"
+      },
+      "network_advantage_license":{
+         "status":"Yes"
+      },
+      "full_ring_stack":{
+         "status":"Yes"
+      },
+      "check_macsec_eligibility":{
+         "status":"Eligible"
+      },
+      "spanning_tree":{
+         "status":"Ineligible",
+         "root_switch_with_forwarding_link":"VLAN0069"
+      },
+      "sso_mode":{
+         "status":"Yes"
+      }
+   }
+}
