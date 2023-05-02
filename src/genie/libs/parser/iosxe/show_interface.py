@@ -30,6 +30,8 @@
     * show pm vp interface {interface} {vlan}
     * show pm port interface {interface}
     * show interfaces transceiver supported-list
+    * show interfaces capabilities
+    * show interfaces {interface} capabilities    
 """
 
 import os
@@ -5350,6 +5352,330 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['port_age'] = group['age_of_port']
+                continue
+
+        return ret_dict
+
+# ====================================================
+# Schema for show interfaces capabilities
+# ====================================================
+class ShowInterfacesCapabilitiesSchema(MetaParser):
+    schema = {
+        # 'interfaces': {
+            Any(): {
+                ('model'): str,
+                Optional('type'): str,
+                Optional('speed'): list,
+                Optional('duplex'): list,
+                Optional('trunk_encap_type'): str,
+                Optional('trunk_mode'): list,
+                Optional('channel'): bool,
+                Optional('broadcast_suppression'): str,
+                Optional('unicast_suppression'): str,
+                Optional('multicast_suppression'): str,
+                Optional('flowcontrol'): {
+                    'flowcontrol_rx': list,
+                    'flowcontrol_tx': list,
+                },
+                Optional('fast_start'): bool,
+                Optional('qos_scheduling'): {
+                    'qos_scheduling_rx': str,
+                    'qos_scheduling_tx': str,
+                },
+                Optional('cos_rewrite'): bool,
+                Optional('tos_rewrite'): bool,
+                Optional('udld'): bool,
+                Optional('inline_power'): bool,
+                Optional('span'): str,
+                Optional('portsecure'): bool,
+                Optional('dot1x'): bool,    
+                Optional('breakout_support'): str,
+                Optional('media_types'): list
+            }
+        }
+
+# ==========================================================
+#  Parser for show interfaces capabilities
+# ==========================================================
+class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
+    """ Parser for
+        * show interfaces capabilities
+        * show interfaces {interface} capabilities
+    """
+
+    cli_command = ['show interfaces capabilities',
+                   'show interfaces {interface} capabilities']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                output = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # TenGigabitEthernet1/1/4
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+)$')
+
+        #  Model:                 WS-C3850-48P
+        p2 = re.compile(r'Model:\s+(?P<model>.*$)')
+
+        #  Type:                  SFP-10GBase-CX1
+        p3 = re.compile(r'Type:\s+(?P<type>.*$)')
+
+        #  Speed:                 10,100,1000,auto
+        p4 = re.compile(r'Speed:\s+(?P<speeds>.*$)')
+
+        #  Duplex:                full,half,auto
+        p5 = re.compile(r'Duplex:\s+(?P<duplex>.*$)')
+
+        #  Trunk encap. type:     802.1Q
+        p6 = re.compile(r'Trunk +encap[.] +type:\s+(?P<trunk_encap_type>.*$)')
+
+        #  Trunk mode:            on,off,desirable,nonegotiate
+        p7 = re.compile(r'Trunk +mode:\s+(?P<trunk_mode>.*$)')
+
+        #  Channel:               yes
+        p8 = re.compile(r'Channel:\s+(?P<channel>.*$)')
+
+        #  Broadcast suppression: percentage(0-100)
+        p9 = re.compile(r'Broadcast +suppression:\s+(?P<broadcast_suppression>.*$)')
+
+        #  Unicast suppression:   percentage(0-100)
+        p10 = re.compile(r'Unicast +suppression:\s+(?P<unicast_suppression>.*$)')
+
+        #  Multicast suppression: percentage(0-100)
+        p11 = re.compile(r'Multicast +suppression:\s+(?P<multicast_suppression>.*$)')
+
+        #  Flowcontrol:           rx-(off,on,desired),tx-(none)
+        # p12 = re.compile(r'Flowcontrol:\s+(?P<flowcontrol>.*$)')
+        p12 = re.compile(r'Flowcontrol:\s+rx-\((?P<flowcontrol_rx>.*)\),tx-\((?P<flowcontrol_tx>.*)\)$')
+
+        #  Fast Start:            yes
+        p13 = re.compile(r'Fast +Start:\s+(?P<fast_start>.*$)')
+
+        #QoS scheduling:        rx-(not configurable on per port basis),
+        #                       tx-(2p6q3t)
+        p14a = re.compile(r'QoS +scheduling:\s+rx-\((?P<qos_scheduling_rx>.*)\),')
+
+        #                       tx-(2p6q3t)
+        p14b = re.compile(r'tx-\((?P<qos_scheduling_tx>\S+)\)')
+
+        #CoS rewrite:           yes
+        p15 = re.compile(r'Cos +rewrite:\s+(?P<cos_rewrite>.*$)')
+
+        #  ToS rewrite:           yes
+        p16 = re.compile(r'Tos +rewrite:\s+(?P<tos_rewrite>.*$)')
+
+        #  UDLD:                  yes
+        p17 = re.compile(r'UDLD:\s+(?P<udld>.*$)')
+
+        #   Inline power:          no
+        p18 = re.compile(r'Inline +power:\s+(?P<inline_power>.*$)')
+
+        #  SPAN:                  source/destination
+        p19 = re.compile(r'SPAN:\s+(?P<span>.*$)')
+
+        #  PortSecure:            yes
+        p20 = re.compile(r'PortSecure:\s+(?P<portsecure>.*$)')
+
+        #  Dot1x:                 yes
+        p21 = re.compile(r'Dot1x:\s+(?P<dot1x>.*$)')
+
+        #  Breakout Support:      not applicable
+        p22 = re.compile(r'Breakout +Support:\s+(?P<breakout_support>.*$)')
+
+        #  Multiple Media Types:  rj45, sfp, auto-select
+        p23 = re.compile(r'Multiple Media Types:\s+(?P<media_types>.*$)')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #TenGigabitEthernet1/1/4
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                if intf not in ret_dict:
+                    ret_dict[intf] = {}
+                continue
+
+            #  Model:                 WS-C3850-48P
+            m = p2.match(line)
+            if m:
+                ret_dict[intf]['model'] = m.groupdict()['model']
+                continue
+
+            #  Type:                  SFP-10GBase-CX1
+            m = p3.match(line)
+            if m:
+                ret_dict[intf]['type'] = m.groupdict()['type']
+                continue        
+
+            #  Speed:                 10,100,1000,auto
+            m = p4.match(line)
+            if m:
+                speed_list = m.groupdict()['speeds'].split(',')
+                ret_dict[intf]['speed'] = speed_list
+                continue        
+
+            #  Duplex:                full,half,auto
+            m = p5.match(line)
+            if m:
+                duplex_list = m.groupdict()['duplex'].split(',')
+                ret_dict[intf]['duplex'] = duplex_list
+                continue
+
+            #  Trunk encap. type:     802.1Q
+            m = p6.match(line)
+            if m:
+                ret_dict[intf]['trunk_encap_type'] = m.groupdict()['trunk_encap_type']
+                continue
+
+            #  Trunk mode:            on,off,desirable,nonegotiate
+            m = p7.match(line)
+            if m:
+                trunk_mode_list = m.groupdict()['trunk_mode'].split(',')
+                ret_dict[intf]['trunk_mode'] = trunk_mode_list
+                continue
+
+            #  Channel:               yes
+            m = p8.match(line)
+            if m:
+                if m.groupdict()['channel'].lower() == 'yes':
+                    ret_dict[intf]['channel'] = True
+                else:
+                    ret_dict[intf]['channel'] = False
+                continue
+
+            #  Broadcast suppression: percentage(0-100)
+            m = p9.match(line)
+            if m:
+                ret_dict[intf]['broadcast_suppression'] = m.groupdict()['broadcast_suppression']
+                continue
+
+            #  Unicast suppression:   percentage(0-100)
+            m = p10.match(line)
+            if m:
+                ret_dict[intf]['unicast_suppression'] = m.groupdict()['unicast_suppression']
+                continue
+
+            #  Multicast suppression: percentage(0-100)
+            m = p11.match(line)
+            if m:
+                ret_dict[intf]['multicast_suppression'] = m.groupdict()['multicast_suppression']
+                continue
+
+            #  Flowcontrol:           rx-(off,on,desired),tx-(none)
+            m = p12.match(line)
+            if m:
+                flowcontrol_dict = ret_dict[intf].setdefault('flowcontrol', {})
+                flow_rx_list = m.groupdict()['flowcontrol_rx'].split(',')
+                flow_tx_list = m.groupdict()['flowcontrol_tx'].split(',')
+                flowcontrol_dict.update({
+                            'flowcontrol_rx': flow_rx_list,
+                            'flowcontrol_tx': flow_tx_list,
+                })                
+                continue
+
+            #  Fast Start:            yes
+            m = p13.match(line)
+            if m:
+                if m.groupdict()['fast_start'].lower() == 'yes':
+                    ret_dict[intf]['fast_start'] = True
+                else:
+                    ret_dict[intf]['fast_start'] = False
+                continue
+
+            #  QoS scheduling:        rx-(not configurable on per port basis),
+            #                         tx-(2p6q3t)
+            m = p14a.match(line)
+            if m:
+                qos_temp_rx = m.groupdict()['qos_scheduling_rx']
+                qos_scheduling_dict = ret_dict[intf].setdefault('qos_scheduling', {})
+                continue
+
+            m = p14b.match(line)
+            if m:
+                qos_scheduling_dict.update({
+                            'qos_scheduling_rx': qos_temp_rx,
+                            'qos_scheduling_tx': m.groupdict()['qos_scheduling_tx']
+                })
+                continue
+
+            #  CoS rewrite:           yes
+            m = p15.match(line)
+            if m:
+                print('ret dict=',ret_dict)
+                if m.groupdict()['cos_rewrite'].lower() == 'yes':
+                    ret_dict[intf]['cos_rewrite'] = True
+                else:
+                    ret_dict[intf]['cos_rewrite'] = False
+                continue
+
+            #  ToS rewrite:           yes
+            m = p16.match(line)
+            if m:
+                if m.groupdict()['tos_rewrite'].lower() == 'yes':
+                    ret_dict[intf]['tos_rewrite'] = True
+                else:
+                    ret_dict[intf]['tos_rewrite'] = False
+                continue
+
+            #  UDLD:                  yes
+            m = p17.match(line)
+            if m:
+                if m.groupdict()['udld'].lower() == 'yes':
+                    ret_dict[intf]['udld'] = True
+                else:
+                    ret_dict[intf]['udld'] = False
+                continue
+
+            #  Inline power:          no
+            m = p18.match(line)
+            if m:
+                if m.groupdict()['inline_power'].lower() == 'yes':
+                    ret_dict[intf]['inline_power'] = True
+                else:
+                    ret_dict[intf]['inline_power'] = False
+                continue
+
+            #  SPAN:                  source/destination
+            m = p19.match(line)
+            if m:
+                ret_dict[intf]['span'] = m.groupdict()['span']
+                continue
+
+            #  PortSecure:            yes
+            m = p20.match(line)
+            if m:
+                if m.groupdict()['portsecure'].lower() == 'yes':
+                    ret_dict[intf]['portsecure'] = True
+                else:
+                    ret_dict[intf]['portsecure'] = False
+                continue
+
+            #  Dot1x:                 yes
+            m = p21.match(line)
+            if m:
+                if m.groupdict()['dot1x'].lower() == 'yes':
+                    ret_dict[intf]['dot1x'] = True
+                else:
+                    ret_dict[intf]['dot1x'] = False
+                continue
+
+            #  Breakout Support:      not applicable
+            m = p22.match(line)
+            if m:
+                ret_dict[intf]['breakout_support'] = m.groupdict()['breakout_support']
+                continue
+
+            #  Multiple Media Types:  rj45, sfp, auto-select
+            m = p23.match(line)
+            if m:
+                media_types_string = m.groupdict()['media_types']
+                media_types_list = re.split(', |,', media_types_string)
+                ret_dict[intf]['media_types'] = media_types_list
                 continue
 
         return ret_dict

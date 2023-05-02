@@ -1,0 +1,20 @@
+GigabitEthernet1/14
+  Model:                 IE-4010-4S24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                half,full,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(4q3t) (3t: Two configurable values and one fixed.)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
