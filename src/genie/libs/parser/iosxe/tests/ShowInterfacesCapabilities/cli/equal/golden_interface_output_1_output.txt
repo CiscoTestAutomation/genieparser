@@ -1,0 +1,24 @@
+TenGigabitEthernet1/1/4
+  Model:                 WS-C3850-48P
+  Type:                  SFP-10GBase-CX1
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          no
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Breakout Support:      not applicable
+  Multiple Media Types:  rj45, sfp, auto-select
