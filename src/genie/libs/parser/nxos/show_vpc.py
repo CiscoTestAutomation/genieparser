@@ -574,3 +574,128 @@ class ShowVpcRoleSchema(MetaParser):
             }
         }
     }
+
+
+# ========================================
+# Parser for "show vpc role"
+# ========================================
+
+class ShowVpcRole(ShowVpcRoleSchema):
+    """Parser for show vpc role"""
+
+    cli_command = "show vpc role"
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initial return dictionary
+        parsed_dict = {}
+
+        # vPC role                        : primary
+        p1 = re.compile(r'^vPC +role\s*: +(?P<vpc_role>[\w]+)$')
+
+        # Dual Active Detection Status    : 0
+        p2 = re.compile(r'^Dual +Active +Detection +Status\s*: +(?P<dual_status>[\w]+)$')
+
+        # vPC system-mac                  : 00:11:22:aa:bb:cc
+        p3 = re.compile(r'^vPC +system-mac\s*: +(?P<system_mac>[\w:]+)$')
+
+        # vPC system-priority             : 32667
+        p4 = re.compile(r'^vPC +system-priority\s*: +(?P<system_priority>[\w]+)$')
+
+        # vPC local system-mac            : 00:11:22:aa:bb:cc
+        p5 = re.compile(r'^vPC +local +system-mac\s*: +(?P<local_system_mac>[\w:]+)$')
+
+        # vPC local role-priority         : 10
+        p6 = re.compile(r'^vPC +local +role-priority\s*: +(?P<local_role_priority>[\w]+)$')
+
+        # vPC local config role-priority  : 10
+        p7 = re.compile(r'^vPC +local +config +role-priority\s*: +(?P<local_config_role_priority>[\w]+)$')
+
+        # vPC peer system-mac             : 33:44:55:dd:ee:ff
+        p8 = re.compile(r'^vPC +peer +system-mac\s*: +(?P<peer_system_mac>[\w:]+)$')
+
+        # vPC peer role-priority          : 20
+        p9 = re.compile(r'^vPC +peer +role-priority\s*: +(?P<peer_role_priority>[\w]+)$')
+
+        # vPC peer config role-priority   : 20
+        p10 = re.compile(r'^vPC +peer +config +role-priority\s*: +(?P<peer_config_role_priority>[\w]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # vPC role                        : primary
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vpc_dict = parsed_dict.setdefault('vpc_role_status', {})
+                vpc_dict['vpc_role'] = group['vpc_role'] 
+                continue
+
+            # Dual Active Detection Status    : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vpc_dict['dual_active_detection_status'] = group['dual_status']
+                continue
+
+            # vPC system-mac                  : 00:11:22:aa:bb:cc
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                vpc_dict['system_mac'] = group['system_mac']
+                continue
+
+            # vPC system-priority             : 32667
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vpc_dict['system_priority'] = group['system_priority']
+                continue
+
+            # vPC local system-mac            : 00:11:22:aa:bb:cc
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                local_vpc_dict = parsed_dict.setdefault('vpc_role_status', {}).setdefault('vpc_local', {})
+                local_vpc_dict['system_mac'] = group['local_system_mac']
+                continue
+
+            # vPC local role-priority         : 10
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                local_vpc_dict['role_priority'] = group['local_role_priority']
+                continue
+
+            # vPC local config role-priority  : 10
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                local_vpc_dict['config_role_priority'] = group['local_config_role_priority']
+                continue
+
+            # vPC peer system-mac             : 33:44:55:dd:ee:ff
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                peer_vpc_dict = parsed_dict.setdefault('vpc_role_status', {}).setdefault('vpc_peer', {})
+                peer_vpc_dict['system_mac'] = group['peer_system_mac']
+                continue
+
+            # vPC peer role-priority          : 20
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                peer_vpc_dict['role_priority'] = group['peer_role_priority']
+                continue
+
+            # vPC peer config role-priority   : 20
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                peer_vpc_dict['config_role_priority'] = group['peer_config_role_priority']
+                continue
+
+        return parsed_dict
