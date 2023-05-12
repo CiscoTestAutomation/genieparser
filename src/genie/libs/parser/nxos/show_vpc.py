@@ -552,25 +552,19 @@ class ShowVpcRoleSchema(MetaParser):
 
     schema = {
         'vpc_role_status': {
-            Any(): {
-                'vpc_role': str,
-                'dual_active_detection_status': str,
-                'system_mac': str,
-                'system_priority': str,
-                Optional('vpc_local'): {
-                    Optional(Any()): {
-                        Optional('system_mac'): str,
-                        Optional('role_priority'): str,
-                        Optional('config_role_priority'): str
-                    }
-                },
-                Optional('vpc_peer'): {
-                    Optional(Any()): {
-                        Optional('system_mac'): str,
-                        Optional('role_priority'): str,
-                        Optional('config_role_priority'): str
-                    }
-                }
+            'vpc_role': str,
+            'dual_active_detection_status': str,
+            'system_mac': str,
+            'system_priority': str,
+            Optional('vpc_local'): {  
+                Optional('system_mac'): str,
+                Optional('role_priority'): str,
+                Optional('config_role_priority'): str 
+            },
+            Optional('vpc_peer'): {
+                Optional('system_mac'): str,
+                Optional('role_priority'): str,
+                Optional('config_role_priority'): str
             }
         }
     }
@@ -622,7 +616,7 @@ class ShowVpcRole(ShowVpcRoleSchema):
         # vPC peer config role-priority   : 20
         p10 = re.compile(r'^vPC +peer +config +role-priority\s*: +(?P<peer_config_role_priority>[\w]+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # vPC role                        : primary
@@ -697,5 +691,5 @@ class ShowVpcRole(ShowVpcRoleSchema):
                 group = m.groupdict()
                 peer_vpc_dict['config_role_priority'] = group['peer_config_role_priority']
                 continue
-
+                
         return parsed_dict
