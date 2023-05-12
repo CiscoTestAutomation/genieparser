@@ -2,6 +2,7 @@
 
 Parser for the following show commands:
     * show vpc
+    * show vpc role
 """
 
 # Python
@@ -540,3 +541,36 @@ class ShowVpc(ShowVpcSchema):
                     vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})                                  
                 continue
         return ret_dict
+
+
+# ========================================
+# Schema for "show vpc role"
+# ========================================
+
+class ShowVpcRoleSchema(MetaParser):
+    """Schema for "show vpc role"""
+
+    schema = {
+        'vpc_role_status': {
+            Any(): {
+                'vpc_role': str,
+                'dual_active_detection_status': str,
+                'system_mac': str,
+                'system_priority': str,
+                Optional('vpc_local'): {
+                    Optional(Any()): {
+                        Optional('system_mac'): str,
+                        Optional('role_priority'): str,
+                        Optional('config_role_priority'): str
+                    }
+                },
+                Optional('vpc_peer'): {
+                    Optional(Any()): {
+                        Optional('system_mac'): str,
+                        Optional('role_priority'): str,
+                        Optional('config_role_priority'): str
+                    }
+                }
+            }
+        }
+    }
