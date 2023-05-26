@@ -1,12 +1,12 @@
 expected_output = {
-	'Local Node Number': '1', 
-	'Node status is': 'NODE_STATUS_UP',
-	'Tunnel status is': 'NODE_TUNNEL_UP',
-	'Node role is': 'CLUSTER_NODE_ROLE_LEADER', 
-	'MAC address is ': '128 36 143 36 60 0',
-	'Slot number is ': '0', 
-	'priority set to': '1',
-	'Leader node num is': '1', 
-	'Follower node is': '2',
-	'Total node present in cluster': '2'
+	"local_node_number": 1, 
+	"node_status_is": "NODE_STATUS_UP",
+	"tunnel_status_is": "NODE_TUNNEL_UP",
+	"node_role_is": "CLUSTER_NODE_ROLE_LEADER", 
+	"mac_address_is": "128 36 143 36 60 0",
+	"slot_number_is": 0, 
+	"priority_set_to": 1,
+	"leader_node_num_is": 1, 
+	"follower_node_is": 2,
+	"total_node_present_in_cluster": 2
 	} 

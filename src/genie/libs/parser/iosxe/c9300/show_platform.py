@@ -639,7 +639,8 @@ class ShowPlatformHardwareFedSwitchQosQueueStatsInterface(ShowPlatformHardwareFe
             output = self.device.execute(cmd)
 
         # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
-        p1 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/]+)\s+.*$')
+        # VOQ Stats For : HundredGigE2/0/2.1 [ 0x550 ]
+        p1 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/\.]+)\s+.*$')
 
         # 0      | Enqueued |                        1194566957 |                       78841419162 |
         # | Dropped  |                                 0 |                                 0 |

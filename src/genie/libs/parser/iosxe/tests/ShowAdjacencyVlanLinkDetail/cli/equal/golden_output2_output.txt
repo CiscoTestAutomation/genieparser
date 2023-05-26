@@ -1,0 +1,13 @@
+# golden_output_output.txt
+#
+# Copyright (c) 2022 by Cisco Systems, Inc.
+# All rights reserved.
+
+Protocol Interface Address
+IPV6 Vlan3 ABCD:2::2(7)
+0 packets, 0 bytes
+epoch 0
+sourced in sev-epoch 4
+Encap length 14
+AABBCC81F600AABBCC81F50086DD
+VXLAN Transport tunnel

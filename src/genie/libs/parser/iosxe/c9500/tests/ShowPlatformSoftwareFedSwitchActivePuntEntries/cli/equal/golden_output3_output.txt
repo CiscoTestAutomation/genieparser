@@ -1,0 +1,119 @@
+Punject Punt Entries
+
+Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+MIRROR    ARP                               4   4  system-cpp-police-arp                       1000     965         0           0         0           0
+TRAP      DHCP Server(v4)                   3   4  system-cpp-police-dhcp-v4                   6000    5793         0           0         0           0
+TRAP      DHCP Client(v4)                   3   4  system-cpp-police-dhcp-v4                   6000    5793         0           0         0           0
+TRAP      DHCP Server(v6)                   3   4  system-cpp-police-dhcp-v6                   6000    5793         0           0         0           0
+TRAP      DHCP Client(v6)                   3   4  system-cpp-police-dhcp-v6                   6000    5793         0           0         0           0
+TRAP      ISIS(L2)                          3   5  system-cpp-police-isis                      1000     965         0           0         0           0
+TRAP      LLDP                              4   5  system-cpp-police-l2-control               16000   15449         5         586         0           0
+TRAP      STP(IEEE)                         4   5  system-cpp-police-topology-control          5000    4988         2         220         0           0
+TRAP      GOLD                              0   3  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      LACP                              4   5  system-cpp-police-lacp                       600     583         0           0         0           0
+TRAP      CISCO Protocols                   3   5  system-cpp-police-l2-control               16000   15449         5         586         0           0
+TRAP      MACSEC                            3   4  system-cpp-police-l2-control               16000   15449         5         586         0           0
+TRAP      Unknown UC                        3   3  system-cpp-police-unknown-uc                1000     965         0           0         0           0
+TRAP      ETH HOP-OPT                      88   3  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      Egres DHCP Snooping               3   3  system-cpp-police-dhcp-snooping             1000     965         0           0         0           0
+TRAP      MC FWD DISABLED(v4)               6   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+TRAP      IPv4 Checksum                     3   2  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      IPV4 UNKNOWN                      4   3  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      IP Options(v4)                    5   3  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      MC FWD DISABLED(v6)               6   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+TRAP      IPv6 HOP-OPT                      1   3  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      IPv6 DEST-OPT                     1   3  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      TTL0(MPLS)                        8   3  system-cpp-police-mtu-ttl-fail               600     583         0           0         0           0
+TRAP      TTL1(MPLS)                        8   3  system-cpp-police-mtu-ttl-fail               600     583         0           0         0           0
+TRAP      MPLS-VPN-TTL1                     8   3  system-cpp-police-mtu-ttl-fail               600     583         0           0         0           0
+TRAP      RPF(unicast)                      2   0  system-cpp-default                             0       0         0           0         0           0
+TRAP      MC PIM RPF                        5   1  system-cpp-police-mcast-rpf-fail            2000    1931         0           0         0           0
+TRAP      MC DIRECT CONNECT                 5   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+TRAP      MC SNOOP and DIRECT CONNECT       5   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+MIRROR    MC SNOOP RPF FAIL                 5   1  system-cpp-police-mcast-rpf-fail            2000    1931         0           0         0           0
+TRAP      MC PIM RPF FAIL                   5   1  system-cpp-police-mcast-rpf-fail            2000    1931         0           0         0           0
+TRAP      MC NOT FOUND                      5   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+MIRROR    MC SG PIM PUNT                    6   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+MIRROR    MC G PIM PUNT                     6   1  system-cpp-police-mcast-data                2000    1931         0           0         0           0
+TRAP      ISIS(L3)                          3   5  system-cpp-police-isis                      1000     965         0           0         0           0
+TRAP      LPM Drop                         80   2  system-cpp-police-alt-sw-forward             600     583         0           0         0           0
+TRAP      GLEAN-SUBNET                      5   2  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      ACL Drop                          1   2  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      ACL LOG                           0   2  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      GLEAN                             5   2  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      PBR GLEAN                         5   2  system-cpp-police-sw-forward                2000    1931         1         155         0           0
+TRAP      TTL1(L3)                          8   3  system-cpp-police-mtu-ttl-fail               600     583         0           0         0           0
+TRAP      MTU(L3)                           8   3  system-cpp-police-mtu-ttl-fail               600     583         0           0         0           0
+TRAP      IGMP ENABLE                       8   4  system-cpp-police-proto-snoop-v4            2000    1931         0           0         0           0
+TRAP      MDNS                              8   4  system-cpp-police-proto-snoop-v6            2000    1931         0           0         0           0
+TRAP      ARP Snooping                      3   3  system-cpp-police-proto-snoop-v4            2000    1931         0           0         0           0
+TRAP      DHCP Snooping                     3   3  system-cpp-police-dhcp-snooping             1000     965         0           0         0           0
+TRAP      SISF                              3   3  system-cpp-police-proto-snoop-v6            2000    1931         0           0         0           0
+MIRROR    DHCP(mirror)                      3   4  system-cpp-police-dhcp-v4                   6000    5793         0           0         0           0
+TRAP      RIP                               3   5  system-cpp-police-rip-bc                    4500    4345         0           0         0           0
+LPTSv4    ICMP IPv4                         1   3  system-cpp-police-icmp-v4                   2500    2494         2         240         0           0
+LPTSv4    OSPF v2 MC                        2   5  system-cpp-police-ospf-v4                   2000    1931         0           0         0           0
+LPTSv4    OSPF v2 UC                        3   5  system-cpp-police-ospf-v4                   2000    1931         0           0         0           0
+LPTSv4    LDP UDP SRC IPv4                  4   5  system-cpp-police-ldp-v4                    2000    1931         0           0         0           0
+LPTSv4    LDP UDP DST IPv4                  5   5  system-cpp-police-ldp-v4                    2000    1931         0           0         0           0
+LPTSv4    LDP TCP SRC IPv4                  6   5  system-cpp-police-ldp-v4                    2000    1931         0           0         0           0
+LPTSv4    LDP TCP DST IPv4                  7   5  system-cpp-police-ldp-v4                    2000    1931         0           0         0           0
+LPTSv4    BGP IPv4                          8   5  system-cpp-police-bgp-v4                    6000    5793         0           0         0           0
+LPTSv4    BGP established IPv4              9   5  system-cpp-police-bgp-v4                    6000    5793         0           0         0           0
+LPTSv4    EIGRP IPv4                       11   5  system-cpp-police-igrp-v4                   1000     965         0           0         0           0
+LPTSv4    RIP IPv4                         12   5  system-cpp-police-rip-v4                    4500    4345         0           0         0           0
+LPTSv4    VRRP IPv4                        13   4  system-cpp-police-fhrp-v4                   4500    4345         0           0         0           0
+LPTSv4    HSRP IPv4                        14   4  system-cpp-police-fhrp-v4                   4500    4345         0           0         0           0
+LPTSv4    GLBP IPv4                        15   4  system-cpp-police-fhrp-v4                   4500    4345         0           0         0           0
+LPTSv4    WCCP IPv4                        16   4  system-cpp-default-v4                       2000    1931         0           0         0           0
+LPTSv4    PIM IPv4                         17   4  system-cpp-police-mcast-ctrl-v4             2000    1931         0           0         0           0
+LPTSv4    BFD IPv4                         18   6  system-cpp-police-bfd-v4                    6000    5793         6         676         0           0
+LPTSv4    BFD ECHO IPv4                    19   6  system-cpp-police-bfd-v4                    6000    5793         6         676         0           0
+LPTSv4    BFD MHOP IPv4                    20   6  system-cpp-police-bfd-v4                    6000    5793         6         676         0           0
+LPTSv4    MPLS OAM IPv4                    21   4  system-cpp-police-mpls-oam                  1000     965         0           0         0           0
+LPTSv4    DHCPv4 Server TCP Bulk Query     22   4  system-cpp-police-tcp-v4                    1000     965         0           0         0           0
+LPTSv4    DHCPv4 S to S                    23   4  system-cpp-police-udp-v4                     600     583         0           0         0           0
+LPTSv4    DHCPv4 C to S                    24   0  system-cpp-police-udp-v4                     600     583         0           0         0           0
+LPTSv4    DHCPv4 S to C                    25   0  system-cpp-police-udp-v4                     600     583         0           0         0           0
+LPTSv4    UDP SRC PORT LISP IPv4           26   2  system-cpp-police-lisp-ctrl                  600     583         0           0         0           0
+LPTSv4    UDP DST PORT LISP IPv4           27   2  system-cpp-police-lisp-ctrl                  600     583         0           0         0           0
+LPTSv4    TCP SRC PORT LISP IPv4           28   2  system-cpp-police-lisp-ctrl                  600     583         0           0         0           0
+LPTSv4    TCP DST PORT LISP IPv4           29   2  system-cpp-police-lisp-ctrl                  600     583         0           0         0           0
+LPTSv4    IPv4 PIM Reg Mcast               30   1  system-cpp-police-mcast-register-v4         2000    1931         0           0         0           0
+LPTSv4    IPv4 IGMP                        31   4  system-cpp-police-proto-snoop-v4            2000    1931         0           0         0           0
+LPTSv4    IPv4 MC                          32   0  system-cpp-police-mcast-ctrl-v4             2000    1931         0           0         0           0
+LPTSv4    IPV4 FRAGMENTATION               33   3  system-cpp-police-fragment-v4               2500    2494         0           0         0           0
+LPTSv4    RSVP IPV4                        34   5  system-cpp-default-v4                       2000    1931         0           0         0           0
+LPTSv4    TCP default IPv4                 35   2  system-cpp-police-tcp-v4                    1000     965         0           0         0           0
+LPTSv4    UDP default IPv4                 36   2  system-cpp-police-udp-v4                     600     583         0           0         0           0
+LPTSv6    ICMP IPv6 MC                      1   3  system-cpp-police-icmp-v6                   2500    2494         0           0         0           0
+LPTSv6    ICMP IPv6 UC                      2   3  system-cpp-police-icmp-v6                   2500    2494         0           0         0           0
+LPTSv6    OSPF v3 MC                        3   5  system-cpp-police-ospf-v6                   2000    1931         0           0         0           0
+LPTSv6    OSPF v3 UC                        4   5  system-cpp-police-ospf-v6                   2000    1931         0           0         0           0
+LPTSv6    LDP UDP SRC IPv6                  5   5  system-cpp-police-ldp-v6                    2000    1931         0           0         0           0
+LPTSv6    LDP UDP DST IPv6                  6   5  system-cpp-police-ldp-v6                    2000    1931         0           0         0           0
+LPTSv6    LDP TCP SRC IPv6                  7   5  system-cpp-police-ldp-v6                    2000    1931         0           0         0           0
+LPTSv6    LDP UDP DST IPv6                  8   5  system-cpp-police-ldp-v6                    2000    1931         0           0         0           0
+LPTSv6    BGP IPv6                          9   5  system-cpp-police-bgp-v6                    6000    5793         0           0         0           0
+LPTSv6    BGP established IPv6             10   5  system-cpp-police-bgp-v6                    6000    5793         0           0         0           0
+LPTSv6    EIGRP IPV6                       12   5  system-cpp-police-igrp-v6                   1000     965         0           0         0           0
+LPTSv6    VRRP IPv6                        13   4  system-cpp-police-fhrp-v6                   4500    4345         0           0         0           0
+LPTSv6    RIP IPv6                         14   5  system-cpp-police-rip-v6                    4500    4345         0           0         0           0
+LPTSv6    HSRP IPv6                        15   4  system-cpp-police-fhrp-v6                   4500    4345         0           0         0           0
+LPTSv6    GLBP IPV6                        16   4  system-cpp-police-fhrp-v6                   4500    4345         0           0         0           0
+LPTSv6    PIM IPV6                         17   4  system-cpp-police-mcast-ctrl-v6             2000    1931         0           0         0           0
+LPTSv6    PIM IPV6 Reg Mcast               18   1  system-cpp-police-mcast-register-v6         2000    1931         0           0         0           0
+LPTSv6    BFD IPv6                         19   6  system-cpp-police-bfd-v6                    6000    5793         0           0         0           0
+LPTSv6    BFD ECHO IPv6                    20   6  system-cpp-police-bfd-v6                    6000    5793         0           0         0           0
+LPTSv6    BFD MHOP IPv6                    21   6  system-cpp-police-bfd-v6                    6000    5793         0           0         0           0
+LPTSv6    DHCPv6 Server TCP Bulk Query     22   4  system-cpp-police-tcp-v6                    1000     965         0           0         0           0
+LPTSv6    DHCPv6 S to S                    23   4  system-cpp-police-udp-v6                     600     583         0           0         0           0
+LPTSv6    DHCPv6 C to S                    24   0  system-cpp-police-udp-v6                     600     583         0           0         0           0
+LPTSv6    DHCPv6 S to C                    25   0  system-cpp-police-udp-v6                     600     583         0           0         0           0
+LPTSv6    IPv6 Options                     26   4  system-cpp-police-proto-snoop-v6            2000    1931         0           0         0           0
+LPTSv6    IPv6 MC                          27   0  system-cpp-police-mcast-ctrl-v6             2000    1931         0           0         0           0
+LPTSv6    IPv6 Fragment                    28   3  system-cpp-police-fragment-v6               2500    2494         0           0         0           0
+LPTSv6    TCP default IPv6                 30   2  system-cpp-police-tcp-v6                    1000     965         0           0         0           0
+LPTSv6    UDP default IPv6                 31   2  system-cpp-police-udp-v6                     600     583         0           0         0           0
+LPTSv6    IPv6 UC                          32   2  system-cpp-police-alt-sw-forward             600     583         0           0         0           0

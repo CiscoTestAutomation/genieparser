@@ -11,6 +11,11 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware chassis power-supply detail all
    * show platform hardware chassis fantray detail switch {mode}
    * show platform hardware chassis power-supply detail switch {mode} all
+   * show platform software fed active punt entries
+   * show platform software fed {switch} active punt entries
+   * show platform software fed {switch} active punt entries | include {label}
+   * show platform software fed active punt entries | include {label}
+   * show platform software fed {switch} active ip route vrf {vrf_name}
 '''
 
 # Python
@@ -1746,6 +1751,190 @@ class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNatSchema):
             if m:
                 group = m.groupdict()
                 index_dict['ad'] = group['ad']
+                continue
+
+        return ret_dict
+
+# ======================================================================================
+#  Schema for
+#  * show platform software fed active punt entries
+#  * show platform software fed {switch} active punt entries
+#  * show platform software fed {switch} active punt entries | include {label}
+#  * show platform software fed active punt entries | include {label}
+# =======================================================================================
+class ShowPlatformSoftwareFedSwitchActivePuntEntriesSchema(MetaParser):
+    """Schema for 'show platform software fed active punt entries'
+                    'show platform software fed {switch} active punt entries'
+                    'show platform software fed {switch} active punt entries | include {label}'
+                    'show platform software fed active punt entries | include {label}'
+    """
+    schema = {
+        'entries_name': {
+            Any(): {
+                'source': str,
+                'pri': int,
+                'tc': int,
+                'policy': str,
+                'cir_sw': int,
+                'cir_hw': int,
+                'pkts_a': int,
+                'bytes_a': int,
+                'pkts_d': int,
+                'bytes_d': int,               
+            },
+        }
+    }
+
+# =======================================================================================
+#  Parser for
+#  * 'show platform software fed active punt entries'
+#  * 'show platform software fed {switch} active punt entries'
+#  * 'show platform software fed {switch} active punt entries | include {label}'
+#  * 'show platform software fed active punt entries | include {label}'
+# =======================================================================================
+
+class ShowPlatformSoftwareFedSwitchActivePuntEntries(ShowPlatformSoftwareFedSwitchActivePuntEntriesSchema):
+    """
+    Parser for :
+        * show platform software fed active punt entries
+        * show platform software fed {switch} active punt entries
+        * show platform software fed {switch} active punt entries | include {label}
+        * show platform software fed active punt entries | include {label}
+    """
+    cli_command = ['show platform software fed {switch} active punt entries | include {label}',\
+                    'show platform software fed {switch} active punt entries',\
+                    'show platform software fed active punt entries | include {label}',\
+                    'show platform software fed active punt entries']
+
+    def cli(self, label=None, switch=None, output=None):
+        if output is None:
+            if switch:
+                if label:
+                    cmd = self.cli_command[0].format(switch=switch, label=label)
+                else:
+                    cmd = self.cli_command[1].format(switch=switch)
+            else:
+                if label:
+                    cmd= self.cli_command[2].format(label=label)
+                else:
+                    cmd= self.cli_command[3]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict ={}
+
+        #Punject Punt Entries
+        p1 = re.compile(r'^Punject Punt Entries$')
+
+        # MIRROR   ARP   4    4    system-cpp-police-arp 1000     965      0           0         0           0
+        p2 = re.compile(r'^(?P<source>\w*)\s+(?P<name>((\w+\s)+\w*\S\w*\S*)|(\w*(\S\w*\S){1,}))\s+'
+                        r'(?P<pri>\d+)\s+(?P<tc>\d+)\s+(?P<policy>(\w+(-\w+)*))\s+(?P<cir_sw>\d+)\s+'
+                        r'(?P<cir_hw>\d+)\s+(?P<pkts_a>\d+)\s+(?P<bytes_a>\d+)\s+(?P<pkts_d>\d+)\s+(?P<bytes_d>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Punject Punt Entries
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('entries_name', {})
+                continue
+
+            # MIRROR   ARP   4    4    system-cpp-police-arp 1000     965      0           0         0           0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entries_name = group['name']
+                sub_dict = ret_dict.setdefault('entries_name', {}).setdefault(entries_name, {})
+                sub_dict.update({
+                    'source': group['source'],
+                    'pri': int(group['pri']),
+                    'tc': int(group['tc']),
+                    'pri': int(group['pri']),
+                    'policy': group['policy'],
+                    'cir_sw': int(group['cir_sw']),
+                    'cir_hw': int(group['cir_hw']),
+                    'pkts_a': int(group['pkts_a']),
+                    'bytes_a': int(group['bytes_a']),
+                    'pkts_d': int(group['pkts_d']),
+                    'bytes_d': int(group['bytes_d'])
+                })
+                continue
+
+        return ret_dict
+
+# ==============================================================================
+# Schema for 'show platform software fed {switch} active ip route vrf {vrf_name}'
+# ==============================================================================
+
+class ShowPlatformSoftwareFedActiveIpRouteVrfSchema(MetaParser):
+    """Schema for show platform software fed {switch} active ip route vrf {vrf_name}"""
+    schema = {
+        'object_id':{
+             Any(): {
+                Optional('ipv4_address'): str,
+                Optional('mask_length'): int,
+                Optional('parent_type'): str,
+                Optional('parent_object_id'): str,
+            }
+        },
+        'number_entries': int,
+    }
+
+# ==============================================================================
+# Parser for 'show platform software fed {switch} active ip route vrf {vrf_name}'
+# ==============================================================================
+
+class ShowPlatformSoftwareFedActiveIpRouteVrf(ShowPlatformSoftwareFedActiveIpRouteVrfSchema):
+    """Parser for show platform software fed {switch} active ip route vrf {vrf_name}"""
+ 
+    cli_command = 'show platform software fed {switch} active ip route vrf {vrf_name}'
+    def cli(self, switch='', vrf_name='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(switch=switch, vrf_name=vrf_name))
+        else:
+            output = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Number of npi_ipv4route entries = 19
+        p0 = re.compile(r'^Number of npi_ipv4route entries\s+=\s+(?P<number_entries>\d*)$')
+        
+        # 0x5b60bb7077c8      40.1.1.3            32                  PUSH_COUNTER        0x169     
+        p1 = re.compile(r'^(?P<object_id>0x\w+)(?:\s*)'
+                        r'(?P<ipv4_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\s*)'
+                        r'(?P<mask_length>\d*)(?:\s*)(?P<parent_type>\w*)(?:\s*)(?P<parent_object_id>0x\w*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of npi_ipv4route entries = 19
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                number_entries = group['number_entries']
+                ret_dict.setdefault('number_entries', int(number_entries))
+                continue
+            
+            # 0x5b60bb7077c8      40.1.1.3            32                  PUSH_COUNTER        0x169      
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                object_id = group['object_id']
+                sub_dict = ret_dict.setdefault('object_id', {}).setdefault(object_id, {})
+
+                ipv4_address = group['ipv4_address']
+                sub_dict['ipv4_address'] = str(ipv4_address)
+
+                mask_length = group['mask_length']
+                sub_dict['mask_length'] = int(mask_length)
+
+                parent_type = group['parent_type']
+                sub_dict['parent_type'] = str(parent_type)
+
+                parent_object_id = group['parent_object_id']
+                sub_dict['parent_object_id'] = str(parent_object_id)
                 continue
 
         return ret_dict

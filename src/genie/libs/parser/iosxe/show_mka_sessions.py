@@ -2065,3 +2065,73 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                 group = m46.groupdict()
                 mkpdu_fail['mkpdu-rx-nonrecent-peerlist-mn'] = int(group['mkpdu_rx_nonrecent_peerlist_mn'])
         return ret_dict
+# ==============================================
+# Parser for 'show mka policy'
+# ==============================================
+class ShowMkaPolicySchema(MetaParser):
+    """Schema for show mka policy
+    """
+
+    schema = {
+        'send_secure_announcements': str,
+        'policy': {
+            Any(): {
+                'key_server_priority': int,
+                'delay_protect': str,
+                'confidentiality_offset': int,
+                'sak_rey_key_on_live_peer_loss': str,
+                'include_icv_indicator': str,
+                'cipher': str,
+                Optional('interfaces'): list
+            }
+        }
+    }
+
+class ShowMkaPolicy(ShowMkaPolicySchema):
+    """Parser for 'show mka policy'
+    """
+    cli_command = 'show mka policy'
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+        # initial return dictionary
+        ret_dict = {}
+        #Send-Secure-Announcements: DISABLED
+        p = re.compile(r'^Send-Secure-Announcements:\s+(?P<send_secure_announcements>\w+)')
+
+        # DEFAULT POLICY  0    FALSE 0  FALSE TRUE   GCM-AES-128
+        # macsec            0    FALSE 30 FALSE TRUE   GCM-AES-128     Te1/0/48       Fo1/1/2
+        p2 = re.compile(r'^(?P<policy>[\w\s]+)\s+(?P<key_server_priority>\d+)\s+(?P<delay_protect>\S+)\s+(?P<confidentiality_offset>\d+)\s+(?P<sak_rey_key_on_live_peer_loss>\S+)\s+(?P<include_icv_indicator>\S+)\s+(?P<cipher>\S+)(\s+(?P<interfaces>[\S\s]*))?$')
+        
+        # Gi2/0/12       Gi2/0/22
+        # Te3/0/46       Te3/0/48
+        p3 = re.compile(r'^(?P<interfaces>(\w+\d+\/\d+\/\d+)\s+.*)$') 
+       
+        for line in output.splitlines():
+            line = line.strip()
+            m = p.match(line)
+            if m:
+                group = m.groupdict()
+                send_secure_announcements = group["send_secure_announcements"]
+                ret_dict['send_secure_announcements'] = send_secure_announcements
+                continue
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()  
+                policy_dict = ret_dict.setdefault('policy', {}).setdefault(group["policy"].strip(), {})
+                policy_dict['key_server_priority'] = int(group["key_server_priority"])
+                policy_dict["delay_protect"] = group["delay_protect"]
+                policy_dict["confidentiality_offset"] = int(group["confidentiality_offset"])
+                policy_dict["sak_rey_key_on_live_peer_loss"] = group["sak_rey_key_on_live_peer_loss"]
+                policy_dict["include_icv_indicator"] = group["include_icv_indicator"]
+                policy_dict["cipher"] = group["cipher"]
+                if group["interfaces"]:
+                    int_list = policy_dict.setdefault("interfaces", group["interfaces"].split())
+                continue
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                int_list.extend(group["interfaces"].split())
+                continue
+        return ret_dict

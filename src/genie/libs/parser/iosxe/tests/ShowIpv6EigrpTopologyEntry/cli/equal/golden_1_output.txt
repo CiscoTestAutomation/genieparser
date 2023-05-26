@@ -1,0 +1,13 @@
+EIGRP-IPv6 Topology Entry for AS(101)/ID(10.9.1.1) for 5001::/64
+  State is Passive, Query origin flag is 1, 1 Successor(s), FD is 3072
+  Descriptor Blocks:
+  FE80::20C:29FF:FED4:B578 (vmi1), from FE80::20C:29FF:FED4:B578, Send flag is 0x0
+      Composite metric is (3072/2816), route is Internal
+      Vector metric:
+        Minimum bandwidth is 1000000 Kbit
+        Total delay is 20 microseconds
+        Reliability is 255/255
+        Load is 2/255
+        Minimum MTU is 1492
+        Hop count is 1
+        Originating router is 10.10.1.1

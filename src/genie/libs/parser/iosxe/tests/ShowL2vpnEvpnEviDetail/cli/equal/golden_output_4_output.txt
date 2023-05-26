@@ -1,0 +1,51 @@
+EVPN instance:      1 (VLAN Based)
+
+  RD:               10.1.1.10:1 (auto)
+
+  Import-RTs:       10:1
+
+  Export-RTs:       10:1
+
+  Per-EVI Label:    none
+
+  State:            Established
+
+  Replication Type: Static (global)
+
+  Encapsulation:    vxlan
+
+  IP Local Learn:   Enable (global)
+
+  Vlan:             201
+
+    Ethernet-Tag:   0
+
+    State:          Established
+
+    Core If:        Vlan200
+
+    Access If:      Vlan201
+
+    NVE If:         nve10
+
+    RMAC:           a0f8.4910.bce2
+
+    Core Vlan:      200
+
+    L2 VNI:         6000
+
+    L3 VNI:         5000
+
+    VTEP IP:        10.1.1.10
+
+    MCAST IP:       232.1.1.1
+
+    VRF:            green
+
+    IPv4 IRB:       Enabled
+
+    IPv6 IRB:       Enabled
+
+    Pseudoports:
+
+      GigabitEthernet1/0/1 service instance 201

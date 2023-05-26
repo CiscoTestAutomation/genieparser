@@ -1,0 +1,13 @@
+Interface Templates
+===================
+Interface: Gi3/0/3
+
+Method              Source            Template-Name
+------              ------            -------------
+dynamic             Built-in          IP_PHONE_INTERFACE_TEMPLATE                     
+
+Service Templates
+
+=================
+Template-Name                                    Source            Bound-To-MAc
+-------------                                    ------            ----------------

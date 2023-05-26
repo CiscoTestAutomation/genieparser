@@ -1,0 +1,27 @@
+            Interface:  GigabitEthernet1/0/12
+               IIF-ID:  0x135C9B47
+          MAC Address:  000e.83e5.3398
+         IPv6 Address:  Unknown
+         IPv4 Address:  194.10.0.1
+            User-Name:  CP-7970G-SEP000E83E53398
+               Status:  Authorized
+               Domain:  VOICE
+       Oper host mode:  multi-domain
+     Oper control dir:  both
+      Session timeout:  135s (server), Remaining: 130s
+       Timeout action:  Reauthenticate
+    Common Session ID:  EE01060A0000000FBB64DB50
+      Acct Session ID:  0x00000004
+               Handle:  0x60000005
+       Current Policy:  POLICY_Gi1/0/12
+
+
+Server Policies:
+      Session-Timeout: 135 sec
+           Vlan Group:  Vlan: 194
+              ACS ACL: xACSACLx-IP-legacy_TC9_permit_user_CP-7970G-SEP000E83E53398-63ced261
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success

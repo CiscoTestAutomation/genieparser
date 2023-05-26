@@ -1,0 +1,22 @@
+IOS (tm) C2600 Software (C2600-IPBASE-M), Version 12.3(6f), RELEASE SOFTWARE (fc1)
+Copyright (c) 1986-2005 by cisco Systems, Inc.
+Compiled Tue 16-Aug-05 17:54 by ssearch
+Image text-base: 0x80008098, data-base: 0x80ED16A0
+
+ROM: System Bootstrap, Version 12.2(8r) [cmong 8r], RELEASE SOFTWARE (fc1)
+
+CON-82-24 uptime is 1 week, 2 days, 1 hour, 51 minutes
+System returned to ROM by power-on
+System image file is "flash:c2600-ipbase-mz.123-6f.bin"
+
+cisco 2611XM (MPC860P) processor (revision 0x401) with 126976K/4096K bytes of memory.
+Processor board ID FTX0951A011 (3896118621)
+M860 processor: part number 5, mask 2
+Bridging software.
+X.25 software, Version 3.0.0.
+2 FastEthernet/IEEE 802.3 interface(s)
+32 terminal line(s)
+32K bytes of non-volatile configuration memory.
+49152K bytes of processor board System flash (Read/Write)
+
+Configuration register is 0x2102

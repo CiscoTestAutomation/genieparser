@@ -114,7 +114,8 @@ class ShowEnvironment(ShowEnvironmentSchema):
         p5 = re.compile(r'^\s*Voltage: +(?P<voltage>[0-9]+)\s+Volts')
 
         #1        N9K-PAC-3000W-B      1087 W             1150 W      3000 W      Ok
-        p6 = re.compile(r'^\s*(?P<ps_id>\d+)\s+(?P<model>[A-Z0-9-]+)\s*(?P<act_out>\d+)\s?W\s*(?P<act_in>\d+)\s?W\s*(?P<tot_cap>\d+)\s?W\s+(?P<status>\w+)\s*')
+        #2        NXK-HV-6.3KW20A-A     341 W              390 W      3150 W      Ok
+        p6 = re.compile(r'^\s*(?P<ps_id>\d+)\s+(?P<model>[A-Z0-9-.]+)\s*(?P<act_out>\d+)\s?W\s*(?P<act_in>\d+)\s?W\s*(?P<tot_cap>\d+)\s?W\s+(?P<status>\w+)\s*')
 
         #1        N9K-X9736Q-FX           401.00 W     936.00 W    Powered-Up
         #Xb22     N9K-C9508-FM-E          175.00 W     564.00 W    Powered-Up

@@ -1,0 +1,23 @@
+Active IPv4-SGT Bindings Information
+
+IP Address              SGT     Source
+============================================
+100.1.1.0/24            100     L3IF
+200.1.1.0/24            200     L3IF
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of L3IF     bindings = 2
+Total number of active   bindings = 2
+
+Active IPv6-SGT Bindings Information
+
+IP Address                                  SGT     Source
+================================================================
+100:1::/64                                  100     L3IF
+200:1::/64                                  200     L3IF
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of L3IF     bindings = 2
+Total number of active   bindings = 2
