@@ -1930,6 +1930,18 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         # TE Opaque LSA: Source of link information OSPF
         p31_1 = re.compile(r'^TE +Opaque +LSA: +(?P<te_opaque_lsa>[\S\s]+)$')
 
+        # Parse additional commands that are needed
+        cmd = 'show running-config | section router ospf'
+        ospf_out = self.device.execute(cmd)
+        cmd = 'show running-config | i virtual-link'
+        vl_out = self.device.execute(cmd)
+        cmd = 'show running-config | i sham-link'
+        sl_out = self.device.execute(cmd)    
+        cmd = 'show ip ospf virtual-links'
+        ospfvl_out = self.device.execute(cmd)    
+        cmd = 'show ip ospf sham-links'
+        ospfsl_out = self.device.execute(cmd)    
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2001,10 +2013,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     vl_transit_area_id = None
 
                     # Execute command to get virtual-link address
-                    cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
-                    out = self.device.execute(cmd)
-
-                    for line in out.splitlines():
+                    for line in ospfvl_out.splitlines():
                         line = line.rstrip()
                         # Virtual Link OSPF_VL0 to router 10.100.5.5 is down
                         p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
@@ -2017,10 +2026,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Execute command to get virtual-link transit_area_id
                     if vl_addr is not None:
-                        cmd = 'show running-config | i virtual-link | i {addr}'.format(addr=vl_addr)
-                        out = self.device.execute(cmd)
-
-                        for line in out.splitlines():
+                        for line in vl_out.splitlines():
                             line = line.rstrip()
                             #  area 1 virtual-link 10.100.5.5
                             q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
@@ -2042,10 +2048,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
-                    out = self.device.execute(cmd)
-
-                    for line in out.splitlines():
+                    for line in ospfsl_out.splitlines():
                         line = line.rstrip()
                         # Sham Link OSPF_SL1 to address 10.151.22.22 is up
                         p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
@@ -2057,10 +2060,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Execute command to get sham-link local_id
                     if sl_remote_id is not None:
-                        cmd = 'show running-config | i sham-link | i {remote}'.format(remote=sl_remote_id)
-                        out = self.device.execute(cmd)
 
-                        for line in out.splitlines():
+                        for line in sl_out.splitlines():
                             line = line.rstrip()
                             # area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                             q = re.search('area +(?P<q_area>(\d+)) +sham-link'
@@ -2080,10 +2081,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         intf_name = '{} {}'.format(sl_local_id, sl_remote_id)
 
                 # Get VRF information based on OSPF instance
-                cmd = 'show running-config | section router ospf {}'.format(instance)
-                out = self.device.execute(cmd)
 
-                for line in out.splitlines():
+                for line in ospf_out.splitlines():
                     line = line.rstrip()
 
                     # Skip the show command line so as to not match
