@@ -1,0 +1,132 @@
+    Class-map: Ping_Class (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name Ping_Option
+        police:
+            cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+                drop 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: TELNET_Class (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name TELNET_Permit
+        police:
+            cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+                drop 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: TACACS_Class (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name TACACS_Permit
+        police:
+            cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+                drop 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: SNMP_Class (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name SNMP_Permit
+        police:
+              cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+              drop 
+            exceeded 0 packets, 0 bytes; actions:
+              drop 
+            conformed 0000 bps, exceeded 0000 bps
+           
+    Class-map: FTP_Class (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name FTP_Permit
+        police:
+              cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+              drop 
+            exceeded 0 packets, 0 bytes; actions:
+              drop 
+            conformed 0000 bps, exceeded 0000 bps
+           
+    Class-map: BGP_Class (match-all)  
+        32 packets, 2032 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name BGP_Permit
+        QoS Set
+            ip precedence 6
+            Marker statistics: Disabled
+             
+    Class-map: OSPF_Class (match-all)  
+        58 packets, 11788 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name OSPF_Permit
+        QoS Set
+            ip precedence 6
+            Marker statistics: Disabled
+           
+    Class-map: LDP_Class (match-all)  
+        128 packets, 9552 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name LDP_Permit
+        QoS Set
+            ip precedence 6
+            Marker statistics: Disabled
+           
+    Class-map: ICMP_Class1 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name ICMP_Permit1
+        police:
+            cir 8000 bps, bc 1500 bytes
+            conformed 0 packets, 0 bytes; actions:
+                drop 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+           
+    Class-map: ICMP_Class2 (match-all)  
+        4 packets, 482 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name ICMP_Permit2
+        police:
+            cir 12000000 bps, bc 150000 bytes
+            conformed 4 packets, 482 bytes; actions:
+                transmit 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+        
+    Class-map: NTP_Class (match-all)  
+        3 packets, 330 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name NTP_Permit
+        police:
+            cir 8000 bps, bc 1500 bytes
+            conformed 3 packets, 330 bytes; actions:
+                drop 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+           
+    Class-map: ALL_Class (match-all)  
+        23 packets, 1548 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: access-group name ALL_Permit
+        police:
+            cir 200000 bps, bc 15000 bytes
+            conformed 23 packets, 1548 bytes; actions:
+                transmit 
+            exceeded 0 packets, 0 bytes; actions:
+                drop 
+            conformed 0000 bps, exceeded 0000 bps
+           

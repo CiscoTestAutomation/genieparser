@@ -1,0 +1,19 @@
+DLEP Neighbors for all interfaces:
+
+DLEP Neighbors for Interface GigabitEthernet1
+DLEP Local IP=9.9.9.1:11113 Sock=0
+
+SID=2372 Remote End-point MAC_Address=88fc.5d32.0900
+  Addresses:
+  DLEP Remote IP : 9.9.9.11 DLEP Remote IPv6 LL : FE80::8AFC:5DFF:FE32:900
+  Associated virtual access interface : Virtual-Access2
+Supported Metrics:
+  RLQ RX Metric : 100
+  RLQ TX Metric : 100
+  Resources Metric : 100
+  MTU Metric : 1500
+  Latency Metric : 250 microseconds
+  CDR RX Metric : 100000000 bps
+  CDR TX Metric : 100000000 bps
+  MDR RX Metric : 100000000 bps
+  MDR TX Metric : 100000000 bps

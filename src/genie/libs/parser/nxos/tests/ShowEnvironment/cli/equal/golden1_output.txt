@@ -1,0 +1,93 @@
+Fan:
+---------------------------------------------------------------------------
+Fan             Model                Hw     Direction       Status
+---------------------------------------------------------------------------
+Fan1(sys_fan1)  N9K-C9808-FAN-A      1.0    front-to-back   Ok
+Fan2(sys_fan2)  N9K-C9808-FAN-A      1.0    front-to-back   Ok
+Fan3(sys_fan3)  N9K-C9808-FAN-A      1.0    front-to-back   Ok
+Fan4(sys_fan4)  N9K-C9808-FAN-A      1.0    front-to-back   Ok
+Fan_in_PS1                           --     front-to-back   Absent
+Fan_in_PS2                           --     front-to-back   Absent
+Fan_in_PS3                           --     front-to-back   Absent
+Fan_in_PS4                           --     front-to-back   Ok
+Fan_in_PS5                           --     front-to-back   Ok
+Fan_in_PS6                           --     front-to-back   Shutdown
+Fan_in_PS7                           --     front-to-back   Ok
+Fan_in_PS8                           --     front-to-back   Ok
+Fan_in_PS9                           --     front-to-back   Shutdown
+Fan Zone Speed: Zone 1: 0x80
+Fan Air Filter : NotSupported
+
+
+Power Supply:
+Voltage: 54 Volts
+Power                      Actual             Actual        Total
+Supply    Model            Output             Input        Capacity     Status
+                           (Watts )           (Watts )     (Watts )
+-------  ----------  ---------------  ------  ----------  --------------------
+1        ------------            0 W                0 W         0 W   Absent
+2        ------------            0 W                0 W         0 W   Absent
+3        ------------            0 W                0 W         0 W   Absent
+4        NXK-HV-6.3KW20A-A     429 W              475 W      3150 W      Ok
+5        NXK-HV-6.3KW20A-A     415 W              468 W      3150 W      Ok
+6        NXK-HV-6.3KW20A-A       0 W                0 W         0 W   Shutdown
+7        NXK-HV-6.3KW20A-A     425 W              478 W      3150 W      Ok
+8        NXK-HV-6.3KW20A-A     450 W              506 W      3150 W      Ok
+9        NXK-HV-6.3KW20A-A       0 W                0 W         0 W   Shutdown
+
+
+                                  Actual        Power
+Module    Model                     Draw    Allocated    Status
+                                 (Watts )     (Watts )
+-------  -------------------  -----------  -----------  --------------
+1        N9K-X9836DM-A           597.00 W     2435.94 W    Powered-Up
+Xb19     N9K-C9808-FM-A          192.00 W     574.56 W    Powered-Up
+Xb20     xbar                      N/A          0.00 W    Absent
+Xb21     xbar                      N/A          0.00 W    Absent
+Xb22     xbar                      N/A          0.00 W    Absent
+Xb23     N9K-C9808-FM-A          193.00 W     574.56 W    Powered-Up
+Xb24     xbar                      N/A          0.00 W    Absent
+Xb25     xbar                      N/A          0.00 W    Absent
+Xb26     xbar                      N/A          0.00 W    Absent
+27       N9K-C9800-SUP-A          75.00 W      94.50 W    Powered-Up
+28       supervisor                N/A         94.50 W    Absent
+fan1     N9K-C9808-FAN-A         171.00 W     686.00 W    Powered-Up
+fan2     N9K-C9808-FAN-A         173.00 W     686.00 W    Powered-Up
+fan3     N9K-C9808-FAN-A         176.00 W     686.00 W    Powered-Up
+fan4     N9K-C9808-FAN-A         171.00 W     686.00 W    Powered-Up
+
+N/A - Per module power not available
+
+
+Power Usage Summary:
+--------------------
+Power Supply redundancy mode (configured)                Non-Redundant(combined)
+Power Supply redundancy mode (operational)               Non-Redundant(combined)
+
+Total Power Capacity (based on configured mode)            12599.00 W
+Total Grid-A (first inlet of all PS slots) Power Capacity  6300.00 W
+Total Grid-B (second inlet of all PS slots) Power Capacity 6300.00 W
+Total Power of all Inputs (cumulative)                     12599.00 W
+Total Power Output (actual draw)                           1719.00 W
+Total Power Input (actual draw)                            1927.00 W
+Total Power Allocated (budget)                             6521.00 W
+Total Power Available for additional modules               6078.28 W
+
+
+
+Temperature:
+--------------------------------------------------------------------
+Module   Sensor        MajorThresh   MinorThres   CurTemp     Status
+                       (Celsius)     (Celsius)    (Celsius)
+--------------------------------------------------------------------
+1        CPU             100             98          57         Ok
+1        Sone-1          110             100         38         Ok
+1        Sone-2          110             100         44         Ok
+1        Sone-3          110             100         45         Ok
+19       Sone-1          110             100         35         Ok
+19       Sone-2          110             100         37         Ok
+23       Sone-1          110             100         36         Ok
+23       Sone-2          110             100         38         Ok
+27       OUTLET          85              80          27         Ok
+27       INLET           45              42          25         Ok
+27       CPU             97              93          37         Ok

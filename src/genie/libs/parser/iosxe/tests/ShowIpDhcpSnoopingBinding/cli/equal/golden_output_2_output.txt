@@ -1,0 +1,4 @@
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+00:19:09:00:00:02   101.1.0.4        111         dhcp-snooping   101   GigabitEthernet2/0/4
+Total number of bindings: 1

@@ -55,6 +55,8 @@ class ShowIpIgmpSnoopingSchema(MetaParser):
                     Optional('robustness'): int,
                     },
                 Optional('switch_querier'): str,
+                Optional('ip_address'): str,
+                Optional('state'): str,   
                 Optional('igmp_explicit_tracking'): str,
                 Optional('v2_fast_leave'): str,
                 Optional('router_ports_count'): int,
@@ -95,7 +97,7 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
         global_configuration_enabled = v1v2_report_suppression = v3_report_suppression =\
             link_local_group_suppression_enabled = vpc_multicast_optimization = configuration_vlan_id = \
             ip_igmp_snooping = lookup_mode = igmp_querier = querier_interval =\
-            querier_last_member_query_interval = querier_robustness = switch_querier = igmp_explicit_tracking = \
+            querier_last_member_query_interval = querier_robustness = switch_querier = ip_address = state = igmp_explicit_tracking = \
             v2_fast_leave = router_ports_count = groups_count = vlan_vpc_function = report_flooding = \
             report_flooding_interfaces = group_address_for_proxy_leaves = address = version = ""
 
@@ -192,12 +194,15 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
             m = p9_3.match(line)
             if m:
                 querier_robustness = m.groupdict()['querier_robustness']
-
-            #  Switch-querier disabled
-            p10 = re.compile(r'^\s*Switch\-querier +(?P<switch_querier>\S+)$')
+            # Switch-querier disabled
+            # Switch-querier enabled, address XXX.XXX.XXX.XXX, currently running
+            p10 = re.compile(r'^\s*Switch\-querier +(?P<switch_querier>[\w]+)(, +address +(?P<ip_address>(\S+)), +currently +(?P<state>[\w]+))?$')
             m = p10.match(line)
             if m:
                 switch_querier = m.groupdict()['switch_querier']
+                if switch_querier == "enabled":
+                    ip_address = m.groupdict()['ip_address']
+                    state = m.groupdict()['state']
 
             #  IGMP Explicit tracking enabled
             p11 = re.compile(r'^\s*IGMP +Explicit +tracking +(?P<igmp_explicit_tracking>\w+)$')
@@ -340,7 +345,10 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
 
             if switch_querier:
                 ret_dict['vlans'][configuration_vlan_id]['switch_querier'] = switch_querier
-
+                if switch_querier == "enabled":
+                     ret_dict['vlans'][configuration_vlan_id]['ip_address'] = ip_address
+                     ret_dict['vlans'][configuration_vlan_id]['state'] = state
+                 
             if igmp_explicit_tracking:
                 ret_dict['vlans'][configuration_vlan_id]['igmp_explicit_tracking'] = igmp_explicit_tracking
 

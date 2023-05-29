@@ -1,0 +1,312 @@
+GigabitEthernet1/0/1
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/2
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/3
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/4
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/5
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/6
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/7
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/8
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/9
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/10
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/11
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/12
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable
+GigabitEthernet1/0/13
+  Model:                 C9300-24P
+  Type:                  10/100/1000BaseTX
+  Speed:                 10,100,1000,auto
+  Duplex:                full,half,auto
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Unicast suppression:   percentage(0-100)
+  Multicast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          yes
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes
+  Multiple Media Types:  rj45
+  Breakout Support:      not applicable

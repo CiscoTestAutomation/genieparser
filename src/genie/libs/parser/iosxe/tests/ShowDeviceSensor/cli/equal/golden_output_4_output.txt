@@ -1,0 +1,13 @@
+Device: c89c.1db5.c516 on port GigabitEthernet2/0/13
+----------------------------------------------------------------------------
+Proto Type:Name                       Len Value                       Text
+DHCP    60:class-identifier            38 3C 24 43 69 73 63 6F 20 73  <$Cisco s
+                                          79 73 74 65 6D 73 2C 20 49  ystems, I
+                                          6E 63 2E 20 49 50 20 50 68  nc. IP Ph
+                                          6F 6E 65 20 43 50 2D 36 39  one CP-69
+                                          36 31                       61
+DHCP    12:host-name                   17 0C 0F 53 45 50 63 38 39 63  ..SEPc89c
+                                          31 64 62 35 63 35 31 36     1db5c516
+CDP      6:platform-type               23 00 06 00 17 43 69 73 63 6F  ....Cisco
+                                          20 49 50 20 50 68 6F 6E 65   IP Phone
+                                          20 36 39 36 31               6961

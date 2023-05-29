@@ -1,0 +1,41 @@
+ASIC Cause Statistics Brief
+
++-----------------------------------------------------------------------------------+
+| Source |         Cause        |           Rx            |           Drop          |
+|        |                      |     cur    |    delta   |     cur    |    delta   |
++-----------------------------------------------------------------------------------+
+   UKNWN   UNKNOWN                       218          218          218          218
+   INMIR   ARP MIRROR                    368          368            0            0
+   INMIR   MCAST *,G or S,G               75           75            0            0
+   INMIR   MC SVI RPF FAIL              1883         1883            0            0
+    LPTS   ICMP IPv4                 1684636      1684636            0            0
+    LPTS   BGP IPv4                    70787        70787            0            0
+    LPTS   BGP established IPv        111977       111977            0            0
+    LPTS   PIM IPv4                   142235       142235            0            0
+    LPTS   BFD IPv4                  1969349      1969349            0            0
+    LPTS   BFD ECHO IPv4             5086307      5086307            0            0
+    LPTS   UDP SRC PORT LISP I           782          782            0            0
+    LPTS   TCP SRC PORT LISP I         18264        18264            0            0
+    LPTS   IPv4 PIM Reg Mcast           1871         1871            0            0
+    LPTS   IPv4 IGMP                   15758        15758            0            0
+    LPTS   TCP default IPv4           217571       217571            0            0
+    LPTS   UDP default IPv4            43915        43915            0            0
+    LPTS   ICMP IPv6 MC                24920        24920            0            0
+    LPTS   ICMP IPv6 UC                41663        41663            0            0
+    LPTS   BGP IPv6                   147060       147060            0            0
+    LPTS   BGP established IPv         42185        42185            0            0
+    LPTS   IPv6 Options                 6337         6337            0            0
+   ITRAP   ISIS(L2)                   294428       294428            0            0
+   ITRAP   LLDP                        10953        10953        10953        10953
+   ITRAP   STP(IEEE)                  786674       786674            0            0
+   ITRAP   GOLD                           36           36            0            0
+   ITRAP   LACP                       100998       100998            0            0
+   ITRAP   CISCO Protocols           3118605      3118605            0            0
+   ITRAP   ETH HOP-OPT                     1            1            0            0
+   ITRAP   ISIS(L3)                   264309       264309            0            0
+   ITRAP   LPM Drop                        2            2            2            2
+   ITRAP   GLEAN-SUBNET                    6            6            0            0
+   ITRAP   GLEAN                      698662       698662            0            0
+   ITRAP   IGMP ENABLE                 24073        24073            0            0
+   ITRAP   MDNS                       204285       204285            0            0
+   ETRAP   TTL1(L3)                  2599161      2599161            0            0

@@ -1,0 +1,43 @@
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                             101
+
+  Flows added:                                 106
+  Flows aged:                                    5
+    - Inactive timeout    (    60 secs)          5
+
+IPV6 SOURCE ADDRESS:        2012:AA:1::20
+IPV6 DESTINATION ADDRESS:   2012:AA:2::10
+INTERFACE INPUT:            Tw2/0/2
+IP VERSION:                 6
+IP PROTOCOL:                59
+IP TOS:                     0x14
+interface output:           Null
+counter packets long:       6238
+timestamp abs first:        12:53:17.702
+timestamp abs last:         12:54:20.702
+counter bytes layer2 long:  3193856
+
+IPV6 SOURCE ADDRESS:        2012:AA:1::41
+IPV6 DESTINATION ADDRESS:   2012:AA:2::10
+INTERFACE INPUT:            Tw2/0/2
+IP VERSION:                 6
+IP PROTOCOL:                59
+IP TOS:                     0x14
+interface output:           Null
+counter packets long:       6238
+timestamp abs first:        12:53:17.702
+timestamp abs last:         12:54:20.702
+counter bytes layer2 long:  3193856
+
+IPV6 SOURCE ADDRESS:        2012:AA:1::1F
+IPV6 DESTINATION ADDRESS:   2012:AA:2::10
+INTERFACE INPUT:            Tw2/0/2
+IP VERSION:                 6
+IP PROTOCOL:                59
+IP TOS:                     0x14
+interface output:           Null
+counter packets long:       6238
+timestamp abs first:        12:53:17.702
+timestamp abs last:         12:54:20.702
+counter bytes layer2 long:  3193856

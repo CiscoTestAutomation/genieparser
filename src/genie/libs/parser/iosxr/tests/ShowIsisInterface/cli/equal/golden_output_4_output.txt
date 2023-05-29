@@ -1,0 +1,78 @@
+show isis interface Bundle-Ether10.10
+Thu Mar 23 11:35:33.215 UTC
+
+Bundle-Ether10.10           Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Enabled
+  IPv6 BFD:                 Enabled
+  BFD Min Interval:         100
+  BFD Multiplier:           3
+  RSI SRLG:                 Registered
+  Bandwidth:                2000000
+  Total bandwidth:          2000000
+  
+  Circuit Type:             level-2-only
+  Media Type:               LAN
+  Circuit Number:           1
+  Measured Delay:           Min:- Avg:- Max:- usec
+  Delay Normalization:      Interval:0 Offset:0
+  Normalized Delay:         Min:- Avg:- Max:- usec
+  Link Loss:                -
+  
+  Level-2                   
+    Adjacency Count:        1
+    LAN ID:                 P-9001-1.01
+    Priority (Local/DIS):   64/64
+    Next LAN IIH in:        2 s
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+  
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   8478.ac6d.6c4a
+    Layer-2 MCast Groups Membership:
+      All Level-2 ISs:      Yes
+  
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+          Policy (L1/L2):   -/-
+    Metric (L1/L2):         0/10
+    Metric fallback:
+      Bandwidth (L1/L2):    Inactive/Inactive
+      Anomaly (L1/L2):      Inactive/Inactive
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10/10 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+      FRR Type:             None               None           
+  IPv6 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+          Policy (L1/L2):   -/-
+    Metric (L1/L2):         0/10
+    Metric fallback:
+      Bandwidth (L1/L2):    Inactive/Inactive
+      Anomaly (L1/L2):      Inactive/Inactive
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   1/3/10/10 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+      FRR Type:             None               None           
+  
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 192.168.17.1
+    Global Prefix(es):      192.168.17.0/24
+  IPv6 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): fe80::8678:acff:fe6d:6c4a
+    Global Prefix(es):      100:1:1::/64
+  
+  LSP transmit timer expires in 0 ms
+  LSP transmission is idle
+  Can send up to 9 back-to-back LSPs in the next 0 ms

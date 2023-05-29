@@ -56,9 +56,10 @@ class ShowTemplateBindingTarget(ShowTemplateBindingSchema):
         # ------              ------            -------------
         # dynamic             User              cts_dot1x
         # static              User              port-config
+        # dynamic             Built-in          IP_PHONE_INTERFACE_TEMPLATE 
         p2 = re.compile(
             r"^(?P<method>(static|dynamic))\s+"
-            r"(?P<source>\w+)\s+"
+            r"(?P<source>[\w\-]+)\s+"
             r"(?P<interface_template_name>[\w_\-.]+)"
         )
         # Template-Name                                    Source            Bound-To-MAc

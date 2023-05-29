@@ -429,6 +429,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                 Optional('mask'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
+                                Optional('behaviour'): str,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_codes'): str,
                                 Optional('known_via'): str,
@@ -1101,14 +1102,19 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # i L1 2001:21:21:21::21/128
         # i*L2 ::/0
         # a*   ::/0
+        # L    fc00:c000:1001::/48, SRv6 Endpoint uN (shift)
+        # L    fc00:c000:1001::/64, SRv6 Endpoint uN (PSP/USD)
         p2 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*)?(?P<code2>\w+)? '
-                        r'+(?P<network>\S+))?( +is +directly +connected\,)?$')
+                        r'+(?P<network>([\d:.\/a-f]+)))?\,?\s*(is +directly +connected)?'
+                        r'\,?( +SRv6 +Endpoint (?P<behaviour>[\w \/\(\)]+))?$')
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
         # [0/0] via ::, 5w2d
+        # [0/0] via ::ffff:0.0.0.0 (nexthop in vrf SRV6_L3VPN_BE), 23:09:19
+        # [0/0] via :: (nexthop in vrf SRV6_L3VPN_BE), 23:09:19
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +(?P<nexthop_in_vrf>\w+)\))?,'
                         r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # 01:52:24, Loopback0
@@ -1189,6 +1195,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             # i L1 2001:21:21:21::21/128
             # i*L2 ::/0
             # a*   ::/0
+            # L    fc00:c000:1001::/48, SRv6 Endpoint uN (shift)
+            # L    fc00:c000:1001::/64, SRv6 Endpoint uN (PSP/USD)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1203,6 +1211,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     code1 = '{} {}'.format(code1, code2)
 
                 network = group['network']
+                behaviour = group['behaviour']
                 route_dict = ret_dict.setdefault('vrf', {}). \
                     setdefault(vrf, {}). \
                     setdefault('address_family', {}). \
@@ -1214,6 +1223,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 route_dict.update({'source_protocol_codes': code1})
                 route_dict.update({'route': network})
                 route_dict.update({'active': True})
+                if behaviour:
+                    route_dict.update({'behaviour': behaviour})
                 index = 0
                 continue
 
@@ -1225,6 +1236,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 group = m.groupdict()
                 route_preference = int(group['route_preference'])
                 metric = int(group['metric'])
+                nexthop_in_vrf = group['nexthop_in_vrf']
                 next_hop = group.get('next_hop', None)
                 updated = group.get('date', None)
                 interface = group.get('interface', None)
@@ -1243,6 +1255,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     next_hop_list_dict.update({'outgoing_interface': interface})
                 if updated:
                     next_hop_list_dict.update({'updated': updated})
+                if nexthop_in_vrf:
+                    next_hop_list_dict.update({'nexthop_in_vrf': nexthop_in_vrf})
                 continue
 
             # 01:52:24, Loopback0

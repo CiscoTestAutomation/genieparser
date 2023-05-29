@@ -1,0 +1,18 @@
+       Device-Sensor Details         
+--------------------------------------
+
+Status = Enabled 
+
+Protocols:
+-----------
+CDP            registered  Proto Tlv Limit = 128
+LLDP           registered  Proto Tlv Limit = 128
+DHCP           registered  Proto Tlv Limit = 128
+DHCPv6         registered  Proto Tlv Limit = 128
+
+Protocol Filter Configuration:
+---------------------------------
+CDP             None
+LLDP            None
+DHCP            None
+DHCPv6          None

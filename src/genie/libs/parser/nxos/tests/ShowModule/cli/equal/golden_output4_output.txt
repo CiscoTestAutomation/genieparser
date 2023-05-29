@@ -1,0 +1,51 @@
+show module
+
+Mod Ports                  Module-Type                            Model           Status
+--- ----- ------------------------------------------------ --------------------- --------
+7    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok        
+8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok        
+27   0    Supervisor Module                                N9K-C9800-SUP-A       active *  
+28   0    Supervisor Module                                N9K-C9800-SUP-A       ha-standby
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+7    10.3(2)IOV9(0.190)       1.0    LC7 
+8    10.3(2)IOV9(0.190)       1.0    LC8 
+27   10.3(2)IOV9(0.190)       1.0    SUP1
+28   10.3(2)IOV9(0.190)       1.0    SUP2
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+7    14-a2-a0-c6-11-88 to 14-a2-a0-c6-12-af  FOC2546NHP8
+8    e0-69-ba-94-10-30 to e0-69-ba-94-11-57  FOC2546NHPF
+27   38-fd-f8-ef-f5-68 to 38-fd-f8-ef-f5-6f  FOC2547N3SM
+28   38-fd-f8-ef-f5-38 to 38-fd-f8-ef-f5-3f  FOC2547N3SH
+
+Mod  Online Diag Status
+---  ------------------
+7    Pass
+8    Pass
+27   Pass
+28   Fail
+LFM Ports                  Module-Type                            Model           Status
+--- ----- ------------------------------------------------ --------------------- --------
+21   0    8-slot Fabric Module                             N9K-C9808-FM-A        ok        
+24   0    8-slot Fabric Module                             N9K-C9808-FM-A        ok        
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+21   NA                       1.0    FM3 
+24   NA                       1.0    FM6 
+
+LFM MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+21   NA                                      928AF1Z7YSU
+24   NA                                      9ZBU8WUG4DX
+
+LFM  Online Diag Status
+---  ------------------
+21   Pass
+24   Pass
+
+sanity131-eor1#

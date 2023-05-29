@@ -74,6 +74,10 @@ IOSXE parsers for the following show commands:
     * show ip dhcp excluded-addresses all
     * show ip dhcp excluded-addresses vrf {vrf}
     * show ip dhcp excluded-addresses pool {pool}
+    * show ip http server all
+    * show ip http server secure status
+    * show ip dhcp snooping binding interface {interface}
+    * show ip dhcp snooping binding {mac}
     '''
 
 # Python
@@ -752,7 +756,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                     itemp_dict = tmp_dict.setdefault(index, {})
 
                     itemp_dict.update(group)
-
+                    vrf_dict.setdefault('default', {}).setdefault('index', {}).update(tmp_dict)
                     protocol_dict = index_dict.setdefault(index, {})
 
                 index += 1
@@ -854,6 +858,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                     vrf_name_dict = vrf_dict.setdefault(group['vrf_name'], {})
                     index_dict = vrf_name_dict.setdefault('index', {})
                     tmp_dict[1].update({'group_id': int(group['group_id'])})
+                    del vrf_dict['default']
                     vrf_flag = True
 
                 else:
@@ -1710,14 +1715,20 @@ class ShowIpDhcpSnoopingDatabaseDetail(ShowIpDhcpSnoopingDatabase):
 
 
 # ===================================================
-# Schema for 'show ip dhcp snooping binding'
+# Schema for 
+#    * 'show ip dhcp snooping binding'
+#    * 'show ip dhcp snooping binding interface {interface}'
+#    * 'show ip dhcp snooping binding {mac}'
 # ===================================================
 class ShowIpDhcpSnoopingBindingSchema(MetaParser):
     ''' Schema for:
         * 'show ip dhcp snooping binding'
+        * 'show ip dhcp snooping binding interface {interface}'
+        * 'show ip dhcp snooping binding {mac}'
     '''
 
     schema = {
+        'total_bindings': int,
         'interfaces': {
             Any(): {
                 'vlan': {
@@ -1736,20 +1747,30 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
 # ===========================
 # Parser for:
 #   * 'show show ip dhcp snooping binding'
+#   * 'show ip dhcp snooping binding interface {interface}'
+#   * 'show ip dhcp snooping binding {mac}'
 # ===========================
 class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
     ''' Parser for:
         * 'show ip dhcp snooping binding'
+        * 'show ip dhcp snooping binding interface {interface}'
+        * 'show ip dhcp snooping binding {mac}'
      '''
 
-    cli_command = ['show ip dhcp snooping binding']
+    cli_command = ['show ip dhcp snooping binding', 
+                'show ip dhcp snooping binding interface {interface}',
+                'show ip dhcp snooping binding {mac}']
 
-    def cli(self, output=None):
-
+    def cli(self, interface=None, mac=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if mac:
+                cmd = self.cli_command[2].format(mac=mac)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)
 
         # Init vars
         ret_dict = {}
@@ -1760,8 +1781,10 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
 
         p1 = re.compile(r'^(?P<mac>\S+) +(?P<ip>\S+) +(?P<lease>\d+) +(?P<type>\S+) +(?P<vlan>\d+) +(?P<interface>\S+)$')
 
+        # Total number of bindings: 1
+        p2 = re.compile(r'^Total number of bindings: (?P<total_bindings>\d+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
 
             line = line.strip()
             m = p1.match(line)
@@ -1782,6 +1805,12 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
                     'lease': int(group['lease']),
                     'type': group['type']
                 })
+                continue
+            
+            # Total number of bindings: 1
+            m = p2.match(line)
+            if m:
+                ret_dict['total_bindings'] = int(m.groupdict()['total_bindings'])
                 continue
 
         return ret_dict
@@ -2063,7 +2092,10 @@ class ShowIpMfib(ShowIpMfibSchema):
             if m:
                 changedict={}
                 for key in m.groupdict().keys():
-                  changedict[key] = int(m.groupdict()[key])
+                    if 'NA' in m.groupdict()[key]:
+                        changedict[key] = (m.groupdict()[key])
+                    else:
+                        changedict[key] = int(m.groupdict()[key])
                 sw_data.update(changedict)
                 continue
 
@@ -6508,3 +6540,807 @@ class ShowIpDhcpExcludedAddresses(ShowIpDhcpExcludedAddressesSchema):
                 continue
 
         return parsed_dict
+
+class ShowIpIgmpSnoopingVlanSchema(MetaParser):
+    """Schema for show ip igmp snooping vlan {vlan}"""
+    schema = {
+        'igmp_snooping': str,
+        'global_pim_snooping': str,
+        'igmpv3_snooping': str,
+        'report_supression': str,
+        'tcn_solicit_query': str,
+        'tcn_flood_query_count': int,
+        'robustness_variable': int,
+        'last_member_query_count': int,
+        'last_member_query_interval': int,
+        'vlan': {
+            Any(): {
+                'igmp_snooping': str,
+                'pim_snooping': str,
+                'igmpv2_immediate_leave': str,
+                'explicit_host_tracking': str,
+                'multicast_router_learning_mode': str,
+                Optional('cgmp_inter_mode'): str,
+                'robustness_variable': int,
+                'last_member_query_count': int,
+                'last_member_query_interval': int,
+                Optional('topology_change_state'): str,
+            },
+        }
+    }
+
+class ShowIpIgmpSnoopingVlan(ShowIpIgmpSnoopingVlanSchema):
+    """Parser for show ip igmp snooping vlan {vlan}"""
+    cli_command = 'show ip igmp snooping vlan {vlan}'
+
+    def cli(self, vlan=None):
+        cmd = self.cli_command.format(vlan = vlan)
+        output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Vlan 10:
+        p0 = re.compile(r"^Vlan\s+(?P<vlan>\d+):\s*$")
+        
+        # IGMP snooping : Enabled
+        p1 = re.compile(r"^IGMP\s+snooping\s+:\s+(?P<igmp_snooping>\w+)$")
+
+        # Global PIM Snooping : Disabled
+        p2 = re.compile(r"^Global\s+PIM\s+Snooping\s+:\s+(?P<global_pim_snooping>\w+)$")
+
+        # IGMPv3 snooping : Enabled
+        p3 = re.compile(r"^IGMPv3\s+snooping\s+:\s+(?P<igmpv3_snooping>\w+)$")
+
+        # Report suppression : Enabled
+        p4 = re.compile(r"^Report\s+suppression\s+:\s+(?P<report_supression>\w+)$")
+
+        # TCN solicit query : Disabled
+        p5 = re.compile(r"^TCN\s+solicit\s+query\s+:\s+(?P<tcn_solicit_query>\w+)$")
+
+        # TCN flood query count      : 2
+        p6 = re.compile(r"^TCN\s+flood\s+query\s+count\s+:\s+(?P<tcn_flood_query_count>\d+)$")
+
+        # Robustness variable : 2
+        p7 = re.compile(r"^Robustness\s+variable\s+:\s+(?P<robustness_variable>\d+)$")
+
+        # Last member query count  : 2
+        p8 = re.compile(r"^Last\s+member\s+query\s+count\s+:\s+(?P<last_member_query_count>\d+)$")
+
+        # Last member query interval   : 1000
+        p9 = re.compile(r"^Last\s+member\s+query\s+interval\s+:\s+(?P<last_member_query_interval>\d+)$")
+
+        # Pim Snooping                        : Disabled
+        p10 = re.compile(r"^Pim\s+Snooping\s+:\s+(?P<pim_snooping>\w+)$")
+
+        # IGMPv2 immediate leave              : Disabled
+        p11 = re.compile(r"^IGMPv2\s+immediate\s+leave\s+:\s+(?P<igmpv2_immediate_leave>\w+)$")
+
+        # Explicit host tracking              : Enabled
+        p12 = re.compile(r"^Explicit\s+host\s+tracking\s+:\s+(?P<explicit_host_tracking>\w+)$")
+
+        # Multicast router learning mode      : pim-dvmrp
+        p13 = re.compile(r"^Multicast\s+router\s+learning\s+mode\s+:\s+(?P<multicast_router_learning_mode>\S+)$")
+
+        # CGMP interoperability mode          : IGMP_ONLY
+        p14 = re.compile(r"^CGMP\s+interoperability\s+mode\s+:\s+(?P<cgmp_inter_mode>\S+)$")
+
+        # Topology change                     : No
+        p15 = re.compile(r"^Topology\s+change\s+:\s+(?P<topology_change_state>\w+)$")
+
+        vlan_dict = ret_dict
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan 10:
+            m = p0.match(line)
+            if m:
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(m.groupdict()['vlan'], {})
+                continue
+
+            # IGMP snooping : Enabled
+            m = p1.match(line)
+            if m:
+                vlan_dict.update({
+                    "igmp_snooping": m.groupdict()["igmp_snooping"]
+                })
+                continue
+            
+            # Global PIM Snooping : Disabled
+            m = p2.match(line)
+            if m:
+                ret_dict["global_pim_snooping"] = m.groupdict()["global_pim_snooping"]
+                continue
+
+            # IGMPv3 snooping : Enabled
+            m = p3.match(line)
+            if m:
+                ret_dict["igmpv3_snooping"] = m.groupdict()["igmpv3_snooping"]
+                continue
+
+            # Report suppression : Enabled
+            m = p4.match(line)
+            if m:
+                ret_dict["report_supression"] = m.groupdict()["report_supression"]
+                continue
+
+            # TCN solicit query : Disabled
+            m = p5.match(line)
+            if m:
+                ret_dict["tcn_solicit_query"] = m.groupdict()["tcn_solicit_query"]
+                continue
+
+            # TCN flood query count      : 2
+            m = p6.match(line)
+            if m:
+                ret_dict["tcn_flood_query_count"] = int(m.groupdict()["tcn_flood_query_count"])
+                continue
+
+            # Robustness variable : 2
+            m = p7.match(line)
+            if m:
+                vlan_dict.update({
+                    "robustness_variable": int(m.groupdict()["robustness_variable"])
+                })
+                continue
+
+            # Last member query count  : 2
+            m = p8.match(line)
+            if m:
+                vlan_dict.update({
+                    "last_member_query_count": int(m.groupdict()["last_member_query_count"])
+                })
+                continue
+
+            # Last member query interval   : 1000
+            m = p9.match(line)
+            if m:
+                vlan_dict.update({
+                    "last_member_query_interval": int(m.groupdict()["last_member_query_interval"])
+                })
+                continue
+
+            # Pim Snooping                        : Disabled
+            m = p10.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # IGMPv2 immediate leave              : Disabled
+            m = p11.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Explicit host tracking              : Enabled
+            m = p12.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Multicast router learning mode      : pim-dvmrp
+            m = p13.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # CGMP interoperability mode          : IGMP_ONLY
+            m = p14.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+            # Topology change                     : No
+            m = p15.match(line)
+            if m:
+                vlan_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
+
+
+class ShowIpHttpServerAllSchema(MetaParser):
+    """
+        Schema for show ip http server all
+    """
+    schema = {
+        Optional('http_server'): {
+            'status': str,
+            'port': int,
+            'supplementary_listener_ports': int,
+            'authentication_method': str,
+            'auth_retry': int,
+            'time_window': int,
+            'digest_algorithm': str,
+            'access_class': str,
+            'ipv4_access_class': str,
+            'ipv6_access_class': str,
+            Optional('base_path'): str,
+            'file_upload_status': str,
+            Optional('upload_path'): str,
+            Optional('help_root'): str,
+            'max_connections_allowed': int,
+            'max_secondary_connections': int,
+            'idle_timeout': int,
+            'life_timeout': int,
+            'session_idle_timeout': int,
+            'max_requests_allowed': int,
+            'linger_timeout': int,
+            'active_session_modules': str,
+            'application_session_modules': {
+                Any(): {
+                    'handle': int,
+                    'status': str,
+                    'secure_status': str,
+                    'description': str
+                }
+            },
+            'current_connections': {
+                Any(): {
+                    'remote_ipaddress_port': str,
+                    'in_bytes': int,
+                    'out_bytes': int
+                }
+            },
+            'nginx_internal_counters': {
+                'pool': int,
+                'active_connection': int,
+                'pool_available': int,
+                'maximum_connection_hit': int
+            },
+            'statistics': {
+                'accepted_connections': int,
+                'server_accepts_handled_requests': str,
+                'reading': int,
+                'writing': int,
+                'waiting': int
+            },
+            'history': {
+                'index': {
+                    Any(): {
+                        'local_ip_address_port': str,
+                        'remote_ip_address_port': str,
+                        'in_bytes': int,
+                        'out_bytes': int,
+                        'end_time': str
+                    }
+                }
+            },
+            'conn_history_current_pos': int,
+            Optional('help_path'): str
+        },
+        'http_secure_server': {
+            Optional('capability'): str,
+            'status': str,
+            'port': int,
+            'ciphersuite': list,
+            'tls_version': list,
+            'client_authentication': str,
+            'piv_authentication': str,
+            'piv_authorization': str,
+            'trustpoint': str,
+            Optional('peer_validation_trustpoint'): str,
+            'ecdhe_curve': str,
+            'active_session_modules': str
+        }
+    }
+
+
+class ShowIpHttpServerAll(ShowIpHttpServerAllSchema):
+    """
+        Parser for show ip http server all
+    """
+
+    cli_command = 'show ip http server all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # HTTP server status: Enabled
+        p0 = re.compile(r'^HTTP server status: (?P<status>\w+)$')
+
+        # HTTP server port: 80
+        p1 = re.compile(r'^HTTP server port: (?P<port>\d+)$')
+
+        # HTTP server active supplementary listener ports: 21111
+        p2 = re.compile(r'^HTTP server active supplementary listener ports: (?P<supplementary_listener_ports>\d+)$')
+
+        # HTTP server authentication method: enable
+        p3 = re.compile(r'^HTTP server authentication method: (?P<authentication_method>\w+)$')
+
+        # HTTP server auth-retry 0 time-window 0
+        p4 = re.compile(r'^HTTP server auth-retry (?P<auth_retry>\d+) time-window (?P<time_window>\d+)$')
+
+        # HTTP server digest algorithm: md5
+        p5 = re.compile(r'^HTTP server digest algorithm: (?P<digest_algorithm>\w+)$')
+
+        # HTTP server access class: 0
+        p6 = re.compile(r'^HTTP server access class: (?P<access_class>\d+)$')
+
+        # HTTP server IPv4 access class: None
+        p7 = re.compile(r'^HTTP server IPv4 access class: (?P<ipv4_access_class>\w+)$')
+
+        # HTTP server IPv6 access class: None
+        p8 = re.compile(r'^HTTP server IPv6 access class: (?P<ipv6_access_class>\w+)$')
+
+        # HTTP server base path:
+        p9 = re.compile(r'^HTTP server base path: (?P<base_path>\S+)$')
+
+        # HTTP File Upload status: Disabled
+        p10 = re.compile(r'^HTTP File Upload status: (?P<file_upload_status>\w+)$')
+
+        # HTTP server upload path:
+        p11 = re.compile(r'^HTTP server upload path: (?P<upload_path>\S+)$')
+
+        # HTTP server help root:
+        p12 = re.compile(r'^HTTP server help root: (?P<help_root>\w+)$')
+
+        # Maximum number of concurrent server connections allowed: 300
+        p13 = re.compile(r'^Maximum number of concurrent server connections allowed: (?P<max_connections_allowed>\d+)$')
+
+        # Maximum number of secondary server connections allowed: 50
+        p14 = re.compile(r'^Maximum number of secondary server connections allowed: (?P<max_secondary_connections>\d+)$')
+
+        # Server idle time-out: 180 seconds
+        p15 = re.compile(r'^Server idle time-out: (?P<idle_timeout>\d+) seconds$')
+
+        # Server life time-out: 180 seconds
+        p16 = re.compile(r'^Server life time-out: (?P<life_timeout>\d+) seconds$')
+
+        # Server session idle time-out: 600 seconds
+        p17 = re.compile(r'^Server session idle time-out: (?P<session_idle_timeout>\d+) seconds$')
+
+        # Maximum number of requests allowed on a connection: 25
+        p18 = re.compile(r'^Maximum number of requests allowed on a connection: (?P<max_requests_allowed>\d+)$')
+
+        # Server linger time : 60 seconds
+        p19 = re.compile(r'^Server linger time : (?P<linger_timeout>\d+) seconds$')
+
+        # HTTP server active session modules: ALL
+        p20 = re.compile(r'^HTTP server active session modules: (?P<active_session_modules>\w+)$')
+
+        # HTTP secure server capability: Present
+        p21 = re.compile(r'^HTTP secure server capability: (?P<capability>\w+)$')
+
+        # HTTP secure server status: Enabled
+        p21_1 = re.compile(r'^HTTP secure server status: (?P<status>\w+)$')
+
+        # HTTP secure server port: 443
+        p21_2 = re.compile(r'^HTTP secure server port: (?P<port>\d+)$')
+
+        # HTTP secure server ciphersuite:  rsa-aes-cbc-sha2 rsa-aes-gcm-sha2
+        p21_3 = re.compile(r'^HTTP secure server ciphersuite:\s+(?P<ciphersuite>.+)$')
+        
+        #         dhe-aes-cbc-sha2 dhe-aes-gcm-sha2 ecdhe-rsa-aes-cbc-sha2
+        #         ecdhe-rsa-aes-gcm-sha2 ecdhe-ecdsa-aes-gcm-sha2 tls13-aes128-gcm-sha256
+        #         tls13-aes256-gcm-sha384 tls13-chacha20-poly1305-sha256
+        p21_4 = re.compile(r'^(?P<ciphersuite>(dhe|ecdhe|tls|rsa)[a-z\d\s\-]+)$')
+        
+        # HTTP secure server TLS version:  TLSv1.3 TLSv1.2
+        p21_5 = re.compile(r'^HTTP secure server TLS version:\s+(?P<tls_version>.+)$')
+
+        # HTTP secure server client authentication: Disabled
+        p21_6 = re.compile(r'^HTTP secure server client authentication: (?P<client_authentication>\w+)$')
+
+        # HTTP secure server PIV authentication: Disabled
+        p21_7 = re.compile(r'^HTTP secure server PIV authentication: (?P<piv_authentication>\w+)$')
+
+        # HTTP secure server PIV authorization only: Disabled
+        p21_8 = re.compile(r'^HTTP secure server PIV authorization only: (?P<piv_authorization>\w+)$')
+
+        # HTTP secure server trustpoint: INVALID_TP
+        p21_9 = re.compile(r'^HTTP secure server trustpoint:\s+(?P<trustpoint>.+)$')
+
+        # HTTP secure server peer validation trustpoint:
+        p21_10 = re.compile(r'^HTTP secure server peer validation trustpoint: (?P<peer_validation_trustpoint>\w+)$')
+
+        # HTTP secure server ECDHE curve: secp256r1
+        p21_11 = re.compile(r'^HTTP secure server ECDHE curve: (?P<ecdhe_curve>\w+)$')
+
+        # HTTP secure server active session modules: ALL
+        p21_12 = re.compile(r'^HTTP secure server active session modules: (?P<active_session_modules>\w+)$')
+
+        # HTTP server application session modules:
+        p22 = re.compile(r'^HTTP server application session modules:$')
+
+        # HTTP_IFS              1      Active   Active         HTTP based IOS File Server
+        p22_1 = re.compile(r'^(?P<session_module_name>\S+)\s+(?P<handle>\d+)\s+(?P<status>[A-Za-z]+)\s+(?P<secure_status>[A-Za-z]+)\s+(?P<description>.+)$')
+
+        # HTTP server current connections:
+        p23 = re.compile(r'^HTTP server current connections:$')
+
+        # local-ipaddress:port  remote-ipaddress:port  in-bytes  out-bytes
+        # 127.0.0.1:21111  127.0.0.1:58764  0  0
+        p23_1 = re.compile(r'^(?P<current_connection>\S+)\s+(?P<remote_ipaddress_port>\S+)\s+(?P<in_bytes>\d+)\s+(?P<out_bytes>\d+)$')
+
+        # Nginx Internal Counters:
+        p24 = re.compile(r'^Nginx Internal Counters:$')
+
+        # Nginx pool = 915
+        p24_1 = re.compile(r'^Nginx pool = (?P<pool>\d+)$')
+
+        # Active connection = 1
+        p24_2 = re.compile(r'^Active connection = (?P<active_connection>\d+)$')
+
+        # Nginx pool available = 898
+        p24_3 = re.compile(r'^Nginx pool available = (?P<pool_available>\d+)$')
+
+        # Maxmum connection Hit = 0
+        p24_4 = re.compile(r'^Maxmum connection Hit = (?P<maximum_connection_hit>\d+)$')
+
+        # HTTP server statistics:
+        p25 = re.compile(r'^HTTP server statistics:$')
+
+        # Accepted connections total: 1
+        p25_1 = re.compile(r'^Accepted connections total: (?P<accepted_connections>\d+)$')
+
+        # 2 2 2
+        p25_2 = re.compile(r'^(?P<server_accepts_handled_requests>[\d\s]+)$')
+
+        # Reading: 0 Writing: 1 Waiting: 0
+        p25_3 = re.compile(r'^Reading:\s+(?P<reading>\d+)\s+Writing:\s+(?P<writing>\d+)\s+Waiting:\s+(?P<waiting>\d+)$')
+
+        # HTTP server history:
+        p26 = re.compile(r'^HTTP server history:$')
+
+        # local-ipaddress:port  remote-ipaddress:port  in-bytes  out-bytes  end-time
+        # 127.0.0.1:21111  127.0.0.1:58764  0  404  11:56:11 17/03
+        # 127.0.0.1:21111  127.0.0.1:58778  0  277  11:56:13 17/03
+        p26_1 = re.compile(r'^(?P<local_ip_address_port>\S+)\s+(?P<remote_ip_address_port>\S+)\s+(?P<in_bytes>\d+)\s+(?P<out_bytes>\d+)\s+(?P<end_time>.+)$')
+
+        # conn_history_current_pos: 2
+        p27 = re.compile(r'^conn_history_current_pos: (?P<conn_history_current_pos>\d+)$')
+
+        # HTTP server help path:
+        p28 = re.compile(r'^HTTP server help path: (?P<help_path>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # HTTP server status: Enabled
+            m = p0.match(line)
+            if m:
+                http_server_dict = ret_dict.setdefault('http_server', {})
+                http_server_dict['status'] = m.groupdict()['status']
+                continue
+
+            # HTTP server port: 80
+            m = p1.match(line)
+            if m:
+                http_server_dict['port'] = int(m.groupdict()['port'])
+                continue
+
+            # HTTP server active supplementary listener ports: 21111
+            m = p2.match(line)
+            if m:
+                http_server_dict['supplementary_listener_ports'] = int(m.groupdict()['supplementary_listener_ports'])
+                continue
+
+            # HTTP server authentication method: enable
+            m = p3.match(line)
+            if m:
+                http_server_dict['authentication_method'] = m.groupdict()['authentication_method']
+                continue
+
+            # HTTP server auth-retry 0 time-window 0
+            m = p4.match(line)
+            if m:
+                http_server_dict['auth_retry'] = int(m.groupdict()['auth_retry'])
+                http_server_dict['time_window'] = int(m.groupdict()['time_window'])
+                continue
+
+            # HTTP server digest algorithm: md5
+            m = p5.match(line)
+            if m:
+                http_server_dict['digest_algorithm'] = m.groupdict()['digest_algorithm']
+                continue
+
+            # HTTP server access class: 0
+            m = p6.match(line)
+            if m:
+                http_server_dict['access_class'] = m.groupdict()['access_class']
+                continue
+
+            # HTTP server IPv4 access class: None
+            m = p7.match(line)
+            if m:
+                http_server_dict['ipv4_access_class'] = m.groupdict()['ipv4_access_class']
+                continue
+
+            # HTTP server IPv6 access class: None
+            m = p8.match(line)
+            if m:
+                http_server_dict['ipv6_access_class'] = m.groupdict()['ipv6_access_class']
+                continue
+
+            # HTTP server base path:
+            m = p9.match(line)
+            if m:
+                http_server_dict['base_path'] = m.groupdict()['base_path']
+                continue
+
+            # HTTP File Upload status: Disabled
+            m = p10.match(line)
+            if m:
+                http_server_dict['file_upload_status'] = m.groupdict()['file_upload_status']
+                continue
+
+            # HTTP server upload path:
+            m = p11.match(line)
+            if m:
+                http_server_dict['upload_path'] = m.groupdict()['upload_path']
+                continue
+
+            # HTTP server help root:
+            m = p12.match(line)
+            if m:
+                http_server_dict['help_root'] = m.groupdict()['help_root']
+                continue
+
+            # Maximum number of concurrent server connections allowed: 300
+            m = p13.match(line)
+            if m:
+                http_server_dict['max_connections_allowed'] = int(m.groupdict()['max_connections_allowed'])
+                continue
+
+            # Maximum number of secondary server connections allowed: 50
+            m = p14.match(line)
+            if m:
+                http_server_dict['max_secondary_connections'] = int(m.groupdict()['max_secondary_connections'])
+                continue
+
+            # Server idle time-out: 180 seconds
+            m = p15.match(line)
+            if m:
+                http_server_dict['idle_timeout'] = int(m.groupdict()['idle_timeout'])
+                continue
+
+            # Server life time-out: 180 seconds
+            m = p16.match(line)
+            if m:
+                http_server_dict['life_timeout'] = int(m.groupdict()['life_timeout'])
+                continue
+
+            # Server session idle time-out: 600 seconds
+            m = p17.match(line)
+            if m:
+                http_server_dict['session_idle_timeout'] = int(m.groupdict()['session_idle_timeout'])
+                continue
+
+            # Maximum number of requests allowed on a connection: 25
+            m = p18.match(line)
+            if m:
+                http_server_dict['max_requests_allowed'] = int(m.groupdict()['max_requests_allowed'])
+                continue
+
+            # Server linger time : 60 seconds
+            m = p19.match(line)
+            if m:
+                http_server_dict['linger_timeout'] = int(m.groupdict()['linger_timeout'])
+                continue
+
+            # HTTP server active session modules: ALL
+            m = p20.match(line)
+            if m:
+                http_server_dict['active_session_modules'] = m.groupdict()['active_session_modules']
+                continue
+
+            # HTTP secure server capability: Present
+            m = p21.match(line)
+            if m:
+                secure_server_dict = ret_dict.setdefault('http_secure_server', {})
+                secure_server_dict['capability'] = m.groupdict()['capability']
+                continue
+
+            # HTTP secure server status: Enabled
+            m = p21_1.match(line)
+            if m:
+                secure_server_dict = ret_dict.setdefault('http_secure_server', {})
+                secure_server_dict['status'] = m.groupdict()['status']
+                continue
+
+            # HTTP secure server port: 443
+            m = p21_2.match(line)
+            if m:
+                secure_server_dict['port'] = int(m.groupdict()['port'])
+                continue
+
+            # HTTP secure server ciphersuite:  rsa-aes-cbc-sha2 rsa-aes-gcm-sha2
+            m = p21_3.match(line)
+            if m:
+                secure_server_dict['ciphersuite'] = m.groupdict()['ciphersuite'].split()
+                continue
+
+            #         dhe-aes-cbc-sha2 dhe-aes-gcm-sha2 ecdhe-rsa-aes-cbc-sha2
+            #         ecdhe-rsa-aes-gcm-sha2 ecdhe-ecdsa-aes-gcm-sha2 tls13-aes128-gcm-sha256
+            #         tls13-aes256-gcm-sha384 tls13-chacha20-poly1305-sha256
+            m = p21_4.match(line)
+            if m:
+                secure_server_dict['ciphersuite'].extend(m.groupdict()['ciphersuite'].split())
+                continue
+
+            # HTTP secure server TLS version:  TLSv1.3 TLSv1.2
+            m = p21_5.match(line)
+            if m:
+                secure_server_dict['tls_version'] = m.groupdict()['tls_version'].split()
+                continue
+
+            # HTTP secure server client authentication: Disabled
+            m = p21_6.match(line)
+            if m:
+                secure_server_dict['client_authentication'] = m.groupdict()['client_authentication']
+                continue
+
+            # HTTP secure server PIV authentication: Disabled
+            m = p21_7.match(line)
+            if m:
+                secure_server_dict['piv_authentication'] = m.groupdict()['piv_authentication']
+                continue
+
+            # HTTP secure server PIV authorization only: Disabled
+            m = p21_8.match(line)
+            if m:
+                secure_server_dict['piv_authorization'] = m.groupdict()['piv_authorization']
+                continue
+
+            # HTTP secure server trustpoint: INVALID_TP
+            m = p21_9.match(line)
+            if m:
+                secure_server_dict['trustpoint'] = m.groupdict()['trustpoint']
+                continue
+
+            # HTTP secure server peer validation trustpoint:
+            m = p21_10.match(line)
+            if m:
+                secure_server_dict['peer_validation_trustpoint'] = m.groupdict()['peer_validation_trustpoint']
+                continue
+
+            # HTTP secure server ECDHE curve: secp256r1
+            m = p21_11.match(line)
+            if m:
+                secure_server_dict['ecdhe_curve'] = m.groupdict()['ecdhe_curve']
+                continue
+
+            # HTTP secure server active session modules: ALL
+            m = p21_12.match(line)
+            if m:
+                secure_server_dict['active_session_modules'] = m.groupdict()['active_session_modules']
+                continue
+
+            # HTTP server application session modules:
+            m = p22.match(line)
+            if m:
+                application_session_dict = http_server_dict.setdefault('application_session_modules', {})
+                continue
+
+            # HTTP_IFS              1      Active   Active         HTTP based IOS File Server
+            m = p22_1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                session_module_dict = application_session_dict.setdefault(group_dict['session_module_name'].lower().replace('-', '_'), {})
+                session_module_dict['handle'] = int(group_dict['handle'])
+                session_module_dict['status'] = group_dict['status']
+                session_module_dict['secure_status'] = group_dict['secure_status']
+                session_module_dict['description'] = group_dict['description']
+                continue
+
+            # HTTP server current connections:
+            m = p23.match(line)
+            if m:
+                current_connections_dict = http_server_dict.setdefault('current_connections', {})
+                continue
+
+            # local-ipaddress:port  remote-ipaddress:port  in-bytes  out-bytes
+            # 127.0.0.1:21111  127.0.0.1:58764  0  0
+            m = p23_1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                current_connection_dict = current_connections_dict.setdefault(group_dict['current_connection'], {})
+                current_connection_dict['remote_ipaddress_port'] = group_dict['remote_ipaddress_port']
+                current_connection_dict['in_bytes'] = int(group_dict['in_bytes'])
+                current_connection_dict['out_bytes'] = int(group_dict['out_bytes'])
+                continue
+
+            # Nginx Internal Counters:
+            m = p24.match(line)
+            if m:
+                nginx_counters_dict = http_server_dict.setdefault('nginx_internal_counters', {})
+                continue
+
+            # Nginx pool = 915
+            m = p24_1.match(line)
+            if m:
+                nginx_counters_dict['pool'] = int(m.groupdict()['pool'])
+                continue
+
+            # Active connection = 1
+            m = p24_2.match(line)
+            if m:
+                nginx_counters_dict['active_connection'] = int(m.groupdict()['active_connection'])
+                continue
+
+            # Nginx pool available = 898
+            m = p24_3.match(line)
+            if m:
+                nginx_counters_dict['pool_available'] = int(m.groupdict()['pool_available'])
+                continue
+
+            # Maxmum connection Hit = 0
+            m = p24_4.match(line)
+            if m:
+                nginx_counters_dict['maximum_connection_hit'] = int(m.groupdict()['maximum_connection_hit'])
+                continue
+
+            # HTTP server statistics:
+            m = p25.match(line)
+            if m:
+                statistics_dict = http_server_dict.setdefault('statistics', {})
+                continue
+
+            # Accepted connections total: 1
+            m = p25_1.match(line)
+            if m:
+                statistics_dict['accepted_connections'] = int(m.groupdict()['accepted_connections'])
+                continue
+
+            # 2 2 2
+            m = p25_2.match(line)
+            if m:
+                statistics_dict['server_accepts_handled_requests'] = m.groupdict()['server_accepts_handled_requests']
+                continue
+
+            # Reading: 0 Writing: 1 Waiting: 0
+            m = p25_3.match(line)
+            if m:
+                statistics_dict['reading'] = int(m.groupdict()['reading'])
+                statistics_dict['writing'] = int(m.groupdict()['writing'])
+                statistics_dict['waiting'] = int(m.groupdict()['waiting'])
+                continue
+
+            # HTTP server history:
+            m = p26.match(line)
+            if m:
+                history_dict = http_server_dict.setdefault('history', {}).setdefault('index', {})
+                continue
+
+            # local-ipaddress:port  remote-ipaddress:port  in-bytes  out-bytes  end-time
+            # 127.0.0.1:21111  127.0.0.1:58764  0  404  11:56:11 17/03
+            # 127.0.0.1:21111  127.0.0.1:58778  0  277  11:56:13 17/03
+            m = p26_1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                index = str(len(history_dict))
+                each_history_dict = history_dict.setdefault(index, {})
+                each_history_dict['local_ip_address_port'] = group_dict['local_ip_address_port']
+                each_history_dict['remote_ip_address_port'] = group_dict['remote_ip_address_port']
+                each_history_dict['in_bytes'] = int(group_dict['in_bytes'])
+                each_history_dict['out_bytes'] = int(group_dict['out_bytes'])
+                each_history_dict['end_time'] = group_dict['end_time']
+                continue
+
+            # conn_history_current_pos: 2
+            m = p27.match(line)
+            if m:
+                http_server_dict['conn_history_current_pos'] = int(m.groupdict()['conn_history_current_pos'])
+                continue
+
+            # HTTP server help path:
+            m = p28.match(line)
+            if m:
+                http_server_dict['help_path'] = m.groupdict()['help_path']
+                continue
+        
+        return ret_dict
+
+
+class ShowIpHttpServerSecureStatus(ShowIpHttpServerAll):
+    """
+        Parser for show ip http server secure status
+    """
+
+    cli_command = 'show ip http server secure status'
+
+    def cli(self, output=None):
+        return super().cli(output=output)

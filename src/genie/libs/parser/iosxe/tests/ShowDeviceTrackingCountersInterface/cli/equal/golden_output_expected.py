@@ -51,7 +51,8 @@ expected_output = {
                         "Flooding Suppress": {
                             "protocol": "ndp",
                             "message": "ns",
-                            "dropped": 35
+                            "dropped": 35,
+                            "reason": "NS Owner on input interface"
                         },
                         "ACD_DAD": {
                             "protocol": "--",
