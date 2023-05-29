@@ -1032,7 +1032,8 @@ class ShowModule(ShowModuleSchema):
                         'status'].strip()
                 continue
 
-            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[\w\-]+)?$')
+            p4 = re.compile(
+                r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)(( +)(?P<world_wide_name>[\w\-]+))?$')
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']

@@ -1,0 +1,6 @@
+ CG id    ACL name                                    No of ACEs  Protocol  Ingress    Egress
+-----------------------------------------------------------------------------------------------
+ 20        v4denytest                                    23         IPv4        Y       N
+ 30        auto-egress                                    3         IPv6        N       Y
+ 31        bfd1                                           7         IPv6        Y       N
+

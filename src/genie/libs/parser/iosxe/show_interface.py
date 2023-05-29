@@ -30,6 +30,8 @@
     * show pm vp interface {interface} {vlan}
     * show pm port interface {interface}
     * show interfaces transceiver supported-list
+    * show interfaces capabilities
+    * show interfaces {interface} capabilities
 """
 
 import os
@@ -5352,4 +5354,75 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
                 ret_dict['port_age'] = group['age_of_port']
                 continue
 
+        return ret_dict
+
+
+class ShowInterfacesCapabilitiesSchema(MetaParser):
+    """
+        Schema for show interfaces capabilities
+    """
+
+    schema = {
+        'interface': {
+            Any() : {
+                Any() : str,
+            }
+        }
+    }
+
+
+class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
+    """
+        parser for show interfaces capabilities
+    """
+
+    cli_command = ['show interfaces capabilities', 'show interfaces {interface} capabilities']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)
+
+        # TenGigabitEthernet3/1/3
+        p1 = re.compile(r'^(?P<interface>[\w\/\d\.]+)$')
+
+        # Model:                 WS-C3650-48PD
+        # Type:                  SFP-10G-ACTIVE-CABLE
+        # Speed:                 10000
+        # Duplex:                full
+        p2 = re.compile(r'^(?P<key_name>[\w\s\.]+):\s+(?P<value>.+)$')
+
+        # tx-(2p6q3t)
+        p3 = re.compile(r'^(?P<qos_tx>tx-.+)$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet3/1/3
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+
+            # Model:                 WS-C3650-48PD
+            # Type:                  SFP-10G-ACTIVE-CABLE
+            # Speed:                 10000
+            # Duplex:                full
+            m = p2.match(line)
+            if m:
+                key = m.groupdict()['key_name'].strip().lower().replace(' ', '_').replace('.', '')
+                int_dict[key] = m.groupdict()['value']
+                continue
+            
+            # tx-(2p6q3t)
+            m = p3.match(line)
+            if m:
+                int_dict[key] = f"{int_dict[key]} {m.groupdict()['qos_tx']}"
+        
         return ret_dict

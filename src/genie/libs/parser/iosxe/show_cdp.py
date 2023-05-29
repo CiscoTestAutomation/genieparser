@@ -567,7 +567,8 @@ class ShowCdpInterface(ShowCdpInterfaceSchema):
         meta_dict = dict()
 
         # TwentyFiveGigE3/1/1 is down, line protocol is down
-        p0 = re.compile(r'^(?P<interface>[a-zA-Z\-\/\d\.]+)\s+is\s+(?P<state>\w+),\s+line\s+protocol\s+is\s+(?P<protocol_state>\w+)$')
+        # GigabitEthernet0/0 is administratively down, line protocol is down
+        p0 = re.compile(r'^(?P<interface>[a-zA-Z\-\/\d\.]+)\s+is\s+(?P<state>[\w\s]+),\s+line\s+protocol\s+is\s+(?P<protocol_state>\w+)$')
 
         # Encapsulation ARPA
         p1 = re.compile(r'^Encapsulation\s+(?P<encapsulation>\w+)$')

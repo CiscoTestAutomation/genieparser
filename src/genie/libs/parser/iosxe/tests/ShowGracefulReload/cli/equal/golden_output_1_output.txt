@@ -1,0 +1,7 @@
+Graceful Reload Infra Status: Started in stacking mode, not running
+Minimum required system uptime before fast reload can be supported is 5 seconds
+Client OSPFV3                          : (0x10203004) Status: GR stack none: Up
+Client OSPF                            : (0x10203003) Status: GR stack none: Up
+Client IS-IS                           : (0x10203002) Status: GR stack none: Up
+Client GR_CLIENT_FIB                   : (0x10203001) Status: GR stack none: Up
+Client GR_CLIENT_RIB                   : (0x10203000) Status: GR stack none: Up

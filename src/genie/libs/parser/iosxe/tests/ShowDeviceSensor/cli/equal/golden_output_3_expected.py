@@ -73,20 +73,20 @@ expected_output = {
                                 6: {
                                     "name": "platform-type",
                                     "length": 19,
-                                    "value": "00 06 00 13 63 69 73 63 6F 50",
-                                    "text": "....ciscoP",
+                                    "value": "00 06 00 13 63 69 73 63 6F 20 43 39 33 30 30 2D 32 34 50",
+                                    "text": "....cisco C9300-24P",
                                 },
                                 5: {
                                     "name": "version-type",
                                     "length": 299,
-                                    "value": "00 05 01 2B 43 69 73 63 6F 70 65 72 69 6D 65 6E 74 61 31 30 38 30 37 3A 31 39 34 62 75 69 6C 64 2D 70 6F 6C 61 72 69 73 5F 64 65 76 2D 31 34 33 38 33 30 2D 2F 6E 6F 62 61 63 6B 75 70 2F 6D 63 70 72 65 2F 42 4C 44 2D 42 4C 44 5F 50 4F 4C 41 52 49 53 5F 44 45 56 5F 4C 41 54 45 53 54 5F 32 30 32 31 30 38 30 37 5F 31 39 34 37 0A 43 6F 6D 70 69 6C 65 64 72 65",
-                                    "text": "...+Ciscoperimenta10807:194build-polaris_dev-143830-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20210807_1947.Compiledre",
+                                    "value": "00 05 01 2B 43 69 73 63 6F 20 49 4F 53 20 53 6F 66 74 77 61 72 65 20 5B 42 65 6E 67 61 6C 75 72 75 5D 2C 20 43 61 74 61 6C 79 73 74 20 4C 33 20 53 77 69 74 63 68 20 53 6F 66 74 77 61 72 65 20 28 43 41 54 39 4B 5F 49 4F 53 58 45 29 2C 20 45 78 70 65 72 69 6D 65 6E 74 61 6C 20 56 65 72 73 69 6F 6E 20 31 37 2E 37 2E 32 30 32 31 30 38 30 37 3A 31 39 34 39 35 35 20 5B 53 32 43 2D 62 75 69 6C 64 2D 70 6F 6C 61 72 69 73 5F 64 65 76 2D 31 34 33 38 33 30 2D 2F 6E 6F 62 61 63 6B 75 70 2F 6D 63 70 72 65 2F 42 4C 44 2D 42 4C 44 5F 50 4F 4C 41 52 49 53 5F 44 45 56 5F 4C 41 54 45 53 54 5F 32 30 32 31 30 38 30 37 5F 31 39 34 37 35 38 20 31 31 39 5D 0A 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 38 36 2D 32 30 32 31 20 62 79 20 43 69 73 63 6F 20 53 79 73 74 65 6D 73 2C 20 49 6E 63 2E 0A 43 6F 6D 70 69 6C 65 64 20 53 61 74 20 30 37 2D 41 75 67 2D 32 31 20 31 39 3A 30 34 20 62 79 20 6D 63 70 72 65",
+                                    "text": "...+Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.7.20210807:194955 [S2C-build-polaris_dev-143830-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20210807_194758 119].Copyright (c) 1986-2021 by Cisco Systems, Inc..Compiled Sat 07-Aug-21 19:04 by mcpre",
                                 },
                                 1: {
                                     "name": "device-name",
                                     "length": 18,
-                                    "value": "00 01 00 12 6E 79 71 75 69",
-                                    "text": "....nyqui",
+                                    "value": "00 01 00 12 6E 79 71 75 69 73 74 32 2D 73 6A 63 32 34",
+                                    "text": "....nyqui  ",
                                 },
                             }
                         },

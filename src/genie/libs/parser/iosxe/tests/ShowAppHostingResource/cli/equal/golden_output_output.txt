@@ -1,0 +1,11 @@
+CPU:
+  Quota: 25(Percentage)
+  Available: 25(Percentage)
+VCPU:
+  Count: 2
+Memory:
+  Quota: 2048(MB)
+  Available: 2048(MB)
+Storage space:
+  Total: 3904(MB)
+  Available: 3485(MB)

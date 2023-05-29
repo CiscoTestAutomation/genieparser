@@ -369,6 +369,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_trunk_vlans'): str,
                 Optional('keepalive'): bool,
                 Optional('switchport_mode'): str,
+                Optional('switchport_trunk_native_vlan'): int,
                 Optional('input_policy'): str,
                 Optional('output_policy'): str,
                 Optional('device_tracking_attach_policy'): str,
@@ -757,6 +758,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # isis ipv6 metric 33 level-1
         # isis ipv6 metric 22 level-2
         p91 = re.compile(r'^isis +ipv6 +metric +(?P<isis_v6_metric>\d+) +(?P<isis_v6_level>\S+)$')
+
+        # switchport trunk native vlan 101
+        p92 = re.compile(r'^switchport trunk native vlan (?P<switchport_trunk_native_vlan>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1475,13 +1479,15 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('isis', {}).setdefault('network', group['isis_network'])
-
+                continue
+            
             # isis metric 22 level-1
             # isis metric 22 level-2
             m = p90.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('isis', {}).setdefault('ipv4', {}).setdefault('level', {}).setdefault(group['isis_v4_level'], {}).setdefault('metric', int(group['isis_v4_metric']))
+                continue
 
             # isis ipv6 metric 33 level-1
             # isis ipv6 metric 22 level-2
@@ -1489,6 +1495,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('isis', {}).setdefault('ipv6', {}).setdefault('level', {}).setdefault(group['isis_v6_level'], {}).setdefault('metric', int(group['isis_v6_metric']))
+                continue
+
+            # switchport trunk native vlan 101
+            m = p92.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['switchport_trunk_native_vlan'] = int(m.groupdict()['switchport_trunk_native_vlan'])
+                continue
 
         return config_dict
 
@@ -4335,5 +4349,52 @@ class ShowRunSectionVrfDefinition(ShowRunSectionVrfDefinitionSchema):
                 else:
                     rt_list.append({'rt': rt, 'type': rt_type})
                 continue
+
+        return ret_dict
+
+# =================================================
+# Schema for:
+#   * 'show running-config | section mac address'
+# ==================================================
+
+class ShowRunSectionMacAddressSchema(MetaParser):
+    """Schema for show running-config | section mac address"""
+
+    schema = {
+                'vlan': int,
+                'mac_address': str,
+                'type': str,
+                'port': str,
+            }
+
+# ===================================
+# Parser for:
+#   * 'show running-config | section mac address'
+# ===================================
+
+class ShowRunSectionMacAddress(ShowRunSectionMacAddressSchema):
+    """Parser for show running-config | section mac address"""
+
+    cli_command = 'show running-config | section mac address'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # mac address-table static 0075.c3e4.b824 vlan 1000 drop
+        p0 = re.compile(r'^mac +address-table +(?P<type>[\w]+)\s+(?P<mac_address>[\w\d\.]+)\s+vlan+\s(?P<vlan>[\d]+)\s+(?P<port>[\w]+)$')
+        for line in output.splitlines():
+            line = line.strip()
+
+            # mac address-table static 0075.c3e4.b824 vlan 1000 drop
+            m = p0.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['vlan'] = int(dict_val['vlan'])
+                ret_dict['mac_address'] = dict_val['mac_address']
+                ret_dict['type'] = dict_val['type']
+                ret_dict['port'] = dict_val['port']
 
         return ret_dict

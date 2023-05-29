@@ -1,0 +1,104 @@
+GigabitEthernet0/0 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/1 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/2 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/3 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/4 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/5 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/6 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/7 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/8 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/9 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/10 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/11 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/12 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/13 is up, line protocol is up
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/14 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/15 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/16 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/17 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/18 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/19 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/20 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/21 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/22 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/23 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+GigabitEthernet1/0/24 is administratively down, line protocol is down
+  Encapsulation ARPA
+  Sending CDP packets every 250 seconds
+  Holdtime is 180 seconds
+
+ cdp enabled interfaces : 25
+ interfaces up          : 3
+ interfaces down        : 22

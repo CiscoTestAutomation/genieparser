@@ -2486,7 +2486,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
     '''Schema for "show lisp {lisp_id} instance-id <instance_id> <service> dabatase" '''
     schema = {
         'lisp_id': {
-            int: {
+            Any(): {
                 'instance_id': {
                     int: {
                         'eid_table': str,
@@ -2536,9 +2536,11 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         ret_dict = {}
 
         # LISP ETR IPv4 Mapping Database for EID-table default (IID 1), LSBs: 0x1
-        p1 = re.compile(r'^LISP\s+ETR\s+(MAC|IPv6|IPv4)\s+Mapping\s+Database\s+'
-                        r'for\s+LISP\s+(?P<lisp_id>\d+)\s+EID-table\s+'
-                        r'(?P<eid_table>(vrf\s\w+)|(Vlan\s\d+))\s+'
+        # LISP ETR IPv4 Mapping Database for EID-table vrf INTERNAL (IID 4099), LSBs: 0x1
+        # LISP ETR IPv6 Mapping Database for LISP 0 EID-table vrf red (IID 4100), LSBs: 0x1
+        p1 = re.compile(r'^LISP\s+ETR\s+(MAC|IPv6|IPv4)\s+Mapping\s+Database\s+for(\s+LISP\s+'
+                        r'(?P<lisp_id>\d+))?\s+EID-table\s+'
+                        r'(?P<eid_table>(vrf\s\w+)|(Vlan\s\d+)|default)\s+'
                         r'\(IID\s(?P<instance_id>\d+)\),\sLSBs:\s(?P<lsb>\S+)$')
 
         # Entries total 2, no-route 0, inactive 0, do-not-register 1
@@ -2575,6 +2577,7 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                         r'\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<source>\S+)'
                         r'\s+(?P<location>\S+),\s(?P<state>\S+)$')
 
+        lisp_id = "default"
 
         for line in output.splitlines():
             line = line.strip()
@@ -2583,7 +2586,9 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                lisp_id = int(group['lisp_id'])
+                if group['lisp_id']:
+                    lisp_id = int(group['lisp_id'])
+                
                 eid_table = group['eid_table']
                 instance_id = int(group['instance_id'])
                 lsb = group['lsb']
@@ -2701,6 +2706,7 @@ class ShowLispServiceDatabase(ShowLispDatabaseSuperParser):
                    'show lisp locator-table {locator_table} instance-id {instance_id} {service} database']
 
     def cli(self, service, instance_id, locator_table=None, lisp_id=None, output=None):
+        
         if output is None:
             if locator_table and instance_id and service:
                 output = self.device.execute(self.cli_command[2].\
