@@ -1,0 +1,28 @@
+BGP routing table entry for 2000:90:45:1::/64, Route Distinguisher: 50.1.1.4:2
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                720         720
+Last Modified: Mar 27 02:45:53.105 for 1d16h
+Paths: (2 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  5000
+    50.1.1.1 (metric 4) from 50.1.1.8(bgp_neighbor) (50.1.1.1)(ori
+      Received Label 24026
+      Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+      Received Path ID 0, Local Path ID 0, version 720
+      Extended community: RT:100:1001
+      Originator: 50.1.1.1, Cluster list: 50.1.1.8
+      Source AFI: VPNv6 Unicast, Source VRF: default, Source Route Distinguisher: 50.1.1.1:0
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  5000
+    50.1.1.5 (metric 4) from 50.1.1.8 (50.1.1.5)
+      Received Label 24024
+      Origin incomplete, metric 0, localpref 100, valid, internal, import-candidate, imported
+      Received Path ID 0, Local Path ID 0, version 0
+      Extended community: RT:100:1001
+      Originator: 50.1.1.5, Cluster list: 50.1.1.8
+      Connector: type: 1, Value:50.1.1.5:0:50.1.1.5
+      Source AFI: VPNv6 Unicast, Source VRF: default, Source Route Distinguisher: 50.1.1.5:0

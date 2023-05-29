@@ -1,0 +1,7 @@
+Routing Proxy default configuration: 
+  Proxying NDP
+Policy default is applied on the following targets: 
+Target               Type  Policy               Feature        Target range
+vlan 1100            VLAN  default              Routing Proxy  vlan all
+vlan 1400            VLAN  default              Routing Proxy  vlan all
+Vl110                PORT  default              Routing Proxy  vlan all

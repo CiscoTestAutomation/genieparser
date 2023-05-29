@@ -1,0 +1,44 @@
+My_System_id: 18.18.18.18 (ospf 1  area 0)
+
+Signalling error holddown: 30 sec Global Link Generation 30
+
+IGP Id: 1.1.1.1, MPLS TE Id:1.1.1.1 Router Node  (ospf 1  area 0)
+      link[0]: Broadcast, DR: 172.15.145.5, nbr_node_id:2, gen:25
+      frag_id: 110, Intf Address: 172.15.145.14
+      TE metric: 1, IGP metric: 1, attribute flags: 0x0
+      SRLGs: None 
+      physical_bw: 10000000 (kbps), max_reservable_bw_global: 7499999 (kbps)
+      max_reservable_bw_sub: 0 (kbps)
+
+                             Global Pool       Sub Pool
+           Total Allocated   Reservable        Reservable
+           BW (kbps)         BW (kbps)         BW (kbps)
+           ---------------   -----------       ----------
+    bw[0]:            0          7499999                0
+    bw[1]:            0          7499999                0
+    bw[2]:            0          7499999                0
+    bw[3]:            0          7499999                0
+    bw[4]:            0          7499999                0
+    bw[5]:            0          7499999                0
+    bw[6]:            0          7499999                0
+    bw[7]:            0          7499999                0
+
+      link[1]: Broadcast, DR: 172.16.245.14, nbr_node_id:4294967295, gen:25
+      frag_id: 1394, Intf Address: 172.16.245.14
+      TE metric: 1, IGP metric: 1, attribute flags: 0x0
+      SRLGs: None 
+      physical_bw: 1000000 (kbps), max_reservable_bw_global: 750000 (kbps)
+      max_reservable_bw_sub: 0 (kbps)
+
+                             Global Pool       Sub Pool
+           Total Allocated   Reservable        Reservable
+           BW (kbps)         BW (kbps)         BW (kbps)
+           ---------------   -----------       ----------
+    bw[0]:            0           750000                0
+    bw[1]:            0           750000                0
+    bw[2]:            0           750000                0
+    bw[3]:            0           750000                0
+    bw[4]:            0           750000                0
+    bw[5]:            0           750000                0
+    bw[6]:            0           750000                0
+    bw[7]:            0           750000                0

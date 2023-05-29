@@ -1,0 +1,7 @@
+VLAN   ADJ_ID      ADJ_KEY          Encap  Link   siHandle         riHandle         l3mriHandle      diHandle         Obj_type   Shared   
+----------------------------------------------------------------------------------------------------------------------------------------
+99     966         0x3000003c6      VXLAN  V4     0x0              0x0              0x0              0x0              UC         No       
+99     798         0x20000031e      VXLAN  V4     0x0              0x7ffb0f451248   0x7ffb0f450bb8   0x0              IR         No       
+99     794         0x20000031a      VXLAN  V4     0x0              0x7ffb0f44e738   0x7ffb0f450678   0x0              IR         No       
+99     1057        0x300000421      VXLAN  V4     0x0              0x0              0x0              0x0              UC         No       
+

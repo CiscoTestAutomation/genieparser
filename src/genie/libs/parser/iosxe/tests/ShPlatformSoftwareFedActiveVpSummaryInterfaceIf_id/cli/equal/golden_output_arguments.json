@@ -1,4 +1,5 @@
 {
-    "interface_id":"102"
+    "interface_id":"102",
+    "mode": "active"
 }
 

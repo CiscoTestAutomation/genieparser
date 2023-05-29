@@ -1,0 +1,5 @@
+{
+    "vrf_name": "VRF_1",
+    "address_family": "ipv6 unicast",
+    "prefix": "2000:90:11:1::/64"
+}

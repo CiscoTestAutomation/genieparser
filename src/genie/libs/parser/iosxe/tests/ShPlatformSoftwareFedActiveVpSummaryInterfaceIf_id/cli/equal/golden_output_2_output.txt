@@ -1,0 +1,10 @@
+           if_id      vlan_id   pvlan_mode   pvlan_vlan   stp_state  vtp pruned          Untagged
+-------------------------------------------------------------------------------------------------
+             100           60        trunk            1  blocking            No                No
+             100           34        trunk            1  forwarding          No                No
+             100           11        trunk            1  forwarding          No               Yes
+             100           10        trunk            1  forwarding          No               Yes
+             100            9        trunk            1  forwarding          No               No
+             100            5        trunk            1  forwarding          No               Yes
+             100            2        trunk            1  forwarding          No               Yes
+             100            1        trunk            1  forwarding          No               Yes

@@ -17,6 +17,8 @@ expected_output =  {
         "total": 5,
         "verify": 1,
         "incomplete": 1,
+        "creating": 1,
+        "tentative": 1,
     },
     "device": {
         1: {

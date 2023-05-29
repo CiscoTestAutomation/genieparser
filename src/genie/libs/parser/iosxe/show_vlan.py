@@ -1148,3 +1148,68 @@ class ShowVlanMapping(ShowVlanMappingSchema):
 
         return ret_dict
 
+
+# ======================================================
+# Parser for 'show vlan brief '
+# ======================================================
+
+class ShowVlanBriefSchema(MetaParser):
+    """Schema for show VLAN brief"""
+
+    schema = {
+        'vlan': 
+        {
+            Any(): 
+            {
+                'vlan_name': str,
+                'vlan_status': str,
+                Optional('vlan_port'): list
+            }
+        }
+    }
+
+class ShowVlanBrief(ShowVlanBriefSchema):
+    """Parser for show vlan brief"""
+
+    cli_command = 'show vlan brief'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 10   VLAN0010                         active
+        p1 = re.compile(r"^(?P<vlan>[0-9]+)+\s+(?P<vlan_name>[\w\-]+)+\s+(?P<vlan_status>[a-zA-Z\/\s]+)$")
+        # 666  VLAN0666                         active    Te1/1/6, Te1/1/7
+        p2 = re.compile(r"^(?P<vlan>[0-9]+)+\s+(?P<vlan_name>[\w\-]+)+\s+(?P<vlan_status>[a-zA-Z\/]+)\s+(?P<vlan_port>[a-zA-Z0-9\,\/\ ]+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            # 10   VLAN0010                         active 
+            m1 = p1.match(line)
+            if m1:
+                dict_val = m1.groupdict()
+                vlan = 'vlan'+dict_val['vlan']
+                vlan = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                vlan['vlan_name'] = dict_val['vlan_name']
+                vlan['vlan_status'] = dict_val['vlan_status'].replace(' ', '')
+                continue
+
+            # 666  VLAN0666                         active    Te1/1/6, Te1/1/7
+            m2 = p2.match(line)
+            if m2:
+                dict_val = m2.groupdict()
+                vlan = 'vlan'+dict_val['vlan']
+                vlan = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                vlan['vlan_name'] = dict_val['vlan_name']
+                vlan['vlan_status'] = dict_val['vlan_status'].replace(' ','')
+                vlan_port = dict_val['vlan_port']
+                if not vlan_port == ' ':
+                    my_list = list(vlan_port.split())
+                    for port in range(len(my_list)):
+                        if isinstance(my_list[port], str) and ',' in my_list[port]:
+                            my_list[port] = my_list[port].replace(',', '')
+                    dict_val['vlan_port'] = my_list
+                    vlan['vlan_port'] = dict_val['vlan_port']
+                continue   
+
+        return ret_dict

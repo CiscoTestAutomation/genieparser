@@ -1,0 +1,28 @@
+
+Interface Name: Ethernet0/1
+  Total query packets received                  : 23304
+  Total reply packets sent                      : 23302
+  Total reply packets sent errors               : 2
+  Total URO TLV not present errors              : 0
+  Total invalid port number errors              : 0
+  Total no source address errors                : 0
+  Total no return path errors                   : 0
+  Total unsupported querier control code errors : 0
+  Total unsupported timestamp format errors     : 0
+  Total timestamp not available errors          : 0
+  Total unsupported mandatory TLV errors        : 0
+  Total invalid packet errors                   : 0
+  Total loss probe color errors                 : 1
+Interface Name: Ethernet1/2
+  Total query packets received                  : 23301
+  Total reply packets sent                      : 23301
+  Total reply packets sent errors               : 0
+  Total URO TLV not present errors              : 0
+  Total invalid port number errors              : 0
+  Total no source address errors                : 0
+  Total no return path errors                   : 0
+  Total unsupported querier control code errors : 0
+  Total unsupported timestamp format errors     : 0
+  Total timestamp not available errors          : 0
+  Total unsupported mandatory TLV errors        : 0
+  Total invalid packet errors                   : 0
