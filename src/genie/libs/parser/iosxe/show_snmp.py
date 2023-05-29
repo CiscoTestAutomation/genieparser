@@ -1295,3 +1295,4 @@ class ShowControllersPowerInlineModule(ShowControllersPowerInlineModuleSchema):
                 continue
 
         return ret_dict
+    

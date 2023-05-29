@@ -700,12 +700,13 @@ class Common:
         return match
 
     @classmethod
-    def convert_intf_name(self, intf, os='generic'):
+    def convert_intf_name(self, intf, os='generic', ignore_case=False):
         '''return the full interface name
 
             Args:
                 intf (`str`): Short version of the interface name
                 os (`str`): picks what operating system the interface needs to be translated for.
+                ignore_case (`bool`): Case in-sensitive matching of names
 
             Returns:
                 Full interface name fit the standard
@@ -834,7 +835,16 @@ class Common:
                 log.error((
                     "Check '{}' is in convert dict in utils/common.py, otherwise leave blank.\nMissing key {}\n"
                     .format(os, k)))
+                return intf
 
+            if ignore_case:
+                mapping = {k.lower():v for k,v in os_type_dict.items()}
+                name = int_type.lower()
+                if name in mapping:
+                    return mapping[name] + int_port
+                else:
+                    return intf[0].capitalize() + intf[1:].replace(
+                        ' ', '').replace('ethernet', 'Ethernet')
             else:
                 if int_type in os_type_dict.keys():
                     return os_type_dict[int_type] + int_port

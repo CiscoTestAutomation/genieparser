@@ -1,0 +1,95 @@
+Interface TenGigE0/0/2/0 (shutdown)
+  Assigned as input for selection
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+  Input:
+    Down
+    Last received QL: Failed
+    Effective QL: Failed, Priority: 5, Time-of-day Priority 99
+    Extended ESMC data not received
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/2/1
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Extended QL data not being sent
+  Next selection points: SPA_RX_2
+
+Interface TenGigE0/0/2/1 (up)
+  Assigned as input for selection
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+    Peer Up for 1d02h, last SSM received 0.837s ago
+    Peer has come up 1 times and timed out 0 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          96052        96050         2      96034
+      Received:      96051        96051         0          0
+  Input:
+    Up
+    Last received QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC, Priority: 10, Time-of-day Priority 100
+    Extended ESMC data not received
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/2/1
+    Selected source QL: Opt-I/PRC
+    Effective QL: DNU
+    Extended QL data not being sent
+  Next selection points: SPA_RX_2
+
+Interface GigabitEthernet0/0/0/2 (up)
+  Wait-to-restore time 5 minutes
+  SSM Enabled
+    Peer Timed Out for 1d02h, last SSM received never
+    Peer has come up 0 times and timed out 1 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          96039        96037         2          0
+      Received:          0            0         0          0
+  Input:
+    Down - not assigned for selection
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/2/1
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Extended QL data not being sent
+  Next selection points: SPA_RX_0
+
+Interface GigabitEthernet0/0/0/16 (up)
+  Assigned as input for selection
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+    Peer Up for 1d02h, last SSM received 0.838s ago
+    Peer has come up 1 times and timed out 0 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          96037        96035         2          0
+      Received:      96035        96034         1          0
+  Input:
+    Up
+    Last received QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC, Priority: 15, Time-of-day Priority 101
+    Extended ESMC data not received
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/2/1
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Extended QL data not being sent
+  Next selection points: SPA_RX_0
+
+Interface GigabitEthernet0/0/0/17 (shutdown)
+  Assigned as input for selection
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+  Input:
+    Down
+    Last received QL: Failed
+    Effective QL: Failed, Priority: 15, Time-of-day Priority 101
+    Extended ESMC data not received
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/2/1
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Extended QL data not being sent
+  Next selection points: SPA_RX_0

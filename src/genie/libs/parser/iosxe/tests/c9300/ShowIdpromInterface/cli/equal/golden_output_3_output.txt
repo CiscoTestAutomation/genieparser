@@ -1,0 +1,63 @@
+General SFP Information
+-----------------------------------------------
+Identifier            :   SFP/SFP+
+Ext.Identifier        :   SFP function is defined by two-wire interface ID only
+Connector             :   LC connector
+Transceiver
+ 10/40GE Comp code       :   10G BASE-SR
+ SONET Comp code      :   Unknown
+ GE Comp code         :   Unknown
+ Link length          :   Unknown
+ Technology           :   Unknown
+ Media                :   Unknown
+ Speed                :   Unknown
+Encoding              :   64B/66B
+BR_Nominal            :   10300 Mbps
+Length(9um)-km        :   GBIC does not support single mode fibre
+Length(9um)           :   GBIC does not support single mode fibre
+Length(50um)          :   80 m
+Length(62.5um)        :   20 m
+Length(Copper)        :   GBIC does not support 50 micron multi mode OM4 fibre
+Vendor Name           :   CISCO-FINISAR   
+Vendor Part Number    :   FTLX8571D3BCL-C2
+Vendor Revision       :   0x41 0x20 0x20 0x20
+Vendor Serial Number  :   FNS17462988     
+Wavelength            :   850.00 nm
+CC_BASE               :   0xA5
+-----------------------------------------------
+
+Extended ID Fields
+-----------------------------------------------
+Options               :   0x00 0x1A
+BR, max               :   0x00
+BR, min               :   0x00
+Date code             :   131115
+Diag monitoring       :   Implemented
+Internally calibrated :   Yes
+Exeternally calibrated:   No
+Rx.Power measurement  :   Avg.Power
+Address Change        :   Not Required
+CC_EXT                :   0xA5
+-----------------------------------------------
+
+Other Information
+-----------------------------------------------
+Chk for link status   : 00
+Flow control Receive  : Off
+Flow control Send     : Off
+Administrative Speed  : 10000
+Administrative Duplex : full 
+Operational Speed     : auto
+Operational Duplex    : auto
+-----------------------------------------------
+
+SEEPROM contents (hex):
+ 0x00: 03 04 07 10 00 00 00 00 00 00 00 06 67 00 00 00
+ 0x10: 08 02 00 1E 43 49 53 43 4F 2D 46 49 4E 49 53 41
+ 0x20: 52 20 20 20 00 00 90 65 46 54 4C 58 38 35 37 31
+ 0x30: 44 33 42 43 4C 2D 43 32 41 20 20 20 03 52 00 A5
+ 0x40: 00 1A 00 00 46 4E 53 31 37 34 36 32 39 38 38 20
+ 0x50: 20 20 20 20 31 33 31 31 31 35 20 20 68 80 03 A5
+ 0x60: 00 00 02 73 F7 10 3F 71 17 C4 00 BF D9 34 9D E5
+ 0x70: CF B1 0A 00 00 00 00 00 00 00 00 00 00 00 00 01
+-----------------------------------------------

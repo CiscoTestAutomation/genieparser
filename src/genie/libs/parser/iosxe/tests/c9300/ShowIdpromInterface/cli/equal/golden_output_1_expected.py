@@ -1,0 +1,31 @@
+expected_output = {
+    'extended_id_fileds': {
+        'address_change': 'Not Required',
+        'br_max': '0x00',
+        'br_min': '0x00',
+        'cc_ext': '0x61',
+        'date_code': 161216,
+        'diag_monitoring': 'Implemented',
+        'exeternally_calibrated': 'No',
+        'internally_calibrated': 'Yes',
+        'options': '0x00 0x1A',
+        'rx_power_measurement': 'Avg.Power',
+    },
+    'other_information': {
+        'administrative_duplex': 'full',
+        'administrative_speed': '10000',
+        'chk_for_link_status': '00',
+        'flow_control_receive': 'ON',
+        'flow_control_send': 'Off',
+        'operational_duplex': 'full',
+        'operational_speed': '10000',
+    },
+    'sfp_info': {
+        'cisco_part_number': 'SFP-10G-SR-QNC',
+        'connector_type': 'LC connector',
+        'product_identifier': 'SFP/SFP+',
+        'serial_number': 'QNXP96S3636',
+        'vendor_name': 'QNC',
+        'vendor_revision': '0x31 0x2E 0x30 0x20',
+    },
+}

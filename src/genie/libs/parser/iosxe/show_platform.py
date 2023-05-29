@@ -43,6 +43,8 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware fed switch active fwd-asic drops exceptions'
     * 'show platform software fed {switchvirtualstate} mpls lspa all | c {mode}'
     * 'show platform software fed {switchvirtualstate} mpls lspa all'
+    * 'show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_add}'
+    * 'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_add}'
     * 'show platform software interface switch {mode} F0 brief'
     * 'show platform software fed switch {mode} port summary'
     * 'show platform software fed {switchvirtualstate} mpls lspa all | c {mode}'
@@ -96,6 +98,8 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active infra punt stat type per | ex _0_'
     * 'show platform hardware qfp active datapath infra sw-cio'
     * 'show platform hardware qfp active datapath infra sw-nic'
+    * 'show platform hardware qfp {status} statistics drop clear'
+    * 'show platform hardware qfp {status} statistics drop | exclude _0_'
     * 'show platform soft infra bipc | inc buffer'
     * 'show platform hardware fed switch active fwd resource utilization | include LABEL'
     * 'show platform hardware qfp active system state'
@@ -144,6 +148,18 @@ IOSXE parsers for the following show commands:
     * 'show platform software fed switch {switch_var} vt hardware if-id {ifid}'
     * 'show platform software fed {switch} active ifm interfaces {label}'
     * 'show platform software fed active ifm interfaces {label}'
+    * 'show platform software fed active matm stats'
+    * 'show platform software fed switch {mode} matm stats'
+    * 'show platform software audit summary'
+    * 'show platform software fed {switch} {mode} qos interface {interface} ingress npi detailed'
+    * 'show platform software fed {mode} qos interface {interface} ingress npi detailed'
+    * 'show platform software fed active ptp domain'
+    * 'show platform hardware fed active qos queue stats oq multicast attach'
+    * 'show platform hardware fed switch {switch_num} qos queue stats oq multicast attach'
+    * 'show platform software fed {switch} {mode} security-fed ipsg if-id {if_id}'
+    * 'show platform software fed {mode} security-fed ipsg if-id {if_id}'
+    * 'show xfsu status'
+    * 'show graceful-reload'
     '''
 
 # Python
@@ -155,7 +171,7 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
 from genie.libs.parser.utils.common import Common
 from genie.parsergen import oper_fill_tabular
 # genie.parsergen
@@ -442,7 +458,7 @@ class ShowVersionSchema(MetaParser):
             Optional('interfaces'): {
                 Optional('virtual_ethernet'): int,
                 Optional('fastethernet'): int,
-                'gigabit_ethernet': int,
+                Optional('gigabit_ethernet'): int,
             },
             Optional('revision'): {
                 Any(): int,
@@ -6572,6 +6588,46 @@ class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDro
 
         return ret_dict
 
+class ShowPlatformHardwareQfpStatisticsDropClear(ShowPlatformHardwareQfpStatisticsDropSchema):
+    """
+    Parser for
+        show platform hardware qfp active statistics drop clear
+        show platform hardware qfp standby statistics drop clear
+    """
+
+    cli_command = 'show platform hardware qfp {status} statistics drop clear'
+
+    def cli(self, status, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Ipv4NoRoute              181                 7964
+        # Note: The command output contains multiple such rows
+        #       with different row headers, so we parse the
+        #       row header as well
+        p1 = re.compile(r'^(?P<drop_reason>\w+)\s+(?P<packets>\d+)\s+(?P<octets>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Ipv4NoRoute              181                 7964
+            # Note: The command output contains multiple such rows
+            #       with different row headers, so we parse the
+            #       row header as well
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                drop_reason = group.pop('drop_reason')
+                stats_dict = ret_dict.setdefault('global_drop_stats', {}).setdefault(drop_reason, {})
+                stats_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
 
 class ShowProcessesCpuHistorySchema(MetaParser):
     """Schema for show processes cpu history"""
@@ -11386,7 +11442,7 @@ class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesLabel(ShowPlatformSoftware
 #  Schema for 'show platform software fed switch active ptp domain
 # ================================================================
 class ShowPlatformSoftwareFedSwitchActivePtpDomainSchema(MetaParser):
-    """Schema for 'show platform software fed switch active ptp domain
+    """Schema for 'show platform software fed switch {switch} ptp domain
     """
     schema = {
         'domain_number': {
@@ -12517,7 +12573,7 @@ class ShowPlatformSoftwareFedSwitchActiveIfmMappingsLpn(ShowPlatformSoftwareFedS
 
 
 # =================================================================
-#  Schema for 'show platform software fed switch active ptp domain
+#  Schema for 'show platform software fed switch {switch} ptp domain
 # ================================================================
 class ShowPlatformSoftwareFedSwitchActivePtpDomainSchema(MetaParser):
     """Schema for 'show platform software fed switch active ptp domain
@@ -12533,31 +12589,44 @@ class ShowPlatformSoftwareFedSwitchActivePtpDomainSchema(MetaParser):
                 Optional('mean_path_delay_ns'): int,
                 'transport_method': str,
                 'message_general_ip_dscp': int,
-                'message_event_ip_dscp': int
+                'message_event_ip_dscp': int,
+                Optional('clocksource'): int,
+                Optional('gm_capable'): str,
+                Optional('grandmaster'): str,
+                Optional('gm_present'): str,
+                Optional('propagation_delay'): str
             }
         },
     }
+
+
 # =================================================================
-#  Parser for 'show platform software fed switch active ptp domain
+#  Parser for 'show platform software fed switch {switch} ptp domain
 # ================================================================
 class ShowPlatformSoftwareFedSwitchActivePtpDomain(ShowPlatformSoftwareFedSwitchActivePtpDomainSchema):
     """
     Parser for :
-        * show platform software fed switch active ptp domain
+        * show platform software fed switch {switch} ptp domain
+        * show platform software fed active ptp domain
     """
 
-    cli_command = 'show platform software fed switch active ptp domain'
+    cli_command = ['show platform software fed active ptp domain', 
+        'show platform software fed switch {switch} ptp domain']
 
-    def cli(self, output=None):
+    def cli(self, switch=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         #Displaying data for domain number 0
         p1 = re.compile(r'^Displaying\sdata\sfor\sdomain\snumber\s(?P<domain_number>\d+)$')
 
         #Profile Type : DEFAULT
-        p2 = re.compile(r'^Profile\sType\s\:\s(?P<profile_type>[a-zA-Z]+)$')
+        p2 = re.compile(r'^Profile\sType\s\:\s(?P<profile_type>\w+)$')
 
         #Profile State: enabled
         p3 = re.compile(r'^Profile\sState\:\s(?P<profile_state>\S+)$')
@@ -12582,6 +12651,21 @@ class ShowPlatformSoftwareFedSwitchActivePtpDomain(ShowPlatformSoftwareFedSwitch
 
         #Message event ip dscp    : 59
         p10 = re.compile(r'^Message\sevent\sip\sdscp\s+\:\s(?P<message_event_ip_dscp>\d+)$')
+
+        # clocksource 160
+        p11 = re.compile(r'^clocksource\s+(?P<clocksource>\d+)$')
+
+        # Grandmaster: FALSE
+        p12 = re.compile(r'^Grandmaster:\s+(?P<grandmaster>\w+)$')
+
+        # gm_capable: TRUE
+        p13 = re.compile(r'^gm_capable:\s+(?P<gm_capable>\w+)$')
+
+        # gm_present: TRUE
+        p14 = re.compile(r'^gm_present:\s+(?P<gm_present>\w+)$')
+
+        # neighbor propagation delay threshold: 800 ns
+        p15 = re.compile(r'^neighbor propagation delay threshold:\s+(?P<propagation_delay>[\w\s]+)$')
 
         # initial return dictionary
         ret_dict ={}
@@ -12659,6 +12743,37 @@ class ShowPlatformSoftwareFedSwitchActivePtpDomain(ShowPlatformSoftwareFedSwitch
                 message_event_ip_dscp = m.groupdict()['message_event_ip_dscp']
                 sub_dict['message_event_ip_dscp'] = int(message_event_ip_dscp)
                 continue
+
+            # clocksource 160
+            m = p11.match(line)
+            if m:
+                sub_dict['clocksource'] = int(m.groupdict()['clocksource'])
+                continue
+
+            # Grandmaster: FALSE
+            m = p12.match(line)
+            if m:
+                sub_dict['grandmaster'] = m.groupdict()['grandmaster']
+                continue
+
+            # gm_capable: TRUE
+            m = p13.match(line)
+            if m:
+                sub_dict['gm_capable'] = m.groupdict()['gm_capable']
+                continue
+
+            # gm_present: TRUE
+            m = p14.match(line)
+            if m:
+                sub_dict['gm_present'] = m.groupdict()['gm_present']
+                continue
+
+            # neighbor propagation delay threshold: 800 ns
+            m = p15.match(line)
+            if m:
+                sub_dict['propagation_delay'] = m.groupdict()['propagation_delay']
+                continue
+        
         return ret_dict
 
 # ================================================================================
@@ -13232,8 +13347,8 @@ class ShowPlatformSudiCertificateNonce(ShowPlatformSudiCertificateNonceSchema):
         # Signature:
         p4=re.compile('^Signature:$')
 
-        # 7E873A87E287B685E823F7BC66CF13D43EC238D40DA7CBEA06F6926C04C8C5AFC21BA4C
-        p5=re.compile('^(?P<signatur>\d[A-Z\d]+)$')
+        # A59DA741EA66C2AFC006E1766B3B11493A79E67408388C40160C2729F88281E9
+        p5=re.compile('^(?P<signatur>[A-Z\d]+)$')
 
         # o4IBBDCCAQAwDgYDVR0PAQH/BAQDAgXgMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgw
         p6 =re.compile('([a-zA-Z0-9/+=]+)')
@@ -13831,6 +13946,377 @@ class ShowPlatformSoftwareFedLspaAllPermode(ShowPlatformSoftwareFedLspaAllPermod
                 lspa_mode_count=int(m.groupdict()['lspa_mode_count'])
                 ret_dict['lspa_mode_count']= lspa_mode_count
                 continue
+        return ret_dict
+
+# ======================================================================================
+# Schema for :
+#   * 'show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_add}'
+#   * 'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_add}'
+# ======================================================================================
+class ShowPlatformSofwareFedActiveMplsIpv4VrfNameIpAddSchema(MetaParser):
+
+    ''' Schema for :
+        * 'show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_add}'
+        * 'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_add}'
+    '''
+
+    schema = {
+        'ipv4_add': {
+            Any(): {
+                'ipv4route_id': str,
+                'obj_name': str,
+                'obj_id': int,
+                'tblid': int,
+                'da': int,
+                Optional('child'): {
+                    Optional('child_adj'): {
+                        Optional('objid'): int,
+                        Optional('nh_type'): str,
+                        Optional('iif_id'): str,
+                        Optional('ether_type'): str,
+                        Optional('srcmac'): str,
+                        Optional('dstmac'): str,
+                    },
+                    Optional('child_npd'): {
+                        Optional('child_device'): int,
+                        Optional('nh_gid'): int,
+                        Optional('nh_oid'): int,
+                        Optional('old_gid'): int,
+                        Optional('old_oid'): int,
+                        Optional('parent_oid'): int,
+                        Optional('child_fec_oid'): int,
+                        Optional('was_nor_nh'): int,
+                        Optional('cr_def'): int,
+                        Optional('stale'): int,
+                        Optional('l3port_valid'): int,
+                    },
+                    Optional('child_sdk'): {
+                        Optional('cla_nhtype'): int,
+                    }
+                },
+                Optional('sdk_fec_dest'): {
+                    Optional('sdk_oid'): int,
+                    Optional('sdk_dev'): int,
+                    Optional('dest_type'): str,
+                },
+                Optional('npd'): {
+                    Optional('device'): int,
+                    Optional('lspa_rec'): int,
+                    Optional('api_type'): str,
+                    Optional('sdk_oid'): int,
+                    Optional('devid'): int,
+                    Optional('asic'): int,
+                },
+                Optional('sdk'): {
+                    Optional('is_host'): int,
+                    Optional('l3_dest_id'): str,
+                    Optional('l3_dest_name'): str,
+                    Optional('vrf_gid'): int,
+                    Optional('vrf_oid'): int,
+                },
+                Optional('object_type'): str,
+                Optional('sdk_nexthop'): {
+                    Optional('oid'): int,
+                    Optional('dev'): int,
+                    Optional('gid'): str,
+                    Optional('macaddr'): str,
+                    Optional('nh_type'): str,
+                },
+                Optional('sdk_outgoing_port'): {
+                    Optional('out_oid'): int,
+                    Optional('porttype'): str,
+                },
+                Optional('forus_destination'): {
+                    Any(): {
+                        Optional('forus_obj_id'): int,
+                    }
+                },
+                Optional('subnet_present_l3port_oid'): int,
+                Optional(Any()): {
+                    Optional('ipnexthop_obj_id'): int,
+                },
+            }
+        }
+    }            
+
+# ======================================================================================
+# Parser for:
+#   * 'show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_add}'
+#   * 'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_add}'
+# ======================================================================================
+class ShowPlatformSofwareFedActiveMplsIpv4VrfNameIpAdd(ShowPlatformSofwareFedActiveMplsIpv4VrfNameIpAddSchema):
+    ''' Parser for
+        * 'show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_add}'
+        * 'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_add}'
+    '''
+    cli_command = ['show platform software fed {switch} active mpls ipv4 vrf-name {vn_name} {ip_address}', 
+                    'show platform software fed active mpls ipv4 vrf-name {vn_name} {ip_address}']
+
+    def cli(self,switch='',vn_name='',ip_address='',output=None):
+
+        if output is None:
+            if vn_name and ip_address:
+                if switch:
+                    output = self.device.execute(self.cli_command[0].format(switch=switch,vn_name=vn_name,ip_address=ip_address))
+                else:
+                    output = self.device.execute(self.cli_command[1].format(vn_name=vn_name,ip_address=ip_address))
+
+        # Init vars
+        ret_dict = {}
+        ipv4_add_dict = {}
+
+        # IPV4ROUTE_ID:id:0x5b36201d0608 nobj:(PUSH_COUNTER,418) 20.1.1.123/32 tblid:2 DA:0
+        p1 = re.compile(r'^IPV4ROUTE_ID:id:(?P<ipv4route_id>\w+)(?:\s+)nobj:\((?P<obj_name>\w+)(?:,)'
+                        r'(?P<obj_id>\d+)\)(?:\s+)(?P<ipv4_add>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})'
+                        r'(?:\s+)tblid:(?P<tblid>\d+)(?:\s+)DA:(?P<da>\d+)$')
+
+        # NPD: device:0 lspa_rec:0 api_type:route(3)
+        p2 = re.compile(r'^NPD:\s+device:(?P<device>\d+)(?:\s+)lspa_rec:(?P<lspa_rec>\d+)(?:\s+)api_type:(?P<api_type>\S+)$')
+
+        # NPD: SDK oid 534, devid:0, asic:0
+        p3 = re.compile(r'^NPD:\sSDK\soid\s(?P<sdk_oid>\d+)(?:,\s+)devid:(?P<devid>\d+)(?:,\s+)asic:(?P<asic>\d+)$')
+
+        # SDK: is_host:0 l3_dest:0x62faa7b0fca0 l3_dest:la_vxlan_next_hop_base(oid=2113) vrf(gid/oid):2/697
+        p4 = re.compile(r'^SDK:(?:\s+)is_host:(?P<is_host>\d+)(?:\s+)'
+                        r'l3_dest:(?P<l3_dest_id>\w+)(?:\s+)'
+                        r'l3_dest:(?P<l3_dest_name>\S+)(?:\s+)'
+                        r'vrf\(gid\/oid\):(?P<vrf_gid>\d+)\/(?P<vrf_oid>\d+)$')
+
+        # object type: vxlan_next_hop
+        p5 = re.compile(r'^object type:\s+(?P<object_type>\w+)$')
+
+        # sdk nexthop oid:1449,dev:0, gid:0xa,macaddr:a0f8.4910.ab57, nh_type:normal(0)
+        p6 = re.compile(r'^sdk nexthop oid:(?P<oid>\d+),dev:(?P<dev>\d+),\s+gid:(?P<gid>\w+)'
+                        r',macaddr:(?P<macaddr>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}),\s+nh_type:(?P<nh_type>\S+)$')
+
+        # sdk outgoing port oid 2143, porttype:svi(104)
+        p7 = re.compile(r'^sdk outgoing port oid\s+(?P<out_oid>\d+),\s+porttype:(?P<porttype>\S+)$')
+
+        # forus_destination  SPECIAL_IPNEXTHOP_ID:obj_id:0
+        p8 = re.compile(r'^forus_destination\s+(?P<forus_name>\w+):obj_id:(?P<forus_obj_id>\d+)$')
+
+        # Subnet Present in SDK for L3Port OID:2143
+        p9 = re.compile(r'^Subnet Present in SDK for L3Port OID:(?P<subnet_present_l3port_oid>\d+)$')
+
+        # SPECIAL_IPNEXTHOP_ID:obj_id:0
+        p10 = re.compile(r'^(?P<ipnexthop_name>\w+):obj_id:(?P<ipnexthop_obj_id>\d+)$')
+
+        # sdk fec destination oid:1449,dev:0, destination_type:4b
+        p11 = re.compile(r'^sdk fec destination oid:(?P<sdk_oid>\d+),dev:(?P<sdk_dev>\d+),\s+destination_type:(?P<dest_type>\S+)$')
+
+        # ADJ:objid:101 nh_type:NHADJ_NORMAL iif_id:0x553 ether_type:0x8 #child:2
+        p12 = re.compile(r'^ADJ:objid:(?P<objid>\d+)\s+nh_type:(?P<nh_type>\w+)\s+'
+                            r'iif_id:(?P<iif_id>\w+)\s+ether_type:(?P<ether_type>\w+)\s+#child:\d+$')
+
+        # srcmac:f87a.4125.2f02 dstmac:a0f8.4910.ab57
+        p13 = re.compile(r'^srcmac:(?P<srcmac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+dstmac:(?P<dstmac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})$')
+
+        # NPD: device:0 nh_gid/oid:10/1449 old_gid/oid:0/0 parent_oid:2143
+        p14 = re.compile(r'^NPD:\s+device:(?P<child_device>\d+)\s+nh_gid\/oid:(?P<nh_gid>\d+)\/(?P<nh_oid>\d+)\s+'
+                            r'old_gid\/oid:(?P<old_gid>\d+)\/(?P<old_oid>\d+)\s+parent_oid:(?P<parent_oid>\d+)$')
+
+        # fec_oid:1454 was_nor_nh:1 cr_def:0 stale:0 l3port_valid:1
+        p15 = re.compile(r'^fec_oid:(?P<child_fec_oid>\d+)\s+was_nor_nh:(?P<was_nor_nh>\d+)\s+cr_def:(?P<cr_def>\d+)'
+                            r'\s+stale:(?P<stale>\d+)\s+l3port_valid:(?P<l3port_valid>\d+)$')
+
+        # SDK: cla_nhtype:0
+        p16 = re.compile(r'^SDK:\s+cla_nhtype:(?P<cla_nhtype>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IPV4ROUTE_ID:id:0x5b36201d0608 nobj:(PUSH_COUNTER,418) 20.1.1.123/32 tblid:2 DA:0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv4_add = m.groupdict()['ipv4_add']
+                ipv4_add_dict = ret_dict.setdefault('ipv4_add', {}).setdefault(ipv4_add, {})
+                ipv4_add_dict.update({                                                        
+                            'ipv4route_id': str(groups['ipv4route_id']),
+                            'obj_name': str(groups['obj_name']),
+                            'obj_id': int(groups['obj_id']),
+                            'tblid': int(groups['tblid']),
+                            'da': int(groups['da']),
+                        })
+                continue
+
+            # NPD: device:0 lspa_rec:0 api_type:route(3)
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                npd_dict = ipv4_add_dict.setdefault('npd', {})
+                npd_dict.update({                                                        
+                            'device': int(groups['device']),
+                            'lspa_rec': int(groups['lspa_rec']),
+                            'api_type': str(groups['api_type']),
+                        })
+                continue
+
+            # NPD: SDK oid 534, devid:0, asic:0
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                npd_dict.update({                                                        
+                            'sdk_oid': int(groups['sdk_oid']),
+                            'devid': int(groups['devid']),
+                            'asic': int(groups['asic']),
+                        })
+                continue
+
+            # SDK: is_host:0 l3_dest:0x62faa7b0fca0 l3_dest:la_vxlan_next_hop_base(oid=2113) vrf(gid/oid):2/697
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_dict = ipv4_add_dict.setdefault('sdk', {})
+                sdk_dict.update({                                                        
+                            'is_host': int(groups['is_host']),
+                            'l3_dest_id': str(groups['l3_dest_id']),
+                            'l3_dest_name': str(groups['l3_dest_name']),
+                            'vrf_gid': int(groups['vrf_gid']),
+                            'vrf_oid': int(groups['vrf_oid']),
+                        })
+                continue
+            
+            # object type: vxlan_next_hop
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv4_add_dict.update({                                                        
+                            'object_type': str(groups['object_type']),
+                        })
+                continue
+
+            # sdk nexthop oid:1449,dev:0, gid:0xa,macaddr:a0f8.4910.ab57, nh_type:normal(0)
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_nexthop_dict = ipv4_add_dict.setdefault('sdk_nexthop', {})
+                sdk_nexthop_dict.update({                                                        
+                            'oid': int(groups['oid']),
+                            'dev': int(groups['dev']),
+                            'gid': str(groups['gid']),
+                            'macaddr': str(groups['macaddr']),
+                            'nh_type': str(groups['nh_type']),
+                        })
+                continue
+
+            # sdk outgoing port oid 2143, porttype:svi(104)
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_outgoing_port_dict = ipv4_add_dict.setdefault('sdk_outgoing_port', {})
+                sdk_outgoing_port_dict.update({                                                        
+                            'out_oid': int(groups['out_oid']),
+                            'porttype': str(groups['porttype']),
+                        })
+                continue
+
+            # forus_destination  SPECIAL_IPNEXTHOP_ID:obj_id:0
+            m =p8.match(line)
+            if m:
+                groups = m.groupdict()
+                forus_name = m.groupdict()['forus_name']
+                forus_destination_dict = ipv4_add_dict.setdefault('forus_destination', {})
+                forus_name_dict = forus_destination_dict.setdefault(forus_name, {})
+                forus_name_dict.update({                                                        
+                            'forus_obj_id': int(groups['forus_obj_id']),
+                        })
+                continue
+
+            # Subnet Present in SDK for L3Port OID:2143
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv4_add_dict.update({                                                        
+                            'subnet_present_l3port_oid': int(groups['subnet_present_l3port_oid']),
+                        })
+                continue
+
+            # SPECIAL_IPNEXTHOP_ID:obj_id:0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                ipnexthop_name = m.groupdict()['ipnexthop_name']
+                ipnexthop_name_dict = ipv4_add_dict.setdefault(ipnexthop_name, {})
+                ipnexthop_name_dict.update({                                                        
+                            'ipnexthop_obj_id': int(groups['ipnexthop_obj_id']),
+                        })
+                continue
+
+            # sdk fec destination oid:1449,dev:0, destination_type:4b
+            m = p11.match(line)
+            if m:
+                sdk_fec_dest = m.groupdict()
+                sdk_fec_dest_dict = ipv4_add_dict.setdefault('sdk_fec_dest', {})
+                sdk_fec_dest_dict.update({                                                        
+                            'sdk_oid': int(sdk_fec_dest['sdk_oid']),
+                            'sdk_dev': int(sdk_fec_dest['sdk_dev']),
+                            'dest_type': str(sdk_fec_dest['dest_type']),
+                        })
+                continue
+
+            # ADJ:objid:101 nh_type:NHADJ_NORMAL iif_id:0x553 ether_type:0x8 #child:2
+            m = p12.match(line)
+            if m:
+                child_adj = m.groupdict()
+                ipv4_add_dict.setdefault('child', {}).setdefault('child_adj', {})
+                child_adj_dict = ipv4_add_dict.setdefault('child', {}).setdefault('child_adj', {})
+                child_adj_dict.update({                                                        
+                            'objid': int(child_adj['objid']),
+                            'nh_type': str(child_adj['nh_type']),
+                            'iif_id': str(child_adj['iif_id']),
+                            'ether_type': str(child_adj['ether_type']),
+                        })
+                continue
+
+            # srcmac:f87a.4125.2f02 dstmac:a0f8.4910.ab57
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                child_adj_dict.update({                                                        
+                            'srcmac': str(groups['srcmac']),
+                            'dstmac': str(groups['dstmac']),
+                        })
+                continue
+
+            # NPD: device:0 nh_gid/oid:10/1449 old_gid/oid:0/0 parent_oid:2143
+            m = p14.match(line)
+            if m:
+                child_npd = m.groupdict()
+                child_npd_dict = ipv4_add_dict.setdefault('child', {}).setdefault('child_npd', {})
+                child_npd_dict.update({                                                        
+                            'child_device': int(child_npd['child_device']),
+                            'nh_gid': int(child_npd['nh_gid']),
+                            'nh_oid': int(child_npd['nh_oid']),
+                            'old_gid': int(child_npd['old_gid']),
+                            'old_oid': int(child_npd['old_oid']),
+                            'parent_oid': int(child_npd['parent_oid']),
+                        })
+                continue
+
+            # fec_oid:1454 was_nor_nh:1 cr_def:0 stale:0 l3port_valid:1
+            m = p15.match(line)
+            if m:
+                child_npd = m.groupdict()
+                child_npd_dict.update({                                                        
+                            'child_fec_oid': int(child_npd['child_fec_oid']),
+                            'was_nor_nh': int(child_npd['was_nor_nh']),
+                            'cr_def': int(child_npd['cr_def']),
+                            'stale': int(child_npd['stale']),
+                            'l3port_valid': int(child_npd['l3port_valid']),
+                        })
+                continue
+
+            # SDK: cla_nhtype:0
+            m = p16.match(line)
+            if m:
+                child_sdk = m.groupdict()
+                child_sdk_dict = ipv4_add_dict.setdefault('child', {}).setdefault('child_sdk', {})
+                child_sdk_dict.update({                                                        
+                            'cla_nhtype': int(child_sdk['cla_nhtype']),
+                        })
+                continue
+
         return ret_dict
 
 # =======================================
@@ -17609,12 +18095,16 @@ class ShowPlatformHardwareFedActiveQosScheduleInterface(ShowPlatformHardwareFedA
     Parser for:
         * show platform hardware fed active qos schedule interface
     """
+    cli_command = ['show platform hardware fed switch {switch_var} qos schedule interface {interface}',
+    'show platform hardware fed active qos schedule interface {interface}']
 
-    cli_command = ['show platform hardware fed active qos schedule interface {interface}']
-
-    def cli(self, interface,output=None):
+    def cli(self, interface,output=None,switch_var=None):
         if output is None:
-            cmd = self.cli_command[0].format(interface=interface)
+            if switch_var is None:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0].format(switch_var=switch_var,interface=interface)
+
             output = self.device.execute(cmd)
 
         ret_dict = {}
@@ -20940,85 +21430,88 @@ class ShowPlatformHardwareQfpActiveDatapathPmdIfdevSchema(MetaParser):
 
     schema = {
         'port': {
-			Any(): {
-				'port_name': str,
-				'state_information': {
-					'bind_name': str,
-					'driver': str,
-					'mac_address': str,
-					'device': str,
-					'cio': {
-						'cio_state': str,
-						'if_type': int,
-						'uidb_index': int,
-						'module_id': int,
-						'flags': str
-					},
-					'cio_events': {
-						'enable': int,
-						'disable': int
-					},
-					'tx_drain': str,
-					'vdev_pause': str,
-					'admin_state': str,
-					'oper_state': str,
-					'link_state': {
-						'up': int,
-						'down': int
-					},
-					'events': {
-						'remove': int,
-						'reset': int,
-						'link_up': int,
-						'link_down': int,
-						'bond_del': int,
-						'unknown': int
-					},
-					'vdev_rmv_pendng': int,
-					'attach_attempts': int
-				},
-				'attributes': {
-					'reconfigure': str,
-					'rx_offload_crc_strip': str,
-					'rx_offload_vlan_filter': str,
-					'rx_vlan_tag_insert': str,
-					'rx_vlan_tag_swap_': str,
-					'mac_filter_api': str,
-					'mc_promisc': str,
-					'set_mc_addr_api': str,
-					'pause_resume': str
-				},
-				'configuration': {
-					'promiscuous': {
-						'admin': str,
-						'override': str,
-						'multicast': str
-					},
-					'mtu_config': {
+            Any(): {
+                'port_name': str,
+                'state_information': {
+                    'bind_name': str,
+                    'driver': str,
+                    'mac_address': str,
+                    'device': str,
+                    'cio': {
+                        'cio_state': str,
+                        'if_type': int,
+                        'uidb_index': int,
+                        'module_id': int,
+                        'flags': str
+                    },
+                    'cio_events': {
+                        'enable': int,
+                        'disable': int
+                    },
+                    'tx_drain': str,
+                    'vdev_pause': str,
+                    'admin_state': str,
+                    'oper_state': str,
+                    'link_state': {
+                        'up': int,
+                        'down': int
+                    },
+                    'events': {
+                        'remove': int,
+                        'reset': int,
+                        'link_up': int,
+                        'link_down': int,
+                        'bond_del': int,
+                        'unknown': int
+                    },
+                    'vdev_rmv_pendng': int,
+                    'attach_attempts': int
+                },
+                'attributes': {
+                    'reconfigure': str,
+                    'rx_offload_crc_strip': str,
+                    'rx_offload_vlan_filter': str,
+                    'rx_vlan_tag_insert': str,
+                    'rx_vlan_tag_swap_': str,
+                    'mac_filter_api': str,
+                    'mc_promisc': str,
+                    'set_mc_addr_api': str,
+                    'pause_resume': str
+                },
+                'configuration': {
+                    'promiscuous': {
+                        'admin': str,
+                        'override': str,
+                        'multicast': str
+                    },
+                'mtu_config': {                 
+    
                                         'mtu': int,
                                         'cur': int,
                                         'min': int,
                                         'max': int
                                 },
-					'trans_vlan': int,
-					'map_qid_num': int,
-					'map_qid_id': int,
-					'rx_ring_size': int,
-					'tx_ring_size': int,
-					'rx_active_q_num': int,
-					'rx_total_q_num': int,
-					'rx_cio_q_num': int,
-					'rx_desc_num': {
+
+                'trans_vlan': int,
+                'map_qid_num': int,
+                'map_qid_id': int,
+                'rx_ring_size': int,
+                'tx_ring_size': int,
+                'rx_active_q_num': int,
+                'rx_total_q_num': int,
+                'rx_cio_q_num': int,
+                'rx_desc_num': {
                     'queue_0': int
-					},
-					'tx_q_num': int,
-					'tx_desc_num': {
-						'queue_0': int
-					},
-					'num_vlans': int
-				}
-		}
-	}
+                },
+                'tx_q_num': int,
+                'tx_desc_num': {
+                    'queue_0': int
+                },
+                'num_vlans': int
+            }
+        }
+    }                   
+
 }
 
 # ================================================================================
@@ -22789,12 +23282,15 @@ class ShowPlatformSoftwareWiredClientSwitchR0(ShowPlatformSoftwareWiredClientSwi
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_state=switch_state))
 
-        # 0x13151bdb  001b.0c18.918d  Yes    No
-        p1 = re.compile(r"^(?P<id>\S+)\s+(?P<mac>\S+)\s+(?P<fwd>\w+)\s+(?P<open_access>\w+)\s+$")
-
+        # 0x13151bdb  001b.0c18.918d  Yes    No            
+        p1 = re.compile(r'^(?P<id>[0-9a-z]+) +'
+                  '(?P<mac>[\w\.]+) +'
+                  '(?P<fwd>\w+) +'
+                  '(?P<open_access>\w+)$')
         ret_dict = {}
-
+        
         for line in output.splitlines():
+            line = line.strip()
 
             # 0x13151bdb  001b.0c18.918d  Yes    No
             m = p1.match(line)
@@ -22812,7 +23308,6 @@ class ShowPlatformSoftwareWiredClientSwitchR0(ShowPlatformSoftwareWiredClientSwi
                 continue
 
         return ret_dict
-
 
 # =========================================================================
 # Parser for 'show platform authentication sbinfo interface {interface} '
@@ -24078,10 +24573,10 @@ class ShowPlatformPmPortDataInt(ShowPlatformPmPortDataIntSchema):
                 if 'pm_port_info' not in ret_dict:
                     pm_port_info = ret_dict.setdefault('pm_port_info', {})
                 pm_port_info['time_stamp_last_link_flapped'] = dict_val['time_stamp_last_link_flapped']
-                continue
-
-
+                continue                
+            
             #   LastLinkDownDuration(sec) 2
+
             m = p2_6.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -25769,12 +26264,17 @@ class ShPlatformSoftwareFedActiveVpSummaryInterfaceIf_idSchema(MetaParser):
 class ShPlatformSoftwareFedActiveVpSummaryInterfaceIf_id(ShPlatformSoftwareFedActiveVpSummaryInterfaceIf_idSchema):
     """Parser for show platform software fed active vp summary interface if_id {interface_id}"""
 
-    cli_command = 'show platform software fed active vp summary interface if_id {interface_id}'
+    cli_command = ['show platform software fed {mode} vp summary interface if_id {interface_id}', 
+                'show platform software fed {switch} {mode} vp summary interface if_id {interface_id}']
 
-    def cli(self, interface_id="", output=None):
-
+    def cli(self, interface_id, mode, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(interface_id=interface_id))
+            if switch:
+                cmd = self.cli_command[1].format(interface_id=interface_id, mode=mode, switch=switch)
+            else:
+                cmd = self.cli_command[0].format(interface_id=interface_id, mode=mode)
+            
+            output = self.device.execute(cmd)
 
         #              102           80        trunk            1  forwarding          No                Yes
         p1 = re.compile(r"(?P<if_id>\d+)\s+(?P<vlan_id>\d+)\s+(?P<pvln_mode>\w+)\s+(?P<pvlan>\d+)\s+(?P<stp_state>\w+)\s+(?P<vtp_pruned>\w+)\s+(?P<untag>\w+)$")
@@ -25960,11 +26460,15 @@ class ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesVlanSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesVlan(ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesVlanSchema):
     """Parser for show platform software fed switch active matm adjacencies vlan {vlan_id}"""
 
-    cli_command = 'show platform software fed switch active matm adjacencies vlan {vlan_id}'
+    cli_command = ['show platform software fed {switch} active matm adjacencies vlan {vlan_id}',
+                   'show platform software fed active matm adjacencies vlan {vlan_id}']
 
-    def cli(self, vlan_id, output=None):
+    def cli(self, vlan_id, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(vlan_id=vlan_id))
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch,vlan_id=vlan_id))
+            else:
+                output = self.device.execute(self.cli_command[1].format(vlan_id=vlan_id))
 
         #v99     966         0x3000003c6      VXLAN  V4     0x0              0x0              0x0              0x0              UC         No
         p1 = re.compile(r"^(?P<vlan_id>\d+)\s+(?P<adj_id>\d+)\s+(?P<adj_key>\S+)\s+(?P<encap>\S+)\s+(?P<link_type>\w+)\s+(?P<si_handle>\w+)\s+(?P<ri_handle>\w+)\s+(?P<l3_mri_handle>\S+)\s+(?P<di_handle>\w+)\s+(?P<obj_type>\S+)\s+(?P<shared>\w+)$")
@@ -26048,11 +26552,15 @@ class ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesAdjkeySchema(MetaParser)
 class ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesAdjkey(ShowPlatformSoftwareFedSwitchActiveMatmAdjacenciesAdjkeySchema):
     """Parser for show platform software fed switch active matm adjacencies adjkey {adj_key}"""
 
-    cli_command = 'show platform software fed switch active matm adjacencies adjkey {adj_key}'
+    cli_command = ['show platform software fed {switch} active matm adjacencies adjkey {adj_key}',
+                   'show platform software fed active matm adjacencies adjkey {adj_key}']
 
-    def cli(self, adj_key, output=None):
+    def cli(self, adj_key, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(adj_key=adj_key))
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, adj_key=adj_key))
+            else:
+                output = self.device.execute(self.cli_command[1].format(adj_key=adj_key))
 
         # 3849        0x420065   200199     60     99     VXLAN  V4     172.11.1.1        172.11.1.22       0x7f95815d74d8       0x7f95815a4528       0x0              0x0          UC
         p1 = re.compile(
@@ -26871,11 +27379,15 @@ class ShowPlatformSoftwareFedSwitchMatmStatsSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchMatmStats(ShowPlatformSoftwareFedSwitchMatmStatsSchema):
     """Parser for 'show platform software fed switch {mode} matm stats'"""
 
-    cli_command = 'show platform software fed switch {mode} matm stats'
+    cli_command = ['show platform software fed active matm stats', 
+        'show platform software fed switch {mode} matm stats']
 
-    def cli(self, mode, output=None):
+    def cli(self, mode=None, output=None):
         if output is None:
-            cmd = self.cli_command.format(mode=mode)
+            if mode:
+                cmd = self.cli_command[1].format(mode=mode)
+            else:
+                cmd = self.cli_command[0]
             output = self.device.execute(cmd)
 
         #   Total non-cpu mac entries       : 3
@@ -27417,6 +27929,338 @@ class ShowPlatformSoftwareFedSwitchActiveMonitor(ShowPlatformSoftwareFedActiveMo
     def cli(self, session, output=None):
         return super().cli(session=session, output=output)
 
+
+
+class ShowPlatformSoftwareBpCrimsonStatisticsSchema(MetaParser):
+    """
+    Schema for show platform software bp crimson statistics
+    """
+    schema = {
+        'bp_crimson_statistics':{            
+            'initialized': str,
+            'config_database_init_d': str,
+            'config_db_persist': str,
+            'config_db_restorable': str,
+            'config_lock_mgr_dbid': int,
+            'oper_database_init_d': str,
+            'oper_lock_mgr_dbid': int,
+            'garbage_collections': int,         
+        },
+        Optional('bp_svl_crimson_statistics'):{            
+            'config_notify_mgr_id': int,
+            'config_dyn_tables_reg_d': int,
+            'config_dyn_reg_failures': int,
+            'config_dyn_tables_dereg_d': int,
+            'config_dereg_deferred': int,
+            'config_dereg_failures': int,
+            'config_table_updates': int,
+            'config_applied': int,
+            'config_skipped': int,
+            'oper_notify_mgr_dbid': int,
+            'oper_dyn_tables_reg_d': int,
+            'oper_dyn_reg_failures': int,
+            'oper_dyn_tables_dereg_d': int,
+            'oper_dereg_s_deferred': int,
+            'oper_dereg_failures': int,
+            'oper_table_updates': int,
+            'dyn_table_failures': int,
+            'dyn_table_dereg_failures': int,
+            'pending_notifications': int,
+            'notifications_highwater': int,
+            'notifications_processed': int,
+            'notification_failures': int,
+        },
+        Optional('bp_remote_db_statistics'):{
+            'get_requests':{
+                'total_requests': int,
+                'pending_requests': int,
+                'timed_out_requests': int,
+                'failed_requests': int,
+            },
+            'set_requests':{
+                'total_requests': int,
+                'pending_requests': int,
+                'timed_out_requests': int,
+                'failed_requests': int,
+            },
+            'in_progress_requests':{
+                'type': str,
+                'db_id': int,
+                'batch_id': int,
+                'op_id': int,
+                'task_pid': int,
+            },
+            Optional('dbal_response_time'):{
+                'max': int,
+            },
+            Optional('record_free_failures'):{
+                'total_failures':int,
+            },
+            
+        }
+ }
+
+class ShowPlatformSoftwareBpCrimsonStatistics(ShowPlatformSoftwareBpCrimsonStatisticsSchema):
+    """ Parser for show platform software bp crimson statistics"""
+
+    cli_command = 'show platform software bp crimson statistics'
+
+    def cli(self, output=None):
+        # excute command to get output
+        output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # BP Crimson Statistics
+        p1 = re.compile('^(?P<bp_crimson_statistics>BP Crimson Statistics)$')
+
+        # Regexp  for  all the  lines  which fals in the below  pattern
+		# Initialized            : Yes
+        p2 = re.compile('^(?P<description>[\w\'\s]+)\:\s+(?P<value>\w+)$')
+
+        # BP SVL Crimson Statistics
+        p3 = re.compile('^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$')
+		
+		# BP Remote DB Statistics
+        p4 = re.compile('^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$')
+        
+		# GET Requests:
+        p5 = re.compile('^(?P<get_requests>GET Requests\:)$')
+
+		# SET Requests:
+        p6 = re.compile('^(?P<set_requests>SET Requests\:)$')
+		
+		# In Progress Requests: 
+        p7 = re.compile('^(?P<in_progress_requests>In Progress Requests\:)$')
+		
+		# DBAL Response Time:
+        p8 = re.compile('^(?P<dbal_response_time>DBAL Response Time\:)$')
+
+		# Record Free Failures:
+        p9 = re.compile('^(?P<record_free_failures>Record Free Failures\:)$')
+		
+		#  MAX (ms)         : 49
+        p10 = re.compile('^\s*MAX +\(ms\) +\:\s*(?P<max>\d+)$')
+
+
+        for line in output.splitlines():
+            line=line.strip()
+            
+			# BP Crimson Statistics
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_crimson_statistics',{})
+                continue
+
+            # Initialized            : Yes
+            m=p2.match(line)
+            if m:
+                group=m.groupdict()
+                if group['value'].isdigit():
+                    group['value'] = int(group['value'])
+                root_dict[group['description'].strip().lower().replace(' ','_').replace('"','').replace('\'','_')] = group['value']
+                continue
+
+            # BP SVL Crimson Statistics
+            m=p3.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_svl_crimson_statistics',{})
+                continue
+			
+			# BP Remote DB Statistics
+            m = p4.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{})
+                continue
+            
+			# GET Requests:
+            m = p5.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{}).setdefault('get_requests', {})
+                continue
+			
+			# SET Requests:
+            m = p6.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{}).setdefault('set_requests', {})
+                continue
+			
+			# In Progress Requests: 
+            m = p7.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{}).setdefault('in_progress_requests', {})
+                continue
+			
+			# DBAL Response Time:
+            m = p8.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{}).setdefault('dbal_response_time', {})
+                continue
+
+            # Record Free Failures:
+            m = p9.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict = ret_dict.setdefault('bp_remote_db_statistics',{}).setdefault('record_free_failures', {})
+                continue
+
+            #  MAX (ms)         : 49
+            m = p10.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict.update({'max' : int(group['max'])})
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareNodeClusterManagerSwitchB0LocalSchema(MetaParser):
+    """
+    Schema for show platform software node cluster-manager switch {mode} B0 local
+    """
+    schema = {        
+        'local_node_number': int,
+        'node_status_is': str,
+        'tunnel_status_is': str,
+        'node_role_is': str,
+        'mac_address_is': str,
+        'slot_number_is': int,
+        'priority_set_to': int,
+        'leader_node_num_is': int,
+        'follower_node_is': int,
+        'total_node_present_in_cluster': int,
+    }
+
+class ShowPlatformSoftwareNodeClusterManagerSwitchB0Local(ShowPlatformSoftwareNodeClusterManagerSwitchB0LocalSchema):
+    """ Parser for show platform software node cluster-manager switch {mode} B0 local"""
+
+    cli_command = 'show platform software node cluster-manager switch {mode} B0 local'
+
+    def cli(self, mode, output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mode=mode))
+
+        # initial variables
+        ret_dict = {}
+        #p1 = re.compile('^(?P<node_description>[\w\s]+)\: (?P<status>.*)$')
+		# Local Node Number: 1
+        p1 = re.compile('^Local +Node +Number\: +(?P<local_node_number>\d+)$')
+        
+		# Node status is: NODE_STATUS_UP
+        p2 = re.compile('^Node +status +is\: +(?P<node_status_is>.*)$')
+        
+		# Tunnel status is: NODE_TUNNEL_UP
+        p3 = re.compile('^Tunnel +status +is\: +(?P<tunnel_status_is>.*)$')
+		
+		# Node role is: CLUSTER_NODE_ROLE_LEADER
+        p4 = re.compile('^Node +role +is\: +(?P<node_role_is>.*)$')
+		
+		# MAC address is : 64 181 193 255 238 0
+        p5 = re.compile('^MAC +address +is +\: +(?P<mac_address_is>.*)$')
+
+		# Slot number is : 0
+        p6 = re.compile('^Slot +number +is +\: +(?P<slot_number_is>\d+)$')
+		
+		# priority set to: 1
+        p7 = re.compile('^priority +set +to\: +(?P<priority_set_to>\d+)$')
+		
+		# Leader node num is: 1
+        p8 = re.compile('^Leader +node +num is\: +(?P<leader_node_num_is>\d+)$')
+		
+		# Follower node is: 2
+        p9 = re.compile('^Follower +node +is\: +(?P<follower_node_is>\d+)$')
+		
+		# Total node present in cluster: 2
+        p10 = re.compile('^Total +node +present +in +cluster\: +(?P<total_node_present_in_cluster>\d+)$')
+
+
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+			# Local Node Number: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()               
+                ret_dict['local_node_number'] = int (group['local_node_number'])
+                continue
+			
+			# Node status is: NODE_STATUS_UP
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['node_status_is'] = group['node_status_is']
+                continue
+			
+			# Tunnel status is: NODE_TUNNEL_UP
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tunnel_status_is'] = group['tunnel_status_is']
+                continue
+			
+			# Node role is: CLUSTER_NODE_ROLE_LEADER
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['node_role_is'] = group['node_role_is']
+                continue
+			
+			# MAC address is : 64 181 193 255 238 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['mac_address_is'] = group['mac_address_is']
+                continue
+			
+			# Slot number is : 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['slot_number_is'] = int(group['slot_number_is'])
+                continue
+			
+			# priority set to: 1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['priority_set_to'] = int(group['priority_set_to'])
+                continue
+			
+			# Leader node num is: 1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['leader_node_num_is'] = int(group['leader_node_num_is'])
+                continue
+			
+			# Follower node is: 2
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['follower_node_is'] = int(group['follower_node_is'])
+                continue
+			
+			# Total node present in cluster: 2
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_node_present_in_cluster'] = int(group['total_node_present_in_cluster'])
+                continue
+
+        return ret_dict
+
+
+
 # ======================================================
 # Parser for 'show platform software fed switch active matm adjacencies '
 # ======================================================
@@ -27473,6 +28317,13 @@ class ShowPlatformSoftwareFedSwitchActiveMatmAdjacencies(ShowPlatformSoftwareFed
                 continue
 
         return ret_dict
+
+
+# ======================================================
+# Parser for 'show platform hardware fed switch active qos dscp-cos counters interface {interface} '
+# ======================================================
+class ShowPlatformHardwareFedSwitchActiveQosDscpCosCountersInterfaceSchema(MetaParser):
+    """Schema for show platform hardware fed switch active qos dscp-cos counters interface {interface}"""
 
 
 # =====================================================================
@@ -27720,7 +28571,8 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(ShowPlatformSoftwareFedQosI
             output = self.device.execute(cmd)
 
         # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
-        p1 = re.compile(r'^\[(?P<interface>[\w\/]+),.+$')
+        # [HundredGigE1/0/1.1, map1, Ingress]: CGID = 0x738310
+        p1 = re.compile(r'^\[(?P<interface>[\w\/\.]+),.+$')
 
         # cgid: 0x738310
         p1_1 = re.compile(r'^cgid:\s+(?P<cgid>\w+)$')
@@ -27928,6 +28780,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(ShowPlatformSoftwareFedQosI
             line = line.strip()
 
             # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
+            # [HundredGigE1/0/1.1, map1, Ingress]: CGID = 0x738310
             m = p1.match(line)
             if m:
                 int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
@@ -28583,9 +29436,11 @@ class ShowProcessesPid(ShowProcessesPidSchema):
                     'state': group["state"],
                     'priority': group["priority"]
                 })
-                continue
+                continue          
+            
 
         return parsed_dict
+
 # ==========================================================================================
 # Parser Schema for 'show xfsu eligibility'
 # ==========================================================================================
@@ -28953,3 +29808,662 @@ class ShowPlatformSoftwareFedSwitchActiveVtHardware(ShowPlatformSoftwareFedSwitc
                 continue
 
         return ret_dict
+
+
+
+class ShowPlatformSoftwareAuditSummarySchema(MetaParser):
+    """Schema for show platform software audit summary"""
+    schema = {
+        'chassis': {
+            Any(): {
+                Optional('route_process'): int,
+                'avc_denial_count': int
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareAuditSummary(ShowPlatformSoftwareAuditSummarySchema):
+    """Parser for show platform software audit summary"""
+
+    cli_command = 'show platform software audit summary'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # AUDIT LOG ON chassis 1 route-processor 0
+        p1 = re.compile(r'^AUDIT LOG ON chassis (?P<chassis>\d+) route-processor (?P<route_process>\d+)$')
+
+        # AUDIT LOG ON ACTIVE
+        p2 = re.compile(r'^AUDIT LOG ON (?P<chassis>\w+)$')
+
+        # AVC Denial count: 82
+        p3 = re.compile(r'^AVC Denial count: (?P<avc_denial_count>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # AUDIT LOG ON chassis 1 route-processor 0
+            m = p1.match(line)
+            if m:
+                chassis_dict = ret_dict.setdefault('chassis', {}).setdefault(m.groupdict()['chassis'], {})
+                chassis_dict['route_process'] = int(m.groupdict()['route_process'])
+                continue
+
+            # AUDIT LOG ON ACTIVE
+            m = p2.match(line)
+            if m:
+                chassis_dict = ret_dict.setdefault('chassis', {}).setdefault(m.groupdict()['chassis'].lower(), {})
+                continue
+
+            # AVC Denial count: 82
+            m = p3.match(line)
+            if m:
+                chassis_dict['avc_denial_count'] = int(m.groupdict()['avc_denial_count'])
+                continue
+        
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailedSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} qos interface {interface} ingress npi detailed"""
+    schema = {
+        Optional('interface'): {
+            Any(): {
+                'cgid': str,
+                'no_of_classes': int,
+                'tcg_ref_count': int,
+                'filter_state': str,
+                'vmr_state': str
+            }
+        },
+        'classmap': {
+            Any(): {
+                'cgid': str,
+                'clid': str,
+                'tccg_ref_count': int,
+                'null_bind_count': int,
+                'class_seq_number': str,
+                'child_classes': int,
+                Optional('filter'): {
+                    Any(): {
+                        'value': str
+                    }
+                }
+            }
+        },
+        Optional('tcg'): {
+            'npi_tcg': {
+                'config_state': str,
+                'operational_state': str,
+                'parent_info': list,
+                'child_tcg': int,
+                'mark_action': int,
+                'police_action': int,
+                'queue_action': int,
+                'no_of_tccg': int
+            },
+            Optional('tccg'): {
+                Any(): {
+                    'class_map_name': str,
+                    'clid': str,
+                    'child_cgid': str,
+                    'null_bind': bool,
+                    Optional('action'): {
+                        Any(): {
+                            'action_type': str,
+                            'marking_method': str,
+                            'mark_value': int,
+                            'mark_type': str,
+                            'qos_group': int,
+                            'traffic_class': int,
+                            'discard_class': int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailed(
+        ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailedSchema):
+    """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress npi detailed"""
+    
+    cli_command = ['show platform software fed {switch} {mode} qos interface {interface} ingress npi detailed', 
+        'show platform software fed {mode} qos interface {interface} ingress npi detailed']
+    
+    def cli(self, mode, interface, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode, interface=interface)
+            else:
+                cmd = self.cli_command[1].format(mode=mode, interface=interface)
+            
+            output = self.device.execute(cmd)
+
+        # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
+        # [HundredGigE1/0/5.100, map1, Ingress]: CGID = 0x738310
+        p1 = re.compile(r'^\[(?P<interface>[\w\/\.]+),.+$')
+
+        # cgid: 0x738310
+        p1_1 = re.compile(r'^cgid:\s+(?P<cgid>\w+)$')
+        
+        # No of classes: 4
+        p1_2 = re.compile(r'^No of classes:\s+(?P<no_of_classes>\d+)$')
+
+        # TCG ref count: 1
+        p1_3 = re.compile(r'^TCG ref count:\s+(?P<tcg_ref_count>\d+)$')
+
+        # Filter state: UP TO DATE
+        p1_4 = re.compile(r'^Filter state:\s+(?P<filter_state>[\w\s]+)$')
+
+        # VMR state: UP TO DATE
+        p1_5 = re.compile(r'^VMR state:\s+(?P<vmr_state>[\w\s]+)$')
+
+        # Classmap Information
+        p2 = re.compile(r'^Classmap Information$')
+
+        # Class name: cs1(cgid: 0x738310, clid: 0x6A611)
+        p2_1 = re.compile(r'^Class name: (?P<class_name>[\w\s\-]+)\(cgid: (?P<cgid>\w+)\, clid: (?P<clid>\w+)\)$')
+        
+        # TCCG ref count: 1
+        p2_2 = re.compile(r'^TCCG ref count: (?P<tccg_ref_count>\d+)$')
+
+        # NULL Bind count: 1
+        p2_3 = re.compile(r'^NULL Bind count: (?P<null_bind_count>\d+)$')
+
+        # Class seq no.: 0x1FFFFF
+        p2_4 = re.compile(r'^Class seq no\.: (?P<class_seq_number>\w+)$')
+        
+        # No of child classes: 0
+        p2_5 = re.compile(r'^No of child classes: (?P<child_classes>\d+)$')
+
+        # Filter: FILTER_MATCH_IP_DSCP
+        p2_6 = re.compile(r'^Filter: (?P<filter_name>[\w\s]+)$')
+
+        # Value: 0x8
+        p2_7 = re.compile(r'^Value: (?P<value>\w+)$')
+
+        # TCG Information
+        p3 = re.compile(r'^TCG Information$')
+
+        # NPI TCG Values:
+        p3_1 = re.compile(r'^NPI TCG Values:$')
+
+        # Config state: VALID
+        p3_2 = re.compile(r'^Config state: (?P<config_state>[\w\s]+)$')
+        
+        # Operational state: IN HARDWARE
+        p3_3 = re.compile(r'^Operational state: (?P<operational_state>[\w\s]+)$')
+
+        # Parent Info: [0x0, 0x0, 0]
+        p3_4 = re.compile(r'^Parent Info: \[(?P<parent_info>[\w\s\,]+)\]$')
+
+        # No of Child TCGs: 0
+        p3_5 = re.compile(r'^No of Child TCGs: (?P<child_tcg>\d+)$')
+
+        # Mark Action count: 1
+        p3_6 = re.compile(r'^Mark Action count: (?P<mark_action>\d+)$')
+
+        # Police Action count: 3
+        p3_7 = re.compile(r'^Police Action count: (?P<police_action>\d+)$')
+
+        # Queue Action count: 0
+        p3_8 = re.compile(r'^Queue Action count: (?P<queue_action>\d+)$')
+
+        # No of TCCGs: 4
+        p3_9 = re.compile(r'^No of TCCGs: (?P<no_of_tccg>\d+)$')
+
+        #  TCCG 0:
+        p4 = re.compile(r'^TCCG (?P<tccg>\d+):$')
+
+        # Class-map name: cs5(0x6A651)
+        p4_1 = re.compile(r'^Class-map name: (?P<class_map_name>[\w\s\-]+)\((?P<clid>\w+)\)$')
+
+        # Child cgid: 0x0
+        p4_2 = re.compile(r'^Child cgid: (?P<child_cgid>\w+)$')
+
+        # Null Bind: True
+        p4_3 = re.compile(r'^Null Bind: (?P<null_bind>\w+)$')
+
+        # Action 0
+        p4_4 = re.compile(r'^Action (?P<action>\d+)$')
+
+        # Action Type: Marking
+        p4_5 = re.compile(r'^Action Type: (?P<action_type>[\w\s]+)$')
+
+        # Marking Method : Normal
+        p4_6 = re.compile(r'^Marking Method : (?P<marking_method>[\w\s]+)$')
+
+        # Mark value: 32
+        p4_7 = re.compile(r'^Mark value: (?P<mark_value>\d+)$')
+
+        # Mark Type: DSCP
+        p4_8 = re.compile(r'^Mark Type: (?P<mark_type>\w+)$')
+
+        # QoS Group: 255
+        p4_9 = re.compile(r'^QoS Group: (?P<qos_group>\d+)$')
+        
+        # Traffic Class: 255
+        p4_10 = re.compile(r'^Traffic Class: (?P<traffic_class>\d+)$')
+
+        # Discard Class: 255
+        p4_11 = re.compile(r'^Discard Class: (?P<discard_class>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+            
+            # cgid: 0x738310
+            m = p1_1.match(line)
+            if m:
+                int_dict.setdefault('cgid', m.groupdict()['cgid'])
+                continue
+
+            # No of classes: 4
+            m = p1_2.match(line)
+            if m:
+                int_dict.setdefault('no_of_classes', int(m.groupdict()['no_of_classes']))
+                continue
+
+            # TCG ref count: 1
+            m = p1_3.match(line)
+            if m:
+                int_dict.setdefault('tcg_ref_count', int(m.groupdict()['tcg_ref_count']))
+                continue
+            
+            # Filter state: UP TO DATE
+            m = p1_4.match(line)
+            if m:
+                int_dict.setdefault('filter_state', m.groupdict()['filter_state'])
+                continue
+            
+            # VMR state: UP TO DATE
+            m = p1_5.match(line)
+            if m:
+                int_dict.setdefault('vmr_state', m.groupdict()['vmr_state'])
+                continue
+            
+            # Classmap Information
+            m = p2.match(line)
+            if m:
+                classmap_dict = ret_dict.setdefault('classmap', {})
+                continue
+
+            # Class name: cs1(cgid: 0x738310, clid: 0x6A611)
+            m = p2_1.match(line)
+            if m:
+                class_dict = classmap_dict.setdefault(m.groupdict()['class_name'], {})
+                class_dict['cgid'] = m.groupdict()['cgid']
+                class_dict['clid'] = m.groupdict()['clid']
+                continue
+
+            # TCCG ref count: 1
+            m = p2_2.match(line)
+            if m:
+                class_dict['tccg_ref_count'] = int(m.groupdict()['tccg_ref_count'])
+                continue
+
+            # NULL Bind count: 1
+            m = p2_3.match(line)
+            if m:
+                class_dict['null_bind_count'] = int(m.groupdict()['null_bind_count'])
+                continue
+
+            # Class seq no.: 0x1FFFFF
+            m = p2_4.match(line)
+            if m:
+                class_dict['class_seq_number'] = m.groupdict()['class_seq_number']
+                continue
+
+            # No of child classes: 0
+            m = p2_5.match(line)
+            if m:
+                class_dict['child_classes'] = int(m.groupdict()['child_classes'])
+                continue
+
+            # Filter: FILTER_MATCH_IP_DSCP
+            m = p2_6.match(line)
+            if m:
+                filt_dict = class_dict.setdefault('filter', {}).setdefault(m.groupdict()['filter_name'].lower(), {})
+                continue
+
+            # Value: 0x8
+            m = p2_7.match(line)
+            if m:
+                filt_dict['value'] = m.groupdict()['value']
+                continue
+
+            # TCG Information
+            m = p3.match(line)
+            if m:
+                tcg_dict = ret_dict.setdefault('tcg', {})
+                continue
+            
+            # NPI TCG Values:
+            m = p3_1.match(line)
+            if m:
+                npi_tcg_dict = tcg_dict.setdefault('npi_tcg', {})
+                continue
+            
+            # Config state: VALID
+            m = p3_2.match(line)
+            if m:
+                npi_tcg_dict['config_state'] = m.groupdict()['config_state']
+                continue
+            
+            # Operational state: IN HARDWARE
+            m = p3_3.match(line)
+            if m:
+                npi_tcg_dict['operational_state'] = m.groupdict()['operational_state']
+                continue
+
+            # Parent Info: [0x0, 0x0, 0]
+            m = p3_4.match(line)
+            if m:
+                npi_tcg_dict['parent_info'] = m.groupdict()['parent_info'].split(', ')
+                continue
+
+            # No of Child TCGs: 0
+            m = p3_5.match(line)
+            if m:
+                npi_tcg_dict['child_tcg'] = int(m.groupdict()['child_tcg'])
+                continue
+
+            # Mark Action count: 1
+            m = p3_6.match(line)
+            if m:
+                npi_tcg_dict['mark_action'] = int(m.groupdict()['mark_action'])
+                continue
+            
+            # Police Action count: 3
+            m = p3_7.match(line)
+            if m:
+                npi_tcg_dict['police_action'] = int(m.groupdict()['police_action'])
+                continue
+
+            # Queue Action count: 0
+            m = p3_8.match(line)
+            if m:
+                npi_tcg_dict['queue_action'] = int(m.groupdict()['queue_action'])
+                continue        
+
+            # No of TCCGs: 4
+            m = p3_9.match(line)
+            if m:
+                npi_tcg_dict['no_of_tccg'] = int(m.groupdict()['no_of_tccg'])
+                continue            
+
+            #  TCCG 0:
+            m = p4.match(line)
+            if m:
+                tccg_dict = tcg_dict.setdefault('tccg', {}).setdefault(m.groupdict()['tccg'], {})
+                continue            
+
+            # Class-map name: cs5(0x6A651)
+            m = p4_1.match(line)
+            if m:
+                tccg_dict['class_map_name'] = m.groupdict()['class_map_name']
+                tccg_dict['clid'] = m.groupdict()['clid']
+                continue             
+
+            # Child cgid: 0x0
+            m = p4_2.match(line)
+            if m:
+                tccg_dict['child_cgid'] = m.groupdict()['child_cgid']
+                continue            
+
+            # Null Bind: True
+            m = p4_3.match(line)
+            if m:
+                tccg_dict['null_bind'] = True if m.groupdict()['null_bind'] == 'True' else False
+                continue               
+
+            # Action 0
+            m = p4_4.match(line)
+            if m:
+                action_dict = tccg_dict.setdefault('action', {}).setdefault(m.groupdict()['action'], {})
+                continue              
+
+            # Action Type: Marking
+            m = p4_5.match(line)
+            if m:
+                action_dict['action_type'] = m.groupdict()['action_type']
+                continue            
+
+            # Marking Method : Normal
+            m = p4_6.match(line)
+            if m:
+                action_dict['marking_method'] = m.groupdict()['marking_method']
+                continue             
+
+            # Mark value: 32
+            m = p4_7.match(line)
+            if m:
+                action_dict['mark_value'] = int(m.groupdict()['mark_value'])
+                continue           
+
+            # Mark Type: DSCP
+            m = p4_8.match(line)
+            if m:
+                action_dict['mark_type'] = m.groupdict()['mark_type']
+                continue             
+
+            # QoS Group: 255
+            m = p4_9.match(line)
+            if m:
+                action_dict['qos_group'] = int(m.groupdict()['qos_group'])
+                continue             
+
+            # Traffic Class: 255
+            m = p4_10.match(line)
+            if m:
+                action_dict['traffic_class'] = int(m.groupdict()['traffic_class'])
+                continue           
+
+            # Discard Class: 255
+            m = p4_11.match(line)
+            if m:
+                action_dict['discard_class'] = int(m.groupdict()['discard_class'])
+                continue             
+
+        return ret_dict
+
+
+class ShowPlatHardFedActiveQosQueueStatsOqMulticastAttachSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_num} qos queue stats oq multicast attach"""
+
+    schema = {
+        'oq_id': {
+            Any(): {
+                'interface': str,
+            },
+        },
+    }
+
+class ShowPlatHardFedActiveQosQueueStatsOqMulticastAttach(ShowPlatHardFedActiveQosQueueStatsOqMulticastAttachSchema):
+    """Parser for show platform hardware fed switch {switch_num} qos queue stats oq multicast attach"""
+
+    cli_command = ['show platform hardware fed active qos queue stats oq multicast attach',
+        'show platform hardware fed switch {switch_num} qos queue stats oq multicast attach']
+
+    def cli(self, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        #  HundredGigE1/0/5              6
+        p1 = re.compile(r"^(?P<interface>\S+)\s+(?P<oq_id>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #  HundredGigE1/0/5              6
+            m = p1.match(line)
+            if m:
+                oq_dict = ret_dict.setdefault('oq_id', {}).setdefault(int(m.groupdict()['oq_id']), {})
+                oq_dict.setdefault('interface', Common.convert_intf_name(m.groupdict()['interface']))
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSecurityFedIpsgIfIdSchema(MetaParser):
+    """
+        Schema for 
+            * show platform software fed {switch} {mode} security-fed ipsg if-id {if_id}
+            * show platform software fed {mode} security-fed ipsg if-id {if_id}
+    """
+    schema = {
+        Or('ip', 'mac'): {
+            Any(): {
+                'handle': int
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSecurityFedIpsgIfId(ShowPlatformSoftwareFedSecurityFedIpsgIfIdSchema):
+    """
+        Parser for 
+            * show platform software fed {switch} {mode} security-fed ipsg if-id {if_id}
+            * show platform software fed {mode} security-fed ipsg if-id {if_id}
+    """
+
+    cli_command = ['show platform software fed {mode} security-fed ipsg if-id {if_id}',
+                'show platform software fed {switch} {mode} security-fed ipsg if-id {if_id}']
+    
+    def cli(self, mode, if_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode, if_id=if_id)
+            else:
+                cmd = self.cli_command[0].format(mode=mode, if_id=if_id)
+            
+            output = self.device.execute(cmd)
+        
+        # 10.1.1.1           2056770536     00:11:01:00:00:01    2047852776
+        p1 = re.compile(r'^(?P<ip>\S+)\s+(?P<ip_handle>\d+)\s+(?P<mac>\S+)\s+(?P<mac_handle>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 10.1.1.1           2056770536     00:11:01:00:00:01    2047852776
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                ip_dict = ret_dict.setdefault('ip', {}).setdefault(group_dict['ip'], {})
+                ip_dict['handle'] = int(group_dict['ip_handle'])
+                mac_dict = ret_dict.setdefault('mac', {}).setdefault(group_dict['mac'], {})
+                mac_dict['handle'] = int(group_dict['mac_handle'])
+                continue
+        
+        return ret_dict
+
+
+class ShowXfsuStatusSchema(MetaParser):
+    """
+        Schema for show xfsu status
+    """
+    schema = {
+        Optional('reload_fast_platform_status'): str,
+        'graceful_reload_infra_status': str,
+        'uptime_before_fast_reload': int,
+        'client': {
+            Any(): {
+                'id': str,
+                'status': str
+            }
+        }
+    }
+
+
+class ShowXfsuStatus(ShowXfsuStatusSchema):
+    """
+        Parser for show xfsu status
+    """
+    cli_command = 'show xfsu status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Reload Fast PLATFORM Status: Not started yet
+        p1 = re.compile(r'^Reload Fast PLATFORM Status: (?P<reload_fast_platform_status>.+)$')
+
+        # Graceful Reload Infra Status: Started in stacking mode, not running
+        p2 = re.compile(r'^Graceful Reload Infra Status: (?P<graceful_reload_infra_status>.+)$')
+
+        # Minimum required system uptime before fast reload can be supported is 5 seconds
+        p3 = re.compile(r'^Minimum required system uptime before fast reload can be supported is (?P<uptime_before_fast_reload>\d+) seconds$')
+        
+        # Client OSPFV3                          : (0x10203004) Status: GR stack none: Up
+        # Client OSPF                            : (0x10203003) Status: GR stack none: Up
+        # Client IS-IS                           : (0x10203002) Status: GR stack none: Up
+        # Client GR_CLIENT_FIB                   : (0x10203001) Status: GR stack none: Up
+        # Client GR_CLIENT_RIB                   : (0x10203000) Status: GR stack none: Up
+        p4 = re.compile(r'^Client (?P<client>\S+)\s+: \((?P<id>\S+)\) Status: (?P<status>.+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Reload Fast PLATFORM Status: Not started yet
+            m = p1.match(line)
+            if m:
+                ret_dict['reload_fast_platform_status'] = m.groupdict()['reload_fast_platform_status']
+                continue
+            
+            # Graceful Reload Infra Status: Started in stacking mode, not running
+            m = p2.match(line)
+            if m:
+                ret_dict['graceful_reload_infra_status'] = m.groupdict()['graceful_reload_infra_status']
+                continue
+
+            # Minimum required system uptime before fast reload can be supported is 5 seconds
+            m = p3.match(line)
+            if m:
+                ret_dict['uptime_before_fast_reload'] = int(m.groupdict()['uptime_before_fast_reload'])
+                continue
+
+            # Client OSPFV3                          : (0x10203004) Status: GR stack none: Up
+            # Client OSPF                            : (0x10203003) Status: GR stack none: Up
+            # Client IS-IS                           : (0x10203002) Status: GR stack none: Up
+            # Client GR_CLIENT_FIB                   : (0x10203001) Status: GR stack none: Up
+            # Client GR_CLIENT_RIB                   : (0x10203000) Status: GR stack none: Up
+            m = p4.match(line)
+            if m:
+                output_dict = m.groupdict()
+                client_dict = ret_dict.setdefault('client', {}).setdefault(output_dict['client'].lower().replace('-', '_'), {})
+                client_dict['id'] = output_dict['id']
+                client_dict['status'] = output_dict['status']
+                continue
+        
+        return ret_dict
+
+
+class ShowGracefulReload(ShowXfsuStatus):
+    """
+        Parser for show graceful-reload
+    """
+
+    cli_command = 'show graceful-reload'
+
+    def cli(self, output=None):
+        return super().cli(output=output)

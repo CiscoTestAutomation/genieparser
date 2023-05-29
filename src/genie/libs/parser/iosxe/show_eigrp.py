@@ -12,6 +12,7 @@ IOSXE parsers for the following commands
     * 'show ipv6 eigrp interfaces'
     * 'show ipv6 eigrp interfaces detail'
     * 'show ip eigrp interfaces detail'
+    * 'show ipv6 eigrp topology {ipv6_address}'
 '''
 
 # Python
@@ -1363,5 +1364,221 @@ class ShowEigrpAddressFamilyIpv6VrfNeighbors(ShowEigrpAddressFamilyIpv6VrfNeighb
                 group = m.groupdict()
                 add_dict[add_type]= group['address']
                 continue
+
+        return ret_dict
+
+class ShowIpv6EigrpTopologyEntrySchema(MetaParser):
+    """
+        Schema for 'show ipv6 eigrp topology {ipv6_address}'
+    """
+
+    schema = {
+        Any(): {
+            'autonomous_system_number': int,
+            'router_id': str,
+            'state': str,
+            'query_origin_flag': int,
+            'num_successors': int,
+            'feasible_distance': int,
+            'descriptor_blocks': {
+                Any(): {
+                    'interface': str,
+                    'from': str,
+                    'send_flag': str,
+                    'composite_metric': str,
+                    'route': str,
+                    'vector_metrics': {
+                        'minimum_bandwidth': int,
+                        'total_delay': int,
+                        'reliability': str,
+                        'load': str,
+                        'minimum_mtu': int,
+                        'hop_count': int,
+                        'originating_router': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpv6EigrpTopologyEntry(ShowIpv6EigrpTopologyEntrySchema):
+    """
+        Parser for:
+            'show ipv6 eigrp topology {ipv6_address}'
+    """
+
+    cli_command = 'show ipv6 eigrp topology {ipv6_address}'
+
+    def cli(self, ipv6_address, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(ipv6_address=ipv6_address)
+            )
+
+        # EIGRP-IPv6 Topology Entry for AS(101)/ID(10.9.1.1) for 5001::/64
+        p1 = re.compile(
+            r'^EIGRP-IPv6\s+Topology\s+Entry\s+for\s+AS\('
+            r'(?P<autonomous_system_number>\d+)\)/ID\((?P<router_id>[\d\.]+)\)'
+            r'\s+for\s+(?P<ipv6_subnet>[\d\w:/]+)$'
+        )
+
+        # State is Passive, Query origin flag is 1, 1 Successor(s), FD is 3072
+        p2 = re.compile(
+            r'^State\s+is\s+(?P<state>\w+),\s+Query\s+origin\s+flag\s+is\s+'
+            r'(?P<query_origin_flag>\d+),\s+(?P<num_successors>\d+)\s+'
+            r'Successor\(s\),\s+FD\s+is\s+(?P<feasible_distance>\d+)$'
+        )
+
+        # FE80::20C:29FF:FE5C:FB0A (vmi2), from FE80::20C:29FF:FE5C:FB0A, Send flag is 0x0
+        p3 = re.compile(
+            r'^(?P<link_local_address>[\w:]+)\s+\((?P<interface>[\w\d/]+)\),'
+            r'\s+from\s+(?P<from>[\w:]+),\s+Send\s+flag\s+is\s+'
+            r'(?P<send_flag>[\dx]+)$'
+        )
+
+        # Composite metric is (3072/2816), route is Internal
+        p4 = re.compile(
+            r'^Composite\s+metric\s+is\s+\((?P<composite_metric>[\d/]+)\),'
+            r'\s+route\s+is\s+(?P<route>\w+)$'
+        )
+
+        # Minimum bandwidth is 1000000 Kbit
+        p5 = re.compile(
+            r'^Minimum\s+bandwidth\s+is\s+(?P<minimum_bandwidth>\d+)'
+            r'\s+Kbit$'
+        )
+
+        # Total delay is 20 microseconds
+        p6 = re.compile(
+            r'^Total\s+delay\s+is\s+(?P<total_delay>\d+)\s+microseconds$'
+        )
+
+        # Reliability is 255/255
+        p7 = re.compile(
+            r'^Reliability\s+is\s+(?P<reliability>[\d/]+)$'
+        )
+
+        # Load is 1/255
+        p8 = re.compile(
+            r'^Load\s+is\s+(?P<load>[\d/]+)$'
+        )
+
+        # Minimum MTU is 1492
+        p9 = re.compile(
+            r'^Minimum\s+MTU\s+is\s+(?P<minimum_mtu>\d+)$'
+        )
+
+        # Hop count is 1
+        p10 = re.compile(
+            r'^Hop\s+count\s+is\s+(?P<hop_count>\d+)$'
+        )
+
+        # Originating router is 11.9.1.1
+        p11 = re.compile(
+            r'^Originating\s+router\s+is\s+(?P<originating_router>[\d\.]+)$'
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv6 Topology Entry for AS(101)/ID(10.9.1.1) for 5001::/64
+            m = p1.match(line)
+            if m:
+                groupdict = m.groupdict()
+                subnet_dict = ret_dict.setdefault(groupdict['ipv6_subnet'], {})
+                subnet_dict['autonomous_system_number'] = \
+                    int(groupdict['autonomous_system_number'])
+                subnet_dict['router_id'] = groupdict['router_id']
+
+            # State is Passive, Query origin flag is 1, 1 Successor(s), FD is 3072
+            m = p2.match(line)
+            if m:
+                groupdict = m.groupdict()
+                subnet_dict['state'] = groupdict['state']
+                subnet_dict['query_origin_flag'] = \
+                    int(groupdict['query_origin_flag'])
+                subnet_dict['num_successors'] = \
+                    int(groupdict['num_successors'])
+                subnet_dict['feasible_distance'] = \
+                    int(groupdict['feasible_distance'])
+
+            # FE80::20C:29FF:FE5C:FB0A (vmi2), from FE80::20C:29FF:FE5C:FB0A, Send flag is 0x0
+            m = p3.match(line)
+            if m:
+                groupdict = m.groupdict()
+                descriptor_blocks = \
+                    subnet_dict.setdefault('descriptor_blocks', {})
+                descriptor_block = \
+                    descriptor_blocks.setdefault(groupdict['link_local_address'], {})
+                descriptor_block['interface'] = groupdict['interface']
+                descriptor_block['from'] = groupdict['from']
+                descriptor_block['send_flag'] = groupdict['send_flag']
+
+            # Composite metric is (3072/2816), route is Internal
+            m = p4.match(line)
+            if m:
+                groupdict = m.groupdict()
+                descriptor_block['composite_metric'] = groupdict['composite_metric']
+                descriptor_block['route'] = groupdict['route']
+
+            # Minimum bandwidth is 1000000 Kbit
+            m = p5.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['minimum_bandwidth'] = \
+                    int(groupdict['minimum_bandwidth'])
+
+            # Total delay is 20 microseconds
+            m = p6.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['total_delay'] = int(groupdict['total_delay'])
+
+            # Reliability is 255/255
+            m = p7.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['reliability'] = groupdict['reliability']
+
+            # Load is 1/255
+            m = p8.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['load'] = groupdict['load']
+
+            # Minimum MTU is 1492
+            m = p9.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['minimum_mtu'] = int(groupdict['minimum_mtu'])
+
+            # Hop count is 1
+            m = p10.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['hop_count'] = int(groupdict['hop_count'])
+
+            # Originating router is 11.9.1.1
+            m = p11.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['originating_router'] = \
+                    groupdict['originating_router']
 
         return ret_dict

@@ -35,9 +35,36 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
                 Optional('tunnel_ipsec_profile'): str,
                 Optional('description'): str,
                 Optional('switchport_mode'): str,
-                Optional('allowed_vlan'): str
-            },
-        },
+                Optional('allowed_vlan'): str,
+                Optional('switchport_block'): str,
+                Optional('switchport_port_security'): {
+                    'switchport_port_security': bool,
+                    'violation': str,
+                    'aging_time': int,
+                    'aging_type': str,
+                    'maximum': {
+                        Any(): {
+                            Optional('vlan'): str
+                        }
+                    }
+                },
+                Optional('load_interval'): int,
+                Optional('storm_control'): {
+                    Optional('broadcast_level_pps'): str,
+                    Optional('multicast_level_pps'): str,
+                    Optional('action'): str
+                },
+                Optional('spanning_tree'): {
+                    Optional('portfast'): bool,
+                    Optional('bpduguard'): str
+                },
+                Optional('service_policy'): {
+                    Optional('input'): str,
+                    Optional('output'): str
+                },
+                Optional('ip_dhcp_snooping_limit_rate'): int
+            }
+        }
     }
 # ====================================================
 #  Parser for 'show crypto ipsec internal dual'
@@ -107,6 +134,54 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
         
         # switchport mode trunk
         p15 = re.compile(r"^switchport mode\s+(?P<switchport_mode>\w+)$")
+
+        # switchport block unicast
+        p16 = re.compile(r"^switchport block\s+(?P<switchport_block>\w+)$")
+        
+        # switchport port-security maximum 3
+        p17 = re.compile(r"^switchport port-security maximum\s+(?P<maximum>\d+)$")
+
+        # switchport port-security maximum 2 vlan access
+        p18 = re.compile(r"^switchport port-security maximum\s+(?P<maximum>\d+) vlan (?P<vlan>\w+)$")
+
+        # switchport port-security violation restrict
+        p19 = re.compile(r"^switchport port-security violation\s+(?P<violation>\w+)$")
+
+        # switchport port-security aging time 2
+        p20 = re.compile(r"^switchport port-security aging time\s+(?P<aging_time>\d+)$")
+
+        # switchport port-security aging type inactivity
+        p21 = re.compile(r"^switchport port-security aging type\s+(?P<aging_type>\w+)$")
+
+        # switchport port-security
+        p22 = re.compile(r"^switchport port-security$")
+
+        # load-interval 30
+        p23 = re.compile(r"^load-interval\s+(?P<load_interval>\d+)$")
+
+        # storm-control broadcast level pps 1k
+        p24 = re.compile(r"^storm-control broadcast level pps\s+(?P<broadcast_level_pps>\w+)$")
+        
+        # storm-control multicast level pps 2k
+        p25 = re.compile(r"^storm-control multicast level pps\s+(?P<multicast_level_pps>\w+)$")
+        
+        # storm-control action trap
+        p26 = re.compile(r"^storm-control action\s+(?P<action>\w+)$")
+
+        # spanning-tree portfast
+        p27 = re.compile(r"^spanning-tree\s+(?P<portfast>\w+)$")
+
+        # spanning-tree bpduguard enable
+        p28 = re.compile(r"^spanning-tree bpduguard\s+(?P<bpduguard>\w+)$")
+
+        # service-policy input AutoConf-4.0-CiscoPhone-Input-Policy
+        p29 = re.compile(r"^service-policy input\s+(?P<input>\S+)$")
+
+        # service-policy output AutoConf-4.0-Output-Policy
+        p30 = re.compile(r"^service-policy output\s+(?P<output>\S+)$")
+
+        # ip dhcp snooping limit rate 15
+        p31 = re.compile(r"^ip dhcp snooping limit rate\s+(?P<ip_dhcp_snooping_limit_rate>\d+)$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -198,4 +273,105 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
             if m:
                 intf_dict['switchport_mode'] = m.groupdict()['switchport_mode']
                 continue
+
+            # switchport block unicast
+            m = p16.match(line)
+            if m:
+                intf_dict['switchport_block'] = m.groupdict()['switchport_block']
+                continue
+            
+            # switchport port-security maximum 3
+            m = p17.match(line)
+            if m:
+                intf_dict.setdefault('switchport_port_security', {}).setdefault('maximum', {})\
+                    .setdefault(m.groupdict()['maximum'], {})
+                continue
+
+            # switchport port-security maximum 2 vlan access
+            m = p18.match(line)
+            if m:
+                max_dict = intf_dict.setdefault('switchport_port_security', {}).setdefault('maximum', {})\
+                    .setdefault(m.groupdict()['maximum'], {})
+                max_dict['vlan'] = m.groupdict()['vlan']
+                continue
+
+            # switchport port-security violation restrict
+            m = p19.match(line)
+            if m:
+                intf_dict.setdefault('switchport_port_security', {}).setdefault('violation', m.groupdict()['violation'])
+                continue
+
+            # switchport port-security aging time 2
+            m = p20.match(line)
+            if m:
+                intf_dict.setdefault('switchport_port_security', {}).setdefault('aging_time', int(m.groupdict()['aging_time']))
+                continue
+
+            # switchport port-security aging type inactivity
+            m = p21.match(line)
+            if m:
+                intf_dict.setdefault('switchport_port_security', {}).setdefault('aging_type', m.groupdict()['aging_type'])
+                continue
+
+            # switchport port-security
+            m = p22.match(line)
+            if m:
+                intf_dict.setdefault('switchport_port_security', {}).setdefault('switchport_port_security', True)
+                continue
+
+            # load-interval 30
+            m = p23.match(line)
+            if m:
+                intf_dict['load_interval'] = int(m.groupdict()['load_interval'])
+                continue
+
+            # storm-control broadcast level pps 1k
+            m = p24.match(line)
+            if m:
+                intf_dict.setdefault('storm_control', {}).setdefault('broadcast_level_pps', m.groupdict()['broadcast_level_pps'])
+                continue
+            
+            # storm-control multicast level pps 2k
+            m = p25.match(line)
+            if m:
+                intf_dict.setdefault('storm_control', {}).setdefault('multicast_level_pps', m.groupdict()['multicast_level_pps'])
+                continue
+
+            # storm-control action trap
+            m = p26.match(line)
+            if m:
+                intf_dict.setdefault('storm_control', {}).setdefault('action', m.groupdict()['action'])
+                continue
+
+            # spanning-tree portfast
+            m = p27.match(line)
+            if m:
+                intf_dict.setdefault('spanning_tree', {}).setdefault('portfast', True)
+                continue
+
+            # spanning-tree bpduguard enable
+            m = p28.match(line)
+            if m:
+                intf_dict.setdefault('spanning_tree', {}).setdefault('bpduguard', m.groupdict()['bpduguard'])
+                continue
+
+            # service-policy input AutoConf-4.0-CiscoPhone-Input-Policy
+            m = p29.match(line)
+            if m:
+                intf_dict.setdefault('service_policy', {}).setdefault('input', m.groupdict()['input'])
+                continue
+
+            # service-policy output AutoConf-4.0-Output-Policy
+            m = p30.match(line)
+            if m:
+                intf_dict.setdefault('service_policy', {}).setdefault('output', m.groupdict()['output'])
+                continue
+
+            # ip dhcp snooping limit rate 15
+            p31 = re.compile(r"^ip dhcp snooping limit rate\s+(?P<ip_dhcp_snooping_limit_rate>\d+)$")
+            m = p31.match(line)
+            if m:
+                intf_dict['ip_dhcp_snooping_limit_rate'] = int(m.groupdict()['ip_dhcp_snooping_limit_rate'])
+                continue
+        
         return ret_dict

@@ -357,6 +357,8 @@ class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
             Optional("stale"): int,
             Optional("down"): int,
             Optional("incomplete"): int,
+            Optional("creating"): int,
+            Optional("tentative"): int,
             "total": int,
         },
         "device": {
@@ -420,7 +422,9 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  STALE      : 2
         #  DOWN       : 1
         #  INCOMPLETE : 1
-        #    total    : 4
+        #  CREATING   : 1
+        #  TENTATIVE  : 1 
+        #    total    : 6
         binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
 
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
@@ -1096,6 +1100,7 @@ class ShowDeviceTrackingCountersVlanSchema(MetaParser):
                         "protocol": str,
                         "message": str,
                         "dropped": int,
+                        Optional("reason"): str
                     },
                 },
                 "faults": list,
@@ -1175,6 +1180,9 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
         #   DHCPv6_REQUEST_NAK[1]
         fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
 
+        # reason:  Message unauthorized on port [3]
+        reason_info = re.compile(r'^reason:\s+(?P<reason>.+)\s+\[\d+\]$')
+
         capture_list = [
             ndp_info,
             dhcp6_info,
@@ -1247,7 +1255,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                     groups = match.groupdict()
                     if capture == dropped_message_info:
                         feature = groups['feature']
-                        dropped_dict.setdefault(feature, {})
+                        dropped_dict_feature = dropped_dict.setdefault(feature, {})
                         del groups['feature']
 
                         for key, value in groups.items():
@@ -1275,6 +1283,12 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                                 packet = packet_groups['packet']
                                 num = packet_groups['num']
                                 packet_dict[packet] = int(num)
+
+            # reason:  Message unauthorized on port [3]
+            match = reason_info.match(line)
+            if match:
+                dropped_dict_feature['reason'] = match.groupdict()['reason']
+                continue
 
         return device_tracking_counters_vlanid_dict
 
@@ -1749,6 +1763,7 @@ class ShowDeviceTrackingCountersInterfaceSchema(MetaParser):
                                 "protocol": str,
                                 "message": str,
                                 "dropped": int,
+                                Optional("reason"): str
                             },
                         },
                     },
@@ -1822,6 +1837,9 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
 
         # DHCPv6_REBIND_NAK[3]
         p12 = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
+
+        # reason:  Message unauthorized on port [3]
+        p13 = re.compile(r'^reason:\s+(?P<reason>.+)\s+\[\d+\]$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1926,6 +1944,12 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
                 groups = m.groupdict()
                 message = groups['fault']
                 faults_list.append(message)
+                continue
+
+            # reason:  Message unauthorized on port [3]
+            m = p13.match(line)
+            if m:
+                feature_dict['reason'] = m.groupdict()['reason']
                 continue
 
         return device_tracking_counters_interface_dict

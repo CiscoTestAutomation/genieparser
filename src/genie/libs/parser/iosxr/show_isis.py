@@ -2409,6 +2409,16 @@ class ShowIsisInterfaceSchema(MetaParser):
                             'interval': int,
                             'offset': int
                         },
+                        Optional('measured_delay'):{
+                            'min': str,
+                            'avg': str,
+                            'max': str,
+                        },
+                        Optional('normalized_delay'):{
+                            'min': str,
+                            'avg': str,
+                            'max': str,
+                        },
                         Optional('link_loss'): str,
                         Optional('rsi_srlg'): str,
                         Optional('next_p2p_iih_in'): int,
@@ -2767,6 +2777,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Link Loss:                -
         # Link Loss:                1
         r62 = re.compile(r'Link\s+Loss:\s*(?P<link_loss>[\d-]+)')
+
+        # Measured Delay:           Min:- Avg:- Max:- usec
+        # Normalized Delay:         Min:- Avg:- Max:- usec
+        r63 = re.compile(r'^(?P<delay_name>[a-zA-Z ]+):\s+Min:(?P<min>[-\d]+)\s+'
+                         'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
 
         parsed_output = {}
         interface_flag = False
@@ -3564,6 +3579,18 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 interface_dict['link_loss'] = link_loss
                 continue
 
+            # Measured Delay:           Min:- Avg:- Max:- usec
+            # Normalized Delay:         Min:- Avg:- Max:- usec
+            result = r63.match(line)
+            if result:
+                group = result.groupdict()
+                delay_name = group['delay_name'].lower().replace(' ','_')
+                delay_dict = interface_dict.setdefault(delay_name, {})
+                delay_dict['min'] = group['min']
+                delay_dict['avg'] = group['avg']
+                delay_dict['max'] = group['max']
+                continue
+
         return parsed_output
 
 
@@ -3593,6 +3620,13 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                 Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
+                                Optional('mt_srv6_locator'):{
+                                    'locator_prefix': str,
+                                    'locator_prefix_length': int,
+                                    'd_flag': int,
+                                    'metric': int,
+                                    'algorithm': int
+                                },
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
@@ -3827,6 +3861,11 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # TLV 14:         Length: 2
         r24 = re.compile(r'^TLV +(?P<tlv>\d+): +Length: +(?P<length>\d+)$')
+
+        # SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1001::/48 D:0 Metric: 0 Algorithm: 0
+        r25 = re.compile(r'^SRv6\s+Locator:\s+MT\s+\(.*\)\s+(?P<locator_prefix>[\w:]+)\/'
+                         r'(?P<locator_prefix_length>\d+)\s+D:(?P<d_flag>\d+)\s+Metric:\s+'
+                         r'(?P<metric>\d+)\s+Algorithm:\s+(?P<algorithm>\d+)$')
 
         parsed_output = {}
 
@@ -4213,6 +4252,23 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 length = int(group['length'])
                 lspid_dict['tlv'] = tlv
                 lspid_dict['tlv_length'] = length
+                continue
+
+            # SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1001::/48 D:0 Metric: 0 Algorithm: 0
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                locator_prefix = group['locator_prefix']
+                locator_prefix_length = int(group['locator_prefix_length'])
+                d_flag = int(group['d_flag'])
+                metric = int(group['metric'])
+                algorithm = int(group['algorithm'])
+                mt_srv6_locator_dict = lspid_dict.setdefault('mt_srv6_locator', {})
+                mt_srv6_locator_dict['locator_prefix'] = locator_prefix
+                mt_srv6_locator_dict['locator_prefix_length'] = locator_prefix_length
+                mt_srv6_locator_dict['d_flag'] = d_flag
+                mt_srv6_locator_dict['metric'] = metric
+                mt_srv6_locator_dict['algorithm'] = algorithm
                 continue
 
         return parsed_output

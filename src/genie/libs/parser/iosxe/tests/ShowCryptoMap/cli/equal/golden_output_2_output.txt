@@ -1,0 +1,18 @@
+Crypto Map IPv4 "ikev2-cryptomap" 1 ipsec-isakmp
+	Peer = 172.20.249.12
+	Peer = 172.20.249.3
+	IKEv2 Profile: ikev2profile
+	Access-List SS dynamic: False
+	Extended IP access list 102
+	Current peer: 172.20.249.12
+	Security association lifetime: 4608000 kilobytes/3600 seconds
+	Dualstack (Y/N): N
+
+	Responder-Only (Y/N): N
+	PFS (Y/N): N
+	Mixed-mode : Disabled
+	Transform sets={
+		aes256-sha1:  { esp-aes esp-sha-hmac  } ,
+	}
+	Interfaces using crypto map ikev2-cryptomap:
+		Vlan1

@@ -1,0 +1,5 @@
+{
+    "address_family": "vpnv4 unicast", 
+    "vrf": "green", 
+    "route": "1:1:192.1.0.40/24"
+}

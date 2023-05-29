@@ -1,0 +1,23 @@
+DLEP Clients for all interfaces:
+
+DLEP Clients for Interface GigabitEthernet1
+DLEP Local IP=9.9.9.1:11113 Sock=0
+
+DLEP Local Radio IP=9.9.9.2:858 TCP Socket fd=1
+	Peer ID=271, Virtual template=1
+	Description: radio_4
+	Peer Timers (all values in milliseconds):
+		Heartbeat=5000, Dead Interval=10000, Terminate ACK=20000
+	Neighbor Timers (all values in seconds):
+		Activity timeout=0, Neighbor Down ACK=10
+
+	Supported Metrics:
+		Link RLQ RX Metric : 100
+		Link RLQ TX Metric : 100
+		Link Resources Metric : 100
+		Link MTU Metric : 100
+		Link Latency Metric : 250 microseconds
+		Link CDR RX Metric : 100000000 bps
+		Link CDR TX Metric : 100000000 bps
+		Link MDR RX Metric : 100000000 bps
+		Link MDR TX Metric : 100000000 bps

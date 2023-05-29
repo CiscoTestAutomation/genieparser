@@ -18,6 +18,8 @@
  STALE      : 1
  DOWN       : 1
  INCOMPLETE : 1
+ CREATING   : 1
+ TENTATIVE  : 1
    total    : 5
 
 Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created

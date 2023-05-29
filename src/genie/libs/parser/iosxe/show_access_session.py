@@ -4,6 +4,9 @@
      * show access-session interface {interface} details
      * show access-session brief
      * show access-session event-logging mac <mac>
+     * show access-session mac {mac} details
+     * show access-session mac {mac} details switch {mode} {rp_slot}
+     * show access-session interface {interface} details switch {mode} {rp_slot}
 """
 # Python
 import re
@@ -68,12 +71,15 @@ class ShowAccessSession(ShowAccessSessionSchema):
 
         # initial regexp pattern
         
-        # Session count = 2
-        p1 = re.compile(r'^Session +count \= +(?P<val>\d+)$')
+        # No sessions currently exist
+        p1 = re.compile(r'^No sessions currently exist$')
 
+        # Session count = 2
+        p2 = re.compile(r'^Session +count \= +(?P<val>\d+)$')
+        
         # Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
         # Gi1/0/2                  aabb.cc11.2233 dot1x   VOICE   Unauth      000000000000000A1B2C3D4E
-        p2 = re.compile(r'^(?P<intf>[\w\/\-\.]+) +'
+        p3 = re.compile(r'^(?P<intf>[\w\/\-\.]+) +'
                          '(?P<client>[\w\.]+) +'
                          '(?P<method>\w+) +'
                          '(?P<domain>\w+) +'
@@ -83,16 +89,22 @@ class ShowAccessSession(ShowAccessSessionSchema):
         for line in output.splitlines():
             line = line.strip()
             line = line.replace('\t', '    ')
-            
-            # Session count = 2
+
+            # No sessions currently exist
             m = p1.match(line)
+            if m:
+                ret_dict['session_count'] = 0
+                return ret_dict
+
+            # Session count = 2
+            m = p2.match(line)
             if m:
                 ret_dict['session_count'] = int(m.groupdict()['val'])
                 continue
 
             # Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
             # Gi1/0/2                  aabb.cc11.2233 dot1x   VOICE   Unauth      000000000000000A1B2C3D4E
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group['intf'])
@@ -111,7 +123,7 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 continue
 
         return ret_dict
-       
+
 class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails):
     '''
         Parser for the following show commands:
@@ -182,7 +194,7 @@ class ShowAccessSessionBrief(ShowAccessSessionBriefSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # initial return dictionary
         ret_dict = {}
 
@@ -197,7 +209,7 @@ class ShowAccessSessionBrief(ShowAccessSessionBriefSchema):
         for line in out.splitlines():
             line = line.strip()
             line = line.replace('\t', '    ')
-            
+
             # Gi1/0/23   34bd.c853.0505  d:OK           AZ: SA-                 X    6858s
             m = p1.match(line)
             if m:
@@ -212,7 +224,7 @@ class ShowAccessSessionBrief(ShowAccessSessionBriefSchema):
                 mac_dict['authz'] = group['authz']
                 mac_dict['flag'] = group['flag']
                 mac_dict['uptime'] = group['uptime']
-                
+
                 continue
 
         return ret_dict
@@ -324,4 +336,210 @@ class ShowAccessSessionEventLoggingMac(ShowAccessSessionEventLoggingMacSchema):
                 continue
 
 
+        return ret_dict
+
+
+class ShowAccessSessionMacDetailsSchema(MetaParser):
+    """
+        Schema for
+        * show access-session mac {mac} details
+        * show access-session mac {mac} details switch {mode} {rp_slot}
+        * show access-session interface {interface} details switch {mode} {rp_slot}
+    """
+    schema = {
+        'mac': {
+            Any(): {
+                'interface': str,
+                'iif_id': str,
+                'ipv6_address': str,
+                'ipv4_address': str,
+                'user_name': str,
+                'status': str,
+                'domain': str,
+                'oper_host_mode': str,
+                'oper_control_dir': str,
+                'session_timeout': {
+                    'server': int,
+                    'remaining': int
+                },
+                'timeout_action': str,
+                'common_session_id': str,
+                'acct_session_id': str,
+                'handle': str,
+                'current_policy': str,
+                'server_policies': {
+                    'session_timeout': int,
+                    'vlan_group': int,
+                    'acs_acl': str
+                },
+                'method_status_list': {
+                    'method': str,
+                    'state': str
+                }
+            }
+        }
+    }
+
+
+class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
+    """
+        Parser for
+        * show access-session mac {mac} details
+        * show access-session mac {mac} details switch {mode} {rp_slot}
+        * show access-session interface {interface} details switch {mode} {rp_slot}
+    """
+    cli_command = ['show access-session mac {mac} details', 
+                'show access-session mac {mac} details switch {mode} {rp_slot}',
+                'show access-session interface {interface} details switch {mode} {rp_slot}']
+    
+    def cli(self, mac, mode=None, rp_slot=None, interface=None, output=None):
+        if output is None:
+            if interface and mode and rp_slot:
+                cli = self.cli_command[2].format(mac=mac, interface=interface, mode=mode, rp_slot=rp_slot)
+            elif mode and rp_slot:
+                cli = self.cli_command[1].format(mac=mac, mode=mode, rp_slot=rp_slot)
+            else:
+                cli = self.cli_command[0].format(mac=mac)
+            
+            output = self.device.execute(cli)
+        
+        # Interface:  GigabitEthernet1/0/12
+        p1 = re.compile(r'^Interface:\s+(?P<interface>\S+)$')
+
+        # IIF-ID:  0x135C9B47
+        p2 = re.compile(r'^IIF-ID:\s+(?P<iif_id>\S+)$')
+
+        # MAC Address:  000e.83e5.3398
+        p3 = re.compile(r'^MAC Address:\s+(?P<mac>\S+)$')
+
+        # IPv6 Address:  Unknown
+        # IPv4 Address:  194.10.0.1
+        # User-Name:  CP-7970G-SEP000E83E53398
+        # Status:  Authorized
+        # Domain:  VOICE
+        # Oper host mode:  multi-domain
+        # Oper control dir:  both
+        # Timeout action:  Reauthenticate
+        # Common Session ID:  EE01060A0000000FBB64DB50
+        # Acct Session ID:  0x00000004
+        # Handle:  0x60000005
+        # Current Policy:  POLICY_Gi1/0/12
+        p4 = re.compile(r'^(?P<key_name>IPv6 Address|IPv4 Address|User-Name|Status|Domain|Oper host mode|'
+            r'Oper control dir|Timeout action|Common Session ID|Acct Session ID|Handle|Current Policy|):\s+(?P<value>\S+)$')
+
+        # Session timeout:  135s (server), Remaining: 82s
+        p5 = re.compile(r'^Session timeout:\s+(?P<server>\d+)s \(server\), Remaining: (?P<remaining>\d+)s$')
+
+        # Server Policies:
+        p6 = re.compile(r'^Server Policies:$')
+
+        # Session-Timeout: 135 sec
+        p7 = re.compile(r'^Session-Timeout: (?P<session_timeout>\d+) sec$')
+
+        # Vlan Group:  Vlan: 194
+        p8 = re.compile(r'^Vlan Group:  Vlan: (?P<vlan_group>\d+)$')
+
+        # ACS ACL: xACSACLx-IP-legacy_TC9_permit_user_CP-7970G-SEP000E83E53398-63ced261
+        p9 = re.compile(r'^ACS ACL: (?P<acs_acl>\S+)$')
+
+        # Method status list:
+        p10 = re.compile(r'^Method status list:$')
+
+        # Method           State
+        p11 = re.compile(r'^Method           State$')
+
+        # dot1x           Authc Success
+        p12 = re.compile(r'^(?P<method>\S+)           (?P<state>[\S\s]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface:  GigabitEthernet1/0/12
+            m = p1.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                continue
+
+            # IIF-ID:  0x135C9B47
+            m = p2.match(line)
+            if m:
+                iif_id = m.groupdict()['iif_id']
+                continue
+
+            # MAC Address:  000e.83e5.3398
+            m = p3.match(line)
+            if m:
+                mac_dict = ret_dict.setdefault('mac', {}).setdefault(m.groupdict()['mac'], {})
+                mac_dict['interface'] = interface
+                mac_dict['iif_id'] = iif_id
+                continue
+
+            # IPv6 Address:  Unknown
+            # IPv4 Address:  194.10.0.1
+            # User-Name:  CP-7970G-SEP000E83E53398
+            # Status:  Authorized
+            # Domain:  VOICE
+            # Oper host mode:  multi-domain
+            # Oper control dir:  both
+            # Timeout action:  Reauthenticate
+            # Common Session ID:  EE01060A0000000FBB64DB50
+            # Acct Session ID:  0x00000004
+            # Handle:  0x60000005
+            # Current Policy:  POLICY_Gi1/0/12
+            m = p4.match(line)
+            if m:
+                mac_dict[m.groupdict()['key_name'].lower().replace(' ', '_').replace('-', '_')] = m.groupdict()['value']
+                continue
+
+            # Session timeout:  135s (server), Remaining: 82s
+            m = p5.match(line)
+            if m:
+                session_dict = mac_dict.setdefault('session_timeout', {})
+                session_dict['server'] = int(m.groupdict()['server'])
+                session_dict['remaining'] = int(m.groupdict()['remaining'])
+                continue
+
+            # Server Policies:
+            m = p6.match(line)
+            if m:
+                server_policies_dict = mac_dict.setdefault('server_policies', {})
+                continue
+
+            # Session-Timeout: 135 sec
+            m = p7.match(line)
+            if m:
+                server_policies_dict['session_timeout'] = int(m.groupdict()['session_timeout'])
+                continue
+
+            # Vlan Group:  Vlan: 194
+            m = p8.match(line)
+            if m:
+                server_policies_dict['vlan_group'] = int(m.groupdict()['vlan_group'])
+                continue
+
+            # ACS ACL: xACSACLx-IP-legacy_TC9_permit_user_CP-7970G-SEP000E83E53398-63ced261
+            m = p9.match(line)
+            if m:
+                server_policies_dict['acs_acl'] = m.groupdict()['acs_acl']
+                continue
+
+            # Method status list:
+            m = p10.match(line)
+            if m:
+                method_status_dict = mac_dict.setdefault('method_status_list', {})
+                continue
+
+            # Method           State
+            m = p11.match(line)
+            if m:
+                continue
+
+            # dot1x           Authc Success
+            m = p12.match(line)
+            if m:
+                method_status_dict['method'] = m.groupdict()['method']
+                method_status_dict['state'] = m.groupdict()['state']
+                continue
+        
         return ret_dict

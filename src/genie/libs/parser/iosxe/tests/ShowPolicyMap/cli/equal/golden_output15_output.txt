@@ -1,0 +1,9 @@
+  Policy Map map1
+    Class cs1
+     police rate 10000000000 
+       conform-action transmit 
+       exceed-action drop 
+    Class cs2
+     police rate 10000000000 
+       conform-action transmit 
+       exceed-action drop 
