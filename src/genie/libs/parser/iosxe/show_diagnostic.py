@@ -4,7 +4,8 @@
      * show diagnostic description module {include} test all
      * show diagnostic content module {mod_num}
      * show diagnostic result module {mod_num} test {include} detail
-     * show diagnostic result switch {switch_number} test {include} detail 
+     * show diagnostic result switch {switch_number} test {include} detail
+     * show diagnostic post
 """
 
 
@@ -722,3 +723,110 @@ class ShowDiagnosticResultSwitchTestDetail(ShowDiagnosticResultSwitchTestDetailS
                
         return ret_dict
 
+
+class ShowDiagnosticPostSchema(MetaParser):
+    """
+    Schema for show diagnostic post
+    """
+
+    schema = {
+        Optional('load'): {
+            'five_seconds': str,
+            'one_minute': str,
+            'five_minutes': str
+        },
+        Optional('ntp_time'): str,
+        'switch': {
+            Any(): {
+                Optional('load'): {
+                    'five_seconds': str,
+                    'one_minute': str,
+                    'five_minutes': str
+                },
+                Optional('ntp_time'): str,
+                'test': {
+                    Any(): {
+                        'initial_state': str,
+                        'final_state': str,
+                        'status': str
+                    }
+                }
+            }
+        } 
+    }
+
+
+class ShowDiagnosticPost(ShowDiagnosticPostSchema):
+    """Parser for show diagnostic post"""
+
+    cli_command = 'show diagnostic post'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        ret_dict = switch_dict = {}
+        
+        # Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+        p1 = re.compile(r'^Load for five secs: (?P<five_seconds>\S+); one minute: (?P<one_minute>\S+); five minutes: (?P<five_minutes>\S+)$')
+
+        # Time source is NTP, .08:55:28.918 UTC Mon Mar 13 2023
+        p2 = re.compile(r'^Time source is NTP, (?P<ntp_time>.+)$')
+        
+        # Switch 1
+        p3 = re.compile(r'^Switch (?P<switch>\d+)$')
+
+        # POST: MBIST Tests : Begin
+        # POST: PHY Loopback: loopback Test : Begin
+        # POST: Thermal, Temperature Tests : Begin
+        p4 = re.compile(r'^POST:\s(?P<test>[\w\s\,]+)(:\sloopback )?Tests*\s:\s(?P<initial_state>[\w\s]+)$')
+
+        # POST: PHY Loopback: loopback Test : End, Status Passed
+        # POST: Thermal, Fan Tests : End, Status Passed
+        p5 = re.compile(r'^POST:\s(?P<test>[\w\s\,]+)(:\sloopback )?Tests*\s:\s(?P<final_state>[\w\s]+), Status (?P<status>[\w\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+            m = p1.match(line)
+            if m:
+                load_dict = switch_dict.setdefault('load', {})
+                load_dict['five_seconds'] = m.groupdict()['five_seconds']
+                load_dict['one_minute'] = m.groupdict()['one_minute']
+                load_dict['five_minutes'] = m.groupdict()['five_minutes']
+                continue
+
+            # Time source is NTP, .08:55:28.918 UTC Mon Mar 13 2023
+            m = p2.match(line)
+            if m:
+                switch_dict['ntp_time'] = m.groupdict()['ntp_time']
+                continue
+
+            # Switch 1
+            m = p3.match(line)
+            if m:
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {})
+                continue
+
+            # POST: MBIST Tests : Begin
+            # POST: PHY Loopback: loopback Test : Begin
+            # POST: Thermal, Temperature Tests : Begin
+            m = p4.match(line)
+            if m:
+                test_name = m.groupdict()['test'].strip().lower().replace(' ', '_').replace(',', '')
+                test_dict = switch_dict.setdefault('test', {}).setdefault(test_name, {})
+                test_dict['initial_state'] = m.groupdict()['initial_state']
+                continue
+
+            # POST: PHY Loopback: loopback Test : End, Status Passed
+            # POST: Thermal, Fan Tests : End, Status Passed
+            m = p5.match(line)
+            if m:
+                test_name = m.groupdict()['test'].strip().lower().replace(' ', '_').replace(',', '')
+                test_dict = switch_dict.setdefault('test', {}).setdefault(test_name, {})
+                test_dict['final_state'] = m.groupdict()['final_state']
+                test_dict['status'] = m.groupdict()['status']
+                continue
+
+        return ret_dict

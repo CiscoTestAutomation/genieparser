@@ -1,0 +1,5 @@
+stack3-nyquist-1#show hardware led port tw 1/0/16 speed 
+
+Current Mode: STATUS
+
+BLINK_GREEN

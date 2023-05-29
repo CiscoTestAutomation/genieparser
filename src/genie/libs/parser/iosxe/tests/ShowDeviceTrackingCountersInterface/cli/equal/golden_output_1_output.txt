@@ -1,0 +1,50 @@
+Received messages on Gi1/0/35:
+Protocol        Protocol message
+NDP             RA[3] NS[5] NA[2]
+DHCPv6          SOL[1] REQ[1] REN[11]
+ARP             REQ[1] REP[2]
+DHCPv4          DIS[1] REQ4[1]
+ACD&DAD         --[1]
+ 
+Received Broadcast/Multicast messages on Gi1/0/35:
+Protocol        Protocol message
+NDP             RA[3] NS[4] NA[1]
+DHCPv6          SOL[1] REQ[1] REN[11]
+ARP             REQ[1] REP[2]
+DHCPv4          DIS[1] REQ4[1]
+ 
+Bridged messages from Gi1/0/35:
+Protocol        Protocol message
+NDP             NS[5] NA[2]
+DHCPv6          SOL[1] REQ[1] REN[11]
+ARP
+DHCPv4
+ACD&DAD         --[1]
+ 
+Broadcast/Multicast converted to unicast messages from Gi1/0/35:
+Protocol        Protocol message
+NDP
+DHCPv6
+ARP
+DHCPv4
+ACD&DAD
+ 
+Probe message on Gi1/0/35:
+Type            Protocol message
+PROBE_SEND
+PROBE_REPLY
+ 
+Limited Broadcast to Local message on Gi1/0/35:
+Type            Protocol message
+NDP
+DHCPv6
+ARP
+DHCPv4
+ 
+Dropped messages on Gi1/0/35:
+Feature             Protocol Msg [Total dropped]
+RA guard:           NDP      RA  [3]
+                    reason:  Message unauthorized on port [3]
+ 
+
+Faults on Gi1/0/35:

@@ -3,6 +3,7 @@ IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
     * show hw-module slot {slot} port-group mode
     * show hw-module usbflash1 security status
+    * show hardware led port {port} {mode}
 '''
 
 # Python
@@ -618,4 +619,48 @@ class ShowHwModuleUsbflash1Security(ShowHwModuleUsbflash1SecuritySchema):
                 ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {'auth_status': m.groupdict()['auth_status']})
                 continue
         
+        return ret_dict
+
+
+class ShowHardwareLedPortModeSchema(MetaParser):
+    """
+    Schema for show hardware led port {port} {mode}
+    """
+    schema = {
+        'current_mode': str,
+        'status': str 
+    }
+
+class ShowHardwareLedPortMode(ShowHardwareLedPortModeSchema):
+    """Parser for show hardware led port {port} {mode}"""
+
+    cli_command = "show hardware led port {port} {mode}"
+    
+    def cli(self, port, mode, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(port=port, mode=mode))
+
+        # Current Mode: STATUS
+        p1 = re.compile(r'^Current Mode: (?P<current_mode>[\w\s]+)$')
+
+        # BLINK_GREEN
+        p2 = re.compile(r'^(?P<status>\w+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Current Mode: STATUS
+            m = p1.match(line)
+            if m:
+                ret_dict['current_mode'] = m.groupdict()['current_mode']
+                continue
+
+            # BLINK_GREEN
+            m = p2.match(line)
+            if m:
+                ret_dict['status'] = m.groupdict()['status']
+                continue
+  
         return ret_dict

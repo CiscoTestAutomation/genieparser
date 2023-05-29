@@ -1,0 +1,43 @@
+expected_output = {
+    'cache_size': 10000,
+    'cache_type': 'Normal (Platform cache)',
+    'current_entries': 101,
+    'entries': {
+        1: {
+            'counter_pkts_long': 6238,
+            'intf_output': 'Null',
+            'ip_protocol': 59,
+            'ip_tos': '0x14',
+            'ipv6_dst_addr': '2012:AA:2::10',
+            'ipv6_src_addr': '2012:AA:1::20',
+            'timestamp_abs_first': '12:53:17.702',
+            'timestamp_abs_last': '12:54:20.702',
+        },
+        2: {
+            'counter_pkts_long': 6238,
+            'intf_output': 'Null',
+            'ip_protocol': 59,
+            'ip_tos': '0x14',
+            'ipv6_dst_addr': '2012:AA:2::10',
+            'ipv6_src_addr': '2012:AA:1::41',
+            'timestamp_abs_first': '12:53:17.702',
+            'timestamp_abs_last': '12:54:20.702',
+        },
+        3: {
+            'counter_pkts_long': 6238,
+            'intf_output': 'Null',
+            'ip_protocol': 59,
+            'ip_tos': '0x14',
+            'ipv6_dst_addr': '2012:AA:2::10',
+            'ipv6_src_addr': '2012:AA:1::1F',
+            'timestamp_abs_first': '12:53:17.702',
+            'timestamp_abs_last': '12:54:20.702',
+        },
+    },
+    'flows_added': 106,
+    'flows_aged': {
+        'inactive_timeout': 5,
+        'inactive_timeout_secs': 60,
+        'total': 5,
+    },
+}

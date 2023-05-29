@@ -865,8 +865,11 @@ class ShowL2fibBridgeDomainDetail(ShowL2fibBridgeDomainDetailSchema):
                         r'+PL:(?P<path_list_id>\d+)\((?P<path_count>\d+)\)\s+T:(?P<path_list_type>\w+)\s'
                         r'+(?P<path_list_desc>[\w\[\]:.]+)$') 
 
-        #Source: *, Group: 224.0.0.0/24, IIF: Null, Adjacency: Olist: 1125, Ports: 2  
-        p10 =  re.compile(r'^Source: (?P<source>[\w*]+),\s+Group: (?P<group>[\d.\/]+),\s'
+        #Source: *, Group: 224.0.0.0/24, IIF: Null, Adjacency: Olist: 1125, Ports: 2
+        # Source: *, Group: *, IIF: Null, Adjacency: Olist: 6396, Ports: 1
+        # Source: ::, Group: ::, IIF: Null, Adjacency: Olist: 6397, Ports: 1
+        # Source: ::, Group: FF1E::1, IIF: Null, Adjacency: Olist: 6398, Ports: 2
+        p10 =  re.compile(r'^Source: (?P<source>.+),\s+Group: (?P<group>.+),\s'
                         r'+IIF: (?P<iif>\w+),\s+Adjacency:(?P<adjacency>[\s\S]+)Olist:\s'
                         r'+(?P<olist>\d+),\s+Ports:\s+(?P<port_count>\d+)$')   
 

@@ -126,7 +126,7 @@ class ShowOspfv3vrfNeighborSchema(MetaParser):
         'address_family': str,
         'router_id': str,
         'vrfs': {
-            int: {
+            Or(int, str): {
                 'neighbor_id': {
                     str: {
                         'priority': int,
@@ -151,24 +151,20 @@ class ShowOspfv3vrfNeighbor(ShowOspfv3vrfNeighborSchema):
 
     cli_command = 'show ospfv3 vrf {vrf_id} neighbor'
 
-    def cli(self, vrf_id='', output=None):
-        cmd = self.cli_command.format(vrf_id=vrf_id)
-
-        if output is None:
-            output = self.device.execute(self.cli_command)
-
+    def cli(self, vrf_id, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(vrf_id=vrf_id))
         ret_dict = {}
-
         # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
         p1 = re.compile(
-            r'^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>\d+)'
+            r'^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>\w+)'
             r'\s+\(router-id\s+(?P<router_id>[\d\.\/]+)\)$')
 
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
-        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s*[A-Z-]*)'
+        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[0-9A-Z]+/\s*[A-Z-]*)'
                         r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$')
 
         for line in output.splitlines():
@@ -178,7 +174,10 @@ class ShowOspfv3vrfNeighbor(ShowOspfv3vrfNeighborSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                vrf_id = int(group['vrf_id'])
+                if group['vrf_id'].isdigit():
+                    vrf_id = int(group['vrf_id'])
+                else:
+                    vrf_id = group['vrf_id']
                 ret_dict['process_id'] = int(group['process_id'])
                 ret_dict['address_family'] = group['address_family']
                 ret_dict['router_id'] = group['router_id']
@@ -239,7 +238,8 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
                         r"?P<router_id>(\d{1,3}\.){3}\d{1,3})\)$")
         
         # 2.200.33.3        1   FULL/BDR        00:00:33    4584            Vlan3892
-        p2 = re.compile(r"^(?P<neighbor_id>(\d{1,3}\.){3}\d{1,3})\s+(?P<priority>\d+)\s+(?P<state>\S+)\s+("
+        # 100.100.100.100   0   FULL/  -        00:01:58    86              vmi1
+        p2 = re.compile(r"^(?P<neighbor_id>(\d{1,3}\.){3}\d{1,3})\s+(?P<priority>\d+)\s+(?P<state>\w+/(\w+|\s+-))\s+("
                         r"?P<dead_time>\S+)\s+(?P<int_id>\d+)\s+(?P<interface>\S+)$")
 
         ret_dict = {}
@@ -257,6 +257,7 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
                 continue
 
             # 2.200.33.3  1 FULL/BDR  00:00:33  4584  Vlan3892
+            # 100.100.100.100   0   FULL/  -        00:01:58    86              vmi1
             match_obj = p2.match(line)
             if match_obj:
                 dict_val = match_obj.groupdict()
@@ -609,13 +610,14 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                 'router_id': str,
                 'network_type': str,
                 'cost': int,
-                'state': str,
-                'priority': int,
-                'hello': int,
-                'dead': int,
-                'retransmit': int,
-                'wait': int,
-                'transmit_delay': int,
+                Optional('wait'): int,
+                Optional('transmit_delay'): int,
+                Optional('retransmit'): int,
+                Optional('state'): str,
+                Optional('dead'): int,
+                Optional('hello'): int,
+                Optional('cost_hysteresis'): str,
+                Optional('priority'): int,
                 Optional('bfd_status'): str,
                 Optional('Designated_router'): str,
                 Optional('dr_local_address'): str,
@@ -634,6 +636,7 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                 Optional('adj_neighbor_count'): int,
                 Optional('neighbor_id'): str,
                 Optional('dr_or_bdr'): str,
+                Optional('neighbor_cost'): int,
                 Optional('suppress_hello'): int
             }
         }
@@ -655,19 +658,22 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                         r"?P<line_protocol>\w+)\s*(.*)?$")
         
         # Link Local Address FE80::E75:BDFF:FE6E:DB47, Interface ID 18 (snmp-if-index)
+        # Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 42 (ios-if-index)
         p1_1 = re.compile(r"^Link\s+Local\s+Address\s+(?P<link_local_address>\S+),\s+Interface\s+ID\s+("
-                          r"?P<int_id>\d+)\s+\(snmp-if-index\)$")
+                          r"?P<int_id>\d+)\s+\((snmp|ios)-if-index\)$")
         
         # Area 0, Process ID 5, Instance ID 0, Router ID 1.1.1.1
         p1_2 = re.compile(r"^Area\s+(?P<area>\d+),\s+Process\s+ID\s+(?P<pid>\d+),\s+Instance\s+ID\s+("
                           r"?P<instance_id>\d+),\s+Router\s+ID\s+(?P<router_id>(\d{1,3}\.){3}\d{1,3})$")
         
         # Network Type BROADCAST, Cost: 1
-        p1_3 = re.compile(r"^Network\s+Type\s+(?P<network_type>\w+),\s+Cost:\s+(?P<cost>\d+)$")
+        # Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
+        p1_3 = re.compile(r"^Network\s+Type\s+(?P<network_type>\w+),\s+Cost:\s+(?P<cost>\d+)(\s+\(dynamic\),)?(\s+Cost\s+Hysteresis:\s+(?P<cost_hysteresis>[\w\s]+))?$")
         
         # Transmit Delay is 1 sec, State DOWN, Priority 1
-        p1_4 = re.compile(r"^Transmit\s+Delay\s+is\s+(?P<transmit_delay>\d+)\s+sec,\s+State\s+(?P<state>\w+),"
-                          r"\s+Priority\s+(?P<priority>\d+)[,\s+BFD\s+]*(?P<bfd_status>\w*)$")
+        # Transmit Delay is 1 sec, State POINT_TO_MULTIPOINT
+        p1_4 = re.compile(r"^Transmit\s+Delay\s+is\s+(?P<transmit_delay>\d+)\s+sec,\s+State\s+(?P<state>\w+)(,"
+                          r"\s+Priority\s+(?P<priority>\d+))?[,\s+BFD\s+]*(?P<bfd_status>\w*)$")
         
         # Designated Router (ID) 2.200.1.2, local address FE80::72B3:17FF:FE1E:A982
         p1_5 = re.compile(r"^Designated\s+Router\s+\(ID\)\s+(?P<Designated_router>(\d{1,3}\.){3}\d{1,3}),"
@@ -706,8 +712,9 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                            r"\s+Adjacent\s+neighbor\s+count\s+is\s+(?P<adj_neighbor_count>\d+)$")
         
         # Adjacent with neighbor 2.200.33.3  (Backup Designated Router)
-        p1_15 = re.compile(r"^Adjacent\s+with\s+neighbor\s+(?P<neighbor_id>(\d{1,3}\.){3}\d{1,3})\s+\(("
-                           r"?P<dr_or_bdr>.*)\)$")
+        # Adjacent with neighbor 100.100.100.100, cost is 2
+        p1_15 = re.compile(r"^Adjacent\s+with\s+neighbor\s+(?P<neighbor_id>(\d{1,3}\.){3}\d{1,3})(\s+\(("
+                           r"?P<dr_or_bdr>.*)\))?(,\s+cost\s+is\s+(?P<neighbor_cost>\d+))?$")
         
         # Suppress hello for 0 neighbor(s)
         p1_16 = re.compile(r"^Suppress\s+hello\s+for\s+(?P<suppress_hello>\d+)\s+neighbor\(s\)$")
@@ -729,6 +736,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 continue
 
             # Link Local Address FE80::E75:BDFF:FE6E:DB47, Interface ID 18 (snmp-if-index)
+            # Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 42 (ios-if-index)
             match_obj = p1_1.match(line)
             if match_obj:
                 dict_val = match_obj.groupdict()
@@ -747,19 +755,24 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 continue
 
             # Network Type BROADCAST, Cost: 1
+            # Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
             match_obj = p1_3.match(line)
             if match_obj:
                 dict_val = match_obj.groupdict()
                 interface_dict['network_type'] = dict_val['network_type']
                 interface_dict['cost'] = int(dict_val['cost'])
+                if dict_val['cost_hysteresis']:
+                    interface_dict['cost_hysteresis'] = dict_val['cost_hysteresis']
                 continue
 
             # Transmit Delay is 1 sec, State DOWN, Priority 1
+            # Transmit Delay is 1 sec, State POINT_TO_MULTIPOINT
             match_obj = p1_4.match(line)
             if match_obj:
                 dict_val = match_obj.groupdict()
                 interface_dict['state'] = dict_val['state']
-                interface_dict['priority'] = int(dict_val['priority'])
+                if dict_val['priority']:
+                    interface_dict['priority'] = int(dict_val['priority'])
                 if dict_val['bfd_status']:
                     interface_dict['bfd_status'] = dict_val['bfd_status']
                 interface_dict['transmit_delay'] = int(dict_val['transmit_delay'])
@@ -849,7 +862,10 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             if match_obj:
                 dict_val = match_obj.groupdict()
                 interface_dict['neighbor_id'] = dict_val['neighbor_id']
-                interface_dict['dr_or_bdr'] = dict_val['dr_or_bdr']
+                if dict_val['dr_or_bdr']:
+                    interface_dict['dr_or_bdr'] = dict_val['dr_or_bdr']
+                if dict_val['neighbor_cost']:
+                    interface_dict['neighbor_cost'] = int(dict_val['neighbor_cost'])
                 continue
 
             # Suppress hello for 0 neighbor(s)

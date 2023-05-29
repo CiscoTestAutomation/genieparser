@@ -48,7 +48,8 @@ class ShowInventoryRaw(ShowInventoryRawSchema):
         #NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
         #NAME: "Gi2/0/5", DESCR: "Gi2/0/5"
         #NAME: "Switch 1 Slot 1 Temp: S1_I_00", DESCR: "Temp: S1_I_00"
-        p1 = re.compile(r'^NAME: "(?P<name>[\w\d\s(\/\-)?(\:\")*]+)", DESCR: "(?P<description>[\w\d\s(\-\.\/)?(\:\_)*]+)"$')
+        #NAME: "TenGigabitEthernet3/0/1", DESCR: "SFP+ 10GBASE-SR"
+        p1 = re.compile(r'^NAME: "(?P<name>[\w\d\s(\/\-)?(\:\")*]+)", DESCR: "(?P<description>[\w\d\s(\-\.\/\+)?(\:\_)*]+)"$')
         
         # PID: C9500X-28C8D      , VID: V00  , SN: FDO25030SLN
         # PID: C9300-24U         , VID:      , SN:
@@ -64,6 +65,7 @@ class ShowInventoryRaw(ShowInventoryRawSchema):
             
             #NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
             #NAME: "Gi2/0/5", DESCR: "Gi2/0/5"
+            #NAME: "TenGigabitEthernet3/0/1", DESCR: "SFP+ 10GBASE-SR"
             m = p1.match(line)
             if m: 
                 group = m.groupdict()

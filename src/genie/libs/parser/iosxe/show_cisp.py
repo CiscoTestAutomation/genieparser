@@ -15,6 +15,8 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (And, Any, Default, Optional,
                                                 Or, Schema, Use)
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 # ======================================================
 # Parser for 'show cisp summary '
@@ -24,7 +26,11 @@ class ShowCispSummarySchema(MetaParser):
     """Schema for show cisp summary"""
 
     schema = {
-        'interface': {
+        'cisp': {
+            'enabled': bool,
+            'running': bool
+        },
+        Optional('interface'): {
             Any(): {
                 'mode': str,
             },
@@ -40,17 +46,42 @@ class ShowCispSummary(ShowCispSummarySchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
+        # CISP not enabled
+        p1 = re.compile(r"^CISP not enabled$")
+
+        # CISP is not running on any interface
+        # CISP is running on the following interface(s):
+        p2 = re.compile(r"^CISP is (?P<running>not running|running) on.+$")
+
         #    Gi1/0/4 (Authenticator)
-        p1 = re.compile(r"^\s+(?P<interface>\S+)\s+\((?P<mode>\w+)\)$")
+        p3 = re.compile(r"^(?P<interface>\S+)\s+\((?P<mode>\w+)\)$")
 
         ret_dict = {}
 
         for line in output.splitlines():
+            line = line.strip()
+
+            # CISP not enabled
+            m = p1.match(line)
+            if m:
+                cisp_dict = ret_dict.setdefault('cisp', {})
+                cisp_dict['enabled'] = False
+                cisp_dict['running'] = False
+                continue
+
+            # CISP is not running on any interface
+            # CISP is running on the following interface(s):
+            m = p2.match(line)
+            if m:
+                cisp_dict = ret_dict.setdefault('cisp', {})
+                cisp_dict['enabled'] = True
+                cisp_dict['running'] = True if m.groupdict()['running'] == 'running' else False
+                continue
 
             #    Gi1/0/4 (Authenticator)
-            match_obj = p1.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
                 intf_var = dict_val['interface']
                 if 'interface' not in ret_dict:
                     interface = ret_dict.setdefault('interface', {})
@@ -75,7 +106,8 @@ class ShowCispInterfaceSchema(MetaParser):
             'version': int,
             'mode': str,
             'peer_mode': str,
-            'supp_state': str,
+            Optional('supp_state'): str,
+            Optional('auth_state'): str,
             'intf': str,
         },
     }
@@ -91,14 +123,21 @@ class ShowCispInterface(ShowCispInterfaceSchema):
 
         # Version:  1
         p1 = re.compile(r"^Version:\s+(?P<version>\d+)$")
+        
         # Mode:  Supplicant
         p1_1 = re.compile(r"^Mode:\s+(?P<mode>\w+)$")
+        
         # Peer Mode:  Authenticator
         p1_2 = re.compile(r"^Peer\s+Mode:\s+(?P<peer_mode>\w+)$")
+        
         # Supp State:   Idle
         p1_3 = re.compile(r"^Supp\s+State:\s+(?P<supp_state>\w+)$")
+        
         # CISP Status for interface Gi1/6
         p1_4 = re.compile(r"^CISP\s+Status\s+for\s+interface\s+(?P<intf>\S+)$")
+
+        # Auth State:   Idle
+        p1_5 = re.compile(r"^Auth\s+State:\s+(?P<auth_state>\w+)$")
 
         ret_dict = {}
 
@@ -107,46 +146,38 @@ class ShowCispInterface(ShowCispInterfaceSchema):
             # Version:  1
             match_obj = p1.match(line)
             if match_obj:
-                dict_val = match_obj.groupdict()
-                if 'cisp' not in ret_dict:
-                    cisp = ret_dict.setdefault('cisp', {})
-                cisp['version'] = int(dict_val['version'])
+                cisp_dict['version'] = int(match_obj.groupdict()['version'])
                 continue
 
             # Mode:  Supplicant
             match_obj = p1_1.match(line)
             if match_obj:
-                dict_val = match_obj.groupdict()
-                if 'cisp' not in ret_dict:
-                    cisp = ret_dict.setdefault('cisp', {})
-                cisp['mode'] = dict_val['mode']
+                cisp_dict['mode'] = match_obj.groupdict()['mode']
                 continue
 
             # Peer Mode:  Authenticator
             match_obj = p1_2.match(line)
             if match_obj:
-                dict_val = match_obj.groupdict()
-                if 'cisp' not in ret_dict:
-                    cisp = ret_dict.setdefault('cisp', {})
-                cisp['peer_mode'] = dict_val['peer_mode']
+                cisp_dict['peer_mode'] = match_obj.groupdict()['peer_mode']
                 continue
 
             # Supp State:   Idle
             match_obj = p1_3.match(line)
             if match_obj:
-                dict_val = match_obj.groupdict()
-                if 'cisp' not in ret_dict:
-                    cisp = ret_dict.setdefault('cisp', {})
-                cisp['supp_state'] = dict_val['supp_state']
+                cisp_dict['supp_state'] = match_obj.groupdict()['supp_state']
                 continue
 
             # CISP Status for interface Gi1/6
             match_obj = p1_4.match(line)
             if match_obj:
-                dict_val = match_obj.groupdict()
-                if 'cisp' not in ret_dict:
-                    cisp = ret_dict.setdefault('cisp', {})
-                cisp['intf'] = dict_val['intf']
+                cisp_dict = ret_dict.setdefault('cisp', {})
+                cisp_dict['intf'] = match_obj.groupdict()['intf']
+                continue
+
+            # Auth State:   Idle
+            match_obj = p1_5.match(line)
+            if match_obj:
+                cisp_dict['auth_state'] = match_obj.groupdict()['auth_state']
                 continue
 
         return ret_dict
@@ -209,6 +240,66 @@ class ShowCispClients(ShowCispClientsSchema):
                     mac_address_dict = ret_dict['mac_address'].setdefault(mac_address_var, {})
                 mac_address_dict['vlan'] = int(dict_val['vlan'])
                 mac_address_dict['interface'] = dict_val['interface']
+                continue
+
+        return ret_dict
+
+
+class ShowCispRegistrationsSchema(MetaParser):
+    """
+        Schema for show cisp registrations
+    """
+
+    schema = {
+        'interface': {
+            Any(): {
+                'auth_mgr': str
+            }
+        }
+    }
+
+
+class ShowCispRegistrations(ShowCispRegistrationsSchema):
+    """
+        Parser for show cisp registrations
+    """
+
+    cli_command = 'show cisp registrations'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Interface(s) with CISP registered user(s):
+        p1 = re.compile(r'^Interface\(s\) with CISP registered user\(s\):$')
+
+        # Te1/0/12
+        p2 = re.compile(r"^(?P<interface>\w+\/\w+\/[\w\.]+)$")
+        
+        # Auth Mgr (Authenticator)
+        p3 = re.compile(r"^Auth Mgr \((?P<auth_mgr>\w+)\)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface(s) with CISP registered user(s):
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {})
+                continue
+
+            # Te1/0/12
+            m = p2.match(line)
+            if m:
+                interface_dict = int_dict.setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+
+            # Auth Mgr (Authenticator)
+            m = p3.match(line)
+            if m:
+                interface_dict['auth_mgr'] = m.groupdict()['auth_mgr']
                 continue
 
         return ret_dict

@@ -5956,3 +5956,138 @@ class ShowSdwanAppqoeDreoptStatus(ShowSdwanAppqoeDreoptStatusSchema):
                 continue
 
         return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'show platform software sdwan service-chain database'
+# =======================================================================
+
+class ShowSdwanServiceChainDatabaseSchema(MetaParser):
+
+    """Schema for "show platform software sdwan service-chain database" """
+
+    schema = {
+        "service_chain_db": {
+            Any(): {
+                "vrf": int,
+                "label": str,
+                "state": str,
+                "services": {
+                    Any(): {
+                        "service_state": str,
+                        "sequence": int,
+                        Any():{
+                            Any():{
+                                Any():{
+                                    'interface': str,
+                                    'ip': str,
+                                    'status': str
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+# =======================================================================
+# Parser for 'show platform software sdwan service-chain database'
+# =======================================================================
+class ShowSdwanServiceChainDatabase(ShowSdwanServiceChainDatabaseSchema):
+    """parser for "show platform software sdwan service-chain database" """
+
+    cli_command = "show platform software sdwan service-chain database"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Chain-Name: SC3, VRF: 101, Label: 0x800409, State: Up
+        p1 = re.compile(
+            r"^Chain-Name:\s+(?P<sc>\S+),\s+VRF:\s+(?P<vrf>\d+),\s+"
+            r"Label:\s+(?P<label>\S+),\s+State:\s+(?P<sc_status>\w+)$"
+        )
+        
+        # Services:
+        p2 = re.compile(r"^Services:$")
+
+        # FW, State: Up
+        p3 = re.compile(r"^(?P<service_name>(FW|IDS|IDP|SIG|NETSVC\d+)),\s+State:\s+(?P<ser_state>\S+)$")
+
+        # Sequence   1
+        p4 = re.compile(r"^Sequence\s+(?P<seq_no>\d+)$")
+
+        # Transport HA pair-1:
+        p5 = re.compile(r"^Transport\s+HA\s+pair-(?P<inst_num>\d+):$")
+
+        # Active   Tx (GigabitEthernet3, 192.168.40.42  ): Up*
+        p6 = re.compile(
+            r"^(?P<inst_type>(Active|Backup))\s*Tx\s*\((?P<inst_tx_intf>\S+),\s*"
+            r"(?P<inst_tx_ip>\S+)\s*\)\s*:\s*(?P<inst_tx_status>\w+)\*?$"
+        )
+
+        # Rx (GigabitEthernet3, 192.168.40.42  ): Up*
+        p7 = re.compile(
+            r"^Rx\s*\((?P<inst_rx_intf>\S+),\s*(?P<inst_rx_ip>\S+)\s*\)\s*:\s*(?P<inst_rx_status>\w+)\*?$"
+        )
+        services_db = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Chain-Name: SC3, VRF: 101, Label: 0x800409, State: Up
+            m = p1.match(line)
+            if m:
+                chain_dict = services_db.setdefault('service_chain_db', {})
+                sc_name = m.groupdict()["sc"]
+                sc_dict = chain_dict.setdefault(sc_name, {})
+                sc_dict.update({"vrf": int(m.groupdict()["vrf"])})
+                sc_dict.update({"label": m.groupdict()["label"]})
+                sc_dict.update({"state": m.groupdict()["sc_status"]})              
+                continue
+            
+            # Services:
+            m = p2.match(line)
+            if m:
+                ser_dict = sc_dict.setdefault("services", {})
+
+            # FW, State: Up
+            m = p3.match(line)
+            if m:
+                service_type = m.groupdict()["service_name"]
+                type_dict = ser_dict.setdefault(service_type, {})
+                type_dict.update({"service_state": m.groupdict()["ser_state"]})
+                continue
+            
+            # Sequence   1
+            m = p4.match(line)
+            if m:
+                type_dict.update({"sequence": int(m.groupdict()["seq_no"])})
+                continue
+
+            # Transport HA pair-1:
+            m = p5.match(line)
+            if m:
+                ha_pair = m.groupdict()["inst_num"]
+                ha_dict = type_dict.setdefault(ha_pair, {})
+                continue
+
+            # Active   Tx (GigabitEthernet3, 192.168.40.42  ): Up*
+            m = p6.match(line)
+            if m:
+                ha_type = m.groupdict()["inst_type"]
+                hatype_dict = ha_dict.setdefault(ha_type, {})
+                dir_tx_dict = hatype_dict.setdefault('tx', {})
+                dir_tx_dict.update({"interface": m.groupdict()["inst_tx_intf"]})
+                dir_tx_dict.update({"ip": m.groupdict()["inst_tx_ip"]})
+                dir_tx_dict.update({"status": m.groupdict()["inst_tx_status"]})
+                continue
+
+            # Rx (GigabitEthernet3, 192.168.40.42  ): Up*
+            m = p7.match(line)
+            if m:
+                dir_rx_dict = hatype_dict.setdefault('rx', {})
+                dir_rx_dict.update({"interface": m.groupdict()["inst_rx_intf"]})
+                dir_rx_dict.update({"ip": m.groupdict()["inst_rx_ip"]})
+                dir_rx_dict.update({"status": m.groupdict()["inst_rx_status"]})
+                continue
+
+        return services_db

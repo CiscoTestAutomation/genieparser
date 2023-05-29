@@ -1,0 +1,27 @@
+Local Intf: TenGigabitEthernet1/0/3
+Local Intf service instance: -
+Chassis id: 0476.b0d7.9100
+Port id: Te1/0/2
+Port Description: TenGigabitEthernet1/0/2
+System Name: 9300-24UX-2
+
+System Description:
+Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.12.4, RELEASE SOFTWARE (fc5)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+Compiled Thu 09-Jul-20 21:49 by mcpre
+
+Time remaining: 110 seconds
+System Capabilities: B,R
+Enabled Capabilities: B,R
+Management Addresses:
+    IP: 192.168.0.31
+Auto Negotiation - supported, enabled
+Physical media capabilities:
+    Other/unknown
+Media Attachment Unit type: 30
+Vlan ID: 1
+Peer Source MAC: 0476.b0d7.9102
+
+
+Total entries displayed: 1

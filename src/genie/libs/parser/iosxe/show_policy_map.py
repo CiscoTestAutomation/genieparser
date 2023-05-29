@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
     * 'show policy-map interface class {class_name}',
     * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
+    * 'show policy-map control-plane | section {class_map}'
     * 'show policy-map interface',
     * 'show policy-map type control subscriber binding <policymap name>',
     * 'show policy-map type queueing interface {interface} output class {class_name}',
@@ -1930,6 +1931,353 @@ class ShowPolicyMapTargetClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSc
         return super().cli(output=show_output, num=num)
 
 
+# ==========================================================================
+# Schema for :
+#   * 'show policy-map control-plane | section {class_map}'
+# ===========================================================================
+class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
+
+    ''' Schema for :
+        * 'show policy-map control-plane | section {class_map}'
+    '''
+
+    schema = {               
+        'class_map': {
+            Any(): {
+                'match_evaluation': str,
+                'match': list,
+                Optional('packets'): int,
+                Optional('bytes'): int,
+                Optional('rate'): {
+                    Optional('interval'): int,
+                    Optional('offered_rate_bps'): int,
+                    Optional('drop_rate_bps'): int
+                },
+                Optional('qos_set'): {
+                    Any(): {
+                        Any(): {
+                            Optional('packets_marked'): int,
+                            Optional('marker_statistics'): str,  
+                        },
+                    },
+                },
+                Optional('police'): {
+                    Optional('cir_bps'): int,
+                    Optional('cir_bc_bytes'): int,
+                    Optional('cir_be_bytes'): int,
+                    Optional('police_bps'): int,
+                    Optional('police_limit'): int,
+                    Optional('extended_limit'): int,
+                    Optional('conformed'): {
+                        Optional('packets'): int,
+                        'bytes': int,
+                        'bps': int,
+                        Optional('actions'): {
+                            Any(): Or(bool, str),
+                        }
+                    },
+                    Optional('exceeded'): {
+                        Optional('packets'): int,
+                        'bytes': int,
+                        'bps': int,
+                        Optional('actions'): {
+                            Any(): Or(bool, str),
+                        }
+                    },
+                    Optional('violated'): {
+                        Optional('packets'): int,
+                        'bytes': int,
+                        'bps': int,
+                        Optional('actions'): {
+                            Any(): Or(bool, str),
+                        }
+                    },
+                },
+            },
+        }, 
+    }
+
+# =====================================================================
+# Parser for:
+#   * 'show policy-map control-plane | section {class_map}'
+# =====================================================================
+class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema):
+    ''' Super Parser for
+        * 'show policy-map control-plane | section {class_map}'
+    '''
+    
+    BOOL_ACTION_LIST = ['drop', 'transmit', 'set_clp_transmit']
+
+    cli_command = 'show policy-map control-plane | section {class_map}'
+
+    def cli(self, class_map='', output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(class_map=class_map))
+
+        # Init vars
+        ret_dict = {}
+        class_dict = {}
+
+        # Class-map: Ping_Class (match-all)
+        # Class-map:TEST (match-all)
+        # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
+        p1 = re.compile(r'^[Cc]lass-map *:( +)?(?P<class_map>\S+) +(?P<match_all>(.*))$')
+
+        # 8 packets, 800 bytes
+        p2 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes$')
+
+        # 5 minute offered rate 0000 bps, drop rate 0000 bps
+        p3 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
+
+        # 30 second offered rate 15000 bps, drop rate 300 bps
+        p3_1 = re.compile(r'^(?P<interval>(\d+)) +second +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
+
+        # Match: access-group name Ping_Option
+        # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
+        p4= re.compile(r'^[Mm]atch:( +)?(?P<match>([\S\s]+))$')
+
+        # police:
+        p5 = re.compile(r'^police:$')
+
+        #  police:  cir 64000 bps, bc 8000 bytes
+        p5_1 = re.compile(r'^police: +cir (?P<cir_bps>(\d+)) bps, bc (?P<cir_bc_bytes>(\d+)) bytes$')
+
+        # cir 8000 bps, bc 1500 bytes
+        p6 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +bc +(?P<cir_bc_bytes>(\d+)) bytes$')
+
+        # 8000 bps, 1500 limit, 1500 extended limit
+        p6_1 = re.compile(r'^(?P<police_bps>(\d+)) bps, +(?P<police_limit>(\d+)) limit, +'
+                          r'(?P<extended_limit>(\d+))(.*)$')
+
+        # cir 10000000 bps, be 312500 bytes
+        p6_2 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +be +(?P<cir_be_bytes>(\d+)) bytes$')
+
+        # conformed 8 packets, 800 bytes; actions:
+        # conformed 800 bytes; actions:
+        # conformed 15 packets, 6210 bytes; action:transmit
+        p7 = re.compile(r'^conformed( (?P<packets>(\d+)) packets,)? +(?P<bytes>(\d+)) bytes; (action:|actions:)((?P<action>(\w+)))?$')
+
+        # exceeded 0 packets, 0 bytes; actions:
+        # exceeded 5 packets, 5070 bytes; action:drop
+        # exceeded 0 bytes; actions:
+        p8 = re.compile(r'^exceeded( (?P<packets>(\d+)) packets,)? +(?P<bytes>(\d+)) bytes; (action:|actions:)((?P<action>(\w+)))?$')
+
+        # violated 0 packets, 0 bytes; action:drop
+        # violated 0 packets, 0 bytes; actions:
+        # violated 0 bytes; actions:
+        p9 = re.compile(r'^violated( (?P<packets>(\d+)) packets,)? +(?P<bytes>(\d+)) bytes; (action:|actions:)((?P<action>(\w+)))?$')
+
+        # conformed 0000 bps, exceeded 0000 bps
+        # conformed 0 bps, exceed 0 bps, violate 0 bps
+        p10 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps,+ excee(d|ded) (?P<e_bps>(\d+)) bps(, violat(e|ed) (?P<v_bps>(\d+)) bps)?$')
+
+        # drop
+        # transmit
+        # start
+        # set-qos-transmit 7
+        # set-mpls-exp-imposition-transmit 7
+        # set-dscp-transmit ef
+        # filter 'Queueing' and 'random-detect'
+        # set-dscp-transmit dscp table policed-dscp
+        p12 = re.compile(r'^(?![Qr])(?P<action>drop|transmit|start|set-qos-transmit|set-mpls-exp-imposition-transmit|set-dscp-transmit|filter)( +(?P<value>.+))?$')
+
+        # QoS Set
+        p11 = re.compile(r'^QoS +Set$')
+
+        # ip precedence 6
+        # dscp af41
+        # qos-group 20
+        p11_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp)) +(?P<value>(\w+))$')
+
+        # Marker statistics: Disabled
+        p11_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Class-map: Ping_Class (match-all)
+            # Class-map:TEST (match-all)
+            # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
+            m = p1.match(line)
+            if m:
+                match_list = []
+                class_map = m.groupdict()['class_map']
+                class_match = m.groupdict()['match_all'].replace('(', '').replace(')', '')
+                class_dict = ret_dict.setdefault('class_map', {}).setdefault(class_map, {})
+                class_dict['match_evaluation'] = class_match
+                continue
+
+            # 8 packets, 800 bytes
+            m = p2.match(line)
+            if m:
+                pkts = m.groupdict()['packets']
+                byte = m.groupdict()['bytes']
+                class_dict['packets'] = int(pkts)
+                class_dict.setdefault('bytes', int(byte))
+                continue
+
+            # 5 minute offered rate 0000 bps, drop rate 0000 bps
+            m = p3.match(line)
+            if m:
+                rate_dict = class_dict.setdefault('rate', {})
+                rate_dict['interval'] = int(m.groupdict()['interval']) * 60
+                rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
+                rate_dict['drop_rate_bps'] = int(m.groupdict()['drop_rate'])
+                continue
+
+            # 30 second offered rate 15000 bps, drop rate 300 bps
+            m = p3_1.match(line)
+            if m:
+                rate_dict = class_dict.setdefault('rate', {})
+                rate_dict['interval'] = int(m.groupdict()['interval'])
+                rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
+                rate_dict['drop_rate_bps'] = int(m.groupdict()['drop_rate'])
+                continue
+
+            # Match: access-group name Ping_Option
+            # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
+            m = p4.match(line)
+            if m:
+                match_list.append(m.groupdict()['match'])
+                class_dict.setdefault('match', match_list)
+                continue
+            
+            # police:
+            m = p5.match(line)
+            if m:
+                police_dict = class_dict.setdefault('police', {})
+                continue
+
+            # police:  cir 64000 bps, bc 8000 bytes
+            m = p5_1.match(line)
+            if m:
+                police_dict = class_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
+                continue
+
+            # cir 8000 bps, bc 1500 bytes
+            m = p6.match(line)
+            if m:
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
+                continue
+
+            # 8000 bps, 1500 limit, 1500 extended limit
+            m = p6_1.match(line)
+            if m:
+                police_dict['police_bps'] = int(m.groupdict()['police_bps'])
+                police_dict['police_limit'] = int(m.groupdict()['police_limit'])
+                police_dict['extended_limit'] = int(m.groupdict()['extended_limit'])
+                continue
+            
+            # cir 10000000 bps, be 312500 bytes
+            m = p6_2.match(line)
+            if m:
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
+                continue
+            
+            # conformed 8 packets, 800 bytes; actions:
+            # conformed 15 packets, 6210 bytes; action:transmit
+            # conformed 800 bytes; actions:
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                conformed_dict = police_dict.setdefault('conformed', {})
+                if group['packets']:
+                    conformed_dict['packets'] = int(group['packets'])
+                conformed_dict['bytes'] = int(group['bytes'])
+                target_dict = conformed_dict.setdefault('actions', {})
+                if group['action']:
+                    action = group['action']
+                    target_dict.update({action: True})
+                continue
+
+            # exceeded 0 packets, 0 bytes; actions:
+            # exceeded 5 packets, 5070 bytes; action:drop
+            # exceeded 0 bytes; actions:
+            m =p8.match(line)
+            if m:
+                group = m.groupdict()
+                exceeded_dict = police_dict.setdefault('exceeded', {})
+                if group['packets']:
+                    exceeded_dict['packets'] = int(group['packets'])
+                exceeded_dict['bytes'] = int(group['bytes'])
+                target_dict = exceeded_dict.setdefault('actions', {})
+                if group['action']:
+                    action = group['action']
+                    target_dict.update({action: True})
+                continue
+
+            # violated 0 packets, 0 bytes; action:drop
+            # violated 0 packets, 0 bytes; actions:
+            # violated 0 bytes; actions:
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                violated_dict = police_dict.setdefault('violated', {})
+                if group['packets']:
+                    violated_dict['packets'] = int(group['packets'])
+                violated_dict['bytes'] = int(group['bytes'])
+                target_dict = violated_dict.setdefault('actions', {})
+                if group['action']:
+                    action = group['action']
+                    target_dict.update({action: True})
+                continue
+
+            # conformed 0000 bps, exceeded 0000 bps
+            # conformed 0 bps, exceed 0 bps, violate 0 bps
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                conformed_dict['bps'] = int(group['c_bps'])
+                exceeded_dict['bps'] = int(group['e_bps'])
+                if group['v_bps']:
+                    violated_dict['bps'] = int(group['v_bps'])
+                continue
+
+            # QoS Set
+            m = p11.match(line)
+            if m:
+                qos_dict = class_dict.setdefault('qos_set', {})
+                continue
+
+            # ip precedence 6
+            # cos 5
+            m = p11_1.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip()
+                value = group['value'].strip()
+                qos_dict_map = qos_dict.setdefault(key, {}).setdefault(value, {})
+                continue
+
+            # Marker statistics: Disabled
+            m = p11_2.match(line)
+            if m:
+                qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                continue
+            
+            # drop
+            # transmit
+            # start
+            # set-qos-transmit 7
+            # set-mpls-exp-imposition-transmit 7
+            m = p12.match(line)
+            if m:
+                action = m.groupdict()['action'].replace('-', '_')
+                if action in self.BOOL_ACTION_LIST:
+                    value = True
+                else:
+                    value = m.groupdict()['value']
+                target_dict.update({action: value})
+                continue
+
+        return ret_dict
+
+
 # ===================================
 # Schema for:
 #   * 'show policy-map'
@@ -1947,6 +2295,7 @@ class ShowPolicyMapSchema(MetaParser):
                                 'kbps': int}},
                         Optional('police'): {
                             Optional('rate_pps'): int,
+                            Optional('rate'): int,
                             Optional('cir_bps'): int,
                             Optional('cir_bc_bytes'): int,
                             Optional('cir_be_bytes'): int,
@@ -2082,7 +2431,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<pir_be_bytes>(\d+))$')
 
         # police rate 2000 pps
-        p2_3 = re.compile(r'^police +rate +(?P<rate_pps>\d+) +pps$')
+        # police rate 10000000000
+        p2_3 = re.compile(r'^police +rate +(?P<rate>\d+)\s*((?P<rate_mode>pps))?$')
 
         # police rate percent 10
         p2_4 = re.compile(r'^police +rate +percent +(?P<rate_percent>\d+)$')
@@ -2265,6 +2615,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
             # police rate 1800 pps
+            # police rate 10000000000
             m = p2_3.match(line)
             if m:
                 police_line = 1
@@ -2272,7 +2623,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 exceed_list = []
                 violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
-                police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
+                if m.groupdict()['rate_mode']:
+                    police_dict['rate_pps'] = int(m.groupdict()['rate'])
+                else:
+                    police_dict['rate'] = int(m.groupdict()['rate'])
                 continue
 
             # police rate percent 10

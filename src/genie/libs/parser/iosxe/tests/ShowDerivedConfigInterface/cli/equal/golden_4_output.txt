@@ -1,0 +1,23 @@
+Building configuration...
+
+Derived configuration : 648 bytes
+!
+interface GigabitEthernet3/0/3
+ switchport mode access
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security maximum 2 vlan access
+ switchport port-security violation restrict
+ switchport port-security aging time 2
+ switchport port-security aging type inactivity
+ switchport port-security
+ load-interval 30
+ storm-control broadcast level pps 1k
+ storm-control multicast level pps 2k
+ storm-control action trap
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input AutoConf-4.0-CiscoPhone-Input-Policy
+ service-policy output AutoConf-4.0-Output-Policy
+ ip dhcp snooping limit rate 15
+end

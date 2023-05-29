@@ -8,6 +8,7 @@
      *  show spanning-tree mst <WORD>
      *  show spanning-tree vlan <WORD>
      *  show spanning-tree mst configuration
+     *  show spanning-tree summary totals
 
 """
 import re
@@ -1431,6 +1432,118 @@ class ShowSpanningTreeInconsistentports(ShowSpanningTreeInconsistentportsSchema)
             match = p2.match(line)
             if match:
                 ret_dict['total_inconsistent_ports'] = int(match.groupdict()['total_inconsistent_ports'])
+                continue
+        
+        return ret_dict
+
+
+class ShowSpanningTreeSummaryTotalsSchema(MetaParser):
+    """
+        Schema for show spanning-tree summary totals
+    """
+    schema = {
+        'mode': str,
+        'root_bridge': str,
+        'extended_system_id': bool,
+        'portfast': bool,
+        'portfast_bpdu_guard': bool,
+        'portfast_bpdu_filter': bool,
+        'loopguard': bool,
+        'etherchannel_misconfig_guard': bool,
+        'uplinkfast': bool,
+        'backbonefast': bool,
+        'spannig_tree_name': {
+            Any(): {
+                'blocking': int,
+                'listening': int,
+                'learning': int,
+                'forwarding': int,
+                'stp_active': int
+            }
+        }
+    }
+
+
+class ShowSpanningTreeSummaryTotals(ShowSpanningTreeSummaryTotalsSchema):
+    """
+        Parser for show spanning-tree summary totals
+    """
+
+    cli_command = 'show spanning-tree summary totals'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Switch is in rapid-pvst mode
+        p1 = re.compile(r'^Switch is in (?P<mode>\S+) mode$')
+
+        # Root bridge for: none
+        p2 = re.compile(r'^Root bridge for:\s+(?P<root_bridge>.+)$')
+
+        # Extended system ID                      is enabled
+        # Portfast Default                        is enabled
+        # PortFast BPDU Guard Default            is disabled
+        # Portfast BPDU Filter Default           is disabled
+        # Loopguard Default                      is disabled
+        # EtherChannel misconfig guard            is enabled
+        # UplinkFast                              is disabled
+        # BackboneFast                            is disabled
+        p3 = re.compile(r'^(?P<key>Extended system ID|Portfast|PortFast BPDU Guard|Portfast BPDU Filter|'
+            r'Loopguard|EtherChannel misconfig guard|UplinkFast|BackboneFast)(\sDefault)?\s+is (?P<state>\w+)$')
+
+        # Name                   Blocking Listening Learning Forwarding STP Active
+        p4 = re.compile(r'^Name\s+Blocking Listening Learning Forwarding STP Active$')
+
+        # 300 vlans                  300         0        0        600        900
+        p5 = re.compile(r'^(?P<spannig_tree_name>[\s\S]+)\s+(?P<blocking>\d+)\s+(?P<listening>\d+)\s+'
+            r'(?P<learning>\d+)\s+(?P<forwarding>\d+)\s+(?P<stp_active>\d+)$')
+        
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Switch is in rapid-pvst mode
+            m = p1.match(line)
+            if m:
+                ret_dict['mode'] = m.groupdict()['mode']
+                continue
+
+            # Root bridge for: none
+            m = p2.match(line)
+            if m:
+                ret_dict['root_bridge'] = m.groupdict()['root_bridge']
+                continue
+
+            # Extended system ID                      is enabled
+            # Portfast Default                        is enabled
+            # PortFast BPDU Guard Default            is disabled
+            # Portfast BPDU Filter Default           is disabled
+            # Loopguard Default                      is disabled
+            # EtherChannel misconfig guard            is enabled
+            # UplinkFast                              is disabled
+            # BackboneFast                            is disabled
+            m = p3.match(line)
+            if m:
+                ret_dict[m.groupdict()['key'].strip().lower().replace(' ', '_')] = m.groupdict()['state'] == 'enabled'
+                continue
+
+            # Name                   Blocking Listening Learning Forwarding STP Active
+            m = p4.match(line)
+            if m:
+                spannig_tree_name_dict = ret_dict.setdefault('spannig_tree_name', {})
+                continue
+
+            # 300 vlans                  300         0        0        600        900
+            m = p5.match(line)
+            if m:
+                group_dict = m.groupdict()
+                span_dict = spannig_tree_name_dict.setdefault(group_dict['spannig_tree_name'].strip().lower().replace(' ', '_'), {})
+                span_dict['blocking'] = int(group_dict['blocking'])
+                span_dict['listening'] = int(group_dict['listening'])
+                span_dict['learning'] = int(group_dict['learning'])
+                span_dict['forwarding'] = int(group_dict['forwarding'])
+                span_dict['stp_active'] = int(group_dict['stp_active'])
                 continue
         
         return ret_dict

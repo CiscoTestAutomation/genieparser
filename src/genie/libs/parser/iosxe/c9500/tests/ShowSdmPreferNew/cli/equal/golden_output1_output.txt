@@ -1,0 +1,31 @@
+Showing SDM Template Info
+
+This is the Custom template.
+Feature-Name                                        Reserved-Scale
+Unicast MAC addresses                               262144
+  Resource-Programmed: EM
+FIB Host Route                                      262144
+  Resource-Programmed: EM
+OG/SGACL Hosts/Cells                                32768
+  Resource-Programmed: EM
+L3 Multicast entries                                32768 (**)
+L2 Multicast entries                                16384 (**)
+Number of VLANs                                     4094 (**)
+Overflow Unicast MAC addresses                      512 (**)
+Overflow L2 Multicast entries                       512 (**)
+Overflow L3 Multicast entries                       512 (**)
+Ipv4/Ipv6 shared unicast routes                     262144 (**)
+Overflow shared unicast routes                      2000000 (**)
+STP Instances                                       4094 (**)
+Tunnels                                             1024 (**)
+VRF                                                 3840 (**)
+Max MPLS VPN Routes Per-Vrf label mode              2000000 (**)
+Max MPLS VPN Routes Per-Prefix label mode           65536 (**)
+Max L3 adjacency                                    131072 (**)
+Max L3 Interface                                    8192 (**)
+Max MPLS TE TUNNEL                                  4096 (**)
+
+(**) - SDM library is referred to only obtain scale
+
+Resource scale information
+EM                                                  622592

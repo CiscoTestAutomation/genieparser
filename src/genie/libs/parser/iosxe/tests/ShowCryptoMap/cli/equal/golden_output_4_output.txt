@@ -1,0 +1,14 @@
+Crypto Map IPv6 "sdsd" 3 ipsec-manual
+	WARNING: This crypto map is in an incomplete state!
+		(missing peer or access-list definitions)
+	Peer = 2001::1
+	Access-List SS dynamic: False
+	No matching address list set.
+	Extended IP access check IN list sds
+	Transform sets={ 
+		default:  { esp-aes esp-sha-hmac  } , 
+	}
+	Interfaces using crypto map sdsd:
+		TwoGigabitEthernet2/0/17
+
+		TwoGigabitEthernet2/0/19

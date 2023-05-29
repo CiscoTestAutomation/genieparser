@@ -1,0 +1,12 @@
+IPV4ROUTE_ID:id:0x5b3620034e48 nobj:(IPNEXTHOP_ID,101) 0.0.0.0/0 tblid:2 DA:0
+   NPD: device:0 lspa_rec:0 api_type:route(3)
+   SDK: is_host:0 l3_dest:0x62faa7b15ba0 l3_dest:la_l3_fec_impl_base(oid=1454) vrf(gid/oid):2/697
+   NPD: SDK oid 1454, devid:0, asic:0
+   sdk fec destination oid:1449,dev:0, destination_type:4b
+   sdk nexthop oid:1449,dev:0, gid:0xa,macaddr:a0f8.4910.ab57, nh_type:normal(0)
+   sdk outgoing port oid 2143, porttype:svi(104)
+     ADJ:objid:101 nh_type:NHADJ_NORMAL iif_id:0x553 ether_type:0x8 #child:2
+      srcmac:f87a.4125.2f02 dstmac:a0f8.4910.ab57
+     NPD: device:0 nh_gid/oid:10/1449 old_gid/oid:0/0 parent_oid:2143
+         fec_oid:1454 was_nor_nh:1 cr_def:0 stale:0 l3port_valid:1
+     SDK: cla_nhtype:0

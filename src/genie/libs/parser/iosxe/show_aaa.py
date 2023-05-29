@@ -1168,7 +1168,8 @@ class ShowAAACacheGroup(ShowAAACacheGroupSchema):
         # Profile Name: regProfile
         profile_compile = re.compile(r'Profile Name:[\s\t]+(?P<profile>[0-9A-Za-z\-\.]+)')
         # User Name:          test
-        user_compile = re.compile(r'User Name:[\s\t]+(?P<user>[0-9A-Za-z\-\.]+)')
+        # User Name:        #ACSACL#-IP-legacy_TC5_permit_user_dot1x_103-63c4d37b
+        user_compile = re.compile(r'User Name:[\s\t]+(?P<user>.+)')
         # Timeout:            86400
         timeout_compile = re.compile(r'Timeout:[\s\t]+(?P<timeout>\w+)')
         # Total number of Cache entries is 2

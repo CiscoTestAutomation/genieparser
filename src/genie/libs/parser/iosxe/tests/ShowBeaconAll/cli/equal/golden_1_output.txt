@@ -1,0 +1,5 @@
+Switch#   Beacon Status
+-----------------------
+*1        OFF
+ 2        OFF
+ 3        OFF
