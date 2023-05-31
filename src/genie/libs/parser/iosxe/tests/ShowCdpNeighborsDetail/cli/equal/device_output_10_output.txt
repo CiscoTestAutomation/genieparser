@@ -1,0 +1,39 @@
+
+Device# show cdp neighbors detail
+Device ID: MXMERCN5.cosmos.es.ftgroup
+Entry address(es): 
+  IP address: 10.2.3.41
+Platform: Cisco 3825,  Capabilities: Router Switch 
+Interface: Serial0/0/0:1,  Port ID (outgoing port): Serial1/4:1
+Holdtime : 160 sec
+        
+Version :
+Cisco IOS Software, 3800 Software (C3825-ENTSERVICESK9-M), Version 12.4(24)T8, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2012 by Cisco Systems, Inc.
+Compiled Sun 09-Sep-12 05:35 by prod_rel_team
+        
+advertisement version: 2
+VTP Management Domain: 'brz4'
+        
+-------------------------
+Device ID: BXPEDRCN2.cosmos.es.ftgroup
+Entry address(es): 
+  IP address: 10.32.0.2
+Platform: cisco WS-C6509-E,  Capabilities: Router Switch 
+Interface: FastEthernet0/0.1,  Port ID (outgoing port): GigabitEthernet7/27
+Holdtime : 164 sec
+        
+Version :
+Cisco IOS Software, s3223_rp Software (s3223_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXI14, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Wed 03-Sep-14 23:45 by prod_rel_team
+        
+advertisement version: 2
+VTP Management Domain: 'brz5'
+Native VLAN: 1
+Duplex: full
+        
+Total cdp entries displayed : 2
+    

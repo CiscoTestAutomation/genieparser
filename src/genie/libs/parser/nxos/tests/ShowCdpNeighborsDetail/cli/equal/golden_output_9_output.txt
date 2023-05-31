@@ -1,0 +1,15 @@
+
+        Device ID:PYATS-3850X-2SW-1-01.pyatscenter.com
+        VTP Management Domain Name: Brz45
+
+        Interface address(es):
+            IPv4 Address: 172.16.4.110
+        Platform: WS-C3850-48P, Capabilities: Router Switch IGMP Filtering
+        Interface: Ethernet9/9, Port ID (outgoing port): TenGigabitEthernet2/1/1
+        Holdtime: 153 sec
+
+        Advertisement Version: 2
+
+        Native VLAN: 1
+        Duplex: full
+    
