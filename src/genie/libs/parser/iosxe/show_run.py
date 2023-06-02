@@ -318,6 +318,9 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('dot1x_timeout_quiet_period'): str,
                 Optional('dot1x_timeout_server_timeout'): str,
                 Optional('dot1x_timeout_tx_period'): str,
+                Optional('dot1x_timeout_supp_timeout'): str,
+                Optional('dot1x_timeout_ratelimit_period'):str,
+                Optional('dot1x_source_template'): str,
                 Optional('ip_arp_inspection_limit_rate'): str,
                 Optional('ip_dhcp_snooping_limit_rate'): str,
                 Optional('ip_ospf'): {
@@ -339,6 +342,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ipv6_destination_guard_attach_policy'): str,
                 Optional('ipv6_source_guard_attach_policy'): str,
                 Optional('ipv6_nd_raguard_attach_policy'): str,
+                Optional('ipv6_nd_raguard'): bool,
                 Optional('ipv6_ospfv3'): {
                     Any(): {
                         'area': str,
@@ -365,7 +369,9 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('spanning_tree_portfast'): bool,
                 Optional('spanning_tree_portfast_trunk'): bool,
                 Optional('spanning_tree_bpdufilter'): str,
+                Optional('spanning_tree_guard'):str,
                 Optional('switchport_access_vlan'): str,
+                Optional('switchport_voice_vlan'):str,
                 Optional('switchport_trunk_vlans'): str,
                 Optional('keepalive'): bool,
                 Optional('switchport_mode'): str,
@@ -758,6 +764,25 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # isis ipv6 metric 22 level-2
         p91 = re.compile(r'^isis +ipv6 +metric +(?P<isis_v6_metric>\d+) +(?P<isis_v6_level>\S+)$')
 
+        # dot1x timeout supp-timeout 5
+        p92 = re.compile(r'^dot1x timeout supp-timeout (?P<supp_timeout>\d+)$')
+        
+        # dot1x timeout ratelimit-period 300
+        p93 = re.compile(r'^dot1x timeout ratelimit-period (?P<ratelimit_period>\d+)$')
+
+        # source template ENT-TEMPLATE_CLOSED_MODE
+        p94 = re.compile(r'^source template (?P<dot1x_source_template>[a-zA-Z\-\_]*)$')
+
+        # switchport voice vlan 300
+        p95 = re.compile(r'^switchport voice vlan (?P<voice_vlan>[\d]+)$')
+
+        # spanning-tree guard root
+        p96 = re.compile(r'^spanning-tree guard (?P<guard>[\S\s]+)$')
+
+        # ipv6 nd raguard
+        p97 = re.compile(r'^(ipv6 nd raguard)$')
+
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -858,6 +883,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'switchport_mode': group['switchport_mode']})
+                continue
+
+            # switchport voice vlan 300
+            m = p95.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'switchport_voice_vlan': group['voice_vlan']})
                 continue
 
             # switchport nonegotiate
@@ -1027,6 +1059,30 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update(
                     {'dot1x_timeout_tx_period': group['tx_period']})
                 continue
+            
+            # dot1x timeout supp-timeout 5
+            m = p92.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'dot1x_timeout_supp_timeout': group['supp_timeout']})
+                continue
+            
+            # dot1x timeout ratelimit-period 300
+            m = p93.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'dot1x_timeout_ratelimit_period': group['ratelimit_period']})
+                continue
+
+            # source template ENT-TEMPLATE_CLOSED_MODE
+            m = p94.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'dot1x_source_template': group['dot1x_source_template']})
+                continue         
 
             # spanning-tree portfast
             m = p35.match(line)
@@ -1041,6 +1097,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update(
                     {'spanning_tree_bpduguard': group['bpduguard']})
+                continue
+            
+            # spanning-tree guard root
+            m = p96.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'spanning_tree_guard': group['guard']})
                 continue
 
             # ip dhcp snooping limit rate 100
@@ -1385,6 +1449,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'ipv6_source_guard_attach_policy': group['ipv6_source_guard_attach_policy']})
                 continue
+            
+            #ipv6 nd raguard
+            m = p97.match(line)
+            if m:
+                intf_dict.update({'ipv6_nd_raguard': True})
+                continue
 
             # spanning-tree portfast trunk
             m = p77.match(line)
@@ -1489,7 +1559,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.setdefault('isis', {}).setdefault('ipv6', {}).setdefault('level', {}).setdefault(group['isis_v6_level'], {}).setdefault('metric', int(group['isis_v6_metric']))
-
+            
+            
+            
         return config_dict
 
 

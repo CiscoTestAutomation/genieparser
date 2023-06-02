@@ -1,0 +1,7 @@
+interface GigabitEthernet1/0/1
+ switchport voice vlan 400
+ ipv6 nd raguard
+ dot1x timeout supp-timeout 5
+ dot1x timeout ratelimit-period 300
+ source template ENT-TEMPLATE_CLOSED_MODE
+ spanning-tree guard root
