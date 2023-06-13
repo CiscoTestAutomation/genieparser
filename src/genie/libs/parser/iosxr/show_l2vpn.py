@@ -1136,17 +1136,22 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Any(): {
                                         'pw_id': {
                                             Any(): {
-                                                'ac_id': str,
+                                                Optional('ac_id'): str,
                                                 'state': str,
                                                 'xc_id': str,
+                                                Optional('pw_class'): str,
                                                 'encapsulation': str,
+                                                Optional('protocol'): str,
+                                                Optional('pw_type'): str,
                                                 'source_address': str,
-                                                'encap_type': str,
+                                                Optional('encap_type'): str,
                                                 'control_word': str,
+                                                Optional('interworking'): str,
+                                                Optional('pw_backup_disable_delay'): int,
                                                 'sequencing': str,
                                                 Optional('lsp'): {
                                                     'state': str,
-                                                    'evpn': {
+                                                    Optional('evpn'): {
                                                         Any(): {
                                                             'local': str,
                                                             'remote': str,
@@ -1161,7 +1166,15 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                             Optional('remote_type'): list,
                                                             Optional('local_type'): list
                                                         }
-                                                    }
+                                                    },
+                                                    Optional('pw'): {
+                                                        Any(): {
+                                                            'local': str,
+                                                            'remote': str,
+                                                            Optional('remote_type'): list,
+                                                            Optional('local_type'): list
+                                                        }
+                                                    },
                                                 },
                                                 Optional('status_code'): str,
                                                 'create_time': str,
@@ -1394,8 +1407,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                         r'is +(?P<state>[\S ]+)$')
 
         # PW class mpls, XC ID 0xff000001
-        p27 = re.compile(r'^PW +class +(?P<pw_class>\w+), +XC +ID +(?P<xc_id>\S+)$')
-
+        # PW class not set, XC ID 0xa0000005
+        p27 = re.compile(r'^PW +class +(?P<pw_class>(\w+)|(not set)), +XC +ID +(?P<xc_id>\S+)$')
         # PW class not set
         p27_1 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+)$')
 
@@ -2004,18 +2017,34 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
             m = p26.match(line)
             if m:
-                dict_type = 'pw'
                 group = m.groupdict()
-                neighbor = group['neighbor']
-                pw_id = group['pw_id']
-                state = group['state']
-                pw_id_dict = vfi_obj_dict.setdefault('neighbor', {}). \
-                    setdefault(neighbor, {}). \
-                    setdefault('pw_id', {}). \
-                    setdefault(pw_id, {})
-                pw_id_dict.update({'state': state})
-                label_dict = pw_id_dict
-                continue
+                outer_dict = {}
+                if dict_type == 'access_pw':
+                    neighbor = group['neighbor']
+                    pw_id = group['pw_id']
+                    state = group['state']
+                    pw_id_dict = bridge_domain_dict.setdefault('access_pw', {}). \
+                        setdefault('PW_' + neighbor, {}). \
+                        setdefault('neighbor', {}). \
+                        setdefault(neighbor, {}). \
+                        setdefault('pw_id', {}). \
+                        setdefault(pw_id, {})
+                    pw_id_dict.update({'state': state})
+                    label_dict = pw_id_dict
+                    continue
+                else:
+                    dict_type = 'pw'
+                    group = m.groupdict()
+                    neighbor = group['neighbor']
+                    pw_id = group['pw_id']
+                    state = group['state']
+                    pw_id_dict = vfi_obj_dict.setdefault('neighbor', {}). \
+                        setdefault(neighbor, {}). \
+                        setdefault('pw_id', {}). \
+                        setdefault(pw_id, {})
+                    pw_id_dict.update({'state': state})
+                    label_dict = pw_id_dict
+                    continue
 
             # PW class mpls, XC ID 0xff000001
             m = p27.match(line)

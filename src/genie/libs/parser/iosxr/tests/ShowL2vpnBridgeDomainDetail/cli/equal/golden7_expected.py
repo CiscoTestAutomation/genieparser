@@ -364,6 +364,120 @@ expected_output = {
                     "p2mp_pw": "disabled",
                     "create_time": "22/05/2020 03:04:51 (1y03w ago)",
                     "status_changed_since_creation": "No",
+                    "access_pw": {
+                        "PW_10.11.44.8": {
+                            "neighbor": {
+                                "10.11.44.8": {
+                                    "pw_id": {
+                                        "180": {
+                                            "state": "standby ( all ready )",
+                                            "pw_class": "PW_DEFAULT",
+                                            "xc_id": "0xa0000131",
+                                            "encapsulation": "MPLS",
+                                            "protocol": "LDP",
+                                            "source_address": "10.11.44.91",
+                                            "pw_type": "Ethernet",
+                                            "control_word": "enabled",
+                                            "interworking": "none",
+                                            "pw_backup_disable_delay": 0,
+                                            "sequencing": "not set",
+                                            "lsp": {
+                                                "state": "Up",
+                                                "mpls": {
+                                                    "label": {
+                                                        "local": "26303",
+                                                        "remote": "31",
+                                                    },
+                                                    "group_id": {
+                                                        "local": "0x8a",
+                                                        "remote": "0x8",
+                                                    },
+                                                    "interface": {
+                                                        "local": "Access PW",
+                                                        "remote": "[B2C]",
+                                                    },
+                                                    "mtu": {
+                                                        "local": "1500",
+                                                        "remote": "1500",
+                                                    },
+                                                    "control_word": {
+                                                        "local": "enabled",
+                                                        "remote": "enabled",
+                                                    },
+                                                    "pw_type": {
+                                                        "local": "Ethernet",
+                                                        "remote": "Ethernet",
+                                                    },
+                                                    "vccv_cv_type": {
+                                                        "local": "0x2",
+                                                        "remote": "0x12",
+                                                        "local_type": [
+                                                            "LSP ping verification"
+                                                        ],
+                                                        "remote_type": [
+                                                            "LSP ping verification"
+                                                        ],
+                                                    },
+                                                    "vccv_cc_type": {
+                                                        "local": "0x7",
+                                                        "remote": "0x3",
+                                                        "local_type": [
+                                                            "control word",
+                                                            "router alert label",
+                                                            "TTL expiry",
+                                                        ],
+                                                        "remote_type": [
+                                                            "control word",
+                                                            "router alert label",
+                                                        ],
+                                                    },
+                                                    "mib": {
+                                                        "local": "cpwVcIndex:",
+                                                        "remote": "2684354865",
+                                                    },
+                                                    "last_time_pw": {
+                                                        "local": "went down: 10/06/2021 02:53:01 (3d20h",
+                                                        "remote": "ago)",
+                                                    },
+                                                    "mac_limit:": {
+                                                        "local": "4000, Action: none, Notification: syslog,",
+                                                        "remote": "trap",
+                                                    },
+                                                },
+                                            },
+                                            "status_code": "0x20 (Standby)",
+                                            "create_time": "22/05/2020 03:04:51 (1y03w ago)",
+                                            "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
+                                            "mac_withdraw_message": {
+                                                "send": 0,
+                                                "receive": 22,
+                                            },
+                                            "forward_class": "0",
+                                            "mac_learning": "enabled",
+                                            "flooding": {
+                                                "broadcast_multicast": "enabled",
+                                                "unknown_unicast": "enabled",
+                                            },
+                                            "mac_aging_time": 300,
+                                            "mac_aging_type": "inactivity",
+                                            "mac_limit_reached": "no",
+                                            "mac_limit_threshold": "75%",
+                                            "mac_port_down_flush": "enabled",
+                                            "mac_secure": "disabled",
+                                            "mac_secure_logging": "disabled",
+                                            "split_horizon_group": "none",
+                                            "dhcp_v4_snooping": "disabled",
+                                            "dhcp_v4_snooping_profile": "none",
+                                            "igmp_snooping": "disabled",
+                                            "igmp_snooping_profile": "none",
+                                            "mld_snooping_profile": "none",
+                                            "storm_control": "bridge-domain policer",
+                                        }
+                                    }
+                                },
+                            },
+                        },
+                    },
                     "ac": {
                         "num_ac": 2,
                         "num_ac_up": 2,
@@ -594,6 +708,58 @@ expected_output = {
                                         }
                                     }
                                 },
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            },
+                        },
+                    },
+                    "pw": {"num_pw": 2, "num_pw_up": 1},
+                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
+                    "vni": {"num_vni": 0, "num_vni_up": 0},
+                },
+                "SEG242": {
+                    "state": "up",
+                    "id": 252,
+                    "shg_id": 0,
+                    "mst_i": 0,
+                    "coupled_state": "disabled",
+                    "vine_state": "Default",
+                    "mac_learning": "enabled",
+                    "mac_withdraw": "enabled",
+                    "mac_withdraw_for_access_pw": "enabled",
+                    "mac_withdraw_sent_on": "bridge port up",
+                    "mac_withdraw_relaying": "disabled",
+                    "flooding": {
+                        "broadcast_multicast": "enabled",
+                        "unknown_unicast": "enabled",
+                    },
+                    "mac_aging_time": 300,
+                    "mac_aging_type": "inactivity",
+                    "mac_limit_reached": "no",
+                    "mac_limit_threshold": "75%",
+                    "mac_port_down_flush": "enabled",
+                    "mac_secure": "disabled",
+                    "mac_secure_logging": "disabled",
+                    "split_horizon_group": "none",
+                    "dynamic_arp_inspection": "disabled",
+                    "dynamic_arp_logging": "disabled",
+                    "ip_source_guard": "disabled",
+                    "ip_source_logging": "disabled",
+                    "dhcp_v4_snooping": "disabled",
+                    "dhcp_v4_snooping_profile": "none",
+                    "igmp_snooping": "disabled",
+                    "igmp_snooping_profile": "none",
+                    "mld_snooping_profile": "none",
+                    "storm_control": "bridge-domain policer",
+                    "bridge_mtu": "1600",
+                    "mid_cvpls_config_index": "253",
+                    "p2mp_pw": "disabled",
+                    "create_time": "06/08/2020 03:00:38 (44w3d ago)",
+                    "status_changed_since_creation": "No",
+                    "access_pw": {
+                        "PW_10.11.44.12": {
+                            "neighbor": {
                                 "10.11.44.12": {
                                     "pw_id": {
                                         "242": {
@@ -702,55 +868,9 @@ expected_output = {
                                         }
                                     }
                                 },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
-                            },
-                        },
+                            }
+                        }
                     },
-                    "pw": {"num_pw": 2, "num_pw_up": 1},
-                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
-                    "vni": {"num_vni": 0, "num_vni_up": 0},
-                },
-                "SEG242": {
-                    "state": "up",
-                    "id": 252,
-                    "shg_id": 0,
-                    "mst_i": 0,
-                    "coupled_state": "disabled",
-                    "vine_state": "Default",
-                    "mac_learning": "enabled",
-                    "mac_withdraw": "enabled",
-                    "mac_withdraw_for_access_pw": "enabled",
-                    "mac_withdraw_sent_on": "bridge port up",
-                    "mac_withdraw_relaying": "disabled",
-                    "flooding": {
-                        "broadcast_multicast": "enabled",
-                        "unknown_unicast": "enabled",
-                    },
-                    "mac_aging_time": 300,
-                    "mac_aging_type": "inactivity",
-                    "mac_limit_reached": "no",
-                    "mac_limit_threshold": "75%",
-                    "mac_port_down_flush": "enabled",
-                    "mac_secure": "disabled",
-                    "mac_secure_logging": "disabled",
-                    "split_horizon_group": "none",
-                    "dynamic_arp_inspection": "disabled",
-                    "dynamic_arp_logging": "disabled",
-                    "ip_source_guard": "disabled",
-                    "ip_source_logging": "disabled",
-                    "dhcp_v4_snooping": "disabled",
-                    "dhcp_v4_snooping_profile": "none",
-                    "igmp_snooping": "disabled",
-                    "igmp_snooping_profile": "none",
-                    "mld_snooping_profile": "none",
-                    "storm_control": "bridge-domain policer",
-                    "bridge_mtu": "1600",
-                    "mid_cvpls_config_index": "253",
-                    "p2mp_pw": "disabled",
-                    "create_time": "06/08/2020 03:00:38 (44w3d ago)",
-                    "status_changed_since_creation": "No",
                     "ac": {
                         "num_ac": 2,
                         "num_ac_up": 2,
@@ -981,6 +1101,58 @@ expected_output = {
                                         }
                                     }
                                 },
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            },
+                        },
+                    },
+                    "pw": {"num_pw": 2, "num_pw_up": 1},
+                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
+                    "vni": {"num_vni": 0, "num_vni_up": 0},
+                },
+                "SEG244": {
+                    "state": "up",
+                    "id": 253,
+                    "shg_id": 0,
+                    "mst_i": 0,
+                    "coupled_state": "disabled",
+                    "vine_state": "Default",
+                    "mac_learning": "enabled",
+                    "mac_withdraw": "enabled",
+                    "mac_withdraw_for_access_pw": "enabled",
+                    "mac_withdraw_sent_on": "bridge port up",
+                    "mac_withdraw_relaying": "disabled",
+                    "flooding": {
+                        "broadcast_multicast": "enabled",
+                        "unknown_unicast": "enabled",
+                    },
+                    "mac_aging_time": 300,
+                    "mac_aging_type": "inactivity",
+                    "mac_limit_reached": "no",
+                    "mac_limit_threshold": "75%",
+                    "mac_port_down_flush": "enabled",
+                    "mac_secure": "disabled",
+                    "mac_secure_logging": "disabled",
+                    "split_horizon_group": "none",
+                    "dynamic_arp_inspection": "disabled",
+                    "dynamic_arp_logging": "disabled",
+                    "ip_source_guard": "disabled",
+                    "ip_source_logging": "disabled",
+                    "dhcp_v4_snooping": "disabled",
+                    "dhcp_v4_snooping_profile": "none",
+                    "igmp_snooping": "disabled",
+                    "igmp_snooping_profile": "none",
+                    "mld_snooping_profile": "none",
+                    "storm_control": "bridge-domain policer",
+                    "bridge_mtu": "1600",
+                    "mid_cvpls_config_index": "254",
+                    "p2mp_pw": "disabled",
+                    "create_time": "06/08/2020 03:00:38 (44w3d ago)",
+                    "status_changed_since_creation": "No",
+                    "access_pw": {
+                        "PW_10.11.44.12": {
+                            "neighbor": {
                                 "10.11.44.12": {
                                     "pw_id": {
                                         "244": {
@@ -1089,55 +1261,9 @@ expected_output = {
                                         }
                                     }
                                 },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
-                            },
-                        },
+                            }
+                        }
                     },
-                    "pw": {"num_pw": 2, "num_pw_up": 1},
-                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
-                    "vni": {"num_vni": 0, "num_vni_up": 0},
-                },
-                "SEG244": {
-                    "state": "up",
-                    "id": 253,
-                    "shg_id": 0,
-                    "mst_i": 0,
-                    "coupled_state": "disabled",
-                    "vine_state": "Default",
-                    "mac_learning": "enabled",
-                    "mac_withdraw": "enabled",
-                    "mac_withdraw_for_access_pw": "enabled",
-                    "mac_withdraw_sent_on": "bridge port up",
-                    "mac_withdraw_relaying": "disabled",
-                    "flooding": {
-                        "broadcast_multicast": "enabled",
-                        "unknown_unicast": "enabled",
-                    },
-                    "mac_aging_time": 300,
-                    "mac_aging_type": "inactivity",
-                    "mac_limit_reached": "no",
-                    "mac_limit_threshold": "75%",
-                    "mac_port_down_flush": "enabled",
-                    "mac_secure": "disabled",
-                    "mac_secure_logging": "disabled",
-                    "split_horizon_group": "none",
-                    "dynamic_arp_inspection": "disabled",
-                    "dynamic_arp_logging": "disabled",
-                    "ip_source_guard": "disabled",
-                    "ip_source_logging": "disabled",
-                    "dhcp_v4_snooping": "disabled",
-                    "dhcp_v4_snooping_profile": "none",
-                    "igmp_snooping": "disabled",
-                    "igmp_snooping_profile": "none",
-                    "mld_snooping_profile": "none",
-                    "storm_control": "bridge-domain policer",
-                    "bridge_mtu": "1600",
-                    "mid_cvpls_config_index": "254",
-                    "p2mp_pw": "disabled",
-                    "create_time": "06/08/2020 03:00:38 (44w3d ago)",
-                    "status_changed_since_creation": "No",
                     "ac": {
                         "num_ac": 2,
                         "num_ac_up": 2,
@@ -1370,6 +1496,65 @@ expected_output = {
                                         }
                                     }
                                 },
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            },
+                        },
+                    },
+                    "pw": {"num_pw": 2, "num_pw_up": 1},
+                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
+                    "vni": {"num_vni": 0, "num_vni_up": 0},
+                },
+            }
+        },
+        "LAB": {
+            "bridge_domain": {
+                "9001": {
+                    "state": "up",
+                    "id": 0,
+                    "shg_id": 0,
+                    "mst_i": 0,
+                    "coupled_state": "disabled",
+                    "vine_state": "Default",
+                    "mac_learning": "enabled",
+                    "mac_withdraw": "enabled",
+                    "mac_withdraw_for_access_pw": "enabled",
+                    "mac_withdraw_sent_on": "bridge port up",
+                    "mac_withdraw_relaying": "disabled",
+                    "flooding": {
+                        "broadcast_multicast": "enabled",
+                        "unknown_unicast": "enabled",
+                    },
+                    "mac_aging_time": 300,
+                    "mac_aging_type": "inactivity",
+                    "mac_limit": 4000,
+                    "mac_limit_action": "none",
+                    "mac_limit_notification": "syslog",
+                    "mac_limit_reached": "no",
+                    "mac_limit_threshold": "75%",
+                    "mac_port_down_flush": "enabled",
+                    "mac_secure": "disabled",
+                    "mac_secure_logging": "disabled",
+                    "split_horizon_group": "none",
+                    "dynamic_arp_inspection": "disabled",
+                    "dynamic_arp_logging": "disabled",
+                    "ip_source_guard": "disabled",
+                    "ip_source_logging": "disabled",
+                    "dhcp_v4_snooping": "disabled",
+                    "dhcp_v4_snooping_profile": "none",
+                    "igmp_snooping": "disabled",
+                    "igmp_snooping_profile": "none",
+                    "mld_snooping_profile": "none",
+                    "storm_control": "bridge-domain policer",
+                    "bridge_mtu": "1500",
+                    "mid_cvpls_config_index": "1",
+                    "p2mp_pw": "disabled",
+                    "create_time": "01/10/2019 14:18:18 (1y36w ago)",
+                    "status_changed_since_creation": "No",
+                    "access_pw": {
+                        "PW_10.11.44.81": {
+                            "neighbor": {
                                 "10.11.44.81": {
                                     "pw_id": {
                                         "9001": {
@@ -1471,11 +1656,16 @@ expected_output = {
                                         }
                                     }
                                 },
+                            }
+                        },
+                        "PW_10.11.44.82": {
+                            "neighbor": {
                                 "10.11.44.82": {
                                     "pw_id": {
                                         "9001": {
                                             "state": "down ( local ready ) (Transport LSP Down)",
-                                            "pw_class": "not set, XC ID 0xa0000005",
+                                            "pw_class": "not set",
+                                            "xc_id": "0xa0000005",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",
@@ -1580,62 +1770,9 @@ expected_output = {
                                         }
                                     }
                                 },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
-                            },
-                        },
+                            }
+                        }
                     },
-                    "pw": {"num_pw": 2, "num_pw_up": 1},
-                    "pbb": {"num_pbb": 0, "num_pbb_up": 0},
-                    "vni": {"num_vni": 0, "num_vni_up": 0},
-                },
-            }
-        },
-        "LAB": {
-            "bridge_domain": {
-                "9001": {
-                    "state": "up",
-                    "id": 0,
-                    "shg_id": 0,
-                    "mst_i": 0,
-                    "coupled_state": "disabled",
-                    "vine_state": "Default",
-                    "mac_learning": "enabled",
-                    "mac_withdraw": "enabled",
-                    "mac_withdraw_for_access_pw": "enabled",
-                    "mac_withdraw_sent_on": "bridge port up",
-                    "mac_withdraw_relaying": "disabled",
-                    "flooding": {
-                        "broadcast_multicast": "enabled",
-                        "unknown_unicast": "enabled",
-                    },
-                    "mac_aging_time": 300,
-                    "mac_aging_type": "inactivity",
-                    "mac_limit": 4000,
-                    "mac_limit_action": "none",
-                    "mac_limit_notification": "syslog",
-                    "mac_limit_reached": "no",
-                    "mac_limit_threshold": "75%",
-                    "mac_port_down_flush": "enabled",
-                    "mac_secure": "disabled",
-                    "mac_secure_logging": "disabled",
-                    "split_horizon_group": "none",
-                    "dynamic_arp_inspection": "disabled",
-                    "dynamic_arp_logging": "disabled",
-                    "ip_source_guard": "disabled",
-                    "ip_source_logging": "disabled",
-                    "dhcp_v4_snooping": "disabled",
-                    "dhcp_v4_snooping_profile": "none",
-                    "igmp_snooping": "disabled",
-                    "igmp_snooping_profile": "none",
-                    "mld_snooping_profile": "none",
-                    "storm_control": "bridge-domain policer",
-                    "bridge_mtu": "1500",
-                    "mid_cvpls_config_index": "1",
-                    "p2mp_pw": "disabled",
-                    "create_time": "01/10/2019 14:18:18 (1y36w ago)",
-                    "status_changed_since_creation": "No",
                     "ac": {
                         "num_ac": 1,
                         "num_ac_up": 1,
@@ -1943,7 +2080,8 @@ expected_output = {
                                     "pw_id": {
                                         "104001": {
                                             "state": "up ( established )",
-                                            "pw_class": "not set, XC ID 0xa0000007",
+                                            "pw_class": "not set",
+                                            "xc_id": "0xa0000007",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",
