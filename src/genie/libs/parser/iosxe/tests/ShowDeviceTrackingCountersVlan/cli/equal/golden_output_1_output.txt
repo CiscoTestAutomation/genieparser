@@ -1,0 +1,49 @@
+Received messages on vlan 20   :
+Protocol        Protocol message
+NDP             RA[5] NS[12] NA[8]
+DHCPv6          SOL[1] ADV[1] REQ[1] REN[42] REB[1] REP[44]
+ARP             REQ[1] REP[3]
+DHCPv4          DIS[1] OFFR[1] REQ4[1] ACK[1]
+ACD&DAD         --[3]
+ 
+Received Broadcast/Multicast messages on vlan 20   :
+Protocol        Protocol message
+NDP             RA[5] NS[6] NA[2]
+DHCPv6          SOL[1] REQ[1] REN[42] REB[1]
+ARP             REQ[1] REP[2]
+DHCPv4          DIS[1] OFFR[1] REQ4[1] ACK[1]
+ 
+Bridged messages from vlan 20   :
+Protocol        Protocol message
+NDP             NS[12] NA[8]
+DHCPv6          SOL[1] ADV[1] REQ[1] REN[42] REB[1] REP[44]
+ARP
+DHCPv4
+ACD&DAD         --[3]
+ 
+Broadcast/Multicast converted to unicast messages from vlan 20   :
+Protocol        Protocol message
+NDP
+DHCPv6
+ARP
+DHCPv4
+ACD&DAD
+ 
+Probe message on vlan 20   :
+Type            Protocol message
+PROBE_SEND
+PROBE_REPLY
+ 
+Limited Broadcast to Local message on vlan 20   :
+Type            Protocol message
+NDP
+DHCPv6
+ARP
+DHCPv4
+ 
+Dropped messages on vlan 20   :
+Feature             Protocol Msg [Total dropped]
+RA guard:           NDP      RA  [5]
+                    reason:  Message unauthorized on port [5]
+ 
+Faults on vlan 20   :

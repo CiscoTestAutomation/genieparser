@@ -1,0 +1,92 @@
+***********************************************************************************
+ [HundredGigE1/0/5.1, map1, Ingress]: CGID = 0x738310
+***********************************************************************************
+  cgid: 0x738310
+  No of classes: 4
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE
+
+  ============================================================
+   NPD: Ingress QOS Profile information
+  ============================================================
+  OID: 0x82E
+  Ref Count: 1
+  No of  Counter: 1
+  No of meters: 3
+  Tunnel Mode: RE-EVALUATE
+  Need filter table update: UPTODATE
+
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+  ----      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      3
+   1          1       0         0       0   G     N      3
+   2          2       0         0       0   G     N      3
+   3          3       0         0       0   G     N      3
+   4          4       0         0       0   G     N      3
+   5          5       0         0       0   G     N      3
+   6          6       0         0       0   G     N      3
+   7          7       0         0       0   G     N      3
+   8          8       1         0       0   G     N      3
+
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   -------   -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      3
+   1          1       0         0       0   G     N      3
+   2          2       1         0       0   G     N      3
+   3          3       1         0       0   G     N      3
+   4          4       2         0       0   G     N      3
+   5          5       2         0       0   G     N      3
+   6          6       3         0       0   G     N      3
+   7          7       3         0       0   G     N      3
+   8          8       4         0       7   G     N      3
+   9          9       4         0       7   G     N      3
+   10         10      5         0       7   G     N      3
+   11         11      5         0       7   G     N      3
+
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   ---      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      3
+   1          1       1         0       0   G     N      3
+   2          2       2         0       0   G     N      3
+   3          3       3         0       0   G     N      3
+   4          4       4         0       0   G     N      3
+   5          5       5         0       0   G     N      3
+   6          6       6         0       0   G     N      3
+   7          7       7         0       0   G     N      3
+
+  ============================================================
+   NPD: Bind Information
+  ============================================================
+  Port Type: L3
+  IQP counter size: 1
+  IQP Counter OID: 0x0
+  Meter Type: EXACT
+  Meter set OID: 0x831
+  No of meters: 4
+    Meter Set info
+    ...............
+    CIR: 1000000000
+    EIR: 1000000000
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 1000000000
+    EIR: 1000000000
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 1000000000
+    EIR: 1000000000
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 0
+    EIR: 0
+    Profile OID: 0x0
+    Action Profile OID: 0x0
+
+  System port OID: 0x5ED
+  Port OID: 0x5E9
+  Speed: 10000000000
+  Port Internal State: Active

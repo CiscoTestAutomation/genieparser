@@ -1,0 +1,52 @@
+interface: FiveGigabitEthernet3/0/16
+    Crypto map tag: FiveGigabitEthernet3/0/16-OSPF-MAP, local addr FE80::B28B:D0FF:FE8D:BA75
+
+   IPsecv6 policy name: OSPFv3-2552
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (FE80::/10/89/0)
+   remote ident (addr/mask/prot/port): (::/0/89/0)
+   current_peer FF02::5 port 500
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 703, #pkts encrypt: 703, #pkts digest: 703
+    #pkts decaps: 682, #pkts decrypt: 682, #pkts verify: 682
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #send errors 0, #recv errors 0
+
+     local crypto endpt.: FE80::B28B:D0FF:FE8D:BA75,
+     remote crypto endpt.: FF02::5
+     plaintext mtu 1470, path mtu 1500, ipv6 mtu 1500, ipv6 mtu idb FiveGigabitEthernet3/0/16
+     current outbound spi: 0x9F8(2552)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: 0x9F8(2552)
+        transform: esp-3des esp-md5-hmac ,
+        in use settings ={Transport, }
+        conn id: 73, flow_id: SW:73, sibling_flags FFFFFFFF80000009, crypto map: FiveGigabitEthernet3/0/16-OSPF-MAP, initiator : False
+        sa timing: remaining key lifetime (sec): 0
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: N
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: 0x9F8(2552)
+        transform: esp-3des esp-md5-hmac ,
+        in use settings ={Transport, }
+        conn id: 74, flow_id: SW:74, sibling_flags FFFFFFFF80000009, crypto map: FiveGigabitEthernet3/0/16-OSPF-MAP, initiator : False
+        sa timing: remaining key lifetime (sec): 0
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: N
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas: 

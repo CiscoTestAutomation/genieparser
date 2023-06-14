@@ -1,0 +1,15 @@
+Legend: * - Currently Active
+---------------------------------------------------------------------------------
+                     SDWAN Service-chain database details                        
+---------------------------------------------------------------------------------
+
+ Chain-Name: SC1, VRF: 101, Label: 0x80041B, State: Up
+  Services:
+   IDS, State: Up
+   Sequence   1
+    Transport HA pair-1:
+     Active   Tx (GigabitEthernet3, 192.168.40.42  ): Down
+              Rx (GigabitEthernet3, 192.168.40.42  ): Down
+    Transport HA pair-2:
+     Active   Tx (GigabitEthernet4, 192.168.140.42 ): Up*
+              Rx (GigabitEthernet4, 192.168.140.42 ): Up*

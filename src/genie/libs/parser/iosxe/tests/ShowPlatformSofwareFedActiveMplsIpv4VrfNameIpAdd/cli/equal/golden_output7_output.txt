@@ -1,0 +1,7 @@
+IPV4ROUTE_ID:id:0x5b36200364c8 nobj:(NHADJ_DROP,0) 127.0.0.0/8 tblid:2 DA:0
+   NPD: device:0 lspa_rec:0 api_type:route(3)
+   SDK: is_host:0 l3_dest:0x777838c13f80 l3_dest:la_next_hop_base(oid=535) vrf(gid/oid):2/697
+   NPD: SDK oid 535, devid:0, asic:0
+   sdk nexthop oid:535,dev:0, gid:0x3,macaddr:0000.0000.0000, nh_type:drop(3)
+   sdk outgoing port none
+     SPECIAL_IPNEXTHOP_ID:obj_id:0

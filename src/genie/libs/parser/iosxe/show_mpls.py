@@ -40,6 +40,7 @@
         *  show mpls traffic-eng tunnels
         *  show mpls traffic-eng tunnels brief
         *  show mpls traffic-eng autoroute
+        *  show mpls traffic-eng topology
 """
 
 import re
@@ -4670,3 +4671,195 @@ class ShowMplsTrafficEngLinkManagementAdvertisements(ShowMplsTrafficEngLinkManag
                 continue
 
         return ret_dict
+
+
+class ShowMplsTrafficEngTopologySchema(MetaParser):
+    """Schema for show mpls traffic-eng topology"""
+
+    schema = {
+        'system_id': str,
+        Optional('ospf_process_id'): int,
+        Optional('area_id'): int,
+        'signalling_error_holddown': int,
+        'global_link_generation': int,
+        'igp_id': {
+            Any(): {
+                'mpls_te_id': str,
+                'node': str,
+                Optional('ospf_process_id'): int,
+                Optional('area_id'): int,
+                'link': {
+                    Any(): {
+                        'type': str,
+                        'dr': str,
+                        'nbr_node_id': int,
+                        'gen': int,
+                        'frag_id': int,
+                        'interface_address': str,
+                        'te_metric': int,
+                        'igp_metric': int,
+                        'attribute_flags': str,
+                        'srlgs': str,
+                        'physical_bw': int,
+                        'max_reservable_bw_global': int,
+                        'max_reservable_bw_sub': int,
+                        'bandwidth': {
+                            Any(): {
+                                'total_allocated_bw': int,
+                                'global_pool_reservable_bw': int,
+                                'sub_pool_reservable_bw': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMplsTrafficEngTopology(ShowMplsTrafficEngTopologySchema):
+    """Parser for show mpls traffic-eng autoroute"""
+
+    cli_command = 'show mpls traffic-eng topology'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+            # My_System_id: 18.18.18.18 (ospf 1  area 0)
+            p1 = re.compile(r'^My_System_id: (?P<system_id>\S+) \(ospf (?P<ospf_process_id>\d+)  area (?P<area_id>\d+)\)$')
+
+            # Signalling error holddown: 30 sec Global Link Generation 30
+            p2 = re.compile(r'^Signalling error holddown: (?P<signalling_error_holddown>\d+)'
+                            r' sec Global Link Generation (?P<global_link_generation>\d+)$')
+            
+            # IGP Id: 1.1.1.1, MPLS TE Id:1.1.1.1 Router Node  (ospf 1  area 0)
+            p3 = re.compile(r'^IGP Id: (?P<igp_id>\S+), MPLS TE Id:(?P<mpls_te_id>\S+)'
+                            r' (?P<node>\S+) Node(  \(ospf (?P<ospf_process_id>\d+)  area (?P<area_id>\d+)\))?$')
+
+            # link[0]: Broadcast, DR: 172.15.145.5, nbr_node_id:2, gen:25
+            p4 = re.compile(r'^link\[(?P<link>\d+)\]: (?P<type>.+), DR: (?P<dr>\S+),'
+                            r' nbr_node_id:(?P<nbr_node_id>\d+), gen:(?P<gen>\d+)$')
+            
+            # frag_id: 110, Intf Address: 172.15.145.14
+            p5 = re.compile(r'^frag_id: (?P<frag_id>\d+), Intf Address: (?P<interface_address>\S+)$')
+            
+            # TE metric: 1, IGP metric: 1, attribute flags: 0x0
+            p6 = re.compile(r'^TE metric: (?P<te_metric>\d+), IGP metric: (?P<igp_metric>\d+),'
+                            r' attribute flags: (?P<attribute_flags>\S+)$')
+            
+            # SRLGs: None 
+            p7 = re.compile(r'^SRLGs: (?P<srlgs>\S+)$')
+
+            # physical_bw: 10000000 (kbps), max_reservable_bw_global: 7499999 (kbps)
+            p8 = re.compile(r'^physical_bw: (?P<physical_bw>\d+) \(kbps\), max_reservable_bw_global:'
+                            r' (?P<max_reservable_bw_global>\d+) \(kbps\)$')
+            
+            # max_reservable_bw_sub: 0 (kbps)
+            p9 = re.compile(r'^max_reservable_bw_sub: (?P<max_reservable_bw_sub>\d+) \(kbps\)$')
+
+            #                     Global Pool       Sub Pool
+            # Total Allocated   Reservable        Reservable
+            # BW (kbps)         BW (kbps)         BW (kbps)
+            # ---------------   -----------       ----------
+            # bw[0]:            0          7499999                0
+            # bw[1]:            0          7499999                0
+            p10 = re.compile(r'^bw\[(?P<bandwidth>\d+)\]:\s+(?P<total_allocated_bw>\d+)'
+                             r'\s+(?P<global_pool_reservable_bw>\d+)\s+(?P<sub_pool_reservable_bw>\d+)$')
+
+            ret_dict = {}
+
+            for line in output.splitlines():
+                line = line.strip()
+
+                # My_System_id: 18.18.18.18 (ospf 1  area 0)
+                m = p1.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    ret_dict['system_id'] = group_dict['system_id']
+                    if group_dict['ospf_process_id']:
+                        ret_dict['ospf_process_id'] = int(group_dict['ospf_process_id'])
+                        ret_dict['area_id'] = int(group_dict['area_id'])
+                    continue
+
+                # Signalling error holddown: 30 sec Global Link Generation 30
+                m = p2.match(line)
+                if m:
+                    ret_dict['signalling_error_holddown'] = int(m.groupdict()['signalling_error_holddown'])
+                    ret_dict['global_link_generation'] = int(m.groupdict()['global_link_generation'])
+                    continue
+                
+                # IGP Id: 1.1.1.1, MPLS TE Id:1.1.1.1 Router Node  (ospf 1  area 0)
+                m = p3.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    igp_id_dict = ret_dict.setdefault('igp_id', {}).setdefault(group_dict['igp_id'], {})
+                    igp_id_dict['mpls_te_id'] = group_dict['mpls_te_id']
+                    igp_id_dict['node'] = group_dict['node']
+                    if group_dict['ospf_process_id']:
+                        igp_id_dict['ospf_process_id'] = int(group_dict['ospf_process_id'])
+                        igp_id_dict['area_id'] = int(group_dict['area_id'])
+                    continue
+
+                # link[0]: Broadcast, DR: 172.15.145.5, nbr_node_id:2, gen:25
+                m = p4.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    link_dict = igp_id_dict.setdefault('link', {}).setdefault(group_dict['link'], {})
+                    link_dict['type'] = group_dict['type']
+                    link_dict['dr'] = group_dict['dr']
+                    link_dict['nbr_node_id'] = int(group_dict['nbr_node_id'])
+                    link_dict['gen'] = int(group_dict['gen'])
+                    continue
+
+                # frag_id: 110, Intf Address: 172.15.145.14
+                m = p5.match(line)
+                if m:
+                    link_dict['frag_id'] = int(m.groupdict()['frag_id'])
+                    link_dict['interface_address'] = m.groupdict()['interface_address']
+                    continue
+
+                # TE metric: 1, IGP metric: 1, attribute flags: 0x0
+                m = p6.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    link_dict['te_metric'] = int(group_dict['te_metric'])
+                    link_dict['igp_metric'] = int(group_dict['igp_metric'])
+                    link_dict['attribute_flags'] = group_dict['attribute_flags']
+                    continue
+
+                # SRLGs: None 
+                m = p7.match(line)
+                if m:
+                    link_dict['srlgs'] = m.groupdict()['srlgs']
+                    continue
+
+                # physical_bw: 10000000 (kbps), max_reservable_bw_global: 7499999 (kbps)
+                m = p8.match(line)
+                if m:
+                    link_dict['physical_bw'] = int(m.groupdict()['physical_bw'])
+                    link_dict['max_reservable_bw_global'] = int(m.groupdict()['max_reservable_bw_global'])
+                    continue
+
+                # max_reservable_bw_sub: 0 (kbps)
+                m = p9.match(line)
+                if m:
+                    link_dict['max_reservable_bw_sub'] = int(m.groupdict()['max_reservable_bw_sub'])
+                    continue
+
+                #                     Global Pool       Sub Pool
+                # Total Allocated   Reservable        Reservable
+                # BW (kbps)         BW (kbps)         BW (kbps)
+                # ---------------   -----------       ----------
+                # bw[0]:            0          7499999                0
+                # bw[1]:            0          7499999                0
+                m = p10.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    bandwidth_dict = link_dict.setdefault('bandwidth', {}).setdefault(group_dict['bandwidth'], {})
+                    bandwidth_dict['total_allocated_bw'] = int(group_dict['total_allocated_bw'])
+                    bandwidth_dict['global_pool_reservable_bw'] = int(group_dict['global_pool_reservable_bw'])
+                    bandwidth_dict['sub_pool_reservable_bw'] = int(group_dict['sub_pool_reservable_bw'])
+                    continue
+            
+            return ret_dict

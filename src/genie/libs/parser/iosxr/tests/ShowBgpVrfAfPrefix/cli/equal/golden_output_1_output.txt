@@ -1,0 +1,28 @@
+BGP routing table entry for 2000:90:11:1::/64, Route Distinguisher: 50.1.1.1:0
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                 17          17
+    Local Label: 24021
+Last Modified: Mar 31 12:40:50.327 for 2d16h
+Paths: (2 available, best #1)
+  Advertised to PE peers (in unique update groups):
+    50.1.1.8        
+  Advertised to CE peers (in unique update groups):
+    2000:90:11:1::2                         
+  Path #1: Received by speaker 0
+  Advertised to PE peers (in unique update groups):
+    50.1.1.8        
+  Advertised to CE peers (in unique update groups):
+    2000:90:11:1::2                         
+  Local
+    :: from :: (50.1.1.1)
+      Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
+      Received Path ID 0, Local Path ID 0, version 17
+      Extended community: RT:100:1001 
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  5000
+    2000:90:11:1::2 from 2000:90:11:1::2 (70.1.1.1)
+      Origin incomplete, metric 0, localpref 100, valid, external, group-best
+      Received Path ID 0, Local Path ID 0, version 0
+      Extended community: RT:100:1001

@@ -783,8 +783,8 @@ class ShowControllerEthernetControllerSchema(MetaParser):
 class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
     """Parser for show controller ethernet-controller {interface}"""
 
-    cli_command = ['show controller ethernet-controller', 
-        'show controller ethernet-controller {interface}']
+    cli_command = ['show controllers ethernet-controller', 
+        'show controllers ethernet-controller {interface}']
 
     def cli(self, interface=None, output=None):
         if output is None:

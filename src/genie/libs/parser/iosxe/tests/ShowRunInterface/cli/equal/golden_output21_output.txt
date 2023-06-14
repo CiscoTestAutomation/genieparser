@@ -1,0 +1,15 @@
+Building configuration...
+
+Current configuration : 268 bytes
+!
+interface TenGigabitEthernet1/0/11
+ switchport trunk native vlan 101
+ switchport mode trunk
+ authentication open
+ authentication order dot1x
+ authentication priority dot1x
+ authentication port-control auto
+ dot1x pae authenticator
+ 
+spanning-tree portfast trunk
+end

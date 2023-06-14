@@ -2614,7 +2614,9 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_cli'): int,
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
-            Optional('total_local'): int
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
         },
         Optional('ipv6_sgt_bindings'): {
             Any(): {
@@ -2626,7 +2628,9 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_cli'): int,
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
-            Optional('total_local'): int
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
         }
     }
 
@@ -2663,6 +2667,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
         # Total number of active bindings = 51
         # Total number of SXP bindings = 2
         # Total number of active bindings = 2
+        # Total number of L3IF     bindings = 2
+        # Total number of VLAN     bindings = 1
         p2 = re.compile(r'^Total\s+number\s+of\s+(?P<binding_type>(\S+))\s+bindings\s+=\s+(?P<binding_count>(\d+))$')
 
         for line in output.splitlines():
@@ -2696,6 +2702,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
             # Total number of active bindings = 51
             # Total number of SXP bindings = 2
             # Total number of active bindings = 2
+            # Total number of L3IF     bindings = 2
+            # Total number of VLAN     bindings = 1
             m2 = p2.match(line)
             if m2:
                 total_sgt_group = m2.groupdict()

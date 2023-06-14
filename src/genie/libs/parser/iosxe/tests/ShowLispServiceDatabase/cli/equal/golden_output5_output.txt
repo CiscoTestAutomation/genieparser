@@ -1,0 +1,24 @@
+show lisp instance-id 4099 ipv4 database
+LISP ETR IPv4 Mapping Database for EID-table vrf INTERNAL (IID 4099), LSBs: 0x1
+Entries total 3, no-route 0, inactive 0, do-not-register 1
+
+0.0.0.0/0, locator-set DEFAULT_ETR_LOCATOR, default-ETR
+  Uptime: 18w2d, Last-change: 18w2d
+  Domain-ID: unset
+  Metric: 0
+  Service-Insertion: N/A (0)
+  Locator       Pri/Wgt  Source     State
+  100.64.254.5    9/10   cfg-intf   site-self, reachable
+100.64.250.4/32, locator-set rloc_ee607b14-6b17-4c5b-babd-c895c2a8d22c, auto-discover-rlocs
+  Uptime: 18w2d, Last-change: 18w2d
+  Domain-ID: unset
+  Service-Insertion: N/A (0)
+  Locator       Pri/Wgt  Source     State
+  100.64.254.5   10/10   cfg-intf   site-self, reachable
+100.65.0.1/32, dynamic-eid CIP_FIXED_DATA_POOL-IPV4, do not register, inherited from default locator-set rloc_ee607b14-6b17-4c5b-babd-c895c2a8d22c, auto-discover-rlocs
+  Uptime: 18w2d, Last-change: 18w0d
+  Domain-ID: unset
+  Service-Insertion: N/A (0)
+  Locator       Pri/Wgt  Source     State
+  100.64.254.5   10/10   cfg-intf   site-self, reachable
+CIP-DC1-FBS-01#

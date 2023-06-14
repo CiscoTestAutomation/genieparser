@@ -1,0 +1,10 @@
+
+Interface Name: Ethernet0/1
+  Interface Handle        : 0x3
+  Local IPV4 Address      : 110.1.1.3
+  Local IPV6 Address      : ::
+  Current rate            : 0 pkts/sec
+  Rate high water mark    : 0 pkts/sec
+  Cleanup time remaining  : 3599 sec
+  Loss color type         : dual-color gre
+  Loss color inact remain : 1006 sec

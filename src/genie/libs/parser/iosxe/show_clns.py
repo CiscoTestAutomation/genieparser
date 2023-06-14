@@ -1282,6 +1282,8 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
+                if "tag" not in result_dict:
+                    isis_dict = result_dict.setdefault('tag',{}).setdefault("default", {}).setdefault('IS-IS', {})
                 isis_dict.update({'last_clear': group['last_clear']})
                 continue
             #     IS-IS: Level-1 Hellos (sent/rcvd): 497/533

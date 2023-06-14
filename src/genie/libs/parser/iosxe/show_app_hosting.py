@@ -3,6 +3,8 @@
 IOSXE parsers for the following show commands:
     * show app-hosting list
     * show app-hosting infra
+    * show app-hosting resource
+    * show app-hosting detail appid {appid}
 '''
 
 # Metaparser
@@ -150,3 +152,398 @@ class ShowApphostingList(ShowApphostingListSchema):
             parsed_dict['app_id'] = app_id
         return parsed_dict
 
+
+class ShowAppHostingResourceSchema(MetaParser):
+    """
+        Schema for show app-hosting resource
+    """
+    schema = {
+        'cpu': {
+            'quota': int,
+            'available': int,
+            'metric': str 
+        },
+        'vcpu': {
+            'count': int
+        },
+        'memory': {
+            'quota': int,
+            'available': int,
+            'metric': str
+        },
+        'storage_space': {
+            'total': int,
+            'available': int,
+            'metric': str
+        }
+    }
+
+
+class ShowAppHostingResource(ShowAppHostingResourceSchema):
+    """
+        Parser for show app-hosting resource
+    """
+    cli_command = 'show app-hosting resource'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # CPU:
+        # VCPU:
+        # Memory:
+        # Storage space:
+        p1 = re.compile(r'^(?P<resource_name>CPU|VCPU|Memory|Storage space):$')
+        
+        # Quota: 25(Percentage)
+        # Available: 25(Percentage)
+        # Count: 2
+        # Quota: 2048(MB)
+        # Available: 2048(MB)
+        # Total: 3904(MB)
+        # Available: 3485(MB)
+        p2 = re.compile(r'^(?P<resource_type>Quota|Available|Count|Total):\s+(?P<resouce_value>\d+)(\((?P<metric>\w+)\))?$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CPU:
+            # VCPU:
+            # Memory:
+            # Storage space:
+            m = p1.match(line)
+            if m:
+                resource_name = m.groupdict()['resource_name'].lower().replace(' ', '_')
+                resource_dict = ret_dict.setdefault(resource_name, {})
+                continue
+
+            # Quota: 25(Percentage)
+            # Available: 25(Percentage)
+            # Count: 2
+            # Quota: 2048(MB)
+            # Available: 2048(MB)
+            # Total: 3904(MB)
+            # Available: 3485(MB)
+            m = p2.match(line)
+            if m:
+                resources = m.groupdict()
+                resource_dict[resources['resource_type'].lower()] = int(resources['resouce_value'])
+                if resources['metric']:
+                    resource_dict['metric'] = resources['metric']
+                continue
+        
+        return ret_dict
+
+
+class ShowAppHostingDetailAppidSchema(MetaParser):
+    """Schema for show app-hosting detail appid {appid}"""
+    schema = {
+        'app_id': str,
+        'owner': str,
+        'state': str,
+        'application': {
+            Any(): {
+                'type': str,
+                'version': str,
+                Optional('description'): str,
+                'author': str,
+                'path': str,
+                Optional('url_path'): str
+            }
+        },
+        'activated_profile_name': str,
+        'resource_reservation': {
+            'memory': str,
+            'disk': str,
+            'cpu': int,
+            'vcpu': int
+        },
+        'attached_devices': {
+            Any(): {
+                'type': str,
+                'alias': str
+            }
+        },
+        'network_interfaces': {
+            Any(): {
+                'mac_address': str,
+                'network_name': str
+            }
+        },
+        'application_health': {
+            'status': str,
+            Optional('last_probe_error'): str,
+            Optional('last_probe_output'): str
+        }
+    }
+
+
+class ShowAppHostingDetailAppid(ShowAppHostingDetailAppidSchema):
+    """Parser for show app-hosting detail appid {appid}"""
+
+    cli_command = "show app-hosting detail appid {appid}"
+    
+    def cli(self, appid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(appid=appid))
+        
+        # App id                 : thousandeyes_enterprise_agent
+        p1 = re.compile(r'^App id\s+: (?P<app_id>.+)$')
+        
+        # Owner                  : iox
+        p2 = re.compile(r'^Owner\s+: (?P<owner>.+)$')
+        
+        # State                  : RUNNING
+        p3 = re.compile(r'^State\s+: (?P<state>.+)$')
+
+        # Application
+        p4 = re.compile(r'^Application$')
+        
+        # Type                 : docker
+        p4_1 = re.compile(r'^Type\s+: (?P<type>.+)$')
+
+        # Name                 : ThousandEyes Enterprise Agent
+        p4_2 = re.compile(r'^Name\s+: (?P<application>.+)$')
+
+        # Version              : 4.3.0
+        p4_3 = re.compile(r'^Version\s+: (?P<version>.+)$')
+
+        # Description          : 
+        p4_4 = re.compile(r'^Description\s+: (?P<description>.+)$')
+
+        # Author               : ThousandEyes <support@thousandeyes.com>
+        p4_5 = re.compile(r'^Author\s+: (?P<author>.+)$')
+
+        # Path                 : flash:thousandeyes-enterprise-agent-4.3.0.cisco.tar
+        p4_6 = re.compile(r'^Path\s+: (?P<path>.+)$')
+
+        # URL Path             : 
+        p4_7 = re.compile(r'^URL Path\s+: (?P<url_path>.+)$')
+
+        # Activated profile name : custom
+        p5 = re.compile(r'^Activated profile name : (?P<activated_profile_name>.+)$')
+
+        # Resource reservation
+        p6 = re.compile(r'^Resource reservation$')
+
+        # Memory               : 500 MB
+        p6_1 = re.compile(r'^Memory\s+: (?P<memory>.+)$')
+
+        # Disk                 : 1 MB
+        p6_2 = re.compile(r'^Disk\s+: (?P<disk>.+)$')
+
+        # CPU                  : 1850 units
+        p6_3 = re.compile(r'^CPU\s+: (?P<cpu>\d+) units$')
+
+        # VCPU                 : 1
+        p6_4 = re.compile(r'^VCPU\s+: (?P<vcpu>\d+)$')
+
+        # Attached devices
+        p7 = re.compile(r'^Attached devices$')
+
+        # Type              Name               Alias
+        # ---------------------------------------------
+        # serial/shell     iox_console_shell   serial0
+        p7_1 = re.compile(r'^(?P<type>\w+\/\w+)\s+(?P<name>\S+)\s+(?P<alias>\w+)$')
+
+        # Network interfaces
+        p8 = re.compile(r'^Network interfaces$')
+
+        # ---------------------------------------
+        # eth0:
+        p8_1 = re.compile(r'^(?P<network_interface>[\w\.\/]+):$')
+        
+        # MAC address         : 52:54:dd:d:38:3d
+        p8_2 = re.compile(r'^MAC address\s+: (?P<mac_address>[a-f0-9\:]+)$')
+
+        # Network name        : mgmt-bridge-v21
+        p8_3 = re.compile(r'^Network name\s+: (?P<network_name>.+)$')
+
+        # Application health information
+        p9 = re.compile(r'^Application health information$')
+
+        # Status               : 0
+        p9_1 = re.compile(r'^Status\s+: (?P<status>\w+)$')
+
+        # Last probe error     :
+        p9_2 = re.compile(r'^Last probe error\s+: (?P<last_probe_error>.+)$')
+
+        # Last probe output    :
+        p9_3 = re.compile(r'^Last probe output\s+: (?P<last_probe_output>.+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # App id                 : thousandeyes_enterprise_agent
+            m = p1.match(line)
+            if m:
+                ret_dict['app_id'] = m.groupdict()['app_id']
+                continue
+            
+            # Owner                  : iox
+            m = p2.match(line)
+            if m:
+                ret_dict['owner'] = m.groupdict()['owner']
+                continue
+
+            # State                  : RUNNING
+            m = p3.match(line)
+            if m:
+                ret_dict['state'] = m.groupdict()['state']
+                continue
+
+            # Application
+            m = p4.match(line)
+            if m:
+                application_dict = ret_dict.setdefault('application', {})
+                continue
+
+            # Type                 : docker
+            m = p4_1.match(line)
+            if m:
+                app_type = m.groupdict()['type']
+                continue
+
+            # Name                 : ThousandEyes Enterprise Agent
+            m = p4_2.match(line)
+            if m:
+                app_name_dict = application_dict.setdefault(m.groupdict()['application'].lower().replace(' ', '_'), {})
+                app_name_dict['type'] = app_type
+                continue
+
+            # Version              : 4.3.0
+            m = p4_3.match(line)
+            if m:
+                app_name_dict['version'] = m.groupdict()['version']
+                continue
+
+            # Description          : 
+            m = p4_4.match(line)
+            if m:
+                app_name_dict['description'] = m.groupdict()['description']
+                continue
+
+            # Author               : ThousandEyes <support@thousandeyes.com>
+            m = p4_5.match(line)
+            if m:
+                app_name_dict['author'] = m.groupdict()['author']
+                continue
+
+            # Path                 : flash:thousandeyes-enterprise-agent-4.3.0.cisco.tar
+            m = p4_6.match(line)
+            if m:
+                app_name_dict['path'] = m.groupdict()['path']
+                continue
+
+            # URL Path             : 
+            m = p4_7.match(line)
+            if m:
+                app_name_dict['url_path'] = m.groupdict()['url_path']
+                continue
+
+            # Activated profile name : custom
+            m = p5.match(line)
+            if m:
+                ret_dict['activated_profile_name'] = m.groupdict()['activated_profile_name']
+                continue
+
+            # Resource reservation
+            m = p6.match(line)
+            if m:
+                resource_reservation_dict = ret_dict.setdefault('resource_reservation', {})
+                continue
+
+            # Memory               : 500 MB
+            m = p6_1.match(line)
+            if m:
+                resource_reservation_dict['memory'] = m.groupdict()['memory']
+                continue
+
+            # Disk                 : 1 MB
+            m = p6_2.match(line)
+            if m:
+                resource_reservation_dict['disk'] = m.groupdict()['disk']
+                continue
+
+            # CPU                  : 1850 units
+            m = p6_3.match(line)
+            if m:
+                resource_reservation_dict['cpu'] = int(m.groupdict()['cpu'])
+                continue
+
+            # VCPU                 : 1
+            m = p6_4.match(line)
+            if m:
+                resource_reservation_dict['vcpu'] = int(m.groupdict()['vcpu'])
+                continue
+
+            # Attached devices
+            m = p7.match(line)
+            if m:
+                attached_devices_dict = ret_dict.setdefault('attached_devices', {})
+                continue
+
+            # Type              Name               Alias
+            # ---------------------------------------------
+            # serial/shell     iox_console_shell   serial0
+            m = p7_1.match(line)
+            if m:
+                device_name_dict = attached_devices_dict.setdefault(m.groupdict()['name'].lower().replace(' ', '_'), {})
+                device_name_dict['type'] = m.groupdict()['type']
+                device_name_dict['alias'] = m.groupdict()['alias']
+                continue
+            
+            # Network interfaces
+            m = p8.match(line)
+            if m:
+                network_dict = ret_dict.setdefault('network_interfaces', {})
+                continue
+
+            # ---------------------------------------
+            # eth0:
+            m = p8_1.match(line)
+            if m:
+                interface_dict = network_dict.setdefault(Common.convert_intf_name(m.groupdict()['network_interface']), {})
+                continue
+
+            # MAC address         : 52:54:dd:d:38:3d
+            m = p8_2.match(line)
+            if m:
+                interface_dict['mac_address'] = m.groupdict()['mac_address']
+                continue
+
+            # Network name        : mgmt-bridge-v21
+            m = p8_3.match(line)
+            if m:
+                interface_dict['network_name'] = m.groupdict()['network_name']
+                continue
+
+            # Application health information
+            m = p9.match(line)
+            if m:
+                application_health_dict = ret_dict.setdefault('application_health', {})
+                continue
+
+            # Status               : 0
+            m = p9_1.match(line)
+            if m:
+                application_health_dict['status'] = m.groupdict()['status']
+                continue
+
+            # Last probe error     :
+            m = p9_2.match(line)
+            if m:
+                application_health_dict['last_probe_error'] = m.groupdict()['last_probe_error']
+                continue
+
+            # Last probe output    :
+            m = p9_3.match(line)
+            if m:
+                application_health_dict['last_probe_output'] = m.groupdict()['last_probe_output']
+                continue
+        
+        return ret_dict

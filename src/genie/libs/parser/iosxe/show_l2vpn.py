@@ -176,6 +176,7 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn vpws vc id detail
     * show l2vpn evpn vpws vc id <vc_id> detail
     * show l2vpn evpn vpws vc preferred-path
+    * show l2vpn evpn default-gateway
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -3732,7 +3733,7 @@ class ShowL2vpnEvpnDefaultGatewayDetailSchema(MetaParser):
                             Any(): {
                                 'source': {
                                     Any(): {
-                                        'eth_tag': int,
+                                        Optional('eth_tag'): int,
                                         'mac_addr': str,
                                         'valid': bool,
                                     },
@@ -3864,6 +3865,37 @@ class ShowL2vpnEvpnDefaultGatewayDetail(ShowL2vpnEvpnDefaultGatewayDetailSchema)
                 continue
 
         return parsed_dict
+
+
+class ShowL2vpnEvpnDefaultGateway(ShowL2vpnEvpnDefaultGatewayDetailSchema):
+    """ 
+        Parser for show l2vpn evpn default-gateway
+    """
+
+    cli_command = 'show l2vpn evpn default-gateway'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Y   192.168.1.201             1     201   a0f8.4910.bccc Vl201
+        p1 = re.compile(r'^(?P<valid>\w+)\s+(?P<dg_addr>\S+)\s+(?P<evi>\d+)\s+(?P<vlan>\d+)\s+(?P<mac_addr>\S+)\s+(?P<source>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Y   192.168.1.201             1     201   a0f8.4910.bccc Vl201
+            m = p1.match(line)
+            if m:
+                reg_dict = m.groupdict()
+                source_dict = ret_dict.setdefault('evi', {}).setdefault(reg_dict['evi'], {}).setdefault('bd_id', {}).setdefault(reg_dict['vlan'], {}).setdefault('dg_addr', {}).setdefault(reg_dict['dg_addr'], {}).setdefault('source', {}).setdefault(reg_dict['source'], {})
+                source_dict['mac_addr'] = reg_dict['mac_addr']
+                source_dict['valid'] = reg_dict['valid'] == 'Y'
+                continue
+
+        return ret_dict
 
 
 # ====================================================
@@ -4547,8 +4579,8 @@ class ShowL2vpnEvpnEviDetailSchema(MetaParser):
                     Optional('bdi_label'): int,
                     Optional('pseudo_port'): {
                         Any(): {
-                            'mac_routes': int,
-                            'mac_ip_routes': int,
+                            Optional('mac_routes'): int,
+                            Optional('mac_ip_routes'): int,
                             Optional('per_ce_label'): int,
                             Optional('df_state'): str,
                             Optional('access_vfi'): str,
@@ -4794,7 +4826,8 @@ class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
             # IP Local Learn:    Enabled (global)
             m = p9.match(line)
             if m:
-                if m.groupdict()['enable'].rstrip().lower() == 'enabled':
+                ip_local = m.groupdict()['enable'].rstrip().lower()
+                if ip_local == 'enabled' or ip_local == 'enable':
                     evi_dict['ip_local_learn'] = True
                 else:
                     evi_dict['ip_local_learn'] = False

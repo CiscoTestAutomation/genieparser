@@ -1,0 +1,20 @@
+TenGigabitEthernet3/1/3
+  Model:                 WS-C3650-48PD
+  Type:                  SFP-10G-ACTIVE-CABLE
+  Speed:                 10000
+  Duplex:                full
+  Trunk encap. type:     802.1Q
+  Trunk mode:            on,off,desirable,nonegotiate
+  Channel:               yes
+  Broadcast suppression: percentage(0-100)
+  Flowcontrol:           rx-(off,on,desired),tx-(none)
+  Fast Start:            yes
+  QoS scheduling:        rx-(not configurable on per port basis),
+                         tx-(2p6q3t)
+  CoS rewrite:           yes
+  ToS rewrite:           yes
+  UDLD:                  yes
+  Inline power:          no
+  SPAN:                  source/destination
+  PortSecure:            yes
+  Dot1x:                 yes

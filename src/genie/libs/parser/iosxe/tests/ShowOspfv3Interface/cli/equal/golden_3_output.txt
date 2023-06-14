@@ -1,0 +1,84 @@
+Loopback200 is up, line protocol is up
+  Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 24 (ios-if-index)
+  Internet Address 200.200.200.200/32
+  Area 0, Process ID 1, Instance ID 64, Router ID 200.200.200.200
+  Network Type LOOPBACK, Cost: 1
+  Loopback interface is treated as a stub Host
+vmi2 is down, line protocol is down
+  Link Local Address FE80::8AFC:5DFF:FE32:901, Interface ID 31 (ios-if-index)
+  Interface is unnumbered. Using address of GigabitEthernet0/0/1.200 (8.8.8.11)
+  Area 0, Process ID 1, Instance ID 64, Router ID 200.200.200.200
+  Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
+  Cost Weights: Throughput 100, Resources 100, Latency 100, L2-factor 100
+  Transmit Delay is 1 sec, State DOWN
+  Timer intervals configured, Hello 30, Dead 120, Wait 120, Retransmit 5
+vmi1 is up, line protocol is up
+  Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 29 (ios-if-index)
+  Interface is unnumbered. Using address of GigabitEthernet0/0/0 (9.9.9.11)
+  Area 0, Process ID 1, Instance ID 64, Router ID 200.200.200.200
+  Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
+  Cost Weights: Throughput 100, Resources 100, Latency 100, L2-factor 100
+  Transmit Delay is 1 sec, State POINT_TO_MULTIPOINT
+  Timer intervals configured, Hello 30, Dead 120, Wait 120, Retransmit 5
+    Hello due in 00:00:25
+  Graceful restart helper support enabled
+  Index 1/2/2, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 2, maximum is 2
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 100.100.100.100, cost is 2
+  Suppress hello for 0 neighbor(s)
+  Incremental Hello is enabled
+  Local SCS number 1
+  Relaying enabled
+Loopback200 is up, line protocol is up
+  Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 24 (ios-if-index)
+  Area 0, Process ID 1, Instance ID 0, Router ID 200.200.200.200
+  Network Type LOOPBACK, Cost: 1
+  Loopback interface is treated as a stub Host
+vmi2 is down, line protocol is down
+  Link Local Address FE80::8AFC:5DFF:FE32:901, Interface ID 31 (ios-if-index)
+  Area 0, Process ID 1, Instance ID 0, Router ID 200.200.200.200
+  Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
+  Cost Weights: Throughput 100, Resources 100, Latency 100, L2-factor 100
+  Reduce LSA flooding.
+  Transmit Delay is 1 sec, State DOWN
+  Timer intervals configured, Hello 30, Dead 120, Wait 120, Retransmit 5
+vmi1 is up, line protocol is up
+  Link Local Address FE80::8AFC:5DFF:FE32:900, Interface ID 29 (ios-if-index)
+  Area 0, Process ID 1, Instance ID 0, Router ID 200.200.200.200
+  Network Type MANET, Cost: 1 (dynamic), Cost Hysteresis: Disabled
+  Cost Weights: Throughput 100, Resources 100, Latency 100, L2-factor 100
+  Reduce LSA flooding.
+  Transmit Delay is 1 sec, State POINT_TO_MULTIPOINT
+  Timer intervals configured, Hello 30, Dead 120, Wait 120, Retransmit 5
+    Hello due in 00:00:27
+  Graceful restart helper support enabled
+  Index 1/3/3, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 1, maximum is 1
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 100.100.100.100, cost is 2
+  Suppress hello for 0 neighbor(s)
+  Incremental Hello is enabled
+  Local SCS number 1
+  Relaying enabled
+GigabitEthernet0/0/7 is up, line protocol is up
+  Link Local Address FE80::8AFC:5DFF:FE32:907, Interface ID 15 (ios-if-index)
+  Area 0, Process ID 1, Instance ID 0, Router ID 200.200.200.200
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State DR, Priority 1
+  Designated Router (ID) 200.200.200.200, local address FE80::8AFC:5DFF:FE32:907
+  No backup designated router on this network
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:08
+  Graceful restart helper support enabled
+  Index 1/2/2, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 0, maximum is 0
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Suppress hello for 0 neighbor(s)
+  Relaying disabled

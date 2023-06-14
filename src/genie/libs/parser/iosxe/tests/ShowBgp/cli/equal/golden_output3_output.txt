@@ -1,0 +1,34 @@
+Leaf-03#show bgp l2vpn evpn evi 101
+BGP table version is 1284, local router ID is 172.16.255.5
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+              t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 172.16.254.5:101
+ *>   [1][172.16.254.5:101][00010101010101010101][0]/23
+                      ::                                 32768 ?
+ *mi                   172.16.254.4             0    100      0 ?
+ *>i  [2][172.16.254.5:101][0][48][10B3D56A8FC1][32][10.1.101.1]/24
+                      172.16.254.3             0    100      0 ?
+ *>   [2][172.16.254.5:101][0][48][44D3CA286C82][0][*]/20
+                      ::                                 32768 ?
+ *>   [2][172.16.254.5:101][0][48][44D3CA286CC2][0][*]/20
+                      ::                                 32768 ?
+ *>   [2][172.16.254.5:101][0][48][7C210DBD2741][32][10.1.101.1]/24
+                      ::                                 32768 ?
+ *>i  [2][172.16.254.5:101][0][48][7C210DBD9541][32][10.1.101.1]/24
+                      172.16.254.4             0    100      0 ?
+ *>i  [2][172.16.254.5:101][0][48][F4CFE24334C1][0][*]/20
+                      172.16.254.3             0    100      0 ?
+ *>i  [2][172.16.254.5:101][0][48][F4CFE24334C1][32][10.1.101.11]/24
+                      172.16.254.3             0    100      0 ?
+ *>i  [3][172.16.254.5:101][0][32][172.16.254.3]/17
+                      172.16.254.3             0    100      0 ?
+ *>i  [3][172.16.254.5:101][0][32][172.16.254.4]/17
+                      172.16.254.4             0    100      0 ?
+ *>   [3][172.16.254.5:101][0][32][172.16.254.5]/17
+                      ::                                 32768 ?

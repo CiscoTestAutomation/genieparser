@@ -16,9 +16,19 @@ expected_output = {
                "circuit_type":"level-2-only",
                "media_type":"P2P",
                "circuit_number":0,
-               "delay_normalization":{
-                  "interval":0,
-                  "offset":0
+               'measured_delay': {
+                  'min': '-',
+                  'avg': '-',
+                  'max': '-'
+               },
+               'delay_normalization': {
+                  'interval': 0,
+                  'offset': 0
+               },
+               'normalized_delay': {
+                  'min': '-',
+                  'avg': '-',
+                  'max': '-'
                },
                "link_loss":"-",
                "extended_circuit_number":0,

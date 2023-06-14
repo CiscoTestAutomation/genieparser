@@ -1,0 +1,9 @@
+          OSPFv3 1 address-family ipv4 (router-id 200.200.200.200)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+100.100.100.100   0   FULL/  -        00:01:57    23              vmi1
+
+          OSPFv3 1 address-family ipv6 (router-id 200.200.200.200)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+100.100.100.100   0   FULL/  -        00:01:34    23              vmi1

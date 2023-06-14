@@ -1,0 +1,33 @@
+show route ipv6 local-srv6
+Wed Mar 15 08:35:31.551 UTC
+
+L    fc00:c000:1001::/48, SRv6 Endpoint uN (shift) 
+      [0/0] via ::, 1d21h
+L    fc00:c000:1001::/64, SRv6 Endpoint uN (PSP/USD) 
+      [0/0] via ::, 1d21h
+L    fc00:c001:1001::/48, SRv6 Endpoint uN (shift) 
+      [0/0] via ::, 1d21h
+L    fc00:c001:1001::/64, SRv6 Endpoint uN (PSP/USD) 
+      [0/0] via ::, 1d21h
+L    fc00:c000:1001:e000::/64, SRv6 Endpoint uDT4 
+      [0/0] via ::ffff:0.0.0.0 (nexthop in vrf SRV6_L3VPN_BE), 1d21h
+L    fc00:c000:1001:e001::/64, SRv6 Endpoint uDT6 
+      [0/0] via :: (nexthop in vrf SRV6_L3VPN_BE), 1d21h
+L    fc00:c000:1001:e004::/64, SRv6 Endpoint uDT4 
+      [0/0] via ::ffff:0.0.0.0 (nexthop in vrf default), 1d21h
+L    fc00:c000:1001:e002::/64, SRv6 Endpoint uA (shift) 
+      [0/0] via fe80::250:56ff:fe94:9ba5, 1d20h, GigabitEthernet0/0/0/0
+L    fc00:c000:1001:e002::/80, SRv6 Endpoint uA (PSP/USD) 
+      [0/0] via fe80::250:56ff:fe94:9ba5, 1d20h, GigabitEthernet0/0/0/0
+L    fc00:c000:1001:e003::/64, SRv6 Endpoint uA (shift) 
+      [0/0] via fe80::250:56ff:fe94:ac68, 1d20h, GigabitEthernet0/0/0/2
+L    fc00:c000:1001:e003::/80, SRv6 Endpoint uA (PSP/USD) 
+      [0/0] via fe80::250:56ff:fe94:ac68, 1d20h, GigabitEthernet0/0/0/2
+L    fc00:c000:e002::/48, SRv6 Endpoint uA (shift) 
+      [0/0] via fe80::250:56ff:fe94:9ba5, 1d20h, GigabitEthernet0/0/0/0
+L    fc00:c000:e002::/64, SRv6 Endpoint uA (PSP/USD) 
+      [0/0] via fe80::250:56ff:fe94:9ba5, 1d20h, GigabitEthernet0/0/0/0
+L    fc00:c000:e003::/48, SRv6 Endpoint uA (shift) 
+      [0/0] via fe80::250:56ff:fe94:ac68, 1d20h, GigabitEthernet0/0/0/2
+L    fc00:c000:e003::/64, SRv6 Endpoint uA (PSP/USD) 
+      [0/0] via fe80::250:56ff:fe94:ac68, 1d20h, GigabitEthernet0/0/0/2

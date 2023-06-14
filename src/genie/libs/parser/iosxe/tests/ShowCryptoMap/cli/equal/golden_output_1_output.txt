@@ -1,0 +1,16 @@
+Crypto Map IPv4 "VPN_To_Switch2" 1 ipsec-isakmp
+	WARNING: This crypto map is in an incomplete state!
+		(missing peer or access-list definitions)
+	Peer = 172.20.249.12
+	Access-List SS dynamic: False
+	Extended IP access list 101
+	Security association lifetime: 4608000 kilobytes/3600 seconds
+	Dualstack (Y/N): N
+
+	Responder-Only (Y/N): N
+	PFS (Y/N): N
+	Mixed-mode : Disabled
+	Transform sets={
+		default:  { esp-aes esp-sha-hmac  } ,
+	}
+	Interfaces using crypto map VPN_To_Switch2:
