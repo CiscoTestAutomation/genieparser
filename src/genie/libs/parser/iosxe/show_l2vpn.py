@@ -1820,8 +1820,8 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     schema = {
@@ -1868,8 +1868,8 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     cli_command = ['show l2vpn evpn mac',
@@ -1884,11 +1884,12 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    'show l2vpn evpn mac vlan {vlan_id}',
                    'show l2vpn evpn mac vlan {vlan_id} address {mac_addr}',
                    'show l2vpn evpn mac vlan {vlan_id} duplicate',
-                   'show l2vpn evpn mac vlan {vlan_id} local',
-                   'show l2vpn evpn mac vlan {vlan_id} remote'
+                   'show l2vpn evpn mac vlan {vlan_id} {local}',
+                   'show l2vpn evpn mac vlan {vlan_id} {remote}'
     ]
 
-    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None, vlan_id=None):
+    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, 
+            evi_id=None, vlan_id=None, local=None, remote=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
@@ -1902,6 +1903,10 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                 cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
             elif vlan_id:
                 cli_cmd += ' vlan {vlan_id}'.format(vlan_id=vlan_id)
+                if local:
+                    cli_cmd += ' local'
+                elif remote:
+                    cli_cmd += ' remote'
 
             if mac_type:
                 cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
@@ -4633,10 +4638,12 @@ class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
         p2 = re.compile(r'^RD:\s+(?P<rd>[0-9a-fA-F\.:]+)\s+\((?P<type>\w+)\)$')
 
         # Import-RTs:        1:1
-        p3 = re.compile(r'^Import-RTs:\s+(?P<rt>[\d:]+)')
+        # Import-RTs:        1:100 995:95 997:97 998:98 999:99
+        p3 = re.compile(r'^Import-RTs:\s+(?P<rt>[\d:\s]+)')
 
         # Export-RTs:        1:1
-        p4 = re.compile(r'^Export-RTs:\s+(?P<rt>[\d:]+)')
+        # Export-RTs:        1:100 995:95 997:97 998:98 999:99
+        p4 = re.compile(r'^Export-RTs:\s+(?P<rt>[\d:\s]+)')
 
         # Per-EVI Label:     none
         p5 = re.compile(r'^Per-EVI Label:\s+(?P<label>\d+|none)$')

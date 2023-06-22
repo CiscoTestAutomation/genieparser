@@ -1,0 +1,3 @@
+MAC Address     Adjacency
+--------------- --------------------------------
+aabb.0000.0021  VXLAN_UC  PL:268(1) T:VXLAN_UC [MAC]20121:2.2.2.3

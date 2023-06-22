@@ -3,3 +3,5 @@ Subscription ID  Name                               Index  State          Explan
 101              grpc-tcp                           0      Resolving      Resolution request in progress
 101              grpc-tls                           0      Disconnected   Receiver invalid
 102              grpc-tcp://5.34.15.224:57846       0      Disconnected   Receiver does not exist
+102              grpc-tcp://5.34.15.224:57846       0      Disconnected   Receiver does not exist
+2147483648       gNMI://5.40.26.169:53416           1      Connected

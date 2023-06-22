@@ -10322,6 +10322,18 @@ class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter(ShowIpOspfDatabaseOpaqueA
 
         return super().cli(db_type='opaque', out=output)
 
+class ShowIpOspfDatabaseOpaqueAreaTypeTrafficEngineeringSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type traffic-engineering self-originate
+    """
+    cli_command = 'show ip ospf database opaque-area type traffic-engineering self-originate'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
 # ===========================
 # Schema for:
 #   * 'show ipv6 ospf neighbor'

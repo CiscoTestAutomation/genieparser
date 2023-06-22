@@ -881,7 +881,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p40 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
         # cos 5
-        p41 = re.compile(r'^(?P<key>cos)\s+(?P<value>\d+)$')
+        # traffic-class 6
+        p41 = re.compile(r'^(?P<key>cos|traffic\-class)\s+(?P<value>\d+)$')
 
         # Virtual Class   min/max        Transmit                 Random drop                 AFD Weight
         #       0         10 / 20    (Byte)33459183360             27374016                     12
@@ -1290,6 +1291,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             #violated 0 bytes; actions:
             m = p11_2.match(line)
             if m:
+                conformed_line = False
+                exceeded_line = False
+                violated_line = True
                 violated_dict = police_dict.setdefault('violated', {})
                 violated_dict['bytes'] = int(m.groupdict()['bytes'])
                 viol_action_dict = violated_dict.setdefault('actions', {})
@@ -3387,3 +3391,131 @@ class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperPar
         
         # Call super      
         return super().cli(output=output, interface=interface, class_name=class_name)
+
+#================================================================================
+#Schema for :
+#   * "show policy-map type queueing {policy_name}" 
+#================================================================================
+class ShowPolicyMapTypeQueueingPolicynameSchema(MetaParser) :
+    '''Schema for :
+    * "show policy-map type queueing {policy_name}" '''  
+    
+    schema = {
+        'policy_name': {
+            Any(): {
+                'class_map': {
+                    Any(): {
+                        'class_val': {
+                            Any():{
+                                Optional('min_threshold'): str,
+                                Optional('max_threshold'): str,
+                                Optional('mark_probability'): str,
+                            },
+                        },
+                        Optional('cir_percent'): int,
+                        Optional('queue_limit_bytes'): int,
+                        Optional('wred_type'): str,
+                        Optional('exponential_weight'): int,
+                        Optional('average_rate_traffic_shaping'):bool
+                    },
+               },
+           },
+       },
+   }
+
+#=================================================================================
+#Parser for:
+#   * "show policy-map type queueing {policy_name}" 
+# ================================================================================
+class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSchema) :
+    '''Parser for :
+    *"show policy-map type queueing {policy_name}" '''
+      
+    cli_command = 'show policy-map type queueing {policy_name}'        
+
+    def cli(self,policy_name="",output=None):      
+        if output is None:
+            cmd = self.cli_command.format(policy_name=policy_name)
+
+        # Execute command
+        output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Policy Map type queueing RED
+        p1 = re.compile(r'^Policy(\-map| Map) type queueing +(?P<policy_name>([\w\s\-]+))$')
+
+        # Class class-default
+        p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
+
+        # Average Rate Traffic Shaping
+        p3 = re.compile(r'^Average +Rate +Traffic +Shaping$')
+   
+        # cir 10%
+        p4 = re.compile(r'^cir +(?P<cir_percent>(\d+))%$')
+
+        # queue-limit 100000000 bytes
+        p5 = re.compile(r'^queue-limit +(?P<queue_limit_bytes>(\d+)) bytes$')
+
+        # percent-based wred, exponential weight 1
+        p6 = re.compile(r'^(?P<wred_type>[\w-]+) +wred, +exponential +weight +(?P<exponential_weight>(\d+))$')
+
+        # discard-class    min-threshold    max-threshold    mark-probablity
+        # -------------------------------------------------------------------
+        # 0                1                 100                   1/1
+        # 1                -                  -                    1/1
+        p7 = re.compile(r'^(?P<class_val>(\w+(\s+\(\d+\))?)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) +(?P<mark_probability>([0-9]+)/([0-9]+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Policy Map type queueing RED
+            m = p1.match(line)
+            if m:
+                key_chain_dict = ret_dict.setdefault('policy_name', {}).setdefault(m.groupdict()['policy_name'], {})
+                continue
+        
+            # Class class-default
+            m = p2.match(line)
+            if m:
+                class_map_dict = key_chain_dict.setdefault('class_map', {}).setdefault(m.groupdict()['class_map'], {})
+                continue
+
+            # Average Rate Traffic Shaping  
+            m = p3.match(line)
+            if m:
+                class_map_dict['average_rate_traffic_shaping'] = True
+                continue
+        
+            # cir 10%
+            m = p4.match(line)
+            if m:
+                class_map_dict['cir_percent']=int(m.groupdict()['cir_percent'])
+                continue
+            
+            # queue-limit 100000000 bytes
+            m = p5.match(line)
+            if m:
+                class_map_dict['queue_limit_bytes']=int(m.groupdict()['queue_limit_bytes'])
+                continue
+        
+            # percent-based wred, exponential weight 1
+            m = p6.match(line)
+            if m:
+                class_map_dict['wred_type']=m.groupdict()['wred_type']
+                class_map_dict['exponential_weight']=int(m.groupdict()['exponential_weight'])
+                continue
+
+            # discard-class    min-threshold    max-threshold    mark-probablity
+              # -------------------------------------------------------------------
+              # 0                1                 100                   1/1
+              # 1                -                  -                    1/1
+            m = p7.match(line)
+            if m:
+                class_val = class_map_dict.setdefault('class_val', {}).setdefault(m.groupdict()['class_val'], {})
+                class_val['min_threshold']=m.groupdict()['min_threshold']
+                class_val['max_threshold']=m.groupdict()['max_threshold']
+                class_val['mark_probability']=m.groupdict()['mark_probability']
+                continue
+        
+        return ret_dict

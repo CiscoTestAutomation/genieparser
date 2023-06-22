@@ -4,7 +4,7 @@
 
 import re
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 
 class ShowRplRoutePolicySchema(MetaParser):
@@ -30,7 +30,7 @@ class ShowRplRoutePolicySchema(MetaParser):
                                         Optional('match_as_path_list'): str,
                                         Optional('match_as_path_length'): int,
                                         Optional('match_as_path_length_oper'): str,
-                                        Optional('match_level_eq'): str,
+                                        Optional('match_level_eq'): Or(int,str),
                                         Optional('match_area_eq'): str,
                                         Optional('match_prefix_list'): str,
                                         Optional('match_prefix_list_v6'): str,
@@ -525,7 +525,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                             ['match_as_path_length_oper'] = match_as_path_length_oper
 
                     if 'route-type is' in m.groupdict()[cond]:
-                        v = re.match('route-type is (?P<match_level_eq>[\w\W]+)', m.groupdict()[cond])
+                        v = re.match('(evpn-route-type is|route-type is) (?P<match_level_eq>[\da-z-]+)', m.groupdict()[cond])
                         match_level_eq = v.groupdict()['match_level_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_level_eq'] = match_level_eq

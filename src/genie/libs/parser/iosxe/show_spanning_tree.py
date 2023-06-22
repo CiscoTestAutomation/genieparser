@@ -975,7 +975,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
         p10 = re.compile(r'^(?P<interface>[\w\-\/\.]+) +'
                           '(?P<role>[\w\*]+) +(?P<port_state>[A-Z\*]+) *'
                           '(?P<cost>\d+) +(?P<port_priority>\d+)\.'
-                          '(?P<port_num>\d+) +(?P<type>\w+)'
+                          '(?P<port_num>\d+) +(?P<type>[\w\s]+)'
                           '( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)))?'
                           '( +\*\S+)?$')
 

@@ -8,6 +8,8 @@ IOSXE parsers for the following show commands:
     * show logging onboard rp active status
     * show logging onboard rp active {include}
     * show logging onboard rp {rp} {feature} detail
+    * show logging process smd reverse
+    * show logging process smd {switch} {mode} reverse
 '''
 
 # Python
@@ -1258,4 +1260,311 @@ class ShowLoggingOnboardRpActiveUptimeDetail(ShowLoggingOnboardRpActiveUptimeDet
                 temp_dict.update({k: v for k, v in group.items()})
                 continue
  
+        return ret_dict
+
+
+class ShowLoggingProcessSmdReverseSchema(MetaParser):
+    """
+        Schema for
+            * show logging process smd reverse
+            * show logging process smd {switch} {mode} reverse
+    """
+    schema = {
+        'requested_date': str,
+        'requested_time': str,
+        'hostname': str,
+        'model': str,
+        'version': str,
+        'serial_number': str,
+        'md_sn': str,
+        'logs_date': {
+            'days': int,
+            'hours': int,
+            'minutes': int,
+            'seconds': int
+        },
+        'chassis': list,
+        'utm_level': {
+            'verbose': int,
+            'noise': int,
+            'invalid': int,
+            'warning': int,
+            'notice': int,
+            'info': int,
+            'debug': int,
+            'emergency': int,
+            'alert': int,
+            'critical': int,
+            'error': int,
+        },
+        'utm': {
+            'luid_not_found': int,
+            'pcap': int,
+            'marker': int,
+            'app_context': int,
+            'tdl_tan': int,
+            'module_id': int,
+            'dyn_lib': int,
+            'plain_text': int,
+            'encoded': int,
+            'skipped': int,
+            'rendered': int,
+            'total': int
+        },
+        'last_utm_timestamp': {
+            'date': str,
+            'time': str
+        },
+        'first_utm_timestamp': {
+            'date': str,
+            'time': str
+        },
+        'decoder': {
+            'output': {
+                'mrst_filter_rules': int,
+                'utm_process_filter': str,
+                'utm_to_process': int,
+                'utf_to_process': int,
+                'unique_streams': int
+            },
+            Optional('input'): {
+                'date': {
+                    Any(): {
+                        'time': {
+                            Any(): {
+                                'message_type': str,
+                                'message': str,
+                                'process': str,
+                                'pid': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLoggingProcessSmdReverse(ShowLoggingProcessSmdReverseSchema):
+    """
+        Parser for
+            * show logging process smd reverse
+            * show logging process smd {switch} {mode} reverse
+    """
+    cli_command = ['show logging process smd reverse',
+                'show logging process smd {switch} {mode} reverse']
+    
+    def cli(self, switch=None, mode=None, output=None):
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)
+
+        # Logging display requested on 2023/04/27 21:34:18 (UTC) for Hostname: 
+        # [stack3-nyquist-1], Model: [C9300-48P], Version: [17.12.01], SN: [FOC21446Z0R], MD_SN: [FCW2146L00Y]
+        p1 = re.compile(r'^Logging display requested on (?P<requested_date>\S+) (?P<requested_time>\S+) \(.+\) for Hostname:'
+                        r' \[(?P<hostname>\S+)\], Model: \[(?P<model>\S+)\], Version: \[(?P<version>\S+)\],'
+                        r' SN: \[(?P<serial_number>\S+)\], MD_SN: \[(?P<md_sn>\S+)\]$')
+
+        # Displaying logs from the last 0 days, 0 hours, 10 minutes, 0 seconds
+        p2 = re.compile(r'^Displaying logs from the last (?P<days>\d+) days, (?P<hours>\d+) hours,'
+                        r' (?P<minutes>\d+) minutes, (?P<seconds>\d+) seconds$')
+        
+        # executing cmd on chassis 2 ...
+        p3 = re.compile(r'^executing cmd on chassis (?P<chassisd>\d+).+$')
+
+        #  UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+        p4 = re.compile(r'^UTM Level \[VERBOSE \/ NOISE \/ INVALID\]\s+\.+\s+(?P<verbose>\d+)'
+                        r' \/ (?P<noise>\d+) \/ (?P<invalid>\d+)$')
+
+        #  UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 0 / 0 / 0 / 0
+        p5 = re.compile(r'^UTM Level \[WARNING \/ NOTICE \/ INFO \/ DEBUG\]\s+\.+\s+(?P<warning>\d+)'
+                        r' \/ (?P<notice>\d+) \/ (?P<info>\d+) \/ (?P<debug>\d+)$')
+
+        #  UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 24
+        p6 = re.compile(r'^UTM Level \[EMERGENCY \/ ALERT \/ CRITICAL \/ ERROR\]\s+\.+\s+(?P<emergency>\d+)'
+                        r' \/ (?P<alert>\d+) \/ (?P<critical>\d+) \/ (?P<error>\d+)$')
+
+        #  UTM [LUID NOT FOUND] .............. 0
+        #  UTM [PCAP] ........................ 0
+        #  UTM [MARKER] ...................... 0
+        #  UTM [APP CONTEXT] ................. 0
+        #  UTM [TDL TAN] ..................... 0
+        #  UTM [MODULE ID] ................... 0
+        #  UTM [DYN LIB] ..................... 0
+        #  UTM [PLAIN TEXT] .................. 0
+        #  UTM [ENCODED] ..................... 24
+        p7 = re.compile(r'^UTM \[(?P<utm_name>.+)\] \.+ (?P<utm_value>\d+)$')
+
+        #  UTM [Skipped / Rendered / Total] .. 153967 / 24 / 153991
+        p8 = re.compile(r'^UTM \[Skipped \/ Rendered \/ Total\] \.+ (?P<skipped>\d+) \/ (?P<rendered>\d+) \/ (?P<total>\d+)$')
+
+        #  Last UTM TimeStamp ................ 2023/04/27 21:34:17.692905538
+        #  First UTM TimeStamp ............... 2023/04/27 20:57:07.075475821
+        p9 = re.compile(r'^(?P<utm_timestamp>(Last|First) UTM TimeStamp) \.+ (?P<date>\S+) (?P<time>\S+)$')
+
+        # ----------------- Decoder Output Information --------------
+        p10 = re.compile(r'^\-+ Decoder Output Information \-+$')
+
+        #  MRST Filter Rules ...... 1
+        p11 = re.compile(r'^MRST Filter Rules \.+ (?P<mrst_filter_rules>\d+)$')
+
+        #  UTM Process Filter ..... smd
+        p12 = re.compile(r'^UTM Process Filter \.+ (?P<utm_process_filter>\w+)$')
+
+        #  Total UTM To Process ... 153991
+        p13 = re.compile(r'^Total UTM To Process \.+ (?P<utm_to_process>\d+)$')
+
+        #  Total UTF To Process ... 2
+        p14 = re.compile(r'^Total UTF To Process \.+ (?P<utf_to_process>\d+)$')
+
+        #  Num of Unique Streams .. 1
+        p15 = re.compile(r'^Num of Unique Streams \.+ (?P<unique_streams>\d+)$')
+
+        # 2023/04/27 21:29:51.918681533 {smd_R0-0}{2}: [radius] [30442]: (ERR): Failed to mark Identifier for reuse
+        p16 = re.compile(r'^(?P<date>\S+) (?P<time>\S+) \{.+\}\{.+\}: \[(?P<process>.+)\] \[(?P<pid>\d+)\]: \((?P<message_type>\S+)\): (?P<message>.+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Logging display requested on 2023/04/27 21:34:18 (UTC) for Hostname: 
+            # [stack3-nyquist-1], Model: [C9300-48P], Version: [17.12.01], SN: [FOC21446Z0R], MD_SN: [FCW2146L00Y]
+            m = p1.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            # Displaying logs from the last 0 days, 0 hours, 10 minutes, 0 seconds
+            m = p2.match(line)
+            if m:
+                group_dict = m.groupdict()
+                logs_date_dict = ret_dict.setdefault('logs_date', {})
+                logs_date_dict['days'] = int(group_dict['days'])
+                logs_date_dict['hours'] = int(group_dict['hours'])
+                logs_date_dict['minutes'] = int(group_dict['minutes'])
+                logs_date_dict['seconds'] = int(group_dict['seconds'])
+                continue
+
+            # executing cmd on chassis 2 ...
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('chassis', []).append(m.groupdict()['chassisd'])
+                continue
+
+            #  UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+            m = p4.match(line)
+            if m:
+                group_dict = m.groupdict()
+                utm_level_dict = ret_dict.setdefault('utm_level', {})
+                utm_level_dict['verbose'] = int(group_dict['verbose'])
+                utm_level_dict['noise'] = int(group_dict['noise'])
+                utm_level_dict['invalid'] = int(group_dict['invalid'])
+                continue
+
+            #  UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 0 / 0 / 0 / 0
+            m = p5.match(line)
+            if m:
+                group_dict = m.groupdict()
+                utm_level_dict['warning'] = int(group_dict['warning'])
+                utm_level_dict['notice'] = int(group_dict['notice'])
+                utm_level_dict['info'] = int(group_dict['info'])
+                utm_level_dict['debug'] = int(group_dict['debug'])
+                continue
+
+            #  UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 24
+            m = p6.match(line)
+            if m:
+                group_dict = m.groupdict()
+                utm_level_dict['emergency'] = int(group_dict['emergency'])
+                utm_level_dict['alert'] = int(group_dict['alert'])
+                utm_level_dict['critical'] = int(group_dict['critical'])
+                utm_level_dict['error'] = int(group_dict['error'])
+                continue
+
+            #  UTM [LUID NOT FOUND] .............. 0
+            #  UTM [PCAP] ........................ 0
+            #  UTM [MARKER] ...................... 0
+            #  UTM [APP CONTEXT] ................. 0
+            #  UTM [TDL TAN] ..................... 0
+            #  UTM [MODULE ID] ................... 0
+            #  UTM [DYN LIB] ..................... 0
+            #  UTM [PLAIN TEXT] .................. 0
+            #  UTM [ENCODED] ..................... 24
+            m = p7.match(line)
+            if m:
+                utm_dict = ret_dict.setdefault('utm', {})
+                utm_dict[m.groupdict()['utm_name'].lower().replace(' ', '_')] = int(m.groupdict()['utm_value'])
+                continue
+
+            #  UTM [Skipped / Rendered / Total] .. 153967 / 24 / 153991
+            m = p8.match(line)
+            if m:
+                group_dict = m.groupdict()
+                utm_dict['skipped'] = int(group_dict['skipped'])
+                utm_dict['rendered'] = int(group_dict['rendered'])
+                utm_dict['total'] = int(group_dict['total'])
+                continue
+
+            #  Last UTM TimeStamp ................ 2023/04/27 21:34:17.692905538
+            #  First UTM TimeStamp ............... 2023/04/27 20:57:07.075475821
+            m = p9.match(line)
+            if m:
+                group_dict = m.groupdict()
+                utm_timestamp_dict = ret_dict.setdefault(group_dict['utm_timestamp'].lower().replace(' ', '_'), {})
+                utm_timestamp_dict['date'] = group_dict['date']
+                utm_timestamp_dict['time'] = group_dict['time']
+                continue
+
+            # ----------------- Decoder Output Information --------------
+            m = p10.match(line)
+            if m:
+                decoder_out_dict = ret_dict.setdefault('decoder', {}).setdefault('output', {})
+                continue
+
+            #  MRST Filter Rules ...... 1
+            m = p11.match(line)
+            if m:
+                decoder_out_dict['mrst_filter_rules'] = int(m.groupdict()['mrst_filter_rules'])
+                continue
+
+            #  UTM Process Filter ..... smd
+            m = p12.match(line)
+            if m:
+                decoder_out_dict['utm_process_filter'] = m.groupdict()['utm_process_filter']
+                continue
+
+            #  Total UTM To Process ... 153991
+            m = p13.match(line)
+            if m:
+                decoder_out_dict['utm_to_process'] = int(m.groupdict()['utm_to_process'])
+                continue
+
+            #  Total UTF To Process ... 2
+            m = p14.match(line)
+            if m:
+                decoder_out_dict['utf_to_process'] = int(m.groupdict()['utf_to_process'])
+                continue
+
+            #  Num of Unique Streams .. 1
+            m = p15.match(line)
+            if m:
+                decoder_out_dict['unique_streams'] = int(m.groupdict()['unique_streams'])
+                continue
+
+            # 2023/04/27 21:29:51.918681533 {smd_R0-0}{2}: [radius] [30442]: (ERR): Failed to mark Identifier for reuse
+            m = p16.match(line)
+            if m:
+                group_dict = m.groupdict()
+                time_dict = ret_dict.setdefault('decoder', {}).setdefault('input', {}).setdefault('date', {}).setdefault(group_dict['date'], {})\
+                    .setdefault('time', {}).setdefault(group_dict['time'], {})
+                time_dict['process'] = group_dict['process']
+                time_dict['pid'] = int(group_dict['pid'])
+                time_dict['message_type'] = group_dict['message_type']
+                time_dict['message'] = group_dict['message']
+                continue
+        
         return ret_dict

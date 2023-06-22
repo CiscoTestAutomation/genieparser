@@ -13,7 +13,12 @@ IOSXE parsers for the following show commands:
     * show ip multicast
     * show ip multicast vrf <vrf_name>
     * show ip multicast mpls vif
-
+    * show consistency-checker run-id <id>
+    * show consistency-checker run-id <id> detail
+    * show consistency-checker mcast <layer> start all'
+    * 'show consistency-checker mcast <layer> start <address> <source>',
+    * 'show consistency-checker mcast <layer> start vrf <instance_name> <address> <source>',
+    * 'show consistency-checker mcast <layer> start vlan <vlan_id> <address>
 """
 
 # Python
@@ -881,6 +886,298 @@ class ShowIpMrouteCount(ShowIpMrouteCountSchema):
                 group_dict[groupid]['source_count'] = int(group['source_count'])
                 group_dict[groupid]['pkt_forwarded'] = int(group['pkt_forwarded'])
                 group_dict[groupid]['pkt_received'] = int(group['pkt_received'])
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker mcast {layer} start all'
+#=================================================
+
+class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
+    """Schema for 
+        * 'show consistency-checker mcast {layer} start all'
+        * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+        * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    """
+    schema = {
+        'run_id': int,
+        Optional('layer'): str
+    }
+
+#=================================================
+# Parser for 'show consistency-checker mcast {layer} start all'
+#=================================================
+
+class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSchema):
+    """Parser for 
+        * 'show consistency-checker mcast {layer} start all'
+        * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+        * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    """
+
+    cli_command = ['show consistency-checker mcast {layer} start all',
+    'show consistency-checker mcast {layer} start {address} {source}',
+    'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+    'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    ]
+
+    def cli(self, layer, source=None, address=None, instance_name=None, vlan_id=None, output=None):
+        if output is None:
+            if instance_name and address and source:
+                cmd = self.cli_command[2].format(layer=layer, instance_name=instance_name, address=address, source=source)
+            elif vlan_id and address:
+                cmd = self.cli_command[3].format(layer=layer, vlan_id=vlan_id, address=address)
+            elif address and source:
+                cmd = self.cli_command[1].format(layer=layer, address=address, source=source)
+            else:
+                cmd = self.cli_command[0].format(layer=layer)
+            output = self.device.execute(cmd)
+
+        # L3 multicast Full scan started. Run_id: 2181
+        p1 = re.compile(r'^(?P<layer>(\w\d+)) multicast +Full +scan +started. Run_id: +(?P<run_id>(\d+))$')
+
+        # Single entry scan started with Run_id: 2255
+        p2 = re.compile(r'^Single +entry +scan +started +with +Run_id: +(?P<run_id>(\d+))$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # L3 multicast Full scan started. Run_id: 2181
+            m = p1.match(line)
+            if m:
+                ret_dict['layer'] = m.groupdict()['layer']
+                ret_dict['run_id'] = int(m.groupdict()['run_id'])
+                continue
+            
+            # Single entry scan started with Run_id: 2255
+            m = p2.match(line)
+            if m:
+                ret_dict['run_id'] = int(m.groupdict()['run_id'])
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker run-id detail'
+#=================================================
+class ShowConsistencyCheckerRunIdDetailSchema(MetaParser):
+    """Schema for 
+        * 'show consistency-checker run-id {id} detail'
+    """
+    schema = {
+        'process': {
+            Any(): {
+                'type': str,
+            }
+        },
+        'switch': {
+            Any(): {
+                'process': {
+                    Any(): {
+                        Optional('process_type'): str
+                    }
+               }
+           }
+       }
+   }
+
+#=================================================
+# Parser for 'show consistency-checker run-id detail'
+#=================================================
+class ShowConsistencyCheckerRunIdDetail(ShowConsistencyCheckerRunIdDetailSchema):
+    """  Parser for 
+        * 'show consistency-checker run-id {id} detail'
+    """
+
+    cli_command = 'show consistency-checker run-id {id} detail'
+    
+    def cli(self, id, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(id=id))
+        # Process: IOSD
+        # Process: FMAN-RP
+        p1 = re.compile(r'^Process:\s+(?P<type>[\w\s\-]+)$')
+        # Switch: 1 Process: FMAN-FP
+        # Switch: 1 Process: FED
+        p2 = re.compile(r'^Switch:\s+(?P<switch>[\d]+)+\s+Process:\s+(?P<process_type>[\w\s\-]+)$')
+        
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # Process: IOSD
+            # Process: FMAN-RP
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('process', {}).setdefault(m.groupdict()['type'], {}).setdefault('type', m.groupdict()['type'])
+                continue
+
+            # Switch: 1 Process: FMAN-FP
+            # Switch: 1 Process: FED
+            m = p2.match(line)
+            if m: 
+                key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {})
+                key_dict = key_chain_dict.setdefault('process', {}).setdefault(m.groupdict()['process_type'], {})
+                key_dict['process_type'] = m.groupdict()['process_type']
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker run-id'
+#=================================================
+class ShowConsistencyCheckerRunIdSchema(MetaParser):
+        schema = {
+        'process': {
+            Any(): {
+                'object_type': {
+                    Any():{
+                            'starttime':str,
+                            Optional('entries'):int ,
+                            Optional('exceptions'):int,
+                            Optional('fulltable'):str,
+                            Optional('garbagedetector'):str,
+                            Optional('hwcheck'):str,
+                            Optional('hwshadow'):str,
+                            Optional('state'):str,
+                            Optional('actual'):int,
+                            Optional('inherited'):int,
+                            Optional('missing'):int,
+                            Optional('stale'):int,
+                            Optional('others'):int
+                    },
+                },
+            },
+        },
+        'switch': {
+            Any(): {
+                'process': {
+                    Any(): {
+                        'object_type': {
+                            Any():{
+                                    'starttime':str,
+                                    'state':str,
+                                    'actual':int,
+                                    'inherited':int,
+                                    'missing':int,
+                                    'stale':int,
+                                    'others':int,
+                                    Optional('hardware'):int
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+        
+#==================================================
+# Parser for 'show consistency-checker run-id'
+#==================================================
+class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
+    cli_command = 'show consistency-checker run-id {id}'
+
+    def cli(self, id, output=None):
+        if output is None:
+            cmd = self.cli_command.format(id=id)
+            output = self.device.execute(cmd)
+
+        # Process: IOSD
+        # Process: FMAN-RP
+        p1 = re.compile(r'^Process:\s+(?P<type>[\w\s\-]+)$')
+
+        # Object-Type    Start-time                Entries  Exceptions  Flags
+        #  l2m_vlan      2023/04/28 03:51:03         72         0       F GD Hw HS
+        #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
+        p2 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+(?P<fulltable>[\w]+)\s+(?P<garbagedetector>[\w]+)\s+(?P<hwcheck>[\w]+)\s+(?P<hwshadow>[\w]+)$')
+
+        # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+        #  l2m_vlan       2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
+        #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0
+        p3 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<others>[\d]+)$')
+
+        # Switch: 1 Process: FMAN-FP
+        # Switch: 1 Process: FED
+        p4 = re.compile(r'^Switch:\s+(?P<switch>[\d]+)+\s+Process:\s+(?P<process_type>[\w\s\-]+)$')
+
+        # Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
+        # l2m_vlan       2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+        # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+        p5 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<hardware>[\d]+)/\s+(?P<others>[\d]+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Process: IOSD
+            # Process: FMAN-RP
+            m = p1.match(line)
+            if m:
+                process_dict = ret_dict.setdefault('process', {}).setdefault(m.groupdict()['type'], {})
+                continue
+
+            # Object-Type    Start-time                Entries  Exceptions  Flags
+            #  l2m_vlan      2023/04/28 03:51:03         72         0       F GD Hw HS
+            #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
+            m=p2.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['entries']=int(m.groupdict()['entries'])
+                object_dict['exceptions']=int(m.groupdict()['exceptions'])
+                object_dict['fulltable']=m.groupdict()['fulltable']
+                object_dict['garbagedetector']=m.groupdict()['garbagedetector']
+                object_dict['hwcheck']=m.groupdict()['hwcheck']
+                object_dict['hwshadow']=m.groupdict()['hwshadow']
+                continue
+
+            # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+            #  l2m_vlan        2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
+            #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0 
+            m=p3.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['state']=m.groupdict()['state']
+                object_dict['actual']=int(m.groupdict()['actual'])
+                object_dict['inherited']=int(m.groupdict()['inherited'])
+                object_dict['missing']=int(m.groupdict()['missing'])
+                object_dict['stale']=int(m.groupdict()['stale'])
+                object_dict['others']=int(m.groupdict()['others'])
+                continue 
+            
+            # Switch: 1 Process: FMAN-FP
+            # Switch: 1 Process: FED
+            m = p4.match(line)
+            if m:
+                consistency_checker = m.groupdict()['switch']
+                key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(consistency_checker, {})
+                key_name = m.groupdict()['process_type']
+                process_dict = key_chain_dict.setdefault('process', {}).setdefault(key_name, {})
+                continue
+
+            # Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
+            # l2m_vlan       2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+            # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+            m = p5.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['state']=m.groupdict()['state']
+                object_dict['actual']=int(m.groupdict()['actual'])
+                object_dict['inherited']=int(m.groupdict()['inherited'])
+                object_dict['missing']=int(m.groupdict()['missing'])
+                object_dict['stale']=int(m.groupdict()['stale'])
+                object_dict['others']=int(m.groupdict()['others'])
+                object_dict['hardware']=int(m.groupdict()['hardware'])
                 continue
 
         return ret_dict

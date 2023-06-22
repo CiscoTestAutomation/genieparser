@@ -1,0 +1,10 @@
+Past crypto device utilization:
+ 1 min (percentage) : 65%
+       (decrypt pkt): 89846705
+       (encrypt pkt): 176
+ 5 min (percentage) : 65%
+       (decrypt pkt): 449245590
+       (encrypt pkt): 879
+15 min (percentage) : 65%
+       (decrypt pkt): 1347755401
+       (encrypt pkt): 2632

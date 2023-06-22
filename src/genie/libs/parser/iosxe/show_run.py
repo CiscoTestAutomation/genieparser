@@ -308,6 +308,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_priority'): str,
                 Optional('authentication_timer_inactivity'): str,
                 Optional('authentication_timer_reauthenticate_server'): bool,
+                Optional('authentication_timer_reauthenticate'): int,
                 Optional('authentication_violation'): str,
                 Optional('trust_device'): str,
                 Optional('carrier_delay'): list,
@@ -318,8 +319,18 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('dot1x_timeout_quiet_period'): str,
                 Optional('dot1x_timeout_server_timeout'): str,
                 Optional('dot1x_timeout_tx_period'): str,
+                Optional('dot1x_pae'): str,
+                Optional('dot1x_timeout_supp_timeout'): int,
+                Optional('dot1x_max_req'): int,
+                Optional('dot1x_authenticator_eap_profile'): str,
+                Optional('dot1x_timeout_held_period'): int,
+                Optional('dot1x_credentials'): str,
+                Optional('dot1x_supplicant_eap_profile'): str,
                 Optional('ip_arp_inspection_limit_rate'): str,
                 Optional('ip_dhcp_snooping_limit_rate'): str,
+                Optional('access_session_host_mode'): str,
+                Optional('access_session'): str,
+                Optional('access_session_port_control'): str,
                 Optional('ip_ospf'): {
                     Any(): {
                         'area': str,
@@ -552,6 +563,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # authentication timer inactivity 65535
         p24_1 = re.compile(r'^authentication +timer +inactivity +(?P<inactivity>\d+)$')
 
+        # authentication timer reauthenticate 6000
+        p24_2 = re.compile(r'^authentication timer reauthenticate (?P<authentication_timer_reauthenticate>\d+)$')
+
         # authentication violation restrict
         p25 = re.compile(r'^authentication +violation +(?P<violation>[\S\s]+)$')
 
@@ -762,6 +776,36 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # switchport trunk native vlan 101
         p92 = re.compile(r'^switchport trunk native vlan (?P<switchport_trunk_native_vlan>\d+)$')
 
+        # access-session host-mode multi-host
+        p93 = re.compile(r'^access-session host-mode (?P<access_session_host_mode>.+)$')
+
+        # access-session closed
+        p94 = re.compile(r'^access-session (?P<access_session>\w+)$')
+
+        # access-session port-control auto
+        p95 = re.compile(r'^access-session port-control (?P<access_session_port_control>.+)$')
+
+        # dot1x pae both
+        p96 = re.compile(r'^dot1x pae (?P<dot1x_pae>.+)$')
+
+        # dot1x timeout supp-timeout 87
+        p97 = re.compile(r'^dot1x timeout supp-timeout (?P<dot1x_timeout_supp_timeout>\d+)$')
+
+        # dot1x max-req 6
+        p98 = re.compile(r'^dot1x max-req (?P<dot1x_max_req>\d+)$')
+
+        # dot1x authenticator eap profile Self
+        p99 = re.compile(r'^dot1x authenticator eap profile (?P<dot1x_authenticator_eap_profile>.+)$')
+
+        # dot1x timeout held-period 63
+        p100 = re.compile(r'^dot1x timeout held-period (?P<dot1x_timeout_held_period>\d+)$')
+
+        # dot1x credentials EAPTLSCRED-IOSCA
+        p101 = re.compile(r'^dot1x credentials (?P<dot1x_credentials>.+)$')
+
+        # dot1x supplicant eap profile Self
+        p102 = re.compile(r'^dot1x supplicant eap profile (?P<dot1x_supplicant_eap_profile>.+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -954,6 +998,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update(
                     {'authentication_timer_inactivity': group['inactivity']})
+                continue
+            
+            # authentication timer reauthenticate 6000
+            m = p24_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'authentication_timer_reauthenticate': int(group['authentication_timer_reauthenticate'])})
                 continue
 
             # authentication violation restrict
@@ -1502,6 +1554,66 @@ class ShowRunInterface(ShowRunInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict['switchport_trunk_native_vlan'] = int(m.groupdict()['switchport_trunk_native_vlan'])
+                continue
+
+            # access-session host-mode multi-host
+            m = p93.match(line)
+            if m:
+                intf_dict['access_session_host_mode'] = m.groupdict()['access_session_host_mode']
+                continue
+
+            # access-session closed
+            m = p94.match(line)
+            if m:
+                intf_dict['access_session'] = m.groupdict()['access_session']
+                continue
+
+            # access-session port-control auto
+            m = p95.match(line)
+            if m:
+                intf_dict['access_session_port_control'] = m.groupdict()['access_session_port_control']
+                continue
+
+            # dot1x pae both
+            m = p96.match(line)
+            if m:
+                intf_dict['dot1x_pae'] = m.groupdict()['dot1x_pae']
+                continue
+
+            # dot1x timeout supp-timeout 87
+            m = p97.match(line)
+            if m:
+                intf_dict['dot1x_timeout_supp_timeout'] = int(m.groupdict()['dot1x_timeout_supp_timeout'])
+                continue
+
+            # dot1x max-req 6
+            m = p98.match(line)
+            if m:
+                intf_dict['dot1x_max_req'] = int(m.groupdict()['dot1x_max_req'])
+                continue
+
+            # dot1x authenticator eap profile Self
+            m = p99.match(line)
+            if m:
+                intf_dict['dot1x_authenticator_eap_profile'] = m.groupdict()['dot1x_authenticator_eap_profile']
+                continue
+
+            # dot1x timeout held-period 63
+            m = p100.match(line)
+            if m:
+                intf_dict['dot1x_timeout_held_period'] = int(m.groupdict()['dot1x_timeout_held_period'])
+                continue
+
+            # dot1x credentials EAPTLSCRED-IOSCA
+            m = p101.match(line)
+            if m:
+                intf_dict['dot1x_credentials'] = m.groupdict()['dot1x_credentials']
+                continue
+
+            # dot1x supplicant eap profile Self
+            m = p102.match(line)
+            if m:
+                intf_dict['dot1x_supplicant_eap_profile'] = m.groupdict()['dot1x_supplicant_eap_profile']
                 continue
 
         return config_dict

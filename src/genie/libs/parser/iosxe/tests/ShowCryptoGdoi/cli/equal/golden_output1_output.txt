@@ -1,0 +1,87 @@
+GROUP INFORMATION
+
+Group Name               : cust
+Group Identity           : 1000
+Group Type               : G-IKEv2 (IKEv2)
+IKEv2 Profile            : gikev2-profile
+Crypto Path              : ipv4
+Key Management Path      : ipv4
+Rekeys received          : 134
+IPSec SA Direction       : Both
+
+ Group Server list       : 3.3.3.3
+
+Group Member Information For Group cust:
+IPSec SA Direction : Both
+ACL Received From KS : gdoi_group_cust_temp_acl
+
+Group member             : 10.10.10.2      vrf: None
+   Local addr/port       : 10.10.10.2/848
+   Remote addr/port      : 3.3.3.3/848
+   fvrf/ivrf             : None/None
+   Version               : 1.0.22
+   Registration status   : Registered
+   Registered with       : 3.3.3.3
+   Re-registers in       : 589 sec
+   Succeeded registration: 1
+   Attempted registration: 2
+   Last rekey from       : 3.3.3.3
+   Last rekey seq num    : 2
+   Unicast rekey received: 134
+   Rekey ACKs sent       : 134
+   Rekey Rcvd(hh:mm:ss)  : 00:03:59
+   DP Error Monitoring   : OFF
+   IPSEC init reg executed    : 0
+   IPSEC init reg postponed   : 0
+   Active TEK Number     : 2
+   SA Track (OID/status) : disabled
+
+   allowable rekey cipher: any
+   allowable rekey hash  : any
+   allowable transformtag: any ESP
+
+Rekeys cumulative
+   Total received        : 134
+   After latest register : 134
+   Rekey Acks sents      : 134
+
+ACL Downloaded From KS 3.3.3.3:
+access-list deny eigrp any any
+access-list permit ip host 23.23.23.23 any
+access-list permit ip host 33.23.23.23 any
+
+KEK POLICY:
+Rekey Transport Type : Unicast
+Lifetime (secs) : 1650
+Encrypt Algorithm : AES
+Key Size : 256
+Sig Hash Algorithm : HMAC_AUTH_SHA512
+Sig Key Length (bits) : 4400
+
+TEK POLICY for the current KS-Policy ACEs Downloaded:
+GigabitEthernet0/0/3:
+IPsec SA:
+spi: 0xBB7AA559(3145377113)
+transform: esp-256-aes esp-sha512-hmac
+sa timing:remaining key lifetime (sec): (661)
+Anti-Replay(Time Based) : 20 sec interval
+tag method : disabled
+alg key size: 32 (bytes)
+sig key size: 64 (bytes)
+encaps: ENCAPS_TUNNEL
+
+IPsec SA:
+    spi: 0x1190A473(294691955)
+    transform: esp-256-aes esp-sha512-hmac 
+    sa timing:remaining key lifetime (sec): (36)
+    Anti-Replay(Time Based) : 20 sec interval
+    tag method : disabled
+    alg key size: 32 (bytes)
+    sig key size: 64 (bytes)
+    encaps: ENCAPS_TUNNEL
+
+KGS POLICY:
+REG_GM: local_addr 10.10.10.2
+
+P2P POLICY:
+REG_GM: local_addr 10.10.10.2

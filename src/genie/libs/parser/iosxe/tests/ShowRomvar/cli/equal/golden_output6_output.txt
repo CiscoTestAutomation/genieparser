@@ -22,7 +22,7 @@ ROMMON variables:
  CONFIG_FILE=""
  BOOTLDR=""
  BAUD="9600"
- BOOT_PARAM="root=/dev/ram console=ttyS0,9600enforcing=0"
+ BOOT_PARAM="root=/dev/ram console=ttyS0,9600"
  BP_MANUAL_BOOT="no"
  BP_BOOT=""
  BP_BAUD="9600"

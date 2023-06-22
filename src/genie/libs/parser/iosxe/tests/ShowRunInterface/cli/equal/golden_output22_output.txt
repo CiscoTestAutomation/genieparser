@@ -1,0 +1,24 @@
+Building configuration...
+ 
+Current configuration : 610 bytes
+!
+interface FortyGigabitEthernet1/1/1
+no switchport
+no ip address
+macsec network-link
+authentication periodic
+authentication timer reauthenticate 6000
+access-session host-mode multi-host
+access-session closed
+access-session port-control auto
+dot1x pae both
+dot1x timeout quiet-period 70
+dot1x timeout server-timeout 67
+dot1x timeout tx-period 78
+dot1x timeout supp-timeout 87
+dot1x max-req 6
+dot1x authenticator eap profile Self
+dot1x timeout held-period 63
+dot1x credentials EAPTLSCRED-IOSCA
+dot1x supplicant eap profile Self
+end

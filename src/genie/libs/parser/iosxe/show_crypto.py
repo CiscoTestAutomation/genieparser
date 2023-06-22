@@ -6512,7 +6512,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                     "allowable_rekey_cipher":str,
                                     "attempted_registration_count":int,
                                     "dp_error_monitoring":str,
-                                    "fail_close_revert":str,
+                                    Optional("fail_close_revert"):str,
                                     "fvrf":str,
                                     "ipsec_init_reg_executed":int,
                                     "ipsec_init_reg_postponed":int,
@@ -6521,7 +6521,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                     "last_rekey_server":str,
                                     "local_addr":str,
                                     "local_addr_port":str,
-                                    "pfs_rekey_received":int,
+                                    Optional("pfs_rekey_received"):int,
                                     "re_register_time_sec":int,
                                     "registration":str,
                                     "rekey_acks_sent":int,
@@ -6579,7 +6579,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                                 Any():{
                                                     "alg_key_size_bytes":int,
                                                     "sig_key_size_bytes":int,
-                                                    "anti_replay_count":int,
+                                                    Optional("anti_replay_count"):int,
                                                     "encaps":str,
                                                     "sa_remaining_key_lifetime":int,
                                                     "tag_method":str,
@@ -6588,7 +6588,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                                 Any():{
                                                     "alg_key_size_bytes":int,
                                                     "sig_key_size_bytes":int,
-                                                    "anti_replay_count":int,
+                                                    Optional("anti_replay_count"):int,
                                                     "encaps":str,
                                                     "sa_remaining_key_lifetime":int,
                                                     "tag_method":str,
@@ -6624,7 +6624,8 @@ class ShowCryptoGdoi(ShowCryptoGdoiSchema):
         p2 = re.compile(r"^Group Identity +: +(?P<group_identity>\w+)$")
 
         # Group Type               : GDOI (ISAKMP)
-        p3 = re.compile(r"^Group Type +: +(?P<group_type>[\w\s\S]+)$")
+        # Group Type               : G-IKEv2 (IKEv2)
+        p3 = re.compile(r"^Group Type +: +(?P<group_type>[\w\d\S\-\s]+)$")
 
         # Crypto Path              : ipv4
         p4 = re.compile(r"^Crypto Path +: +(?P<crypto_path>\w+)$")
@@ -6677,8 +6678,9 @@ class ShowCryptoGdoi(ShowCryptoGdoiSchema):
         # Attempted registration: 1
         p20 = re.compile(r"^Attempted.* +(?P<attempted_registration_count>\d+)$")
 
+        # Last rekey from       : UNKNOWN
         # Last rekey from       : 1.1.1.1
-        p21 = re.compile(r"^Last rekey from.* +(?P<last_rekey_server>[\d\.]+)$")
+        p21 = re.compile(r"^Last rekey from.* +(?P<last_rekey_server>[\w\d\.]+)$")
 
         # Last rekey seq num    : 0
         p22 = re.compile(r"^Last rekey seq.* +(?P<last_rekey_seq_num>\d+)$")
@@ -8391,6 +8393,8 @@ class ShowCryptoIkev2StatsSchema(MetaParser):
                     'incoming_challenge_no_cookie': int                   
                 },
                 'deleted_sessions_cert_revoke': int,
+                Optional('sa_strength_enforce_reject_incoming'): int,
+                Optional('sa_strength_enforce_reject_outgoing'): int,
                 Optional('active_qr_sessions'): int,
                 Optional('qr_manual'): int,
                 Optional('qr_dynamic'): int                
@@ -8457,6 +8461,10 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
 
         # Sessions with Quantum Resistance: 1        Manual: 4294967291 Dynamic: 6
         p12 = re.compile(r'^Sessions with Quantum Resistance:\s+(?P<active_qr_sessions>\d+)\s+Manual:\s+(?P<qr_manual>\d+)\s+Dynamic:\s+(?P<qr_dynamic>\d+)$')
+
+        # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
+        p13 = re.compile(r'^SA Strength Enforcement Rejects -\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
+                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -8566,6 +8574,14 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
                 v2stat_dict.update({'qr_dynamic': int(group['qr_dynamic'])})
                 continue
 
+            # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                v2stat_dict.update({'sa_strength_enforce_reject_incoming': int(group['sa_strength_enforce_reject_incoming'])})
+                v2stat_dict.update({'sa_strength_enforce_reject_outgoing': int(group['sa_strength_enforce_reject_outgoing'])})
+                continue
+
         return ret_dict
 
 
@@ -8607,7 +8623,9 @@ class ShowCryptoCallAdmissionStatisticsSchema(MetaParser):
                 'incoming_ipsec_reject': int,
                 'outgoing_ipsec_request': int,
                 'outgoing_ipsec_accept': int,
-                'outgoing_ipsec_reject': int,                
+                'outgoing_ipsec_reject': int,
+                Optional('sa_strength_enforce_reject_incoming'): int,
+                Optional('sa_strength_enforce_reject_outgoing'): int,                
                 'phase_sa_under_negotiation': int
             },
         }
@@ -8671,6 +8689,10 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
 
         # Phase1.5 SAs under negotiation:         0 
         p12 = re.compile(r'^Phase1.5 SAs under negotiation:\s+(?P<phase1_sa>\d+)$')
+
+        # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
+        p13 = re.compile(r'^SA Strength Enforcement Rejects:\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
+                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -8775,6 +8797,16 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
             if m:
                 group = m.groupdict()                    
                 v2stat_dict.update({'phase_sa_under_negotiation': int(group['phase1_sa'])})
+                continue
+
+            # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                v2stat_dict.update({
+                    'sa_strength_enforce_reject_incoming': int(group['sa_strength_enforce_reject_incoming']),
+                    'sa_strength_enforce_reject_outgoing': int(group['sa_strength_enforce_reject_outgoing'])
+                })
                 continue
 
         return ret_dict

@@ -13,6 +13,7 @@ Incoming IKEV2 Cookie Challenged Requests: 0
     accepted: 0        rejected: 0        rejected no cookie: 0       
 Total Deleted sessions of Cert Revoked Peers: 0       
 Total init sa request rejected due to queue limit : 0       
+SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
 Sessions with Quantum Resistance: 1        Manual: 4294967290 Dynamic: 7       
 PPK Identity Mismatch: 0        
 PPK Retrieve Failure    -    ALL:      0        With PPK Required:    0       

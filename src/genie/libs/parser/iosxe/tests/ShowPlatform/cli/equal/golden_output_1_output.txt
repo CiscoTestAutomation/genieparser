@@ -1,0 +1,24 @@
+show platform
+Chassis type: ISR4351/K9
+
+Slot      Type                State                 Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0         ISR4351/K9          ok                    2w0d
+ 0/0      ISR4351-3x1GE       ok                    2w0d
+1         ISR4351/K9          ok                    2w0d
+ 1/0      SM-X-E2-20UXF       admin down            00:00:03
+2         ISR4351/K9          ok                    2w0d
+R0        ISR4351/K9          ok, active            2w0d
+F0        ISR4351/K9          ok, active            2w0d
+P0        PWR-4450-AC         ok                    2w0d
+P2        ACS-4450-FANASSY    ok                    2w0d
+
+Slot      CPLD Version        Firmware Version
+--------- ------------------- ---------------------------------------
+0         17100927            16.12(2r)
+1         17100927            16.12(2r)
+2         17100927            16.12(2r)
+R0        17100927            16.12(2r)
+F0        17100927            16.12(2r)
+
+Utah1#

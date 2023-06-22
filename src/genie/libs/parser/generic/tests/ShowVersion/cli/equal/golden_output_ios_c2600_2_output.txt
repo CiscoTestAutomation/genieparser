@@ -1,0 +1,26 @@
+Cisco Internetwork Operating System Software 
+IOS (tm) C2600 Software (C2600-I-M), Version 12.2(2)XA1, EARLY DEPLOYMENT RELEASE SOFTWARE (fc1)
+TAC:Home:SW:IOS:Specials for info
+Copyright (c) 1986-2001 by cisco Systems, Inc.
+Compiled Mon 27-Aug-01 19:57 by hwcheng
+Image text-base: 0x80008088, data-base: 0x809DD03C
+
+ROM: System Bootstrap, Version 12.1(3r)T2, RELEASE SOFTWARE (fc1)
+ROM: C2600 Software (C2600-I-M), Version 12.2(2)XA1, EARLY DEPLOYMENT RELEASE SOFTWARE (fc1)
+
+dna-poc-ts uptime is 4 weeks, 2 days, 7 hours, 56 
+minutes
+System returned to ROM by power-on
+System image file is "flash:c2600-i-mz.122-2.XA1"
+
+cisco 2621 (MPC860) processor (revision 0x600) with 60416K/5120K bytes of memory.
+Processor board ID JAD05390XNG (3894145955)
+M860 processor: part number 0, mask 49
+Bridging software.
+X.25 software, Version 3.0.0.
+2 FastEthernet/IEEE 802.3 interface(s)
+32 terminal line(s)
+32K bytes of non-volatile configuration memory.
+32768K bytes of processor board System flash (Read/Write)
+
+Configuration register is 0x2

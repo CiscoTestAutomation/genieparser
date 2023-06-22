@@ -1,0 +1,156 @@
+show platform software fed switch 1 qos interface port-channel 10 ingress npd detailed
+***********************************************************************************
+ [Port-channel10, map1, Ingress]: CGID = 0x738310
+***********************************************************************************
+  cgid: 0x738310
+  No of classes: 3
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE
+
+  ============================================================
+   NPD: Ingress QOS Profile information
+  ============================================================
+  OID: 0x840
+  Ref Count: 1
+  No of  Counter: 1
+  No of meters: 2
+  Tunnel Mode: RE-EVALUATE
+  Need filter table update: UPTODATE
+
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+  ----      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      2
+   1          1       0         0       0   G     N      2
+   2          2       0         0       0   G     N      2
+   3          3       0         0       0   G     N      2
+   4          4       0         0       0   G     N      2
+   5          5       0         0       0   G     N      2
+   6          6       0         0       0   G     N      2
+   7          7       0         0       0   G     N      2
+   8          8       1         0       0   G     N      2
+   9          9       1         0       0   G     N      2
+   10         10      1         0       0   G     N      2
+   11         11      1         0       0   G     N      2
+   12         12      1         0       0   G     N      2
+   13         13      1         0       0   G     N      2
+   14         14      1         0       0   G     N      2
+   15         15      1         0       0   G     N      2
+   16         16      2         0       7   G     N      2
+   17         17      2         0       0   G     N      2
+   18         18      2         0       0   G     N      2
+   19         19      2         0       0   G     N      2
+   20         20      2         0       0   G     N      2
+   21         21      2         0       0   G     N      2
+   22         22      2         0       0   G     N      2
+   23         23      2         0       0   G     N      2
+   24         24      3         0       7   G     N      2
+   25         25      3         0       0   G     N      2
+   26         26      3         0       0   G     N      2
+   27         27      3         0       0   G     N      2
+   28         28      3         0       0   G     N      2
+   29         29      3         0       0   G     N      2
+   30         30      3         0       0   G     N      2
+   31         31      3         0       0   G     N      2
+   32         32      4         0       7   G     N      2
+   33         33      4         0       0   G     N      2
+   34         34      4         0       0   G     N      2
+   35         35      4         0       0   G     N      2
+   36         36      4         0       0   G     N      2
+   37         37      4         0       0   G     N      2
+   38         38      4         0       0   G     N      2
+   39         39      4         0       0   G     N      2
+   40         40      5         0       7   G     N      2
+   41         41      5         0       0   G     N      2
+   42         42      5         0       0   G     N      2
+   43         43      5         0       0   G     N      2
+   44         44      5         0       0   G     N      2
+   45         45      5         0       0   G     N      2
+   46         46      5         0       7   G     N      2
+   47         47      5         0       0   G     N      2
+   48         48      6         0       7   G     N      2
+   49         49      6         0       0   G     N      2
+   50         50      6         0       0   G     N      2
+   51         51      6         0       0   G     N      2
+   52         52      6         0       0   G     N      2
+   53         53      6         0       0   G     N      2
+   54         54      6         0       0   G     N      2
+   55         55      6         0       0   G     N      2
+   56         56      7         0       7   G     N      2
+   57         57      7         0       0   G     N      2
+   58         58      7         0       0   G     N      2
+   59         59      7         0       0   G     N      2
+   60         60      7         0       0   G     N      2
+   61         61      7         0       0   G     N      2
+   62         62      7         0       0   G     N      2
+   63         63      7         0       0   G     N      2
+
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   -------   -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      2
+   1          1       0         0       0   G     N      2
+   2          2       1         0       0   G     Y      0
+   3          3       1         0       0   G     Y      0
+   4          4       2         0       0   G     N      2
+   5          5       2         0       0   G     N      2
+   6          6       3         0       0   G     N      2
+   7          7       3         0       0   G     N      2
+   8          8       4         0       7   G     N      2
+   9          9       4         0       7   G     N      2
+   10         10      5         0       7   G     Y      1
+   11         11      5         0       7   G     Y      1
+   12         12      6         0       0   G     N      2
+   13         13      6         0       0   G     N      2
+   14         14      7         0       0   G     N      2
+   15         15      7         0       0   G     N      2
+
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   ---      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      2
+   1          1       1         0       0   G     N      2
+   2          2       2         0       0   G     N      2
+   3          3       3         0       0   G     N      2
+   4          4       4         0       0   G     N      2
+   5          5       5         0       0   G     N      2
+   6          6       6         0       0   G     N      2
+   7          7       7         0       0   G     N      2
+
+
+  ---------------------------------------
+   IPV4 ACL (OID: 0x0, No of ACEs: 0)
+  ---------------------------------------
+
+  ---------------------------------------
+   IPV6 ACL (OID: 0x0, No of ACEs: 0)
+  ---------------------------------------
+  ============================================================
+   NPD: Bind Information
+  ============================================================
+  Port Type: L2 ETHER CHANNEL
+  IQP counter size: 1
+  IQP Counter OID: 0x0
+  Meter Type: IFG EXACT
+  Meter set OID: 0x85B
+  No of meters: 3
+    Meter Set info
+    ...............
+    CIR: 1000000000
+    EIR: 1000000000
+    Profile OID: 0x86D
+    Action Profile OID: 0x110
+
+    CIR: 500000000
+    EIR: 500000000
+    Profile OID: 0x877
+    Action Profile OID: 0x110
+
+    CIR: 0
+    EIR: 0
+    Profile OID: 0x0
+    Action Profile OID: 0x0
+
+  System port OID: 0x0
+  Port OID: 0x0
+  Speed: 40000000000
+  Port Internal State: Active
+  Trust Type mode: Unspecified

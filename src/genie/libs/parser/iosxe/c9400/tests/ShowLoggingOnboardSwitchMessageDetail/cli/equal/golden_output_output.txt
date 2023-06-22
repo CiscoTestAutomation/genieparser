@@ -1,0 +1,27 @@
+--------------------------------------------------------------------------------
+ERROR MESSAGE SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS Facility-Sev-Name | Count | Persistence Flag
+--------------------------------------------------------------------------------
+04/05/2023 06:57:30 %IOSXE-2-SPA_INSERTED :   168  : LAST :  SPA inserted in subslot 1/0
+04/05/2023 06:56:37 %IOSXE-2-SPA_REMOVED :    84   : LAST :  SPA removed from subslot 5/0
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ERROR MESSAGE CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS Facility-Sev-Name
+--------------------------------------------------------------------------------
+03/30/2023 02:32:41 %Unrecognized message ID 2504
+03/30/2023 03:16:41 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+03/30/2023 03:16:51 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/05/2023 07:35:47 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/04/2023 12:26:57 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+04/04/2023 12:41:41 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+04/04/2023 12:41:41 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+04/04/2023 12:41:41 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+04/04/2023 12:41:48 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+04/04/2023 12:41:48 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+04/02/2023 09:48:39 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+04/02/2023 09:48:39 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+04/02/2023 10:58:42 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+--------------------------------------------------------------------------------

@@ -1,0 +1,4 @@
+show platform software wired-client switch Standby r0
+        ID  MAC Address     Fwd    Open Access
+-----------------------------------------------
+0x34e94ce5  0011.0100.0001  Yes    No

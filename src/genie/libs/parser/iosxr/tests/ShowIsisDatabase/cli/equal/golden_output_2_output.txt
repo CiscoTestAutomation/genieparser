@@ -1,0 +1,27 @@
+show isis database
+Mon Jun 12 09:39:34.536 UTC
+
+IS-IS CORE (Level-1) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+XRv9k-PE1.00-00     * 0x0000083b   0xefdd        662             0/0/0
+
+ Total Level-1 LSP count: 1     Local Level-1 LSP count: 1
+
+IS-IS CORE (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+XRv9k-PE1.00-00     * 0x00000845   0xdbe7        705             0/0/0
+
+ Total Level-2 LSP count: 1     Local Level-2 LSP count: 1
+
+IS-IS ACCESS (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+XRv9k-PE1.00-00     * 0x00001420   0xfa85        1108            0/0/0
+AGG-PE-A.00-00        0x00001430   0x09c6        719             0/0/0
+AGG-PE-A.01-00        0x000013cd   0xf6b0        1168            0/0/0
+XRv9k-PE2.00-00       0x0000140b   0x2726        540             0/0/0
+XRv9k-PE2.03-00       0x000013ca   0x069b        583             0/0/0
+AGG-PE-B.00-00        0x0000142f   0xa557        512             0/0/0
+AGG-PE-B.01-00        0x000013bf   0x6742        724             0/0/0
+AGG-PE-B.03-00        0x000013cb   0xf0ae        1087            0/0/0
+
+ Total Level-2 LSP count: 8     Local Level-2 LSP count: 1
