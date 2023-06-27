@@ -56,7 +56,6 @@ class ShowSntp(ShowSntpSchema):
         # 192.168.131.59              3           4        00:01:00      Synced
 
         p1 = re.compile( r'^(?P<server>[\w\.\:]+) +(?P<stratum>\d+) +(?P<version>\d+) +(?P<updated>[\w\:\.]+) *(?P<status>\w*)$' )
-        p2 = re.compile( r'^(?P<server>[\w\.\:]+) +(?P<stratum>\d+) +(?P<version>\d+) +(?P<updated>[\w\:\.]+) +$' )
 
         for line in out.splitlines():
             line = line.strip()
