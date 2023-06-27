@@ -1,0 +1,16 @@
+Dot1x Authenticator Port Statistics for FortyGigabitEthernet1/1/1
+--------------------------------------------
+RxStart = 0 RxLogoff = 0 RxResp = 3 RxRespID = 1
+RxInvalid = 0 RxLenErr = 0 RxTotal = 5
+
+TxReq = 4 TxReqID = 1 TxTotal = 5
+
+RxVersion = 3 LastRxSrcMAC = 0027.90bf.c931
+
+Dot1x Supplicant Port Statistics for FortyGigabitEthernet1/1/1
+--------------------------------------------
+RxReq = 24 RxInvalid = 0 RxLenErr = 0 RxTotal = 28
+
+TxStart = 8 TxLogoff = 4 TxResp = 24 TxTotal = 36
+
+RxVersion = 0 LastRxSrcMAC = 0027.90bf.c931

@@ -4799,14 +4799,27 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
         # Output for router lisp 0
         p1 = re.compile(r'^Output\s+for\s+router\s+lisp\s+(?P<lisp_id>\d+)')
 
+        # Site Name      Last      Up     Who Last             Inst     EID Prefix
+        #                Register         Registered           ID
         # Shire          never     no     --                   0        1.1.1.0/24
-        # 00:00:06  yes*#  11.11.11.11:29972    10       2001:DB8::2/128
+        #                00:00:06  yes*#  11.11.11.11:29972    10       2001:DB8::2/128
         p2 = re.compile(r'^((?P<site_name>\S+)\s+)?(?P<last_registered>\S+)\s+'
                         r'(?P<up>yes|no)\*?#?\s+(?P<who_last_registered>\S+)\s+'
                         r'(?P<instance_id>\d+)\s+(?P<eid_prefix>\d{1,3}\.'
                         r'\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}'
                         r'|any-mac|([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{2})$')
 
+        # Site Name      Last      Up     Who Last             Inst     EID Prefix
+        #                Register         Registered           ID
+        # Shire          00:00:06  yes*#  1000:1000:1000:1000:1000:1000:1000:1000
+        #                                                      10       2001:DB8::2/128
+        p3_1 = re.compile(r'^((?P<site_name>\S+)\s+)?(?P<last_registered>\S+)\s+'
+                          r'(?P<up>yes|no)\*?#?\s+(?P<who_last_registered>\S+)$')
+        p3_2 = re.compile(r'^(?P<instance_id>\d+)\s+(?P<eid_prefix>\d{1,3}\.'
+                          r'\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}'
+                          r'|any-mac|([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{2})$')
+
+        current_prefix_dict = {}
         for line in output.splitlines():
             line = line.strip()
 
@@ -4819,7 +4832,10 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                                        .setdefault(lisp_id, {})
                 continue
 
+            # Site Name      Last      Up     Who Last             Inst     EID Prefix
+            #                Register         Registered           ID
             # Shire          never     no     --                   0        1.1.1.0/24
+            #                00:00:06  yes*#  11.11.11.11:29972    10       2001:DB8::2/128
             m = p2.match(line)
             if m:
                 try:
@@ -4845,6 +4861,44 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                                   'who_last_registered':who_last_registered,
                                   'up':up})
                 continue
+
+            # Site Name      Last      Up     Who Last             Inst     EID Prefix
+            #                Register         Registered           ID
+            # Shire          00:00:06  yes*#  1000:1000:1000:1000:1000:1000:1000:1000
+            #                                                      10       2001:DB8::2/128
+            m = p3_1.match(line)
+            if m:
+                try:
+                    lisp_id = int(lisp_id) if lisp_id else 0
+                    lisp_id_dict = ret_dict.setdefault('lisp_id', {}).setdefault(lisp_id, {})
+                except ValueError:
+                    pass
+                group = m.groupdict()
+                site_name = group['site_name']
+                if site_name:
+                    site_dict = lisp_id_dict.setdefault('site_name', {}) \
+                                            .setdefault(site_name, {})
+                current_prefix_dict.update({'last_registered':group['last_registered'],
+                                            'who_last_registered':group['who_last_registered'],
+                                            'up':group['up']})
+                continue
+
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_id = int(group['instance_id'])
+                eid_prefix = group['eid_prefix']
+
+                site_info = site_dict.setdefault('instance_id', {}) \
+                                     .setdefault(instance_id, {}) \
+                                     .setdefault('eid_prefix', {}) \
+                                     .setdefault(eid_prefix, {})
+                site_info.update({'last_registered':current_prefix_dict['last_registered'],
+                                  'who_last_registered':current_prefix_dict['who_last_registered'],
+                                  'up':current_prefix_dict['up']})
+                current_prefix_dict = {}
+                continue
+
         return ret_dict
 
 
@@ -6832,7 +6886,8 @@ class ShowLispPublisherSchema(MetaParser):
                             str: {
                                 'state': str,
                                 'session': str,
-                                'pubsub_state': str
+                                'pubsub_state': str,
+                                'type': str
                             }
                         }
                     }
@@ -6890,14 +6945,14 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         p1 = re.compile(r'^Output +for +router +lisp +(?P<lisp_id>(\S+))'
                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        # 23.23.23.23                             ETR Map-Server not found       Down            Off
-        # 23.23.23.23                             Unreachable       Down                         Off
+        # 23.23.23.23                             ETR Map-Server not found       Down      T      Off
+        # 23.23.23.23                             Unreachable       Down                   L      Off
         # 23.23.23.23                             Reachable       Down
-        # 2001:199:199:199::199                   ETR Map-Server  Down            Off
-        # 101.101.101.101                         No ETR MS        Up            Established
+        # 2001:199:199:199::199                   ETR Map-Server  Down      S      Off
+        # 101.101.101.101                         No ETR MS        Up       T     Established
         p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F\.:]+)\s+(?P<state>ETR Map-Server '
                         r'not found|ETR Map-Server|Unreachable|Reachable|No ETR MS)\s+'
-                        r'(?P<session>\w+)\s+(?P<pubsub_state>\w+)$')
+                        r'(?P<session>\w+)\s+(?P<type>L|T|S)\s+(?P<pubsub_state>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -13574,10 +13629,11 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
         # EID-prefix: 1.1.1.0/24 instance-id 0
         # EID-prefix: 2001:192:168:1::1/64 instance-id 0
         # EID-prefix: aabb.cc00.c901/48 instance-id 101
+        # EID-prefix: any-mac instance-id 101
         p3 = re.compile(r"^EID-prefix:\s+(?P<eid_prefix>\d{1,3}\.\d{1,3}\."
                         r"\d{1,3}\.\d{1,3}\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}"
-                        r"|([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,3})\s+"
-                        r"instance-id\s+(?P<instance_id>\d+)$")
+                        r"|([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,3}|any-mac)"
+                        r"\s+instance-id\s+(?P<instance_id>\d+)$")
 
         # First registered:     never
         p4 = re.compile(r"^First\s+registered:\s+"
@@ -13718,6 +13774,7 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                 continue
 
             # EID-prefix: 1.1.1.0/24 instance-id 0
+            # EID-prefix: any-mac instance-id 101
             m = p3.match(line)
             if m:
                 groups = m.groupdict()

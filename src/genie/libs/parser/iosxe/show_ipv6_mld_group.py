@@ -346,10 +346,13 @@ class ShowIpv6MldSnoopingMrouterVlanSchema(MetaParser):
     """Schema for show ipv6 mld snooping mrouter vlan {vlanid}"""
 
     schema = {
-        'mld': {
-            Any(): {
+        'mld': 
+        {
+            Any():
+            {
+                'port': str,
                 'vlan': str
-            },
+            }
         },
     }
 
@@ -364,7 +367,7 @@ class ShowIpv6MldSnoopingMrouterVlan(ShowIpv6MldSnoopingMrouterVlanSchema):
             output = self.device.execute(self.cli_command[0].format(vlanid=vlanid))
 
         #  100    Tw1/0/13(static)
-        p1 = re.compile(r"^(?P<vlan>\d+)\s+(?P<ports>[\w\/\.]+)[\(\)\w]+$")
+        p = re.compile(r"^(?P<vlan>\d+)\s+(?P<ports>[\w\/\.\,\s\(\)\w]+)$")
 
         ret_dict = {}
 
@@ -372,10 +375,12 @@ class ShowIpv6MldSnoopingMrouterVlan(ShowIpv6MldSnoopingMrouterVlanSchema):
             line = line.strip()
             
             #  100    Tw1/0/13(static)
-            m = p1.match(line)
+            m = p.match(line)
             if m:
                 ports_var = Common.convert_intf_name(m.groupdict()['ports'])
                 ports_dict = ret_dict.setdefault('mld', {}).setdefault(ports_var, {})
                 ports_dict['vlan'] = m.groupdict()['vlan']
+                ports_dict['port'] = m.groupdict()['ports']
                 continue
+
         return ret_dict

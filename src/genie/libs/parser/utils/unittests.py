@@ -59,8 +59,9 @@ def read_json_file(file_path):
 
 def read_python_file(file_path):
     """Helper function to read in a Python file, and look for expected_output."""
-    _module = importlib.machinery.SourceFileLoader("expected",
-                                                   file_path).load_module()
+    # TODO: replace with AST implementation
+    module_name = pathlib.Path(file_path).stem
+    _module = importlib.machinery.SourceFileLoader(module_name, file_path).load_module()
     return getattr(_module, "expected_output")
 
 

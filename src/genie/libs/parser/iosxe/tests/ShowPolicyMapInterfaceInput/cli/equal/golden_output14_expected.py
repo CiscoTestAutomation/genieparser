@@ -21,7 +21,7 @@ expected_output = {
                                         },
                                     'exceeded': {
                                         'actions': {
-                                            'set_dscp_transmit': 'dscp ' 'table ''tb2'
+                                            'set_dscp_transmit': 'dscp ' 'table ''tb1'
                                             },
                                         'bps': 472651000,
                                         'bytes': 22025930000
@@ -29,7 +29,9 @@ expected_output = {
                                     'pir_be_bytes': 125000000,
                                     'pir_bps': 4000000000,
                                     'violated': {
-                                        'actions': {},
+                                        'actions': {
+                                            'set_dscp_transmit': 'dscp table tb2'
+                                        },
                                         'bps': 6196321000,
                                         'bytes': 288755945000
                                         }

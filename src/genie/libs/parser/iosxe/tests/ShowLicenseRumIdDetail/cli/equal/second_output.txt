@@ -1,0 +1,11 @@
+Smart Licensing Usage Report Detail:
+====================================
+Report Id: 1685089009
+  Metric Name: TELEMETRY
+  UDI: PID:C9800-L-F-K9,SN:FCW2310M0XB
+  Previous Report Id: 1685089006,    Next Report Id: 1685089012
+  State: DELETED,      Close Reason: SMART
+  Start Time: Jun 04 00:00:01 2023 CET,      End Time: Jun 05 00:00:00 2023 CET
+  Storage State: DELETED
+  Transaction ID: 0
+  Transaction Message: <none>

@@ -33,6 +33,7 @@
     * show ipv6 dhcp pool {poolname}
     * show ipv6 dhcp statistics
     * show ipv6 dhcp binding 
+    * show ipv6 dhcp relay binding
 
 """
 
@@ -1065,6 +1066,8 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('egress_pkt_rate'): Or(str,int),
                                                      Optional('egress_vxlan_version'): str,
                                                      Optional('egress_vxlan_cap'): str,
+                                                     Optional('egress_vxlan_vni'): str,
+                                                     Optional('egress_vxlan_nxthop'): str,
                                                     },
                                                 },
                                             },
@@ -1180,18 +1183,19 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
-                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
-                         ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
         
         #Tunnel1, VXLAN v6 Decap Flags: F NS
-        
+        # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
-                        '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
-                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?)?'
-						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
+                        r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+                        r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
+                        r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                        r'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
         p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)$')
@@ -1281,6 +1285,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
 
             #Vlan2001 Flags: F NS
             #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
+            # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
             m=p8.match(line)
             if m:
                 group = m.groupdict()
@@ -1312,7 +1317,10 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     egress_data['egress_vxlan_cap'] = group['egress_vxlan_cap']
                 if group['egress_vxlan_version']:
                     egress_data['egress_vxlan_version'] = group['egress_vxlan_version']
-
+                if group['egress_vxlan_vni']:
+                    egress_data['egress_vxlan_vni'] = group['egress_vxlan_vni']
+                if group['egress_vxlan_nxthop']:
+                    egress_data['egress_vxlan_nxthop'] = group['egress_vxlan_nxthop']
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
@@ -2149,6 +2157,181 @@ class showIpv6MldSnooping(showIpv6MldSnoopingSchema):
                 group = m.groupdict()
                 key = group['key'].lower().strip().replace(' ', '_')
                 dest_dict[key] = group['value']
+                continue
+
+        return ret_dict
+    
+
+# ======================================================
+# Schema for 'show ipv6 dhcp relay binding '
+# ======================================================
+
+class ShowIpv6DhcpRelayBindingSchema(MetaParser):
+    """Schema for show ipv6 dhcp relay binding"""
+
+    schema = {
+        'dhcpv6_relay_binding': {
+            Any(): {
+                'prefix': str,
+                'interface': str,            
+                'duid': str,
+                'iaid': int,
+                'lifetime': int,
+                'expiration': str,
+            },
+        },
+        'num_relay_binding': int,
+        'num_iapd_binding': int,
+        'num_iana_binding': int,
+        'num_relay_binding_bulk_lease': int,
+    }
+
+
+# ======================================================
+# Parser for 'show ipv6 dhcp relay binding '
+# ======================================================
+class ShowIpv6DhcpRelayBinding(ShowIpv6DhcpRelayBindingSchema):
+    """Parser for show ipv6 dhcp relay binding"""
+
+    cli_command = 'show ipv6 dhcp relay binding'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Prefix: 2001:DB8:1201::/48 (TwentyFiveGigE1/0/1)
+        p1 = re.compile(r"^Prefix:\s+(?P<prefix>\S+)\s+\((?P<interface>\S+)\)$")
+        
+        #   DUID: 00030001ECCE131F6700
+        p1_1 = re.compile(r"^\s+DUID:\s+(?P<duid>\S+)$")
+        
+        #   IAID: 8388609
+        p1_2 = re.compile(r"^\s+IAID:\s+(?P<iaid>\d+)$")
+        
+        #   lifetime: 1800
+        p1_3 = re.compile(r"^\s+lifetime:\s+(?P<lifetime>\d+)$")
+        
+        #   expiration: 19:51:56 UTC Mar 21 2023
+        p1_4 = re.compile(r"^\s+expiration:\s+(?P<expiration>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        
+        #   Total number of Relay bindings = 1
+        p2 = re.compile(r"^\s+Total\s+number\s+of\s+Relay\s+bindings\s+=\s+(?P<num_relay_binding>\d+)$")
+        
+        #   Total number of IAPD bindings = 1
+        p3 = re.compile(r"^\s+Total\s+number\s+of\s+IAPD\s+bindings\s+=\s+(?P<num_iapd_binding>\d+)$")
+        
+        #   Total number of IANA bindings = 0
+        p4 = re.compile(r"^\s+Total\s+number\s+of\s+IANA\s+bindings\s+=\s+(?P<num_iana_binding>\d+)$")
+        
+        #   Total number of Relay bindings added by Bulk lease = 0
+        p5 = re.compile(r"^\s+Total\s+number\s+of\s+Relay\s+bindings\s+added\s+by\s+Bulk\s+lease\s+=\s+(?P<num_relay_binding_bulk_lease>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Prefix: 2001:DB8:1201::/48 (TwentyFiveGigE1/0/1)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_var = Common.convert_intf_name(dict_val['interface'])
+                interface_dict = ret_dict.setdefault('dhcpv6_relay_binding', {})\
+                    .setdefault(interface_var, {})
+                interface_dict['prefix'] = dict_val['prefix']
+                interface_dict['interface'] = interface_var
+                continue
+
+            #   DUID: 00030001ECCE131F6700
+            m = p1_1.match(line)
+            if m:
+                interface_dict['duid'] = m.groupdict()['duid']
+                continue
+
+            #   IAID: 8388609
+            m = p1_2.match(line)
+            if m:
+                interface_dict['iaid'] = int(m.groupdict()['iaid'])
+                continue
+
+            #   lifetime: 1800
+            m = p1_3.match(line)
+            if m:
+                interface_dict['lifetime'] = int(m.groupdict()['lifetime'])
+                continue
+
+            #   expiration: 19:51:56 UTC Mar 21 2023
+            m = p1_4.match(line)
+            if m:
+                interface_dict['expiration'] = m.groupdict()['expiration']
+                continue
+
+            #   Total number of Relay bindings = 1
+            m = p2.match(line)
+            if m:
+                ret_dict['num_relay_binding'] = int(m.groupdict()['num_relay_binding'])
+                continue
+
+            #   Total number of IAPD bindings = 1
+            m = p3.match(line)
+            if m:
+                ret_dict['num_iapd_binding'] = int(m.groupdict()['num_iapd_binding'])
+                continue
+
+            #   Total number of IANA bindings = 0
+            m = p4.match(line)
+            if m:
+                ret_dict['num_iana_binding'] = int(m.groupdict()['num_iana_binding'])
+                continue
+
+            #   Total number of Relay bindings added by Bulk lease = 0
+            m = p5.match(line)
+            if m:
+                ret_dict['num_relay_binding_bulk_lease'] = int(m.groupdict()['num_relay_binding_bulk_lease'])
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Schema for 'show ipv6 cef exact-route {source} {destination}'
+# ======================================================
+
+class ShowIpv6cefExactRouteSchema(MetaParser):
+    """ Schema for the commands:
+            * show ipv6 cef exact-route {source} {destination}
+    """
+
+    schema = {
+        "ip_adj": str,
+        "ip_addr": str,
+        "source": str,
+        "destination": str
+    }
+
+class ShowIpv6cefExactRoute(ShowIpv6cefExactRouteSchema):
+    """
+        * show ipv6 cef exact-route
+    """
+
+    cli_command = 'show ipv6 cef exact-route {source} {destination}'
+
+    def cli(self, source, destination, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(source=source, destination=destination))
+
+        # 11:1:0:1::1 -> 11:0:0:2::2 => IP adj out of Port-channel1, addr 11:0:0:2::2
+        p1 = re.compile(r'^(?P<source>[\d\:]+) +-> +(?P<destination>[\d\:]+) +=> IP adj out of +(?P<ip_adj>[\w\-\.\/]+), +addr +(?P<ip_addr>[\d\:]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # 11:1:0:1::1 -> 11:0:0:2::2 => IP adj out of Port-channel1, addr 11:0:0:2::2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['source'] = group['source']
+                ret_dict['destination'] = group['destination']
+                ret_dict['ip_adj'] = group['ip_adj']
+                ret_dict['ip_addr'] = group['ip_addr']
                 continue
 
         return ret_dict

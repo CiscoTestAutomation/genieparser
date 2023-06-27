@@ -5853,6 +5853,10 @@ class ShowOspfInterfaceSchema(MetaParser):
                                             "backup_label": str,
                                             "srte_label": str,
                                         },
+                                        Optional("ldp_status"): {
+                                            "ldp_sync": str,
+                                            "sync_status": str
+                                        },
                                         Optional("forward_reference"): str,
                                         Optional("unnumbered"): bool,
                                         Optional("bandwidth"): int,
@@ -5979,7 +5983,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p2 = re.compile(r'^Interfaces +for +OSPF +(?P<ospf_instance>\S+), +VRF +(?P<vrf_name>\S+)$')
 
         # Loopback0 is up, line protocol is up
-        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down), +line +protocol +is +'
+        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down|administratively down), +line +protocol +is +'
                         r'(?P<line_protocol>up|down)$')
 
         # Internet Address 10.36.3.3/32, Area 0
@@ -6085,6 +6089,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # Youngest key id is 1
         p30 = re.compile(r"^Youngest +key +id +is +(?P<young>(\d+))$")
+
+        # LDP Sync Enabled, Sync Status: Achieved
+        # LDP Sync Enabled, Sync Status: Not Achieved
+        p31 = re.compile(r"^LDP\s+Sync\s+(?P<ldp_sync>[a-zA-Z]+),\s+Sync\s+Status:\s+(?P<sync_status>[a-zA-Z ]+)$")
 
         
         for line in out.splitlines():
@@ -6445,6 +6453,18 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p30.match(line)
             if m:
                 auth_trailer["youngest_key_id"] = int(m.groupdict()["young"])
+                continue
+
+            # LDP Sync Enabled, Sync Status: Achieved
+            # LDP Sync Enabled, Sync Status: Not Achieved
+            m = p31.match(line)
+            if m:
+                ldp_sync = m.groupdict()['ldp_sync']
+                sync_status = m.groupdict()['sync_status']
+
+                ldp_status_dict = interface_dict.setdefault('ldp_status', {})
+                ldp_status_dict['ldp_sync'] = ldp_sync
+                ldp_status_dict['sync_status'] = sync_status
                 continue
 
         return ret_dict

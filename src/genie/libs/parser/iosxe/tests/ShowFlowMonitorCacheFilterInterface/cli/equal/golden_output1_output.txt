@@ -1,0 +1,28 @@
+Processed 1032 flows
+Matched 479 flows
+Aggregated to 479 flows
+Showing the top 2 flows
+
+IPV4 SOURCE ADDRESS:        11.11.19.1
+IPV4 DESTINATION ADDRESS:   224.0.0.6
+INTERFACE OUTPUT:           Gi1/0/13
+IP VERSION:                 4
+IP PROTOCOL:                89
+IP TTL:                     1
+interface input:            Null
+counter packets long:       3
+timestamp abs first:        17:36:52.000
+timestamp abs last:         17:36:53.000
+counter bytes layer2 long:  2550
+
+IPV4 SOURCE ADDRESS:        110.10.84.1
+IPV4 DESTINATION ADDRESS:   15.15.1.8
+INTERFACE OUTPUT:           Gi1/0/13
+IP VERSION:                 4
+IP PROTOCOL:                61
+IP TTL:                     63
+interface input:            Null
+counter packets long:       1
+timestamp abs first:        17:37:01.000
+timestamp abs last:         17:37:01.000
+counter bytes layer2 long:  1024

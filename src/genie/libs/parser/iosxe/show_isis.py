@@ -17,18 +17,19 @@ IOSXE parsers for the following show commands:
     * show isis adjacency stagger all
     * show isis adjacency stagger detail
     * show isis rib
-    * show isis rib {flex_algo}
+    * show isis rib flex-algo 
+    * show isis rib flex-algo {flex_id}
     * show isis rib {source_ip}
     * show isis rib {source_ip} {subnet_mask}
+    * show isis rib flex-algo {flex_id} {source_ip}
+    * show isis rib flex-algo {flex_id} {source_ip} {subnet_mask}
     * show isis rib redistribution
-    * show isis microloop-avoidance flex-algo {flexId}
+    * show isis microloop-avoidance flex-algo {flex_algo}
     * show isis srv6 locators detail
 """
 
 # Python
-from ftplib import parse257
 import re
-from aiohttp import TraceConnectionQueuedEndParams
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -319,6 +320,7 @@ class ShowIsisDatabaseSchema(MetaParser):
                             'overload_bit': int,
                             Optional('area_address'): str,
                             Optional('router_id'): str,
+                            Optional('ipv6_router_id'): str,
                             Optional("router_cap"): str,
                             Optional("d_flag"): bool,
                             Optional("s_flag"): bool,
@@ -528,6 +530,9 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
 
         # Router ID:    10.1.77.77
         p11 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
+
+        # IPv6 Router ID: C01:1::1
+        p11_2 = re.compile(r'^IPv6 +Router +ID: +(?P<ipv6_router_id>\S+)$')
 
         # Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
         p12 = re.compile(r'^Flex algorithm:\s+(?P<flex_algo>\d+)\s+Metric-Type:\s+'
@@ -824,6 +829,13 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
             if m:
                 group = m.groupdict()
                 lsp_dict.update({'router_id': group['router_id']})
+                continue
+
+            # IPv6 Router ID: C01:1::1
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_dict.update({'ipv6_router_id': group['ipv6_router_id']})
                 continue
 
             # Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
@@ -2340,17 +2352,24 @@ class ShowIsisRib(ShowIsisRibSchema):
     cli_command = ['show isis rib',
                    'show isis rib flex-algo',
                    'show isis rib flex-algo {flex_id}',
+                   'show isis rib flex-algo {flex_id} {source_ip}',
+                   'show isis rib flex-algo {flex_id} {source_ip} {subnet_mask}',
                    'show isis rib {source_ip}',
-                   'show isis rib {source_ip} {subnet_mask}']
+                   'show isis rib {source_ip} {subnet_mask}'
+                   ]
 
     def cli(self, flex_id="", source_ip="", subnet_mask="", output=None):
         if output is None:
-            if flex_id:
+            if flex_id and not source_ip and not subnet_mask:
                 out = self.device.execute(self.cli_command[2].format(flex_id=flex_id))
+            elif flex_id and source_ip and not subnet_mask:
+                out = self.device.execute(self.cli_command[3].format(flex_id=flex_id, source_ip=source_ip))
+            elif flex_id and source_ip and subnet_mask:
+                out = self.device.execute(self.cli_command[4].format(flex_id=flex_id, source_ip=source_ip, subnet_mask=subnet_mask))
             elif source_ip and not subnet_mask:
-              out = self.device.execute(self.cli_command[3].format(source_ip=source_ip))
+              out = self.device.execute(self.cli_command[5].format(source_ip=source_ip))
             elif source_ip and subnet_mask:
-              out = self.device.execute(self.cli_command[4].format(source_ip=source_ip, subnet_mask=subnet_mask))
+              out = self.device.execute(self.cli_command[6].format(source_ip=source_ip, subnet_mask=subnet_mask))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -2378,7 +2397,7 @@ class ShowIsisRib(ShowIsisRibSchema):
         # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
         p3 = re.compile(r'^\[(?P<distance>\d+)/(?P<route_type>\w+(\d+)?)/'
                         r'(?P<metric>\d+)\]\s+via\s+(?P<ip>[\d.]+)'
-                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
+                        r'\((?P<interface>\S+)\)'
                         r'( (?P<host>\S+),)?,* from (?P<from_ip>[\d.]+),\s+tag'
                         r'\s+(?P<tag>\d+)(, LSP\[(?P<next_hop_lsp_index>\d+)/'
                         r'(?P<rtp_lsp_index>\d+)/(?P<rtp_lsp_version>\d+)\])?'
@@ -2413,11 +2432,11 @@ class ShowIsisRib(ShowIsisRibSchema):
         # repair path: 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
         p8 = re.compile(r'^repair path(?P<stale>\(\?\))?:\s+'
                         r'(?P<repair_path>\d+.\d+.\d+.\d+)\s*'
-                        r'\((?P<interface>[\w-]+\d+(\/\d+(\/\d+)?)?)\)'
+                        r'\((?P<interface>\S+)\)'
                         r'\s+metric:\s*(?P<metric>\d+)\s+'
                         r'\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?'
                         r'((?P<np>NP),)?((?P<sr>SR))?\)'
-                        r'(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$')
+                        r'(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$') 
 
         # next-hop: 10.10.20.2 (Ethernet1/1)
         p9 = re.compile(r'^next-hop:\s+(?P<next_hop>(([\d.]+)|(not found)))(\s+'

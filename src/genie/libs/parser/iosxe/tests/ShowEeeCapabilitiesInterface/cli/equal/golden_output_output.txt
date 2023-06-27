@@ -1,0 +1,5 @@
+Te1/0/47
+	EEE(efficient-ethernet):  yes (1000T, 2G, 5G and 10G-T auto)
+	Link Partner           :  not enabled
+
+	ASIC/Interface         :  EEE Incapable/None

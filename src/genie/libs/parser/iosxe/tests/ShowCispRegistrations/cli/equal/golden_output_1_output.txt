@@ -1,0 +1,8 @@
+Interface(s) with CISP registered user(s):
+------------------------------------------
+   Gi1/0/11
+    Auth Mgr (Authenticator)
+   Gi1/0/12
+    Auth Mgr (Authenticator)
+   Gi1/0/35
+    802.1x Sup (Supplicant)

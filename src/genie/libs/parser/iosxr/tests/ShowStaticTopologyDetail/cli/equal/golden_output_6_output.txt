@@ -1,0 +1,35 @@
+VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+  Last path event occured at May  1 22:11:04.487
+Prefix/Len          Interface                Nexthop             Object                           Explicit-path       Metrics       Local-Label   
+10.248.4.16/32      Bundle-Ether100          None                None                             None                [0/4096/1/0/1]    No label  
+  Path is installed into RIB at May  1 22:10:34.079 
+  Path version: 1, Path status: 0x21
+  Path has best tag: 0
+
+10.248.4.18/32      Bundle-Ether200          None                None                             None                [0/4096/1/0/1]    No label  
+  Path is installed into RIB at May  1 22:11:04.487 
+  Path version: 1, Path status: 0x21
+  Path has best tag: 0
+
+10.252.252.31/32    None                     1.1.1.1             None                             None                [0/0/5/0/1]       No label  
+  Path is configured at May  1 22:04:12.804
+  Path version: 0, Path status: 0x0
+
+10.255.255.224/32   None                     1.3.2.1             None                             None                [0/2048/10/0/1]   No label  
+  Path is installed into RIB at May  1 22:06:22.240 
+  Path version: 1, Path status: 0x21
+  Path has best tag: 0
+
+10.255.255.253/32   Bundle-Ether5.507        None                None                             None                [0/4096/1/0/1]    No label  
+  Path is configured at May  1 22:04:12.804
+  Path version: 0, Path status: 0x0
+                    Bundle-Ether5.506        None                None                             None                [0/4096/1/0/1]    No label  
+  Path is configured at May  1 22:04:12.804
+  Path version: 0, Path status: 0x0
+
+10.255.255.240/28   Bundle-Ether5.507        None                None                             None                [0/4096/1/0/1]    No label  
+  Path is configured at May  1 22:04:12.804
+  Path version: 0, Path status: 0x0
+                    Bundle-Ether5.506        None                None                             None                [0/4096/1/0/1]    No label  
+  Path is configured at May  1 22:04:12.804
+  Path version: 0, Path status: 0x0

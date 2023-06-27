@@ -1,0 +1,5 @@
+Bridge Domain : 121
+  IP Multicast Prefix table size : 2
+  IP Multicast Prefix table information :
+    Source: *, Group: *, IIF: Null, Adjacency: Olist: 45, Ports: 1
+    Source: ::, Group: ::, IIF: Null, Adjacency: Olist: 46, Ports: 1

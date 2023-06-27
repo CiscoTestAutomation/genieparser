@@ -1,3 +1,11 @@
+"""show_interface_counters.py
+   supported commands:
+     * show interface <intf> counters
+     * show interface <intf> counters | begin <field> 
+     * show interfaces counters errors
+     * show interfaces {interface} counters errors
+"""
+
 import re
 
 from genie.metaparser import MetaParser
@@ -175,3 +183,14 @@ class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
                 continue
 
         return ret_dict
+
+
+class ShowInterfaceCounterErrors(ShowInterfacesCountersErrors):
+    """Parser for show interfaces {interface} counters errors"""
+
+    cli_command = 'show interfaces {interface} counters errors'
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        return super().cli(output=output)

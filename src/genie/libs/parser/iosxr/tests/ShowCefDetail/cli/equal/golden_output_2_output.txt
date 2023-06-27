@@ -1,0 +1,25 @@
+show cef vrf SRV6_L3VPN_BE ipv6 fd00::3/128 detail
+Thu Apr  6 10:15:05.888 UTC
+fd00::3/128, version 103, SRv6 Headend, internal 0x5000001 0x30 (ptr 0xeb4f580) [1], 0x400 (0xda89410), 0x0 (0xf580648)
+ Updated Mar 29 18:12:57.209
+ Prefix Len 128, traffic index 0, precedence n/a, priority 3
+  gateway array (0xd8f5fc8) reference count 3, flags 0x10, source rib (7), 0 backups
+                [4 type 3 flags 0x441 (0xd9a23c8) ext 0x0 (0x0)]
+  LW-LDI[type=3, refc=1, ptr=0xda89410, sh-ldi=0xd9a23c8]
+  gateway array update type-time 1 Mar 13 12:39:03.184
+ LDI Update time Mar 29 18:11:51.158
+ LW-LDI-TS Mar 29 18:11:51.158
+
+  Level 1 - Load distribution: 0
+  [0] via fc00:c000:2003::/128, recursive
+
+   via fc00:c000:2003::/128, 5 dependencies, recursive [flags 0x6000]
+    path-idx 0 NHID 0x0 [0xeb502b0 0x0]
+    next hop VRF - 'default', table - 0xe0800000
+    next hop fc00:c000:2003::/128 via fc00:c000:2003::/48
+    SRv6 H.Encaps.Red SID-list {fc00:c000:2003:e003::}
+
+    Load distribution: 0 (refcount 4)
+
+    Hash  OK  Interface                 Address
+    0     Y   GigabitEthernet0/0/0/2    remote

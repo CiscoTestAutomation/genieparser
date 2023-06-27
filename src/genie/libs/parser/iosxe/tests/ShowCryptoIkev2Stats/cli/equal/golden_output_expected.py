@@ -28,6 +28,8 @@ expected_output = {
             "incoming_challenge_no_cookie": 0,
         },
         "deleted_sessions_cert_revoke": 0,
+        "sa_strength_enforce_reject_incoming": 0,
+        "sa_strength_enforce_reject_outgoing": 4,
         "active_qr_sessions": 1,
         "qr_manual": 4294967290,
         "qr_dynamic": 7,

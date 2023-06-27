@@ -1,0 +1,100 @@
+show isis protocol
+Tue Mar 21 11:20:12.024 UTC
+
+IS-IS Router: 1
+  System Id: 0000.0000.0000 (Not configured, protocol disabled)
+  Instance Id: 0
+  IS Levels: level-2-only
+  Manual area address(es):
+  Routing for area address(es):
+  LSP MTU: 1492
+  LSP Full: level-1: No, level-2: No
+  Non-stop forwarding: Disabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Up
+  XTC connection status: Up
+  Overload Bit: not configured
+  Maximum Metric: not configured
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Rib connected
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+  SR-MPLS:
+    SRLB allocated: 15000 - 15999
+    SRGB allocated: 16000 - 23999
+  Interfaces supported by IS-IS:
+    GigabitEthernet0/0/0/1 is disabled (active in configuration)
+
+IS-IS Router: 10
+  System Id: 1620.1600.1001 
+  Instance Id: 0
+  IS Levels: level-2-only
+  Manual area address(es):
+    49.0001
+    49.0002
+  Routing for area address(es):
+    49.0001
+    49.0002
+  LSP MTU: 1492
+  LSP Full: level-1: No, level-2: No
+  Non-stop forwarding: IETF NSF Restart enabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Up
+  XTC connection status: Up
+  Overload Bit: not configured
+  Maximum Metric: not configured
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Rib connected
+      Level-2
+        Metric style (generate/accept): Wide/Wide
+        Metric: 10
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+      Originating default route active since Mar 16 2023 07:18:46.104 UTC
+    IPv6 Unicast
+      Rib connected
+      Level-2
+        Metric: 10
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+  SR-MPLS:
+    SRLB allocated: 15000 - 15999
+    SRGB allocated: 16000 - 23999
+  Interfaces supported by IS-IS:
+    Bundle-Ether10 is running actively (active in configuration)
+    Bundle-Ether10.10 is running actively (active in configuration)
+    GigabitEthernet0/0/0/1.10 is disabled (active in configuration)
+    GigabitEthernet0/0/0/1.19 is disabled (active in configuration)
+
+IS-IS Router: 99
+  System Id: 1620.1600.5005 
+  Instance Id: 0
+  IS Levels: level-1
+  Manual area address(es):
+    49.0001
+  Routing for area address(es):
+    49.0001
+  LSP MTU: 1492
+  LSP Full: level-1: No, level-2: No
+  Non-stop forwarding: Disabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Up
+  XTC connection status: Down
+  Overload Bit: not configured
+  Maximum Metric: not configured
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Rib connected
+      Level-1
+        Metric style (generate/accept): Wide/Wide
+        Metric: 10
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+  Interfaces supported by IS-IS:
+    GigabitEthernet0/0/0/6 is disabled (active in configuration)

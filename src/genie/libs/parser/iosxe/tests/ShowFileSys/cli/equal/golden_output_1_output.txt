@@ -1,0 +1,4 @@
+Filesystem: usbflash0
+Filesystem Path: /mnt/usb0
+Filesystem Type: vfat
+Mounted: Read/Write

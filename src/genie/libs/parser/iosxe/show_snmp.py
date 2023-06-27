@@ -1295,4 +1295,86 @@ class ShowControllersPowerInlineModule(ShowControllersPowerInlineModuleSchema):
                 continue
 
         return ret_dict
-    
+
+# ==========================================================================================
+# Parser Schema for 'snmp get'
+# ==========================================================================================
+
+class SnmpGetIfIndexSchema(MetaParser):
+    """
+    Schema for
+        * 'snmp get'
+    """
+    schema = {
+        Optional("reqid"): int,
+        Optional("errstat"): int,
+        Optional("erridx"): int,        
+        'mib': {
+            Any():{
+                'mib': str,
+                'ifindex': str,
+                'name': str,
+                Optional('counter'): str
+            },
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'snmp get'
+# ==========================================================================================
+
+class SnmpGetIfIndex(SnmpGetIfIndexSchema):
+    """
+    Parser for
+        * 'snmp get'
+    """
+    cli_command = 'snmp get v{version} {ip} {community_str} oid {mibifindex}'
+
+    def cli(self, version, ip, community_str, mibifindex, output=None):
+        cmd = self.cli_command.format(version=version, ip=ip, community_str=community_str, mibifindex=mibifindex)
+
+        if output is None:
+            output = self.device.execute(cmd)
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # ifInUcastPkts.109 = NO_SUCH_INSTANCE_EXCEPTION  
+        # IF-MIB::ifDescr.66 = STRING: TwentyFiveGigE1/0/24.2001
+        # IF-MIB::ifInUcastPkts.109 = NO_SUCH_INSTANCE_EXCEPTION
+        # IF-MIB::ifHCOutUcastPkts.66 = Counter64: 2
+        # ifHCOutUcastPkts.66 = Counter64: 2
+        # ifOutUcastPkts.22 = 105
+        # ifOutUcastPkts.22 = 105xxx 
+        # IF-MIB::ifOutUcastPkts.22 = 105xxx
+        # IF-MIB::ifOutUcastPkts.22 = 105
+        p1 = re.compile(r'^(IF-MIB::)?(?P<mib>[\w\s]+).(?P<ifindex>[\w]+) = ?(?P<name>[\w]+)?:? ?(?P<counter>[\w\s\-\/\.]+)?$')
+
+        # SNMP Response: reqid 10, errstat 0, erridx 0
+        p2 = re.compile(r'^SNMP Response: reqid (?P<reqid>\d+), errstat (?P<errstat>\d+), erridx (?P<erridx>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SNMP Response: reqid 10, errstat 0, erridx 0      
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mib_dict = ret_dict.setdefault('mib', {}).setdefault(group['mib'], {})  
+                mib_dict.update({k:v for k, v in group.items() if v and k != 'mib'})
+                mib_dict['mib'] = group['mib']
+                if group['counter']:
+                    mib_dict['counter'] = group['counter']
+                mib_dict['name'] = group['name']
+                mib_dict['ifindex'] = group['ifindex']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['reqid'] = int(group['reqid'])
+                ret_dict['errstat'] = int(group['errstat'])
+                ret_dict['erridx'] = int(group['erridx'])
+
+        return ret_dict

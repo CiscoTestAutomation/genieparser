@@ -1,0 +1,18 @@
+Bridge Domain : 11
+  Reference Count : 11
+  Replication ports count : 4
+  Unicast Address table size : 2
+  IP Multicast Prefix table size : 0
+
+  Flood List Information :
+    Olist: 1, Ports: 4
+
+  Port Information :
+    BD_PORT   Et0/1:11
+    BD_PORT   Et0/2:11
+    VXLAN_REP PL:6(1) T:VXLAN_REP [IR]20011:ABCD:2::2 
+    VXLAN_REP PL:2(1) T:VXLAN_REP [IR]20011:ABCD:3::2 
+
+  Unicast Address table information :
+    aabb.0000.0021  VXLAN_UC  PL:4(1) T:VXLAN_UC [MAC]20011:ABCD:2::2 
+    aabb.0000.0031  VXLAN_UC  PL:1(1) T:VXLAN_UC [MAC]20011:ABCD:3::2 

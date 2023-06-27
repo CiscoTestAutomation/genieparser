@@ -13,7 +13,10 @@ expected_output = {
             "keepalive":False,
             "spanning_tree_portfast":True,
             "input_policy":"AutoQos-4.0-CiscoPhone-Input-Policy",
-            "output_policy":"AutoQos-4.0-Output-Policy"
+            "output_policy":"AutoQos-4.0-Output-Policy",
+            "access_session": "closed",
+            "access_session_host_mode": "multi-domain",
+            "access_session_port_control": "auto"
         }
     }
 }
