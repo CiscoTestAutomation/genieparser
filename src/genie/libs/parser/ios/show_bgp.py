@@ -23,7 +23,7 @@
     * show ip bgp regexp <regexp>
 '''
 
-import re   
+import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
