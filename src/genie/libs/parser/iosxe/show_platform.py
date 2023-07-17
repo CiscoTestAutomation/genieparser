@@ -76,6 +76,8 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware fed active qos schedule interface {interface}'
     * 'show platform hardware fed active qos schedule interface {sub_interface}'
     * 'show platform software fed switch active ipsec counters if-id all'
+    * 'show platform software fed switch active ipsec counters if-id {if-id}'
+    * 'show platform software fed switch active ipsec resources if-id {if-id}'
     * 'show platform hardware fed active qos queue stats interface {interface}'
     * 'show platform hardware fed switch {state} qos queue stats interface {interface}'
     * 'show platform hardware fed active qos queue label2qmap qmap-egress-data interface {interface}'
@@ -18820,6 +18822,466 @@ class ShowPlatformSoftwareFedIpsecCounter(ShowPlatformSoftwareFedIpsecCounterSch
                 expected_dict['byte_count'] = int(m.groupdict()['byte_count'])
                 continue
 
+        return ret_dict
+
+class ShowPlatformSoftwareFedIpsecCounterIfIdSchema(MetaParser):
+    """Schema for show platform software fed active ipsec counters if-id {if-id}"""
+
+    schema = {
+    'if-id': str,
+    Or('inbound_flow', 'outbound_flow'): {
+        'flow_id': int,
+        'fvrf_id': int,
+        'ivrf_id': int,
+        'sa_index': int,
+        'asic_instance': str,
+        'packet_format_check_error': int,
+        'invalid_sa': int,
+        'auth_fail': int,
+        'sequence_number_overflows': int,
+        'anti_replay_fail': int,
+        'packet_count': int,
+        'byte_count': int
+    }
+}
+
+class ShowPlatformSoftwareFedIpsecCounterIfId(ShowPlatformSoftwareFedIpsecCounterIfIdSchema):
+    """ Parser for
+       show platform software fed active ipsec counters if-id {if-id}
+    """
+
+    cli_command = ['show platform software fed {switch} active ipsec counters if-id {if_id}',
+                   'show platform software fed active ipsec counters if-id {if_id}']
+    def cli(self, if_id, switch='', output=None):
+        if output is None:
+            if not switch:
+                cmd = self.cli_command[1].format(if_id=if_id)
+            else:
+                cmd = self.cli_command[0].format(if_id=if_id, switch=switch)
+            output = self.device.execute(cmd)
+        
+        ret_dict = {}
+        inbound_flag = True
+
+        # Flow Stats for if-id 0x62
+        p1 = re.compile(r'^Flow Stats for if-id +(?P<if_id>\w+)$')
+
+        # Inbound Flow Info for flow id: 44
+        p2 = re.compile(r'^Inbound Flow Info for flow id:\s+(?P<flow_id>\d+)$')
+
+        # SA Index: 3
+        p3 = re.compile(r'^SA Index:\s+(?P<sa_index>\d+)$')
+
+        # Asic Instance 0: SA Stats
+        p4 = re.compile(r'^Asic Instance 0:\s+(?P<asic_instance>[\w\s]+)$')
+
+        # Packet Format Check Error: 0
+        p5 = re.compile(r'^Packet Format Check Error:\s+(?P<packet_format_check_error>\d+)$')
+
+        # Invalid SA: 0
+        p6 = re.compile(r'^Invalid SA:\s+(?P<invalid_sa>\d+)$')
+
+        # Auth Fail: 0
+        p7 = re.compile(r'^Auth Fail:\s+(?P<auth_fail>\d+)$')
+
+        # Sequence Number Overflows: 0
+        p8 = re.compile(r'^Sequence Number Overflows:\s+(?P<sequence_number_overflows>\d+)$')
+
+        # Anti-Replay Fail: 0
+        p9 = re.compile(r'^Anti-Replay Fail:\s+(?P<anti_replay_fail>\d+)$')
+
+        # Packet Count: 2056
+        p10 = re.compile(r'^Packet Count:\s+(?P<packet_count>\d+)$')
+
+        # Byte Count: 177076
+        p11 = re.compile(r'^Byte Count:\s+(?P<byte_count>\d+)$')
+
+        # Outbound Flow Info for flow id: 43
+        p12 = re.compile(r'^Outbound Flow Info for flow id:\s+(?P<flow_id>\d+)$')
+
+        #  FVRF ID: 0  IVRF ID: 0
+        p13 = re.compile(r'^FVRF ID: +(?P<fvrf_id>\d+) + IVRF ID: +(?P<ivrf_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            inbound_dict = ret_dict.setdefault('inbound_flow', {})
+            outbound_dict = ret_dict.setdefault('outbound_flow', {})
+
+            # Flow Stats for if-id 0x62
+            m = p1.match(line)
+            if m:
+                ret_dict['if-id'] = m.groupdict()['if_id']
+
+            #Inbound Flow Info for flow id: 44
+            m = p2.match(line)
+            if m:
+                inbound_flag = True
+                inbound_dict['flow_id'] = int(m.groupdict()['flow_id'])
+                expected_dict = inbound_dict
+                continue
+
+            #  FVRF ID: 0  IVRF ID: 0
+            m = p13.match(line)
+            if m:
+                expected_dict['fvrf_id'] = int(m.groupdict()['fvrf_id'])
+                expected_dict['ivrf_id'] = int(m.groupdict()['ivrf_id'])
+                continue
+
+            # SA Index: 3
+            m = p3.match(line)
+            if m:
+                expected_dict['sa_index'] = int(m.groupdict()['sa_index'])
+                continue
+
+            # Asic Instance 0: SA Stats
+            m = p4.match(line)
+            if m:
+                expected_dict['asic_instance'] = m.groupdict()['asic_instance']
+                continue
+
+            # Packet Format Check Error: 0
+            m = p5.match(line)
+            if m:
+                expected_dict['packet_format_check_error'] = int(m.groupdict()['packet_format_check_error'])
+                continue
+
+            # Invalid SA: 0
+            m = p6.match(line)
+            if m:
+                expected_dict['invalid_sa'] = int(m.groupdict()['invalid_sa'])
+                continue
+
+            # Auth Fail: 0
+            m = p7.match(line)
+            if m:
+                expected_dict['auth_fail'] = int(m.groupdict()['auth_fail'])
+                continue
+
+            # Sequence Number Overflows: 0
+            m = p8.match(line)
+            if m:
+                expected_dict['sequence_number_overflows'] = int(m.groupdict()['sequence_number_overflows'])
+                continue
+
+            # Anti-Replay Fail: 0
+            m = p9.match(line)
+            if m:
+                expected_dict['anti_replay_fail'] = int(m.groupdict()['anti_replay_fail'])
+                continue
+
+            # Packet Count: 2056
+            m = p10.match(line)
+            if m:
+                expected_dict['packet_count'] = int(m.groupdict()['packet_count'])
+                continue
+
+            # Byte Count: 177076
+            m = p11.match(line)
+            if m:
+                expected_dict['byte_count'] = int(m.groupdict()['byte_count'])
+                continue
+
+            # Outbound Flow Info for flow id: 43
+            m = p12.match(line)
+            if m:
+                inbound_flag = False
+                outbound_dict['flow_id'] = int(m.groupdict()['flow_id'])
+                expected_dict = outbound_dict
+                continue
+            
+            #  FVRF ID: 0  IVRF ID: 0
+            m = p13.match(line)
+            if m:
+                expected_dict['fvrf_id'] = int(m.groupdict()['fvrf_id'])
+                expected_dict['ivrf_id'] = int(m.groupdict()['ivrf_id'])
+                continue
+            
+            # SA Index: 3
+            m = p3.match(line)
+            if m:
+                expected_dict['sa_index'] = int(m.groupdict()['sa_index'])
+                continue
+
+            # Asic Instance 0: SA Stats
+            m = p4.match(line)
+            if m:
+                expected_dict['asic_instance'] = m.groupdict()['asic_instance']
+                continue
+
+            # Packet Format Check Error: 0
+            m = p5.match(line)
+            if m:
+                expected_dict['packet_format_check_error'] = int(m.groupdict()['packet_format_check_error'])
+                continue
+
+            # Invalid SA: 0
+            m = p6.match(line)
+            if m:
+                expected_dict['invalid_sa'] = int(m.groupdict()['invalid_sa'])
+                continue
+
+            # Auth Fail: 0
+            m = p7.match(line)
+            if m:
+                expected_dict['auth_fail'] = int(m.groupdict()['auth_fail'])
+                continue
+
+            # Sequence Number Overflows: 0
+            m = p8.match(line)
+            if m:
+                expected_dict['sequence_number_overflows'] = int(m.groupdict()['sequence_number_overflows'])
+                continue
+
+            # Anti-Replay Fail: 0
+            m = p9.match(line)
+            if m:
+                expected_dict['anti_replay_fail'] = int(m.groupdict()['anti_replay_fail'])
+                continue
+
+            # Packet Count: 2056
+            m = p10.match(line)
+            if m:
+                expected_dict['packet_count'] = int(m.groupdict()['packet_count'])
+                continue
+
+            # Byte Count: 177076
+            m = p11.match(line)
+            if m:
+                expected_dict['byte_count'] = int(m.groupdict()['byte_count'])
+                continue
+        
+        return ret_dict
+
+class ShowPlatformSoftwareFedIpsecResourceSchema(MetaParser):
+    """Schema for show platform software fed active ipsec resources if-id {if-id}"""
+
+    schema = {
+    'Tunnel': {
+        'Tunnel-id': str,
+        'if-id': str,
+        Optional('anchor_sw_num'): int,
+        Optional('andhor_asic_inst'): int,
+        'inbound_flow_id': int,
+        'fvrf_id': int,
+        'ivrf_id': int,
+        'Total-asic-instance': int,
+        'outbound_flow_id': int,
+        Or('Decrypt_Pass', 'Decap_Pass', 'Encrypt_Pass'): {
+            Optional('DI'): str,
+            Optional(Any()): {   #increasing index 0, 1, 2, ...
+                Optional('asic_instance'): int,
+                Optional('RI'): str,
+                Optional('SI'): str,
+                Optional('SI_RI'): str,
+                Optional('SI_DI'): str,
+                Optional('rcpServiceID'): str,
+                Optional('replication_bitmap'): str
+            }
+        }
+    }
+}
+
+class ShowPlatformSoftwareFedIpsecResourceIfId(ShowPlatformSoftwareFedIpsecResourceSchema):
+    """ Parser for
+       show platform software fed active ipsec resources if-id {if-id}
+       show platform software fed switch active ipsec resources if-id {if-id}
+    """
+    cli_command = ['show platform software fed active ipsec resources if-id {if_id}',
+                  'show platform software fed {switch} active ipsec resources if-id {if_id}']
+    def cli(self, if_id, switch='', output=None):
+        if output is None:
+            if not switch:
+                cmd = self.cli_command[0].format(if_id=if_id)
+            else:
+                cmd = self.cli_command[1].format(if_id=if_id, switch=switch)
+            output = self.device.execute(cmd)
+        # print(output)
+        ret_dict = {}
+
+        # Tunnel80 IF ID 0x80 
+        p1 = re.compile(r'^(?P<Tunnel>\w+) IF ID (?P<if_id>\w+)$')
+
+        # Anchor switch number: 3
+        p2 = re.compile(r'^Anchor switch number: (?P<anchor_sw_num>\d+)$')
+
+        # Anchor asic inst: 0
+        p3 = re.compile(r'^Anchor asic inst: (?P<andhor_asic_inst>\d+)$')
+
+        # Inbound Flow ID 40 :
+        p4 = re.compile(r'^Inbound Flow ID (?P<inbound_flow_id>\d+) :')
+
+        #  FVRF ID: 0  IVRF ID: 0
+        p5 = re.compile(r'^FVRF ID: (?P<fvrf_id>\d+)  IVRF ID: (?P<ivrf_id>\d+)$')
+
+        # Outbound Flow ID 40 :
+        p6 = re.compile(r'^Outbound Flow ID (?P<outbound_flow_id>\d+) :')
+
+        # Destination index   = 0x50c2 DI_RCP_PORT3  ->Encrypt,Decrypt
+        p7 = re.compile(r'Destination index\s+= (?P<DI>[A-Za-z0-9]+) DI_RCP_PORT3')
+
+        # Destination index   = 0x50c2 DI_RCP_PORT3  ->Decap
+        p8 = re.compile(r'^Destination index\s+= (?P<DI>[A-Za-z0-9]+) DI_RCP_PORT1')
+
+        # ASIC#:4 RI:26 Rewrite_type:AL_RRM_REWRITE_INGRESS_L3_RECIRC   ->Decrypt RI
+        p9 = re.compile(r'ASIC#:(?P<asic_num>\d+) RI:(?P<RI>\d+) Rewrite_type:AL_RRM_REWRITE_INGRESS_L3_RECIRC')
+        
+        # ASIC#:4 RI:34 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_DECAP   ->Decap RI
+        p10 = re.compile(r'ASIC#:(?P<asic_num>\d+) RI:(?P<RI>\d+) Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_DECAP')
+
+        # ASIC#:4 RI:34 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS   ->Encap RI
+        p11 = re.compile(r'ASIC#:(?P<asic_num>\d+) RI:(?P<RI>\d+) Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS')
+
+        # Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS
+        p12 = re.compile(r'Station Index \(SI\) \[[A-Za-z0-9]+\]RI = [A-Za-z0-9]+DI = [A-Za-z0-9]+')
+
+        '''
+        Brief Resource Information (ASIC_INSTANCE# 0)
+        ----------------------------------------
+        Station Index (SI) [0xa4]
+        RI = 0x1a
+        DI = 0x50c2
+        stationTableGenericLabel = 0
+        stationFdConstructionLabel = 0x2
+        lookupSkipIdIndex = 0
+        rcpServiceId = 0x33
+        dejaVuPreCheckEn = 0
+        Replication Bitmap: LD 
+        '''
+        p13 = re.compile(r'Brief Resource Information \(ASIC_INSTANCE# \d\)----------------------------------------Station Index \(SI\) \[(?P<SI>\w+)\]RI = (?P<SI_RI>\w+)DI = (?P<SI_DI>\w+)stationTableGenericLabel = [0-9]+stationFdConstructionLabel = [A-Za-z0-9]+lookupSkipIdIndex = \drcpServiceId = (?P<rcpServiceID>\w+)dejaVuPreCheckEn = \dReplication Bitmap: (?P<replication_bitmap>\w+)')
+        
+        tunnel_dict = ret_dict.setdefault('Tunnel',{})
+        decrypt_dict = tunnel_dict.setdefault('Decrypt_Pass', {})
+        decap_dict = tunnel_dict.setdefault('Decap_Pass', {})
+        encrypt_dict = tunnel_dict.setdefault('Encrypt_Pass', {})
+        tunnel_dict.setdefault('Tunnel-id', '')
+        tunnel_dict.setdefault('if-id', '')
+        tunnel_dict.setdefault('inbound_flow_id', 0)
+        tunnel_dict.setdefault('fvrf_id', 0)
+        tunnel_dict.setdefault('ivrf_id', 0)
+        tunnel_dict.setdefault('Total-asic-instance', 0)
+        tunnel_dict.setdefault('outbound_flow_id', 0)
+        count = 0
+        temp_copy = output
+        res=[]
+        total_asic_inst = 0
+        res = ''.join(temp_copy.splitlines())
+        
+        m = p9.findall(res)
+        if m:
+            for item in m:
+                asic_index = len(decrypt_dict)
+                sub_asic_dict = decrypt_dict.setdefault(asic_index, {})
+                sub_asic_dict['asic_instance'] = int(item[0])
+                sub_asic_dict['RI'] = hex(int(item[1]))
+                total_asic_inst = total_asic_inst + 1
+            tunnel_dict['Total-asic-instance'] = int(total_asic_inst)
+
+        m = p10.findall(res)
+        if m:
+            # asic_dict_decap = decap_dict.setdefault('asic', {})
+            for item in m:
+                asic_index = len(decap_dict)
+                sub_asic_dict = decap_dict.setdefault(asic_index, {})
+                sub_asic_dict['asic_instance'] = int(item[0])
+                sub_asic_dict['RI'] = hex(int(item[1]))
+
+        m = p11.findall(res)
+        if m:
+            # asic_dict_encrypt = encrypt_dict.setdefault('asic', {})
+            for item in m:
+                asic_index = len(encrypt_dict)
+                sub_asic_dict = encrypt_dict.setdefault(asic_index, {})
+                sub_asic_dict['asic_instance'] = int(item[0])
+                sub_asic_dict['RI'] = hex(int(item[1]))
+
+        m = p7.findall(res)
+        if m:
+            for item in m:
+                if (count%2) == 0:
+                    decrypt_dict['DI'] = item
+                else:
+                    encrypt_dict['DI'] = item
+                count = count + 1
+        
+        m = p13.findall(res)
+        temp_count = 0
+        index_count = 0
+        if m:
+            for item in m:
+                if temp_count < total_asic_inst:
+                    asic_index = index_count
+                    sub_asic_dict = decrypt_dict.setdefault(asic_index, {})
+                    sub_asic_dict['SI'] = item[0]
+                    sub_asic_dict['SI_RI'] = item[1]
+                    sub_asic_dict['SI_DI'] = item[2]
+                    sub_asic_dict['rcpServiceID'] = item[3]
+                    sub_asic_dict['replication_bitmap'] = item[4]
+                elif temp_count >= total_asic_inst and temp_count < (total_asic_inst*2):
+                    asic_index = index_count
+                    sub_asic_dict = decap_dict.setdefault(asic_index, {})
+                    sub_asic_dict['SI'] = item[0]
+                    sub_asic_dict['SI_RI'] = item[1]
+                    sub_asic_dict['SI_DI'] = item[2]
+                    sub_asic_dict['rcpServiceID'] = item[3]
+                    sub_asic_dict['replication_bitmap'] = item[4]
+                else:
+                    asic_index = index_count
+                    sub_asic_dict = encrypt_dict.setdefault(asic_index, {})
+                    sub_asic_dict['SI'] = item[0]
+                    sub_asic_dict['SI_RI'] = item[1]
+                    sub_asic_dict['SI_DI'] = item[2]
+                    sub_asic_dict['rcpServiceID'] = item[3]
+                    sub_asic_dict['replication_bitmap'] = item[4]
+                temp_count = temp_count + 1
+                index_count = index_count + 1
+                if index_count == total_asic_inst:
+                    index_count = 0
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Tunnel80 IF ID 0x80 
+            m = p1.match(line)
+            if m:
+                tunnel_dict['Tunnel-id'] = m.groupdict()['Tunnel']
+                tunnel_dict['if-id'] = m.groupdict()['if_id']
+                continue
+            # Anchor switch number: 3
+            m = p2.match(line)
+            if m:
+                tunnel_dict['anchor_sw_num'] = int(m.groupdict()['anchor_sw_num'])
+                continue
+            
+            # Anchor asic inst: 0
+            m = p3.match(line)
+            if m:
+                tunnel_dict['andhor_asic_inst'] = int(m.groupdict()['andhor_asic_inst'])
+                continue
+            
+            # Inbound Flow ID 40 :
+            m = p4.match(line)
+            if m:
+                tunnel_dict['inbound_flow_id'] = int(m.groupdict()['inbound_flow_id'])
+                continue
+            
+            #  FVRF ID: 0  IVRF ID: 0
+            m = p5.match(line)
+            if m:
+                tunnel_dict['fvrf_id'] = int(m.groupdict()['fvrf_id'])
+                tunnel_dict['ivrf_id'] = int(m.groupdict()['ivrf_id'])
+                continue
+            
+            #Ecnrypt Pass
+            m = p8.match(line)
+            if m:
+                decap_dict['DI'] = m.groupdict()['DI']
+                continue
+
+            # Outbound Flow ID 40 :
+            m = p6.match(line)
+            if m:
+                tunnel_dict['outbound_flow_id'] = int(m.groupdict()['outbound_flow_id'])
+                continue
+        
         return ret_dict
 
 class ShowPlatformHardwareQfpIpsecDropSchema(MetaParser):

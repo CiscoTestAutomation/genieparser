@@ -1,0 +1,246 @@
+show platform software fed sw active ipsec resources if-id 0x5c
+########################################
+Tunnel222 IF ID 0x5c 
+VTI-Flags 0x8 bit3:ADJ_SYNC_DONE
+ CEF ADJ ID (0xf80005c6) Info:
+   IF ID 0x5c ADJ-Flags 0x0 NO_FLAGS_SET AAL adj_id 0x410004dc
+ Inbound Flow ID 54 :
+   FVRF ID: 0  IVRF ID: 0
+   DB Entry: 0x0x7a34a591b068
+    Flag: 0x0 DB_FLAG_NOT_SET Decap L3IFLE: 0x7a34a506e458
+   Decrypt Pass:
+    Decrypt DI handle: 0x7a34a5ff6bf8
+    Decrypt RI handle: 0x7a34a4f19998
+    Decrypt SI handle: 0x7a34a60934b8
+    Decrypt Termination entry: 0x7a34a5e27c98
+    Decrypt SA Index: 23
+    Decrypt RCP Service ID: 51
+    Decrypt SPI 0xebf2f388/3958567816
+
+Handle:0x7a34a5ff6bf8 Res-Type:ASIC_RSC_DI Res-Switch-Num:1 Asic-Num:0 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:69892
+priv_ri/priv_si Handle:(nil) Hardware Indices/Handles: index0:0x5112  mtu_index/l3u_ri_index0:0x0 
+Features sharing this resource:100 (69892), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Destination index   = 0x5112 DI_RCP_PORT3
+pmap                = 0x00000000 0x00000000
+rcp_pmap            = 0x4
+==============================================================
+Handle:0x7a34a4f19998 Res-Type:ASIC_RSC_RI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a5936348 Hardware Indices/Handles: index0:0x1b0  mtu_index/l3u_ri_index0:0x0  index1:0x1b0  mtu_index/l3u_ri_index1:0x0 
+Features sharing this resource:100 (1), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+ASIC#:0 RI:432 Rewrite_type:AL_RRM_REWRITE_INGRESS_L3_RECIRC(35) Mapped_rii:INGRESS_L3_RECIRC(79)
+
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+ASIC#:1 RI:432 Rewrite_type:AL_RRM_REWRITE_INGRESS_L3_RECIRC(35) Mapped_rii:INGRESS_L3_RECIRC(79)
+
+
+==============================================================
+Handle:0x7a34a60934b8 Res-Type:ASIC_RSC_SI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a4f19998 Hardware Indices/Handles: index0:0x1e8  mtu_index/l3u_ri_index0:0x0  index1:0x1e8  mtu_index/l3u_ri_index1:0x0 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Station Index (SI) [0x1e8]
+RI = 0x1b0
+DI = 0x5112
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0x33
+dejaVuPreCheckEn = 0
+Replication Bitmap: LD 
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+Station Index (SI) [0x1e8]
+RI = 0x1b0
+DI = 0x5112
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0x33
+dejaVuPreCheckEn = 0
+Replication Bitmap: RD 
+
+==============================================================
+
+
+   Decap Pass:
+    Decap DI handle: 0x7a34a448a928
+    Decap RI handle: 0x7a34a7114568
+    Decap SI handle: 0x7a34a7746f08
+    Decap Termination entry: 0x7a34a7019618
+    Encap Termination entry: 0x0
+    Decap RCP Service ID: 0
+
+
+Handle:0x7a34a7114568 Res-Type:ASIC_RSC_RI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a7755d58 Hardware Indices/Handles: index0:0x1b2  mtu_index/l3u_ri_index0:0x0  index1:0x1b2  mtu_index/l3u_ri_index1:0x0 
+Features sharing this resource:100 (1), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+ASIC#:0 RI:434 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_DECAP_SECONDPASS_INNERV4(47) Mapped_rii:IPSEC_TUNNEL_MODE_DECAP_SECONDPASS_INNERV4(247)
+
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+ASIC#:1 RI:434 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_DECAP_SECONDPASS_INNERV4(47) Mapped_rii:IPSEC_TUNNEL_MODE_DECAP_SECONDPASS_INNERV4(247)
+
+
+==============================================================
+Handle:0x7a34a7746f08 Res-Type:ASIC_RSC_SI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a7114568 Hardware Indices/Handles: index0:0x3d8  mtu_index/l3u_ri_index0:0x0  index1:0x3d8  mtu_index/l3u_ri_index1:0x0 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Station Index (SI) [0x3d8]
+RI = 0x1b2
+DI = 0x5012
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0
+dejaVuPreCheckEn = 0
+Replication Bitmap: LD 
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+Station Index (SI) [0x3d8]
+RI = 0x1b2
+DI = 0x5012
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0
+dejaVuPreCheckEn = 0
+Replication Bitmap: RD 
+
+==============================================================
+Handle:0x7a34a448a928 Res-Type:ASIC_RSC_DI Res-Switch-Num:1 Asic-Num:0 Feature-ID:AL_FID_LISP Lkp-ftr-id:LKP_FEAT_INVALID ref_count:70174
+priv_ri/priv_si Handle:(nil) Hardware Indices/Handles: index0:0x5012  mtu_index/l3u_ri_index0:0x0 
+Features sharing this resource:109 (1), 152 (2), 107 (1518), 100 (68653), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Destination index   = 0x5012 DI_RCP_PORT1
+pmap                = 0x00000000 0x00000000
+rcp_pmap            = 0x1
+==============================================================
+
+
+ Outbound Flow ID 53 :
+   FVRF ID: 0  IVRF ID: 0
+   DB Entry: 0x0x7a34a6128188
+    Flag: 0x0 DB_FLAG_NOT_SET AAL adj_id: 0x410004dc
+    Encap L3IFLE: 0x7a34a506e248
+    Hash Entry: 0x0x7a34a696dbb8
+      Key: adj_id 0x410004dc spi 0x0 if_id 0x5c
+      db entry: 0x0x7a34a6128188 
+   Encrypt/Encap Pass:
+    Encrypt DI handle: 0x7a34a5ff6bf8
+    Encrypt RI handle: 0x7a34a60040b8
+    Encrypt SI handle: 0x7a34a5686a28
+    Encrypt SA Index: 1069
+    Encrypt RCP Service ID: 48
+    Encap Termination entry: 0x0
+    Encrypt SPI 0x40c3933d/1086559037
+
+
+Handle:0x7a34a5ff6bf8 Res-Type:ASIC_RSC_DI Res-Switch-Num:1 Asic-Num:0 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:69892
+priv_ri/priv_si Handle:(nil) Hardware Indices/Handles: index0:0x5112  mtu_index/l3u_ri_index0:0x0 
+Features sharing this resource:100 (69892), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Destination index   = 0x5112 DI_RCP_PORT3
+pmap                = 0x00000000 0x00000000
+rcp_pmap            = 0x4
+==============================================================
+Handle:0x7a34a60040b8 Res-Type:ASIC_RSC_RI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a6a38f38 Hardware Indices/Handles: index0:0x1b4  mtu_index/l3u_ri_index0:0x0  index1:0x1b4  mtu_index/l3u_ri_index1:0x0 
+Features sharing this resource:100 (1), 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+ASIC#:0 RI:436 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS_OUTERV4_INNERV4(49) Mapped_rii:IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS_OUTERV4_INNERV4(242)
+
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+ASIC#:1 RI:436 Rewrite_type:AL_RRM_REWRITE_IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS_OUTERV4_INNERV4(49) Mapped_rii:IPSEC_TUNNEL_MODE_ENCAP_FIRSTPASS_OUTERV4_INNERV4(242)
+
+
+==============================================================
+Handle:0x7a34a5686a28 Res-Type:ASIC_RSC_SI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_IPSEC Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7a34a60040b8 Hardware Indices/Handles: index0:0xbc  mtu_index/l3u_ri_index0:0x0  index1:0xbc  mtu_index/l3u_ri_index1:0x0 
+
+Brief Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+Station Index (SI) [0xbc]
+RI = 0x1b4
+DI = 0x5112
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0x30
+dejaVuPreCheckEn = 0
+Replication Bitmap: LD 
+
+Brief Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+Station Index (SI) [0xbc]
+RI = 0x1b4
+DI = 0x5112
+stationTableGenericLabel = 0
+stationFdConstructionLabel = 0x2
+lookupSkipIdIndex = 0
+rcpServiceId = 0x30
+dejaVuPreCheckEn = 0
+Replication Bitmap: RD 
+
+
+
+==============================================================
+
+
+
+show platform software fed sw active ipsec counters if-id 0x5c
+########################################
+Flow Stats for if-id 0x5c
+########################################
+-----------------------------------
+Inbound Flow Info for flow id: 54
+  FVRF ID: 0  IVRF ID: 0
+------------------------------
+SA Index: 23
+--------------------
+Asic Instance 0: SA Stats 
+  Packet Format Check Error:	0
+  Invalid SA:			0
+  Auth Fail:			0
+  Sequence Number Overflows:	0
+  Anti-Replay Fail:		0
+  Packet Count:			683184
+  Byte Count:			81982020
+-----------------------------------
+Outbound Flow Info for flow id: 53
+  FVRF ID: 0  IVRF ID: 0
+------------------------------
+SA Index: 1069
+--------------------
+Asic Instance 0: SA Stats 
+  Packet Format Check Error:	0
+  Invalid SA:			0
+  Auth Fail:			0
+  Sequence Number Overflows:	0
+  Anti-Replay Fail:		0
+  Packet Count:			6840571
+  Byte Count:			974181368
