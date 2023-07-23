@@ -1,0 +1,7 @@
+Multicast Replicators (> - Selected):
+ System IP            Preference  Route Count   Threshold   Distance (KM)
+>7.0.0.1                       0            2         100               0
+ 6.0.0.2                       0            1         500             489
+
+Selected Replicator Changes  : 21  
+Overloaded Replicator Selects: 0

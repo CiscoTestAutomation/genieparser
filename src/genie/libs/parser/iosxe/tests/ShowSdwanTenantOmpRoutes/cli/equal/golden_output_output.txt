@@ -1,0 +1,257 @@
+Code:
+C   -> chosen
+I   -> installed
+Red -> redistributed
+Rej -> rejected
+L   -> looped
+R   -> resolved
+S   -> stale
+Ext -> extranet
+Inv -> invalid
+Stg -> staged
+IA  -> On-demand inactive
+U   -> TLOC unresolved
+BR-R -> Border-Router reoriginated
+TGW-R -> Transport-Gateway reoriginated
+R-TGW-R -> Reoriginated Transport-Gateway reoriginated
+
+                                                                                                                                                AFFINITY                                 
+                                                      PATH                      ATTRIBUTE                                                       GROUP                                    
+TENANT    VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE  NUMBER      REGION ID   REGION PATH      
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+22577     2      115.1.68.0/24       0.0.0.0          66     1069     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1069     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1069     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1069     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1069     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     2      115.1.69.0/24       1.0.0.29         83     1070     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1070     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1070     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1070     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1070     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1070     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1070     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1070     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1070     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1070     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.70.0/24       1.0.0.29         83     1071     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1071     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1071     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1071     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1071     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1071     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1071     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1071     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1071     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1071     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.71.0/24       1.0.0.29         83     1072     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         123    1072     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         193    1072     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         249    1072     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         312    1072     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1072     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1072     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1072     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1072     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1072     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.72.0/24       1.0.0.29         84     1073     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1073     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1073     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1073     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1073     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1073     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1073     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1073     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1073     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         314    1073     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.73.0/24       1.0.0.29         84     1074     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1074     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1074     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1074     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1074     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1074     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1074     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1074     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1074     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         315    1074     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.74.0/24       1.0.0.29         84     1075     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1075     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1075     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1075     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1075     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1075     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1075     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1075     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1075     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         315    1075     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.75.0/24       1.0.0.29         84     1076     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1076     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1076     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1076     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1076     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1076     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1076     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1076     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1076     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         315    1076     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.76.0/24       1.0.0.29         84     1077     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1077     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         195    1077     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1077     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1077     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1077     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1077     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1077     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1077     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         315    1077     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     2      115.1.77.0/24       1.0.0.29         84     1078     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1078     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         196    1078     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1078     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1078     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1078     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1078     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1078     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1078     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         315    1078     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     3      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     3      115.1.69.0/24       0.0.0.0          66     1070     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1070     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1070     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1070     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1070     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     4      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     4      115.1.70.0/24       0.0.0.0          66     1071     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1071     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1071     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1071     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1071     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     5      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         194    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     5      115.1.71.0/24       0.0.0.0          66     1072     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1072     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1072     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1072     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1072     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     6      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         192    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         252    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     6      115.1.72.0/24       0.0.0.0          66     1073     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1073     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1073     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1073     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1073     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     7      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         192    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         251    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     7      115.1.73.0/24       0.0.0.0          66     1074     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1074     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1074     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1074     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1074     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     8      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         192    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         251    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     8      115.1.74.0/24       0.0.0.0          66     1075     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1075     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1075     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1075     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1075     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     9      115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         192    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         251    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     9      115.1.75.0/24       0.0.0.0          66     1076     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1076     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1076     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1076     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1076     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     10     115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         192    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         250    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         313    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         251    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     10     115.1.76.0/24       0.0.0.0          66     1077     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1077     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1077     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1077     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1077     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     11     115.1.68.0/24       1.0.0.29         83     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.29         124    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.29         191    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.29         249    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.29         312    1069     C,I,R     installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     1.0.0.30         63     1069     C,R       installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     1.0.0.30         126    1069     C,R       installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     1.0.0.30         189    1069     C,R       installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     1.0.0.30         251    1069     C,R       installed  2.0.150.6        silver           ipsec  -           None        None        -                
+                                     1.0.0.30         313    1069     C,R       installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+22577     11     115.1.77.0/24       0.0.0.0          66     1078     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1078     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1078     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1078     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1078     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+22577     12     115.1.78.0/24       0.0.0.0          66     1079     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+                                     0.0.0.0          70     1079     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+                                     0.0.0.0          74     1079     C,Red,R   installed  2.0.150.6        blue             ipsec  -           None        None        -                
+                                     0.0.0.0          75     1079     C,Red,R   installed  2.0.150.6        gold             ipsec  -           None        None        -                
+                                     0.0.0.0          76     1079     C,Red,R   installed  2.0.150.6        silver           ipsec  -           None        None        -                
+

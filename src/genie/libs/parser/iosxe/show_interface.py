@@ -32,6 +32,7 @@
     * show interfaces transceiver supported-list
     * show interfaces capabilities
     * show interfaces {interface} capabilities
+    * show interfaces {interface} vlan mapping
 """
 
 import os
@@ -1581,7 +1582,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
     schema = {
             Any(): {
                 'switchport_enable': bool,
-                'switchport_mode': str,
+                Optional('switchport_mode'): str,
                 Optional('operational_mode'): str,
                 Optional('port_channel'): {
                     Optional('port_channel_int'): str,
@@ -5425,4 +5426,104 @@ class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
             if m:
                 int_dict[key] = f"{int_dict[key]} {m.groupdict()['qos_tx']}"
         
+        return ret_dict
+
+class ShowInterfaceFlowControlSchema(MetaParser):
+    """Schema for show interfaces {interface_id} flowcontrol"""
+
+    schema = {
+        'interface': {
+            'port': str,
+            'send_fc_admin': str,
+            'send_fc_oper': str,
+            'receive_fc_admin': str,
+            'receive_fc_oper': str,
+            'rx_pause': int,
+            'tx_pause': int,
+        }
+    }
+
+# ======================================================
+# Parser for 'show interface {interface_id} flowcontrol'
+# ====================================================== 
+class ShowInterfaceFlowControl(ShowInterfaceFlowControlSchema):
+    """Parser for show interfaces {interface_id} flowcontrol"""
+
+    cli_command = 'show interfaces {interface_id} flowcontrol'
+
+    def cli(self, interface_id, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface_id=interface_id)
+            output = self.device.execute(cmd)
+
+        # Port            Send FlowControl  Receive FlowControl  RxPause TxPause
+        #                 admin    oper     admin    oper
+        # ------------    -------- -------- -------- --------    ------- -------
+        # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0
+        p1 = re.compile(r'^(?P<port>[\w\/\d]+)\s+(?P<send_fc_admin>[\.\w]+)\s+(?P<send_fc_oper>[\.\w]+)\s+(?P<receive_fc_admin>\w+)\s+(?P<receive_fc_oper>\w+)\s+(?P<rx_pause>\d+)\s+(?P<tx_pause>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port            Send FlowControl  Receive FlowControl  RxPause TxPause
+            #                 admin    oper     admin    oper
+            # ------------    -------- -------- -------- --------    ------- -------
+            # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0        
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                info_dict = ret_dict.setdefault('interface',{})
+                info_dict['port'] = Common.convert_intf_name(group['port'])
+                info_dict['send_fc_admin'] = group['send_fc_admin']
+                info_dict['send_fc_oper'] = group['send_fc_oper']
+                info_dict['receive_fc_admin'] = group['receive_fc_admin']
+                info_dict['receive_fc_oper'] = group['receive_fc_oper']
+                info_dict['rx_pause'] = int(group['rx_pause'])
+                info_dict['tx_pause'] = int(group['tx_pause'])
+                continue
+
+        return ret_dict
+
+
+class ShowInterfacesVlanMappingSchema(MetaParser):
+    """Schema for show interfaces {interface} vlan mapping"""
+
+    schema = {
+        'vlan_on_wire': {
+            Any(): {
+                'trans_vlan': int,
+                'operation': str,
+            }
+        }
+    }
+
+
+class ShowInterfacesVlanMapping(ShowInterfacesVlanMappingSchema):
+    """Parser for show interfaces {interface} vlan mapping"""
+
+    cli_command = 'show interface {interface} vlan mapping'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 20                                    30             1-to-1
+        p1 = re.compile(r"^(?P<vlan_on_wire>\d+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # 20                                    30             1-to-1
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan_on_wire', {}).setdefault(dict_val['vlan_on_wire'], {})
+                vlan_dict['trans_vlan'] = int(dict_val['trans_vlan'])
+                vlan_dict['operation'] = dict_val['operation']
+                continue
+
         return ret_dict

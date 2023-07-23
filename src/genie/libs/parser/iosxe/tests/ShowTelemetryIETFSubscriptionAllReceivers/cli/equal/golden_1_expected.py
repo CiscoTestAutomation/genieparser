@@ -17,5 +17,12 @@ expected_output = {
             'explanation': 'Receiver does not exist',
             'state': 'Disconnected'
         }
+    },
+    2147483648: {
+        'gNMI://5.40.26.169:53416': {
+            'connection': 1,
+            'explanation': '',
+            'state': 'Connected'
+        }
     }
 }

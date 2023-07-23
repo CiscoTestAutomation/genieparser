@@ -1,0 +1,46 @@
+HundredGigE1/0/1
+ 
+  Service-policy input: map1
+ 
+    Class-map: cs1 (match-all)
+      0 packets
+      Match:  dscp cs1 (8)
+      police:
+          rate 100000000 bps, burst 10240 bytes
+        conformed 0 bytes; actions:
+         transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+ 
+    Class-map: cs2 (match-all)
+      0 packets
+      Match:  dscp cs2 (16)
+      police:
+          rate 100000000 bps, burst 10240 bytes
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+ 
+    Class-map: cs5 (match-all)
+      3450792 packets
+      Match:  dscp cs5 (40)
+      police:
+          cir 50000000 bps, bc 10240 bytes
+          pir 600000000 bps, be 10240 bytes
+        conformed 364046000 bytes; actions:
+          transmit
+        exceeded 4004374000 bytes; actions:
+          transmit
+        violated 2533164000 bytes; actions:
+          set-dscp-transmit dscp table t1
+        conformed 8079000 bps, exceeded 88844000 bps, violated 56205000 bps
+      QoS Set
+        traffic-class 6
+        dscp cs7
+ 
+    Class-map: class-default (match-any)
+      15 packets
+      Match: any

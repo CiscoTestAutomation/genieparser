@@ -848,3 +848,97 @@ class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
                 int_dict.setdefault('last_updated', m.groupdict()['last_updated'])
         
         return ret_dict
+
+
+class ShowControllersEthernetControllerSchema(MetaParser):
+    """
+        Schema for show controllers ethernet-controller {interface}
+    """
+
+    schema = {
+        'interface': {
+            Any() : {
+                'transmit': {
+                    Any() : int
+                },
+                'receive': {
+                    Any() : int
+                },
+                'last_update_msecs': int 
+            }
+        }
+    }
+
+
+class ShowControllersEthernetController(ShowControllersEthernetControllerSchema):
+    """
+        parser for show controllers ethernet-controller {interface}
+    """
+
+    cli_command = ['show controllers ethernet-controller', 'show controllers ethernet-controller {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+
+        # Transmit                  GigabitEthernet1/0/1          Receive   
+        p1 = re.compile(r'^Transmit\s+(?P<interface>[\w\/\d\.]+)\s+Receive$')
+
+        # 0 Total bytes                           0 Total bytes              
+        # 0 Unicast frames                        0 Unicast frames       
+        p2 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)\s\s+'
+                r'(?P<receive_value>\d+)\s+(?P<receive_key_name>.+)$')
+
+        # 0 4 collision frames 
+        p3 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)$')
+
+        # LAST UPDATE 65017966 msecs AGO
+        p4 = re.compile(r'^LAST UPDATE (?P<last_update_msecs>\d+) msecs AGO$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transmit                  GigabitEthernet1/0/1          Receive 
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(\
+                    Common.convert_intf_name(m.groupdict()['interface']), {})
+                transmit_dict = int_dict.setdefault('transmit', {})
+                receive_dict = int_dict.setdefault('receive', {})
+                continue
+
+            # 0 Total bytes                           0 Total bytes              
+            # 0 Unicast frames                        0 Unicast frames 
+            m = p2.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                receive_key_name = groupdict['receive_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                receive_dict[receive_key_name] = int(groupdict['receive_value'])
+                continue
+
+            # 0 4 collision frames 
+            m = p3.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                continue
+
+            # LAST UPDATE 65017966 msecs AGO
+            m = p4.match(line)
+            if m:
+                int_dict['last_update_msecs'] = int(m.groupdict()['last_update_msecs'])
+
+        return ret_dict

@@ -1,0 +1,3 @@
+dev2#snmp get v2c 6.6.6.6 public oid ifHCInUcastPkts.22 
+SNMP Response: reqid 9, errstat 0, erridx 0 
+ ifHCInUcastPkts.22 = 0x000000004

@@ -1,0 +1,34 @@
+--------------------------------------------------------------------------------
+CLI LOGGING SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+COUNT COMMAND
+--------------------------------------------------------------------------------
+ 1    show logging onboard RP active clilog detail
+ 1    show logging onboard RP active counter detail
+ 1    show logging onboard RP active environment detail
+ 1    show logging onboard RP active message detail
+ 1    show logging onboard RP active temperature detail
+ 1    show logging onboard RP active uptime detail
+ 1    show logging onboard RP active voltage detail
+ 1    show logging onboard RP standby message detail
+ 1    show logging onboard RP active counter detail
+ 1    show logging onboard RP active counter detail
+ 1    show logging onboard RP active counter detail
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+CLI LOGGING CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS COMMAND
+--------------------------------------------------------------------------------
+ 03/30/2023 02:41:08 show logging onboard RP active clilog detail
+ 03/30/2023 02:41:43 show logging onboard RP active counter detail
+ 03/30/2023 02:42:29 show logging onboard RP active environment detail
+ 03/30/2023 02:43:32 show logging onboard RP active message detail
+ 03/30/2023 02:44:21 show logging onboard RP active temperature detail
+ 03/30/2023 02:45:25 show logging onboard RP active uptime detail
+ 03/30/2023 02:46:31 show logging onboard RP active voltage detail
+ 04/13/2023 09:22:40 show logging onboard RP standby message detail
+ 04/20/2023 03:20:33 show logging onboard RP active counter detail
+ 04/20/2023 07:40:41 show logging onboard RP active counter detail
+ 04/20/2023 09:41:11 show logging onboard RP active counter detail
+--------------------------------------------------------------------------------

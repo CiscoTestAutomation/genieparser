@@ -1,0 +1,17 @@
+show ip bgp 70.3.3.3/32
+Thu May 11 12:09:06.344 UTC
+BGP routing table entry for 70.3.3.3/32
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                 85          85
+Last Modified: May 11 06:39:45.020 for 05:29:21
+Paths: (1 available, best #1)
+  Advertised to update-groups (with more than one peer):
+    0.2 
+  Path #1: Received by speaker 0
+  Advertised to update-groups (with more than one peer):
+    0.2 
+  7000, (Received from a RR-client)
+    50.1.1.4 (metric 65537) from 50.1.1.4 (50.1.1.4)
+      Origin IGP, metric 0, localpref 100, valid, internal, best, group-best
+      Received Path ID 0, Local Path ID 0, version 85

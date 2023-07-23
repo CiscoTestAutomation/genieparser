@@ -2,6 +2,7 @@
 
 IOSXE parser for the following show command:
     * show ospfv3 summary-prefix
+    * show ospfv3 rib redistribution
 """
 
 # python
@@ -1844,5 +1845,126 @@ class ShowRunSectionOspfv3(ShowRunSectionOspfv3Schema):
                         redist_max_dict = sub_dict['vrf'][vrf]['address_family'][address_family].setdefault('redist_max', {})
                         redist_max_dict['max_redist'] = int(group['max_redist'])
                         redist_max_dict['warn'] = group['warn'] == "warning-only"
+
+        return ret_dict
+    
+
+# =================================================================
+# Schema for:
+#   * 'Show ospfv3 rib redistribution'
+# =================================================================
+class ShowOspfv3RibRedistributionSchema(MetaParser):
+    """Schema for show ospfv3 rib redistribution
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': { 
+                            Any(): { 
+                                'router_id': str,
+                                Optional('network'): {
+                                    Any(): {
+                                        'type': int,
+                                        'metric': int,
+                                        'tag': int,
+                                        'origin': str,
+                                        Optional ('via_network'): str,
+                                        Optional ('interface'): str,
+                                    }    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
+# ========================================================
+# Parser for:
+#   * 'Show ospfv3 rib redistribution'
+# ========================================================
+class ShowOspfv3RibRedistribution(ShowOspfv3RibRedistributionSchema):
+    """ Parser for show ospfv3 rib redistribution
+    """
+    cli_command = 'show ospfv3 rib redistribution'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # OSPFv3 1 address-family ipv4 (router-id 100.1.1.1)
+        # OSPFv3 10 address-family ipv4 vrf red (router-id 40.60.0.60)
+        p1 = re.compile(r'OSPFv3 (?P<instance>\d+)+ address-family (?P<address_family>\S+)\s+((vrf (?P<vrf>\S+) )?)+\(router-id (?P<router_id>\S+)\)')
+
+        # 11.1.1.0/24, type 2, metric 1, tag 200, from bgp 100
+        # via 192.46.1.6
+        #33::2/128, type 2, metric 20, tag 0, from connected (connected)
+        #via Loopback1
+
+        p2 = re.compile(r'(?P<network>\S+), type (?P<type>\d+), metric (?P<metric>\d+), tag (?P<tag>\d+), from (?P<from>.*)$')
+        
+        # via 40.60.1.40, Ethernet0/2
+        # via Null0
+        p3 = re.compile(r'via ((?P<via_network>\S+),)?\s*(?P<interface>\S+)')
+
+        # initial variables
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = int(group['instance'])
+                af = str(group['address_family'])
+                vrf = str(group['vrf'])
+
+                # Get VRF information using the ospf instance
+                if vrf == 'None':
+                    vrf = 'default'
+                # Create dict
+                process_id_dict = ret_dict.setdefault('vrf',{}).\
+                                         setdefault(vrf,{}).\
+                                         setdefault('address_family',{}).\
+                                         setdefault(af,{}).\
+                                         setdefault('instance',{}).\
+                                         setdefault(instance,{})
+                process_id_dict.update({'router_id': router_id})
+                continue
+            
+            # 40.0.0.1/32, type 2, metric 20, tag 0, from IS-IS Router
+            # 33::2/128, type 2, metric 20, tag 0, from connected (connected)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                network = group['network']
+                type = group['type']
+                metric = group['metric']
+                tag = group['tag']
+                origin = group['from']
+                network_dict = process_id_dict.setdefault('network',{}).setdefault(network,{})
+                network_dict.update(type=int(type), metric=int(metric), tag=int(tag), origin=origin)                
+                continue
+
+            #  via 40.60.1.40, Ethernet0/2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                via_network = group['via_network']
+                interface = group['interface']
+                if via_network is not None:
+                    network_dict.update({'via_network': str(via_network)})
+                else:
+                    network_dict.update({'via_network': 'None'})
+                 
+                network_dict.update({'interface': interface})
+                continue
 
         return ret_dict

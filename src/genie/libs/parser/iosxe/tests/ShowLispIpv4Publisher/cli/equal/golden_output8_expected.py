@@ -8,6 +8,7 @@ expected_output = {
                             "state": "No ETR MS",
                             "session": "Up",
                             "pubsub_state": "Established",
+                            "type": "T",
                         },
                     }
                 }

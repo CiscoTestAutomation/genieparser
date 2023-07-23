@@ -1,0 +1,119 @@
+Transmit                  GigabitEthernet1/0/1          Receive                 
+            0 Total bytes                           0 Total bytes              
+            0 Unicast frames                        0 Unicast frames           
+            0 Unicast bytes                         0 Unicast bytes            
+            0 Multicast frames                      0 Multicast frames         
+            0 Multicast bytes                       0 Multicast bytes          
+            0 Broadcast frames                      0 Broadcast frames         
+            0 Broadcast bytes                       0 Broadcast bytes          
+            0 System FCS error frames               0 IpgViolation frames      
+            0 MacUnderrun frames                    0 MacOverrun frames        
+            0 Pause frames                          0 Pause frames             
+            0 Cos 0 Pause frames                    0 Cos 0 Pause frames       
+            0 Cos 1 Pause frames                    0 Cos 1 Pause frames       
+            0 Cos 2 Pause frames                    0 Cos 2 Pause frames       
+            0 Cos 3 Pause frames                    0 Cos 3 Pause frames       
+            0 Cos 4 Pause frames                    0 Cos 4 Pause frames       
+            0 Cos 5 Pause frames                    0 Cos 5 Pause frames       
+            0 Cos 6 Pause frames                    0 Cos 6 Pause frames       
+            0 Cos 7 Pause frames                    0 Cos 7 Pause frames       
+            0 Oam frames                            0 OamProcessed frames      
+            0 Oam frames                            0 OamDropped frames        
+            0 Minimum size frames                   0 Minimum size frames      
+            0 65 to 127 byte frames                 0 65 to 127 byte frames    
+            0 128 to 255 byte frames                0 128 to 255 byte frames   
+            0 256 to 511 byte frames                0 256 to 511 byte frames   
+            0 512 to 1023 byte frames               0 512 to 1023 byte frames  
+            0 1024 to 1518 byte frames              0 1024 to 1518 byte frames 
+            0 1519 to 2047 byte frames              0 1519 to 2047 byte frames 
+            0 2048 to 4095 byte frames              0 2048 to 4095 byte frames 
+            0 4096 to 8191 byte frames              0 4096 to 8191 byte frames 
+            0 8192 to 16383 byte frames             0 8192 to 16383 byte frames
+            0 16384 to 32767 byte frame             0 16384 to 32767 byte frame
+            0 > 32768 byte frames                   0 > 32768 byte frames      
+            0 Late collision frames                 0 SymbolErr frames         
+            0 Excess Defer frames                   0 Collision fragments      
+            0 Good (1 coll) frames                  0 ValidUnderSize frames    
+            0 Good (>1 coll) frames                 0 InvalidOverSize frames   
+            0 Deferred frames                       0 ValidOverSize frames     
+            0 Gold frames dropped                   0 FcsErr frames            
+            0 Gold frames truncated    
+            0 Gold frames successful   
+            0 1 collision frames       
+            0 2 collision frames       
+            0 3 collision frames       
+            0 4 collision frames       
+            0 5 collision frames       
+            0 6 collision frames       
+            0 7 collision frames       
+            0 8 collision frames       
+            0 9 collision frames       
+            0 10 collision frames      
+            0 11 collision frames      
+            0 12 collision frames      
+            0 13 collision frames      
+            0 14 collision frames      
+            0 15 collision frames      
+            0 Excess collision frames  
+
+LAST UPDATE 65025761 msecs AGO
+
+Transmit                  GigabitEthernet1/0/2          Receive                 
+            0 Total bytes                           0 Total bytes              
+            0 Unicast frames                        0 Unicast frames           
+            0 Unicast bytes                         0 Unicast bytes            
+            0 Multicast frames                      0 Multicast frames         
+            0 Multicast bytes                       0 Multicast bytes          
+            0 Broadcast frames                      0 Broadcast frames         
+            0 Broadcast bytes                       0 Broadcast bytes          
+            0 System FCS error frames               0 IpgViolation frames      
+            0 MacUnderrun frames                    0 MacOverrun frames        
+            0 Pause frames                          0 Pause frames             
+            0 Cos 0 Pause frames                    0 Cos 0 Pause frames       
+            0 Cos 1 Pause frames                    0 Cos 1 Pause frames       
+            0 Cos 2 Pause frames                    0 Cos 2 Pause frames       
+            0 Cos 3 Pause frames                    0 Cos 3 Pause frames       
+            0 Cos 4 Pause frames                    0 Cos 4 Pause frames       
+            0 Cos 5 Pause frames                    0 Cos 5 Pause frames       
+            0 Cos 6 Pause frames                    0 Cos 6 Pause frames       
+            0 Cos 7 Pause frames                    0 Cos 7 Pause frames       
+            0 Oam frames                            0 OamProcessed frames      
+            0 Oam frames                            0 OamDropped frames        
+            0 Minimum size frames                   0 Minimum size frames      
+            0 65 to 127 byte frames                 0 65 to 127 byte frames    
+            0 128 to 255 byte frames                0 128 to 255 byte frames   
+            0 256 to 511 byte frames                0 256 to 511 byte frames   
+            0 512 to 1023 byte frames               0 512 to 1023 byte frames  
+            0 1024 to 1518 byte frames              0 1024 to 1518 byte frames 
+            0 1519 to 2047 byte frames              0 1519 to 2047 byte frames 
+            0 2048 to 4095 byte frames              0 2048 to 4095 byte frames 
+            0 4096 to 8191 byte frames              0 4096 to 8191 byte frames 
+            0 8192 to 16383 byte frames             0 8192 to 16383 byte frames
+            0 16384 to 32767 byte frame             0 16384 to 32767 byte frame
+            0 > 32768 byte frames                   0 > 32768 byte frames      
+            0 Late collision frames                 0 SymbolErr frames         
+            0 Excess Defer frames                   0 Collision fragments      
+            0 Good (1 coll) frames                  0 ValidUnderSize frames    
+            0 Good (>1 coll) frames                 0 InvalidOverSize frames   
+            0 Deferred frames                       0 ValidOverSize frames     
+            0 Gold frames dropped                   0 FcsErr frames            
+            0 Gold frames truncated    
+            0 Gold frames successful   
+            0 1 collision frames       
+            0 2 collision frames       
+            0 3 collision frames       
+            0 4 collision frames       
+            0 5 collision frames       
+            0 6 collision frames       
+            0 7 collision frames       
+            0 8 collision frames       
+            0 9 collision frames       
+            0 10 collision frames      
+            0 11 collision frames      
+            0 12 collision frames      
+            0 13 collision frames      
+            0 14 collision frames      
+            0 15 collision frames      
+            0 Excess collision frames  
+
+LAST UPDATE 65025761 msecs AGO

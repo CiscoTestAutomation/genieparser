@@ -1,0 +1,4 @@
+Protocol Address Age (min) Hardware Addr Type Interface
+Internet 172.16.255.1 - 28af.fdea.ccdf ARPA Vlan200
+Internet 192.168.1.201 3 0000.0000.0001 ARPA Vlan201 pv 202
+Internet 192.168.1.203 3 0015.0100.0001 ARPA Vlan201 pv 203

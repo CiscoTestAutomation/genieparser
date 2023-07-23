@@ -21,6 +21,10 @@ expected_output = {
                                         "backup_label": "3",
                                         "srte_label": "10",
                                     },
+                                    'ldp_status': {
+                                        'ldp_sync': 'Enabled',
+                                        'sync_status': 'Achieved'
+                                    },
                                     "process_id": "4",
                                     "router_id": "221.132.195.51",
                                     "interface_type": "POINT_TO_POINT",

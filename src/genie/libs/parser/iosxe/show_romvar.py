@@ -62,7 +62,12 @@ class ShowRomvarSchema(MetaParser):
             Optional("ip_address"): str,
             Optional("crashinfo"): str,
             Optional("subnet_mask"): str,
-            Optional("abnormal_reset_count"): int
+            Optional("abnormal_reset_count"): int,
+            Optional("boot_loader_upgrade_disable"): str,
+            Optional("real_mgmte_dev"): str,
+            Optional("sr_mgmt_vrf"): str,
+            Optional("boot_param"): str,
+            Optional("boot_param_bkp"): str
         }
     }
 
@@ -161,6 +166,12 @@ class ShowRomvar(ShowRomvarSchema):
         # VERSION_ID=V05
         #
         # ABNORMAL_RESET_COUNT=0
+        #
+        # BOOT_LOADER_UPGRADE_DISABLE=1
+        #
+        # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+        #
+        # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
 
 
         # ROMMON variables:
@@ -318,6 +329,15 @@ class ShowRomvar(ShowRomvarSchema):
 
         # ABNORMAL_RESET_COUNT=0
         p_abnormal_reset_count = re.compile(r"^ABNORMAL_RESET_COUNT\s*=\s*(?P<abnormal_reset_count>\d+)$")
+
+        # BOOT_LOADER_UPGRADE_DISABLE=1
+        p_boot_loader_upgrade_disable = re.compile(r"^BOOT_LOADER_UPGRADE_DISABLE\s*=\s*(?P<boot_loader_upgrade_disable>\S+)$")
+
+        # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
+        p_boot_param = re.compile(r"^BOOT_PARAM\s*=(?P<boot_param>.*)$")
+
+        # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+        p_boot_param_bkp = re.compile(r"^BOOT_PARAM_BKP\s*=(?P<boot_param_bkp>.*)$")
 
         romvar_dict = {}
 
@@ -586,11 +606,28 @@ class ShowRomvar(ShowRomvarSchema):
                 match = p_device_managed_mode.match(line)
                 romvar_dict["rommon_variables"]["device_managed_mode"] = match.group("mode")
                 continue
-
+            # ABNORMAL_RESET_COUNT=0
             if p_abnormal_reset_count.match(line):
                 match = p_abnormal_reset_count.match(line)
                 romvar_dict["rommon_variables"]["abnormal_reset_count"] = int(match.group("abnormal_reset_count"))
                 continue
+            # BOOT_LOADER_UPGRADE_DISABLE=1
+            if p_boot_loader_upgrade_disable.match(line):
+                match =  p_boot_loader_upgrade_disable.match(line)
+                romvar_dict["rommon_variables"]["boot_loader_upgrade_disable"] = match.group("boot_loader_upgrade_disable")
+                continue
+            
+            # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
+            if p_boot_param.match(line):
+                match = p_boot_param.match(line)
+                romvar_dict["rommon_variables"]["boot_param"] = match.group("boot_param")
+                continue
+
+            # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+            if p_boot_param_bkp.match(line):
+               match =  p_boot_param_bkp.match(line)
+               romvar_dict["rommon_variables"]["boot_param_bkp"] = match.group("boot_param_bkp")
+               continue
 
         return romvar_dict
 

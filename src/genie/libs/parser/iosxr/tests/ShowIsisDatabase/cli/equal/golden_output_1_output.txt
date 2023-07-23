@@ -1,0 +1,15 @@
+show isis database
+Thu Apr 27 13:10:00.154 UTC
+
+No IS-IS 1 levels found
+IS-IS 10 (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+P-9001-1.00-00      * 0x000007f7   0x54eb        533  /*            0/0/0
+
+ Total Level-2 LSP count: 1     Local Level-2 LSP count: 1
+
+IS-IS 99 (Level-1) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+P-9001-1.00-00      * 0x0000038f   0xfcf3        1106 /*            0/0/0
+
+ Total Level-1 LSP count: 1     Local Level-1 LSP count: 1

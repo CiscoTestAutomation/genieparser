@@ -1,0 +1,9 @@
+R -> routes received
+I -> routes installed
+S -> routes sent
+
+TENANT                             DOMAIN    OVERLAY   SITE      REGION                                
+ID        PEER             TYPE    ID        ID        ID        ID        STATE    UPTIME           R/I/S  
+-----------------------------------------------------------------------------------------------------------------
+22577     1.0.0.29         vsmart  1         1         29        None      up       2:07:13:21       90/18/55
+22577     1.0.0.30         vsmart  1         1         30        None      up       2:07:13:25       90/0/55

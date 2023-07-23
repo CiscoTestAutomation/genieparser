@@ -1,0 +1,83 @@
+-------------------------
+Device ID: javelin-morph-mini2-dut2
+Entry address(es):
+  IP address: 192.168.122.92
+Platform: cisco C9KV-A100L-8P,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): GigabitEthernet1/0/3
+Holdtime : 169 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20230127:054234 [BLD_POLARIS_DEV_LATEST_20230126_082257-44-gd8ed8dd01ce5:/nobackup/rajavenk/vikagarw/git_ws/polaris_dev 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Thu 26-Jan-23 21:42 by vikagarw
+
+advertisement version: 2
+Peer Source MAC: 0cc6.3079.0003
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 192.168.122.92
+
+-------------------------
+Device ID: javelin-morph-mini2-dut2
+Entry address(es):
+  IP address: 192.168.122.92
+Platform: cisco C9KV-A100L-8P,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/1,  Port ID (outgoing port): GigabitEthernet1/0/1
+Holdtime : 169 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20230127:054234 [BLD_POLARIS_DEV_LATEST_20230126_082257-44-gd8ed8dd01ce5:/nobackup/rajavenk/vikagarw/git_ws/polaris_dev 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Thu 26-Jan-23 21:42 by vikagarw
+
+advertisement version: 2
+Peer Source MAC: 0cc6.3079.0001
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 192.168.122.92
+
+-------------------------
+Device ID: javelin-morph-mini2-dut2
+Entry address(es):
+  IP address: 192.168.122.92
+Platform: cisco C9KV-A100L-8P,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/4,  Port ID (outgoing port): GigabitEthernet1/0/4
+Holdtime : 169 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20230127:054234 [BLD_POLARIS_DEV_LATEST_20230126_082257-44-gd8ed8dd01ce5:/nobackup/rajavenk/vikagarw/git_ws/polaris_dev 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Thu 26-Jan-23 21:42 by vikagarw
+
+advertisement version: 2
+Peer Source MAC: 0cc6.3079.0004
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 192.168.122.92
+
+-------------------------
+Device ID: javelin-morph-mini2-dut3
+Entry address(es):
+  IP address: 192.168.122.68
+  IPv6 address: FE80::E30:80FF:FE47:0  (link-local)
+Platform: cisco C9KV-A100L-8P,  Capabilities: Switch IGMP
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+Holdtime : 156 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20230127:054234 [BLD_POLARIS_DEV_LATEST_20230126_082257-44-gd8ed8dd01ce5:/nobackup/rajavenk/vikagarw/git_ws/polaris_dev 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Thu 26-Jan-23 21:42 by vikagarw
+
+advertisement version: 2
+Peer Source MAC: 0c30.8047.0000
+VTP Management Domain: ''
+Duplex: full
+Management address(es):
+  IP address: 192.168.122.68

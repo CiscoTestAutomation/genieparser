@@ -1,0 +1,10 @@
+IPv4 Role-based permissions default (configured):
+	DEFAULT_DENY_v4
+IPv4 Role-based permissions from group Unknown to group 100 (configured):
+	SGACL_PERMIT_IPv4
+IPv4 Role-based permissions from group Unknown to group 200 (configured):
+	SGACL_PERMIT_IPv4
+IPv4 Role-based permissions from group 100 to group 200 (configured):
+	SGACL_PERMIT_IPv4
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE
