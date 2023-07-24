@@ -3,19 +3,6 @@ from genie.metaparser.util.schemaengine import Any, Optional
 import re
 
 
-# to convert prefix to subnetmask. huawei only shows prefix len
-def translater_cidr_netmask(cidr):
-    """
-    Translate CIDR to netmask notation.
-    :param cidr:
-    :return: netmask as string
-    """
-    return '.'.join(
-        [str((m >> (3-i)*8) & 0xff) for i, m in enumerate(
-            [-1 << (32-int(cidr))] * 4)]
-    )
-
-
 class DisplayInterfaceSchema(MetaParser):
     schema = {
             Any(): {
@@ -63,6 +50,19 @@ class DisplayInterface(DisplayInterfaceSchema):
                   display interface <interface>"""
 
     cli_command = ['display interface', 'display interface {interface}']
+
+    @staticmethod
+    def translater_cidr_netmask(cidr):
+        """
+        # to convert prefix to subnetmask. huawei only shows prefix len
+        Translate CIDR to netmask notation.
+        :param cidr:
+        :return: netmask as string
+        """
+        return '.'.join(
+            [str((m >> (3 - i) * 8) & 0xff) for i, m in enumerate(
+                [-1 << (32 - int(cidr))] * 4)]
+        )
 
     def cli(self, interface="", output=None):
         if output is None:
@@ -278,8 +278,9 @@ class DisplayInterface(DisplayInterfaceSchema):
             if m:
                 ip_address = m.groupdict()['ip']
                 subnet_prefix = m.groupdict()['prefix_length']
-                subnet_mask = translater_cidr_netmask(m.groupdict()[
-                                                          'prefix_length'])
+                subnet_mask = self.translater_cidr_netmask(
+                    m.groupdict()['prefix_length']
+                )
 
                 interface_dict[interface]['ip_address'] = ip_address
                 interface_dict[interface]['subnet_prefix'] = subnet_prefix
@@ -289,8 +290,9 @@ class DisplayInterface(DisplayInterfaceSchema):
             if m_cellular:
                 ip_address = m_cellular.groupdict()['ip']
                 subnet_prefix = m_cellular.groupdict()['prefix_length']
-                subnet_mask = translater_cidr_netmask(m_cellular.groupdict()[
-                                                          'prefix_length'])
+                subnet_mask = self.translater_cidr_netmask(
+                    m_cellular.groupdict()['prefix_length']
+                )
 
                 interface_dict[interface]['cellular_info']['ip_address'] \
                     = ip_address
