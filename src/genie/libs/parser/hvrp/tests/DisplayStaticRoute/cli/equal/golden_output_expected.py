@@ -3,7 +3,7 @@ expected_output = {
         '0.0.0.0/0/1.1.1.2': {
             'ip_version': '4',
             'next_hop': '1.1.1.2',
-            'preference': '1',
+            'preference': '',
             'route_name': '',
             'subnet': '0.0.0.0',
             'subnet_mask': '0.0.0.0',
@@ -84,7 +84,7 @@ expected_output = {
         '2A07:3500:1BC0::/3/2A07:3500:1BC0::F001:1002': {
             'ip_version': '6',
             'next_hop': '2A07:3500:1BC0::F001:1002',
-            'preference': '1',
+            'preference': '',
             'route_name': 'testroute-3',
             'subnet': '2A07:3500:1BC0::',
             'subnet_mask': '49',

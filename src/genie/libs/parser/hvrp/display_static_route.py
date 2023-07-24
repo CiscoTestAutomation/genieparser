@@ -74,6 +74,7 @@ ipv6 route-static 2A07:3500:1BC0:: 49 2A07:3500:1BC0::F001:1002 description test
                     if "v6" in match_ip_version.groupdict()['ip_version']:
                         ip_version = "6"
 
+                preference = ''
                 match_preference = p_preference.match(line)
                 if match_preference:
                     preference = match_preference.groupdict()['preference']
@@ -98,5 +99,4 @@ ipv6 route-static 2A07:3500:1BC0:: 49 2A07:3500:1BC0::F001:1002 description test
                     'preference': preference,
                 }
                 continue
-        print(ip_routes_dict)
         return ip_routes_dict
