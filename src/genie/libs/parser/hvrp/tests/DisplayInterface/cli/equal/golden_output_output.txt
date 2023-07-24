@@ -1,0 +1,373 @@
+
+display interface
+Atm0/0/0 current state : UP
+Line protocol current state : UP
+Last line protocol up time : 2022-01-20 17:52:13 UTC+01:00
+Description:Connection to IP-VPN # ax10001b #
+Route Port,The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+AAL enabled: AAL5, Maximum PVCs: 16
+PVCs on main-interface: 1 (Total PVCs: 1)
+Last physical up time   : 2022-01-20 17:52:13 UTC+01:00
+Last physical down time : 2022-01-20 17:49:41 UTC+01:00
+Current system time: 2022-01-27 16:24:34+01:00
+
+Port PHY type    : VDSL
+The physical up times since the system startup : 1
+Last 30 seconds input rate 424 bits/sec, 0 packets/sec
+Last 30 seconds output rate 248 bits/sec, 0 packets/sec
+
+Input:  159078 packets, 16881401 bytes
+  OAM Cells:                  0,  ASM Cells:                    0
+  Packet Errors:              0,  Packet Discards:              0
+  Cell Errors:                0
+
+Output:  60908 packets, 6664962 bytes
+  OAM Cells:                  0,  ASM Cells:                    0
+  Packet Errors:              0,  Packet Discards:              0
+    Input bandwidth utilization  : 0.01%
+    Output bandwidth utilization : 0.04%
+
+Cellular0/0/0 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, Cellular0/0/0 Interface
+Route Port,The Maximum Transmit Unit is 1500, Hold timer is 10(sec)
+Internet protocol processing : disabled
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:42 UTC+01:00
+Current system time: 2022-01-27 16:24:34+01:00
+Modem State: Present
+Model = ME909s-120
+Current Network Connection = Unknown
+Current RSSI = Unknown
+Last 30 seconds input rate 0 bytes/sec 0 bits/sec 0 packets/sec
+Last 30 seconds output rate 0 bytes/sec 0 bits/sec 0 packets/sec
+Input: 0 packets, 0 bytes
+  Unicast:                  0,    Ununicast:                  0
+
+Output: 0 packets, 0 bytes
+  Unicast:                  0,    Ununicast:                  0
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+Cellular0/0/1 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, Cellular0/0/1 Interface
+Route Port,The Maximum Transmit Unit is 1500, Hold timer is 10(sec)
+Internet protocol processing : disabled
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:42 UTC+01:00
+Current system time: 2022-01-27 16:24:35+01:00
+Modem State: Not present
+Last 30 seconds input rate 0 bytes/sec 0 bits/sec 0 packets/sec
+Last 30 seconds output rate 0 bytes/sec 0 bits/sec 0 packets/sec
+Input: 0 packets, 0 bytes
+  Unicast:                  0,    Ununicast:                  0
+
+Output: 0 packets, 0 bytes
+  Unicast:                  0,    Ununicast:                  0
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/0 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, GigabitEthernet0/0/0 Interface
+Switch Port, PVID :    1, TPID : 8100(Hex), The Maximum Frame Length is 1800
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc42
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:39 UTC+01:00
+Current system time: 2022-01-27 16:24:35+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/1 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, GigabitEthernet0/0/1 Interface
+Switch Port, PVID :    1, TPID : 8100(Hex), The Maximum Frame Length is 1800
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc42
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:40 UTC+01:00
+Current system time: 2022-01-27 16:24:35+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/2 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, GigabitEthernet0/0/2 Interface
+Switch Port, PVID :    1, TPID : 8100(Hex), The Maximum Frame Length is 1800
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc42
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:40 UTC+01:00
+Current system time: 2022-01-27 16:24:36+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/3 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, GigabitEthernet0/0/3 Interface
+Switch Port, PVID :    1, TPID : 8100(Hex), The Maximum Frame Length is 1800
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc42
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:41 UTC+01:00
+Current system time: 2022-01-27 16:24:36+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/4 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, GigabitEthernet0/0/4 Interface
+Route Port,The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc43
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:39 UTC+01:00
+Current system time: 2022-01-27 16:24:37+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+GigabitEthernet0/0/5 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:VirtualPort
+Route Port,The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc44
+Last physical up time   : -
+Last physical down time : 2022-01-20 17:49:41 UTC+01:00
+Current system time: 2022-01-27 16:24:38+01:00
+Port Mode: COMMON COPPER
+Speed : 1000,  Loopback: NONE
+Duplex: FULL,  Negotiation: ENABLE
+Mdi   : AUTO,  Clock   : -
+Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+Input peak rate 0 bits/sec,Record time: -
+Output peak rate 0 bits/sec,Record time: -
+
+Input:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  CRC:                      0,  Giants:                      0
+  Jabbers:                  0,  Throttles:                   0
+  Runts:                    0,  Symbols:                     0
+  Ignoreds:                 0,  Frames:                      0
+
+Output:  0 packets, 0 bytes
+  Unicast:                  0,  Multicast:                   0
+  Broadcast:                0,  Jumbo:                       0
+  Discard:                  0,  Total Error:                 0
+
+  Collisions:               0,  ExcessiveCollisions:         0
+  Late Collisions:          0,  Deferreds:                   0
+
+    Input bandwidth utilization threshold : 100.00%
+    Output bandwidth utilization threshold: 100.00%
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+LoopBack0 current state : UP
+Line protocol current state : UP (spoofing)
+Description:HUAWEI, AR Series, LoopBack0 Interface
+Route Port,The Maximum Transmit Unit is 1500
+Internet Address is 10.1.1.138/32
+Physical is Loopback
+Current system time: 2022-01-27 16:24:38+01:00
+    Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+    Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+    Realtime 0 seconds input rate 0 bits/sec, 0 packets/sec
+    Realtime 0 seconds output rate 0 bits/sec, 0 packets/sec
+    Input: 0 bytes
+    Output:0 bytes
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+NULL0 current state : UP
+Line protocol current state : UP (spoofing)
+Description:HUAWEI, AR Series, NULL0 Interface
+Route Port,The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+Physical is NULL DEV
+Current system time: 2022-01-27 16:24:38+01:00
+    Last 30 seconds input rate 0 bits/sec, 0 packets/sec
+    Last 30 seconds output rate 0 bits/sec, 0 packets/sec
+    Realtime 0 seconds input rate 0 bits/sec, 0 packets/sec
+    Realtime 0 seconds output rate 0 bits/sec, 0 packets/sec
+    Input: 0 bytes
+    Output:10100 bytes
+    Input bandwidth utilization  :    0%
+    Output bandwidth utilization :    0%
+
+Virtual-Template0 current state : UP
+Line protocol current state : UP
+Last line protocol up time : 2022-01-20 17:52:14 UTC+01:00
+Description:HUAWEI, AR Series, Virtual-Template0 Interface
+Route Port,The Maximum Transmit Unit is 1500, Hold timer is 10(sec)
+Internet Address is unnumbered, using address of LoopBack0(10.1.1.138/32)
+Link layer protocol is PPP
+LCP initial
+Physical is None
+Current system time: 2022-01-27 16:24:39+01:00
+    Last 30 seconds input rate 160 bits/sec, 0 packets/sec
+    Last 30 seconds output rate 8 bits/sec, 0 packets/sec
+    Realtime 0 seconds input rate 0 bits/sec, 0 packets/sec
+    Realtime 0 seconds output rate 0 bits/sec, 0 packets/sec
+    Input: 4089628 bytes
+    Output:982860 bytes
+    Input bandwidth utilization  : 0.25%
+    Output bandwidth utilization : 0.01%
+
+Vlanif1 current state : Administratively DOWN
+Line protocol current state : DOWN
+Description:HUAWEI, AR Series, Vlanif1 Interface
+Route Port,The Maximum Transmit Unit is 1500
+Internet protocol processing : disabled
+IP Sending Frames' Format is PKTFMT_ETHNT_2, Hardware address is f03f-9566-fc42
+Current system time: 2022-01-27 16:24:39+01:00
+    Input bandwidth utilization  : --
+    Output bandwidth utilization : --
