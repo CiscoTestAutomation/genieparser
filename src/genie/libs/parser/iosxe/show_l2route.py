@@ -2361,13 +2361,6 @@ class ShowL2routeEvpnMulticastSmetSchema(MetaParser):
                    show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
                    show l2route evpn multicast smet topology <evi> group <group> remote
                    show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
-                   show l2route evpn multicast smet topology <evi:etag>
-                   show l2route evpn multicast smet topology <evi:etag> group <group>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface> service-instance <serviceInstance>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote originator <originator-addr>
     """
 
     schema = {
@@ -2408,13 +2401,6 @@ class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
                    show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
                    show l2route evpn multicast smet topology <evi> group <group> remote
                    show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
-                   show l2route evpn multicast smet topology <evi:etag>
-                   show l2route evpn multicast smet topology <evi:etag> group <group>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface> service-instance <serviceInstance>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote originator <originator-addr>
     """
 
     cli_command = [
@@ -2424,21 +2410,17 @@ class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
         'show l2route evpn multicast smet topology {evi} group {group} local interface {interface}',
         'show l2route evpn multicast smet topology {evi} group {group} local interface {interface} service-instance {serviceInstance}',
         'show l2route evpn multicast smet topology {evi} group {group} remote originator {originator}',
-        'show l2route evpn multicast smet topology {evi_etag}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} local interface {interface}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} local interface {interface} service-instance {serviceInstance}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} remote originator {originator}',
         'show l2route evpn multicast smet topology {evi} group {group} {locality}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} {locality}'
     ]
 
     def cli(self, output=None, evi=None, etag=None, group=None, locality=None,
             interface=None, serviceInstance=None, originator=None):
         if not output:
             if evi:
+                if ':' in evi:
+                    evi, etag = evi.split(':', maxsplit=1)
                 if etag:
-                    evi_etag = "{}:{}".format(evi,etag)
+                    evi_etag = "{}:{}".format(evi, etag)
                     if group:
                         if locality == 'local' and interface:
                             if serviceInstance:

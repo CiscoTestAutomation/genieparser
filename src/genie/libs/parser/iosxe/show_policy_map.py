@@ -744,7 +744,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # ip precedence 6
         # dscp af41
         # qos-group 20
-        p14_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp)) +(?P<value>(\w+))$')
+        # dscp dscp table t1
+        # traffic-class dscp table t1
+        p14_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp|traffic-class)) +(?P<value>(\w+|dscp table \w+))$')
 
         # Marker statistics: Disabled
         p14_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
@@ -3405,18 +3407,21 @@ class ShowPolicyMapTypeQueueingPolicynameSchema(MetaParser) :
             Any(): {
                 'class_map': {
                     Any(): {
-                        'class_val': {
+                        Optional('class_val'): {
                             Any():{
-                                Optional('min_threshold'): str,
-                                Optional('max_threshold'): str,
-                                Optional('mark_probability'): str,
-                            },
+                                'min_threshold': str,
+                                'max_threshold': str,
+                                'mark_probability': str
+                            }
                         },
                         Optional('cir_percent'): int,
+                        Optional('cir_bps'): int,
                         Optional('queue_limit_bytes'): int,
                         Optional('wred_type'): str,
                         Optional('exponential_weight'): int,
-                        Optional('average_rate_traffic_shaping'):bool
+                        Optional('average_rate_traffic_shaping'):bool,
+                        Optional('bandwidth_remaining_ratio'): int,
+                        Optional('priority_level'): int
                     },
                },
            },
@@ -3436,9 +3441,8 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
     def cli(self,policy_name="",output=None):      
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
-
-        # Execute command
-        output = self.device.execute(cmd)
+            # Execute command
+            output = self.device.execute(cmd)
 
         ret_dict = {}
 
@@ -3454,6 +3458,9 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
         # cir 10%
         p4 = re.compile(r'^cir +(?P<cir_percent>(\d+))%$')
 
+        # cir 100000000 (bps)
+        p4_1 = re.compile(r'^cir +(?P<cir_bps>\d+) \(bps\)$')
+
         # queue-limit 100000000 bytes
         p5 = re.compile(r'^queue-limit +(?P<queue_limit_bytes>(\d+)) bytes$')
 
@@ -3465,6 +3472,12 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
         # 0                1                 100                   1/1
         # 1                -                  -                    1/1
         p7 = re.compile(r'^(?P<class_val>(\w+(\s+\(\d+\))?)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) +(?P<mark_probability>([0-9]+)/([0-9]+))$')
+
+        # bandwidth remaining ratio 10
+        p8 = re.compile(r'^bandwidth remaining ratio (?P<bandwidth_remaining_ratio>\d+)$')
+
+        # priority level 3
+        p9 = re.compile(r'^priority level (?P<priority_level>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -3492,7 +3505,13 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
             if m:
                 class_map_dict['cir_percent']=int(m.groupdict()['cir_percent'])
                 continue
-            
+
+            # cir 100000000 (bps)
+            m = p4_1.match(line)
+            if m:
+                class_map_dict['cir_bps']=int(m.groupdict()['cir_bps'])
+                continue
+
             # queue-limit 100000000 bytes
             m = p5.match(line)
             if m:
@@ -3518,4 +3537,14 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
                 class_val['mark_probability']=m.groupdict()['mark_probability']
                 continue
         
+            # bandwidth remaining ratio 10
+            m = p8.match(line)
+            if m:
+                class_map_dict['bandwidth_remaining_ratio'] = int(m.groupdict()['bandwidth_remaining_ratio'])
+
+            # priority level 3
+            m = p9.match(line)
+            if m:
+                class_map_dict['priority_level'] = int(m.groupdict()['priority_level'])
+
         return ret_dict

@@ -1,0 +1,4 @@
+show lisp instance-id 4100 ipv6 subscription
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 1 entries
+Prefix                                  Source                         Created     Last Update
+2001:194:168:1::72/128                              remote-eid,eid-watch          00:13:06    00:01:41   

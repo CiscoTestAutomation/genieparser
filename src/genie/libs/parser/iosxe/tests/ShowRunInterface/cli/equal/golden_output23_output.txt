@@ -1,0 +1,10 @@
+interface TenGigabitEthernet0/1/3
+ no ip address
+ ip mtu 1468
+ load-interval 30
+ mka policy MKAPolicy
+ mka pre-shared-key key-chain KCP256
+ macsec access-control should-secure
+ macsec
+ channel-group 1 mode active
+end

@@ -1,0 +1,11 @@
+Building configuration...
+
+Current configuration : 217 bytes
+!
+interface TenGigabitEthernet1/0/12
+ no switchport
+ ip flow monitor m4in sampler fnf_sampler input
+ ip flow monitor m4out sampler fnf_sampler output
+ ip address 50.50.50.1 255.255.255.0
+ service-policy input PM
+end

@@ -2,13 +2,14 @@ DLEP Neighbors for all interfaces:
 
 
 
-DLEP Neighbors for Interface GigabitEthernet3
-DLEP Server IP=9.9.9.11:11111 Sock=0
+DLEP Neighbors for Interface TenGigabitEthernet0/0/0
+DLEP Local IP=21.21.21.119:22121 Sock=0
 
 
-SID=2154  MAC_Address=0050.56bd.7503
+SID=2181  Remote End-point MAC_Address=88fc.5d32.0b00 
   Addresses:
-  IPv4 : 9.9.9.1  IPv6 LL : FE80::21E:BDFF:FE08:5000
+  DLEP Remote IP : 21.21.21.111  DLEP Remote IPv6 LL : FE80::8AFC:5DFF:FE32:B00
+  Associated virtual access interface : Virtual-Access3
  Supported Metrics:
   RLQ RX Metric : 100
   RLQ TX Metric : 100
@@ -19,14 +20,10 @@ SID=2154  MAC_Address=0050.56bd.7503
   CDR TX Metric : 100000000 bps
   MDR RX Metric : 100000000 bps
   MDR TX Metric : 100000000 bps
-
-DLEP Neighbors for Interface GigabitEthernet5
-DLEP Server IP=8.8.8.11:11115 Sock=2
-
-
-SID=2155  MAC_Address=0050.56bd.0174
+SID=2182  Remote End-point MAC_Address=44ae.2564.bde0 
   Addresses:
-  IPv4 : 8.8.8.1  IPv6 LL : FE80::21E:BDFF:FE08:5000
+  DLEP Remote IP : 21.21.21.131  DLEP Remote IPv6 LL : FE80::46AE:25FF:FE64:BDE0
+  Associated virtual access interface : Virtual-Access2
  Supported Metrics:
   RLQ RX Metric : 100
   RLQ TX Metric : 100

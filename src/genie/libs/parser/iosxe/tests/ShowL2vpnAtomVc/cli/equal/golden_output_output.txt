@@ -1,0 +1,5 @@
+                                       Service
+Interface Peer ID         VC ID      Type   Name                     Status
+--------- --------------- ---------- ------ ------------------------ ----------
+pw100002  172.16.255.1    11         vfi    VFI11                    STANDBY   
+pw100003  172.16.255.2    11         vfi    VFI11                    UP

@@ -1,0 +1,4 @@
+LISP MS EID Subscriptions for LISP 0 IID 4100, 2 entries
+Prefix                                  Registration                        Created     Last Update     Subscribers
+172.168.0.0/16                          172.168.0.0/16                      00:00:07    never           2 
+182.168.0.0/16                          Unattached                          00:00:03    never           1

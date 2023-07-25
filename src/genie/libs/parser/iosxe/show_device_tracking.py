@@ -1174,8 +1174,9 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
 
         # Device-tracking:    NDP      NS  [10]
         # Flooding Suppress:  NDP      NS  [36]
+        # Routing Proxy:      NDP      REDIR[1]
         dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
-                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+                                          r'\s+(?P<message>(\S+))\s*\[(?P<dropped>(\d+))\]$')
 
         #   DHCPv6_REQUEST_NAK[1]
         fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
