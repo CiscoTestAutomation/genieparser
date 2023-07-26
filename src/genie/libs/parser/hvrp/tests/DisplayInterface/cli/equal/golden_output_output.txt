@@ -3,7 +3,7 @@ display interface
 Atm0/0/0 current state : UP
 Line protocol current state : UP
 Last line protocol up time : 2022-01-20 17:52:13 UTC+01:00
-Description:Connection to IP-VPN # ax10001b #
+Description:Connection to TO-VPN # ax10001b #
 Route Port,The Maximum Transmit Unit is 1500
 Internet protocol processing : disabled
 AAL enabled: AAL5, Maximum PVCs: 16

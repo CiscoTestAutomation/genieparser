@@ -2,7 +2,7 @@ expected_output = {
     'Atm0/0/0': {
         'admin_status': ' UP', 'line_status': True,
         'line_up_since': '2022-01-20 17:52:13 UTC+01:00',
-        'interface_description': 'Connection to IP-VPN # ax10001b #',
+        'interface_description': 'Connection to TO-VPN # ax10001b #',
         'mtu': 1500,
         'time_last_up': '2022-01-20 17:52:13 UTC+01:00',
         'system_time': '2022-01-27 16:24:34+01:00',
