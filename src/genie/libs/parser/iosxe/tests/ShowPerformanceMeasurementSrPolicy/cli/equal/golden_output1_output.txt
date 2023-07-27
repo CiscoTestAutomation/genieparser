@@ -1,0 +1,381 @@
+
+show performance-measurement sr-policy detail private verbose
+
+SR Policy name: Ethernet0/0
+Color                           : 1235
+Endpoint                        : 1.1.1.7
+Source                          : 1.1.1.3
+Profile name                    : Not configured
+Policy Update Timestamp         : 05-20 06:46:52.222
+Number of candidate-paths       : 1
+
+Candidate-Path:
+Preference                    : 100
+Protocol-origin               : CLI
+Discriminator                 : 0
+Active:                       : No
+Number of segment-lists       : 1
+Number of atomic paths        : 1
+Number of live UP atomic paths: 1
+Number of live Unknown atomic : 1
+Max Pkts per Burst            : 500
+Max Pkts per Probe            : 15000
+AP Min Run per Probe          : 3
+Round-robin bursts            : 1
+Round-robin probes            : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 465, min: 1, max: 999, variance: 464
+Next advertisement:
+Check scheduled in 2 more probes (roughly every 120 seconds)
+Aggregated delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 249, min: 1, max: 499, variance: 248
+
+Segment-List:
+Name                        : SL7
+Number of atomic paths      : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 465, min: 1, max: 999, variance: 464
+Next advertisement:
+Aggregated delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 249, min: 1, max: 499, variance: 248
+
+Atomic path:
+Hops                      : 1.1.1.7
+Labels                    : 16230
+Outgoing Interface        : Ethernet0/1
+Max IP MTU                : 1500
+Next Hop                  : 110.1.1.4
+Destination               : 1.1.1.7
+Session ID                : 10
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised reason: Periodic timer, avg delay threshold crossed
+Advertised delays (uSec): avg: 465, min: 1, max: 999, variance: 464
+Next advertisement:
+Aggregated delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Rolling average (uSec): 287
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 233, min: 1, max: 499, variance: 232
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 249, min: 1, max: 499, variance: 248
+Probe samples:
+Packet Rx Timestamp Measured Delay
+10:53:18  21 2021 0
+10:53:17  21 2021 499999
+10:53:16  21 2021 499999
+10:53:15  21 2021 499999
+10:53:14  21 2021 0
+10:53:13  21 2021 0
+
+Liveness Detection:
+Session Creation Timestamp: 05-20 06:46:52.222
+Session State: Up
+Last State Change Timestamp: 05-20 06:46:52.414
+Missed count   [consecutive]: 0
+Received count [consecutive]: 101186
+Backoff                     : 0
+Unique Path Name            : Path-10
+Loss in Last Interval       : 0 % [TX: 6 RX: 6]
+SR Policy name: Ethernet0/1
+Color                           : 1236
+Endpoint                        : 1.1.1.7
+Source                          : 1.1.1.3
+Profile name                    : E01
+Policy Update Timestamp         : 05-20 06:46:52.222
+Number of candidate-paths       : 1
+
+Candidate-Path:
+Preference                    : 100
+Protocol-origin               : CLI
+Discriminator                 : 0
+Active:                       : No
+Number of segment-lists       : 1
+Number of atomic paths        : 1
+Number of live UP atomic paths: 1
+Number of live Unknown atomic : 1
+Max Pkts per Burst            : 500
+Max Pkts per Probe            : 5000
+AP Min Run per Probe          : 3
+Round-robin bursts            : 1
+Round-robin probes            : 1
+Last advertisement:
+Advertised at: 06:48:42  20 2021 (101076 seconds ago)
+Advertised delays (uSec): avg: 566, min: 1, max: 1000, variance: 565
+Next advertisement:
+Check scheduled in 2 more probes (roughly every 120 seconds)
+Aggregated delays (uSec): avg: 100, min: 1, max: 1000, variance: 99
+Last probe:
+Packets Sent: 10, received: 10
+Measured delays (uSec): avg: 100, min: 1, max: 1000, variance: 99
+Current probe:
+Packets Sent: 2, received: 2
+Measured delays (uSec): avg: 1000, min: 1000, max: 1000, variance: 0
+
+Segment-List:
+Name                        : SL8
+Number of atomic paths      : 1
+Last advertisement:
+Advertised at: 06:48:42  20 2021 (101076 seconds ago)
+Advertised delays (uSec): avg: 566, min: 1, max: 1000, variance: 565
+Next advertisement:
+Aggregated delays (uSec): avg: 100, min: 1, max: 1000, variance: 99
+Last probe:
+None
+Current probe:
+None
+
+Atomic path:
+Hops                      : 1.1.1.7
+Labels                    : 16230
+Outgoing Interface        : Ethernet0/1
+Max IP MTU                : 1500
+Next Hop                  : 110.1.1.4
+Destination               : 1.1.1.7
+Session ID                : 11
+Last advertisement:
+Advertised at: 06:48:42  20 2021 (101076 seconds ago)
+Advertised reason: First advertisement
+Advertised delays (uSec): avg: 566, min: 1, max: 1000, variance: 565
+Next advertisement:
+Aggregated delays (uSec): avg: 100, min: 1, max: 1000, variance: 99
+Rolling average (uSec): 238
+Last probe:
+None
+Current probe:
+Packets Sent: 2, received: 2
+Measured delays (uSec): avg: 1000, min: 1000, max: 1000, variance: 0
+Probe samples:
+Packet Rx Timestamp Measured Delay
+10:53:16  21 2021 1000000
+10:53:13  21 2021 1000000
+
+Liveness Detection:
+Session Creation Timestamp: 05-20 06:46:52.222
+Session State: Up
+Last State Change Timestamp: 05-20 06:46:54.404
+Missed count   [consecutive]: 0
+Received count [consecutive]: 33728
+Backoff                     : 0
+Unique Path Name            : Path-10
+Loss in Last Interval       : 0 % [TX: 2 RX: 2]
+SR Policy name: PM
+Color                           : 1234
+Endpoint                        : 1.1.1.7
+Source                          : 1.1.1.3
+Profile name                    : Not configured
+Policy Update Timestamp         : 05-21 10:46:34.131
+Number of candidate-paths       : 3
+
+Candidate-Path:
+Preference                    : 100
+Protocol-origin               : CLI
+Discriminator                 : 0
+Active:                       : No
+Number of segment-lists       : 1
+Number of atomic paths        : 1
+Number of live UP atomic paths: 1
+Number of live Unknown atomic : 1
+Max Pkts per Burst            : 500
+Max Pkts per Probe            : 15000
+AP Min Run per Probe          : 3
+Round-robin bursts            : 1
+Round-robin probes            : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 603, min: 1, max: 999, variance: 602
+Next advertisement:
+Check scheduled in 2 more probes (roughly every 120 seconds)
+Aggregated delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 499, min: 1, max: 999, variance: 498
+
+Segment-List:
+Name                        : SL6
+Number of atomic paths      : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 603, min: 1, max: 999, variance: 602
+Next advertisement:
+Aggregated delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 499, min: 1, max: 999, variance: 498
+
+Atomic path:
+Hops                      : 1.1.1.7
+Labels                    : 16230
+Outgoing Interface        : Ethernet0/1
+Max IP MTU                : 1500
+Next Hop                  : 110.1.1.4
+Destination               : 1.1.1.7
+Session ID                : 13
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised reason: Periodic timer, avg delay threshold crossed
+Advertised delays (uSec): avg: 603, min: 1, max: 999, variance: 229
+Next advertisement:
+Aggregated delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Rolling average (uSec): 467
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 466, min: 1, max: 999, variance: 465
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 499, min: 1, max: 999, variance: 498
+Probe samples:
+Packet Rx Timestamp Measured Delay
+10:53:17  21 2021 499999
+10:53:16  21 2021 499999
+10:53:15  21 2021 499999
+10:53:14  21 2021 999999
+10:53:13  21 2021 499999
+10:53:12  21 2021 0
+
+Liveness Detection:
+Session Creation Timestamp: 05-20 06:46:52.222
+Session State: Up
+Last State Change Timestamp: 05-20 06:46:52.382
+Missed count   [consecutive]: 0
+Received count [consecutive]: 101186
+Backoff                     : 0
+Unique Path Name            : Path-10
+Loss in Last Interval       : 0 % [TX: 6 RX: 6]
+
+Candidate-Path:
+Preference                    : 200
+Protocol-origin               : CLI
+Discriminator                 : 0
+Active:                       : Yes
+Number of segment-lists       : 1
+Number of atomic paths        : 1
+Number of live UP atomic paths: 1
+Number of live Unknown atomic : 1
+Max Pkts per Burst            : 500
+Max Pkts per Probe            : 15000
+AP Min Run per Probe          : 3
+Round-robin bursts            : 1
+Round-robin probes            : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 557, min: 1, max: 999, variance: 556
+Next advertisement:
+Check scheduled in 2 more probes (roughly every 120 seconds)
+Aggregated delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 416, min: 1, max: 499, variance: 415
+
+Segment-List:
+Name                        : SL5
+Number of atomic paths      : 1
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised delays (uSec): avg: 557, min: 1, max: 999, variance: 556
+Next advertisement:
+Aggregated delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 416, min: 1, max: 499, variance: 415
+
+Atomic path:
+Hops                      : 1.2.3.3, 90.1.1.4, 55.1.1.5
+Labels                    : 25, 17
+Outgoing Interface        : Ethernet1/2
+Max IP MTU                : 1500
+Next Hop                  : 1.2.3.4
+Destination               : 1.1.1.7
+Session ID                : 12
+Last advertisement:
+Advertised at: 09:06:42  20 2021 (92796 seconds ago)
+Advertised reason: Periodic timer, avg delay threshold crossed
+Advertised delays (uSec): avg: 557, min: 1, max: 999, variance: 431
+Next advertisement:
+Aggregated delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Rolling average (uSec): 508
+Last probe:
+Packets Sent: 30, received: 30
+Measured delays (uSec): avg: 516, min: 1, max: 999, variance: 515
+Current probe:
+Packets Sent: 6, received: 6
+Measured delays (uSec): avg: 416, min: 1, max: 499, variance: 415
+Probe samples:
+Packet Rx Timestamp Measured Delay
+10:53:18  21 2021 499999
+10:53:17  21 2021 499999
+10:53:16  21 2021 499999
+10:53:15  21 2021 499999
+10:53:14  21 2021 499999
+10:53:13  21 2021 0
+
+Liveness Detection:
+Session Creation Timestamp: 05-20 06:46:52.222
+Session State: Up
+Last State Change Timestamp: 05-20 06:46:52.674
+Missed count   [consecutive]: 0
+Received count [consecutive]: 101186
+Backoff                     : 0
+Unique Path Name            : Path-11
+Loss in Last Interval       : 0 % [TX: 6 RX: 6]
+
+Candidate-Path:
+Preference                    : 300
+Protocol-origin               : CLI
+Discriminator                 : 0
+Active:                       : No
+Number of segment-lists       : 1
+Number of atomic paths        : 0
+Number of live UP atomic paths: 0
+Number of live Unknown atomic : 0
+Max Pkts per Burst            : 0
+Max Pkts per Probe            : 0
+AP Min Run per Probe          : 3
+Round-robin bursts            : 0
+Round-robin probes            : 0
+Last advertisement:
+No advertisements have occured
+Next advertisement:
+Check scheduled in 2 more probes (roughly every 120 seconds)
+No probes completed
+Last probe:
+None
+Current probe:
+None
+
+Segment-List:
+Name                        : SL4
+Number of atomic paths      : 0
+Last advertisement:
+No advertisements have occured
+Next advertisement:
+No probes completed
+Last probe:
+None
+Current probe:
+None

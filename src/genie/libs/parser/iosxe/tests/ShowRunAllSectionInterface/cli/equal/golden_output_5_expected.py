@@ -11,6 +11,7 @@ expected_output = {
       "carrier_delay": 2, 
       "shutdown": False,
       "medium_p2p": False,
+      'mtu': 1500,
       "macsec_replay_protection": False
     }
   }

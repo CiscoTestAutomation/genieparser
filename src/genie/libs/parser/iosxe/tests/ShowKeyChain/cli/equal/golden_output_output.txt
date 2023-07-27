@@ -1,0 +1,18 @@
+Key-chain KCP128:
+    key 0 -- text "cisco "
+        cryptographic-algorithm: hmac-sha-1
+        accept lifetime (always valid) - (always valid) [valid now]
+        send lifetime (always valid) - (always valid) [valid now]
+Key-chain KCP256:
+    MacSEC key chain 
+    key AAAA -- text "1111111122222222333333334444444455555555666666667777777799999999"
+        cryptographic-algorithm: aes-256-cmac
+        lifetime (12:40:00 UTC Jun 1 2023) - (13:21:00 UTC Jun 1 2023)
+    key BBBB -- text "1111111122222222333333334444444455555555666666667777777700000000"
+        cryptographic-algorithm: aes-256-cmac
+        lifetime (20:20:00 IST Jun 15 2023) - (20:34:00 IST Jun 15 2023)
+Key-chain et0297-cpe-macsec-keychain:
+    MacSEC key chain 
+    key 0297 -- text "40e9caa8e2b89e799501fc404963f10541123d89d2162ea0ea09593b249937e4"
+        cryptographic-algorithm: aes-256-cmac
+        lifetime (always valid) - (always valid) [valid now]

@@ -1,0 +1,43 @@
+expected_output = {
+    'interface': {
+        'TwentyFiveGigE1/0/3': {
+            'adjacent_neighbor_address': '109.0.0.5',
+            'adjacent_neighbor_count': 1,
+            'area': 0,
+            'connect_status': 'connected',
+            'cost': 1,
+            'flood_list': {
+                'flood_queue_length': 0,
+                'index': '1/4/4',
+                'last_flood_scan': {
+                    'scan_length': 3,
+                    'scan_length_maximum': 3,
+                    'scan_time_maximum_msec': 0,
+                    'scan_time_msec': 0,
+                },
+                'next': '0x0(0)/0x0(0)/0x0(0)',
+            },
+            'graceful_restart_helper_support': 'enabled',
+            'if_index': 'snmp-if-index',
+            'instance_id': 0,
+            'interface_id': 5,
+            'interface_status': 'up',
+            'line_status': 'up',
+            'link_local_address': 'FE80::2A7:42FF:FED7:4CFF',
+            'neighbor_count': 1,
+            'network_type': 'POINT_TO_POINT',
+            'process_id': 1,
+            'router_id': '109.0.0.1',
+            'state': 'POINT_TO_POINT',
+            'suppressed_hello_neighbor_count': 0,
+            'timer_intervals': {
+                'dead': 40,
+                'hello': 10,
+                'hello_due': '00:00:08',
+                'retransmit': 5,
+                'wait': 40,
+            },
+            'transmit_delay': '1 sec',
+        },
+    },
+}

@@ -27323,6 +27323,7 @@ class ShowPlatformSoftwareFedActiveQosPolicySummary(ShowPlatformSoftwareFedActiv
 class ShowPlatformHardwareFedSwitchActiveQosDscpCosCountersInterfaceSchema(MetaParser):
     """Schema for show platform hardware fed switch active qos dscp-cos counters interface {interface}"""
     schema = {
+        Optional("heading"): str,
         'direction': {
             Any(): {
                 'qos': {
@@ -27350,6 +27351,9 @@ class ShowPlatformHardwareFedSwitchActiveQosDscpCosCountersInterface(
                 cmd = self.cli_command[1].format(switch_var=switch_var, interface=interface)
             output = self.device.execute(cmd)
 
+        #               Frames        Bytes
+        p0 = re.compile(r'^(?P<heading>\AFrames[\s]+ +Bytes)$')
+
         # Ingress DSCP0 0             0
         # Egress DSCP0 0             0
         p1 = re.compile(r"^(?P<direction>\w+)\s+(?P<qos>\S+)\s+(?P<frames>\d+)\s+(?P<bytes>\d+)$")
@@ -27357,8 +27361,14 @@ class ShowPlatformHardwareFedSwitchActiveQosDscpCosCountersInterface(
         ret_dict = {}
 
         for line in output.splitlines():
-
             line = line.strip()
+
+            #               Frames        Bytes
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['heading'] = group['heading'].strip()
+                continue    
 
             # Ingress DSCP0 0             0
             # Egress DSCP0 0             0
@@ -27372,7 +27382,6 @@ class ShowPlatformHardwareFedSwitchActiveQosDscpCosCountersInterface(
                 continue
 
         return ret_dict
-
 
 # ======================================================
 # Schema for 'show platform software fed switch {switch} qos policy target status '
@@ -30343,8 +30352,8 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailedSchema(MetaParser):
                         Any(): {
                             'action_type': str,
                             'marking_method': str,
-                            'mark_value': int,
-                            'mark_type': str,
+                            Optional('mark_value'): int,
+                            Optional('mark_type'): str,
                             'qos_group': int,
                             'traffic_class': int,
                             'discard_class': int

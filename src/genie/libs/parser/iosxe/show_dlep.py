@@ -45,23 +45,24 @@ class ShowDlepNeighborsSchema(MetaParser):
                     'udp_socket': int
                 },
                 Optional('sid'): {
-                    'sid_id': int,
-                    'mac_address': str,
-                    'addresses': {
-                        'ipv4': str,
-                        'ipv6_ll': str,
-                        Optional('associated_interface'): str
-                    },
-                    'supported_metrics': {
-                        'rlq_rx_metric': int,
-                        'rlq_tx_metric': int,
-                        'resources_metric': int,
-                        'mtu_metric': int,
-                        'latency_metric_in_microseconds': int,
-                        'cdr_rx_metric_in_bps': int,
-                        'cdr_tx_metric_in_bps': int,
-                        'mdr_rx_metric_in_bps': int,
-                        'mdr_tx_metric_in_bps': int
+                    Any(): {
+                        'mac_address': str,
+                        'addresses': {
+                            'ipv4': str,
+                            'ipv6_ll': str,
+                            Optional('associated_interface'): str
+                        },
+                        'supported_metrics': {
+                            'rlq_rx_metric': int,
+                            'rlq_tx_metric': int,
+                            'resources_metric': int,
+                            'mtu_metric': int,
+                            'latency_metric_in_microseconds': int,
+                            'cdr_rx_metric_in_bps': int,
+                            'cdr_tx_metric_in_bps': int,
+                            'mdr_rx_metric_in_bps': int,
+                            'mdr_tx_metric_in_bps': int
+                        }
                     }
                 }
             }
@@ -169,7 +170,7 @@ class ShowDlepNeighbors(ShowDlepNeighborsSchema):
             if m:
                 group = m.groupdict()
                 session_dict = interface_dict.setdefault('sid', {})
-                session_dict['sid_id'] = int(group['sid'])
+                session_dict = session_dict.setdefault(int(group['sid']), {})
                 session_dict['mac_address'] = group['mac_address']
 
             # IPv4 : 9.9.9.21  IPv6 LL : FE80::20C:29FF:FE9B:A9D2

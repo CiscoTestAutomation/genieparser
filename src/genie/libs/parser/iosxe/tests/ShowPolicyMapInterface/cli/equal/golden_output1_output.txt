@@ -1,0 +1,17 @@
+ HundredGigE1/0/3
+
+  Service-policy input: map1_table
+
+    Class-map: class-default (match-any)
+      2482448 packets
+      Match: any
+      police:
+          rate 500000000 bps, burst 10240 bytes
+        conformed 1865503500 bytes; actions:
+          transmit
+        exceeded 1858168500 bytes; actions:
+          drop
+        conformed 46055000 bps, exceeded 45873000 bps
+      QoS Set
+         dscp dscp table t1
+         traffic-class dscp table t1

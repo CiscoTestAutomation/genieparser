@@ -1430,7 +1430,8 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     Optional("initiator_of_sa"): str,
                     Optional("pushed_ip"): str,
                     Optional("remote_subnets"): list,
-                    Optional("quantum_resistance"): str
+                    Optional("quantum_resistance"): str,
+                    Optional("quantum_encry_type"): str
                 }
             }
         }
@@ -1538,6 +1539,11 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         # Quantum-Safe Encryption using PPK is enabled
         r23 = "^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
         p23 = re.compile(r23)
+
+        # Quantum-safe Encryption using Manual PPK
+        r24 = "^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
+        p24 = re.compile(r24)
+        
 
         ret_dict={}
         for line in output.splitlines():
@@ -1707,7 +1713,13 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
                         group['quantum_resistance'].upper()[0]+group['quantum_resistance'][1::]
                 master_dict.update(group)
                 continue
-
+            # Quantum-safe Encryption using Manual PPK
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            
         return ret_dict
 
 

@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Optional
 
 
 # =====================================
@@ -16,12 +16,20 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
             "ip": str,
             "last_connection": str,
             "status": str,
-            "type": str,
+            "type": str
+        },
+        Optional("standby_controller"): {
+            "ip": str,
+            "last_connection": str,
+            "status": str,
+            "type": str
         },
         Optional("device"): {
-            "id": str,
+            Optional("id"): str,
             "address": str,
             "segment_name": str,
+            Optional("dev_os_ver"): str,
+            Optional("dev_type"): str
         },
         Optional("status"): str,
         Optional("sd_vac_status"): str,
@@ -40,106 +48,124 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
+        ret_dict = {}
 
-        # Status: CONNECTED
-        # Device ID: sd-sw2.lab.com
-        # Device segment name: core-pop
-        # Device address: 10.18.29.33
+        # Status: DISCONNECTED|CONNECTED
+        p1 = re.compile(r'^Status:\s+(?P<status>(\w+))$')
 
-        # Active controller:
-        #    Type  : Primary
-        #    IP    : 10.11.236.21
-        #    Status: Connected
-        #    Last connection: 18:42:02.000 UTC Fri Oct 2 2020
-
-        avc_connected_capture = (
-            # Status: CONNECTED
-            r"^Status: (?P<status>CONNECTED)\s+"
-            # Device ID: sd-sw2.lab.com
-            r"Device ID: (?P<device_id>\S+)\s+"
-            # Device segment name: core-pop
-            r"Device segment name: (?P<device_segment_name>\S+)\s+"
-            # Device address: 10.18.29.33
-            r"Device address: (?P<device_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
-            # Active controller:
-            r"Active controller:\s+"
-            #    Type  : Primary
-            r"Type\s+: (?P<active_controller_type>\S+)\s+"
-            #    IP    : 10.11.236.21
-            r"IP\s+: (?P<active_controller_ip>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
-            #    Status: Connected
-            r"Status: (?P<active_controller_status>\S+)\s+"
-            #    Last connection: 18:42:02.000 UTC Fri Oct 2 2020
-            r"Last connection: (?P<active_controller_last_connection>.+)$"
-        )
-
-        # Status: DISCONNECTED
-
+        # Device ID: WLC.one-1_1
         # Device ID:
+        p2 = re.compile(r'^Device ID:\s+(?P<id>([\w_\-.]+))$|Device ID:')
+
         # Device segment name: global (default)
-        # Device address: 0.0.0.0
+        p3 = re.compile(r'^Device segment name:\s+(?P<segment_name>([\w\s\-()]*))$')
 
-        # Controller address isn't configured
+        # Device address: 1.0.0.1
+        # Device address: 2001:bebe::1
+        p4 = re.compile(r'^Device address:\s+(?P<address>((\d{1,3}\.){3}\d{1,3}|([a-fA-F\d]{1,4}:*:?){1,7}[a-fA-F\d]{1,4}))$')
 
-        avc_disconnected_capture = (
-            # Status: DISCONNECTED
-            r"^Status: (?P<status>DISCONNECTED)\s+"
-            # Device ID:
-            r"Device ID: (?P<device_id>)\s+"
-            # Device segment name: global (default)
-            r"Device segment name: (?P<device_segment_name>\S+) \(default\)\s+"
-            # Device address: 0.0.0.0
-            r"Device address: (?P<device_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
-        )
+        # Device OS version: 17.9.2
+        p5 = re.compile(r'^Device OS version:\s+(?P<dev_os_ver>([\w.:_]*))$')
+
+        # Device type: C9800-L-C-K9
+        p6 = re.compile(r'^Device type:\s+(?P<dev_type>([\w-]*))$')
+
+        #   Type: Primary
+        p7 = re.compile(r'^\s+Type\s+:\s+(?P<type>(\w+))$')
+
+        #   Address|IP : 1.0.0.1
+        #   Address|IP : 2001:bebe::1
+        p8 = re.compile(r'^(\s+Address|\s+IP)\s+:\s+(?P<ip>((\d{1,3}\.){3}\d{1,3}|([a-fA-F\d]{1,4}:*:?){1,7}[a-fA-F\d]{1,4}))$')
+
+        #   Status  : Disconnected
+        p9 = re.compile(r'^\s+Status\s?:\s+(?P<status>(\w+))$')
+
+        #   Last connection: Never
+        #   Last connection: 18:42:02.000 UTC Fri Oct 2 2020
+        p10 = re.compile(r'^\s+Last connection\s*:\s+(?P<last_connection>\d{2}:\d{2}:\d{2}\.\d{3,6} \w{2,3}[A-Z] \w{3} \w{3}\s\d{1,2}\s\d{4}|Never)$')
 
         # SD-AVC is disabled
+        p11 = re.compile(r'^SD-AVC is disabled$')
 
-        avc_disabled_capture = (
-            # SD-AVC is disabled
-            r"^SD-AVC is disabled"
-        )
+        # Active controller:
+        p_active = re.compile(r'^Active controller:$')
+        # Standby controller:
+        p_standby = re.compile(r'^Standby controller:$')
 
-        avc_info_obj = {}
+        for line in output.splitlines():
+            line = line.rstrip()
+            # Status: DISCONNECTED|CONNECTED
+            m = re.match(p1, line)
+            if m:
+                ret_dict.update({'status': m.groupdict()['status']})
+                continue
+            # Device ID: WLC.one-1_1
+            # Device ID:
+            m = re.match(p2, line)
+            if m:
+                device_dict = ret_dict.setdefault('device', {})
+                id_name = m.groupdict().get('id')
+                device_dict.update({'id': id_name if id_name else ""})
+                continue
+            # Device segment name: global (default)
+            m = re.match(p3, line)
+            if m:
+                # To make it backwards compatible and return
+                # only 'global' when 'global (default) appears'
+                segment = m.groupdict()['segment_name']
+                segment = segment.split('(')[0].strip()
+                device_dict.update({'segment_name': segment})
+                continue
+            # Address : 1.0.0.1
+            # IP : 2001:bebe::1
+            m = re.match(p4, line)
+            if m:
+                device_dict.update({'address': m.groupdict()['address']})
+                continue
+            # Device OS version: 17.9.2
+            m = re.match(p5, line)
+            if m:
+                device_dict.update({'dev_os_ver': m.groupdict()['dev_os_ver']})
+                continue
+            # Device type: C9800-L-C-K9
+            m = re.match(p6, line)
+            if m:
+                device_dict.update({'dev_type': m.groupdict()['dev_type']})
+                continue
+            # Active controller:
+            m = re.match(p_active, line)
+            if m:
+                ctrl_dict = ret_dict.setdefault('active_controller', {})
+                continue
+            # Standby controller:
+            m = re.match(p_standby, line)
+            if m:
+                ctrl_dict = ret_dict.setdefault('standby_controller', {})
+                continue
+            #   Type  : Primary|Secondary
+            m = re.match(p7, line)
+            if m:
+                ctrl_dict.update({'type': m.groupdict()['type']})
+                continue
+            #   IP|Address    : 10.11.236.21
+            m = re.match(p8, line)
+            if m:
+                ctrl_dict.update({'ip': m.groupdict()['ip']})
+                continue
+            #   Status: Connected
+            m = re.match(p9, line)
+            if m:
+                ctrl_dict.update({'status': m.groupdict()['status']})
+                continue
+            #   Last connection: Never
+            #   Last connection: 18:42:02.000 UTC Fri Oct 2 2020
+            m = re.match(p10, line)
+            if m:
+                ctrl_dict.update({'last_connection': m.groupdict()['last_connection']})
+                continue
 
-        capture_list = [
-            avc_connected_capture,
-            avc_disconnected_capture,
-            avc_disabled_capture,
-        ]
+        m = re.match(p11, output.strip())
+        if m:
+            ret_dict = {"sd_vac_status": "disabled"}
 
-        for capture in capture_list:
-            if re.search(capture, output, re.MULTILINE):
-                search = re.search(capture, output, re.MULTILINE)
-                group = search.groupdict()
-
-                if capture == avc_connected_capture or avc_disconnected_capture:
-
-                    key_list = ["active_controller", "device"]
-
-                    # iterate through key_list to format the keys in group
-                    for key in key_list:
-                        new_group = {key: {}}
-
-                        for item in group.copy():
-                            # if the key from key_list is found in item
-                            if re.search(f"{key}_", item):
-                                # replace the key and update with new_dict
-                                new_key = re.sub(f"{key}_", "", item)
-                                new_dict = {new_key: group[item]}
-                                new_group[key].update(new_dict)
-
-                                # pop old keys
-                                group.pop(item)
-
-                        group.update(new_group)
-
-                    avc_info_obj.update(group)
-
-                    # if active_controller is an empty dict, pop it
-                    if not avc_info_obj["active_controller"].get("status"):
-                        avc_info_obj.pop("active_controller")
-
-                if capture == avc_disabled_capture:
-                    avc_info_obj = {"sd_vac_status": "disabled"}
-
-        return avc_info_obj
+        return ret_dict

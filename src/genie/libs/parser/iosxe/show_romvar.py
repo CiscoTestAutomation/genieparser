@@ -631,3 +631,67 @@ class ShowRomvar(ShowRomvarSchema):
 
         return romvar_dict
 
+# ======================================================
+# Parser for 'show rom-mon switch 3 r0 '
+# ======================================================
+
+class ShowRomMonSwitchR0Schema(MetaParser):
+    """Schema for show rom-mon switch 3 r0"""
+
+    schema = {
+                'version': str,
+                'copyright': str,
+                'vendor': str,
+                'day': str,
+                'date': str,
+                'time': str,
+                'username': str,
+	}
+
+class ShowRomMonSwitchR0(ShowRomMonSwitchR0Schema):
+    """Parser for show rom-mon switch 3 r0"""
+
+    cli_command = 'show rom-mon switch {switch_num} {process}'
+
+    def cli(self, switch_num, process, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num,process=process))
+            
+        # System Bootstrap, Version 17.11.1r[FC1], DEVELOPMENT SOFTWARE
+        p1 = re.compile(r"^System\s+Bootstrap,\s+Version\s+(?P<version>\S+),\s+DEVELOPMENT\s+SOFTWARE$")
+        # Copyright (c) 1994-2022 by cisco Systems, Inc.
+        p2 = re.compile(r"^Copyright\s+\(c\)\s+(?P<copyright>\S+)\s+by\s+(?P<vendor>\S+\s+\S+),\s+Inc\.$")
+        # Compiled Wed 02/08/2023 14:20:19.45 by sapitcha
+        p3 = re.compile(r"^Compiled\s+(?P<day>\w+)\s+(?P<date>\S+)\s+(?P<time>\S+)\s+by\s+(?P<username>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # System Bootstrap, Version 17.11.1r[FC1], DEVELOPMENT SOFTWARE
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['version'] = dict_val['version']
+                continue
+
+            # Copyright (c) 1994-2022 by cisco Systems, Inc.
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['copyright'] = dict_val['copyright']
+                ret_dict['vendor'] = dict_val['vendor']
+                continue
+
+            # Compiled Wed 02/08/2023 14:20:19.45 by sapitcha
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['day'] = dict_val['day']
+                ret_dict['date'] = dict_val['date']
+                ret_dict['time'] = dict_val['time']
+                ret_dict['username'] = dict_val['username']
+                continue
+
+
+        return ret_dict   

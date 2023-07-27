@@ -1,0 +1,19 @@
+Status: DISCONNECTED
+
+Device ID: WLC1
+Device segment name: MySegment
+Device address: 1.2.3.4
+Device OS version: 17.9.2
+Device type: C9800-L-C-K9
+
+Active controller:
+   Type  : Primary
+   IP    : 4.3.2.1
+   Status: Connected
+   Last connection: Never
+
+Standby controller:
+   Type  : Secondary
+   IP    : 2001:bebe::1
+   Status: Disconnected
+   Last connection: Never
