@@ -1,0 +1,31 @@
+Tloc extension output uidb  : 0xffffffff
+Interface color        : gold
+BFD Default DSCP       : 0x30
+Interface class exmem address   : 0x0
+Interface rewrite exmem address   : 0x0
+Explicit input ACL cfg :  No
+WAN interface          :  Yes
+SIG Tun src            :  No
+Standard IPSec Tun src :  Yes
+Standard IPSec Tun all :  Yes
+Standard SSL Tun all   :  No
+Interface IP           : 40.188.70.5
+TLOC Ext GRE Dst IP    : 0.0.0.0
+Path Monitor send num  : 0
+Path Monitor recv num  : 0
+
+   Service      Allowed 
+  ----------   -----------
+   all       :  Yes
+   bgp       :  No
+   dhcp      :  Yes
+   dns       :  Yes
+   icmp      :  Yes
+   netconf   :  Yes
+   ntp       :  Yes
+   ospf      :  No
+   sshd      :  Yes
+   stun      :  No
+   snmp      :  Yes
+   https     :  Yes
+   bfd       :  No

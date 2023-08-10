@@ -406,7 +406,7 @@ class ShowPlatform(ShowPlatformSchema):
                 config_state = str(m.groupdict()['config_state']).strip()
 
                 # Parse node for rack, slot, subslot details
-                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
+                parse_node = re.compile(r'\s*(?P<rack>[A-Z0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
                 rack = str(parse_node.groupdict()['rack'])
                 slot = rack + '/' + str(parse_node.groupdict()['slot'])
                 last_entry = str(parse_node.groupdict()['last_entry'])

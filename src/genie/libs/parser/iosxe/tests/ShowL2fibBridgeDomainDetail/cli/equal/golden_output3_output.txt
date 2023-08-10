@@ -1,0 +1,25 @@
+Bridge Domain : 101
+  Reference Count : 16
+  Replication ports count : 6
+  Unicast Address table size : 2
+  IP Multicast Prefix table size : 3
+
+  Flood List Information :
+    Olist: 9, Ports: 6
+
+  Port Information :
+    BD_PORT   Et0/0:101
+    BD_PORT   Et1/1:101
+    MPLS_IR   PL:37(1) T:MPLS_IR [IR]42@1.1.1.1
+    MPLS_IR   PL:25(1) T:MPLS_IR [IR]42@3.3.3.1
+    MPLS_IR   PL:1(1) T:MPLS_IR [IR]42@4.4.4.1
+    MPLS_IR   PL:2(1) T:MPLS_IR [IR]42@5.5.5.1
+
+  Unicast Address table information :
+    ffff.ffff.fffd  Olist: 11, Ports: 2
+    ffff.ffff.fffe  Olist: 10, Ports: 6
+
+  IP Multicast Prefix table information :
+    Source: *, Group: 224.0.0.0/24, IIF: Null, Adjacency: Olist: 9, Ports: 6
+    Source: *, Group: 224.0.1.39, IIF: Null, Adjacency: Olist: 9, Ports: 6
+    Source: *, Group: 224.0.1.40, IIF: Null, Adjacency: Olist: 9, Ports: 6

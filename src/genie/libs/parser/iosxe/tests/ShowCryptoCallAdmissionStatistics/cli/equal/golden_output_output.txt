@@ -1,0 +1,18 @@
+---------------------------------------------------------------------
+               Crypto Call Admission Control Statistics
+---------------------------------------------------------------------
+System Resource Limit:        0 Max IKE SAs:     0 Max in nego:  1000
+Total IKE SA Count:           1 active:          1 negotiating:     0
+Incoming IKE Requests:        0 accepted:        0 rejected:        0
+Outgoing IKE Requests:        1 accepted:        1 rejected:        0
+Rejected IKE Requests:        0 rsrc low:        0 Active SA limit: 0
+                                                   In-neg SA limit: 0
+IKE packets dropped at dispatch:        0
+
+Max IPSEC SAs:     0
+Total IPSEC SA Count:           1 active:          1 negotiating:     0
+Incoming IPSEC Requests:        0 accepted:        0 rejected:        0
+Outgoing IPSEC Requests:        1 accepted:        1 rejected:        0
+SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
+
+Phase1.5 SAs under negotiation:         0  

@@ -35,6 +35,7 @@ IOSXE parsers for the following show commands:
    * show crypto gdoi ks coop identifier detail
    * show crypto ikev2 psh
    * show crypto ikev2 performance
+   * show crypto map
 """
 
 # Python
@@ -1429,7 +1430,8 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     Optional("initiator_of_sa"): str,
                     Optional("pushed_ip"): str,
                     Optional("remote_subnets"): list,
-                    Optional("quantum_resistance"): str
+                    Optional("quantum_resistance"): str,
+                    Optional("quantum_encry_type"): str
                 }
             }
         }
@@ -1533,6 +1535,15 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         # Quantum Resistance Enabled
         r22 = "^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
         p22 = re.compile(r22)
+
+        # Quantum-Safe Encryption using PPK is enabled
+        r23 = "^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
+        p23 = re.compile(r23)
+
+        # Quantum-safe Encryption using Manual PPK
+        r24 = "^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
+        p24 = re.compile(r24)
+        
 
         ret_dict={}
         for line in output.splitlines():
@@ -1687,12 +1698,28 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
             if m:
                 group = m.groupdict()
                 remote_subnets_dict.append(group['remote_subnets'])
+                continue
             # Quantum Resistance Enabled
             m = p22.match(line)
             if m:
                 group = m.groupdict()
                 master_dict.update(group)
                 continue                
+            # Quantum-Safe Encryption using PPK is enabled
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                group['quantum_resistance']=\
+                        group['quantum_resistance'].upper()[0]+group['quantum_resistance'][1::]
+                master_dict.update(group)
+                continue
+            # Quantum-safe Encryption using Manual PPK
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                master_dict.update(group)
+                continue
+            
         return ret_dict
 
 
@@ -1747,7 +1774,6 @@ class ShowCryptoIkev2SaRemote(ShowCryptoIkev2SaDetail, ShowCryptoIkev2SaDetailSc
             output = self.device.execute(self.cli_command.format(ip_address=ip_address))
         return super().cli(output=output)
 
-
 # =====================================
 # Schema for:
 #  * 'show crypto entropy status' 
@@ -1787,7 +1813,8 @@ class ShowCryptoEntropyStatus(ShowCryptoEntropyStatusSchema):
 		#1 ACT-2                 HW  Working  384
 		#2 randfill              SW  Working  128(*)
         #3 getrandombytes        SW  Working  160(*)
-        p1 = re.compile(r"^(?P<count>\d+)\s+(?P<source>\S+)\s+(?P<type>\S+)\s+(?P<status>\S+)(\s+|\s+(?P<requests>\d+)\s+)(?P<entropy_bits>(\S+|\d+\/\d+\s+\(\*\)))$")
+        #1 CPU jitter           Prim Working      3     256/768   ----> Above 17.10
+        p1 = re.compile(r"^(?P<count>\d+)\s+(?P<source>[\w\-\ ?]+)\s+ (?P<type>SW|HW|Phy|NPhy|Prim)\s+(?P<status>\S+)(\s+|\s+(?P<requests>\d+)\s+)(?P<entropy_bits>(\S+|\d+\/\d+\s+\(\*\)))$")
 							
 	    #Fresh entropy collected once every 60 minutes
         p2 = re.compile(r'^Fresh +entropy +collected +once +every +(?P<total>[\d\s\w]+)$')
@@ -1810,7 +1837,7 @@ class ShowCryptoEntropyStatus(ShowCryptoEntropyStatusSchema):
                 count = int(group["count"])
                 entry_dict.update(
                     { int(count) : {
-                        "source" : group["source"],
+                        "source" : group["source"].strip(),
                         "type" : group["type"],
                         "status" : group["status"],
                         "requests" : str(group["requests"]),
@@ -6497,7 +6524,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                     "allowable_rekey_cipher":str,
                                     "attempted_registration_count":int,
                                     "dp_error_monitoring":str,
-                                    "fail_close_revert":str,
+                                    Optional("fail_close_revert"):str,
                                     "fvrf":str,
                                     "ipsec_init_reg_executed":int,
                                     "ipsec_init_reg_postponed":int,
@@ -6506,7 +6533,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                     "last_rekey_server":str,
                                     "local_addr":str,
                                     "local_addr_port":str,
-                                    "pfs_rekey_received":int,
+                                    Optional("pfs_rekey_received"):int,
                                     "re_register_time_sec":int,
                                     "registration":str,
                                     "rekey_acks_sent":int,
@@ -6564,7 +6591,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                                 Any():{
                                                     "alg_key_size_bytes":int,
                                                     "sig_key_size_bytes":int,
-                                                    "anti_replay_count":int,
+                                                    Optional("anti_replay_count"):int,
                                                     "encaps":str,
                                                     "sa_remaining_key_lifetime":int,
                                                     "tag_method":str,
@@ -6573,7 +6600,7 @@ class ShowCryptoGdoiSchema(MetaParser):
                                                 Any():{
                                                     "alg_key_size_bytes":int,
                                                     "sig_key_size_bytes":int,
-                                                    "anti_replay_count":int,
+                                                    Optional("anti_replay_count"):int,
                                                     "encaps":str,
                                                     "sa_remaining_key_lifetime":int,
                                                     "tag_method":str,
@@ -6609,7 +6636,8 @@ class ShowCryptoGdoi(ShowCryptoGdoiSchema):
         p2 = re.compile(r"^Group Identity +: +(?P<group_identity>\w+)$")
 
         # Group Type               : GDOI (ISAKMP)
-        p3 = re.compile(r"^Group Type +: +(?P<group_type>[\w\s\S]+)$")
+        # Group Type               : G-IKEv2 (IKEv2)
+        p3 = re.compile(r"^Group Type +: +(?P<group_type>[\w\d\S\-\s]+)$")
 
         # Crypto Path              : ipv4
         p4 = re.compile(r"^Crypto Path +: +(?P<crypto_path>\w+)$")
@@ -6662,8 +6690,9 @@ class ShowCryptoGdoi(ShowCryptoGdoiSchema):
         # Attempted registration: 1
         p20 = re.compile(r"^Attempted.* +(?P<attempted_registration_count>\d+)$")
 
+        # Last rekey from       : UNKNOWN
         # Last rekey from       : 1.1.1.1
-        p21 = re.compile(r"^Last rekey from.* +(?P<last_rekey_server>[\d\.]+)$")
+        p21 = re.compile(r"^Last rekey from.* +(?P<last_rekey_server>[\w\d\.]+)$")
 
         # Last rekey seq num    : 0
         p22 = re.compile(r"^Last rekey seq.* +(?P<last_rekey_seq_num>\d+)$")
@@ -8376,6 +8405,8 @@ class ShowCryptoIkev2StatsSchema(MetaParser):
                     'incoming_challenge_no_cookie': int                   
                 },
                 'deleted_sessions_cert_revoke': int,
+                Optional('sa_strength_enforce_reject_incoming'): int,
+                Optional('sa_strength_enforce_reject_outgoing'): int,
                 Optional('active_qr_sessions'): int,
                 Optional('qr_manual'): int,
                 Optional('qr_dynamic'): int                
@@ -8442,6 +8473,10 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
 
         # Sessions with Quantum Resistance: 1        Manual: 4294967291 Dynamic: 6
         p12 = re.compile(r'^Sessions with Quantum Resistance:\s+(?P<active_qr_sessions>\d+)\s+Manual:\s+(?P<qr_manual>\d+)\s+Dynamic:\s+(?P<qr_dynamic>\d+)$')
+
+        # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
+        p13 = re.compile(r'^SA Strength Enforcement Rejects -\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
+                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -8551,6 +8586,14 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
                 v2stat_dict.update({'qr_dynamic': int(group['qr_dynamic'])})
                 continue
 
+            # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                v2stat_dict.update({'sa_strength_enforce_reject_incoming': int(group['sa_strength_enforce_reject_incoming'])})
+                v2stat_dict.update({'sa_strength_enforce_reject_outgoing': int(group['sa_strength_enforce_reject_outgoing'])})
+                continue
+
         return ret_dict
 
 
@@ -8592,7 +8635,9 @@ class ShowCryptoCallAdmissionStatisticsSchema(MetaParser):
                 'incoming_ipsec_reject': int,
                 'outgoing_ipsec_request': int,
                 'outgoing_ipsec_accept': int,
-                'outgoing_ipsec_reject': int,                
+                'outgoing_ipsec_reject': int,
+                Optional('sa_strength_enforce_reject_incoming'): int,
+                Optional('sa_strength_enforce_reject_outgoing'): int,                
                 'phase_sa_under_negotiation': int
             },
         }
@@ -8656,6 +8701,10 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
 
         # Phase1.5 SAs under negotiation:         0 
         p12 = re.compile(r'^Phase1.5 SAs under negotiation:\s+(?P<phase1_sa>\d+)$')
+
+        # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
+        p13 = re.compile(r'^SA Strength Enforcement Rejects:\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
+                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -8760,6 +8809,16 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
             if m:
                 group = m.groupdict()                    
                 v2stat_dict.update({'phase_sa_under_negotiation': int(group['phase1_sa'])})
+                continue
+
+            # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                v2stat_dict.update({
+                    'sa_strength_enforce_reject_incoming': int(group['sa_strength_enforce_reject_incoming']),
+                    'sa_strength_enforce_reject_outgoing': int(group['sa_strength_enforce_reject_outgoing'])
+                })
                 continue
 
         return ret_dict
@@ -13351,6 +13410,714 @@ class ShowCryptoPkiTrustpoints(ShowCryptoPkiTrustpointsSchema):
                 else:
                     name_dict['comment'] = dict_val['comment']
 
+                continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto ipsec sa interface {interface}'
+# =================================================
+class ShowCryptoIpsecSaInterfaceSchema(MetaParser):
+    """Schema for show crypto ipsec sa interface {interface}"""
+    schema = {
+        'interface': {
+                Any(): {
+                    'crypto_map_tag': str,
+                    'local_addr': str,
+                    'ident': {
+                        Any(): {
+                            'protected_vrf': str,
+                            'local_ident': {
+                                'addr': str,
+                                'mask': str,
+                                'prot': str,
+                                'port': str
+                                },
+                            'remote_ident': {
+                                'addr': str,
+                                'mask': str,
+                                'prot': str,
+                                'port': str
+                                },
+                            'peer_ip': str,
+                            'port': int,
+                            'action': str,
+                            'acl': str,
+                            Optional('pkts_compr_failed'): int,
+                            Optional('pkts_compressed'): int,
+                            Optional('pkts_decaps'): int,
+                            Optional('pkts_decompress_failed'): int,
+                            Optional('pkts_decompressed'): int,
+                            Optional('pkts_decrypt'): int,
+                            Optional('pkts_encaps'):int,
+                            Optional('pkts_encrypt'):int,
+                            Optional('pkts_digest'): int,
+                            Optional('pkts_not_compressed'): int,
+                            Optional('pkts_not_decompressed'): int,
+                            Optional('pkts_verify'): int,
+                            Optional('pkts_internal_err_recv'): int,
+                            Optional('pkts_internal_err_send'): int,
+                            Optional('pkts_invalid_identity_recv'): int,
+                            Optional('pkts_invalid_prot_recv'): int,
+                            Optional('pkts_invalid_sa_rcv'): int,
+                            Optional('pkts_no_sa_send'): int,                      
+                            Optional('pkts_not_tagged_send'): int,
+                            Optional('pkts_not_untagged_rcv'): int,
+                            Optional('pkts_replay_failed_rcv'): int,
+                            Optional('pkts_replay_rollover_rcv'): int,
+                            Optional('pkts_replay_rollover_send'): int,
+                            Optional('pkts_tagged_send'): int,
+                            Optional('pkts_untagged_rcv'): int,
+                            Optional('pkts_verify_failed'): int,
+                            Optional('recv_errors'): int,
+                            Optional('send_errors'): int,
+                            'path_mtu': int,
+                            'ip_mtu':int,
+                            'pfs': str,
+                            'plaintext_mtu': int,
+                            'remote_crypto_endpt': str,
+                            'current_outbound_spi': str,
+                            'dh_group': str,
+                            'ip_mtu_idb': str,
+                            'local_crypto_endpt': str,
+                            Or('inbound_ah_sas',
+                               'inbound_esp_sas',
+                               'inbound_pcp_sas',
+                               'outbound_ah_sas',
+                               'outbound_esp_sas',
+                               'outbound_pcp_sas'): {
+                                    Optional('spi'): {
+                                        Any(): {
+                                            Optional('conn_id'): int,
+                                            Optional('crypto_map'): str,
+                                            Optional('flow_id'): str,
+                                            Optional('flow_id_val'): int,
+                                            Optional('transform'): str,
+                                            Optional('kilobyte_volume_rekey'): str,
+                                            Optional('in_use_settings'): str,
+                                            Optional('iv_size'): str,
+                                            Optional('initiator_flag'): str,
+                                            Optional('ekey_status'): str,
+                                            Optional('remaining_key_lifetime'): str,
+                                            Optional('replay_detection_support'): str,
+                                            Optional('sibling_flags'): str,
+                                            Optional('status'): str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        Optional('ipsecv6_policy_name'): str
+                    },
+                },
+            }
+
+# ===================================================
+#  Parser for 'show crypto ipsec sa interface {interface}'
+# ===================================================
+class ShowCryptoIpsecSaInterface(ShowCryptoIpsecSaInterfaceSchema):
+
+    """Parser for show crypto ipsec sa interface {interface}"""
+
+    cli_command = 'show crypto ipsec sa interface {interface}'
+    
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # interface: GigabitEthernet3
+        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d\/]+)$')
+
+        # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
+        p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-\/]+), +local addr +(?P<local_addr>[\w\.\:]+)$')
+
+        # protected vrf: (none)
+        p3 = re.compile(r'^protected vrf: +\((?P<protected_vrf>[\w]+)\)$')
+
+        # local ident (addr/mask/prot/port): (20.20.20.0/255.255.255.0/0/0)
+        p4 = re.compile(r'^local.*: +\((?P<addr>[\w\.\:]+)\/(?P<mask>[0-9\.]+)\/(?P<prot>[\d]+)\/(?P<port>[\d]+)\)$')
+
+        # remote ident (addr/mask/prot/port): (10.10.10.0/255.255.255.0/0/0)
+        p5 = re.compile(r'^remote.*: +\((?P<addr>[0-9\.\:]+)\/(?P<mask>[0-9\.]+)\/(?P<prot>[\d]+)\/(?P<port>[\d]+)\)$')
+
+        # current_peer 1.1.1.1 port 500
+        p6 = re.compile(r'^current_peer +(?P<peer_ip>[\w\.\:]+) +port +(?P<port>[0-9]+)$')
+
+        # PERMIT, flags={origin_is_acl,}
+        p7 = re.compile(r'^(?P<action>\w+), +flags=\{(?P<acl>[\w\_\-\,]+)\}$')
+
+        # #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4
+        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_encaps>\d+).*: +(?P<pkts_encrypt>\d+).*: +(?P<pkts_digest>\d+)$')
+
+        # #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4
+        p9 = re.compile(r'^#pkts decaps: +(?P<pkts_decaps>\d+).*: +(?P<pkts_decrypt>\d+).*: +(?P<pkts_verify>\d+)$')
+
+        # #pkts compressed: 0, #pkts decompressed: 0
+        p10 = re.compile(r'^#pkts compressed: +(?P<pkts_compressed>\d+).*: +(?P<pkts_decompressed>\d+)$')
+
+        # #pkts not compressed: 0, #pkts compr. failed: 0
+        p11 = re.compile(r'^#pkts not compressed: +(?P<pkts_not_compressed>\d+).*: +(?P<pkts_compr_failed>\d+)$')
+
+        # #pkts not decompressed: 0, #pkts decompress failed: 0
+        p12 = re.compile(r'^#pkts not decompressed: +(?P<pkts_not_decompressed>\d+).*: +(?P<pkts_decompress_failed>\d+)$')
+
+        #send errors 0, #recv errors 0 
+        p13 = re.compile(r'^#send errors +(?P<send_errors>\d+).* +(?P<recv_errors>\d+)$')
+
+        # IPsecv6 policy name: OSPFv3-256
+        p14 = re.compile(r'^IPsecv6 policy name: +(?P<ipsecv6_policy_name>[\w\-]+)$')
+
+        # sa timing: remaining key lifetime 4 hours, 2 mins
+        p15 = re.compile(r'^sa timing: remaining key lifetime +(?P<remaining_key_lifetime>[\w\,\ ]+)$')
+
+        # IV size: 8 bytes
+        p16 = re.compile(r'^IV size: +(?P<iv_size>[\w\ ]+)$')
+
+        # ekey has been disabled
+        p17 = re.compile(r'^ekey has been +(?P<ekey_status>[\w]+)$')
+
+        #  local crypto endpt.: FE80::B28B:D0FF:FE8D:BA49,
+        p18 = re.compile(r'^local crypto endpt.: +(?P<local_crypto_endpt>[\w\.\:]+),$')
+
+        # plaintext mtu 1476, path mtu 1500, ipv6 mtu 1500, ipv6 mtu idb FiveGigabitEthernet3/0/15
+        p19 = re.compile(r'^plaintext mtu +(?P<plaintext_mtu>\d+),.* +(?P<path_mtu>\d+), ipv6 mtu +(?P<ip_mtu>\d+),.*idb +(?P<ip_mtu_idb>[\w\/]+)$')
+
+        #  remote crypto endpt.: FF02::5
+        p20 = re.compile(r'^remote crypto endpt.: (?P<remote_crypto_endpt>[\w\.\:]+)$')
+
+        # local crypto endpt.: 1.1.1.2, remote crypto endpt.: 1.1.1.1 
+        p21 = re.compile(r'^local crypto endpt.: +(?P<local_crypto_endpt>[\w\.\:]+),+\s+.+ (?P<remote_crypto_endpt>[\w\.\:]+)$')
+
+        # plaintext mtu 1438, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet3 
+        p22 = re.compile(r'^plaintext mtu +(?P<plaintext_mtu>\d+),.* +(?P<path_mtu>\d+), ip mtu +(?P<ip_mtu>\d+),.*idb +(?P<ip_mtu_idb>[\w\/]+)$')
+
+        # current outbound spi: 0x397C36EE(964441838) 
+        p23 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
+
+        # PFS (Y/N): N, DH group: none 
+        p24 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+).*: +(?P<dh_group>\w+)$')
+
+        # inbound esp sas: 
+        p25 = re.compile(r'^inbound esp sas:$')
+
+        # spi: 0x658F7C11(1703902225) 
+        p26 = re.compile(r'^spi: +(?P<spi>[\S]+)$')
+
+        # transform: esp-256-aes esp-sha256-hmac , 
+        p27 = re.compile(r'^transform: +(?P<transform>[\S]+).*,$')
+
+        # in use settings ={Tunnel, }
+        p28 = re.compile(r'^in use settings =+\{(?P<in_use_settings>[\w\,\s]+)\}$')
+
+        # conn id: 2076, flow_id: CSR:76, sibling_flags FFFFFFFF80000048, crypto map: vpn-crypto-map
+        p29 = re.compile(r'^conn id: +(?P<conn_id>\d+), +flow_id: +(?P<flow_id>\w+):(?P<flow_id_val>\d+), +sibling_flags +(?P<sibling_flags>[\w\d]+), +crypto map: +(?P<crypto_map>[\w\-\d\/]+),+ initiator : +(?P<initiator_flag>[\w]+)$')
+
+        # sa timing: remaining key lifetime (k/sec): (4607999/83191) 
+        p30 = re.compile(r'^sa timing: remaining key lifetime \(sec\): +(?P<remaining_key_lifetime>\S+)$')
+
+        # Kilobyte Volume Rekey has been disabled
+        p31 = re.compile(r'^Kilobyte Volume Rekey has been +(?P<kilobyte_volume_rekey>[disabled|enabled]+)$')
+
+        # replay detection support: Y
+        p32 = re.compile(r'^replay detection support: +(?P<replay_detection_support>\w+)$')
+
+        # Status: ACTIVE(ACTIVE) 
+        p33 = re.compile(r'^Status: +(?P<status>\S+)$')
+
+        # inbound ah sas:
+        p34 = re.compile(r'^inbound ah sas:$')
+
+        # inbound pcp sas:
+        p35 = re.compile(r'^inbound pcp sas:$')
+
+        # outbound esp sas: 
+        p36 = re.compile(r'^outbound esp sas:$')
+
+        # outbound ah sas:
+        p37 = re.compile(r'^outbound ah sas:$')
+
+        # outbound pcp sas:
+        p38 = re.compile(r'^outbound pcp sas:$')
+
+        master_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface: GigabitEthernet3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict = master_dict.setdefault('interface', {}).setdefault(group['interface'],{})
+                count = 1
+                continue
+            
+            # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
+            m = p2.match(line)
+            if m:
+                peer_dict = master_dict.setdefault('interface', {}).setdefault(group['interface'],{})
+
+                peer_dict.update(m.groupdict())
+                session_dict = peer_dict.setdefault('ident',{})
+                continue
+
+            # protected vrf: (none)
+            m = p3.match(line)
+            if m:
+                session_dict = peer_dict.setdefault('ident',{})
+                ident_dict = session_dict.setdefault(count,{})
+                count += 1
+                ident_dict.update(m.groupdict())
+                continue
+
+            # local ident (addr/mask/prot/port): (20.20.20.0/255.255.255.0/0/0)
+            m = p4.match(line)
+            if m:
+                local_ident = ident_dict.setdefault('local_ident',{})
+                local_ident.update(m.groupdict())
+                continue
+
+            # remote ident (addr/mask/prot/port): (10.10.10.0/255.255.255.0/0/0)
+            m = p5.match(line)
+            if m:
+                remote_ident = ident_dict.setdefault('remote_ident',{})
+                remote_ident.update(m.groupdict())
+                continue
+
+            # current_peer 1.1.1.1 port 500
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                group['port'] = int(group['port'])
+                ident_dict.update(group)
+                continue
+
+            # PERMIT, flags={origin_is_acl,}
+            m = p7.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts compressed: 0, #pkts decompressed: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts not compressed: 0, #pkts compr. failed: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #pkts not decompressed: 0, #pkts decompress failed: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # #send errors 0, #recv errors 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: int(v) for k, v in group.items()}
+                ident_dict.update(group)
+                continue
+
+            # IPsecv6 policy name: OSPFv3-256
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict['ipsecv6_policy_name'] = group['ipsecv6_policy_name']
+                continue
+        
+            # local crypto endpt.: 1.1.1.2, remote crypto endpt.: 1.1.1.1
+            m = p21.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+            
+            #  local crypto endpt.: FE80::B28B:D0FF:FE8D:BA49,
+            m = p18.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            #  remote crypto endpt.: FF02::5
+            m = p20.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # plaintext mtu 1438, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet3 
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                group['plaintext_mtu'] = int(group['plaintext_mtu'])
+                group['path_mtu'] = int(group['path_mtu'])
+                group['ip_mtu'] = int(group['ip_mtu'])
+                ident_dict.update(group)
+                continue
+
+            # plaintext mtu 1476, path mtu 1500, ipv6 mtu 1500, ipv6 mtu idb FiveGigabitEthernet3/0/15
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                group['plaintext_mtu'] = int(group['plaintext_mtu'])
+                group['path_mtu'] = int(group['path_mtu'])
+                group['ip_mtu'] = int(group['ip_mtu'])
+                ident_dict.update(group)
+                continue
+
+            # current outbound spi: 0x397C36EE(964441838)
+            m = p23.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # PFS (Y/N): N, DH group: none
+            m = p24.match(line)
+            if m:
+                ident_dict.update(m.groupdict())
+                continue
+
+            # inbound esp sas:
+            m = p25.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_esp_sas',{})
+                continue
+            
+            # inbound ah sas:
+            m = p34.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_ah_sas',{})
+                continue
+
+            # inbound pcp sas:
+            m=p35.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('inbound_pcp_sas',{})
+                continue
+
+            # outbound esp sas:
+            m = p36.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_esp_sas',{})
+                continue
+
+            # outbound ah sas:
+            m = p37.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_ah_sas',{})
+                continue
+
+            # outbound pcp sas:
+            m = p38.match(line)
+            if m:
+                prv_line = line
+                sas_dict = ident_dict.setdefault('outbound_pcp_sas',{})
+                continue
+
+            # spi: 0x658F7C11(1703902225)
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                spi_dict = sas_dict.setdefault('spi',{}).setdefault(group['spi'],{})
+                continue
+
+            # transform: esp-256-aes esp-sha256-hmac ,
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                group = {k: v.strip() for k, v in group.items()}
+                spi_dict.update(group)
+                continue
+
+            # in use settings ={Tunnel, } 
+            m = p28.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # conn id: 2076, flow_id: CSR:76, sibling_flags FFFFFFFF80000048, crypto map: vpn-crypto-map 
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                group['conn_id'] = int(group['conn_id'])
+                group['flow_id_val'] = int(group['flow_id_val'])
+                spi_dict.update(group)
+                continue
+
+            # sa timing: remaining key lifetime (k/sec): (4607999/83191)
+            m = p30.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+            
+            # sa timing: remaining key lifetime 4 hours, 2 mins
+            m = p15.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # IV size: 8 bytes
+            m = p16.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # ekey has been disabled
+            m = p17.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+            
+            # Kilobyte Volume Rekey has been disabled
+            m = p31.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # replay detection support: Y 
+            m = p32.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+            # Status: ACTIVE(ACTIVE)
+            m = p33.match(line)
+            if m:
+                spi_dict.update(m.groupdict())
+                continue
+
+        return master_dict
+
+
+class ShowCryptoMapSchema(MetaParser):
+    """
+        Schema for show crypto map
+    """
+
+    schema = {
+        Or('ipv4', 'ipv6'): {
+            'crypto_map_tag': {
+                Any(): {
+                    'sequence_number': int,
+                    Optional('ipsec'): str,
+                    'peer': list,
+                    Optional('ikev2_profile'): str,
+                    'access_list_ss_dynamic': str,
+                    Optional('extended_ip_access_list'): str,
+                    Optional('current_peer'): str,
+                    Optional('extended_ip_access_check_in_list'): str,
+                    Optional('security_association_lifetime'): {
+                        'kilobytes': int,
+                        'seconds': int
+                    },
+                    Optional('dualstack'): bool,
+                    Optional('responder_only'): bool,
+                    Optional('pfs'): bool,
+                    Optional('mixed_mode'): str,
+                    'transform_sets': {
+                        Any(): list
+                    },
+                    'interfaces_crypto_map': {
+                        'crypto_map_tag': str,
+                        Optional('interfaces'): list
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowCryptoMap(ShowCryptoMapSchema):
+    """
+        Parser for show crypto map
+    """
+
+    cli_command = 'show crypto map'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Crypto Map IPv4 "ikev2-cryptomap" 1 ipsec-isakmp
+        # Crypto Map IPv6 "sdsd" 3 ipsec-manual
+        p1 = re.compile(r'^Crypto Map (?P<version>\S+) \"(?P<crypto_map_tag>.+)\" (?P<sequence_number>\d+)(\s+(?P<ipsec>\S+))?$')
+
+        # Peer = 172.20.249.12
+        # Peer = 172.20.249.3
+        p2 = re.compile(r'^Peer = (?P<peer>\S+)$')
+
+        # IKEv2 Profile: ikev2profile
+        p3 = re.compile(r'^IKEv2 Profile: (?P<ikev2_profile>\S+)$')
+
+        # Access-List SS dynamic: False
+        p4 = re.compile(r'^Access-List SS dynamic: (?P<access_list_ss_dynamic>\S+)$')
+
+        # Extended IP access list 102
+        p5 = re.compile(r'^Extended IP access list (?P<extended_ip_access_list>\d+)$')
+
+        # Current peer: 172.20.249.12
+        p6 = re.compile(r'^Current peer: (?P<current_peer>\S+)$')
+
+        # Security association lifetime: 4608000 kilobytes/3600 seconds
+        p7 = re.compile(r'^Security association lifetime: (?P<kilobytes>\d+) kilobytes\/(?P<seconds>\d+) seconds$')
+
+        # Dualstack (Y/N): N
+        p8 = re.compile(r'^Dualstack \(Y\/N\): (?P<dualstack>\S+)$')
+
+        # Responder-Only (Y/N): N
+        p9 = re.compile(r'^Responder-Only \(Y\/N\): (?P<responder_only>\S+)$')
+
+        # PFS (Y/N): N
+        p10 = re.compile(r'^PFS \(Y\/N\): (?P<pfs>\S+)$')
+
+        # Mixed-mode : Disabled
+        p11 = re.compile(r'^Mixed-mode : (?P<mixed_mode>\S+)$')
+
+        # Transform sets={
+        p12 = re.compile(r'^Transform sets=\{$')
+
+        # aes256-sha1:  { esp-aes esp-sha-hmac  } ,
+        p13 = re.compile(r'^(?P<key>\S+):\s+\{\s+(?P<value>.+)\}.+$')
+
+        # Interfaces using crypto map ikev2-cryptomap:
+        p14 = re.compile(r'^Interfaces using crypto map (?P<crypto_map_tag>.+):$')
+
+        #     Vlan1
+        p15 = re.compile(r'^(?P<interface>[\w\/\.]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Crypto Map IPv4 "ikev2-cryptomap" 1 ipsec-isakmp
+            # Crypto Map IPv6 "sdsd" 3 ipsec-manual
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                crypto_map_dict = ret_dict.setdefault(group_dict['version'].lower(), {}).setdefault('crypto_map_tag', {})\
+                    .setdefault(group_dict['crypto_map_tag'].lower(), {})
+                crypto_map_dict['sequence_number'] = int(group_dict['sequence_number'])
+                if group_dict['ipsec']:
+                    crypto_map_dict['ipsec'] = group_dict['ipsec']
+                continue
+
+            # Peer = 172.20.249.12
+            # Peer = 172.20.249.3
+            m = p2.match(line)
+            if m:
+                crypto_map_dict.setdefault('peer', []).append(m.groupdict()['peer'])
+                continue
+
+            # IKEv2 Profile: ikev2profile
+            m = p3.match(line)
+            if m:
+                crypto_map_dict['ikev2_profile'] = m.groupdict()['ikev2_profile']
+                continue
+
+            # Access-List SS dynamic: False
+            m = p4.match(line)
+            if m:
+                crypto_map_dict['access_list_ss_dynamic'] = m.groupdict()['access_list_ss_dynamic']
+                continue
+
+            # Extended IP access list 102
+            m = p5.match(line)
+            if m:
+                crypto_map_dict['extended_ip_access_list'] = m.groupdict()['extended_ip_access_list']
+                continue
+
+            # Current peer: 172.20.249.12
+            m = p6.match(line)
+            if m:
+                crypto_map_dict['current_peer'] = m.groupdict()['current_peer']
+                continue
+
+            # Security association lifetime: 4608000 kilobytes/3600 seconds
+            m = p7.match(line)
+            if m:
+                security_association_dict = crypto_map_dict.setdefault('security_association_lifetime', {})
+                security_association_dict['kilobytes'] = int(m.groupdict()['kilobytes'])
+                security_association_dict['seconds'] = int(m.groupdict()['seconds'])
+                continue
+
+            # Dualstack (Y/N): N
+            m = p8.match(line)
+            if m:
+                crypto_map_dict['dualstack'] = True if m.groupdict()['dualstack'] == 'Y' else False
+                continue
+
+            # Responder-Only (Y/N): N
+            m = p9.match(line)
+            if m:
+                crypto_map_dict['responder_only'] = True if m.groupdict()['responder_only'] == 'Y' else False
+                continue
+
+            # PFS (Y/N): N
+            m = p10.match(line)
+            if m:
+                crypto_map_dict['pfs'] = True if m.groupdict()['pfs'] == 'Y' else False
+                continue
+
+            # Mixed-mode : Disabled
+            m = p11.match(line)
+            if m:
+                crypto_map_dict['mixed_mode'] = m.groupdict()['mixed_mode']
+                continue
+
+            # Transform sets={
+            m = p12.match(line)
+            if m:
+                transform_sets_dict = crypto_map_dict.setdefault('transform_sets', {})
+                continue
+
+            # aes256-sha1:  { esp-aes esp-sha-hmac  } ,
+            m = p13.match(line)
+            if m:
+                transform_sets_dict[m.groupdict()['key'].lower()] = m.groupdict()['value'].split()
+                continue
+
+            # Interfaces using crypto map ikev2-cryptomap:
+            m = p14.match(line)
+            if m:
+                interfaces_crypto_dict = crypto_map_dict.setdefault('interfaces_crypto_map', {})
+                interfaces_crypto_dict['crypto_map_tag'] = m.groupdict()['crypto_map_tag']
+                continue
+
+            #     Vlan1
+            m = p15.match(line)
+            if m:
+                interfaces_crypto_dict.setdefault('interfaces', []).append(Common.convert_intf_name(m.groupdict()['interface']))
                 continue
 
         return ret_dict

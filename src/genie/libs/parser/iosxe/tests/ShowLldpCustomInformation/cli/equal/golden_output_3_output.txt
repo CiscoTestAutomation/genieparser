@@ -1,0 +1,5 @@
+ Management IP: 10.0.0.1
+ Management IPv6: 10::1
+ Switch-id 1 system-name: check1
+ Switch-id 2 system-name: check
+ Switch-id 3 system-name: check21

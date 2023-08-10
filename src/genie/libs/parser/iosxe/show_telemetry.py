@@ -457,7 +457,7 @@ class ShowTelemetryIETFSubscriptionAllReceivers(ShowTelemetryIETFSubscriptionAll
         p1 = re.compile(r'^(?P<id>\d+) +'
                         r'(?P<name>\S+) +'
                         r'(?P<connection>\S+) +'
-                        r'(?P<state>.\S+) +'
+                        r'(?P<state>.\S+) *'
                         r'(?P<explanation>.*)$')
 
 

@@ -1,0 +1,21 @@
+BGP routing table entry for 1:1:192.1.0.40/32, version 12640
+Paths: (1 available, best #1, table green)
+Not advertised to any peer
+Refresh Epoch 1
+Local, imported path from [2][6.6.10.6:101][0][48][001094000030][32][192.1.0.40]/24 (global)
+6:6:10::6 (metric 1) (via default) from 6::6 (6.6.6.6)
+Origin incomplete, metric 0, localpref 100, valid, internal, best
+Extended Community: RT:1:1 RT:100:101 MVPN AS:100:0.0.0.0
+MVPN VRF:6.6.6.6:3 ENCAP:8 Router MAC:00A7.428A.7A1F
+Local vxlan vtep:
+vrf:green, vni:50901
+local router mac:A0B4.39CD.70FF
+encap:8
+vtep-ip:1:1:10::1
+bdi:Vlan901
+Remote VxLAN:
+Topoid 0x2(vrf green)
+Remote Router MAC:00A7.428A.7A1F
+Encap 8
+Egress VNI 50901
+RTEP 6:6:10::6

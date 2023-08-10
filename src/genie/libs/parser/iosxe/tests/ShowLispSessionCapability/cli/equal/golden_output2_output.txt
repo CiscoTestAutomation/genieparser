@@ -1,0 +1,2 @@
+Peer                           Tx Flags   Rx Flags   Rx count  Err count 
+44:44:44:44::.4342             0x1FF      0x1FF      1         0 

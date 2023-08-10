@@ -11,6 +11,11 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware chassis power-supply detail all
    * show platform hardware chassis fantray detail switch {mode}
    * show platform hardware chassis power-supply detail switch {mode} all
+   * show platform software fed active punt entries
+   * show platform software fed {switch} active punt entries
+   * show platform software fed {switch} active punt entries | include {label}
+   * show platform software fed active punt entries | include {label}
+   * show platform software fed {switch} active ip route vrf {vrf_name}
 '''
 
 # Python
@@ -56,6 +61,7 @@ class ShowVersionSchema(MetaParser):
                     'main_mem': str,
                     'processor_board_id': str,
                     Optional('curr_config_register'): str,
+                    Optional('revision') : str,
                     'compiled_date': str,
                     'compiled_by': str,
                     'mac_address': str,
@@ -161,10 +167,12 @@ class ShowVersion(ShowVersionSchema):
         # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
         p13 = re.compile(r'^Smart +Licensing +Status: +(?P<smart_licensing_status>.+)$')
 
+
+        # cisco C9500X-60L4D (X86) processor (revision V00) with 5875522K/6147K bytes of memory.
         # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
-        p14 = re.compile(r'^cisco +(?P<chassis>[\S]+) '
-                         r'+\((?P<processor_type>[\S]+)\) +processor +with '
-                         r'+(?P<main_mem>\d+).+ +bytes +of +memory.$')
+        p14 = re.compile(r'^cisco +(?P<chassis>[\S]+) \((?P<processor_type>[\S]+)\) +processor '
+                         r'+(?:(\(revision (?P<revision>\S+)\) +)?)?'
+                         r'with +(?P<main_mem>(?<!\S)\d+)+.+bytes +of +memory.$')
 
         # Processor board ID CAT2242L6CG
         p15 = re.compile(r'^Processor +board +ID '
@@ -341,13 +349,17 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 version_dict['smart_licensing_status'] = m.groupdict()['smart_licensing_status']
                 continue
-
+            # cisco C9500X-60L4D (X86) processor (revision V00) with 5875522K/6147K bytes of memory.
             # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
             m = p14.match(line)
             if m:
                 version_dict['chassis'] = m.groupdict()['chassis']
                 version_dict['processor_type'] = m.groupdict()['processor_type']
                 version_dict['main_mem'] = m.groupdict()['main_mem']
+                if m.groupdict()['revision'] is not None:
+                     version_dict['revision'] = m.groupdict()['revision']
+
+
                 continue
 
             # Processor board ID CAT2242L6CG
@@ -1749,3 +1761,318 @@ class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNatSchema):
                 continue
 
         return ret_dict
+
+# ======================================================================================
+#  Schema for
+#  * show platform software fed active punt entries
+#  * show platform software fed {switch} active punt entries
+#  * show platform software fed {switch} active punt entries | include {label}
+#  * show platform software fed active punt entries | include {label}
+# =======================================================================================
+class ShowPlatformSoftwareFedSwitchActivePuntEntriesSchema(MetaParser):
+    """Schema for 'show platform software fed active punt entries'
+                    'show platform software fed {switch} active punt entries'
+                    'show platform software fed {switch} active punt entries | include {label}'
+                    'show platform software fed active punt entries | include {label}'
+    """
+    schema = {
+        'entries_name': {
+            Any(): {
+                'source': str,
+                'pri': int,
+                'tc': int,
+                'policy': str,
+                'cir_sw': int,
+                'cir_hw': int,
+                'pkts_a': int,
+                'bytes_a': int,
+                'pkts_d': int,
+                'bytes_d': int,               
+            },
+        }
+    }
+
+# =======================================================================================
+#  Parser for
+#  * 'show platform software fed active punt entries'
+#  * 'show platform software fed {switch} active punt entries'
+#  * 'show platform software fed {switch} active punt entries | include {label}'
+#  * 'show platform software fed active punt entries | include {label}'
+# =======================================================================================
+
+class ShowPlatformSoftwareFedSwitchActivePuntEntries(ShowPlatformSoftwareFedSwitchActivePuntEntriesSchema):
+    """
+    Parser for :
+        * show platform software fed active punt entries
+        * show platform software fed {switch} active punt entries
+        * show platform software fed {switch} active punt entries | include {label}
+        * show platform software fed active punt entries | include {label}
+    """
+    cli_command = ['show platform software fed {switch} active punt entries | include {label}',\
+                    'show platform software fed {switch} active punt entries',\
+                    'show platform software fed active punt entries | include {label}',\
+                    'show platform software fed active punt entries']
+
+    def cli(self, label=None, switch=None, output=None):
+        if output is None:
+            if switch:
+                if label:
+                    cmd = self.cli_command[0].format(switch=switch, label=label)
+                else:
+                    cmd = self.cli_command[1].format(switch=switch)
+            else:
+                if label:
+                    cmd= self.cli_command[2].format(label=label)
+                else:
+                    cmd= self.cli_command[3]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict ={}
+
+        #Punject Punt Entries
+        p1 = re.compile(r'^Punject Punt Entries$')
+
+        # MIRROR   ARP   4    4    system-cpp-police-arp 1000     965      0           0         0           0
+        p2 = re.compile(r'^(?P<source>\w*)\s+(?P<name>((\w+\s)+\w*\S\w*\S*)|(\w*(\S\w*\S){1,}))\s+'
+                        r'(?P<pri>\d+)\s+(?P<tc>\d+)\s+(?P<policy>(\w+(-\w+)*))\s+(?P<cir_sw>\d+)\s+'
+                        r'(?P<cir_hw>\d+)\s+(?P<pkts_a>\d+)\s+(?P<bytes_a>\d+)\s+(?P<pkts_d>\d+)\s+(?P<bytes_d>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Punject Punt Entries
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('entries_name', {})
+                continue
+
+            # MIRROR   ARP   4    4    system-cpp-police-arp 1000     965      0           0         0           0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entries_name = group['name']
+                sub_dict = ret_dict.setdefault('entries_name', {}).setdefault(entries_name, {})
+                sub_dict.update({
+                    'source': group['source'],
+                    'pri': int(group['pri']),
+                    'tc': int(group['tc']),
+                    'pri': int(group['pri']),
+                    'policy': group['policy'],
+                    'cir_sw': int(group['cir_sw']),
+                    'cir_hw': int(group['cir_hw']),
+                    'pkts_a': int(group['pkts_a']),
+                    'bytes_a': int(group['bytes_a']),
+                    'pkts_d': int(group['pkts_d']),
+                    'bytes_d': int(group['bytes_d'])
+                })
+                continue
+
+        return ret_dict
+
+# ==============================================================================
+# Schema for 'show platform software fed {switch} active ip route vrf {vrf_name}'
+# ==============================================================================
+
+class ShowPlatformSoftwareFedActiveIpRouteVrfSchema(MetaParser):
+    """Schema for show platform software fed {switch} active ip route vrf {vrf_name}"""
+    schema = {
+        'object_id':{
+             Any(): {
+                Optional('ipv4_address'): str,
+                Optional('mask_length'): int,
+                Optional('parent_type'): str,
+                Optional('parent_object_id'): str,
+            }
+        },
+        'number_entries': int,
+    }
+
+# ==============================================================================
+# Parser for 'show platform software fed {switch} active ip route vrf {vrf_name}'
+# ==============================================================================
+
+class ShowPlatformSoftwareFedActiveIpRouteVrf(ShowPlatformSoftwareFedActiveIpRouteVrfSchema):
+    """Parser for show platform software fed {switch} active ip route vrf {vrf_name}"""
+ 
+    cli_command = 'show platform software fed {switch} active ip route vrf {vrf_name}'
+    def cli(self, switch='', vrf_name='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(switch=switch, vrf_name=vrf_name))
+        else:
+            output = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Number of npi_ipv4route entries = 19
+        p0 = re.compile(r'^Number of npi_ipv4route entries\s+=\s+(?P<number_entries>\d*)$')
+        
+        # 0x5b60bb7077c8      40.1.1.3            32                  PUSH_COUNTER        0x169     
+        p1 = re.compile(r'^(?P<object_id>0x\w+)(?:\s*)'
+                        r'(?P<ipv4_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:\s*)'
+                        r'(?P<mask_length>\d*)(?:\s*)(?P<parent_type>\w*)(?:\s*)(?P<parent_object_id>0x\w*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of npi_ipv4route entries = 19
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                number_entries = group['number_entries']
+                ret_dict.setdefault('number_entries', int(number_entries))
+                continue
+            
+            # 0x5b60bb7077c8      40.1.1.3            32                  PUSH_COUNTER        0x169      
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                object_id = group['object_id']
+                sub_dict = ret_dict.setdefault('object_id', {}).setdefault(object_id, {})
+
+                ipv4_address = group['ipv4_address']
+                sub_dict['ipv4_address'] = str(ipv4_address)
+
+                mask_length = group['mask_length']
+                sub_dict['mask_length'] = int(mask_length)
+
+                parent_type = group['parent_type']
+                sub_dict['parent_type'] = str(parent_type)
+
+                parent_object_id = group['parent_object_id']
+                sub_dict['parent_object_id'] = str(parent_object_id)
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'voq_id': {
+                    Any(): {
+                        'packets': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'bytes': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'slice': {
+                            Any(): {
+                                'sms_bytes': int,
+                                'hbm_blocks': int,
+                                'hbm_bytes': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterface(ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema):
+    """Parser for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface}',
+        'show platform hardware fed switch {switch_num} qos queue stats interface {interface}']
+
+    def cli(self, interface, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num, interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            
+            output = self.device.execute(cmd)
+
+        # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+        # VOQ Stats For : HundredGigE2/0/2.1 [ 0x550 ]
+        p1 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/\.]+)\s+.*$')
+
+        # 0      | Enqueued |                        1194566957 |                       78841419162 |
+        # | Dropped  |                                 0 |                                 0 |
+        # | Total    |                        1194566957 |                       78841419162 |
+        # |----------|-----------------------------------------------------------------------|
+        p2 = re.compile(r'^(?P<voq_id>\d+)?\s*\|\s+(?P<header>\w+)\s+\|\s+(?P<packets>\d+)\s+\|\s+(?P<bytes>\d+)\s+\|$')
+
+        # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+        p3 = re.compile(r'^\|\s+Slice\s+\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|'
+                    r'\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+        
+        # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        p4 = re.compile(r'^\|\s*(?P<slice_type>SMS Bytes|HBM Blocks|HBM Bytes)\s*\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|'
+            r'\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+            
+            # 0      | Enqueued |                        1194566957 |                       78841419162 |
+            # | Dropped  |                                 0 |                                 0 |
+            # | Total    |                        1194566957 |                       78841419162 |
+            # |----------|-----------------------------------------------------------------------|
+            m = p2.match(line)
+            if m:
+                res_dict = m.groupdict()
+                if res_dict['voq_id']:
+                    voq_dict = int_dict.setdefault('voq_id', {}).setdefault(res_dict['voq_id'], {})
+                
+                pkts_dict = voq_dict.setdefault('packets', {})
+                bytes_dict = voq_dict.setdefault('bytes', {})
+                pkts_dict.setdefault(res_dict['header'].lower(), int(res_dict['packets']))
+                bytes_dict.setdefault(res_dict['header'].lower(), int(res_dict['bytes']))
+                continue
+
+            # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+            m = p3.match(line)
+            if m:
+                slice_dict = voq_dict.setdefault('slice', {})
+                slice_dict0 = slice_dict.setdefault(m.groupdict()['slice0'], {})
+                slice_dict1 = slice_dict.setdefault(m.groupdict()['slice1'], {})
+                slice_dict2 = slice_dict.setdefault(m.groupdict()['slice2'], {})
+                slice_dict3 = slice_dict.setdefault(m.groupdict()['slice3'], {})
+                slice_dict4 = slice_dict.setdefault(m.groupdict()['slice4'], {})
+                slice_dict5 = slice_dict.setdefault(m.groupdict()['slice5'], {})
+                continue
+            
+            # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+            m = p4.match(line)
+            if m:
+                grp_output = m.groupdict()
+                slice_type = grp_output['slice_type'].replace(' ', '_').lower()
+                slice_dict0.setdefault(slice_type, int(grp_output['slice0']))
+                slice_dict1.setdefault(slice_type, int(grp_output['slice1']))
+                slice_dict2.setdefault(slice_type, int(grp_output['slice2']))
+                slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
+                slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
+                slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceClear(ShowPlatformHardwareFedSwitchQosQueueStatsInterface):
+    """Parser for show platform hardware fed switch {switch} qos queue stats interface {interface} clear"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface} clear',
+            'show platform hardware fed switch {switch_num} qos queue stats interface {interface} clear']
+
+    def cli(self, interface, switch_num=None, output=None):
+
+        return super().cli(interface=interface, switch_num=switch_num, output=output)

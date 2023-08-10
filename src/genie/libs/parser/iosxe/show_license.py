@@ -1034,8 +1034,8 @@ class ShowLicenseRumIdDetailSchema(MetaParser):
       Optional('report_id'): {
         Any():{
           'metric_name': str,
-          'feature_name': str,
-          'metric_value': str,
+          Optional('feature_name'): str,
+          Optional('metric_value'): str,
           Optional('udi'): {
             Optional('pid'): str,
             Optional('sn'): str,
@@ -1052,21 +1052,21 @@ class ShowLicenseRumIdDetailSchema(MetaParser):
         }
       }
     }
-    
+
 # ==========================================
-#  Parser for: 'show license rum id detail'   
-# ==========================================           
+#  Parser for: 'show license rum id detail'
+# ==========================================
 
 class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
     """Parser for show license rum id detail"""
-    
+
     cli_command = 'show license rum id {report} detail'
 
-    def cli(self, report = "",  output=None):
+    def cli(self, report='',  output=None):
         if output is None:
             cmd = self.cli_command.format(report=report)
             output = self.device.execute(cmd)
-            
+
         ret_dict={}
 
         #Report Id: 1631796710
@@ -1092,7 +1092,7 @@ class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
 
         #State: CLOSED,      State Change Reason: REPORTING
         p7 = re.compile(r'^State: +(?P<state>[\S ]+), +'
-                        r'State +Change +Reason: +(?P<state_change_reason>.*)$')
+                        r'.*Reason: +(?P<state_change_reason>.*)$')
 
         #Start Time: Sep 19 05:12:48 2021 UTC,      End Time: Sep 19 05:21:41 2021 UTC
         p8 = re.compile(r'^Start +Time: +(?P<start_time>[\S ]+), +'
@@ -1204,7 +1204,7 @@ class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
             continue
 
         return ret_dict
-        
+
 #-------------------------------------------
 # ======================================
 #  Schema for: 'show license all'

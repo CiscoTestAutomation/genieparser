@@ -62,7 +62,12 @@ class ShowRomvarSchema(MetaParser):
             Optional("ip_address"): str,
             Optional("crashinfo"): str,
             Optional("subnet_mask"): str,
-            Optional("abnormal_reset_count"): int
+            Optional("abnormal_reset_count"): int,
+            Optional("boot_loader_upgrade_disable"): str,
+            Optional("real_mgmte_dev"): str,
+            Optional("sr_mgmt_vrf"): str,
+            Optional("boot_param"): str,
+            Optional("boot_param_bkp"): str
         }
     }
 
@@ -161,6 +166,12 @@ class ShowRomvar(ShowRomvarSchema):
         # VERSION_ID=V05
         #
         # ABNORMAL_RESET_COUNT=0
+        #
+        # BOOT_LOADER_UPGRADE_DISABLE=1
+        #
+        # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+        #
+        # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
 
 
         # ROMMON variables:
@@ -318,6 +329,15 @@ class ShowRomvar(ShowRomvarSchema):
 
         # ABNORMAL_RESET_COUNT=0
         p_abnormal_reset_count = re.compile(r"^ABNORMAL_RESET_COUNT\s*=\s*(?P<abnormal_reset_count>\d+)$")
+
+        # BOOT_LOADER_UPGRADE_DISABLE=1
+        p_boot_loader_upgrade_disable = re.compile(r"^BOOT_LOADER_UPGRADE_DISABLE\s*=\s*(?P<boot_loader_upgrade_disable>\S+)$")
+
+        # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
+        p_boot_param = re.compile(r"^BOOT_PARAM\s*=(?P<boot_param>.*)$")
+
+        # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+        p_boot_param_bkp = re.compile(r"^BOOT_PARAM_BKP\s*=(?P<boot_param_bkp>.*)$")
 
         romvar_dict = {}
 
@@ -586,11 +606,92 @@ class ShowRomvar(ShowRomvarSchema):
                 match = p_device_managed_mode.match(line)
                 romvar_dict["rommon_variables"]["device_managed_mode"] = match.group("mode")
                 continue
-
+            # ABNORMAL_RESET_COUNT=0
             if p_abnormal_reset_count.match(line):
                 match = p_abnormal_reset_count.match(line)
                 romvar_dict["rommon_variables"]["abnormal_reset_count"] = int(match.group("abnormal_reset_count"))
                 continue
+            # BOOT_LOADER_UPGRADE_DISABLE=1
+            if p_boot_loader_upgrade_disable.match(line):
+                match =  p_boot_loader_upgrade_disable.match(line)
+                romvar_dict["rommon_variables"]["boot_loader_upgrade_disable"] = match.group("boot_loader_upgrade_disable")
+                continue
+            
+            # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
+            if p_boot_param.match(line):
+                match = p_boot_param.match(line)
+                romvar_dict["rommon_variables"]["boot_param"] = match.group("boot_param")
+                continue
+
+            # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
+            if p_boot_param_bkp.match(line):
+               match =  p_boot_param_bkp.match(line)
+               romvar_dict["rommon_variables"]["boot_param_bkp"] = match.group("boot_param_bkp")
+               continue
 
         return romvar_dict
 
+# ======================================================
+# Parser for 'show rom-mon switch 3 r0 '
+# ======================================================
+
+class ShowRomMonSwitchR0Schema(MetaParser):
+    """Schema for show rom-mon switch 3 r0"""
+
+    schema = {
+                'version': str,
+                'copyright': str,
+                'vendor': str,
+                'day': str,
+                'date': str,
+                'time': str,
+                'username': str,
+	}
+
+class ShowRomMonSwitchR0(ShowRomMonSwitchR0Schema):
+    """Parser for show rom-mon switch 3 r0"""
+
+    cli_command = 'show rom-mon switch {switch_num} {process}'
+
+    def cli(self, switch_num, process, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num,process=process))
+            
+        # System Bootstrap, Version 17.11.1r[FC1], DEVELOPMENT SOFTWARE
+        p1 = re.compile(r"^System\s+Bootstrap,\s+Version\s+(?P<version>\S+),\s+DEVELOPMENT\s+SOFTWARE$")
+        # Copyright (c) 1994-2022 by cisco Systems, Inc.
+        p2 = re.compile(r"^Copyright\s+\(c\)\s+(?P<copyright>\S+)\s+by\s+(?P<vendor>\S+\s+\S+),\s+Inc\.$")
+        # Compiled Wed 02/08/2023 14:20:19.45 by sapitcha
+        p3 = re.compile(r"^Compiled\s+(?P<day>\w+)\s+(?P<date>\S+)\s+(?P<time>\S+)\s+by\s+(?P<username>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # System Bootstrap, Version 17.11.1r[FC1], DEVELOPMENT SOFTWARE
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['version'] = dict_val['version']
+                continue
+
+            # Copyright (c) 1994-2022 by cisco Systems, Inc.
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['copyright'] = dict_val['copyright']
+                ret_dict['vendor'] = dict_val['vendor']
+                continue
+
+            # Compiled Wed 02/08/2023 14:20:19.45 by sapitcha
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['day'] = dict_val['day']
+                ret_dict['date'] = dict_val['date']
+                ret_dict['time'] = dict_val['time']
+                ret_dict['username'] = dict_val['username']
+                continue
+
+
+        return ret_dict   

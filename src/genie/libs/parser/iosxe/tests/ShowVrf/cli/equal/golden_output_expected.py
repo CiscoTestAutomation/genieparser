@@ -1,6 +1,7 @@
 expected_output = {
     "vrf": {
         "Mgmt-intf": {
+            "route_distinguisher": "<not set>",
             "protocols": ["ipv4", "ipv6"],
             "interfaces": ["GigabitEthernet1"],
         },

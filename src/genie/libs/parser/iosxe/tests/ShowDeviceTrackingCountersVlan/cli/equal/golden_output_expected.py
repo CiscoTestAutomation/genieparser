@@ -41,7 +41,8 @@ expected_output = {
                 "Device-tracking": {
                     "protocol": "ndp",
                     "message": "ns",
-                    "dropped": 15
+                    "dropped": 15,
+                    "reason": "Silent drop"
                 },
                 "ACD&DAD": {
                     "protocol": "--",

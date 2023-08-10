@@ -1,0 +1,27 @@
+IPv4 Crypto IKEv2 SA
+
+Tunnel-id Local Remote fvrf/ivrf Status
+6 1.1.1.2/500 2.2.2.2/500 none/none READY
+Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK, QR
+Life/Active Time: 86400/1757 sec
+CE id: 0, Session-id: 74
+Local spi: 4924FD2741CC90FD Remote spi: 601ED2AB91327DAE
+Status Description: Negotiation done
+Local id: 1.1.1.2
+Remote id: 2.2.2.2
+Local req msg id: 0 Remote req msg id: 0
+Local next msg id: 0 Remote next msg id: 0
+Local req queued: 0 Remote req queued: 0
+Local window: 5 Remote window: 5
+DPD configured for 0 seconds, retry 0
+Fragmentation not configured.
+Dynamic Route Update: enabled
+Extended Authentication not configured.
+NAT-T is not detected
+Cisco Trust Security SGT is disabled
+Initiator of SA : No
+Quantum-Safe Encryption using PPK is enabled
+Local Sys Id: sks1 Remote Sys Id: sks2
+PEER TYPE: Other
+
+IPv6 Crypto IKEv2 SA

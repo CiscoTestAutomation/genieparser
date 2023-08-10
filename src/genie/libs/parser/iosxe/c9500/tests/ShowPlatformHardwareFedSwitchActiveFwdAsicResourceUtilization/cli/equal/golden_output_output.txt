@@ -1,0 +1,225 @@
+          Resource                   Slice      Utilized   Total
+--------------------------------------------------------------------
+MAC Termination EM table              s-0          190     8224
+MAC Termination EM table              s-1          190     8224
+MAC Termination EM table              s-2          206     8224
+MAC Termination EM table              s-3          190     8224
+MAC Termination EM table              s-4          190     8224
+MAC Termination EM table              s-5          204     8224
+Tunnel 0 Exact Match                  s-0          169     4128
+Tunnel 0 Exact Match                  s-1          169     4128
+Tunnel 0 Exact Match                  s-2          169     4128
+Tunnel 0 Exact Match                  s-3          169     4128
+Tunnel 0 Exact Match                  s-4          169     4128
+Tunnel 0 Exact Match                  s-5          169     4128
+Tunnel 1 Exact Match                  s-0            0     4128
+Tunnel 1 Exact Match                  s-1            0     4128
+Tunnel 1 Exact Match                  s-2            0     4128
+Tunnel 1 Exact Match                  s-3            0     4128
+Tunnel 1 Exact Match                  s-4            0     4128
+Tunnel 1 Exact Match                  s-5            0     4128
+My IPv4 Table                         s-0            1       64
+My IPv4 Table                         s-1            1       64
+My IPv4 Table                         s-2            1       64
+My IPv4 Table                         s-3            1       64
+My IPv4 Table                         s-4            1       64
+My IPv4 Table                         s-5            1       64
+Resource unknown                      s-0            0     3959
+Resource unknown                      s-1            0     3959
+Resource unknown                      s-2            0     3959
+Resource unknown                      s-3            0     3959
+Resource unknown                      s-4            0     3959
+Resource unknown                      s-5            0     3959
+Resource unknown                      s-0            0    10240
+Resource unknown                      s-1            0    10240
+Resource unknown                      s-2            0    10240
+Resource unknown                      s-3            0    10240
+Resource unknown                      s-4            0    10240
+Resource unknown                      s-5            0    10240
+
+          Resource                        Slice Pair    Utilized   Total
+-------------------------------------------------------------------------
+ACL Group                                     p-0            0      255
+ACL Group                                     p-1            0      255
+ACL Group                                     p-2            0      255
+Egress IPv4 Security ACL IDs                  p-0            1       15
+Egress IPv4 Security ACL IDs                  p-1            1       15
+Egress IPv4 Security ACL IDs                  p-2            1       15
+Egress IPv4 Security ACL IDs                  p-0            1       15
+Egress IPv4 Security ACL IDs                  p-1            1       15
+Egress IPv4 Security ACL IDs                  p-2            1       15
+Ingress Eth Narrow DB1 int_0 ACL IDs          p-0            0      127
+Ingress Eth Narrow DB1 int_0 ACL IDs          p-1            0      127
+Ingress Eth Narrow DB1 int_0 ACL IDs          p-2            0      127
+Ingress Eth Narrow DB2 int_0 ACL IDs          p-0            0      127
+Ingress Eth Narrow DB2 int_0 ACL IDs          p-1            0      127
+Ingress Eth Narrow DB2 int_0 ACL IDs          p-2            0      127
+Ingress IPv4 Security & QOS int_0 ACL IDs     p-0            1      127
+Ingress IPv4 Security & QOS int_0 ACL IDs     p-1            1      127
+Ingress IPv4 Security & QOS int_0 ACL IDs     p-2            1      127
+Ingress IPv4 int_0 OGACL IDs                  p-0            0      127
+Ingress IPv4 int_0 OGACL IDs                  p-1            0      127
+Ingress IPv4 int_0 OGACL IDs                  p-2            0      127
+Ingress IPv4 Narrow DB3 int_0 ACL IDs         p-0            0      127
+Ingress IPv4 Narrow DB3 int_0 ACL IDs         p-1            0      127
+Ingress IPv4 Narrow DB3 int_0 ACL IDs         p-2            0      127
+Ingress IPv4 Narrow DB4 int_0 ACL IDs         p-0            0      127
+Ingress IPv4 Narrow DB4 int_0 ACL IDs         p-1            0      127
+Ingress IPv4 Narrow DB4 int_0 ACL IDs         p-2            0      127
+Ingress IPv4 Wide DB1 int_0 ACL IDs           p-0            0      127
+Ingress IPv4 Wide DB1 int_0 ACL IDs           p-1            0      127
+Ingress IPv4 Wide DB1 int_0 ACL IDs           p-2            0      127
+Ingress IPv4 Wide DB2 int_0 ACL IDs           p-0            0      127
+Ingress IPv4 Wide DB2 int_0 ACL IDs           p-1            0      127
+Ingress IPv4 Wide DB2 int_0 ACL IDs           p-2            0      127
+Ingress IPv4 Wide DB3 int_0 ACL IDs           p-0            0      127
+Ingress IPv4 Wide DB3 int_0 ACL IDs           p-1            0      127
+Ingress IPv4 Wide DB3 int_0 ACL IDs           p-2            0      127
+Ingress IPv4 Wide DB4 int_0 ACL IDs           p-0            0      127
+Ingress IPv4 Wide DB4 int_0 ACL IDs           p-1            0      127
+Ingress IPv4 Wide DB4 int_0 ACL IDs           p-2            0      127
+Ingress IPv6 int_0 OGACL IDs                  p-0            0      127
+Ingress IPv6 int_0 OGACL IDs                  p-1            0      127
+Ingress IPv6 int_0 OGACL IDs                  p-2            0      127
+Ingress IPv6 Narrow DB2 int_0 ACL IDs         p-0            0      127
+Ingress IPv6 Narrow DB2 int_0 ACL IDs         p-1            0      127
+Ingress IPv6 Narrow DB2 int_0 ACL IDs         p-2            0      127
+Ingress IPv6 Narrow DB3 int_0 ACL IDs         p-0            0      127
+Ingress IPv6 Narrow DB3 int_0 ACL IDs         p-1            0      127
+Ingress IPv6 Narrow DB3 int_0 ACL IDs         p-2            0      127
+Ingress IPv6 Narrow DB4 int_0 ACL IDs         p-0            0      127
+Ingress IPv6 Narrow DB4 int_0 ACL IDs         p-1            0      127
+Ingress IPv6 Narrow DB4 int_0 ACL IDs         p-2            0      127
+Ingress IPv6 Security & QOS int_0 ACL IDs     p-0            1      127
+Ingress IPv6 Security & QOS int_0 ACL IDs     p-1            1      127
+Ingress IPv6 Security & QOS int_0 ACL IDs     p-2            1      127
+Ingress IPv6 Wide DB2 int_0 ACL IDs           p-0            0      127
+Ingress IPv6 Wide DB2 int_0 ACL IDs           p-1            0      127
+Ingress IPv6 Wide DB2 int_0 ACL IDs           p-2            0      127
+Ingress IPv6 Wide DB3 int_0 ACL IDs           p-0            0      127
+Ingress IPv6 Wide DB3 int_0 ACL IDs           p-1            0      127
+Ingress IPv6 Wide DB3 int_0 ACL IDs           p-2            0      127
+Ingress IPv6 Wide DB4 int_0 ACL IDs           p-0            0      127
+Ingress IPv6 Wide DB4 int_0 ACL IDs           p-1            0      127
+Ingress IPv6 Wide DB4 int_0 ACL IDs           p-2            0      127
+L2 Service Port                               p-0          151    65568
+L2 Service Port                               p-1            9    65568
+L2 Service Port                               p-2           31    65568
+L3 AC Port                                    p-0            8    32800
+L3 AC Port                                    p-1           25    32800
+L3 AC Port                                    p-2           16    32800
+Service LP Attributes Table                   p-0          154    65536
+Service LP Attributes Table                   p-1           21    65536
+Service LP Attributes Table                   p-2           35    65536
+Egress Large Encap Exact Match                p-0          301    65568
+Egress Large Encap Exact Match                p-1          163    65568
+Egress Large Encap Exact Match                p-2          181    65568
+Egress Small Encap Exact Match                p-0            1    32800
+Egress Small Encap Exact Match                p-1            1    32800
+Egress Small Encap Exact Match                p-2            1    32800
+Egress L3 DLP0 Exact Match                    p-0            8    32800
+Egress L3 DLP0 Exact Match                    p-1           25    32800
+Egress L3 DLP0 Exact Match                    p-2           16    32800
+Resource unknown                              p-0          152    32800
+Resource unknown                              p-1          225    32800
+Resource unknown                              p-2           33    32800
+Resource unknown                              p-0           29    32800
+Resource unknown                              p-1           57    32800
+Resource unknown                              p-2           81    32800
+Ingress QoS Profiles                          p-0            1       16
+Ingress QoS Profiles                          p-1            1       16
+Ingress QoS Profiles                          p-2            1       16
+Egress QoS Profile                            p-0            1       16
+Egress QoS Profile                            p-1            1       16
+Egress QoS Profile                            p-2            1       16
+Resource unknown                              p-0            7    32800
+Resource unknown                              p-1            7    32800
+Resource unknown                              p-2            7    32800
+Resource unknown                              p-0            0    65568
+Resource unknown                              p-1            0    65568
+Resource unknown                              p-2            0    65568
+Resource unknown                              p-0            0    65568
+Resource unknown                              p-1            4    65568
+Resource unknown                              p-2            0    65568
+
+          Resource              Slice/IFG-id  Utilized   Total
+--------------------------------------------------------------------
+Qos Meter actions                   i-0/0          1        4
+Qos Meter actions                   i-0/1          1        4
+Qos Meter actions                   i-1/0          1        4
+Qos Meter actions                   i-1/1          1        4
+Qos Meter actions                   i-2/0          1        4
+Qos Meter actions                   i-2/1          1        4
+Qos Meter actions                   i-3/0          1        4
+Qos Meter actions                   i-3/1          1        4
+Qos Meter actions                   i-4/0          1        4
+Qos Meter actions                   i-4/1          1        4
+Qos Meter actions                   i-5/0          1        4
+Qos Meter actions                   i-5/1          1        4
+Qos Meter profiles                  i-0/0          1       16
+Qos Meter profiles                  i-0/1          1       16
+Qos Meter profiles                  i-1/0          1       16
+Qos Meter profiles                  i-1/1          1       16
+Qos Meter profiles                  i-2/0          1       16
+Qos Meter profiles                  i-2/1          1       16
+Qos Meter profiles                  i-3/0          1       16
+Qos Meter profiles                  i-3/1          1       16
+Qos Meter profiles                  i-4/0          1       16
+Qos Meter profiles                  i-4/1          1       16
+Qos Meter profiles                  i-5/0          1       16
+Qos Meter profiles                  i-5/1          1       16
+
+          Resource              Device  Utilized   Total
+--------------------------------------------------------------------
+AC Profiles                         d-0            2       15
+Counter Bank                        d-0           96      108
+IPv4 VRF DIP EM Table               d-0           17   622505
+IPv6 VRF DIP EM Table               d-0           30   311274
+LPM  Routes                         d-0            1      100
+LPM IPv4 Routes                     d-0          245  2357021
+LPM IPv6 Routes                     d-0           42  1177170
+LPTS Meters                         d-0            1      256
+MAC DA Table                        d-0           19       64
+MAC Forwarding Table                d-0           16   622504
+Native FEC entry                    d-0           11     8192
+SGACL IDs                           d-0            2      510
+Stage 1 LB Group                    d-0            0    16384
+Stage 1 LB Member                   d-0          194   196640
+Stage 1 Protection Monitor          d-0            0     8192
+Stage 2 LB Group                    d-0            0    16384
+Stage 2 LB Member                   d-0            0    32800
+Stage 2 Protection Monitor          d-0            0     8192
+Stage 3 LB Member                   d-0           16    32800
+Traffic class profiles              d-0            8        8
+VOQ CGM Evicted Profile             d-0            0        3
+VoQ CGM profiles                    d-0            5       30
+Central Exact Match                 d-0            0      100
+Protection Group                    d-0            0     4096
+IPv6 Compressed SIPS                d-0            0    65535
+Multicast Exact Match Database      d-0           31   131072
+Next Hop                            d-0           16     4096
+SIP Index Table                     d-0            1       16
+Egress DIP Index                    d-0            0      256
+L3 Port Gid                         d-0           30    32767
+Prefix Object Gid                   d-0            2    65536
+Next Hop Gid                        d-0           15     4094
+TE Tunnel Gid                       d-0            0    16384
+L3 Protection Group Gid             d-0            0     4095
+Meter Markdown Profile Gid          d-0            0       15
+MPLS VPN Encap Gid                  d-0            0   131072
+Switch Gid                          d-0          206    12288
+L2 Punt Destination Gid             d-0           12      250
+VRF Gid                             d-0            8     3840
+SPA Port GID                        d-0            4     8192
+System Port Gid                     d-0          204     4092
+MC Local MCID                       d-0           43   262136
+L2 Service Port Gid                 d-0          197   131072
+Resource unknown                    d-0            0   131072
+PWE Service Port Gid                d-0            0    16384
+Resource unknown                    d-0            0      100
+Resource unknown                    d-0            0      100
+Resource unknown                    d-0            1      100
+Resource unknown                    d-0            1      100
+Resource unknown                    d-0            0        4
+Resource unknown                    d-0            0        4
+Resource unknown                    d-0            1       16

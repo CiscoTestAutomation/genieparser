@@ -1,0 +1,25 @@
+  Policy Map type queueing llq
+    Class tc7
+      priority level 1
+      Average Rate Traffic Shaping
+      cir 2%
+    Class tc6
+      priority level 2
+      Average Rate Traffic Shaping
+      cir 100000000 (bps)
+    Class tc5
+      priority level 3
+      Average Rate Traffic Shaping
+      cir 150000000 (bps)
+    Class tc4
+      priority level 4
+      Average Rate Traffic Shaping
+      cir 100000000 (bps)
+    Class tc3
+      priority level 5
+      Average Rate Traffic Shaping
+      cir 100000000 (bps)
+    Class tc2
+      priority level 6
+      Average Rate Traffic Shaping
+      cir 1000000000 (bps)

@@ -1,0 +1,2 @@
+Pro Inside global      Inside local       Outside local      Outside global
+icmp 100.100.100.100:1024 192.168.121.20:1260 192.168.21.20:1260 192.168.21.20:1024

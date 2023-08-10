@@ -1,0 +1,35 @@
+expected_output = {
+    'version': {
+        'chassis': '2621',
+        'chassis_sn': 'JAD05390XNG',
+        'compiled_by': 'hwcheng',
+        'compiled_date': 'Mon 27-Aug-01 19:57',
+        'copyright_years': '1986-2001',
+        'curr_config_register': '0x2',
+        'hostname': 'dna-poc-ts',
+        'image': {
+            'data_base': '0x809DD03C',
+            'text_base': '0x80008088',
+        },
+        'image_id': 'C2600-I-M',
+        'image_type': 'developer image',
+        'interfaces': {
+            'fastethernet': 2,
+        },
+        'main_mem': '60416',
+        'mem_size': {
+            'non-volatile configuration': '32',
+        },
+        'os': 'IOS',
+        'platform': 'C2600',
+        'processor_board_flash': '32768K',
+        'processor_type': 'MPC860',
+        'returned_to_rom_by': 'power-on',
+        'rom': 'C2600 Software (C2600-I-M), Version 12.2(2)XA1, EARLY DEPLOYMENT RELEASE SOFTWARE (fc1)',
+        'rtr_type': '2621',
+        'system_image': 'flash:c2600-i-mz.122-2.XA1',
+        'uptime': '4 weeks, 2 days, 7 hours, 56',
+        'version': '12.2(2)XA1',
+        'version_short': '12.2',
+    },
+}

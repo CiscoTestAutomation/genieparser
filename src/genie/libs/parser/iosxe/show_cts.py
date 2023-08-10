@@ -1852,8 +1852,8 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
         "indexes": {
             int: {
                 Optional("policy_name"): str,
-                "action_policy": str,
-                "action_policy_group": str,
+                Optional("action_policy"): str,
+                Optional("action_policy_group"): str,
                 Optional("src_grp_id"): int,
                 Optional("src_grp_name"): str,
                 Optional("unknown_group"): str,
@@ -1926,117 +1926,93 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
             cmd = self.cli_command[0]
 
         if output is None:
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
-        cts_rb_permissions_dict = {}
+        ret_dict = {}
 
         # IPv4 Role-based permissions default:
-        rb_default_capture = re.compile(r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        # IPv4 Role-based permissions default (configured):
+        p1 = re.compile(r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+(?P<default_group>default).*:$")
+        
         # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
-        rb_permissions_capture = re.compile(
-            r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
-        #         Deny IP-00
-        policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
+        # IPv4 Role-based permissions from group Unknown to group 100 (configured):
+        # IPv4 Role-based permissions from group 100 to group 200 (configured):
+        p2 = re.compile(
+            r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+)?:?(?P<src_grp_name>\S+)?\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+)(:(?P<dst_group_name>\S+))?).*:$")
+        
         # ACCESS-01
-        policy_group_capture = re.compile(r"^(?P<policy_group>\w+-\d+)")
+        # SGACL_PERMIT_IPv6
+        p3 = re.compile(r"^(?P<policy_group>\S+)$")
+
+        #         Deny IP-00
+        p4 = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)$")
+        
         # RBACL Monitor All for Dynamic Policies : FALSE
-        monitor_dynamic_capture = re.compile(
-            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))")
+        p5 = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))$")
+        
         #RBACL Monitor All for Configured Policies : FALSE
-        monitor_configured_capture = re.compile(
-            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
+        p6 = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))$")
 
-        # Remove unwanted lines from raw text
-        def filter_lines(raw_output):
-            # Remove empty lines
-            clean_lines = list(filter(None, raw_output.splitlines()))
-            rendered_lines = []
-            for clean_line in clean_lines:
-                clean_line_strip = clean_line.strip()
-                rendered_lines.append(clean_line_strip)
-            return rendered_lines
-
-        out = filter_lines(raw_output=out)
-
-        # Index value for each policy which will increment as it matches a new policy
-        policy_index = 1
         # Index value for each policy group which will increment as it matches a new policy group
         policy_group_index = 1
-        # Used to populate data for each policy and the policy index will be used as the key.
-        policy_data = {}
 
-        for line in out:
+        for line in output.splitlines():
+            line = line.strip()
+
             # IPv4 Role-based permissions default:
-            if rb_default_capture.match(line):
-                policy_group_index = 1
-                rb_default_match = rb_default_capture.match(line)
-                groups = rb_default_match.groupdict()
-                default_group = groups['default_group']
-                policy_data = {'policy_name': default_group}
-                if not cts_rb_permissions_dict.get('indexes', {}):
-                    cts_rb_permissions_dict['indexes'] = {}
+            m = p1.match(line)
+            if m:
+                cts_indexs_dict = ret_dict.setdefault('indexes', {})
+                cts_rb_permissions_dict = cts_indexs_dict.setdefault(policy_group_index, {})
+                cts_rb_permissions_dict['policy_name'] = m.groupdict()['default_group']
+                policy_group_index += 1
                 continue
+            
             # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
-            elif rb_permissions_capture.match(line):
-                policy_group_index = 1
-                rb_permissions_match = rb_permissions_capture.match(line)
-                groups = rb_permissions_match.groupdict()
-                policy_data = {}
-                if not cts_rb_permissions_dict.get('indexes', {}):
-                    cts_rb_permissions_dict['indexes'] = {}
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                cts_indexs_dict = ret_dict.setdefault('indexes', {})
+                cts_rb_permissions_dict = cts_indexs_dict.setdefault(policy_group_index, {})
+                policy_group_index += 1
                 for k, v in groups.items():
                     if v:
                         if v.isdigit():
                             v = int(v)
-                        policy_data.update({k: v})
+                        cts_rb_permissions_dict[k] = v
                 continue
+            
             # ACCESS-01
-            elif policy_group_capture.match(line):
-                policy_group_match = policy_group_capture.match(line)
-                groups = policy_group_match.groupdict()
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
                 policy_group = groups['policy_group']
-                if not policy_data.get('policy_groups', []):
-                    policy_data['policy_groups'] = []
-                policy_data['policy_groups'].append(policy_group)
+                cts_rb_permissions_dict.setdefault('policy_groups', []).append(policy_group)
                 continue
-            #         Deny IP-00
-            elif policy_action_capture.match(line):
-                policy_action_match = policy_action_capture.match(line)
-                groups = policy_action_match.groupdict()
-                action_policy = groups['action_policy']
-                action_policy_group = groups['action_policy_group']
+            
+            # Deny IP-00
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
                 for k, v in groups.items():
-                    policy_data.update({k: v})
-                cts_rb_permissions_dict['indexes'][policy_index] = policy_data
-                policy_index = policy_index + 1
+                    cts_rb_permissions_dict[k] = v
                 continue
+
             # RBACL Monitor All for Dynamic Policies : FALSE
-            elif monitor_dynamic_capture.match(line):
-                monitor_dynamic_match = monitor_dynamic_capture.match(line)
-                groups = monitor_dynamic_match.groupdict()
-                monitor_dynamic = groups['monitor_dynamic']
-                if monitor_dynamic == 'FALSE':
-                    monitor_dynamic = False
-                else:
-                    monitor_dynamic = True
-                cts_rb_permissions_dict['indexes']['monitor_dynamic'] = monitor_dynamic
+            m = p5.match(line)
+            if m:
+                cts_indexs_dict['monitor_dynamic'] = m.groupdict()['monitor_dynamic'] != 'FALSE'
                 continue
+            
             # RBACL Monitor All for Configured Policies : FALSE
-            elif monitor_configured_capture.match(line):
-                monitor_configured_match = monitor_configured_capture.match(line)
-                groups = monitor_configured_match.groupdict()
-                monitor_configured = groups['monitor_configured']
-                if monitor_configured == 'FALSE':
-                    monitor_configured = False
-                else:
-                    monitor_configured = True
-                cts_rb_permissions_dict['indexes']['monitor_configured'] = monitor_configured
+            m = p6.match(line)
+            if m:
+                cts_indexs_dict['monitor_configured'] = m.groupdict()['monitor_configured'] != 'FALSE'
                 continue
 
-        return cts_rb_permissions_dict
-
+        return ret_dict
 
 
 # =====================================
@@ -2614,7 +2590,9 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_cli'): int,
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
-            Optional('total_local'): int
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
         },
         Optional('ipv6_sgt_bindings'): {
             Any(): {
@@ -2626,7 +2604,9 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_cli'): int,
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
-            Optional('total_local'): int
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
         }
     }
 
@@ -2663,6 +2643,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
         # Total number of active bindings = 51
         # Total number of SXP bindings = 2
         # Total number of active bindings = 2
+        # Total number of L3IF     bindings = 2
+        # Total number of VLAN     bindings = 1
         p2 = re.compile(r'^Total\s+number\s+of\s+(?P<binding_type>(\S+))\s+bindings\s+=\s+(?P<binding_count>(\d+))$')
 
         for line in output.splitlines():
@@ -2696,6 +2678,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
             # Total number of active bindings = 51
             # Total number of SXP bindings = 2
             # Total number of active bindings = 2
+            # Total number of L3IF     bindings = 2
+            # Total number of VLAN     bindings = 1
             m2 = p2.match(line)
             if m2:
                 total_sgt_group = m2.groupdict()
@@ -3848,3 +3832,60 @@ class ShowPlatformSoftwareFedActiveAclSgacl(ShowPlatformSoftwareFedActiveAclSgac
                 index += 1
                 
         return ret_dict
+# ==============================================
+# Parser for 'show cts interface summary'
+# ==============================================
+class ShowCtsInterfaceSummarySchema(MetaParser):
+    """Schema for show cts interface summary
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'mode': str,
+                'ifc_state': str,
+                'dot1x_role': str,
+                'peer_id': str,
+                'ifc_cache': str,
+                'critical_authentication': str
+            }
+        }
+    }
+
+
+class ShowCtsInterfaceSummary(ShowCtsInterfaceSummarySchema):
+    """Parser for 'show cts interface summary'
+    """
+    cli_command = 'show cts interface summary'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        # CTS Interfaces
+        # ---------------------
+        # Interface                      Mode    IFC-state dot1x-role peer-id    IFC-cache    Critical-Authentication
+        # -----------------------------------------------------------------------------
+        # Twe1/0/12                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        p1 = re.compile(r'^(?P<interface>\w+\d+/\d+/\d+)\s+(?P<mode>\S+)\s+(?P<ifc_state>\S+)\s+(?P<dot1x_role>\S+)\s+(?P<peer_id>\S+)\s+(?P<ifc_cache>\S+)\s+(?P<critical_authentication>\S+)$')     
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()  
+                final_dict = ret_dict.setdefault('interface', {}).setdefault(group["interface"], {})
+                final_dict.update({
+                    "mode": group["mode"],
+                    "ifc_state": group["ifc_state"],
+                    "dot1x_role": group["dot1x_role"],
+                    "peer_id": group["peer_id"],
+                    "ifc_cache": group["ifc_cache"],
+                    "critical_authentication": group["critical_authentication"]})          
+        return ret_dict
+

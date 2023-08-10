@@ -426,6 +426,7 @@ class ShowPlatformSoftwareFedActiveAclInfoSummarySchema(MetaParser):
                 'cg_id': int,
                 'protocol': str,
                 'no_of_aces': int,
+                Optional('feature'): str,
                 'direction_ingress': str,
                 'direction_egress': str
             },
@@ -443,7 +444,6 @@ class ShowPlatformSoftwareFedActiveAclInfoSummary(ShowPlatformSoftwareFedActiveA
     * 'show platform software fed active acl info summary'
     * 'show platform software fed active acl info summary | include {acl_name}'
     """
-
     cli_command = ['show platform software fed active acl info summary',
                    'show platform software fed active acl info summary | include {acl_name}']
 
@@ -458,7 +458,8 @@ class ShowPlatformSoftwareFedActiveAclInfoSummary(ShowPlatformSoftwareFedActiveA
         ret_dict = {}
 
         #CG id    ACL name                                    No of ACEs  Protocol  Ingress    Egress
-        p1 = re.compile(r'^(?P<cg_id>\S+)\s+(?P<acl_name>\S+)\s+(?P<no_of_aces>\S+)\s+(?P<protocol>\S+)\s+(?P<direction_ingress>\w+)\s+(?P<direction_egress>\w+)$')
+        #CG id     ACL name                                    Feature    No of ACEs     Protocol    Ingress    Egress
+        p1 = re.compile(r'^(?P<cg_id>\S+)\s+(?P<acl_name>\S+)\s+(?P<feature>\S+)?\s+(?P<no_of_aces>\S+)\s+(?P<protocol>\S+)\s+(?P<direction_ingress>\w+)\s+(?P<direction_egress>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -477,7 +478,9 @@ class ShowPlatformSoftwareFedActiveAclInfoSummary(ShowPlatformSoftwareFedActiveA
                 new_key = 'acl_name'
                 info_dict = {group[new_key]: {}}
                 # update then pop new_key from the dict
-                info_dict[group[new_key]].update(group)
+                if group['feature']==None:
+                    del group['feature']
+                info_dict[group[new_key]].update(group)                    
                 info_dict[group[new_key]].pop(new_key)
 
                 if not ret_dict.get(new_key):
@@ -489,12 +492,9 @@ class ShowPlatformSoftwareFedActiveAclInfoSummary(ShowPlatformSoftwareFedActiveA
 
         return ret_dict
         
-
-
 class ShowPlatformHardwareChassisPowerSupplyDetailAll(ShowPlatformHardwareChassisPowerSupplyDetailAll_c9500):
     """ Parser for show platform hardware chassis power-supply detail all"""
     pass
-    
     
 class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll_c9500):
     """ Parser for show platform hardware chassis power-supply detail switch {mode} all"""

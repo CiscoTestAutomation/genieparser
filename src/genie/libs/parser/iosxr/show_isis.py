@@ -19,6 +19,8 @@ IOSXR parsers for the following show commands:
     * show isis segment-routing srv6 locators
     * show isis instance {instance} segment-routing srv6 locators
     * show isis instance {process_id} neighbors
+    * show isis interface brief
+    * show isis database
 """
 
 # Python
@@ -501,7 +503,7 @@ class ShowIsisSchema(MetaParser):
                                         'distance': int,
                                         'adv_passive_only': bool,
                                         Optional('protocols_redistributed'): bool,
-                                        'level': {
+                                        Optional('level'): {
                                             Any(): {
                                                 Optional('generate_style'): str,
                                                 Optional('accept_style'): str,
@@ -2409,6 +2411,16 @@ class ShowIsisInterfaceSchema(MetaParser):
                             'interval': int,
                             'offset': int
                         },
+                        Optional('measured_delay'):{
+                            'min': str,
+                            'avg': str,
+                            'max': str,
+                        },
+                        Optional('normalized_delay'):{
+                            'min': str,
+                            'avg': str,
+                            'max': str,
+                        },
                         Optional('link_loss'): str,
                         Optional('rsi_srlg'): str,
                         Optional('next_p2p_iih_in'): int,
@@ -2767,6 +2779,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Link Loss:                -
         # Link Loss:                1
         r62 = re.compile(r'Link\s+Loss:\s*(?P<link_loss>[\d-]+)')
+
+        # Measured Delay:           Min:- Avg:- Max:- usec
+        # Normalized Delay:         Min:- Avg:- Max:- usec
+        r63 = re.compile(r'^(?P<delay_name>[a-zA-Z ]+):\s+Min:(?P<min>[-\d]+)\s+'
+                         'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
 
         parsed_output = {}
         interface_flag = False
@@ -3564,6 +3581,18 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 interface_dict['link_loss'] = link_loss
                 continue
 
+            # Measured Delay:           Min:- Avg:- Max:- usec
+            # Normalized Delay:         Min:- Avg:- Max:- usec
+            result = r63.match(line)
+            if result:
+                group = result.groupdict()
+                delay_name = group['delay_name'].lower().replace(' ','_')
+                delay_dict = interface_dict.setdefault(delay_name, {})
+                delay_dict['min'] = group['min']
+                delay_dict['avg'] = group['avg']
+                delay_dict['max'] = group['max']
+                continue
+
         return parsed_output
 
 
@@ -3593,6 +3622,13 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                 Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
+                                Optional('mt_srv6_locator'):{
+                                    'locator_prefix': str,
+                                    'locator_prefix_length': int,
+                                    'd_flag': int,
+                                    'metric': int,
+                                    'algorithm': int
+                                },
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
@@ -3827,6 +3863,11 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # TLV 14:         Length: 2
         r24 = re.compile(r'^TLV +(?P<tlv>\d+): +Length: +(?P<length>\d+)$')
+
+        # SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1001::/48 D:0 Metric: 0 Algorithm: 0
+        r25 = re.compile(r'^SRv6\s+Locator:\s+MT\s+\(.*\)\s+(?P<locator_prefix>[\w:]+)\/'
+                         r'(?P<locator_prefix_length>\d+)\s+D:(?P<d_flag>\d+)\s+Metric:\s+'
+                         r'(?P<metric>\d+)\s+Algorithm:\s+(?P<algorithm>\d+)$')
 
         parsed_output = {}
 
@@ -4213,6 +4254,23 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 length = int(group['length'])
                 lspid_dict['tlv'] = tlv
                 lspid_dict['tlv_length'] = length
+                continue
+
+            # SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1001::/48 D:0 Metric: 0 Algorithm: 0
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                locator_prefix = group['locator_prefix']
+                locator_prefix_length = int(group['locator_prefix_length'])
+                d_flag = int(group['d_flag'])
+                metric = int(group['metric'])
+                algorithm = int(group['algorithm'])
+                mt_srv6_locator_dict = lspid_dict.setdefault('mt_srv6_locator', {})
+                mt_srv6_locator_dict['locator_prefix'] = locator_prefix
+                mt_srv6_locator_dict['locator_prefix_length'] = locator_prefix_length
+                mt_srv6_locator_dict['d_flag'] = d_flag
+                mt_srv6_locator_dict['metric'] = metric
+                mt_srv6_locator_dict['algorithm'] = algorithm
                 continue
 
         return parsed_output
@@ -5356,3 +5414,223 @@ class ShowIsisSegmentRoutingSrv6Locators(ShowIsisSegmentRoutingSrv6LocatorsSchem
                 continue
 
         return isis_dict
+
+class ShowIsisInterfaceBriefSchema(MetaParser):
+    """Schema for:
+        * show isis interface brief
+    """
+    schema = {
+        'isis': {
+            Any(): {
+                'process_id': str,
+                Optional('interface'): {
+                    Any(): {
+                        'interface_name': str,
+                        'all_status': str,
+                        Optional('adjs_l1'): str,
+                        Optional('adjs_l2'): str,
+                        Optional('adj_topos_run_cfg'): str,
+                        Optional('adv_topos_run_cfg'): str,
+                        Optional('clns'): str,
+                        Optional('mtu_value'): str,
+                        Optional('prio_l1'): str,
+                        Optional('prio_l2'): str
+                    },
+                }
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show isis interface brief'
+# ==============================================
+
+class ShowIsisInterfaceBrief(ShowIsisInterfaceBriefSchema):
+    """Parser for:
+    * show isis interface brief
+    """
+    cli_command = ['show isis interface brief']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+
+        result_dict = {}
+
+        # IS-IS 1 Interfaces
+        # IS-IS SR Interfaces
+        p1 = re.compile(r'^IS-IS\s+(?P<process_id>\w+)\s+Interfaces$')
+
+        # BE10               Yes    -    0      2/2        2/2     Up    1497    -    -
+        # BE10.10            Yes    -    1*      2/2        2/2     Up    1497    -   64
+        # Gi0/0/0/1.19       No     -    1      1/2        1/2     Up    1497    -   64
+        # Gi0/0/0/1.20       No
+        # Lo0                No
+        p2 = re.compile(r'^(?P<interface_name>[\w\/.]+)\s+(?P<all_status>Yes|No)'
+                        r'(?:\s+(?P<adjs_l1>[\d\*-]+)\s+(?P<adjs_l2>[\d\*-]+)\s+'
+                        r'(?P<adj_topos_run_cfg>[\d\/]+)\s+(?P<adv_topos_run_cfg>[\d\/]+)\s+'
+                        r'(?P<clns>Up|Down)\s+(?P<mtu_value>\d+)\s+(?P<prio_l1>[\d-]+)\s+(?P<prio_l2>[\d-]+))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS 1 Interfaces
+            # IS-IS SR Interfaces
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('isis', {}). \
+                    setdefault(group['process_id'], {})
+                process_id_dict['process_id'] = group['process_id']
+                continue
+
+            # BE10               Yes    -    0      2/2        2/2     Up    1497    -    -
+            # BE10.10            Yes    -    1*      2/2        2/2     Up    1497    -   64
+            # Gi0/0/0/1.19       No     -    1      1/2        1/2     Up    1497    -   64
+            # Gi0/0/0/1.20       No
+            # Lo0                No
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = group['interface_name']
+                interface_dict = process_id_dict.setdefault('interface', {}). \
+                    setdefault(interface_name, {})
+                interface_dict.update({k: v for k, v in group.items() if v is not None})
+                continue
+
+        return result_dict
+
+class ShowIsisDatabaseSchema(MetaParser):
+    """Schema for:
+        * show isis database
+    """
+    schema = {
+        'isis': {
+            Any(): {
+                'process_id': str,
+                'routes_found': bool,
+                Optional('level'): {
+                    Any(): {
+                        Optional('lspid'): {
+                            Any(): {
+                                'lspid': str,
+                                'lsp_seq_num': str,
+                                'lsp_checksum': str,
+                                'lsp_holdtime': str,
+                                Optional('rcvd'): str,
+                                'attach_bit': int,
+                                'p_bit': int,
+                                'overload_bit': int,
+                            }
+                        },
+                        Optional('total_level'): int,
+                        Optional('total_lsp_count'): int,
+                        Optional('local_level'): int,
+                        Optional('local_lsp_count'): int
+                    }
+                }
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show isis database'
+# ==============================================
+
+class ShowIsisDatabase(ShowIsisDatabaseSchema):
+    """Parser for:
+    * show isis database
+    """
+    cli_command = ['show isis database']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # No IS-IS 1 levels found
+        p1 = re.compile(r'^No\s+IS-IS\s+(?P<process_id>\d+)\s+levels\s+found$')
+
+        # IS-IS 10 (Level-2) Link State Database
+        # IS-IS 99 (Level-1) Link State Database
+        # IS-IS CORE (Level-1) Link State Database
+        p2 = re.compile(r'^IS-IS\s+(?P<process_id>\w+)\s+\(Level-(?P<level>\d+)\)\s+Link\s+State\s+Database$')
+
+        # P-9001-1.00-00 * 0x000003a8 0x4012 901 /* 0/0/0
+        # P-9001-1.05-00 0x00005acb 0xd1aa 1199 /* 0/0/0
+        # PE-9001-1.00-00 0x0000039f 0xa464 931 /1199 0/0/0
+        # XRv9k-PE1.00-00     * 0x0000141f   0xfc84        432             0/0/0
+        # AGG-PE-A.00-00        0x00001430   0x09c6        917             0/0/0
+        p3 = re.compile(r'^(?P<lspid>[A-Za-z\-0-9\.]+)\s+(?P<lsp_seq_num>[\w \*]+)\s+'
+                        r'(?P<lsp_checksum>\w+)\s+(?P<lsp_holdtime>\d+)\s+(?:\/'
+                        r'(?P<rcvd>[\d\*]+)\s+)?(?P<attach_bit>[\d]+)\/(?P<p_bit>[\d]+)\/(?P<overload_bit>[\d]+)$')
+
+        # Total Level-2 LSP count: 4 Local Level-2 LSP count: 1
+        p4 = re.compile(r'^Total\s+Level-(?P<total_level>\d+)\s+LSP\s+count:\s+(?P<total_lsp_count>\d+)\s+'
+                        r'Local\s+Level-(?P<local_level>\d+)\s+LSP\s+count:\s+(?P<local_lsp_count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # # No IS-IS 1 levels found
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('isis', {}). \
+                    setdefault(group['process_id'], {})
+                process_id_dict['process_id'] = group['process_id']
+                process_id_dict['routes_found'] = False
+                continue
+
+            # IS-IS 10 (Level-2) Link State Database
+            # IS-IS 99 (Level-1) Link State Database
+            # IS-IS CORE (Level-1) Link State Database
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('isis', {}). \
+                    setdefault(group['process_id'], {})
+                process_id_dict['process_id'] = group['process_id']
+                process_id_dict['routes_found'] = True
+                level_dict = process_id_dict.setdefault('level', {}). \
+                    setdefault(group['level'], {})
+                continue
+
+            # P-9001-1.00-00 * 0x000003a8 0x4012 901 /* 0/0/0
+            # P-9001-1.05-00 0x00005acb 0xd1aa 1199 /* 0/0/0
+            # PE-9001-1.00-00 0x0000039f 0xa464 931 /1199 0/0/0
+            # XRv9k-PE1.00-00     * 0x0000141f   0xfc84        432             0/0/0
+            # AGG-PE-A.00-00        0x00001430   0x09c6        917             0/0/0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lsp_id_dict = level_dict.setdefault('lspid', {}). \
+                    setdefault(group['lspid'], {})
+                lsp_id_dict['lspid'] = group['lspid']
+                lsp_id_dict['lsp_seq_num'] = group['lsp_seq_num']
+                lsp_id_dict['lsp_checksum'] = group['lsp_checksum']
+                lsp_id_dict['lsp_holdtime'] = group['lsp_holdtime']
+                if group['rcvd']:
+                    lsp_id_dict['rcvd'] = group['rcvd']
+                lsp_id_dict['attach_bit'] = int(group['attach_bit'])
+                lsp_id_dict['p_bit'] = int(group['p_bit'])
+                lsp_id_dict['overload_bit'] = int(group['overload_bit'])
+                continue
+
+            # Total Level-2 LSP count: 4 Local Level-2 LSP count: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict['total_level'] = int(group['total_level'])
+                level_dict['total_lsp_count'] = int(group['total_lsp_count'])
+                level_dict['local_level'] = int(group['local_level'])
+                level_dict['local_lsp_count'] = int(group['local_lsp_count'])
+                continue
+
+        return result_dict

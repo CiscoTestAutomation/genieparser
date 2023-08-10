@@ -308,6 +308,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_priority'): str,
                 Optional('authentication_timer_inactivity'): str,
                 Optional('authentication_timer_reauthenticate_server'): bool,
+                Optional('authentication_timer_reauthenticate'): int,
                 Optional('authentication_violation'): str,
                 Optional('trust_device'): str,
                 Optional('carrier_delay'): list,
@@ -318,8 +319,18 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('dot1x_timeout_quiet_period'): str,
                 Optional('dot1x_timeout_server_timeout'): str,
                 Optional('dot1x_timeout_tx_period'): str,
+                Optional('dot1x_pae'): str,
+                Optional('dot1x_timeout_supp_timeout'): int,
+                Optional('dot1x_max_req'): int,
+                Optional('dot1x_authenticator_eap_profile'): str,
+                Optional('dot1x_timeout_held_period'): int,
+                Optional('dot1x_credentials'): str,
+                Optional('dot1x_supplicant_eap_profile'): str,
                 Optional('ip_arp_inspection_limit_rate'): str,
                 Optional('ip_dhcp_snooping_limit_rate'): str,
+                Optional('access_session_host_mode'): str,
+                Optional('access_session'): str,
+                Optional('access_session_port_control'): str,
                 Optional('ip_ospf'): {
                     Any(): {
                         'area': str,
@@ -356,6 +367,12 @@ class ShowRunInterfaceSchema(MetaParser):
                 },
                 Optional('load_interval'): str,
                 Optional('mab'): bool,
+                Optional('macsec_enabled'): bool,
+                Optional('macsec_access_control'): str,
+                Optional('mtu'): int,
+                Optional('mka_policy'): str,
+                Optional('mka_primary_keychain'): str,
+                Optional('mka_fallback_keychain'): str,
                 Optional('negotiation_auto'): bool,
                 Optional('cdp'): str,
                 Optional('snmp_trap_link_status'): bool,
@@ -369,6 +386,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_trunk_vlans'): str,
                 Optional('keepalive'): bool,
                 Optional('switchport_mode'): str,
+                Optional('switchport_trunk_native_vlan'): int,
                 Optional('input_policy'): str,
                 Optional('output_policy'): str,
                 Optional('device_tracking_attach_policy'): str,
@@ -401,6 +419,10 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('flow_monitor_output'): str,
                 Optional('flow_monitor_input_v6'): str,
                 Optional('flow_monitor_output_v6'): str,
+                Optional('flow_monitor_in_sampler'): str,
+                Optional('flow_monitor_out_sampler'): str,
+                Optional('input_sampler'): str,
+                Optional('output_sampler'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -427,6 +449,16 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_dhcp_snooping_information_option_allow_untrusted'): bool,
                 Optional('speed'): int,
                 Optional('speed_nonegotiate'): bool,
+                Optional('isis'): {
+                    Optional('network'): str,
+                    Optional(Or('ipv4', 'ipv6')): {
+                        Optional('level'): {
+                            Optional(Or('level-1', 'level-2')): {
+                                Optional('metric'): int,
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -540,6 +572,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # authentication timer inactivity 65535
         p24_1 = re.compile(r'^authentication +timer +inactivity +(?P<inactivity>\d+)$')
+
+        # authentication timer reauthenticate 6000
+        p24_2 = re.compile(r'^authentication timer reauthenticate (?P<authentication_timer_reauthenticate>\d+)$')
 
         # authentication violation restrict
         p25 = re.compile(r'^authentication +violation +(?P<violation>[\S\s]+)$')
@@ -736,7 +771,75 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         
         # speed nonegotiate
         p88 = re.compile(r'^speed +(?P<speed_nonegotiate>nonegotiate)$')
+
+        # isis network point-to-point
+        p89 = re.compile(r'^isis +network +(?P<isis_network>\S+)$')
+
+        # isis metric 22 level-1
+        # isis metric 22 level-2
+        p90 = re.compile(r'^isis +metric +(?P<isis_v4_metric>\d+) +(?P<isis_v4_level>\S+)$')
+
+        # isis ipv6 metric 33 level-1
+        # isis ipv6 metric 22 level-2
+        p91 = re.compile(r'^isis +ipv6 +metric +(?P<isis_v6_metric>\d+) +(?P<isis_v6_level>\S+)$')
+
+        # switchport trunk native vlan 101
+        p92 = re.compile(r'^switchport trunk native vlan (?P<switchport_trunk_native_vlan>\d+)$')
+
+        # access-session host-mode multi-host
+        p93 = re.compile(r'^access-session host-mode (?P<access_session_host_mode>.+)$')
+
+        # access-session closed
+        p94 = re.compile(r'^access-session (?P<access_session>\w+)$')
+
+        # access-session port-control auto
+        p95 = re.compile(r'^access-session port-control (?P<access_session_port_control>.+)$')
+
+        # dot1x pae both
+        p96 = re.compile(r'^dot1x pae (?P<dot1x_pae>.+)$')
+
+        # dot1x timeout supp-timeout 87
+        p97 = re.compile(r'^dot1x timeout supp-timeout (?P<dot1x_timeout_supp_timeout>\d+)$')
+
+        # dot1x max-req 6
+        p98 = re.compile(r'^dot1x max-req (?P<dot1x_max_req>\d+)$')
+
+        # dot1x authenticator eap profile Self
+        p99 = re.compile(r'^dot1x authenticator eap profile (?P<dot1x_authenticator_eap_profile>.+)$')
+
+        # dot1x timeout held-period 63
+        p100 = re.compile(r'^dot1x timeout held-period (?P<dot1x_timeout_held_period>\d+)$')
+
+        # dot1x credentials EAPTLSCRED-IOSCA
+        p101 = re.compile(r'^dot1x credentials (?P<dot1x_credentials>.+)$')
+
+        # dot1x supplicant eap profile Self
+        p102 = re.compile(r'^dot1x supplicant eap profile (?P<dot1x_supplicant_eap_profile>.+)$')
+
+        # macsec
+        p103 = re.compile(r'^\s*macsec$')
+
+        # macsec access-control should-secure
+        p104 = re.compile(r'^\s*macsec access-control +(?P<macsec_access_control>[\w\-]+)')
+
+        #  mka policy MKAPolicy
+        p105 = re.compile(r'^\s*mka policy +(?P<mka_policy>\S+)')
         
+        # mka pre-shared-key key-chain KCP256
+        p106 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+)$')
+
+        # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+        p107 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+) fallback-key-chain +(?P<mka_fallback_keychain>\S+)')
+
+        # ip mtu 1468
+        p108 = re.compile(r'^\s*ip mtu (?P<mtu>\d+)')
+        
+        # ip flow monitor m4in sampler fnf_sampler input
+        p109 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_in_sampler>[\w]+) +sampler +(?P<input_sampler>[\w]+) +input$')
+
+        #  ip flow monitor m4out sampler fnf_sampler output
+        p110 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_out_sampler>[\w]+) +sampler +(?P<output_sampler>[\w]+) +output$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -929,6 +1032,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update(
                     {'authentication_timer_inactivity': group['inactivity']})
+                continue
+            
+            # authentication timer reauthenticate 6000
+            m = p24_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'authentication_timer_reauthenticate': int(group['authentication_timer_reauthenticate'])})
                 continue
 
             # authentication violation restrict
@@ -1449,8 +1560,178 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'speed_nonegotiate': True})
                 continue    
 
+            # isis network point-to-point
+            m = p89.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('network', group['isis_network'])
+                continue
+            
+            # isis metric 22 level-1
+            # isis metric 22 level-2
+            m = p90.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('ipv4', {}).setdefault('level', {}).setdefault(group['isis_v4_level'], {}).setdefault('metric', int(group['isis_v4_metric']))
+                continue
+
+            # isis ipv6 metric 33 level-1
+            # isis ipv6 metric 22 level-2
+            m = p91.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('isis', {}).setdefault('ipv6', {}).setdefault('level', {}).setdefault(group['isis_v6_level'], {}).setdefault('metric', int(group['isis_v6_metric']))
+                continue
+
+            # switchport trunk native vlan 101
+            m = p92.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['switchport_trunk_native_vlan'] = int(m.groupdict()['switchport_trunk_native_vlan'])
+                continue
+
+            # access-session host-mode multi-host
+            m = p93.match(line)
+            if m:
+                intf_dict['access_session_host_mode'] = m.groupdict()['access_session_host_mode']
+                continue
+
+            # access-session closed
+            m = p94.match(line)
+            if m:
+                intf_dict['access_session'] = m.groupdict()['access_session']
+                continue
+
+            # access-session port-control auto
+            m = p95.match(line)
+            if m:
+                intf_dict['access_session_port_control'] = m.groupdict()['access_session_port_control']
+                continue
+
+            # dot1x pae both
+            m = p96.match(line)
+            if m:
+                intf_dict['dot1x_pae'] = m.groupdict()['dot1x_pae']
+                continue
+
+            # dot1x timeout supp-timeout 87
+            m = p97.match(line)
+            if m:
+                intf_dict['dot1x_timeout_supp_timeout'] = int(m.groupdict()['dot1x_timeout_supp_timeout'])
+                continue
+
+            # dot1x max-req 6
+            m = p98.match(line)
+            if m:
+                intf_dict['dot1x_max_req'] = int(m.groupdict()['dot1x_max_req'])
+                continue
+
+            # dot1x authenticator eap profile Self
+            m = p99.match(line)
+            if m:
+                intf_dict['dot1x_authenticator_eap_profile'] = m.groupdict()['dot1x_authenticator_eap_profile']
+                continue
+
+            # dot1x timeout held-period 63
+            m = p100.match(line)
+            if m:
+                intf_dict['dot1x_timeout_held_period'] = int(m.groupdict()['dot1x_timeout_held_period'])
+                continue
+
+            # dot1x credentials EAPTLSCRED-IOSCA
+            m = p101.match(line)
+            if m:
+                intf_dict['dot1x_credentials'] = m.groupdict()['dot1x_credentials']
+                continue
+
+            # dot1x supplicant eap profile Self
+            m = p102.match(line)
+            if m:
+                intf_dict['dot1x_supplicant_eap_profile'] = m.groupdict()['dot1x_supplicant_eap_profile']
+                continue
+
+            # macsec
+            m = p103.match(line)
+            if m:
+                intf_dict.update({'macsec_enabled': True})
+                continue
+
+            # macsec access-control should-secure
+            m = p104.match(line)
+            if m:
+                intf_dict['macsec_access_control'] = m.groupdict()['macsec_access_control']
+                continue
+    
+            # mka policy MKAPolicy
+            m = p105.match(line)
+            if m:
+                intf_dict['mka_policy'] = m.groupdict()['mka_policy']
+                continue
+
+            # mka pre-shared-key key-chain KCP256
+            m = p106.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                continue
+
+            # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+            m = p107.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                intf_dict['mka_fallback_keychain'] = m.groupdict()['mka_fallback_keychain']
+                continue
+
+            # ip mtu 1468
+            m = p108.match(line)
+            if m:
+                intf_dict['mtu'] = int(m.groupdict()['mtu'])
+                continue
+            
+            # ip flow monitor m4in sampler fnf_sampler input
+            m = p109.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'flow_monitor_in_sampler':
+                        group['flow_monitor_in_sampler']})
+                intf_dict.update(
+                    {'input_sampler': group['input_sampler']})
+                continue
+
+            # ip flow monitor m4out sampler fnf_sampler output
+            m = p110.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                        {'flow_monitor_out_sampler':
+                            group['flow_monitor_out_sampler']})
+                intf_dict.update(
+                        {'output_sampler': group['output_sampler']})
+                continue
+
         return config_dict
 
+
+# ==============
+# Parser for:
+#  * 'show running-config all | section ^interface'
+# =================
+class ShowRunInterfaceAllSectionInterface(ShowRunInterface,
+                          ShowRunInterfaceSchema):
+    '''Parser for show running-config all | section ^interface'''
+
+    cli_command = 'show running-config all | section ^interface'
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command.format()
+
+            show_output = self.device.execute(cmd)
+
+        else:
+            show_output = output
+
+        return super().cli(output=show_output)
 
 # =================
 # Schema for:
@@ -1859,6 +2140,12 @@ class ShowRunAllSectionInterfaceSchema(MetaParser):
                 Optional('load_interval'): int,
                 Optional('negotiation_auto'): bool,
                 Optional('macsec_replay_protection'): bool,
+                Optional('macsec_enabled'): bool,
+                Optional('macsec_access_control'): str,
+                Optional('mtu'): int,
+                Optional('mka_policy'): str,
+                Optional('mka_primary_keychain'): str,
+                Optional('mka_fallback_keychain'): str,
                 Optional('cdp_log_mismatch_duplex'): bool,
                 Optional('cdp_tlv_location'): bool,
                 Optional('cdp_tlv_server_location'): bool,
@@ -2021,6 +2308,24 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
         
         # no ip dhcp snooping information option allow-untrusted
         p40 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
+
+        # macsec
+        p41 = re.compile(r'^\s*macsec$')
+
+        # macsec access-control should-secure
+        p42 = re.compile(r'^\s*macsec access-control +(?P<macsec_access_control>[\w\-]+)')
+
+        #  mka policy MKAPolicy
+        p43 = re.compile(r'^\s*mka policy +(?P<mka_policy>\S+)')
+        
+        # mka pre-shared-key key-chain KCP256
+        p44 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+)$')
+
+        # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+        p45 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+) fallback-key-chain +(?P<mka_fallback_keychain>\S+)')
+
+        # ip mtu 1468
+        p46 = re.compile(r'^\s*ip mtu (?P<mtu>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2303,6 +2608,43 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
+                continue
+
+            # macsec
+            m = p41.match(line)
+            if m:
+                intf_dict.update({'macsec_enabled': True})
+                continue
+
+            # macsec access-control should-secure
+            m = p42.match(line)
+            if m:
+                intf_dict['macsec_access_control'] = m.groupdict()['macsec_access_control']
+                continue
+    
+            # mka policy MKAPolicy
+            m = p43.match(line)
+            if m:
+                intf_dict['mka_policy'] = m.groupdict()['mka_policy']
+                continue
+
+            # mka pre-shared-key key-chain KCP256
+            m = p44.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                continue
+
+            # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+            m = p45.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                intf_dict['mka_fallback_keychain'] = m.groupdict()['mka_fallback_keychain']
+                continue
+
+            # ip mtu 1468
+            m = p46.match(line)
+            if m:
+                intf_dict['mtu'] = int(m.groupdict()['mtu'])
                 continue
 
         return config_dict
@@ -2907,6 +3249,8 @@ class ShowRunningConfigNveSchema(MetaParser):
                 'time_limit': int,
             },
             Optional('id_auto_rt'): str,
+            Optional('learn_ip_addr'): bool,
+            Optional('arp_ndp_suppression'): bool,
         },
         Optional('l2vpn_evi'): {
             Any(): {
@@ -2988,10 +3332,14 @@ class ShowRunningConfigNveSchema(MetaParser):
                 Optional('ip_addr_state'): str,
                 Optional('host_reachability_protocol'): str,
                 Optional('source_interface'): str,
+                Optional('vxlan_encapsulation'): {
+                    Optional('encapsulation_type'): str,
+                },
                 Optional('vni'): {
                     Optional('l2vni'): {
                         Any(): {
                             Optional('replication_mcast'): str,
+                            Optional('replication_mcast_ipv6'): str,
                             Optional('replication_type'): str,
                         },
                     },
@@ -3120,6 +3468,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         # route-target export 100:1 stitching
         p1_13 = re.compile(r'^route\-target +(?P<type>import|export|both) +(?P<rt>[\d:]+)(\s+(?P<stitch>stitching))?$')
 
+        # flooding-suppression address-resolution disable
+        p1_14 = re.compile(r'^flooding\-suppression address\-resolution disable$')
+
         # vlan configuration 200
         p2_0 = re.compile(r'^vlan configuration +(?P<vlan_id>\d+)$')
 
@@ -3138,11 +3489,17 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   source-interface loopback1
         p3_3 = re.compile(r'^source\-interface +(?P<source_if>\w+)$')
 
+        #   vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+        #   vxlan encapsulation ipv6
+        p3_3_1 = re.compile(r'^vxlan encapsulation +(?P<type>dual-stack|ipv6|ipv4)(.*)?$')
+
         #   member vni 5000 vrf green
         #   member vni 6000 ingress-replication
         #   member vni 10000 mcast-group 227.0.0.1
         #   member evpn-instance 1 vni 6000
-        p3_4 = re.compile(r'^member +(evpn\-instance +(?P<evi>\d+) )?vni (?P<vni>[\d\-]+)( +vrf\s+(?P<vrf>\w+))?( +(?P<type>ingress\-replication|mcast\-group\s+(?P<mcast_group>[\d.]+)))?$')
+        #   member vni 10101 mcast-group 225.0.0.101 FF0E:225::101
+        #   member vni 10101 mcast-group FF0E:225::101
+        p3_4 = re.compile(r'^member +(evpn\-instance +(?P<evi>\d+) )?vni (?P<vni>[\d\-]+)( +vrf\s+(?P<vrf>\w+))?( +(?P<type>ingress\-replication|mcast\-group\s+(?P<mcast_group>([\d.]+))?(\s+)?(?P<mcast_group_ipv6>[\da-fA-F:]+)?))?$')
 
         # no shutdown
         p3_5 = re.compile(r'^no +shutdown$')
@@ -3215,7 +3572,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   address-family l2vpn evpn
         #   address-family ipv4
         #   address-family ipv4 vrf green
-        p4_8 = re.compile(r'^address\-family +(?P<family_name>l2vpn evpn|ipv4|ipv6)(\s+vrf +(?P<vrf_name>\S+))?$')
+        #   address-family ipv4 mvpn
+        #   address-family ipv6 mvpn
+        p4_8 = re.compile(r'^address\-family +(?P<family_name>l2vpn evpn|ipv4|ipv6|ipv4 mvpn|ipv6 mvpn)(\s+vrf +(?P<vrf_name>\S+))?$')
 
         #   bgp additional-paths select all
         p4_9 = re.compile(r'^bgp +additional\-paths +select +all$')
@@ -3224,18 +3583,22 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         p4_10 = re.compile(r'^bgp +additional\-paths +(?P<option>send|receive|send receive)$')
 
         #   neighbor 10.5.5.50 activate
-        p4_11 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +activate$')
+        #   neighbor FD00:172:16:255::1 activate
+        p4_11 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +activate$')
 
         #   neighbor 10.5.5.50 send-community both
-        p4_12 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +send\-community +(?P<community_attr>both|extended|standard)$')
+        #   neighbor FD00:172:16:255::1 send-community extended
+        p4_12 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +send\-community +(?P<community_attr>both|extended|standard)$')
 
         #   neighbor 10.5.5.50 additional-paths send
-        p4_13 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +additional\-paths +(?P<option>send|receive|send receive)$')
+        #   neighbor FD00:172:16:255::1 additional-paths send
+        p4_13 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +additional\-paths +(?P<option>send|receive|send receive)$')
 
         #   neighbor 10.5.5.50 advertise additional-paths best 2
         #   neighbor 10.5.5.50 advertise additional-paths group-best
         #   neighbor 10.5.5.50 advertise additional-paths all group-best
-        p4_14 = re.compile(r'^neighbor +(?P<ip>[\d.]+) +advertise +additional\-paths +(?P<option>.*)$')
+        #   neighbor FD00:172:16:255::1 advertise additional-paths best 2
+        p4_14 = re.compile(r'^neighbor +(?P<ip>([\d.]+|[a-fA-F\d\:]+)) +advertise +additional\-paths +(?P<option>.*)$')
 
         #   advertise l2vpn evpn
         p4_15 = re.compile(r'^advertise +l2vpn +evpn$')
@@ -3366,15 +3729,27 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     group = m.groupdict()
                     if group['learn_ip_addr'] =='enable':
-                        l2vpn_evi_dict.update({'learn_ip_addr': True})
+                        value = True
                     elif group['learn_ip_addr'] =='disable':
-                        l2vpn_evi_dict.update({'learn_ip_addr': False})
+                        value = False
+
+                    if l2vpn_global_flag:
+                        l2vpn_global_dict.update({'learn_ip_addr': value})
+                    elif l2vpn_evi_flag:
+                        l2vpn_evi_dict.update({'learn_ip_addr': value})
+                        
                     continue
 
                 # no auto-route-target
                 m = p1_11.match(line)
                 if m:
                     l2vpn_evi_dict.update({'autogenerate_route_target': False})
+                    continue
+                
+                # flooding-suppression address-resolution disable
+                m = p1_14.match(line)
+                if m:
+                    l2vpn_global_dict.update({'arp_ndp_suppression': False})
                     continue
 
             # vlan configuration 200
@@ -3414,6 +3789,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         if_name = m.groupdict().pop('if_name')
                         intf_flag=True
                         if_dict = if_others_dict.setdefault('interfaces', {}).setdefault(if_name, {})
+
                 else:
                     if_name = m.groupdict().pop('if_name')
                     svis = ''           # shares same key field
@@ -3456,12 +3832,21 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     current_dict.update({'source_interface': m.groupdict()['source_if']})
                     continue
 
+                #   vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+                #   vxlan encapsulation ipv6
+                m = p3_3_1.match(line)
+                if m:
+                    current_dict = current_dict.setdefault('vxlan_encapsulation', {}).setdefault(
+                        'encapsulation_type', m.groupdict()['type'])
+                    continue
+
                 # no shutdown
                 m = p3_5.match(line)
                 if m:
                     current_dict['shutdown'] = False
                     continue
                 if nve_flag == False:
+                    
                     #   vrf forwarding green
                     m = p3_7.match(line)
                     if m:
@@ -3473,6 +3858,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             if_others_dict['interfaces'].pop(if_name)
                             if_name = ''    # tranferred from interfaces to overlay_interfaces
                         continue
+
                     #   ip address 192.168.1.201 255.255.255.0
                     #   ip address 192.168.1.202 255.255.255.0 secondary
                     m = p3_8.match(line)
@@ -3483,7 +3869,6 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                             current_dict.setdefault('secondary_ip_address', []).append(ip_addr)
                         else:
                             current_dict['ipv4'] = ip_addr
-
                         continue
 
                     #   ipv6 address 2001:DB8:201::201/64
@@ -3493,31 +3878,37 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                         ipv6_addr = group['ipv6']+group['mask']
                         current_dict.setdefault('ipv6', []).append(ipv6_addr)
                         continue
+
                     #   ipv6 enable
                     m = p3_10.match(line)
                     if m:
                         current_dict['ipv6_enable'] = True
                         continue
+
                     #   mac-address aabb.cc01.f100
                     m = p3_11.match(line)
                     if m:
                         current_dict['mac_addr'] = m.groupdict()['mac']
                         continue
+
                     #   ip unnumbered Loopback0
                     m = p3_12.match(line)
                     if m:
                         current_dict['unnumbered_interface'] = m.groupdict()['if_loopback']
                         continue
+
                     #   no autostate
                     m = p3_13.match(line)
                     if m:
                         current_dict['autostate'] = False
                         continue
+
                     #   ip pim sparse-mode
                     m = p3_14.match(line)
                     if m:
                         current_dict['pim_enable'] = True
                         continue
+
                     #   private-vlan mapping 222-224
                     #   private-vlan mapping add 303-307,309,440
                     m = p3_15.match(line)
@@ -3567,6 +3958,8 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 #   member vni 6000 ingress-replication
                 #   member vni 10000 mcast-group 227.0.0.1
                 #   member evpn-instance 1 vni 6000
+                #   member vni 10101 mcast-group 225.0.0.101 FF0E:225::101
+                #   member vni 10101 mcast-group FF0E:225::101
                 m = p3_4.match(line)
                 if m:
                     group = m.groupdict()
@@ -3596,7 +3989,11 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     if group['type']:
                         repl_type = group['type'].split(' ')
                         if repl_type[0] == 'mcast-group':
-                            current_dict.update({'replication_type': 'static', 'replication_mcast': repl_type[1]})
+                            current_dict.update({'replication_type': 'static'})
+                            if group['mcast_group']:
+                                current_dict.update({'replication_mcast': group['mcast_group']})
+                            if group['mcast_group_ipv6']:
+                                current_dict.update({'replication_mcast_ipv6': group['mcast_group_ipv6']})
                         elif repl_type[0] == 'ingress-replication':
                             current_dict.update({'replication_type': repl_type[0]})
                     continue
@@ -3758,9 +4155,12 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     continue
 
             if bgp_asn or vrf_defn:
+
                 #   address-family l2vpn evpn
                 #   address-family ipv4
                 #   address-family ipv4 vrf green
+                #   address-family ipv4 mvpn
+                #   address-family ipv6 mvpn
                 m = p4_8.match(line)
                 if m:
                     group = m.groupdict()
@@ -3806,6 +4206,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 # route-target export 1:201
                 # route-target both 65000:100
                 # route-target export 100:1 stitching
+
                 m = p1_13.match(line)
                 if m:
                     if l2vpn:
@@ -4131,5 +4532,153 @@ class ShowRunSectionBgp(ShowRunSectionBgpSchema):
                 if m:
                     af_dict.update({'default_info_originate': True})
                     continue
+
+        return ret_dict
+
+# =================================================
+# Schema for:
+#   * 'show running-config | section vrf definition'
+# ==================================================
+
+class ShowRunSectionVrfDefinitionSchema(MetaParser):
+    """Schema for show running-config | section vrf definition"""
+
+    schema = {
+        Optional('vrf'): {
+            Any(): {
+                Optional('rd'): str,
+                Optional('address_family'): {
+                    str: {
+                        Optional('route_target'): ListOf({
+                            'rt': str,
+                            'type': str,
+                            Optional('stitching'): bool,
+                        })
+                    },
+                },
+            },
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#   * 'show running-config | section vrf definition'
+# ===================================
+
+class ShowRunSectionVrfDefinition(ShowRunSectionVrfDefinitionSchema):
+    """Parser for show running-config | section vrf definition"""
+
+    cli_command = 'show running-config | section vrf definition'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # vrf definition ce1
+        p0 = re.compile(r'^vrf +definition +(?P<vrf>\S+)$')
+
+        #  rd 2:2
+        p1 = re.compile(r'^rd +(?P<rd>[\d:]+)$')
+
+        #   address-family ipv4
+        #   address-family ipv4 unicast
+        p2 = re.compile(r'^address\-family +(?P<af>ipv4|ipv6|ipv4 unicast|ipv4 multicast|ipv6 unicast|ipv6 multicast)$')
+
+        # route-target import 3:201
+        # route-target export 1:201
+        # route-target both 65000:100
+        # route-target export 100:1 stitching
+        p3 = re.compile(r'^route\-target +(?P<type>import|export|both) +(?P<rt>[\d:]+)(\s+(?P<stitch>stitching))?$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vrf definition ce1
+            m = p0.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                continue
+
+            #  rd 2:2
+            m = p1.match(line)
+            if m:
+                rd = m.groupdict()['rd']
+                vrf_dict.setdefault('rd', rd)
+                continue
+
+            #   address-family ipv4
+            #   address-family ipv4 unicast
+            m = p2.match(line)
+            if m:
+                af = m.groupdict()['af']
+                af_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})
+                continue
+
+            # route-target import 3:201
+            # route-target export 1:201
+            # route-target both 65000:100
+            # route-target export 100:1 stitching
+            m = p3.match(line)
+            if m:
+                rt_type = m.groupdict()['type']
+                rt = m.groupdict()['rt']
+                stitch = m.groupdict()['stitch']
+                rt_list = af_dict.setdefault('route_target', [])
+                if stitch:
+                    rt_list.append({'rt': rt, 'type': rt_type, 'stitching': True})
+                else:
+                    rt_list.append({'rt': rt, 'type': rt_type})
+                continue
+
+        return ret_dict
+
+# =================================================
+# Schema for:
+#   * 'show running-config | section mac address'
+# ==================================================
+
+class ShowRunSectionMacAddressSchema(MetaParser):
+    """Schema for show running-config | section mac address"""
+
+    schema = {
+                'vlan': int,
+                'mac_address': str,
+                'type': str,
+                'port': str,
+            }
+
+# ===================================
+# Parser for:
+#   * 'show running-config | section mac address'
+# ===================================
+
+class ShowRunSectionMacAddress(ShowRunSectionMacAddressSchema):
+    """Parser for show running-config | section mac address"""
+
+    cli_command = 'show running-config | section mac address'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # mac address-table static 0075.c3e4.b824 vlan 1000 drop
+        p0 = re.compile(r'^mac +address-table +(?P<type>[\w]+)\s+(?P<mac_address>[\w\d\.]+)\s+vlan+\s(?P<vlan>[\d]+)\s+(?P<port>[\w]+)$')
+        for line in output.splitlines():
+            line = line.strip()
+
+            # mac address-table static 0075.c3e4.b824 vlan 1000 drop
+            m = p0.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['vlan'] = int(dict_val['vlan'])
+                ret_dict['mac_address'] = dict_val['mac_address']
+                ret_dict['type'] = dict_val['type']
+                ret_dict['port'] = dict_val['port']
 
         return ret_dict

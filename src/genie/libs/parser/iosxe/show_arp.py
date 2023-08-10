@@ -14,6 +14,7 @@ IOSXE parsers for the following show commands:
 '''
 
 # Python
+from ast import Or
 import re
 
 # Metaparser
@@ -55,7 +56,8 @@ class ShowArpSchema(MetaParser):
                             'origin': str,
                             'age': str,
                             'type': str,
-                            'protocol': str
+                            'protocol': str,
+                            Optional('private_vlan'): int
                         },
                     }
                 }
@@ -91,8 +93,10 @@ class ShowArp(ShowArpSchema):
         # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
         # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
         # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
+        # Internet 192.168.1.203 3 0015.0100.0001 ARPA Vlan201 pv 203
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
-                         '(?P<mac>[\w\.]+) +(?P<type>[\w\.]+)( +(?P<interface>[\w\.\/\-]+))?$')
+                         r'(?P<mac>[\w\.]+) +(?P<type>[\w\.]+)'
+                         r'( +(?P<interface>[\w\.\/\-]+)(\s+pv\s+(?P<private_vlan>\d+))?)?$')
         # initial variables
         ret_dict = {}
 
@@ -102,6 +106,7 @@ class ShowArp(ShowArpSchema):
             # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
             # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
             # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
+            # Internet 192.168.1.203 3 0015.0100.0001 ARPA Vlan201 pv 203
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -119,6 +124,8 @@ class ShowArp(ShowArpSchema):
                         final_dict['origin'] = 'static'
                     else:
                         final_dict['origin'] = 'dynamic'
+                    if group['private_vlan']:
+                        final_dict['private_vlan'] = int(group['private_vlan'])
                 else:
                     final_dict = ret_dict.setdefault(
                         'global_static_table', {}).setdefault(address, {})
@@ -1671,7 +1678,7 @@ class ShowIpArpInspectionLogSchema(MetaParser):
     schema = {
         'buffer_size': int,
         'syslog_rate': str,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'interface': str,
                 'vlan_id': int,

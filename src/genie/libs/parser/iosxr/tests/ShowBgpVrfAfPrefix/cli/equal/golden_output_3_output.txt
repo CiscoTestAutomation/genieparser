@@ -1,0 +1,30 @@
+show bgp vpnv4 unicast vrf VRF_1 200.1.1.0/24
+Wed Apr  5 00:31:11.195 UTC
+BGP routing table entry for 200.1.1.0/24, Route Distinguisher: 50.1.1.4:0
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                 49          49
+Last Modified: Apr  4 10:33:32.365 for 13:57:38
+Paths: (2 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  Local
+    50.1.1.1 (metric 65538) from 50.1.1.8 (50.1.1.1)
+      Received Label 24017 
+      Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+      Received Path ID 0, Local Path ID 0, version 41
+      Extended community: RT:100:1001 
+      Originator: 50.1.1.1, Cluster list: 50.1.1.8
+      Source AFI: VPNv4 Unicast, Source VRF: default, Source Route Distinguisher: 50.1.1.1:0
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  Local
+    50.1.1.5 (metric 65538) from 50.1.1.8 (50.1.1.5)
+      Received Label 24021 
+      Origin incomplete, metric 0, localpref 100, valid, internal, backup, add-path, import-candidate, imported
+      Received Path ID 0, Local Path ID 1, version 49
+      Extended community: VRF Route Import:50.1.1.5:17 Source AS:100:0 RT:100:1001 
+      Originator: 50.1.1.5, Cluster list: 50.1.1.8
+      Connector: type: 1, Value:50.1.1.5:0:50.1.1.5
+      Source AFI: VPNv4 Unicast, Source VRF: default, Source Route Distinguisher: 50.1.1.5:0

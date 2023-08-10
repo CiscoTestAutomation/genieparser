@@ -1,0 +1,1 @@
+mac address-table static 0075.c3e4.b824 vlan 1000 drop

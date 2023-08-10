@@ -1,0 +1,6 @@
+CISP Status for interface Te1/0/11
+-------------------------------------
+Version:  1
+Mode:  Authenticator
+Peer Mode:  Supplicant
+Auth State:   Idle

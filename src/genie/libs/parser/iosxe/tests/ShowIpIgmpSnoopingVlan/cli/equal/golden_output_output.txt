@@ -1,0 +1,23 @@
+Global IGMP Snooping configuration:
+-------------------------------------------
+IGMP snooping                : Enabled
+Global PIM Snooping          : Disabled
+IGMPv3 snooping              : Enabled
+Report suppression           : Enabled
+TCN solicit query            : Disabled
+TCN flood query count        : 2
+Robustness variable          : 2
+Last member query count      : 2
+Last member query interval   : 1000
+
+Vlan 777:
+--------
+IGMP snooping                       : Enabled
+Pim Snooping                        : Disabled
+IGMPv2 immediate leave              : Disabled
+Explicit host tracking              : Enabled
+Multicast router learning mode      : pim-dvmrp
+CGMP interoperability mode          : IGMP_ONLY
+Robustness variable                 : 2
+Last member query count             : 2
+Last member query interval          : 1000

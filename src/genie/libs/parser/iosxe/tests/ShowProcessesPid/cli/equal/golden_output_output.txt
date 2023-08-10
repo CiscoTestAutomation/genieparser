@@ -1,0 +1,9 @@
+Process ID 3 [PKI Trustpool], TTY 0
+Memory usage [in bytes]
+  Holding: 49864, Maximum: 0, Allocated: 0, Freed: 0
+  Getbufs: 0, Retbufs: 0, Stack: 46664/48000
+CPU usage
+  PC: 56443ECCBCC5, Invoked: 1, Giveups: 0, uSec: 0
+  5Sec: 0.00%, 1Min: 0.00%, 5Min: 0.00%, Average: 0.00%
+  Age: 8382013609 msec, Runtime: 0 msec
+  State: Waiting for Event, Priority: Normal

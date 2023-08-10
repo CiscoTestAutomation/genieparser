@@ -1,0 +1,8 @@
+AutoRP Information: 
+  AutoRP is enabled.
+  RP Discovery packet MTU is 1496.
+  224.0.1.40 is joined on Te0/1/2.2.
+  AutoRP groups over sparse mode interface is enabled
+
+PIM AutoRP Statistics: Sent/Received
+  RP Announce: 0/2546, RP Discovery: 5840/20424

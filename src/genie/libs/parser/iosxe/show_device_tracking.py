@@ -356,6 +356,9 @@ class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
             Optional("reachable"): int,
             Optional("stale"): int,
             Optional("down"): int,
+            Optional("incomplete"): int,
+            Optional("creating"): int,
+            Optional("tentative"): int,
             "total": int,
         },
         "device": {
@@ -418,7 +421,10 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  REACHABLE  : 1
         #  STALE      : 2
         #  DOWN       : 1
-        #    total    : 4
+        #  INCOMPLETE : 1
+        #  CREATING   : 1
+        #  TENTATIVE  : 1 
+        #    total    : 6
         binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
 
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
@@ -429,11 +435,14 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
         # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
         # DH4 10.0.0.2                                 000b.000c.000d(D)      Gi1/0/1    access     100 ( 100)      0024       45mn       STALE      221 s(7177 s)    no         yes          000b.000c.000d
+        # DH4 110.0.0.3                                0001.0003.0002(R)      Gi1/0/23   access     110 ( 110)      0024       3mn        REACHABLE  12 s try 0(6722 s) no         yes          0001.0003.0002     (unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)
         device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
                                          r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
                                          r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
-                                         r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss)|(\d+\s+s\(\d+\s+s\)))?'
+                                         r'\s+(?P<state>(\S+))\s+'
+                                         r'(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|'
+                                         r'(\d+\ss)|(\d+\s+s\(\d+\s+s\))|(\d+\s+s\s+try\s+\d+\(\d+\s+s\)))?'         
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
                                          r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
 
@@ -1091,6 +1100,7 @@ class ShowDeviceTrackingCountersVlanSchema(MetaParser):
                         "protocol": str,
                         "message": str,
                         "dropped": int,
+                        Optional("reason"): str
                     },
                 },
                 "faults": list,
@@ -1164,11 +1174,15 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
 
         # Device-tracking:    NDP      NS  [10]
         # Flooding Suppress:  NDP      NS  [36]
+        # Routing Proxy:      NDP      REDIR[1]
         dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
-                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+                                          r'\s+(?P<message>(\S+))\s*\[(?P<dropped>(\d+))\]$')
 
         #   DHCPv6_REQUEST_NAK[1]
         fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
+
+        # reason:  Message unauthorized on port [3]
+        reason_info = re.compile(r'^reason:\s+(?P<reason>.+)\s+\[\d+\]$')
 
         capture_list = [
             ndp_info,
@@ -1242,7 +1256,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                     groups = match.groupdict()
                     if capture == dropped_message_info:
                         feature = groups['feature']
-                        dropped_dict.setdefault(feature, {})
+                        dropped_dict_feature = dropped_dict.setdefault(feature, {})
                         del groups['feature']
 
                         for key, value in groups.items():
@@ -1270,6 +1284,12 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                                 packet = packet_groups['packet']
                                 num = packet_groups['num']
                                 packet_dict[packet] = int(num)
+
+            # reason:  Message unauthorized on port [3]
+            match = reason_info.match(line)
+            if match:
+                dropped_dict_feature['reason'] = match.groupdict()['reason']
+                continue
 
         return device_tracking_counters_vlanid_dict
 
@@ -1744,6 +1764,7 @@ class ShowDeviceTrackingCountersInterfaceSchema(MetaParser):
                                 "protocol": str,
                                 "message": str,
                                 "dropped": int,
+                                Optional("reason"): str
                             },
                         },
                     },
@@ -1817,6 +1838,9 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
 
         # DHCPv6_REBIND_NAK[3]
         p12 = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
+
+        # reason:  Message unauthorized on port [3]
+        p13 = re.compile(r'^reason:\s+(?P<reason>.+)\s+\[\d+\]$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1921,6 +1945,12 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
                 groups = m.groupdict()
                 message = groups['fault']
                 faults_list.append(message)
+                continue
+
+            # reason:  Message unauthorized on port [3]
+            m = p13.match(line)
+            if m:
+                feature_dict['reason'] = m.groupdict()['reason']
                 continue
 
         return device_tracking_counters_interface_dict

@@ -10,6 +10,12 @@ IOSXE parser for the following show command
     * show cable rpd {tengig_core_interface} ipv6
     * show cable rpd slot {lc_slot_number}  ipv6
     * show cable rpd {rpd_mac_or_ip} spectrum-capture-capabilities
+    * show cable modem
+    * show cable modem {cm_ipv4_or_ipv6_or_mac}
+    * show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}
+    * show cable modem rpd id {rpd_mac}
+    * show cable modem rpd name {rpd_name}
+    * show cable modem cable {cable_interface}
 '''
 
 # Python
@@ -624,4 +630,285 @@ class ShowCableRpdSpectrumCaptureCapabilities(ShowCableRpdSpectrumCaptureCapabil
                 ret_dict['min_scanning_repeat_period_in_ms'] = int(m.groupdict()['min_scanning_repeat_period_in_ms'])
                 continue
 
+        return ret_dict
+
+
+# =================================================
+# Schema for:
+# * show cable modem
+# * show cable modem {cm_ipv4_or_ipv6_or_mac}
+# * show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}
+# * show cable modem rpd id {rpd_mac}
+# * show cable modem rpd name {rpd_name}
+# * show cable modem cable {cable_interface}
+# ==================================================
+
+class ShowCableModemSchema(MetaParser):
+    """ Schema for
+        "show cable modem"
+        "show cable modem {cm_ipv4_or_ipv6_or_mac}"
+        "show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}"
+        "show cable modem rpd id {rpd_mac}"
+        "show cable modem rpd name {rpd_name}"
+        "show cable modem cable {cable_interface}"
+    """
+
+    schema = {
+        'mac_address': {
+            Any(): {
+                'ipv4_address': str,
+                'interface': str,
+                'mac_state': str,
+                'primary_sid': str,
+                'rx_power': str,
+                'timing_offset': str,
+                'num_cpe': str,
+                'dip': str,
+                Optional('dev_class'): str,
+
+            }
+        }
+    }
+
+
+# ========================================
+# Parser for
+# * show cable modem
+# * show cable modem {cm_ipv4_or_ipv6_or_mac}
+# * show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}
+# * show cable modem rpd id {rpd_mac}
+# * show cable modem rpd name {rpd_name}
+# * show cable modem cable {cable_interface}
+# ========================================
+
+class ShowCableModem(ShowCableModemSchema):
+    """
+    Parser for
+        "show cable modem"
+        "show cable modem {cm_ipv4_or_ipv6_or_mac}"
+    """
+
+    cli_command = ['show cable modem',
+                   'show cable modem {cm_ipv4_or_ipv6_or_mac}']
+
+    def cli(self, cm_ipv4_or_ipv6_or_mac='', output=None):
+        if output is None:
+            if cm_ipv4_or_ipv6_or_mac:
+                cmd = self.cli_command[1].format(cm_ipv4_or_ipv6_or_mac=cm_ipv4_or_ipv6_or_mac)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N
+        p1 = re.compile(r'^(?P<cm_mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+                        r'(?P<ip_address>-{3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<interface>C\d(\/\d{1,2}){2}\/UB)\s+(?P<state>(\S)+)\s+'
+                        r'(?P<sid>(\d)+)\s+(?P<rx_power>(\S)+)\s+(?P<timing_offset>(\S)+)\s+'
+                        r'(?P<num_cpe>(\d){1,5})\s+(?P<dip>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N
+            m = p1.match(line)
+            if m:
+                cm_mac = m.groupdict()['cm_mac']
+                cm_mac_dict = ret_dict.setdefault('mac_address', {}).setdefault(cm_mac, {})
+                cm_mac_dict.update({
+                    'ipv4_address': m.groupdict()['ip_address'],
+                    'interface': m.groupdict()['interface'],
+                    'mac_state': m.groupdict()['state'],
+                    'primary_sid': m.groupdict()['sid'],
+                    'rx_power': m.groupdict()['rx_power'],
+                    'timing_offset': m.groupdict()['timing_offset'],
+                    'num_cpe': m.groupdict()['num_cpe'],
+                    'dip': m.groupdict()['dip']
+                })
+                continue
+        return ret_dict
+
+
+class ShowCableModemCable(ShowCableModemSchema):
+    """
+    Parser for
+        "show cable modem cable {cable_interface}"
+    """
+
+    cli_command = ['show cable modem cable {cable_interface}']
+
+    def cli(self, cable_interface, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(cable_interface=cable_interface)
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N
+        p1 = re.compile(r'^(?P<cm_mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+                        r'(?P<ip_address>-{3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<interface>C\d(\/\d{1,2}){2}\/UB)\s+(?P<state>(\S)+)\s+'
+                        r'(?P<sid>(\d)+)\s+(?P<rx_power>(\S)+)\s+(?P<timing_offset>(\S)+)\s+'
+                        r'(?P<num_cpe>(\d){1,5})\s+(?P<dip>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N
+            m = p1.match(line)
+            if m:
+                cm_mac = m.groupdict()['cm_mac']
+                cm_mac_dict = ret_dict.setdefault('mac_address', {}).setdefault(cm_mac, {})
+                cm_mac_dict.update({
+                    'ipv4_address': m.groupdict()['ip_address'],
+                    'interface': m.groupdict()['interface'],
+                    'mac_state': m.groupdict()['state'],
+                    'primary_sid': m.groupdict()['sid'],
+                    'rx_power': m.groupdict()['rx_power'],
+                    'timing_offset': m.groupdict()['timing_offset'],
+                    'num_cpe': m.groupdict()['num_cpe'],
+                    'dip': m.groupdict()['dip']
+                })
+                continue
+        return ret_dict
+
+
+class ShowCableModemRpd(ShowCableModemSchema):
+    """
+    Parser for
+        "show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}"
+    """
+
+    cli_command = ['show cable modem rpd {rpd_ipv4_or_ipv6_or_mac}']
+
+    def cli(self, rpd_ipv4_or_ipv6_or_mac, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(rpd_ipv4_or_ipv6_or_mac=rpd_ipv4_or_ipv6_or_mac)
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N CM
+        p1 = re.compile(r'^(?P<cm_mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+                        r'(?P<ip_address>-{3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<interface>C\d(\/\d{1,2}){2}\/UB)\s+(?P<state>(\S)+)\s+'
+                        r'(?P<sid>(\d)+)\s+(?P<rx_power>(\S)+)\s+(?P<timing_offset>(\S)+)\s+'
+                        r'(?P<num_cpe>(\d){1,5})\s+(?P<dip>\S+)\s+(?P<dev_class>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9058.515c.c978 101.115.1.12    C9/0/1/UB     w-online(pt)      1     10.00  470    0   N CM
+            m = p1.match(line)
+            if m:
+                cm_mac = m.groupdict()['cm_mac']
+                cm_mac_dict = ret_dict.setdefault('mac_address', {}).setdefault(cm_mac, {})
+                cm_mac_dict.update({
+                    'ipv4_address': m.groupdict()['ip_address'],
+                    'interface': m.groupdict()['interface'],
+                    'mac_state': m.groupdict()['state'],
+                    'primary_sid': m.groupdict()['sid'],
+                    'rx_power': m.groupdict()['rx_power'],
+                    'timing_offset': m.groupdict()['timing_offset'],
+                    'num_cpe': m.groupdict()['num_cpe'],
+                    'dip': m.groupdict()['dip'],
+                    'dev_class': m.groupdict()['dev_class']
+                })
+                continue
+        return ret_dict
+
+
+class ShowCableModemRpdId(ShowCableModemSchema):
+    """
+    Parser for
+        "show cable modem rpd id {rpd_mac}"
+    """
+
+    cli_command = ['show cable modem rpd id {rpd_mac}']
+
+    def cli(self, rpd_mac, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(rpd_mac=rpd_mac)
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N CM
+        p1 = re.compile(r'^(?P<cm_mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+                        r'(?P<ip_address>-{3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<interface>C\d(\/\d{1,2}){2}\/UB)\s+(?P<state>(\S)+)\s+'
+                        r'(?P<sid>(\d)+)\s+(?P<rx_power>(\S)+)\s+(?P<timing_offset>(\S)+)\s+'
+                        r'(?P<num_cpe>(\d){1,5})\s+(?P<dip>\S+)\s+(?P<dev_class>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9058.515c.c978 101.115.1.12    C9/0/1/UB     w-online(pt)      1     10.00  470    0   N CM
+            m = p1.match(line)
+            if m:
+                cm_mac = m.groupdict()['cm_mac']
+                cm_mac_dict = ret_dict.setdefault('mac_address', {}).setdefault(cm_mac, {})
+                cm_mac_dict.update({
+                    'ipv4_address': m.groupdict()['ip_address'],
+                    'interface': m.groupdict()['interface'],
+                    'mac_state': m.groupdict()['state'],
+                    'primary_sid': m.groupdict()['sid'],
+                    'rx_power': m.groupdict()['rx_power'],
+                    'timing_offset': m.groupdict()['timing_offset'],
+                    'num_cpe': m.groupdict()['num_cpe'],
+                    'dip': m.groupdict()['dip'],
+                    'dev_class': m.groupdict()['dev_class']
+                })
+                continue
+        return ret_dict
+
+
+class ShowCableModemRpdName(ShowCableModemSchema):
+    """
+    Parser for
+        "show cable modem rpd name {rpd_name}"
+    """
+
+    cli_command = ['show cable modem rpd name {rpd_name}']
+
+    def cli(self, rpd_name, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(rpd_name=rpd_name)
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        # 9058.515c.a3c0 101.115.1.18    C1/0/0/UB     w-online(pt)      1     10.00  416    0   N CM
+        p1 = re.compile(r'^(?P<cm_mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+'
+                        r'(?P<ip_address>-{3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<interface>C\d(\/\d{1,2}){2}\/UB)\s+(?P<state>(\S)+)\s+'
+                        r'(?P<sid>(\d)+)\s+(?P<rx_power>(\S)+)\s+(?P<timing_offset>(\S)+)\s+'
+                        r'(?P<num_cpe>(\d){1,5})\s+(?P<dip>\S+)\s+(?P<dev_class>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9058.515c.c978 101.115.1.12    C9/0/1/UB     w-online(pt)      1     10.00  470    0   N CM
+            m = p1.match(line)
+            if m:
+                cm_mac = m.groupdict()['cm_mac']
+                cm_mac_dict = ret_dict.setdefault('mac_address', {}).setdefault(cm_mac, {})
+                cm_mac_dict.update({
+                    'ipv4_address': m.groupdict()['ip_address'],
+                    'interface': m.groupdict()['interface'],
+                    'mac_state': m.groupdict()['state'],
+                    'primary_sid': m.groupdict()['sid'],
+                    'rx_power': m.groupdict()['rx_power'],
+                    'timing_offset': m.groupdict()['timing_offset'],
+                    'num_cpe': m.groupdict()['num_cpe'],
+                    'dip': m.groupdict()['dip'],
+                    'dev_class': m.groupdict()['dev_class']
+                })
+                continue
         return ret_dict

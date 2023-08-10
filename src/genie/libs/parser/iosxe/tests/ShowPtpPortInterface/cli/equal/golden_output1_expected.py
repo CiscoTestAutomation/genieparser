@@ -20,4 +20,6 @@ expected_output = {
       "sync_interval":0
    },
    "ptp_role_primary":"Disabled",
+   "ptp_destination_mac":"01.80.C2.00.00.0E",
+   "local_port_priority":128
 }

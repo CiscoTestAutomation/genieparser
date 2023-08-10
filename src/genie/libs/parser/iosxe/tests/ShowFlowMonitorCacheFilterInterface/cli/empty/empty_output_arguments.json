@@ -1,0 +1,8 @@
+{
+    "name": "m4in",
+    "int_type": "interface",
+    "direction": "input",
+    "interface_name": "g1/0/13",
+    "top": "top 2"
+}
+

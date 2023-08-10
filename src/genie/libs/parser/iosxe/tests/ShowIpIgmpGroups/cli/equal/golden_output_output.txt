@@ -1,0 +1,4 @@
+show ip igmp groups
+IGMP Connected Group Membership
+Group Address    Interface                Uptime    Expires   Last Reporter   Group Accounted
+224.0.1.40       Loopback100              5d15h     00:02:02  100.1.1.1

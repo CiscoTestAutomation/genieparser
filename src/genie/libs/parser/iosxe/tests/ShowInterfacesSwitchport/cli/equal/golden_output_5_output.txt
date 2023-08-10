@@ -1,0 +1,2 @@
+Name: Te1/1/6
+Switchport: Disabled

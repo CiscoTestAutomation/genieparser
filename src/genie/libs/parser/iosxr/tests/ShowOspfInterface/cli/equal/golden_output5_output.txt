@@ -1,0 +1,23 @@
+show ospf 200 interface GigabitEthernet0/0/0/2
+Tue Mar 28 10:52:50.294 UTC
+
+GigabitEthernet0/0/0/2 is administratively down, line protocol is down 
+  Internet Address 200.6.1.1/30, Area 200, SID 0, Strict-SPF SID 0
+  Label stack Primary label 0 Backup label 0 SRTE label 0
+  Process ID 200, Router ID 100.1.1.200, Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State DOWN, Priority 1, MTU 1500, MaxPktSz 1500
+  Forward reference No, Unnumbered no, 
+  RIB LC sync Yes
+  TTL security enabled, hop count 22
+  No designated router on this network
+  No backup designated router on this network
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+  Non-Stop Forwarding (NSF) enabled
+  Index 1/1, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 0, maximum is 0
+  Last flood scan time is 0 msec, maximum is 0 msec
+  LS Ack List: current length 0, high water mark 0
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Suppress hello for 0 neighbor(s)
+  Multi-area interface Count is 0

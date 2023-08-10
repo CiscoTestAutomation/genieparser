@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
+    * 'show cdp neighbors {interface} detail'
     * 'show cdp'
 
 '''
@@ -216,14 +217,22 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 # Parser for 'show cdp neighbors details'
 # =======================================
 class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
-    cli_command = 'show cdp neighbors detail'
+    ''' Parser for:
+        * 'show cdp neighbors detail'
+        * 'show cdp neighbors {interface} detail'
+    '''
+    cli_command = ['show cdp neighbors detail', 'show cdp neighbors {interface} detail']
 
     exclude = ['hold_time']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            output = self.device.execute(cmd)
 
         # Device ID: R7(9QBDKB58F76)
         # Device ID:
@@ -567,7 +576,8 @@ class ShowCdpInterface(ShowCdpInterfaceSchema):
         meta_dict = dict()
 
         # TwentyFiveGigE3/1/1 is down, line protocol is down
-        p0 = re.compile(r'^(?P<interface>[a-zA-Z\-\/\d\.]+)\s+is\s+(?P<state>\w+),\s+line\s+protocol\s+is\s+(?P<protocol_state>\w+)$')
+        # GigabitEthernet0/0 is administratively down, line protocol is down
+        p0 = re.compile(r'^(?P<interface>[a-zA-Z\-\/\d\.]+)\s+is\s+(?P<state>[\w\s]+),\s+line\s+protocol\s+is\s+(?P<protocol_state>\w+)$')
 
         # Encapsulation ARPA
         p1 = re.compile(r'^Encapsulation\s+(?P<encapsulation>\w+)$')
@@ -650,7 +660,7 @@ class ShowCdpEntrySchema(MetaParser):
                         'cdp_version': int,
                         'peer_mac': str,
                         'vtp_mgmt_domain': str,
-                        'native_vlan': int,
+                        Optional('native_vlan'): int,
                         'duplex': str,
                         'platform': str,
                         'system_description': str

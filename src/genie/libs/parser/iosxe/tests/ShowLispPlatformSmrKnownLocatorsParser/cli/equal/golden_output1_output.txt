@@ -1,0 +1,9 @@
+Platform requested masked SMR for:
+ IPv6: 32 bits
+
+LISP known locators in VRF default
+
+RLOC                    Known from
+2::2                    MS 3::3
+4::4                    MS 3::3
+6::6                    MS 3::3 

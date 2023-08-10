@@ -1,0 +1,12 @@
+Relay Bindings associated with default vrf:
+Prefix: 2001:DB8:1201::/48 (TwentyFiveGigE1/0/1)
+  DUID: 00030001ECCE131F6700
+  IAID: 8388609
+  lifetime: 1800
+  expiration: 19:51:56 UTC Mar 21 2023
+Summary:
+  Total number of Relay bindings = 1
+  Total number of IAPD bindings = 1
+  Total number of IANA bindings = 0
+  Total number of Relay bindings added by Bulk lease = 0
+

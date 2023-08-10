@@ -1,0 +1,2 @@
+show fabric ap summary
+Number of Fabric AP : 0

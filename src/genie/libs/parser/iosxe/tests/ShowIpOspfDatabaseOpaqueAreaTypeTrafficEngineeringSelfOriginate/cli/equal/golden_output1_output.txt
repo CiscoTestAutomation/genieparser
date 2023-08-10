@@ -1,0 +1,66 @@
+          OSPF Router with ID (1.1.1.13) (Process ID 10)
+
+          OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+		Type-10 Opaque Area Link States (Area 0)
+
+  LS age: 60
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 1.0.0.0
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 0
+  Advertising Router: 1.1.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x58D1
+  Length: 28
+  Fragment number : 0
+
+    MPLS TE router ID : 1.1.1.1
+
+    Number of Links : 0
+
+  LS age: 59
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 1.0.0.5
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 5
+  Advertising Router: 1.1.1.1
+  LS Seq Number: 80000001
+  Checksum: 0xC02A
+  Length: 80
+  Fragment number : 5
+          
+    Link connected to Point-to-Point network
+      Link ID : 1.1.1.4
+      Neighbor Address : 1.4.0.4
+      Interface Address : 1.4.0.1
+      Admin Metric : 10
+      Maximum bandwidth : 1250000
+      IGP Metric : 10
+          
+    Number of Links : 1
+          
+  LS age: 47
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 1.0.0.26
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 26
+  Advertising Router: 1.1.1.1
+  LS Seq Number: 80000002
+  Checksum: 0x933C
+  Length: 88
+  Fragment number : 26
+          
+    Link connected to Broadcast network
+      Link ID : 20.1.1.1
+      Interface Address : 20.1.1.1
+      Admin Metric : 100
+      Maximum bandwidth : 1250000
+      Affinity Bit : 0x2
+      IGP Metric : 100
+      Extended Affinity : 0x 2
+          
+    Number of Links : 1

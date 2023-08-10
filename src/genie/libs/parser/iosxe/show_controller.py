@@ -783,8 +783,8 @@ class ShowControllerEthernetControllerSchema(MetaParser):
 class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
     """Parser for show controller ethernet-controller {interface}"""
 
-    cli_command = ['show controller ethernet-controller', 
-        'show controller ethernet-controller {interface}']
+    cli_command = ['show controllers ethernet-controller', 
+        'show controllers ethernet-controller {interface}']
 
     def cli(self, interface=None, output=None):
         if output is None:
@@ -848,3 +848,239 @@ class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
                 int_dict.setdefault('last_updated', m.groupdict()['last_updated'])
         
         return ret_dict
+class ShowControllersEthernetControllerSchema(MetaParser):
+    """
+        Schema for show controllers ethernet-controller {interface}
+    """
+
+    schema = {
+        'interface': {
+            Any() : {
+                'transmit': {
+                    Any() : int
+                },
+                'receive': {
+                    Any() : int
+                },
+                'last_update_msecs': int 
+            }
+        }
+    }
+
+
+class ShowControllersEthernetController(ShowControllersEthernetControllerSchema):
+    """
+        parser for show controllers ethernet-controller {interface}
+    """
+
+    cli_command = ['show controllers ethernet-controller', 'show controllers ethernet-controller {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+
+        # Transmit                  GigabitEthernet1/0/1          Receive   
+        p1 = re.compile(r'^Transmit\s+(?P<interface>[\w\/\d\.]+)\s+Receive$')
+
+        # 0 Total bytes                           0 Total bytes              
+        # 0 Unicast frames                        0 Unicast frames       
+        p2 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)\s\s+'
+                r'(?P<receive_value>\d+)\s+(?P<receive_key_name>.+)$')
+
+        # 0 4 collision frames 
+        p3 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)$')
+
+        # LAST UPDATE 65017966 msecs AGO
+        p4 = re.compile(r'^LAST UPDATE (?P<last_update_msecs>\d+) msecs AGO$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transmit                  GigabitEthernet1/0/1          Receive 
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(\
+                    Common.convert_intf_name(m.groupdict()['interface']), {})
+                transmit_dict = int_dict.setdefault('transmit', {})
+                receive_dict = int_dict.setdefault('receive', {})
+                continue
+
+            # 0 Total bytes                           0 Total bytes              
+            # 0 Unicast frames                        0 Unicast frames 
+            m = p2.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                receive_key_name = groupdict['receive_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                receive_dict[receive_key_name] = int(groupdict['receive_value'])
+                continue
+
+            # 0 4 collision frames 
+            m = p3.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                continue
+
+            # LAST UPDATE 65017966 msecs AGO
+            m = p4.match(line)
+            if m:
+                int_dict['last_update_msecs'] = int(m.groupdict()['last_update_msecs'])
+
+        return ret_dict
+
+
+# =============================================
+# Parser for 'show controller vdsl {interface} local'
+# =============================================
+
+class ShowControllerVDSLlocalSchema(MetaParser):
+    """Schema for show controller VDSL {interface} local"""
+
+    schema = {
+        'sfp_vendor_pid': str,
+        'sfp_vendor_sn': str,
+        'firmware_embedded_in_ios-xe': str,
+        'running_firmware_version': str,
+        'management_link': str,
+        'dsl_status': str,
+        'dumping_internal_info': str,
+        'dying_gasp': str,
+        'dumping_delt_info': str,
+        
+    }
+
+class ShowControllerVDSLlocal(ShowControllerVDSLlocalSchema):
+    """
+    Parser for show controller VDSL {interface} local
+    """
+
+    cli_command = 'show controller VDSL {interface} local'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        
+        
+        #SFP Vendor PID:                 SFPV5311TR
+        p1 = re.compile(r'^(?P<param>\w*\s*\w*\s*PID):\s+(?P<vl>.+)')
+        
+        #SFP Vendor SN:                  MET211611AC
+        p2 = re.compile(r'^(?P<param>\w*\s*\w*\s*SN):\s+(?P<vl>.+)')
+        
+        #Firmware embedded in IOS-XE:    1_62_8463
+        p3 = re.compile(r'^(?P<param>\w*\s*\w*\s*\w*\s*IOS-XE):\s+(?P<vl>.+)')
+        
+        #Running Firmware Version:       1_62_8463
+        p4 = re.compile(r'^(?P<param>\w*\s*\w*\s*Version\s*):\s+(?P<vl>.+)')
+        
+        #Management Link:                up
+        p5 = re.compile(r'^(?P<param>\w*\s*Link\s*):\s+(?P<state>.+)')
+        
+        #DSL Status:                     showtime
+        p6 = re.compile(r'^(?P<param>DSL\s*\w*):\s+(?P<state>\w+)')
+        
+        #Dumping internal info:          idle
+        p7 = re.compile(r'^(?P<param>\w*\s*internal\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        #Dying Gasp:                     disarmed
+        p8 = re.compile(r'^(?P<param>\w*\s*Gasp):\s+(?P<state>\w+)')
+        
+        #Dumping DELT info:              idle
+        p9 = re.compile(r'^(?P<param>\w*\s*DELT\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        ctrl_dict = {}
+       
+        for lines in out.splitlines():
+            line = lines.strip()
+
+            #SFP Vendor PID:                 SFPV5311TR
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #SFP Vendor SN:                  MET211611AC
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #Firmware embedded in IOS-XE:    1_62_8463
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+            
+            # Running Firmware Version:       1_62_8463
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+
+            #Management Link:                up
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+            # DSL Status:                     showtime
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+                
+            #Dumping internal info:          idle    
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+            #Dying Gasp:                     disarmed
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+               
+            #Dumping DELT info:              idle
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+        return ctrl_dict
+

@@ -1,0 +1,43 @@
+Logging display requested on 2023/04/28 05:22:52 (UTC) for Hostname: [stack3-nyquist-1], Model: [C9300-24P], Version: [17.12.01], SN: [FOC23310DR2], MD_SN: [FOC2334W0K5]
+
+Displaying logs from the last 0 days, 0 hours, 10 minutes, 0 seconds
+executing cmd on chassis 1 ...
+sending cmd to chassis 2 ...
+executing cmd on chassis 2 ...
+cp: error writing '/crashinfo/tracelogs/tmp_trace/./utf_R0-0.7607_22.20230428035441.bin': No space left on device
+sending cmd to chassis 3 ...
+executing cmd on chassis 3 ...
+Collecting files from chassis 2.
+Collecting files from chassis 3.
+===========================================================
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 0 / 0 / 0 / 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM [PCAP] ........................ 0
+ UTM [MARKER] ...................... 0
+ UTM [APP CONTEXT] ................. 0
+ UTM [TDL TAN] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [DYN LIB] ..................... 0
+ UTM [PLAIN TEXT] .................. 0
+ UTM [ENCODED] ..................... 0
+ UTM [Skipped / Rendered / Total] .. 148996 / 0 / 148996
+ Last UTM TimeStamp ................ 2023/04/28 05:22:55.247506904
+ First UTM TimeStamp ............... 2023/04/28 03:51:28.232723621
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ MRST Filter Rules ...... 1
+ UTM Process Filter ..... smd
+ Total UTM To Process ... 190764
+ Total UTF To Process ... 3
+ Num of Unique Streams .. 3
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+
+Found 3 UTF Streams
+Unified Decoder Library Init .. DONE

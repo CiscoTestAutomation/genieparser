@@ -24,6 +24,8 @@ class ShowIpRouteDistributor(MetaParser):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
 
+    exclude = ['updated']
+
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
         if output is None:
@@ -69,6 +71,8 @@ class ShowIpv6RouteDistributor(MetaParser):
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    
+    exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
         
@@ -295,9 +299,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
-            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
-            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
-            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\-\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20
+            # B        1.1.1.10 [200/0] via FC01:101:8:E007:: (default:ipv6), 1d15h
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[0-9a-fA-F\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[dh\d\:]+)+(, +(?P<interface>[\w]+))?$')
             # B        192.168.1.20/32
             p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
             # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
@@ -2337,7 +2341,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                 Optional('feature_space'): {
                                     Optional('iprm'): str,
                                     Optional('broker'): {
-                                      'distribution_priority': int,
+                                        'distribution_priority': int,
                                     },
                                     Optional('lfd'): {
                                         Any(): {
@@ -2345,8 +2349,8 @@ class ShowIpCefInternalSchema(MetaParser):
                                         }
                                     },
                                     Optional('local_label_info'): {
-                                      Optional('dflt'): str,
-                                      Optional('sr'): str,
+                                        Optional('dflt'): str,
+                                        Optional('sr'): str,
                                     },
                                     Optional('path_extension_list'): {
                                         'dflt': {
@@ -2361,7 +2365,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2377,7 +2381,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2395,7 +2399,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2411,22 +2415,25 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
-                                        },
-                                    },
+                                        }
+                                    }
                                 },
                                 Optional('subblocks'): {
-                                  Any(): {
-                                      'rr_source': list,
-                                      'non_eos_chain_loadinfo': str,
-                                      'per-session': bool,
-                                      'flags': str,
-                                      'locks': int,
-                                  }
+                                    Any(): {
+                                        'rr_source': list,
+                                        Optional('non_eos_chain_loadinfo'): str,
+                                        Optional('per-session'): bool,
+                                        Optional('flags'): str,
+                                        Optional('locks'): int,
+                                    },
+                                    Optional('LISP'): {
+                                        Optional('smr_enabled'): bool
+				    }
                                 },
                                 Optional('ifnums'): {
                                     Any(): {
@@ -2462,13 +2469,13 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         Optional('addr_info'): str,
                                                                     }
                                                                 }
-                                                            },
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 },
                                 'output_chain': {
                                     Optional('label'): list,
@@ -2497,10 +2504,10 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                 'addr': str,
                                                                 'addr_info': str,
                                                             }
-                                                        },
-                                                    },
+                                                        }
+                                                    }
                                                 }
-                                            },
+                                            }
                                         }
                                     },
                                     Optional('frr'): {
@@ -2524,31 +2531,31 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                 'addr': str,
                                                                 'addr_info': str,
                                                             }
-                                                        },
+                                                        }
                                                     }
                                                 },
                                                 Optional('tag_adj'): {
                                                     Any(): {
                                                         'addr': str,
                                                         'addr_info': str,
-                                                    },
-                                                },
-                                            },
+                                                    }
+                                                }
+                                            }
                                         }
                                     },
                                     Optional('tag_adj'): {
                                         Any(): {
                                             'addr': str,
                                             'addr_info': str,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -2687,6 +2694,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p18 = re.compile(r'^non-eos +chain +loadinfo +(?P<non_eos_chain_loadinfo>\S+),'
                          r' +(?P<per_session>per-session), +flags +(?P<flags>\S+), '
                          r'+(?P<locks>\d+) +locks$')
+
+        #  SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F0119709CF0 locks: 1]
+        p19 = re.compile(r'^.+LISP generalised SMR - \[(?P<smr_enabled>enabled|disabled)\, .+]')
 
         label_list = []
         label_list2 = []
@@ -2839,6 +2849,14 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     rr_dict['per-session'] = False
                 for i in ['non_eos_chain_loadinfo', 'flags', 'locks']:
                     rr_dict[i] = int(group[i]) if i == 'locks' else group[i]
+                continue
+
+            #  SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F0119709CF0 locks: 1]
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                smr = prefix_dict.setdefault('subblocks', {}).setdefault('LISP', {})
+                smr['smr_enabled'] = group['smr_enabled'] == 'enabled'
                 continue
 
             # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
@@ -3429,3 +3447,50 @@ class ShowRibClient(ShowRibClientSchema):
                 
         return ret_dict
 
+# ==========================================================================================
+# Parser Schema for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotdSchema(MetaParser):
+    """
+    Schema for
+        * 'show banner motd'
+    """
+
+    schema = {
+        'banner_motd': str
+    }
+
+# ==========================================================================================
+# Parser for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotd(ShowBannerMotdSchema):
+    """
+    Parser for
+        * 'show banner motd'
+    """
+    cli_command = 'show banner motd'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # initializing dictionary
+        ret_dict = {}
+
+        # cisco banner test msg
+        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # cisco banner test msg
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['banner_motd'] = group['banner']
+                continue
+
+        return ret_dict

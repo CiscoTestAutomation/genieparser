@@ -1,0 +1,123 @@
+HundredGigE2/0/5
+ 
+  Service-policy queueing output: llq
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 1
+      queue limit 96000 bytes
+      (total drops) 136376959112
+      (bytes output) 142785841240
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 2
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 3
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 4
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 5
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 6
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    queue stats for all priority classes:
+      Queueing
+      priority level 7
+      queue limit 96000 bytes
+      (total drops) 0
+      (bytes output) 0
+ 
+    Class-map: tc7 (match-all)
+      180127705 packets
+      Match: traffic-class 7
+      shape (average) cir 200000000, bc 2000000, be 2000000
+      target shape rate 200000000
+      Priority: Strict,
+ 
+      Priority Level: 1
+ 
+    Class-map: tc6 (match-all)
+      0 packets
+      Match: traffic-class 6
+      Priority: Strict,
+ 
+      Priority Level: 2
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+ 
+    Class-map: tc5 (match-all)
+      0 packets
+      Match: traffic-class 5
+      Priority: Strict,
+ 
+      Priority Level: 3
+      shape (average) cir 1500000000, bc 6000000, be 6000000
+      target shape rate 1500000000
+ 
+    Class-map: tc4 (match-all)
+      0 packets
+      Match: traffic-class 4
+      Priority: Strict,
+ 
+      Priority Level: 4
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+ 
+    Class-map: tc3 (match-all)
+      0 packets
+      Match: traffic-class 3
+      Priority: Strict,
+ 
+      Priority Level: 5
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+ 
+    Class-map: tc2 (match-all)
+      0 packets
+      Match: traffic-class 2
+      Priority: Strict,
+ 
+      Priority Level: 6
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+ 
+    Class-map: tc1 (match-all)
+      0 packets
+      Match: traffic-class 1
+      Priority: Strict,
+ 
+      Priority Level: 7
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+ 
+    Class-map: class-default (match-any)
+      20 packets
+      Match: any
+ 
+      queue limit 7500000 bytes
+      (total drops) 0
+      (bytes output) 0

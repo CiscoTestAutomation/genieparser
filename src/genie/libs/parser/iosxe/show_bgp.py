@@ -661,9 +661,9 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
     cli_command = ['show bgp {address_family} vrf {vrf}',
                    'show bgp {address_family} rd {rd}',
                    'show bgp {address_family}',
-                   ]
+                   'show bgp {address_family} evi {evi}']
 
-    def cli(self, address_family='', rd='', vrf='', output=None):
+    def cli(self, address_family='', rd='', vrf='', evi='', output=None):
         cmd = None
         if output is None:
             # Build command
@@ -673,6 +673,9 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+            elif address_family and evi:
+                cmd = self.cli_command[3].format(address_family=address_family,
+                                                 evi=evi)
             elif address_family and not vrf and not rd:
                 cmd = self.cli_command[2].format(address_family=address_family)
                                                                                                   
@@ -1064,8 +1067,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Extended Community: SoO:65109:999 RT:65109:50
         # Extended Community: RT:0:3051 RT:65109:3051 L2VPN L2:0x0:MTU-1500
         # Extended Community: RT:65109:50 RT:65109:51 , recursive-via-connected
+        # Extended Community: RT:1:1 RT:100:101 MVPN AS:100:0.0.0.0
         p8_2 = re.compile(r'^Extended +Community *:'
-                          r' +(?P<ext_community>([a-zA-Z0-9\-\:\s]+))'
+                          r' +(?P<ext_community>([a-zA-Z0-9\-\:\s\.]+))'
                           r'(?: *, +(?P<recursive>(recursive-via-connected)))?$')
 
         p8_21 = re.compile(r'^(RT|Color|0x88|So0|Cost:pre-bestpath).*$')
@@ -2406,7 +2410,9 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         #  Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         #  2001:DB8:20:4:6::6
         #           4          400      67      73       66    0    0 01:03:11        5
-        p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
+        #  *2001::100:1:2:1
+        #                  4        65001       7       7      198    0    0 00:00:02        1
+        p10 = re.compile(r'^(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
                           ' +(?P<as>[0-9]+(\.\d+)?) +(?P<msg_rcvd>[0-9]+)'
@@ -2764,6 +2770,23 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
         # Call super
         return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family, cmd=cmd)
+
+
+class ShowBgpL2vpnEvpnSummary(ShowBgpSummarySuperParser):
+
+    ''' Parser for:
+        * 'show bgp l2vpn evpn summary'
+    '''
+
+    cli_command = 'show bgp l2vpn evpn summary'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Call super
+        return super().cli(output=output)
 
 
 # ============================================

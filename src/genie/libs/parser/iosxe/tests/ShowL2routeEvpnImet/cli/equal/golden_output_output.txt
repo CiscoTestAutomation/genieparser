@@ -1,0 +1,6 @@
+
+  EVI       ETAG   Prod  Router IP Addr  Type    Label       Tunnel ID Multicast Proxy
+----- ---------- ------ --------------- ----- -------- --------------- ---------------
+    2          0    BGP         2.2.2.2     6    20012         2.2.2.2            IGMP
+    2          0    BGP         3.3.3.2     6    20012         3.3.3.2            IGMP
+    2          0  L2VPN         1.1.1.2     6    20012         1.1.1.2            IGMP

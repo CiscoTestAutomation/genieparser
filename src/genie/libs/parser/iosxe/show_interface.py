@@ -30,6 +30,9 @@
     * show pm vp interface {interface} {vlan}
     * show pm port interface {interface}
     * show interfaces transceiver supported-list
+    * show interfaces capabilities
+    * show interfaces {interface} capabilities
+    * show interfaces {interface} vlan mapping
 """
 
 import os
@@ -237,7 +240,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                'txload', 'last_clear', 'in_crc_errors', 'in_errors',
                'in_giants', 'unnumbered', 'mac_address', 'phys_address',
                'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
-               'reliability']
+               'reliability', 'out_broadcast_pkts']
 
     def cli(self, interface="", output=None):
         if output is None:
@@ -1579,7 +1582,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
     schema = {
             Any(): {
                 'switchport_enable': bool,
-                'switchport_mode': str,
+                Optional('switchport_mode'): str,
                 Optional('operational_mode'): str,
                 Optional('port_channel'): {
                     Optional('port_channel_int'): str,
@@ -5155,5 +5158,372 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                     config_values = ret_dict.setdefault('config_values', {})
                 config_values['prbs'] = dict_val['prbs']
                 continue            
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show interfaces private-vlan mapping'
+# ======================================================
+class ShowInterfacesPrivateVlanMappingSchema(MetaParser):
+    """Schema for show interfaces private-vlan mapping"""
+
+    schema = {
+        'secondary_vlan': {
+            Any(): {
+                'type': str,
+                'interface': str
+            }
+        }
+    }
+
+class ShowInterfacesPrivateVlanMapping(ShowInterfacesPrivateVlanMappingSchema):
+    """Parser for show interfaces private-vlan mapping"""
+
+    cli_command = 'show interfaces private-vlan mapping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # vlan70    71             community   
+        p1 = re.compile(r'^(?P<interface>\w+)\s+(?P<secondary_vlan>\d+)\s+(?P<type>\w+)$')
+
+        result_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # vlan70    71             community        
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = result_dict.setdefault('secondary_vlan', {}).setdefault(int(group['secondary_vlan']), {})                
+
+                intf_dict.update({k:v for k, v in group.items() if v and k != 'secondary_vlan'})
+                intf_dict['interface'] = Common.convert_intf_name(intf_dict['interface'])
+                intf_dict['type'] = intf_dict['type']
+                continue
+
+        return result_dict
+
+# ======================================================
+# Schema for 'show interface {interface_id} etherchannel'
+# ====================================================== 
+
+class ShowInterfaceEtherchannelSchema(MetaParser):
+    """Schema for show interface {interface_id} etherchannel"""
+
+    schema = {
+        'port_state': str,
+        'channel_group': int,
+        'mode': str,
+        'gcchange': str,
+        'port_channel': str,
+        'gc': str,
+        'pseudo_port_channel': str,
+        'port_index': int,
+        'load': str,
+        'protocol': str,
+        Optional('flags'): {
+            str: str
+        },
+        Optional('local_information'): {
+            'port': str,
+            'flags': str,
+            'state': str,
+            'priority': str,
+            'admin_key': str,
+            'oper_key': str,
+            'port_number': str,
+            'port_state': str,
+        },
+        'port_age': str
+    }
+
+# ======================================================
+# Parser for 'show interface {interface_id} etherchannel'
+# ====================================================== 
+class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
+    """Parser for show interface {interface_id} etherchannel"""
+
+    cli_command = 'show interface {interface_id} etherchannel'
+
+    def cli(self, interface_id, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface_id=interface_id)
+            output = self.device.execute(cmd)
+
+        #Port state    = Up Mstr In-Bndl
+        p1 = re.compile(r'^Port state\s+=\s+(?P<port_state>[\w -]+)$')
+        #Channel group = 2           Mode = On              Gcchange = -
+        p2 = re.compile(r'^Channel group\s+=\s+(?P<channel_group>\d+)\s+Mode\s+=\s+(?P<mode>\w+)\s+Gcchange\s+=\s+(?P<gcchange>\S+)$')
+        #Port-channel  = Po2         GC   =   -             Pseudo port-channel = Po2
+        p3 = re.compile(r'^Port-channel\s+=\s+(?P<port_channel>\w+)\s+GC\s+=\s+(?P<gc>\S+)\s+Pseudo port-channel\s+=\s+(?P<pseudo_port_channel>\S+)$')
+        #Port index    = 0           Load = 0x00            Protocol =    -
+        p4 = re.compile(r'^Port index\s+=\s+(?P<port_index>\d+)\s+Load\s+=\s+(?P<load>\S+)\s+Protocol\s+=\s+(?P<protocol>\S+)$')
+        #Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        p5 = re.compile(r'^Flags:\s+(?P<flag>\S+)\s-\s(?P<flag_value>[\S\s]+)\s+(?P<flag2>\w+)\s-\s(?P<flag_value2>[\S\s]+)\.$')
+        #A - Device is in active mode.        P - Device is in passive mode.
+        p5_1 = re.compile(r'^(?P<flag>\S+)\s-\s(?P<flag_value>[\S\s]+)\.\s+(?P<flag2>\S+)\s-\s(?P<flag_value2>[\S\s]+)\.$')
+        #Local information:
+        #                                 LACP port    Admin     Oper    Port        Port
+        # Port          Flags   State     Priority     Key       Key     Number      State
+        # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D 
+        p6 = re.compile(r'^(?P<port>Gi[\w\/\d]+)\s+(?P<flags>\w+)\s+(?P<state>\w+)\s+(?P<priority>\d+)'
+                        r'\s+(?P<admin_key>\w+)\s+(?P<oper_key>\w+)\s+(?P<port_number>\w+)\s+(?P<port_state>\w+)$')
+        #Age of the port in the current state: 0d:00h:00m:29s
+        p7 = re.compile(r'^Age of the port in the current state:\s+(?P<age_of_port>\S+)$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Port state    = Up Mstr In-Bndl
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port_state'] = group['port_state']
+                continue
+
+            #Channel group = 2           Mode = On              Gcchange = -            
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['channel_group'] = int(group['channel_group'])
+                ret_dict['mode'] = group['mode']
+                ret_dict['gcchange'] = group['gcchange']
+                continue
+
+            #Port-channel  = Po2         GC   =   -             Pseudo port-channel = Po2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port_channel'] = group['port_channel']
+                ret_dict['gc'] = group['gc']
+                ret_dict['pseudo_port_channel'] = group['pseudo_port_channel']
+                continue
+
+            #Port index    = 0           Load = 0x00            Protocol =    -
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port_index'] = int(group['port_index'])
+                ret_dict['load'] = group['load']
+                ret_dict['protocol'] = group['protocol']
+                continue
+
+            #Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.            
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                flag_dict = ret_dict.setdefault('flags',{})
+                flag_dict[group['flag']] = group['flag_value'].strip()
+                flag_dict[group['flag2']] = group['flag_value2']
+                continue
+
+            #A - Device is in active mode.        P - Device is in passive mode.
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                flag_dict = ret_dict.setdefault('flags',{})
+                flag_dict[group['flag']] = group['flag_value']
+                flag_dict[group['flag2']] = group['flag_value2']
+                continue
+
+            #Local information:
+            #                                 LACP port    Admin     Oper    Port        Port
+            # Port          Flags   State     Priority     Key       Key     Number      State
+            # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D             
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                info_dict = ret_dict.setdefault('local_information',{})
+                info_dict['port'] = group['port']
+                info_dict['flags'] = group['flags']
+                info_dict['state'] = group['state']
+                info_dict['priority'] = group['priority']
+                info_dict['admin_key'] = group['admin_key']
+                info_dict['oper_key'] = group['oper_key']
+                info_dict['port_number'] = group['port_number']
+                info_dict['port_state'] = group['port_state']
+                continue
+
+            #Age of the port in the current state: 0d:00h:00m:29s
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port_age'] = group['age_of_port']
+                continue
+
+        return ret_dict
+
+
+class ShowInterfacesCapabilitiesSchema(MetaParser):
+    """
+        Schema for show interfaces capabilities
+    """
+
+    schema = {
+        'interface': {
+            Any() : {
+                Any() : str,
+            }
+        }
+    }
+
+
+class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
+    """
+        parser for show interfaces capabilities
+    """
+
+    cli_command = ['show interfaces capabilities', 'show interfaces {interface} capabilities']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)
+
+        # TenGigabitEthernet3/1/3
+        p1 = re.compile(r'^(?P<interface>[\w\/\d\.]+)$')
+
+        # Model:                 WS-C3650-48PD
+        # Type:                  SFP-10G-ACTIVE-CABLE
+        # Speed:                 10000
+        # Duplex:                full
+        p2 = re.compile(r'^(?P<key_name>[\w\s\.]+):\s+(?P<value>.+)$')
+
+        # tx-(2p6q3t)
+        p3 = re.compile(r'^(?P<qos_tx>tx-.+)$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet3/1/3
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+
+            # Model:                 WS-C3650-48PD
+            # Type:                  SFP-10G-ACTIVE-CABLE
+            # Speed:                 10000
+            # Duplex:                full
+            m = p2.match(line)
+            if m:
+                key = m.groupdict()['key_name'].strip().lower().replace(' ', '_').replace('.', '')
+                int_dict[key] = m.groupdict()['value']
+                continue
+            
+            # tx-(2p6q3t)
+            m = p3.match(line)
+            if m:
+                int_dict[key] = f"{int_dict[key]} {m.groupdict()['qos_tx']}"
+        
+        return ret_dict
+
+class ShowInterfaceFlowControlSchema(MetaParser):
+    """Schema for show interfaces {interface_id} flowcontrol"""
+
+    schema = {
+        'interface': {
+            'port': str,
+            'send_fc_admin': str,
+            'send_fc_oper': str,
+            'receive_fc_admin': str,
+            'receive_fc_oper': str,
+            'rx_pause': int,
+            'tx_pause': int,
+        }
+    }
+
+# ======================================================
+# Parser for 'show interface {interface_id} flowcontrol'
+# ====================================================== 
+class ShowInterfaceFlowControl(ShowInterfaceFlowControlSchema):
+    """Parser for show interfaces {interface_id} flowcontrol"""
+
+    cli_command = 'show interfaces {interface_id} flowcontrol'
+
+    def cli(self, interface_id, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface_id=interface_id)
+            output = self.device.execute(cmd)
+
+        # Port            Send FlowControl  Receive FlowControl  RxPause TxPause
+        #                 admin    oper     admin    oper
+        # ------------    -------- -------- -------- --------    ------- -------
+        # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0
+        p1 = re.compile(r'^(?P<port>[\w\/\d]+)\s+(?P<send_fc_admin>[\.\w]+)\s+(?P<send_fc_oper>[\.\w]+)\s+(?P<receive_fc_admin>\w+)\s+(?P<receive_fc_oper>\w+)\s+(?P<rx_pause>\d+)\s+(?P<tx_pause>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port            Send FlowControl  Receive FlowControl  RxPause TxPause
+            #                 admin    oper     admin    oper
+            # ------------    -------- -------- -------- --------    ------- -------
+            # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0        
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                info_dict = ret_dict.setdefault('interface',{})
+                info_dict['port'] = Common.convert_intf_name(group['port'])
+                info_dict['send_fc_admin'] = group['send_fc_admin']
+                info_dict['send_fc_oper'] = group['send_fc_oper']
+                info_dict['receive_fc_admin'] = group['receive_fc_admin']
+                info_dict['receive_fc_oper'] = group['receive_fc_oper']
+                info_dict['rx_pause'] = int(group['rx_pause'])
+                info_dict['tx_pause'] = int(group['tx_pause'])
+                continue
+
+        return ret_dict
+
+
+class ShowInterfacesVlanMappingSchema(MetaParser):
+    """Schema for show interfaces {interface} vlan mapping"""
+
+    schema = {
+        'vlan_on_wire': {
+            Any(): {
+                'trans_vlan': int,
+                'operation': str,
+            }
+        }
+    }
+
+
+class ShowInterfacesVlanMapping(ShowInterfacesVlanMappingSchema):
+    """Parser for show interfaces {interface} vlan mapping"""
+
+    cli_command = 'show interface {interface} vlan mapping'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 20                                    30             1-to-1
+        p1 = re.compile(r"^(?P<vlan_on_wire>\d+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # 20                                    30             1-to-1
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan_on_wire', {}).setdefault(dict_val['vlan_on_wire'], {})
+                vlan_dict['trans_vlan'] = int(dict_val['trans_vlan'])
+                vlan_dict['operation'] = dict_val['operation']
+                continue
 
         return ret_dict

@@ -4,10 +4,13 @@ IOSXE parsers for the following show commands:
     * show device-sensor cache interface {interface}
     * show device-sensor cache all
     * show device-sensor cache mac {mac_address}
+    * show device-sensor details
     * show device classifier attached interface {intf}
     * show device classifier attached mac-address {mac_address}
     * show device classifier attached interface <interface> detail
     * show device classifier profile type custom
+    * show device classifier attached detail   
+
 """
 
 # Python
@@ -97,10 +100,12 @@ class ShowDeviceSensor(ShowDeviceSensorSchema):
         p0 = re.compile(r'^Device: +(?P<mac>\S+) +on port (?P<port>\S+)$')
 
         # DHCP    60:class-identifier            10 3C 08 63 69 73 63 6F 70 6E  <.ciscopn
-        p1 = re.compile(r'^(?P<protocol>\S+)\s+(?P<proto_type>\d+):(?P<name>\S+)\s+(?P<length>\d+)\s(?P<value>[0-9A-F\d ]{27})\s(?P<text>\S+)$')
+        # DHCP    60:class-identifier            38 3C 24 43 69 73 63 6F 20 73  <$Cisco s
+        p1 = re.compile(r'^(?P<protocol>\S+)\s+(?P<proto_type>\d+):(?P<name>\S+)\s+(?P<length>\d+)\s(?P<value>[0-9A-F\d ]{27})\s(?P<text>.+)$')
 
         #                                           30 63 37 35 2E 62 64 30 32  0c75.bd02
-        p2 = re.compile(r'^\s+(?P<value>[0-9A-F\d ]{27})\s(?P<text>\S+)$')
+        #                                           79 73 74 65 6D 73 2C 20 49  ystems, I
+        p2 = re.compile(r'^\s+(?P<value>[0-9A-F\d ]{27})\s(?P<text>.+)$')
 
         for line in output.splitlines():
             line_strip = line.strip()
@@ -145,8 +150,9 @@ class ShowDeviceSensor(ShowDeviceSensorSchema):
 
         return ret_dict
 
-class ShowDeviceClassifierAttachedInterfaceDetailSchema(MetaParser):
-    '''Schema for show device classifier attached interface {interface} detail'''
+
+class ShowDeviceClassifierAttachedDetailSchema(MetaParser):
+    '''Schema for show device classifier attached detail'''
 
     schema = {
         'mac_address': {
@@ -163,14 +169,14 @@ class ShowDeviceClassifierAttachedInterfaceDetailSchema(MetaParser):
     }
 
 
-class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedInterfaceDetailSchema):
-    '''Parser for show device classifier attached interface {interface} detail'''
+class ShowDeviceClassifierAttachedDetail(ShowDeviceClassifierAttachedDetailSchema):
+    '''Parser for show device classifier attached detail'''
 
-    cli_command = 'show device classifier attached interface {interface} detail'
+    cli_command = 'show device classifier attached detail'
 
-    def cli(self, interface=None, output=None):
+    def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(interface=interface))
+            output = self.device.execute(self.cli_command)
 
         # 0016.47cd.9ab1  GigabitEthernet2/0/48 10   0      M   Built-in Cisco-Device                 CISCO SYSTEMS, INC
         p1 = re.compile(r'^(?P<mac_address>[a-f0-9\.]+)\s+(?P<port_id>\S+)\s+(?P<cert>\d+)\s+'
@@ -196,6 +202,19 @@ class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedIn
                 continue
 
         return ret_dict
+
+
+class ShowDeviceClassifierAttachedInterfaceDetail(ShowDeviceClassifierAttachedDetail):
+    '''Parser for show device classifier attached interface {interface} detail'''
+
+    cli_command = 'show device classifier attached interface {interface} detail'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        return super().cli(output=output)
+
 
 # ======================================================
 # Parser for 'show device classifier attached interface <intf>
@@ -342,5 +361,88 @@ class ShowDeviceClassifierProfileTypeCustom(ShowDeviceClassifierProfileTypeCusto
                 profile_name_dict['id'] = int(dict_val['id'])
                 continue
         return ret_dict 
+
+
+# ======================================================
+# Schema for 'show device-sensor details '
+# ======================================================
+
+class ShowDeviceSensorDetailsSchema(MetaParser):
+    """Schema for show device-sensor details"""
+
+    schema = {
+        'status': str,
+        'protocols': {
+            Any(): {
+                'name': str,
+                'status': str,
+                'tlv_limit': str,
+            },
+        },
+        'protocol_filter': {
+            Any(): {
+                'name': str,
+                'filter_type': str,
+            },
+        },
+    }
+
+# ======================================================
+# Parser for 'show device-sensor details '
+# ======================================================
+class ShowDeviceSensorDetails(ShowDeviceSensorDetailsSchema):
+    """Parser for show device-sensor details"""
+
+    cli_command = 'show device-sensor details'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Status = Enabled 
+        p1 = re.compile(r"^Status\s+=\s+(?P<status>\w+)$")
+        # CDP            registered  Proto Tlv Limit = 128
+        p2 = re.compile(r"^(?P<name>\w+)\s+(?P<status>\w+)\s+(?P<tlv_limit>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        # CDP             None
+        p3 = re.compile(r"^(?P<name>\w+)\s+(?P<filter_type>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Status = Enabled 
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['status'] = dict_val['status']
+                continue
+
+            # CDP            registered  Proto Tlv Limit = 128
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_var = dict_val['name']
+                protocols = ret_dict.setdefault('protocols', {})
+                name_dict = ret_dict['protocols'].setdefault(name_var, {})
+                name_dict['name'] = dict_val['name']
+                name_dict['status'] = dict_val['status']
+                name_dict['tlv_limit'] = dict_val['tlv_limit']
+                continue
+
+            # CDP             None
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name_var = dict_val['name']
+                protocol_filter = ret_dict.setdefault('protocol_filter', {})
+                name_dict = ret_dict['protocol_filter'].setdefault(name_var, {})
+                name_dict['name'] = dict_val['name']
+                name_dict['filter_type'] = dict_val['filter_type']
+                continue
+
+        return ret_dict
+
+
         
         

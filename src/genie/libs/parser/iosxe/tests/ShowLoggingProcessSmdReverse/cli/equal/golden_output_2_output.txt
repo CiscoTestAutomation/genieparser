@@ -1,0 +1,36 @@
+Logging display requested on 2023/04/28 04:53:18 (UTC) for Hostname: [stack3-nyquist-1], Model: [C9300-48UXM], Version: [17.12.01], SN: [FJZ23340Y1W], MD_SN: [FJC2335T0R9]
+
+Displaying logs from the last 0 days, 0 hours, 10 minutes, 0 seconds
+executing cmd on chassis 5 ...
+===========================================================
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 0 / 0 / 0 / 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM [PCAP] ........................ 0
+ UTM [MARKER] ...................... 0
+ UTM [APP CONTEXT] ................. 0
+ UTM [TDL TAN] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [DYN LIB] ..................... 0
+ UTM [PLAIN TEXT] .................. 0
+ UTM [ENCODED] ..................... 0
+ UTM [Skipped / Rendered / Total] .. 99698 / 0 / 99698
+ Last UTM TimeStamp ................ 2023/04/28 04:53:17.398092323
+ First UTM TimeStamp ............... 2023/04/28 04:16:15.904161830
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ MRST Filter Rules ...... 1
+ UTM Process Filter ..... smd
+ Total UTM To Process ... 99698
+ Total UTF To Process ... 1
+ Num of Unique Streams .. 1
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+
+Found 1 UTF Streams
+Unified Decoder Library Init .. DONE

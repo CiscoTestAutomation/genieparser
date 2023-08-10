@@ -1,0 +1,2 @@
+L3 multicast Full scan started. Run_id: 2252
+Use 'show consistency-checker run-id 2252 status' for completion status.

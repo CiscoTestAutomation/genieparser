@@ -1,0 +1,6 @@
+{   
+    "version": "2c",
+    "ip": "1.1.1.1", 
+    "community_str": "public",
+    "mibifindex": "22.ifHCInUcastPkts"
+} 
