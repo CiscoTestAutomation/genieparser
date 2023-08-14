@@ -180,4 +180,4 @@ class DisplayConfigDhcp(DisplayConfigDhcpSchema):
                     }
                     index_excluded += 1
 
-        lala = "loeloe"
+        return dhcp_pools
