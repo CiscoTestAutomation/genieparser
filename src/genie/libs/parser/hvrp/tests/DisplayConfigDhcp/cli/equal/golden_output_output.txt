@@ -1,0 +1,19 @@
+portal-access-profile name portal_access_profile
+#
+ip pool dhcppool-vlan10
+ gateway-list 10.23.25.254
+ network 10.23.25.0 mask 255.255.255.0
+ excluded-ip-address 10.23.25.1 10.23.25.100
+ excluded-ip-address 10.23.25.240 10.23.25.253
+ dns-list 10.23.4.1 10.23.4.13
+ option 150 ip-address 10.23.4.15
+ lease day 12 hour 0 minute 0
+ netbios-type h-node
+ nbns-list 1.1.1.3
+ domain-name haarlem.local
+ conflict auto-recycle interval day 0 hour 0 minute 5
+#
+ip pool dhcppool-vlan101
+ domain-name haarlem.locall
+#
+aaa
