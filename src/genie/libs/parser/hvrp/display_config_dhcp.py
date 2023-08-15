@@ -42,7 +42,7 @@ class DisplayConfigDhcp(DisplayConfigDhcpSchema):
     cli_command = "display dhcp configuration"
 
     def cli(self, output=None):
-        real_cmd = "DisplayConfigDhcpSchema"
+        real_cmd = "display current-configuration"
         out = self.device.execute(real_cmd) if output is None else output
 
         # below regex extracts blocks op dhcp pools until the ! char:
