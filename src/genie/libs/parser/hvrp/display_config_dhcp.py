@@ -86,15 +86,14 @@ class DisplayConfigDhcp(DisplayConfigDhcpSchema):
         # we get the whole part after lease. no further usecases for further processing atm
         p_block_lease_time = re.compile(r"^lease\s+(?P<lease_options>.*)$")
 
-
-        # lets get all blocks in the config
-        get_dhcp_pool_blocks = p_get_dhcp_pool_blocks.findall(out)
-
         # note: can be multiples of below in a configuration
         # ex:  excluded-ip-address 10.23.25.1 10.23.25.100
         # ex:  excluded-ip-address 10.23.25.240 10.23.25.253
         p_get_dhcp_excluded = re.compile(
             r"^excluded-ip-address\s+(?P<exclude_range_start>[^ ]*)\s+(?P<exclude_range_end>[^ ]*)")
+
+        # lets get all blocks in the config
+        get_dhcp_pool_blocks = p_get_dhcp_pool_blocks.findall(out)
 
         dhcp_pools = {}
         for block in get_dhcp_pool_blocks:
