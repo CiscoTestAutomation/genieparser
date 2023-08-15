@@ -8,6 +8,7 @@ no ip dhcp conflict logging
 ip dhcp pool TEST-1
  vrf ABC
  network 1.1.1.0 255.255.255.0
+ bootfile dapcfg.txt
  default-router 1.1.1.1
  dns-server 8.8.8.8 9.9.9.9
  netbios-name-server 2.2.2.2 3.3.3.3
