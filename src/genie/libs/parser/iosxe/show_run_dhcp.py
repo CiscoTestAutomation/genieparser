@@ -305,5 +305,4 @@ class ShowRunDhcp(ShowRunDhcpSchema):
                     boot_file = m.groupdict()['boot_file']
                     dhcp_pools[pool_name]['boot_file'] = boot_file
 
-        logging.debug(dhcp_pools)
         return dhcp_pools
