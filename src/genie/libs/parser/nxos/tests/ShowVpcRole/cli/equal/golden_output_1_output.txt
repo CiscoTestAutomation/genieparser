@@ -1,0 +1,12 @@
+vPC Role status
+----------------------------------------------------
+vPC role                        : primary
+Dual Active Detection Status    : 0
+vPC system-mac                  : 00:11:22:aa:bb:cc
+vPC system-priority             : 32667
+vPC local system-mac            : 00:11:22:aa:bb:cc
+vPC local role-priority         : 10
+vPC local config role-priority  : 10
+vPC peer system-mac             : 33:44:55:dd:ee:ff
+vPC peer role-priority          : 20
+vPC peer config role-priority   : 20
