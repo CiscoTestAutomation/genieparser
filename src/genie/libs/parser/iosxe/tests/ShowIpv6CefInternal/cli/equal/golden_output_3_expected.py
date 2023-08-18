@@ -69,6 +69,11 @@ expected_output = {
                               }
                            }
                         }
+                     },
+                     'subblocks':{
+                        'LISP':{
+                           'smr_enabled': False
+                        }
                      }
                   }
                }

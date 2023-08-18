@@ -6,6 +6,8 @@
 * 'show sdwan appqoe flow all'
 * 'show sdwan appqoe status'
 * 'show sdwan appqoe service-chain status'
+* 'show platform hardware qfp active feature sdwan datapath service-chain stats'
+* 'show sdwan policy data-policy-filter'
 * 'show sdwan bfd history'
 * 'show sdwan bfd sessions'
 * 'show sdwan bfd summary'
@@ -54,6 +56,15 @@
 * 'show sdwan tunnel statistics pkt-dup'
 * 'show sdwan tunnel statistics table'
 * 'show sdwan utd dataplane config'
+* 'show sdwan tenant {tenant} omp routes'
+* 'show sdwan tenant {tenant} omp peers'
+* 'show sdwan tenant-summary'
+* 'show platform software sdwan multicast remote-nodes vrf {vrf ID}'
+* 'show platform software sdwan multicast replicators vrf {vrf ID}'
+* 'show sdwan security-info'
+* 'show platform hardware qfp active feature sdwan client interface <interface name>'
+* 'show sdwan omp multicast-routes'
+* 'show sdwan omp multicast-auto-discover'
 '''
 
 # Python
@@ -6091,3 +6102,1116 @@ class ShowSdwanServiceChainDatabase(ShowSdwanServiceChainDatabaseSchema):
                 continue
 
         return services_db
+
+# ================================================================================================
+# Parser Schema for 'show platform hardware qfp active feature sdwan datapath service-chain stats'
+# ================================================================================================
+
+class ShowSdwanServiceChainStatsSchema(MetaParser):
+
+    """Schema for "show platform hardware qfp active feature sdwan datapath service-chain stats" """
+
+    schema = {
+        "service_chain_stats": {
+            Any(): {
+                "global_stats": int,
+                Any(): {
+                    "tx_pkts": int,
+                    "rx_pkts": int
+                }
+            }
+        }
+    }
+# =========================================================================================
+# Parser for 'show platform hardware qfp active feature sdwan datapath service-chain stats'
+# =========================================================================================
+class ShowSdwanServiceChainStats(ShowSdwanServiceChainStatsSchema):
+    """parser for "show platform software sdwan service-chain database" """
+
+    cli_command = "show platform hardware qfp active feature sdwan datapath service-chain stats"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Service-Chain ID: 4
+        p1 = re.compile(r"^Service-Chain ID:\s+(?P<sc_id>\S+)$")
+        
+        # Global stats: 110167
+        p2 = re.compile(r"^Global stats:\s+(?P<gbl_stats>\S+)$")
+
+        # Service: Firewall
+        p3 = re.compile(r"^Service:\s+(?P<srv_name>\S+)$")
+
+        # Tx pkt: 110167
+        p4 = re.compile(r"^Tx pkt:\s+(?P<tx_pkt>\S+)$")
+
+        # Rx pkt: 110167
+        p5 = re.compile(r"^Rx pkt:\s+(?P<rx_pkt>\S+)$")
+
+        services_tr_stats = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Service-Chain ID: 4
+            m = p1.match(line)
+            if m:
+                services_stats = services_tr_stats.setdefault("service_chain_stats", {})
+                sc = m.groupdict()["sc_id"]
+                sc_dict = services_stats.setdefault("SC" + sc, {})            
+                continue
+            
+            # Global stats: 110167
+            m = p2.match(line)
+            if m:
+                sc_dict.update({"global_stats": int(m.groupdict()["gbl_stats"])})
+                continue
+
+            # Service: Firewall
+            m = p3.match(line)
+            if m:
+                srv_name = m.groupdict()["srv_name"]
+                svr_dict = sc_dict.setdefault(srv_name, {})
+                continue
+            
+            # Tx pkt: 110167
+            m = p4.match(line)
+            if m:
+                svr_dict.update({"tx_pkts": int(m.groupdict()["tx_pkt"])})
+                continue
+
+            # Rx pkt: 110167
+            m = p5.match(line)
+            if m:
+                svr_dict.update({"rx_pkts": int(m.groupdict()["rx_pkt"])})
+                continue
+
+        return services_tr_stats
+
+# =======================================================================
+# Parser Schema for 'show sdwan policy data-policy-filter'
+# 'show sdwan policy data-policy-filter <policy>'
+# =======================================================================
+class ShowSdwanPolicyDataPolicyFilterSchema(MetaParser):
+
+    """Schema for "show platform hardware qfp active feature sdwan datapath service-chain stats" """
+
+    schema = {
+        "data_policy_filter": {
+            Any(): {
+                Any():{
+                    Any(): {
+                        "packets": int,
+                        "bytes": int
+                    }
+                }
+            }
+        }
+    }    
+# =======================================================================
+# Parser for 'show sdwan policy data-policy-filter',                    #
+# 'show sdwan policy data-policy-filter <policy>'                       #
+# =======================================================================
+class ShowSdwanPolicyDataPolicyFilter(ShowSdwanPolicyDataPolicyFilterSchema):
+    """Parser for 
+           'show sdwan policy data-policy-filter'
+           'show sdwan policy data-policy-filter <policy>'
+    """
+    cli_command = ['show sdwan policy data-policy-filter', 
+                'show sdwan policy data-policy-filter {policy}']
+
+    def cli(self, policy="", output=None):
+        if output is None:
+            if policy:
+                output = self.device.execute(self.cli_command[1].format(policy=policy))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        ret_dict = {}
+        # data-policy-filter DP_HUB_LOCAL_FROM_TUNNEL
+        p1 = re.compile(r'^data-policy-filter\s+(?P<policy_name>\S+)$')
+
+        # data-policy-vpnlist VPN1
+        p2 = re.compile(r'^data-policy-vpnlist\s+(?P<vpn_name>\S+)$')
+        
+        # data-policy-counter default_action_count
+        p3 = re.compile(r'^data-policy-counter\s+(?P<counter_name>\S+)$')
+
+        # packets 0
+        p4 = re.compile(r'^packets\s+(?P<pkts_count>\d+)$')
+
+        # bytes   0
+        p5 = re.compile(r'^bytes\s+(?P<bytes_count>\d+)$')
+
+        policy_stats = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # data-policy-filter DP_HUB_LOCAL_FROM_TUNNEL
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                policy_dict = ret_dict.setdefault('data_policy_filter', {}).\
+                    setdefault(groups['policy_name'],{})
+                continue
+
+            # data-policy-vpnlist VPN1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                vpn_dict = policy_dict.setdefault(groups['vpn_name'], {})
+                continue
+
+            # data-policy-counter default_action_count
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                counter_dict = vpn_dict.setdefault(groups['counter_name'], {})
+                continue
+
+            # packets 0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                counter_dict.update({"packets": int(m.groupdict()["pkts_count"])})
+                continue
+
+            # bytes   0
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                counter_dict.update({"bytes": int(m.groupdict()["bytes_count"])})
+                continue
+            
+        return(ret_dict)
+
+
+# =============================================================
+# Parser for 'show sdwan tenant-summary'
+# =============================================================
+
+class ShowSdwanTenantSumarySchema(MetaParser):
+    """Schema for: show sdwan tenant-summary"""
+
+    schema = {
+        "max_tenants": int,
+        "active_tenants": int,
+        Optional("org_name"): {
+                    Any() :{
+                        Optional("global_id"): int,
+                        Optional("uuid"): str,
+                    },    
+                },    
+            }
+
+class ShowSdwanTenantSumary(ShowSdwanTenantSumarySchema):
+    """Parser for: show sdwan tenant-summary"""
+
+    cli_command = 'show sdwan tenant-summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+        ret_dict ['org_name'] = {}
+
+        #tenants-summary max-tenants 30
+        p1 = re.compile(r'^\s*tenants\-summary max\-tenants\s*(?P<max_tenants>\d+)')
+
+        #tenants-summary num-active-tenants 20
+        p2 = re.compile(r'^\s*tenants\-summary num\-active\-tenants\s*(?P<active_tenants>\d+)')
+
+        #mttedge-Tenant42   45187   0bf871da-c63c-4043-8f85-386c1f0db2b8 
+        p3 = re.compile(r'^\s*(?P<org_name>[\w\d\-]+)\s*(?P<global_id>\d+)\s*(?P<uuid>[\w\d\-]+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #tenants-summary max-tenants 30
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['max_tenants'] = int(groups['max_tenants']) 
+                continue
+
+            #tenants-summary num-active-tenants 20
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['active_tenants'] = int(groups['active_tenants'])
+                continue
+
+            #mttedge-Tenant42   45187   0bf871da-c63c-4043-8f85-386c1f0db2b8
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                org_name = groups['org_name']
+                ret_dict['org_name'][org_name]={}
+                ret_dict['org_name'][org_name]['global_id'] = int(groups['global_id'])
+                ret_dict['org_name'][org_name]['uuid'] = groups['uuid']
+                continue
+
+        return ret_dict
+
+# =============================================================
+# Parser for 'show sdwan tenant <tenant> omp peers'
+# =============================================================
+
+class ShowSdwanTenantOmpPeersSchema(MetaParser):
+    """Schema for: show sdwan tenant {tenant} omp peers"""
+
+    schema = {
+        "tenant_id": int,
+        "peer": {
+                    Any() :{
+                        "type": str,
+                        "domain_id": int,
+                        "overlay_id": int,
+                        "site_id": int,
+                        "region_id": str,
+                        "state": str,
+                        "uptime": str,
+                        "r_i_s": str,
+                    },    
+                },    
+            }
+
+class ShowSdwanTenantOmpPeers(ShowSdwanTenantOmpPeersSchema):
+    """Parser for: show sdwan tenant {tenant} omp peers"""
+
+    cli_command = 'show sdwan tenant {tenant} omp peers'
+
+    def cli(self, tenant="", output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(tenant=tenant))
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+        ret_dict ['peer'] = {}
+
+        #17890     1.0.0.37         vsmart  1         1         37        None      up       1:04:13:23       65/13/25
+        p1 = re.compile(r'^\s*(?P<tenant_id>\d+)\s*(?P<peer>[\d\.]+)\s*(?P<type>\w+)\s*(?P<domain_id>\d+)\s*(?P<overlay_id>\d+)\s*(?P<site_id>\d+)\s*(?P<region_id>\w+)\s*(?P<state>\w+)\s*(?P<uptime>[\d\:]+)\s*(?P<r_i_s>[\d\/]+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #17890     1.0.0.37         vsmart  1         1         37        None      up       1:04:13:23       65/13/25
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['tenant_id'] = int(groups['tenant_id'])
+                peer = groups['peer']
+                ret_dict['peer'][peer]={}
+                ret_dict['peer'][peer]['type'] = (groups['type'])
+                ret_dict['peer'][peer]['domain_id'] = int(groups['domain_id'])
+                ret_dict['peer'][peer]['overlay_id'] = int(groups['overlay_id'])
+                ret_dict['peer'][peer]['site_id'] = int(groups['site_id'])
+                ret_dict['peer'][peer]['region_id'] = (groups['region_id'])
+                ret_dict['peer'][peer]['state'] = (groups['state'])
+                ret_dict['peer'][peer]['uptime'] = (groups['uptime'])
+                ret_dict['peer'][peer]['r_i_s'] = (groups['r_i_s'])
+                continue
+
+        return ret_dict
+
+# =============================================================
+# Parser for 'show sdwan tenant <tenant> omp routes'
+# =============================================================
+
+class ShowSdwanTenantOmpRoutesSchema(MetaParser):
+    """Schema for: show sdwan tenant {tenant} omp routes"""
+
+    schema = {
+        "tenant": int,
+        "vpn": {
+                Any():{
+                    "prefix": {
+                            Any():{
+                                "path_id":{
+                                    Any(): {
+                                        "from_peer": str,
+                                        "label": int,
+                                        "status": str,
+                                        "attribute_type": str,
+                                        "tloc_ip": str,
+                                        "color": str,
+                                        "encap": str,
+                                        "preference": str,
+                                        "affinity_group_number": str,
+                                        "region_id": str,
+                                        "region_path": str,
+                                    },
+                                },
+                             }, 
+                        },
+                     },   
+                },    
+            }
+
+class ShowSdwanTenantOmpRoutes(ShowSdwanTenantOmpRoutesSchema):
+    """Parser for: show sdwan tenant {tenant} omp routes"""
+
+    cli_command = 'show sdwan tenant {tenant} omp routes'
+
+    def cli(self, tenant="", output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(tenant=tenant))
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+        ret_dict ['vpn'] = {}
+        vpn1 = "x"
+
+        #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+        p1 = re.compile(r'^\s*(?P<tenant>\d+)\s+(?P<vpn>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<from_peer>[\d\.]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>[\w\,]+)\s+(?P<attribute_type>\w+)\s+(?P<tloc_ip>[\d\.]+)\s+(?P<color>\w+)\s+(?P<encap>\w+)\s+(?P<preference>\S+)\s+(?P<affinity_group_number>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S)')
+
+
+        #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+        p2 = re.compile(r'^\s*(?P<from_peer>[\d\.]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>[\w\,]+)\s+(?P<attribute_type>\w+)\s+(?P<tloc_ip>[\d\.]+)\s+(?P<color>\w+)\s+(?P<encap>\w+)\s+(?P<preference>\S+)\s+(?P<affinity_group_number>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['tenant'] = int(groups['tenant'])
+                vpn = groups['vpn']
+                path_id = groups['path_id']
+                prefix = groups['prefix']
+                if vpn != vpn1:
+                    ret_dict['vpn'][vpn]={}
+                    vpn1 = vpn
+                    ret_dict['vpn'][vpn]['prefix']={}
+                ret_dict['vpn'][vpn]['prefix'][prefix]={}
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id']={}
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]={}
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['from_peer'] = groups['from_peer']
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['label'] = int(groups['label'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['status'] = groups['status']
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['attribute_type'] = (groups['attribute_type'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['tloc_ip'] = (groups['tloc_ip'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['color'] = (groups['color'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['encap'] = (groups['encap'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['preference'] = (groups['preference'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['affinity_group_number'] = (groups['affinity_group_number'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['region_id'] = (groups['region_id'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['region_path'] = (groups['region_path'])
+                continue
+
+            #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                path_id = groups['path_id']
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]={}
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['from_peer'] = groups['from_peer']
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['label'] = int(groups['label'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['status'] = groups['status']
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['attribute_type'] = (groups['attribute_type'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['tloc_ip'] = (groups['tloc_ip'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['color'] = (groups['color'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['encap'] = (groups['encap'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['preference'] = (groups['preference'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['affinity_group_number'] = (groups['affinity_group_number'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['region_id'] = (groups['region_id'])
+                ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['region_path'] = (groups['region_path'])
+
+
+        return ret_dict
+
+class ShowSdwanMulticastRemoteNodesSchema(MetaParser):
+    """Schema for 'show platform software sdwan multicast remote-nodes vrf {vrf ID}' """
+
+    schema = {
+        "system_ip": {
+            Any(): {
+                "replicator" : str,
+                "spt_only_mode": str,
+                "msdp_i_work": str,
+                "label": str,
+                "received_xg": str,
+                "received_sg": str,
+                "sent_xg": str,
+                "sent_sg": str,
+            },
+        },
+    }
+
+# =======================================================================
+# Parser for 'show platform software sdwan multicast remote-nodes vrf {vrf ID}'
+# =======================================================================
+class ShowSdwanMulticastRemoteNodes(ShowSdwanMulticastRemoteNodesSchema):
+    """parser for 'show platform software sdwan multicast remote-nodes vrf {vrf ID}' """
+
+    cli_command = "show platform software sdwan multicast remote-nodes vrf {vrf_ID}"
+
+    def cli(self, vrf_ID='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
+        else:
+            output = output
+        
+        ret_dict = {}
+        mcast_dict = {}
+        
+        # 5.0.0.2         No       No     1004        0/0        0/0        0/0        0/0
+        #*6.0.0.2         No       No     1006        0/0        0/0        0/0        0/0
+        p1 = re.compile(r'^\s*(?P<system_ip>[\*\d\.]+)\s+(?P<spt_mode>\w+)\s+(?P<msdp>\w+)\s+(?P<label>\d+)\s+'
+                        r'(?P<received_xg>\d+\/\d+)\s+(?P<received_sg>\d+\/\d+)\s+(?P<sent_xg>\d+\/\d+)\s+(?P<sent_sg>\d+\/\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 5.0.0.2         No       No     1004        0/0        0/0        0/0        0/0
+            #*6.0.0.2         No       No     1006        0/0        0/0        0/0        0/0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                mcast_dict = ret_dict.setdefault('system_ip', {})
+                if '*' in groups['system_ip']:
+                    system_ip = groups['system_ip'].lstrip('*')
+                    mcast_dict[system_ip] = {}
+                    mcast_dict[system_ip]['replicator'] = 'Yes'
+                else:
+                    system_ip = groups['system_ip']
+                    mcast_dict[system_ip] = {}
+                    mcast_dict[system_ip]['replicator'] = 'No'
+                mcast_dict[system_ip]['spt_only_mode'] = groups['spt_mode']
+                mcast_dict[system_ip]['msdp_i_work'] = groups['msdp']
+                mcast_dict[system_ip]['label'] = groups['label']
+                mcast_dict[system_ip]['received_xg'] = groups['received_xg']
+                mcast_dict[system_ip]['received_sg'] = groups['received_sg']
+                mcast_dict[system_ip]['sent_xg'] = groups['sent_xg']
+                mcast_dict[system_ip]['sent_sg'] = groups['sent_sg']
+                continue
+
+        return ret_dict
+
+
+class ShowSdwanMulticastReplicatorsSchema(MetaParser):
+    """Schema for 'show platform software sdwan multicast replicators vrf {vrf ID}' """
+
+    schema = {
+        "system_ip": {
+            Any(): {
+                "selected" : str,
+                "preference" : str,
+                "route_count": str,
+                "threshold": str,
+                "distance": str,
+            },
+        },
+    }
+
+# =======================================================================
+# Parser for 'show platform software sdwan multicast replicators vrf {vrf ID}'
+# =======================================================================
+class ShowSdwanMulticastReplicators(ShowSdwanMulticastReplicatorsSchema):
+    """parser for 'show platform software sdwan multicast replicators vrf {vrf ID}' """
+
+    cli_command = "show platform software sdwan multicast replicators vrf {vrf_ID}"
+
+    def cli(self, vrf_ID='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
+        else:
+            output = output
+        
+        ret_dict = {}
+        mcast_dict = {}
+        
+        #  6.0.0.2                       0            1         500             489
+        # >7.0.0.1                       0            2         100               0
+        p1 = re.compile(r'^\s*(?P<system_ip>[\>\d\.]+)\s+(?P<preference>\d+)\s+(?P<route_count>\d+)\s+(?P<threshold>\d+)\s+(?P<distance>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  6.0.0.2                       0            1         500             489
+            # >7.0.0.1                       0            2         100               0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                mcast_dict = ret_dict.setdefault('system_ip', {})
+                if '>' in groups['system_ip']:
+                    system_ip = groups['system_ip'].lstrip('>')
+                    mcast_dict[system_ip] = {}
+                    mcast_dict[system_ip]['selected'] = 'Yes'
+                else:
+                    system_ip = groups['system_ip']
+                    mcast_dict[system_ip] = {}
+                    mcast_dict[system_ip]['selected'] = 'No'
+                mcast_dict[system_ip]['preference'] = groups['preference']
+                mcast_dict[system_ip]['route_count'] = groups['route_count']
+                mcast_dict[system_ip]['threshold'] = groups['threshold']
+                mcast_dict[system_ip]['distance'] = groups['distance']
+                continue
+
+        return ret_dict
+
+
+# ===========================================================================
+# Schema Parser for 'show sdwan security-info'
+# ===========================================================================
+class ShowSdwanSecurityInfoSchema(MetaParser):
+    """Schema for 'show sdwan security-info' """
+
+    schema = {
+        "authentication_type"  : str,
+        "rekey"                : str,
+        "replay_window"        : str,
+        "encryption_supported" : str,
+        "fips_mode"            : str,
+        "pairwise_keying"      : str,
+        "pwk_sym_rekey"        : str,
+        "extended_ar_window"   : str,
+        "integrity_type"       : str,
+    } 
+
+# ============================================================================
+# Parser for 'show sdwan security-info'
+# ============================================================================
+class ShowSdwanSecurityInfo(ShowSdwanSecurityInfoSchema):
+    """parser for 'show sdwan security-info' """
+
+    cli_command = "show sdwan security-info"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+        
+        ret_dict = {}
+
+        #security-info authentication-type deprecated
+        p1 = re.compile(r'^\s*security-info\s+authentication-type\s+(?P<authentication_type>\w+)$')
+
+        #security-info rekey 86400
+        p2 = re.compile(r'^\s*security-info\s+rekey\s+(?P<rekey>\d+)$')
+
+        #security-info replay-window 512
+        p3 = re.compile(r'^\s*security-info\s+replay-window\s+(?P<replay_window>\d+)$')
+
+        #security-info encryption-supported "AES_GCM_256 (and AES_256_CBC for multicast)"
+        p4 = re.compile(r'^\s*security-info\s+encryption-supported\s+(?P<encryption_supported>\w+)$')
+
+        #security-info fips-mode Disabled
+        p5 = re.compile(r'^\s*security-info\s+fips-mode\s+(?P<fips_mode>\w+)$')
+
+        #security-info pairwise-keying Disabled
+        p6 = re.compile(r'^\s*security-info\s+pairwise-keying\s+(?P<pairwise_keying>\w+)$')
+
+        #security-info pwk-sym-rekey Enabled
+        p7 = re.compile(r'^\s*security-info\s+pwk-sym-rekey\s+(?P<pwk_sym_rekey>\w+)$')        
+
+        #security-info extended-ar-window Disabled
+        p8 = re.compile(r'^\s*security-info\s+extended-ar-window\s+(?P<extended_ar_window>\w+)$')
+
+        #security-info integrity-type "ip-udp-esp esp"
+        p9 = re.compile(r'^\s*security-info\s+integrity-type\s+"(?P<integrity_type>.*)"$')
+
+        for line in output.splitlines():
+            if not line:
+                continue
+
+            #security-info authentication-type deprecated
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['authentication_type'] = groups['authentication_type']
+                continue
+
+            #security-info rekey 86400
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['rekey'] = groups['rekey']
+                continue
+
+            #security-info replay-window 512
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['replay_window'] = groups['replay_window']
+                continue
+
+            #security-info encryption-supported "AES_GCM_256 (and AES_256_CBC for multicast)"
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['encryption_supported'] = groups['encryption_supported'].strip('"')
+                continue
+
+            #security-info fips-mode Disabled
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['fips_mode'] = groups['fips_mode']
+                continue
+
+            #security-info pairwise-keying Disabled
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['pairwise_keying'] = groups['pairwise_keying']
+                continue
+
+            #security-info pwk-sym-rekey Enabled
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['pwk_sym_rekey'] = groups['pwk_sym_rekey']
+                continue
+
+            #security-info extended-ar-window Disabled
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['extended_ar_window'] = groups['extended_ar_window']
+                continue
+
+            #security-info integrity-type "ip-udp-esp esp"
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['integrity_type'] = groups['integrity_type']
+                continue
+
+        return ret_dict
+
+
+# =====================================================================================================
+# Schema Parser for 'show platform hardware qfp active feature sdwan client interface <interface name>'
+# =====================================================================================================
+class ShowSdwanClientInterfaceSchema(MetaParser):
+    """Schema for 'show platform hardware qfp active feature sdwan client interface <interface name>' """
+
+    schema = {
+        "tloc_extension_output_uidb"        : str,
+        "interface_color"                   : str,
+        "bfd_default_dscp"                  : str,
+        "interface_class_exmem_address"     : str,
+        "interface_rewrite_exmem_address"   : str,
+        "explicit_input_acl_cfg"            : str,
+        "wan_interface"                     : str,
+        "sig_tun_src"                       : str,
+        "standard_ipsec_tun_src"            : str,
+        "standard_ipsec_tun_all"            : str,
+        "standard_ssl_tun_all"              : str,
+        "interface_ip"                      : str,
+        "tloc_ext_gre_dst_ip"               : str,
+        "path_monitor_send_num"             : str,
+        "path_monitor_recv_num"             : str,
+        "service" : {
+            Any(): {
+                "allowed"                   : str,
+            },
+
+        },
+    }
+
+# ==============================================================================================
+# Parser for 'show platform hardware qfp active feature sdwan client interface <interface name>'
+# ==============================================================================================
+class ShowSdwanClientInterface(ShowSdwanClientInterfaceSchema):
+    """parser for 'show platform hardware qfp active feature sdwan client interface <interface name>' """
+
+    cli_command = "show platform hardware qfp active feature sdwan client interface {interface_name}"
+
+    def cli(self, interface_name='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface_name=interface_name))
+        else:
+            output = output
+        
+        ret_dict = {}
+        srv_dict = {}
+
+        #Tloc extension output uidb  : 0xffffffff
+        p1 = re.compile(r'^\s*Tloc\s+extension\s+output\s+uidb\s+:\s+(?P<tloc_extension_output_uidb>\w+)$')
+
+        #Interface color        : private1
+        p2 = re.compile(r'^\s*Interface\s+color\s+:\s+(?P<interface_color>(.*))$')
+
+        #BFD Default DSCP       : 0x30
+        p3 = re.compile(r'^\s*BFD\s+Default\s+DSCP\s+:\s+(?P<bfd_default_dscp>\w+)$')
+
+        #Interface class exmem address   : 0x0
+        p4 = re.compile(r'^\s*Interface\s+class\s+exmem\s+address\s+:\s+(?P<interface_class_exmem_address>\w+)$')
+
+        #Interface rewrite exmem address   : 0x0
+        p5 = re.compile(r'^\s*Interface\s+rewrite\s+exmem\s+address\s+:\s+(?P<interface_rewrite_exmem_address>\w+)$')
+
+        #Explicit input ACL cfg :  Yes
+        p6 = re.compile(r'^\s*Explicit\s+input\s+ACL\s+cfg\s+:\s+(?P<explicit_input_acl_cfg>\w+)$')
+
+        #WAN interface          :  Yes
+        p7 = re.compile(r'^\s*WAN\s+interface\s+:\s+(?P<wan_interface>\w+)$')
+
+        #SIG Tun src            :  No
+        p8 = re.compile(r'^\s*SIG\s+Tun\s+src\s+:\s+(?P<sig_tun_src>\w+)$')
+
+        #Standard IPSec Tun src :  No
+        p9 = re.compile(r'^\s*Standard\s+IPSec\s+Tun\s+src\s+:\s+(?P<standard_ipsec_tun_src>\w+)$')
+
+        #Standard IPSec Tun all :  No
+        p10 = re.compile(r'^\s*Standard\s+IPSec\s+Tun\s+all\s+:\s+(?P<standard_ipsec_tun_all>\w+)$')
+
+        #Standard SSL Tun all   :  No
+        p11 = re.compile(r'^\s*Standard\s+SSL\s+Tun\s+all\s+:\s+(?P<standard_ssl_tun_all>\w+)$')
+
+        #Interface IP           : 0.0.0.0
+        p12 = re.compile(r'^\s*Interface\s+IP\s+:\s+(?P<interface_ip>.*)$')
+
+        #TLOC Ext GRE Dst IP    : 0.0.0.0
+        p13 = re.compile(r'^\s*TLOC\s+Ext\s+GRE\s+Dst\s+IP\s+:\s+(?P<tloc_ext_gre_dst_ip>.*)$')
+
+        #Path Monitor send num  : 0
+        p14 = re.compile(r'^\s*Path\s+Monitor\s+send\s+num\s+:\s+(?P<path_monitor_send_num>\d+)$')
+
+        #Path Monitor recv num  : 0
+        p15 = re.compile(r'^\s*Path\s+Monitor\s+recv\s+num\s+:\s+(?P<path_monitor_recv_num>\d+)$')
+
+        #all       :  Yes
+        #bgp       :  No
+        #dhcp      :  Yes
+        p16 = re.compile(r'^\s*(?P<service_name>\w+)\s+:\s+(?P<allowed>\w+)$')
+
+        for line in output.splitlines():
+            if not line:
+                continue
+
+            #Tloc extension output uidb  : 0xffffffff
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['tloc_extension_output_uidb'] = groups['tloc_extension_output_uidb']
+                continue
+
+            #Interface color        : private1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['interface_color'] = groups['interface_color']
+                continue
+
+            #BFD Default DSCP       : 0x30
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['bfd_default_dscp'] = groups['bfd_default_dscp']
+                continue
+
+            #Interface class exmem address   : 0x0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['interface_class_exmem_address'] = groups['interface_class_exmem_address']
+                continue
+
+            #Interface rewrite exmem address   : 0x0
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['interface_rewrite_exmem_address'] = groups['interface_rewrite_exmem_address']
+                continue
+
+            #Explicit input ACL cfg :  Yes
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['explicit_input_acl_cfg'] = groups['explicit_input_acl_cfg']
+                continue
+
+            #WAN interface          :  Yes
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['wan_interface'] = groups['wan_interface']
+                continue
+
+            #SIG Tun src            :  No
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['sig_tun_src'] = groups['sig_tun_src']
+                continue
+
+            #Standard IPSec Tun src :  No
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['standard_ipsec_tun_src'] = groups['standard_ipsec_tun_src']
+                continue
+
+            #Standard IPSec Tun all :  No
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['standard_ipsec_tun_all'] = groups['standard_ipsec_tun_all']
+                continue
+
+            #Standard SSL Tun all   :  No
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['standard_ssl_tun_all'] = groups['standard_ssl_tun_all']
+                continue
+
+            #Interface IP           : 0.0.0.0
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['interface_ip'] = groups['interface_ip']
+                continue
+
+            #TLOC Ext GRE Dst IP    : 0.0.0.0
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['tloc_ext_gre_dst_ip'] = groups['tloc_ext_gre_dst_ip']
+                continue
+
+            #Path Monitor send num  : 0
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['path_monitor_send_num'] = groups['path_monitor_send_num']
+                continue
+
+            #Path Monitor recv num  : 0
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['path_monitor_recv_num'] = groups['path_monitor_recv_num']
+                continue
+
+            #all       :  Yes
+            #bgp       :  No
+            #dhcp      :  Yes
+            p16 = re.compile(r'^\s*(?P<service_name>\w+)\s+:\s+(?P<allowed>\w+)$')
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                srv_dict = ret_dict.setdefault('service', {})
+                service_name = groups['service_name']
+                srv_dict[service_name] = {}
+                srv_dict[service_name]['allowed'] = groups['allowed']
+                continue
+
+        return ret_dict
+
+
+# ==============================================
+# Schema for 'show sdwan omp multicast-routess'
+# ==============================================
+class ShowSdwanOmpMulticastRoutesSchema(MetaParser):
+
+    """ Schema for "show sdwan omp multicast-routes" """
+
+    schema = {
+        'address-family': {
+            Any(): {
+                'vpn': {
+                    Any(): {
+                        'tenant': {
+                            Any(): {
+                                'originator' : {
+                                    Any(): {
+                                        'type' : str,
+                                        'source_system_ip' : str,
+                                        'destination_system_ip' : str,
+                                        'group' : str,
+                                        'source_mcast_ip' : str,
+                                        'path_list': {
+                                            Any(): {  # index
+                                                'from_peer': str,
+                                                'rp_address': str,
+                                                'status': str,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show sdwan omp multicast-routes'
+# =============================================
+class ShowSdwanOmpMulticastRoutes(ShowSdwanOmpMulticastRoutesSchema):
+
+    """ Parser for "show sdwan omp multicast-routes" """
+
+    cli_command = "show sdwan omp multicast-routes"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+        
+        ret_dict = {}
+
+        #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R      
+        #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R  
+        p1 = re.compile(r'^\s*(?P<af>\s+|\S+)\s+(?P<tenant>\d+)\s+(?P<type>\S+)\s+(?P<vpn>\d+)\s+(?P<src_orig>[\d\.]+)\s+(?P<dst>[\d\.]+)\s+'
+                        r'(?P<group>[\d\.]+)\s+(?P<src_mcast>[\d\.]+)\s+(?P<peer>[\d\.]+)\s+(?P<rp>[\d\.]+|-)\s+(?P<status>[\w,]+)\s*$')
+
+        #                                                                                1.0.0.18  100.200.2.1  C,R      
+        #                                                                                1.0.0.19  100.200.2.1  C,R      
+        #                                                                                1.0.0.20  100.200.2.1  C,I,R
+        p2 = re.compile(r'^\s*(?P<peer>[\d\.]+)\s+(?P<rp>[\d\.]+|-)\s+(?P<status>[\w,]+)\s*$')
+
+        for line in output.splitlines():
+
+            #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R      
+            #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R 
+            m = p1.match(line)
+            if m:
+                index = 1
+                group = m.groupdict()
+                if not re.match('^\s*$', group['af']):
+                    af = group['af']
+                vpn = group['vpn']
+                tenant = group['tenant']
+                originator = group['src_orig']
+                af_dict = ret_dict.setdefault('address-family', {}).setdefault(af, {})
+                vpn_dict = af_dict.setdefault('vpn', {}).setdefault(vpn, {})
+                tenant_dict = vpn_dict.setdefault('tenant', {}).setdefault(tenant, {})
+                route_info = tenant_dict.setdefault('originator', {}).setdefault(originator, {})
+                route_info['type'] = group['type']
+                route_info['source_system_ip'] = group['src_orig']
+                route_info['destination_system_ip'] = group['dst']
+                route_info['group'] = group['group']
+                route_info['source_mcast_ip'] = group['src_mcast']
+                path_dict = route_info.setdefault('path_list', {})
+                path_dict[str(index)] = {}
+                path_dict[str(index)]['from_peer'] = group['peer']
+                path_dict[str(index)]['rp_address'] = group['rp']
+                path_dict[str(index)]['status'] = group['status']
+                index += 1
+
+            #                                                                                1.0.0.18  100.200.2.1  C,R      
+            #                                                                                1.0.0.19  100.200.2.1  C,R      
+            #                                                                                1.0.0.20  100.200.2.1  C,I,R
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict[str(index)] = {}
+                path_dict[str(index)]['from_peer'] = group['peer']
+                path_dict[str(index)]['rp_address'] = group['rp']
+                path_dict[str(index)]['status'] = group['status']
+                index += 1
+
+        return ret_dict
+
+
+# ===================================================
+# Schema for 'show sdwan omp multicast-auto-discover'
+# ===================================================
+class ShowSdwanOmpMulticastAutoDiscoverSchema(MetaParser):
+
+    """ Schema for "show sdwan omp multicast-auto-discover" """
+
+    schema = {
+        'address-family': {
+            Any(): {
+                'vpn': {
+                    Any(): {
+                        'tenant': {
+                            Any(): {
+                                'originator' : {
+                                    Any(): {
+                                        'path_list': {
+                                            Any(): {  # index
+                                                'from_peer': str,
+                                                'status': str,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ===================================================
+# Parser for 'show sdwan omp multicast-auto-discover'
+# ===================================================
+class ShowSdwanOmpMulticastAutoDiscover(ShowSdwanOmpMulticastAutoDiscoverSchema):
+
+    """ Parser for "show sdwan omp multicast-auto-discover" """
+
+    cli_command = "show sdwan omp multicast-auto-discover"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+        
+        ret_dict = {}
+
+        #ipv4     0         2    5.0.0.2     1.0.0.17  C,R      
+        p1 = re.compile(r'^\s*(?P<af>\s+|\S+)\s+(?P<tenant>\d+)\s+(?P<vpn>\d+)\s+(?P<src_orig>[\d\.]+)\s+(?P<peer>[\d\.]+)\s+(?P<status>[\w,]+)\s*$')
+
+        #                                    1.0.0.18  C,R           
+        p2 = re.compile(r'^\s*(?P<peer>[\d\.]+)\s+(?P<status>[\w,]+)\s*$')
+
+        for line in output.splitlines():
+
+            #ipv4     0         2    5.0.0.2     1.0.0.17  C,R      
+            m = p1.match(line)
+            if m:
+                index = 1
+                group = m.groupdict()
+                if not re.match('^\s*$', group['af']):
+                    af = group['af']
+                vpn = group['vpn']
+                tenant = group['tenant']
+                originator = group['src_orig']
+                af_dict = ret_dict.setdefault('address-family', {}).setdefault(af, {})
+                vpn_dict = af_dict.setdefault('vpn', {}).setdefault(vpn, {})
+                tenant_dict = vpn_dict.setdefault('tenant', {}).setdefault(tenant, {})
+                route_info = tenant_dict.setdefault('originator', {}).setdefault(originator, {})
+                path_dict = route_info.setdefault('path_list', {})
+                path_dict[str(index)] = {}
+                path_dict[str(index)]['from_peer'] = group['peer']
+                path_dict[str(index)]['status'] = group['status']
+                index += 1
+
+            #                                    1.0.0.18  C,R           
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict[str(index)] = {}
+                path_dict[str(index)]['from_peer'] = group['peer']
+                path_dict[str(index)]['status'] = group['status']
+                index += 1
+
+        return ret_dict

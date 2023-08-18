@@ -1,0 +1,10 @@
+XTR1#sh lisp platform smr known-locators 
+Platform requested masked SMR for:
+  IPv6: 32 bits
+
+LISP known locators in VRF default
+
+RLOC                                        Known from
+100:11:11::11                               MS 100:44:44::44, MS 100:55:55::55
+100:22:22::22                               MS 100:44:44::44, MS 100:55:55::55
+100:33:33::33                               MS 100:44:44::44, MS 100:55:55::55

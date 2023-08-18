@@ -1,0 +1,130 @@
+
+MAC Address : 00d7.8ffe.e2c0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Disabled
+  Operation State: Down
+  Current Tx Power Level: 3
+  Current Channel: (108)*
+  Antenna Type: N/A
+  Internal Antenna Gain (in .5 dBm units): 10
+
+MAC Address : 488b.0a78.25c0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Updownlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: 6
+  Current Channel: (157)
+  Antenna Type:
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 488b.0a78.c8a0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Disabled
+  Operation State: Down
+  Current Tx Power Level: 4
+  Current Channel: (157,161)
+  Antenna Type: C-ANT-DART-RPTNC
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 488b.0a78.cba0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Updownlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: *1
+  Current Channel: (157)
+  Antenna Type: C-ANT-DART-RPTNC
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 4ca6.4d22.cc00
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Updownlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: 5
+  Current Channel: (157)
+  Antenna Type: N/A
+  Internal Antenna Gain (in .5 dBm units): 14
+
+MAC Address : 4ca6.4d23.6fe0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: *1
+  Current Channel: (157)
+  Antenna Type: C-ANT-DART-RPTNC
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 4ca6.4d23.7000
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: 6
+  Current Channel: (157)
+  Antenna Type:
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 80e8.6fd7.fc00
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Updownlink
+  Administrative State: Enabled
+  Operation State: Up
+  Antenna Type: N/A
+  Internal Antenna Gain (in .5 dBm units): 14
+
+MAC Address : 4ca6.4d23.6fe0
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: *1
+  Current Channel: (157)
+  Antenna Type: C-ANT-DART-RPTNC
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 4ca6.4d23.7000
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Downlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: 6
+  Current Channel: (157)
+  Antenna Type:
+  Internal Antenna Gain (in .5 dBm units): 1
+
+MAC Address : 80e8.6fd7.fc00
+  Current Backhaul Slot: 1
+  Radio Type: Main
+  Radio Subband: All
+  Mesh Radio Role: Updownlink
+  Administrative State: Enabled
+  Operation State: Up
+  Current Tx Power Level: 6
+  Current Channel: (157)
+  Antenna Type: N/A
+  Internal Antenna Gain (in .5 dBm units): 10

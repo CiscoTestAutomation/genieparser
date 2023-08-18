@@ -1,0 +1,15 @@
+show isis interface brief
+Mon Apr 10 05:15:25.005 UTC
+
+IS-IS CORE Interfaces
+    Interface      All     Adjs    Adj Topos  Adv Topos  CLNS   MTU    Prio  
+                   OK    L1   L2    Run/Cfg    Run/Cfg                L1   L2
+-----------------  ---  ---------  ---------  ---------  ----  ----  --------
+
+IS-IS ACCESS Interfaces
+    Interface      All     Adjs    Adj Topos  Adv Topos  CLNS   MTU    Prio  
+                   OK    L1   L2    Run/Cfg    Run/Cfg                L1   L2
+-----------------  ---  ---------  ---------  ---------  ----  ----  --------
+Lo0                Yes    -    0      2/2        2/2     Up    1500    -    - 
+Gi0/0/0/0          Yes    -    1      2/2        2/2     Up    1497    -   64 
+Gi0/0/0/1          Yes    -    1      2/2        2/2     Up    1497    -   64

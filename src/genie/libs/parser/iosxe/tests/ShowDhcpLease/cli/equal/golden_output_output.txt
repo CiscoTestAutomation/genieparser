@@ -1,0 +1,20 @@
+Temp IP addr: 40.182.4.1  for peer on Interface: HundredGigE1/1/0
+Temp  sub net mask: 255.255.255.252
+   DHCP Lease server: 40.182.4.2, state: 5 Bound
+   DHCP transaction id: 1663D15A
+   Lease: 3600 secs,  Renewal: 1800 secs,  Rebind: 3150 secs
+   Next timer fires after: 00:19:01
+   Retry count: 0   Client-ID: 00fd.22bc.b860
+   Client-ID hex dump: 00FD22BCB860
+   Hostname: SM-Hub2
+Temp IP addr: 40.187.4.1  for peer on Interface: TenGigabitEthernet1/0/6
+Temp  sub net mask: 255.255.255.252
+   DHCP Lease server: 40.187.4.2, state: 5 Bound
+   DHCP transaction id: 6AAAF114
+   Lease: 86400 secs,  Renewal: 43200 secs,  Rebind: 75600 secs
+Temp default-gateway addr: 40.187.4.2
+   Next timer fires after: 10:15:49
+   Retry count: 0   Client-ID: cisco-00fd.22bc.b846-Te1/0/6
+   Client-ID hex dump: 636973636F2D303066642E323262632E
+                       623834362D5465312F302F36
+   Hostname: SM-Hub2

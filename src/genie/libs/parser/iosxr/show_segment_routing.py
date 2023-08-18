@@ -15,6 +15,8 @@ Parser for the following show commands:
     * show pce ipv4 prefix
     * show pce ipv4 peer detail
     * show pce ipv4 peer
+    * show segment-routing srv6 locator
+    * show segment-routing srv6 locator {locator_name}
 '''
 
 # !/bin/env python
@@ -1516,6 +1518,66 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
                 sid = group.pop('sid')
                 sid_dict = locator_dict.setdefault(locator, {}).setdefault('sid',{}).setdefault(sid,{})
                 sid_dict.update(group)
+                continue
+
+        return ret_dict
+
+class ShowSegmentRoutingSrv6LocatorSchema(MetaParser):
+    ''' Schema for:
+        * show segment-routing srv6 locator
+        * show segment-routing srv6 locator {locator_name}
+    '''
+    schema = {
+        'locators': {
+            Any(): {
+                'name': str,
+                'id': int,
+                'algorithm': int,
+                'prefix': str,
+                'status': str,
+                'flags': str
+            }
+        }
+    }
+
+
+class ShowSegmentRoutingSrv6Locator(ShowSegmentRoutingSrv6LocatorSchema):
+    ''' Parser for:
+        * show segment-routing srv6 locator
+        * show segment-routing srv6 locator {locator_name}
+    '''
+    cli_command = ['show segment-routing srv6 locator',
+                   'show segment-routing srv6 locator {locator_name}']
+
+    def cli(self, locator_name=None, output=None):
+        if output is None:
+            if locator_name:
+                output = self.device.execute(self.cli_command[1].format(locator_name=locator_name))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # LL                    1        128   fc00:c001:1001::/48       Up       U
+        # MAIN                  2        0     fc00:c000:1001::/48       Up       U
+        p1 = re.compile(r'^(?P<name>\w+)\s+(?P<id>\d+)\s+(?P<algorithm>\d+)\s+(?P<prefix>[\w:\/]+)\s+(?P<status>[Up|Dn]+)\s+(?P<flags>[U])$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # LL                    1        128   fc00:c001:1001::/48       Up       U
+            # MAIN                  2        0     fc00:c000:1001::/48       Up       U
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                locator_dict = ret_dict.setdefault('locators', {}). \
+                                    setdefault(group['name'], {})
+                locator_dict['name'] = group['name']
+                locator_dict['id'] = int(group['id'])
+                locator_dict['algorithm'] = int(group['algorithm'])
+                locator_dict['prefix'] = group['prefix']
+                locator_dict['status'] = group['status']
+                locator_dict['flags'] = group['flags']
                 continue
 
         return ret_dict

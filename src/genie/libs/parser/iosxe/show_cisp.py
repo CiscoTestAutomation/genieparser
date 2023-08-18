@@ -253,7 +253,8 @@ class ShowCispRegistrationsSchema(MetaParser):
     schema = {
         'interface': {
             Any(): {
-                'auth_mgr': str
+                Optional('auth_mgr'): str,
+                Optional('dot1x'): str
             }
         }
     }
@@ -279,6 +280,9 @@ class ShowCispRegistrations(ShowCispRegistrationsSchema):
         # Auth Mgr (Authenticator)
         p3 = re.compile(r"^Auth Mgr \((?P<auth_mgr>\w+)\)$")
 
+        # 802.1x Sup (Supplicant)
+        p4 = re.compile(r"^802\.1x.+\((?P<dot1x>\w+)\)$")
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -300,6 +304,12 @@ class ShowCispRegistrations(ShowCispRegistrationsSchema):
             m = p3.match(line)
             if m:
                 interface_dict['auth_mgr'] = m.groupdict()['auth_mgr']
+                continue
+
+            # 802.1x Sup (Supplicant)
+            m = p4.match(line)
+            if m:
+                interface_dict['dot1x'] = m.groupdict()['dot1x']
                 continue
 
         return ret_dict

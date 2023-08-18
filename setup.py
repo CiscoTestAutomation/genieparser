@@ -31,7 +31,7 @@ def build_version_range(version):
     eg: for version '3.4.7', return '>=3.4.0, <3.5.0'
     '''
     req_ver = version.split('.')
-    version_range = '>= %s.%s.0, < %s.%s.0' % \
+    version_range = '>= %s.%s.0rc0, < %s.%s.0' % \
         (req_ver[0], req_ver[1], req_ver[0], int(req_ver[1])+1)
 
     return version_range

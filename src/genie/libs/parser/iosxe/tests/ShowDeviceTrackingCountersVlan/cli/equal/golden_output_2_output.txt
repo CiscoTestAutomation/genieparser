@@ -1,0 +1,50 @@
+Received messages on vlan 20  :
+Protocol        Protocol message
+NDP             REDIR[1] 
+DHCPv6          
+ARP             
+DHCPv4          
+ACD&DAD         
+
+Received Broadcast/Multicast messages on vlan 20  :
+Protocol        Protocol message
+NDP             REDIR[1] 
+DHCPv6          
+ARP             
+DHCPv4          
+
+Bridged messages from vlan 20  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             
+DHCPv4          
+ACD&DAD         
+
+Broadcast/Multicast converted to unicast messages from vlan 20  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             
+DHCPv4          
+ACD&DAD         
+
+Probe message on vlan 20  :
+Type            Protocol message
+PROBE_SEND      
+PROBE_REPLY     
+
+Limited Broadcast to Local message on vlan 20  :
+Type            Protocol message
+NDP             
+DHCPv6          
+ARP             
+DHCPv4          
+
+Dropped messages on vlan 20  :
+Feature             Protocol Msg [Total dropped]
+Routing Proxy:      NDP      REDIR[1]
+                    reason:  Stop other ND [1]
+
+
+Faults on vlan 20  :

@@ -4,10 +4,10 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
 
+
 # ===========================================
 # Schema for 'show orchestrator connections'
 # ===========================================
-
 
 class ShowOrchestratorConnectionsSchema(MetaParser):
     """ Schema for "show orchestrator connections" """
@@ -35,11 +35,9 @@ class ShowOrchestratorConnectionsSchema(MetaParser):
         },
     }
 
-
 # ===========================================
 # Parser for 'show orchestrator connections'
 # ===========================================
-
 
 class ShowOrchestratorConnections(ShowOrchestratorConnectionsSchema):
     """ Parser for "show orchestrator connections" """
@@ -91,3 +89,83 @@ class ShowOrchestratorConnections(ShowOrchestratorConnectionsSchema):
                 continue
 
         return parsed_dict
+
+
+# =====================================================
+# Schema for 'show orchestrator reverse-proxy-mapping'
+# ====================================================
+
+class ShowOrchestratorReverseProxyMappingSchema(MetaParser):
+    """ Schema for "show orchestrator reverse-proxy-mapping" """
+
+    schema = {
+        'total_mappings' : int,
+        'uuid' : {
+            Any() : {
+                Any() : {
+                    'private_ip' : str,
+                    'private_port' : str,
+                    'proxy_ip' : str,
+                    'proxy_port' : str
+                }
+            }
+        }
+    }
+
+# ===========================================
+# Parser for 'show orchestrator connections'
+# ===========================================
+
+class ShowOrchestratorReverseProxyMapping(ShowOrchestratorReverseProxyMappingSchema):
+    """ Parser for "show orchestrator reverse-proxy-mapping" """
+
+    cli_command = "show orchestrator reverse-proxy-mapping"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command + '| tab')
+        else:
+            output = output
+
+        ret_dict = {}
+        rp_dict = {}
+        counter_dict = {}
+
+        #2153b38d-09fe-413e-a70a-bb5a7c7453e4  26.0.1.20        23456    99.99.99.184  23456  
+        #2153b38d-09fe-413e-a70a-bb5a7c7453e4  2600:0:0:1::20   23456    9999::184     23456  
+        p1 = re.compile(r'^\s*(?P<uuid>[a-zA-Z0-9\-]+)\s+(?P<private_ip>[\d\.]+]|[a-fA-F\d\:]+)\s+'
+                        r'(?P<private_port>\d+)\s+(?P<proxy_ip>[\d\.]+|[a-fA-F\d\:]+)\s+(?P<proxy_port>\d+)\s*$')
+
+        for line in output.splitlines():
+            if not line:
+                continue
+
+            #2153b38d-09fe-413e-a70a-bb5a7c7453e4  26.0.1.20        23456    99.99.99.184  23456  
+            #2153b38d-09fe-413e-a70a-bb5a7c7453e4  2600:0:0:1::20   23456    9999::184     23456  
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                uuid = groups['uuid']
+                rp_dict = ret_dict.setdefault('uuid', {})
+
+                if uuid in counter_dict:
+                    counter_dict[uuid] = counter_dict[uuid] + 1
+                else:
+                    counter_dict[uuid] = 1
+
+                uuid_map_dict = rp_dict.setdefault(uuid, {})
+                map_dict = uuid_map_dict.setdefault(counter_dict[uuid],{})
+                map_dict['private_ip'] = groups['private_ip']
+                map_dict['private_port'] = groups['private_port']
+                map_dict['proxy_ip'] = groups['proxy_ip']
+                map_dict['proxy_port'] = groups['proxy_port']
+
+                continue
+
+        # Code to count total numer of reverser-proxy mappings
+        total_mappings = 0
+        for mapping_count_per_uuid in counter_dict:
+            total_mappings += counter_dict[mapping_count_per_uuid]    
+        ret_dict['total_mappings'] = total_mappings
+
+        return ret_dict

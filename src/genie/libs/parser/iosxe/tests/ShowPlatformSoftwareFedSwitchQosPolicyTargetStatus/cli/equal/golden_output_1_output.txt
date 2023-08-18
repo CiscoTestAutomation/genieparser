@@ -1,0 +1,41 @@
+TCG status summary:
+
+Loc Interface             IIF-ID           Dir State:(cfg,opr) Policy
+--- --------------------- ---------------- --- --------------- --------------------
+?:255 Control Plane         0x00000001000001 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-0          0x0000000100000d OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-1          0x0000000100000e OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-2          0x0000000100000f OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-3          0x00000001000010 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-4          0x00000001000011 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-5          0x00000001000012 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-6          0x00000001000013 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-7          0x00000001000014 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-8          0x00000001000015 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-9          0x00000001000016 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-10         0x00000001000017 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-11         0x00000001000018 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-12         0x00000001000019 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-13         0x0000000100001a OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-14         0x0000000100001b OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-15         0x0000000100001c OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-16         0x0000000100001d OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-17         0x0000000100001e OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-18         0x0000000100001f OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-19         0x00000001000020 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-20         0x00000001000021 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-21         0x00000001000022 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-22         0x00000001000023 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-23         0x00000001000024 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-24         0x00000001000025 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-25         0x00000001000026 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-26         0x00000001000027 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-27         0x00000001000028 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-28         0x00000001000029 OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-29         0x0000000100002a OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-30         0x0000000100002b OUT VALID,SET_INHW  system-cpp-policy
+?:0 CoPP-Queue-31         0x0000000100002c OUT VALID,SET_INHW  system-cpp-policy
+
+L:6 FortyGigabitEthernet1/0/5 0x0000000000000e OUT VALID,SET_INHW  PARENT
+
+L:6 FortyGigabitEthernet1/0/5 0x0000000000000e OUT VALID,SET_INHW  CHILD

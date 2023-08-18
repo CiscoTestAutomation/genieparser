@@ -1743,3 +1743,297 @@ class ShowFlowMonitorCheck(ShowFlowMonitorCheckSchema):
 
         return ret_dict
 
+# =================================================================================================================================
+# Schema for 'show flow monitor {name} cache filter {int_type} {direction} {interface_name} sort highest {int_type} {direction} {top}'
+# =================================================================================================================================
+class ShowFlowMonitorCacheFilterInterfaceSchema(MetaParser):
+    ''' Schema for "show flow monitor {name} cache filter {int_type} {direction} {interface_name} sort highest {int_type} {direction} {top}" '''
+
+    schema = {
+        "processed_flow": int,
+        "matched_flow": int,
+        "aggregated_flow": int,
+        "showing_flow": str,
+        Optional("ipv4_source_address"): ListOf(str),
+        Optional("ipv4_dest_address"): ListOf(str),
+        Optional("trans_source_port"): ListOf(str),
+        Optional("trans_dest_port"): ListOf(str),
+        Optional("interface_output"): ListOf(str),
+        Optional("interface_input_val") : ListOf(str),
+        "ip_version": ListOf(str),
+        "ip_protocol": ListOf(str),
+        Optional("ip_ttl"): ListOf(str),
+        Optional("interface_input"): ListOf(str),
+        Optional("interface_output_val"): ListOf(str),
+        "counter_packets_long": ListOf(str),
+        "timestamp_abs_first": ListOf(str),
+        "timestamp_abs_last": ListOf(str),
+        "counter_bytes_layers_long": ListOf(str),
+        Optional("ip_tos"): ListOf(str),
+        Optional("ipv6_source_address"): ListOf(str),
+        Optional("ipv6_dest_address"): ListOf(str)
+    }
+
+# ===================================================================================================================================
+# Parser for 'show flow monitor {name} cache filter {int_type} {direction} {interface_name} sort highest {int_type} {direction} {top}'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheFilterInterface(ShowFlowMonitorCacheFilterInterfaceSchema):
+    ''' Parser for
+      "show flow monitor {name} cache filter {int_type} {direction} {interface_name} sort highest {int_type} {direction} {top}"
+    '''
+
+    cli_command = 'show flow monitor {name} cache filter {int_type} {direction} {interface_name} sort highest {other_int_type} {other_direction} {top}'
+
+    def cli(self, name, int_type, direction, interface_name, top, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name, int_type=int_type, direction=direction, interface_name=interface_name, other_int_type=int_type, other_direction=direction, top=top)
+            output = self.device.execute(cmd)
+            out = output
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # Processed 1032 flows
+        p1 = re.compile(r'^Processed (?P<processed_flow>[\d]+) flows$')
+
+        # Matched 479 flows
+        p2 = re.compile(r'^Matched (?P<matched_flow>[\d]+) flows$')
+
+        # Aggregated to 479 flows
+        p3 = re.compile(r'^Aggregated to (?P<aggregated_flow>[\d]+) flows$')
+
+        # Showing the top 2 flows
+        p4 = re.compile(r'^Showing the (?P<showing_flow>[\w\ ]+) flows$')
+
+        # IPV4 SOURCE ADDRESS:        11.11.19.1
+        p5 = re.compile(r'^IPV4 SOURCE ADDRESS:        (?P<ipv4_source_address>[\w\.]+)$')
+
+        # IPV4 DESTINATION ADDRESS:   224.0.0.6
+        p6 = re.compile(r'^IPV4 DESTINATION ADDRESS:   (?P<ipv4_dest_address>[\w\.]+)$')
+
+        # INTERFACE OUTPUT:           Gi1/0/13
+        p7 = re.compile(r'^INTERFACE OUTPUT:           (?P<interface_output>[\w\/]+)$')
+
+        # IP VERSION:                 4
+        p8 = re.compile(r'^IP VERSION:                 (?P<ip_version>[\d]+)$')
+
+        # IP PROTOCOL:                89
+        p9 = re.compile(r'^IP PROTOCOL:                (?P<ip_protocol>[\d]+)$')
+
+        # IP TTL:                     1
+        p10 = re.compile(r'^IP TTL:                     (?P<ip_ttl>[\d]+)$')
+
+        # interface input:            Null
+        p11 = re.compile(r'^interface input:            (?P<interface_input>[\w\/]+)$')
+
+        # counter packets long:       3
+        p12 = re.compile(r'^counter packets long:       (?P<counter_packets_long>[\d]+)$')
+
+        # timestamp abs first:        17:36:52.000
+        p13 = re.compile(r'^timestamp abs first:        (?P<timestamp_abs_first>[\d\:\.]+)$')
+
+        # timestamp abs last:         17:36:53.000
+        p14 = re.compile(r'^timestamp abs last:         (?P<timestamp_abs_last>[\d\:\.]+)$')
+
+        # counter bytes layer2 long:  2550
+        p15 = re.compile(r'^counter bytes layer2 long:  (?P<counter_bytes_layers_long>[\d]+)$')
+
+        # TRNS SOURCE PORT:           0
+        p16 = re.compile(r'^TRNS SOURCE PORT:           (?P<trans_source_port>[\d]+)$')
+
+        # TRNS DESTINATION PORT:      0
+        p17 = re.compile(r'^TRNS DESTINATION PORT:      (?P<trans_dest_port>[\d]+)$')
+
+        # INTERFACE INPUT:            Gi1/0/13
+        p18 = re.compile(r'^INTERFACE INPUT:            (?P<interface_input_val>[\w\/]+)$')
+
+        # interface output:           Null
+        p19 = re.compile(r'^interface output:           (?P<interface_output_val>[\w\/]+)$')
+
+        # IP TOS:                     0x00
+        p20 = re.compile(r'^IP TOS:                     (?P<ip_tos>[\w\/]+)$')
+
+        # IPV6 SOURCE ADDRESS:        4100:1:7:33::1
+        p21 = re.compile(r'^IPV6 SOURCE ADDRESS:        (?P<ipv6_source_address>[\w\:]+)$')
+
+        # IPV6 DESTINATION ADDRESS:   21:28:1::2
+        p22 = re.compile(r'^IPV6 DESTINATION ADDRESS:   (?P<ipv6_dest_address>[\w\:]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Processed 1032 flows
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'processed_flow': int(group['processed_flow'])})
+                continue
+
+            # Matched 479 flows
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'matched_flow': int(group['matched_flow'])})
+                continue
+
+            # Aggregated to 479 flows
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'aggregated_flow': int(group['aggregated_flow'])})
+                continue
+
+            # Showing the top 2 flows
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'showing_flow': group['showing_flow']})
+                continue
+
+            # IPV4 SOURCE ADDRESS:        11.11.19.1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_source_addr_dict = ret_dict.setdefault('ipv4_source_address', [])
+                ipv4_source_addr_dict.append(group['ipv4_source_address'])
+                continue
+
+            # IPV4 DESTINATION ADDRESS:   224.0.0.6
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_dest_address = ret_dict.setdefault('ipv4_dest_address', [])
+                ipv4_dest_address.append(group['ipv4_dest_address'])
+                continue
+
+            # INTERFACE OUTPUT:           Gi1/0/13
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                interface_output = ret_dict.setdefault('interface_output', [])
+                interface_output.append(group['interface_output'])
+                continue
+            
+            # IP VERSION:                 4
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ip_version = ret_dict.setdefault('ip_version', [])
+                ip_version.append(group['ip_version'])
+                continue
+            
+            # IP PROTOCOL:                89
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ip_protocol = ret_dict.setdefault('ip_protocol', [])
+                ip_protocol.append(group['ip_protocol'])
+                continue
+            
+            # IP TTL:                     1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ip_ttl = ret_dict.setdefault('ip_ttl', [])
+                ip_ttl.append(group['ip_ttl'])
+                continue
+            
+            # interface input:            Null
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_input = ret_dict.setdefault('interface_input', [])
+                interface_input.append(group['interface_input'])
+                continue
+            
+            # counter packets long:       3
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                counter_packets_long = ret_dict.setdefault('counter_packets_long', [])
+                counter_packets_long.append(group['counter_packets_long'])
+                continue
+            
+            # timestamp abs first:        17:36:52.000
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                timestamp_abs_first = ret_dict.setdefault('timestamp_abs_first', [])
+                timestamp_abs_first.append(group['timestamp_abs_first'])
+                continue
+            
+            # timestamp abs last:         17:36:53.000
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                timestamp_abs_last = ret_dict.setdefault('timestamp_abs_last', [])
+                timestamp_abs_last.append(group['timestamp_abs_last'])
+                continue
+
+            # counter bytes layer2 long:  2550
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                counter_bytes_layers_long = ret_dict.setdefault('counter_bytes_layers_long', [])
+                counter_bytes_layers_long.append(group['counter_bytes_layers_long'])
+                continue
+            
+            # TRNS SOURCE PORT:           0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                trans_source_port = ret_dict.setdefault('trans_source_port', [])
+                trans_source_port.append(group['trans_source_port'])
+                continue
+            
+            # TRNS DESTINATION PORT:      0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                trans_dest_port = ret_dict.setdefault('trans_dest_port', [])
+                trans_dest_port.append(group['trans_dest_port'])
+                continue
+            
+            # INTERFACE INPUT:            Gi1/0/13
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                interface_input_val = ret_dict.setdefault('interface_input_val', [])
+                interface_input_val.append(group['interface_input_val'])
+                continue
+            
+            # interface output:           Null
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                interface_output_val = ret_dict.setdefault('interface_output_val', [])
+                interface_output_val.append(group['interface_output_val'])
+                continue
+
+            # IP TOS:                     0x00
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ip_tos = ret_dict.setdefault('ip_tos', [])
+                ip_tos.append(group['ip_tos'])
+                continue
+            
+            # IPV6 SOURCE ADDRESS:        4100:1:7:33::1
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_source_address = ret_dict.setdefault('ipv6_source_address', [])
+                ipv6_source_address.append(group['ipv6_source_address'])
+                continue
+            
+            # IPV6 DESTINATION ADDRESS:   21:28:1::2
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_dest_address = ret_dict.setdefault('ipv6_dest_address', [])
+                ipv6_dest_address.append(group['ipv6_dest_address'])
+                continue
+            
+        return ret_dict

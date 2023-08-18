@@ -1,0 +1,18 @@
+show cef ipv4 10.255.255.224/32 detail
+Mon Mar 20 14:47:46.405 CET
+10.255.255.224/32, version 31880810, drop adjacency, internal 0x1000001 0x30 (ptr 0x79189280) [1], 0x0 (0x0), 0x0 (0x0)
+ Updated Mar 20 11:11:27.890
+ Prefix Len 32, traffic index 0, precedence n/a, priority 3
+  gateway array (0x782f1468) reference count 1, flags 0x2012, source rib (7), 0 backups
+                [1 type 3 flags 0xc8401 (0x78399948) ext 0x0 (0x0)]
+  LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
+  gateway array update type-time 3 Mar 20 14:47:43.154
+ LDI Update time Mar 20 11:11:27.890
+   via 1.3.2.1/32, 0 dependencies, recursive [flags 0x4]
+    path-idx 0 NHID 0x0 [0x781b57c8 0x0]
+    unresolved
+
+    Load distribution: 0 (refcount 1)
+
+    Hash  OK  Interface                 Address
+    0     Y   recursive                 drop

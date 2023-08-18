@@ -26,6 +26,7 @@ IOSXE parsers for the following show commands:
     * show ip pim tunnel
     * show {addr_family} pim tunnel
     * show {addr_family} pim vrf {vrf} tunnel
+    * show ip pim vrf {vrf} autorp
 '''
 
 # Python
@@ -2135,6 +2136,101 @@ class ShowIpPimTunnel(ShowIpPimTunnelSchema):
                 group = m.groupdict()
                 intf_dict[tunnel]['last_event'] = group['last_event']
                 intf_dict[tunnel]['uptime'] = group['uptime']
+                continue
+
+        return ret_dict
+
+
+# ==========================================================
+# Schema Parser for 'show ip pim vrf {vrf ID} autorp'
+# ==========================================================
+class ShowIpPimAutorpSchema(MetaParser):
+    """Schema for 'show ip pim vrf {vrf ID} autorp' """
+
+    schema = {
+        "autorp" : str,
+        "mtu" : str,
+        "group": str,
+        "interface" : str,
+        "mode" : str,
+        "rp_announce_sent" : str,
+        "rp_announce_received" : str,
+        "rp_discovery_sent" : str,
+        "rp_discovery_received" : str,
+    }
+
+# =======================================================================
+# Parser for 'show ip pim vrf {vrf ID} autorp'
+# =======================================================================
+class ShowIpPimAutorp(ShowIpPimAutorpSchema):
+    """parser for 'show ip pim vrf {vrf ID} autorp' """
+
+    cli_command = "show ip pim vrf {vrf_ID} autorp"
+
+    def cli(self, vrf_ID='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
+        else:
+            output = output
+        
+        ret_dict = {}
+
+        #AutoRP is enabled.
+        p1 = re.compile(r'^\s*AutoRP\s+is\s*(?P<autorp>\w+).+$')
+
+        #RP Discovery packet MTU is 1496.
+        p2 = re.compile(r'^\s*RP\s+Discovery\s+packet\s+MTU\s+is\s+(?P<mtu>\d+).+$')
+
+        #224.0.1.40 is joined on Loopback0.
+        p3 = re.compile(r'^\s*(?P<group>\d+.\d+.\d+.\d+)\s+is\s+joined\s+on\s+(?P<interface>[\w\/\.\-\:]+).+$')
+
+        #AutoRP groups over sparse mode interface is enabled
+        p4 = re.compile(r'^\s*AutoRP\s+groups\s+over\s+(?P<mode>\w+)\s+mode\s+interface\s+is\s+enabled$')
+
+        #RP Announce: 3078/1303, RP Discovery: 3780/10412
+        p5 = re.compile(r'^\s*RP\s+Announce:\s+(?P<rpas>\d+)\/(?P<rpar>\d+),\s+RP Discovery:\s+(?P<rpds>\d+)\/(?P<rpdr>\d+)$')
+
+        for line in output.splitlines():
+            if not line:
+                continue
+
+            #AutoRP is enabled.
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['autorp'] = groups['autorp']
+                continue
+            
+            #RP Discovery packet MTU is 1496.
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['mtu'] = groups['mtu']
+                continue
+            
+            #224.0.1.40 is joined on Loopback0.
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['group'] = groups['group']
+                ret_dict['interface'] = groups['interface']
+                continue
+            
+            #AutoRP groups over sparse mode interface is enabled
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['mode'] = groups['mode']
+                continue
+            
+            #RP Announce: 3078/1303, RP Discovery: 3780/10412
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['rp_announce_sent'] = groups['rpas']
+                ret_dict['rp_announce_received'] = groups['rpar']
+                ret_dict['rp_discovery_sent'] = groups['rpds']
+                ret_dict['rp_discovery_received'] = groups['rpdr']
                 continue
 
         return ret_dict

@@ -3,6 +3,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or
 
+
 # ====================
 # Schema for:
 #  * 'show ap summary'
@@ -26,6 +27,7 @@ class ShowApSummarySchema(MetaParser):
             }
         }
     }
+
 
 # ====================
 # Parser for:
@@ -1201,6 +1203,7 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
                 continue
 
         return ap_cdp_neighbor_dict
+
 
 # =============================
 # Schema for:
@@ -2904,3 +2907,55 @@ class ShowApStatus(ShowApStatusSchema):
                 })
         return ret_dict
 
+
+# ========================================
+# Schema for:
+#  * 'show ap ble summary'
+# ========================================
+class ShowApBleSummarySchema(MetaParser):
+    """ Schema for :
+        show ap ble summary"""
+
+    schema = {
+       Any(): {'ap_model': str,
+               'eth_mac': str,
+               'intf_state': str,
+               'admin_state': str,
+               'ble_mode': str,
+               'ble_mac': str,
+               'ble_profile': str,
+               'scan_state': str}
+    }
+
+# ========================================
+# Parser for:
+#  * 'show ap ble summary'
+# ========================================
+class ShowApBleSummary(ShowApBleSummarySchema):
+    """Parser for :
+        show ap ble summary"""
+
+    cli_command = 'show ap ble summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        p1 = re.compile(
+            # AP Name       AP Model            AP Ethernet MAC         BLE Interface State     BLE Admin State         BLE mode                BLE MAC                 BLE Profile         Scan State
+            # AP3-02        AIR-AP4800-B-K9     4001.7ab2.c3e4          Close                   Up                      Base (Native)           2471.891b.c302          No Advertisement    Enabled
+            r'(?P<ap_name>(^[\w_\-]+))\s+(?P<ap_model>([A-Z0-9\-]+))\s+(?P<eth_mac>(([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}))\s+(?P<intf_state>([a-zA-Z]+\s*[a-zA-Z]+))\s+(?P<admin_state>(Up|Down|Not Configured))\s+(?P<ble_mode>((Base|Advanced)\s\((Native|IOx)\)|Unknown))\s+(?P<ble_mac>(([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}|Unknown))\s+(?P<ble_profile>([\w\s\-\.]*|Unknown))\s+(?P<scan_state>(Enabled|Disabled|Not Configured))$'
+            )
+
+        for line in output.splitlines():
+            line = line.strip()
+            # AP3-02        AIR-AP4800-B-K9     4001.7ab2.c3e4          Close                   Up                      Base (Native)           2471.891b.c302          No Advertisement    Enabled
+            m = re.match(p1, line)
+            if m:
+                rgx_dict = m.groupdict()
+                ap_name_dict = ret_dict.setdefault(rgx_dict['ap_name'], {})
+                rgx_dict.pop('ap_name')
+                ap_name_dict.update({key: value.strip() for key, value in rgx_dict.items()})
+                continue
+        return ret_dict

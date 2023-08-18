@@ -22,7 +22,7 @@ IOSXE parser for the following show commands:
    * show ipv6 nd ra nat64-prefix
    * show nat64 translations vrf {vrf_name}
    * show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}
-   
+   * show ip nat redundancy
 '''
 # Python
 import re
@@ -1496,4 +1496,51 @@ class ShowIpv6NdRaPrefix(ShowIpv6NdRaPrefixSchema):
                 continue
                 
         return ret_dict  
-               
+
+
+class ShowIpNatRedundancySchema(MetaParser):
+    """ Schema for 'show ip nat redundancy' """
+
+    schema = {
+        "ip": {
+            Any(): {
+                "name" : str,
+                "id": str,
+                "use_count": str,
+            },
+        },
+    }
+
+class ShowIpNatRedundancy(ShowIpNatRedundancySchema):
+    """ parser for 'show ip nat redundancy' """
+
+    cli_command = "show ip nat redundancy"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+        
+        ret_dict = {}
+        ip_dict = {}
+        
+        # 201.201.1.200 hsrp_lan_201         0         1
+        p1 = re.compile(r'^\s*(?P<ip>[\>\d\.]+)\s+(?P<name>\w+)\s+(?P<id>\d+)\s+(?P<use_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 201.201.1.200 hsrp_lan_201         0         1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ip_dict = ret_dict.setdefault('ip', {})
+                ip = groups['ip']
+                ip_info = ip_dict.setdefault(ip, {})
+                ip_info['name'] = groups['name']
+                ip_info['id'] = groups['id']
+                ip_info['use_count'] = groups['use_count']
+                continue
+
+        return ret_dict

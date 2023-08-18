@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
+    * 'show cdp neighbors {interface} detail'
     * 'show cdp'
 
 '''
@@ -216,14 +217,22 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 # Parser for 'show cdp neighbors details'
 # =======================================
 class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
-    cli_command = 'show cdp neighbors detail'
+    ''' Parser for:
+        * 'show cdp neighbors detail'
+        * 'show cdp neighbors {interface} detail'
+    '''
+    cli_command = ['show cdp neighbors detail', 'show cdp neighbors {interface} detail']
 
     exclude = ['hold_time']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            output = self.device.execute(cmd)
 
         # Device ID: R7(9QBDKB58F76)
         # Device ID:
@@ -651,7 +660,7 @@ class ShowCdpEntrySchema(MetaParser):
                         'cdp_version': int,
                         'peer_mac': str,
                         'vtp_mgmt_domain': str,
-                        'native_vlan': int,
+                        Optional('native_vlan'): int,
                         'duplex': str,
                         'platform': str,
                         'system_description': str

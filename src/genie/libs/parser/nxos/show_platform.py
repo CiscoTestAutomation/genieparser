@@ -942,9 +942,39 @@ class ShowModule(ShowModuleSchema):
         lem_hit = False
         rp_list = []
         map_dic = {}
+        
+        # Mod  Ports  Module-Type                         Model              Status
+        p1 = re.compile(r'^\s*Mod.*$')
+
+        # Xbar Ports  Module-Type                         Model              Status
+        p2 = re.compile(r'^\s*Xbar.*$')
+
+        # Lem Ports             Module-Type                      Model           Status
+        p2_1 = re.compile(r'^\s*Lem.*$')
+
+        # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
+        # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
+        # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
+        p3 = re.compile(r'^(?P<number>[0-9]+)\s+(?P<ports>[0-9]+)\s+(?P<module_type>.+?)\s+'
+                        r'((?P<model>[A-Z0-9\-\+]+)\s+)?(?P<status>[a-z\- ]+)(\s\*)?$')
+
+        # 1 9.4(0)SK(0.135) 1.0 20:01:00:08:31:14:b7:60 to 20:10:00:08:31:14:b7:60
+        # 7    10.3(2)IOV9(0.190)       1.0    LC7
+        # 1    NA               3.1
+        p4 = re.compile(r'^(?P<number>[\d]+)\s+(?P<software>[A-Z0-9\(\)\.]+)\s+'
+                        r'(?P<hardware>\d+\.\d+)(\s+(?P<slot>[A-Z]+\d+))?'
+                        r'(\s+(?P<world_wide_name>[\w\:\s-]+))?$')
+
+        # 1 e0-69-ba-60-02-00 to e0-69-ba-60-02-0f JAE26361EB4
+        p5 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<mac_address>[a-zA-Z0-9\.\-\s]+) +(?P<serial_number>[A-Z0-9]+)$')
+
+        # 7    Pass
+        p6 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<online_diag_status>[a-zA-Z]+)$')
+
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Mod.*$')
+
+            # Mod  Ports  Module-Type                         Model              Status
             m = p1.match(line)
             if m:
                 table_header = 'slot'
@@ -952,7 +982,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['slot'] = {}
                 continue
 
-            p2 = re.compile(r'^\s*Xbar.*$')
+            # Xbar Ports  Module-Type                         Model              Status
             m = p2.match(line)
             if m:
                 table_header = 'xbar'
@@ -960,7 +990,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'] = {}
                 continue
 
-            p2_1 = re.compile(r'^\s*Lem.*$')
+            # Lem Ports             Module-Type                      Model           Status
             m = p2_1.match(line)
             if m:
                 table_header = 'lem'
@@ -969,15 +999,14 @@ class ShowModule(ShowModuleSchema):
                     module_dict['lem'] = {}
                 continue
 
-            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+\(\)]+) +(?P<model>\S+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
-            p3_1 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
+            # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
+            # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
+            # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
             m = p3.match(line)
-            m1 = p3_1.match(line)
-            m = m if m else m1
             if m:
                 header_number = m.groupdict()['number']
                 module_type = m.groupdict()['module_type']
-                if 'Supervisor' in module_type:
+                if 'Supervisor' in module_type or 'Sup' in module_type:
                     header_type = 'rp'
                     if header_type not in module_dict['slot']:
                         module_dict['slot'][header_type] = {}
@@ -986,10 +1015,9 @@ class ShowModule(ShowModuleSchema):
                     map_dic[header_number] = rp_name
                 else:
                     header_type = 'lc'
-                    if header_type not in module_dict['slot']:
-                        module_dict['slot'][header_type] = {}
                     lc_name =  m.groupdict()['module_type'].strip()
                     map_dic[header_number] = lc_name
+
                 if table_header == 'slot':
                     if header_number in rp_list:
                         if header_number not in module_dict['slot']['rp']:
@@ -1001,6 +1029,8 @@ class ShowModule(ShowModuleSchema):
                             module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
                     else:
+                        if header_type not in module_dict['slot']:
+                            module_dict['slot'][header_type] = {}
                         if header_number not in module_dict['slot']['lc']:
                             module_dict['slot']['lc'][header_number] = {}
                         if lc_name not in module_dict['slot']['lc'][header_number]:
@@ -1032,12 +1062,13 @@ class ShowModule(ShowModuleSchema):
                         'status'].strip()
                 continue
 
-            p4 = re.compile(
-                r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)(( +)(?P<world_wide_name>[\w\-]+))?$')
+            # 1 9.4(0)SK(0.135) 1.0 20:01:00:08:31:14:b7:60 to 20:10:00:08:31:14:b7:60
+            # 7    10.3(2)IOV9(0.190)       1.0    LC7
+            # 1    NA               3.1
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']
-                world_wide_name = m.groupdict()['world_wide_name']
+                world_wide_name = m.groupdict()['world_wide_name'] if m.groupdict()['world_wide_name'] else m.groupdict()['slot']
                 if table_header == 'slot' and not lem_hit:
                     if header_number in rp_list:
                         rp_name = map_dic[header_number]
@@ -1049,25 +1080,28 @@ class ShowModule(ShowModuleSchema):
                         module_dict['slot']['lc'][header_number][lc_name]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
                         if header_number in rp_list:
-                            module_dict['slot']['rp'][header_number][rp_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['rp'][header_number][rp_name]['slot/world_wide_name'] = \
+                                m.groupdict()['world_wide_name'] if m.groupdict()['world_wide_name'] else m.groupdict()['slot']
                         else:
-                            module_dict['slot']['lc'][header_number][lc_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['lc'][header_number][lc_name]['slot/world_wide_name'] = \
+                                m.groupdict()['world_wide_name'] if m.groupdict()['world_wide_name'] else m.groupdict()['slot']
                 elif table_header == 'xbar':
                     module_dict['xbar'][header_number]['software'] = m.groupdict()['software'].strip()
                     module_dict['xbar'][header_number]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
-                        module_dict['xbar'][header_number]['slot/world_wide_name'] = m.groupdict()['world_wide_name']
+                        module_dict['xbar'][header_number]['slot/world_wide_name'] = \
+                            m.groupdict()['world_wide_name'] if m.groupdict()['world_wide_name'] else m.groupdict()['slot']
                 elif table_header == 'lem' or lem_hit:
                     module_dict['lem'][header_number]['software'] = m.groupdict()[
                         'software'].strip()
                     module_dict['lem'][header_number]['hardware'] = m.groupdict()[
                         'hardware'].strip()
                     if world_wide_name:
-                        module_dict['lem'][header_number]['slot/world_wide_name'] = m.groupdict()[
-                            'world_wide_name']
+                        module_dict['lem'][header_number]['slot/world_wide_name'] = \
+                            m.groupdict()['world_wide_name'] if m.groupdict()['world_wide_name'] else m.groupdict()['slot']
                 continue
 
-            p5 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<mac_address>[a-zA-Z0-9\.\-\s]+) +(?P<serial_number>[A-Z0-9]+)$')
+            # 1 e0-69-ba-60-02-00 to e0-69-ba-60-02-0f JAE26361EB4
             m = p5.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -1090,7 +1124,7 @@ class ShowModule(ShowModuleSchema):
                         'serial_number'].strip()
                 continue
 
-            p6 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<online_diag_status>[a-zA-Z]+)$')
+            # 7    Pass
             m = p6.match(line)
             if m:
                 header_number = m.groupdict()['number']

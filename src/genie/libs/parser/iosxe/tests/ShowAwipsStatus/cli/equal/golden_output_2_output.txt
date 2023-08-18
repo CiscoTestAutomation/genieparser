@@ -1,0 +1,3 @@
+AP Radio MAC    AWIPS Status          Forensic Capture Status    Alarm Message Count
+------------------------------------------------------------------------------------------
+7070.8b05.fa60  NOT_CAPABLE               NOT_CAPABLE                    11020

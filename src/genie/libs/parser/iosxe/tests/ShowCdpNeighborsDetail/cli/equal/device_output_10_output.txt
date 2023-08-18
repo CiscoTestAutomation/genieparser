@@ -1,0 +1,20 @@
+-------------------------
+Device ID: javelin-morph-mini2-dut2
+Entry address(es):
+  IP address: 10.10.10.10
+Platform: cisco C9300-24UX,  Capabilities: Router Switch IGMP
+Interface: TwoGigabitEthernet1/0/13,  Port ID (outgoing port): TenGigabitEthernet1/0/1
+Holdtime : 126 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.10.20220811:080104 [BLD_POLARIS_DEV_LATEST_20220811_071526:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Thu 11-Aug-22 01:01 by mcpre
+
+advertisement version: 2
+Peer Source MAC: a03d.6ea4.6f01
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 10.10.10.10

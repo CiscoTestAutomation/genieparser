@@ -1,0 +1,72 @@
+show platform software cef ipv4 vrf * 11.1.6.1/24 feature-all
+For ALL VRFs *
+
+VRF Default
+
+
+------------------ show ip route vrf Default 11.1.6.1 255.255.255.0 ------------------
+
+% IP routing table vrf Default does not exist
+
+------------------ show ip cef vrf Default 11.1.6.1 255.255.255.0 internal ------------------
+
+ Invalid prefix/mask, prefix host bits are set
+------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+------------------ show platform software ip switch active fp active cef prefix 11.1.6.1/24 detail ------------------
+
+================== None of any next hop is found in the output of show cef command. ==================
+
+VRF Mgmt-vrf
+
+
+------------------ show ip route vrf Mgmt-vrf 11.1.6.1 255.255.255.0 ------------------
+
+
+Routing Table: Mgmt-vrf
+% Subnet not in table
+
+------------------ show ip cef vrf Mgmt-vrf 11.1.6.1 255.255.255.0 internal ------------------
+
+ Invalid prefix/mask, prefix host bits are set
+------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+------------------ show platform software ip switch active fp active cef prefix 11.1.6.1/24 detail ------------------
+
+================== None of any next hop is found in the output of show cef command. ==================
+
+VRF vrf1000
+
+
+------------------ show ip route vrf vrf1000 11.1.6.1 255.255.255.0 ------------------
+
+
+Routing Table: vrf1000
+Routing entry for 11.1.6.0/24
+  Known via "connected", distance 0, metric 0 (connected, via interface)
+  Routing Descriptor Blocks:
+  * directly connected, via HundredGigE1/0/3
+      Route metric is 0, traffic share count is 1
+
+------------------ show ip cef vrf vrf1000 11.1.6.1 255.255.255.0 internal ------------------
+
+ Invalid prefix/mask, prefix host bits are set
+------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+------------------ show platform software ip switch active fp active cef prefix 11.1.6.1/24 detail ------------------
+
+================== None of any next hop is found in the output of show cef command. ==================
+
+VRF vrf1001
+
+
+------------------ show ip route vrf vrf1001 11.1.6.1 255.255.255.0 ------------------
+
+
+Routing Table: vrf1001
+% Network not in table
+
+------------------ show ip cef vrf vrf1001 11.1.6.1 255.255.255.0 internal ------------------
+
+ Invalid prefix/mask, prefix host bits are set
+------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+------------------ show platform software ip switch active fp active cef prefix 11.1.6.1/24 detail ------------------
+
+================== None of any next hop is found in the output of show cef command. ==================

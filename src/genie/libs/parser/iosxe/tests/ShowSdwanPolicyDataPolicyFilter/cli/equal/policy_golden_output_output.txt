@@ -1,0 +1,15 @@
+data-policy-filter DP_HUB_LOCAL_FROM_TUNNEL
+ data-policy-vpnlist VPN1
+  data-policy-counter default_action_count
+   packets 0
+   bytes   0
+  data-policy-counter FROM_TUNNEL_SAME_VPN_SC
+   packets 46960
+   bytes   53256268
+ data-policy-vpnlist VPN2
+  data-policy-counter default_action_count
+   packets 0
+   bytes   0
+  data-policy-counter FROM_TUNNEL_DIFF_VPN_SC
+   packets 0
+   bytes   0

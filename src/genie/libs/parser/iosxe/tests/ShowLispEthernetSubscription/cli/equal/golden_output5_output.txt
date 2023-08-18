@@ -1,0 +1,4 @@
+show lisp eid-table vlan 101 ethernet subscription
+LISP EID Subscriptions for LISP 0 EID-table Vlan 101 (IID 1023), 1 entries
+Prefix                                  Source                         Created     Last Update
+aacc.ccaa.cc00/48                              remote-eid,eid-watch          00:13:06    00:01:41   

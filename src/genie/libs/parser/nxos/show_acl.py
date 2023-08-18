@@ -317,6 +317,8 @@ class ShowAccessListsSummarySchema(MetaParser):
         'acl': {
           Any(): { # 'ipv4_acl'
               'total_aces_configured': int,
+              Optional('Statistics'): str,
+              Optional('Fragments'): str,
           }
         },
         'attachment_points': {
@@ -326,7 +328,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                     Any(): { # 'ipv4_acl'
                         'name': str, # 'ipv4_acl'
                         Optional('type'): str, # 'Router ACL'
-                        'active': bool,
+                        Optional('active'): bool,
                         'total_aces_configured': int,
                     }
                 },
@@ -334,7 +336,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                     Any(): {
                         'name': str,
                         Optional('type'): str,
-                        'active': bool,
+                        Optional('active'): bool,
                         'total_aces_configured': int,
                     }
                 }
@@ -359,59 +361,99 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
             out = self.device.execute(cmd)
         else:
             out = output
-
+        active_interface = False
+        
         # IPV4 ACL acl_name
-        # IPV6 ACL ipv6_acl2
-        # IPV6 ACL __urpf_v6_acl__
-        p1 = re.compile(r'^(?P<type>[A-Z0-9]+) +ACL +(?P<name>\S+)$')
+        # IPV4 ACL sl_def_acl
+        p1=re.compile(r'^(?P<type>[\w\d]+) +ACL +(?P<name>[\w\-\w]+)(\s+(Statistics +(?P<status>\w+)))?$')
 
-        stack = []
-        stacks = []
-        start_flag = 0
+        # Statistics enabled
+        p1_1 = re.compile(r'^Statistics\s+(?P<status>\w+)$')
+
+        # fragments permit-all
+        p1_2 = re.compile(r'^(fragments +(?P<Fragments>[\w\-]+))?$')
+
+        # Total ACEs Configured: 10
+        p2=re.compile(r'^Total +ACEs +Configured: +(?P<total_aces_configured>\d+)$')
+
+        # VTY         - ingress
+        # Vlan2472 - egress (Router ACL)
+        p3 = re.compile(r'^((?P<interface>[\w\d\/]+)\s+-\s+(?P<traffic>ingress|egress)( +\((?P<route>[\w\s]+)\))?)?$')
+
+        #Active on interfaces:
+        #        Vlan2472 - egress (Router ACL)
+        #        Vlan2474 - egress (Router ACL)
+        p4 = re.compile(r'^(?P<active>Active) +on +interfaces:(?:\n +(?P<interface2>[\w\d\/]+) - (?P<traffic2>ingress|egress+) (\((?P<type2>[\w\s]+))\)?)?$')
+
+
         result_dict = {}
+
         for line in out.splitlines():
-            acl_dict = result_dict.setdefault('acl', {})
-            att_dict = result_dict.setdefault('attachment_points', {})
-            m = p1.match(line)
-            if m:
-                if start_flag == 0:
-                    start_flag += 1
-                else:
-                    stacks.append('\n'.join(stack))
-                    stack = []
-                    start_flag = 1
+            line = line.strip()
 
-            if start_flag == 1:
-                stack.append(line)
-
-        stacks.append('\n'.join(stack))
-
-        p = re.compile(r'^(?P<ip>[A-Z0-9]+) +ACL +(?P<name>\S+)\n +Total +ACEs +Configured: +(?P<total_configured>\d+)\n +Configured +on +interfaces:\n(?: +(?P<interface>\S+) +- +(?P<traffic>egress|ingress)( +\((?P<type>[\w\s]+)\))?\n)? +(?P<active>Active) +on +interfaces:(?:\n +(?P<interface2>\S+) +- +(?P<traffic2>egress|ingress)( +\((?P<type2>[\w\s]+)\))?)?')
-
-        for s in stacks:
-            m = p.match(s)
+            # IPV4 ACL acl_name
+            # IPV4 ACL sl_def_acl
+            m = p1.match(line) 
             if m:
                 group = m.groupdict()
-                ip = group['ip']
-                name = group['name']
-                total_configured = int(group['total_configured'])
-                if not group['interface'] and not group['interface2']:
-                    acl_dict.setdefault(name, {}).setdefault('total_aces_configured', total_configured)
-                else:
-                    sub_att_dict = att_dict.setdefault(group['interface'], {})
-                    sub_att_dict['interface_id'] = group['interface']
-                    traffic_dict = sub_att_dict.setdefault(group['traffic'], {}).\
-                                                setdefault(name, {})
+                acl_dict = result_dict.setdefault('acl',{}).setdefault(group['name'],{})
+                acl_name=group['name']
+                if group['status']:
+                    acl_dict.update({'Statistics': group['status']})      
+                continue
 
-                    traffic_dict['name'] = name
-                    if group['type']:
-                        traffic_dict['type'] = group['type']
-                    if group['active'] == 'Active':
-                        active = True
-                    else:
-                        active = False
-                    traffic_dict['active'] = True
-                    traffic_dict['total_aces_configured'] = total_configured
+            # Statistics enabled
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                if group['status']:
+                    acl_dict.update({'Statistics': group['status']})
+                continue
 
+            # fragments permit-all
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                if group['Fragments']:
+                    acl_dict.update({'Fragments': group['Fragments']})
+
+
+            # Total ACEs Configured: 10    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                total_configured=int( group['total_aces_configured'] )
+                acl_dict.update({'total_aces_configured': int(group['total_aces_configured'])}),
+                continue
+
+            #Active on interfaces:
+            #        Vlan2472 - egress (Router ACL)
+            #        Vlan2474 - egress (Router ACL)    
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+
+                if group['active'] == 'Active':
+                    active_interface =True
+                continue  
+
+            # VTY         - ingress
+            # Vlan2472 - egress (Router ACL)    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['interface']:
+                    att_dict = result_dict.setdefault('attachment_points',{}).setdefault(group['interface'],{})
+                    att_dict.update({'interface_id':group['interface']})
+                if group['traffic']:
+                    traffic_name=group['traffic']
+                    traffic_dict = att_dict.setdefault(traffic_name,{}).setdefault(acl_name,{})
+                    traffic_dict.update({'total_aces_configured': total_configured})
+
+                    traffic_dict.update({'active':active_interface})
+                    traffic_dict.update({'name': acl_name})
+                    if group['route']:
+                        traffic_dict.update({'type': group['route']})
+                continue
         return result_dict
 

@@ -1,0 +1,16 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+
+
+Flex-algo 128
+
+2.2.2.2/32  prefix attr X:0 R:0 N:1  source router id: 2.2.2.2  SID index 202 - Bound
+  [115/L2/10] via 12.12.1.2(GigabitEthernet0/3/0.1) asr1k-23.00-00, from 2.2.2.2, tag 0
+     prefix attr: X:0 R:0 N:1
+     Source router id: 2.2.2.2
+      Prefix-SID index: 202, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null

@@ -1,0 +1,8 @@
+Source                        : *
+Group                         : *
+Reference Count               : 1
+Epoch                         : 0
+Source Port                   : Null
+Flags                         : Age Out
+Receiver Ports(s)             : PL:85(1) T:VXLAN_REP [SMC]20121:239.2.1.121 , Epoch: 0, Producer: EVPN
+Adjacency                     : Olist: 45, Ports: 1

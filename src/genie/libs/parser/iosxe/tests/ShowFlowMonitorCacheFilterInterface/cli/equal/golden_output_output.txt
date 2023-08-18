@@ -1,0 +1,32 @@
+Processed 552 flows
+Matched 215 flows
+Aggregated to 215 flows
+Showing the top 2 flows
+
+IPV4 SOURCE ADDRESS:        121.5.69.1
+IPV4 DESTINATION ADDRESS:   21.21.25.2
+TRNS SOURCE PORT:           0
+TRNS DESTINATION PORT:      0
+INTERFACE INPUT:            Gi1/0/13
+IP VERSION:                 4
+IP PROTOCOL:                61
+IP TTL:                     62
+interface output:           Null
+counter packets long:       112
+timestamp abs first:        17:14:12.000
+timestamp abs last:         17:17:51.000
+counter bytes layer2 long:  28672
+
+IPV4 SOURCE ADDRESS:        121.5.71.1
+IPV4 DESTINATION ADDRESS:   21.21.25.2
+TRNS SOURCE PORT:           0
+TRNS DESTINATION PORT:      0
+INTERFACE INPUT:            Gi1/0/13
+IP VERSION:                 4
+IP PROTOCOL:                61
+IP TTL:                     62
+interface output:           Null
+counter packets long:       108
+timestamp abs first:        17:14:11.000
+timestamp abs last:         17:17:53.000
+counter bytes layer2 long:  27648

@@ -1820,8 +1820,8 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     schema = {
@@ -1868,8 +1868,8 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     cli_command = ['show l2vpn evpn mac',
@@ -1884,11 +1884,12 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    'show l2vpn evpn mac vlan {vlan_id}',
                    'show l2vpn evpn mac vlan {vlan_id} address {mac_addr}',
                    'show l2vpn evpn mac vlan {vlan_id} duplicate',
-                   'show l2vpn evpn mac vlan {vlan_id} local',
-                   'show l2vpn evpn mac vlan {vlan_id} remote'
+                   'show l2vpn evpn mac vlan {vlan_id} {local}',
+                   'show l2vpn evpn mac vlan {vlan_id} {remote}'
     ]
 
-    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None, vlan_id=None):
+    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, 
+            evi_id=None, vlan_id=None, local=None, remote=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
@@ -1902,6 +1903,10 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                 cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
             elif vlan_id:
                 cli_cmd += ' vlan {vlan_id}'.format(vlan_id=vlan_id)
+                if local:
+                    cli_cmd += ' local'
+                elif remote:
+                    cli_cmd += ' remote'
 
             if mac_type:
                 cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
@@ -4633,10 +4638,12 @@ class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
         p2 = re.compile(r'^RD:\s+(?P<rd>[0-9a-fA-F\.:]+)\s+\((?P<type>\w+)\)$')
 
         # Import-RTs:        1:1
-        p3 = re.compile(r'^Import-RTs:\s+(?P<rt>[\d:]+)')
+        # Import-RTs:        1:100 995:95 997:97 998:98 999:99
+        p3 = re.compile(r'^Import-RTs:\s+(?P<rt>[\d:\s]+)')
 
         # Export-RTs:        1:1
-        p4 = re.compile(r'^Export-RTs:\s+(?P<rt>[\d:]+)')
+        # Export-RTs:        1:100 995:95 997:97 998:98 999:99
+        p4 = re.compile(r'^Export-RTs:\s+(?P<rt>[\d:\s]+)')
 
         # Per-EVI Label:     none
         p5 = re.compile(r'^Per-EVI Label:\s+(?P<label>\d+|none)$')
@@ -5894,3 +5901,60 @@ class ShowL2vpnEvpnVpwsVcPreferredPath(ShowL2vpnEvpnVpwsVcPreferredPathSchema):
                                             device_output=show_output,
                                             device_os='iosxe', index=[1]).entries
         return parsed_dict
+
+
+# ============================================
+# Schema for 'show l2vpn atom vc'
+# ============================================
+class ShowL2vpnAtomVcSchema(MetaParser):
+    """Schema for show l2vpn atom vc"""
+
+    schema = {
+        'name': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'peer_id': str,
+                        'vc_id': int,
+                        'type': str,
+                        'status': str                        
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show l2vpn atom vc '
+# ======================================================
+class ShowL2vpnAtomVc(ShowL2vpnAtomVcSchema):
+    """Parser for show l2vpn atom vc"""
+    
+    cli_command = 'show l2vpn atom vc'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Peer ID        VC ID      Type   Name                     Status
+        p1 = re.compile(r"^(?P<interface>[\w\d]+)\s+(?P<peer_id>[\d\:\.]+)\s+(?P<vc_id>\d+)\s+(?P<type>\w+)\s+(?P<name>[\w\d]+)\s+(?P<status>\w+)$")
+
+        for line in output.splitlines():
+            line = line.rstrip()
+
+            # Interface Peer ID        VC ID      Type   Name                     Status
+            m = p1.match(line)
+            if m:
+                name = m.groupdict()['name']
+                key_chain_dict = ret_dict.setdefault('name', {}).setdefault(name, {})
+                key_name = Common.convert_intf_name(m.groupdict()['interface'])
+                process_dict = key_chain_dict.setdefault('interface', {}).setdefault(key_name, {})
+                process_dict['peer_id']=m.groupdict()['peer_id']
+                process_dict['status']=m.groupdict()['status']
+                process_dict['vc_id']=int(m.groupdict()['vc_id'])
+                process_dict['type']=m.groupdict()['type']
+                continue
+
+        return ret_dict
