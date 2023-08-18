@@ -4344,16 +4344,32 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 router_id = None
                 bfd_state = m.groupdict().get('bfd_state', None)
                 # Get OSPF process ID from 'show ip ospf interface'
+                flag = False
+
                 for line in ospfint_out.splitlines():
                     line = line.rstrip()
 
                     # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
-                    p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
-                                  ' +(?P<router_id>(\S+)) +(.*)', line)
+                    # p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
+                    #                 ' +(?P<router_id>(\S+)) +(.*)', line)
+                    
+                    p = re.search('^(?P<interface>(\S+)) +is( +administratively)?'
+                            ' +(?P<enable>(unknown|up|down)), +line +protocol'
+                            ' +is +(?P<line_protocol>(up|down))'
+                            '(?: +\(\S+\))?$', line)
+
                     if p:
-                        instance = str(p.groupdict()['instance'])
-                        router_id = str(p.groupdict()['router_id'])
-                        break
+                        p_interface = str(p.groupdict()['interface'])
+                        if (p_interface == interface):
+                            flag = True
+
+                    if (flag == True):
+                        p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID +(?P<router_id>(\S+)) +(.*)', line)
+                        if p:
+                            flag = False
+                            instance = str(p.groupdict()['instance'])
+                            router_id = str(p.groupdict()['router_id'])
+                            break
 
                 # Get VRF information using the ospf instance
                 if instance is not None:
