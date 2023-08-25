@@ -1,0 +1,8 @@
+show rib ipv6 iid all
+Mon Jul  3 11:19:09.191 UTC
+IID         Prefix                Context                                            Owner              State      RW
+----------  --------------------  -------------------------------------              ------------------ ---------- --
+0xa000001   ::ffff:10.0.0.1       [EVPN-VPWS:evi=1001:eth_tag=10001:type=0]          l2vpn_iid          InUse      Y 
+0xa000002   ::ffff:10.0.0.2       [EVPN-ELAN:evi=1002:esi=0194.aef0.f99c.dd00.2400:nh=:::eth_tag=0:type=0] l2vpn_iid          InUse      Y 
+0xa000003   ::ffff:10.0.0.3       [EVPN-ELAN:evi=1002:esi=01b0.a651.645c.dd00.2f00:nh=:::eth_tag=0:type=0] l2vpn_iid          InUse      Y 
+RP/0/RSP0/CPU0:A-AN1#

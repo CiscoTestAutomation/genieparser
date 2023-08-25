@@ -2395,7 +2395,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         p3 = re.compile(r'^\s*BGP +version +(?P<bgp_version>[0-9]+),'
                             ' +remote +router +ID +(?P<router_id>[0-9\.]+)$')
         p4 = re.compile(r'^\s*\s*BGP +state += +(?P<session_state>(\S+))'
-                            '(?: +\((?P<reason>([a-zA-Z\s]+))\))?,'
+                            '(?: +\((?P<reason>([a-zA-Z\s\/\-]+))\))?,'
                             ' +(up|down) +for +(?P<up_time>[a-zA-Z0-9\:\.]+)'
                             '(?: *, +retry +in +(?P<retry_time>[0-9\.\:]+))?$')
         p5 = re.compile(r'^\s*Using +(?P<update_source>[a-zA-Z0-9]+)'
@@ -2559,6 +2559,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             # BGP state = Established, up for 5w0d
             # BGP state = Idle, down for 4w6d, retry in 0.000000
             # BGP state = Shut (Admin), down for 5w0d
+            # BGP state = Idle (Update-source i/f down/unresolved), down for 00:01:24
             m = p4.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['session_state'] = \

@@ -146,3 +146,46 @@ class ShowEnvironmentAllIncludeLocation(ShowEnvironmentAllIncludeLocationSchema)
                 continue
 
         return ret_dict
+
+class ShowHwProgrammableAllSchema(MetaParser):
+    """Schema for show hw-programmable all"""
+    schema = {
+        Any(): {
+            'cpld_ver': str,
+            'fpga_ver': str
+        }
+    }
+
+class ShowHwProgrammableAll(ShowHwProgrammableAllSchema):
+    """Parser for show hw-programmable all"""
+
+    cli_command = 'show hw-programmable all'
+
+    def cli(self, output=None):
+        """parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        """
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        platform_dict = {}
+
+        #R0                14111801                  18102401       
+        p1 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +(?P<fpga_version>[\w\.\(\)\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # R0         14111801            18102401
+            m = p1.match(line)
+            if m:
+                fpga_ver = m.groupdict()['fpga_version']
+                cpld_ver = m.groupdict()['cpld_version']
+                slot = m.groupdict()['slot']
+
+                platform_dict[slot] = {'fpga_ver': fpga_ver, 'cpld_ver': cpld_ver}
+
+        return platform_dict

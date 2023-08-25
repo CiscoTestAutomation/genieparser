@@ -1,0 +1,49 @@
+
++++ Node01 with via 'vty': executing command 'show vpc' +++
+show vpc
+Legend:
+                (*) - local vPC is down, forwarding via vPC peer-link
+
+vPC domain id                     : 200
+Peer status                       : peer adjacency formed ok
+vPC keep-alive status             : peer is alive
+Configuration consistency status  : success
+Per-vlan consistency status       : success
+Type-2 consistency status         : success
+vPC role                          : primary
+Number of vPCs configured         : 2
+Peer Gateway                      : Enabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Enabled
+Auto-recovery status              : Disabled
+Delay-restore status              : Timer is off.(timeout = 30s)
+Delay-restore SVI status          : Timer is off.(timeout = 10s)
+Delay-restore Orphan-port status  : Timer is off.(timeout = 0s)
+Operational Layer3 Peer-router    : Disabled
+Virtual-peerlink mode             : Enabled
+
+vPC Peer-link status
+---------------------------------------------------------------------
+id    Port   Status Active vlans
+--    ----   ------ -------------------------------------------------
+1     Po101  up     1-5,10-15,21-25,31-35,41-45,51-55,61-65,71-75,
+                    81-85,91-95,101-105,111-115,121-125,131-135,
+                    141-145,151-155,161-165,171-175,181-185,191-195,
+                    201-205,501,1006-1010,1016-1020
+
+vPC status
+----------------------------------------------------------------------------
+Id    Port          Status Consistency Reason                Active vlans
+--    ------------  ------ ----------- ------                ---------------
+102   Po102         up     success     success               10
+
+103   Po103         up     success     success               2-5,11-15,21-25,
+                                                             31-35,41-45,51-55,
+                                                             61-65,71-75,81-85,
+                                                             91-95,101-105,
+                                                             111-115,121-125,
+                                                             131-135,141-...,
+
+Please check "show vpc consistency-parameters vpc <vpc-num>" for the
+consistency reason of down vpc and for type-2 consistency reasons for
+any vpc.

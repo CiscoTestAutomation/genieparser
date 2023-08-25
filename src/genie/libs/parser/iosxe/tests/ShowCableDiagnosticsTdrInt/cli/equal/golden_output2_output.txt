@@ -1,0 +1,5 @@
+Interface Speed Local pair Cable length Remote channel Status
+Gi2/7 0Mbps 1-2 46 +/-1m Unknown Open
+3-6 45 +/-1m Unknown Open
+4-5 46 +/-1m Unknown Open
+7-8 46 +/-1m Unknown Open

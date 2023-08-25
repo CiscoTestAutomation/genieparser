@@ -291,7 +291,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
         p5 = re.compile(r'^Method +status +list:')
 
         # dot1x            Authc Failed
-        p6 = re.compile(r'^(?P<method>[dot1x|mab]\w+) +(?P<state>(\w+\s\w+)|(\w+))$')
+        p6 = re.compile(r'^(?P<method>[dot1x|mab|webauth]\w+) +(?P<state>(\w+\s\w+)|(\w+))$')
 
         # Runnable methods list:
         p7 = re.compile(r'^Runnable +methods +list:')

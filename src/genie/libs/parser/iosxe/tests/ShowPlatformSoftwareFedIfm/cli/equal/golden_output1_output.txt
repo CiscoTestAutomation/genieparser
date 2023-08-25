@@ -1,0 +1,5 @@
+show platform software fed active ifm interfaces tunnel
+Interface                         IF_ID               State             
+----------------------------------------------------------------------
+Tunnel50                          0x00000235          READY             
+Tunnel10                          0x000003ce          READY             

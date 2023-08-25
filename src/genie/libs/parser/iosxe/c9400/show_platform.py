@@ -18,6 +18,8 @@ import logging
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
+from genie.libs.parser.utils.common import Common
+
 log = logging.getLogger(__name__)
 
 
@@ -652,4 +654,170 @@ class ShowModule(ShowModuleSchema):
                 ret_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
                 continue
                 
+        return ret_dict
+
+
+class ShowHardwareLedSchema(MetaParser):
+    """
+    Schema for show hardware led
+    """
+    schema = {
+        'switch':str,
+        'system':str,
+        'line_card_supervisor': {
+            Any():{
+                'beacon': str,
+                'status':str,
+                Optional('port_led_status'):{
+                    str: str
+                    },
+                Optional('group_led'):{
+                    str: str
+                    }
+                }
+            },
+        'rj45_console':str,
+        Optional('fantray_status'): str,
+        Optional('fantray_beacon'): str,
+        Optional('power_supply_beacon_status'):{
+            int : str
+        }
+    }     
+
+class ShowHardwareLed(ShowHardwareLedSchema):
+    """ Parser for show hardware led"""
+
+    cli_command = "show hardware led"
+    
+    def cli(self,output=None): 
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # SWITCH: C9404R
+        p1 = re.compile('^SWITCH:\s+(?P<switch>\S+)$')
+
+        # SYSTEM: GREEN
+        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+
+        # Line Card : 1
+        # SUPERVISOR: ACTIVE
+        p3 = re.compile('^(Line Card :|SUPERVISOR:)\s+(?P<line_card_supervisor>\w+)$')
+
+        # PORT STATUS: (48)
+        p4 = re.compile('^PORT STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+
+        # BEACON:     OFF
+        p5 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+
+        # STATUS: GREEN
+        p6 = re.compile('^STATUS:\s+(?P<status>\w+)$')
+
+        # GROUP LED: UPLINK-G1:GREEN UPLINK-G2:BLACK UPLINK-G3:BLACK UPLINK-G4:BLACK
+        p7 = re.compile('^GROUP LED:\s+(?P<group_led>((\S+:\w+\s*))+)$')
+
+        # RJ45 CONSOLE: GREEN
+        p8 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+
+        # FANTRAY STATUS: GREEN
+        p9 = re.compile('^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
+
+        # FANTRAY BEACON: BLACK
+        p10 = re.compile('^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
+
+        # POWER-SUPPLY 1 BEACON: OFF
+        p11 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # SWITCH: C9404R
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['switch'] = group["switch"]
+                continue
+            
+            # SYSTEM: GREEN
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['system'] = group["system"]
+                continue
+
+            # Line Card : 1
+            # SUPERVISOR: ACTIVE
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict=ret_dict.setdefault('line_card_supervisor',{}).setdefault(group['line_card_supervisor'],{})       
+                continue
+
+            # BEACON:     OFF
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict.update({'beacon': group['beacon']})      
+                continue
+            
+            # STATUS: GREEN
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict.update({'status': group['status']})      
+                continue
+
+            # PORT STATUS: (48)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                for port in group['led_ports'].split():
+                    port = (port.split(':'))
+                    port_led_dict = slot_dict.setdefault('port_led_status',{})
+                    port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
+                continue
+
+            
+            # GROUP LED: UPLINK-G1:GREEN UPLINK-G2:BLACK UPLINK-G3:BLACK UPLINK-G4:BLACK
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                for uplink in group['group_led'].split():
+                    uplink = (uplink.split(':'))
+                    group_led_dict = slot_dict.setdefault('group_led',{})
+                    group_led_dict.update({(uplink[0]): uplink[1]})
+                continue
+            
+            # RJ45 CONSOLE: GREEN
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'rj45_console': group['rj45_console']})      
+                continue
+
+            # FANTRAY STATUS: GREEN
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'fantray_status': group['fantray_status']})
+                continue
+                
+            # FANTRAY BEACON: BLACK
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'fantray_beacon': group['fantray_beacon']})
+                continue
+            
+            # POWER-SUPPLY 1 BEACON: OFF
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                power_supply_dict= ret_dict.setdefault('power_supply_beacon_status',{})
+                power_supply_dict.setdefault(int(group['power_supply_num']),group['power_supply_status'])
+                continue
+
         return ret_dict

@@ -1,0 +1,13 @@
+show isis ipv4 topology
+Thu May 11 05:35:01.043 UTC
+
+No IS-IS 1 IPv4 Unicast levels found
+IS-IS 10 paths to IPv4 Unicast (Level-2) routers
+System Id Metric Next-Hop Interface SNPA
+P-9001-1 --
+PE-9001-1 10 PE-9001-1 Gi0/0/0/1.19 28c7.cebd.7c23
+PE-9001-1 10 PE-9001-1 BE10.10 5087.890d.27c3
+
+IS-IS 99 paths to IPv4 Unicast (Level-1) routers
+System Id Metric Next-Hop Interface SNPA
+P-9001-1 --

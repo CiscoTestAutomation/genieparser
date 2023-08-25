@@ -2837,6 +2837,14 @@ class ShowInterfaceBriefSchema(MetaParser):
                     Optional('reason'): str,
                 },
             },
+            Optional('tunnel'): {
+                Any(): {
+                    'status': str,
+                    'ip_address': str,
+                    'encap_type': str,
+                    'mtu': int,
+                },
+            },
         }
     }
 
@@ -2921,6 +2929,15 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # nve1           up     none            9216
         p12 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+) +(?P<status>[a-z]+)'
                          r' +(?P<reason>[a-zA-Z\s\-]+) +(?P<mtu>[0-9]+)$')
+
+        # Interface                Status     IP Address                                   Encap type       MTU
+        p13 = re.compile(
+            r'^Interface\s+Status\s+IP\sAddress\s+Encap\stype\s+MTU$')
+
+        # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+        p14 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+)'
+                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>\S+)'
+                         r' +(?P<encap_type>\S+) +(?P<mtu>[0-9]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -3039,6 +3056,26 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['status'] = group['status']
                 intf_dict['reason'] = group['reason'].strip()
                 intf_dict['mtu'] = group['mtu']
+                continue
+
+            # Interface                Status     IP Address                                   Encap type       MTU
+            m = p13.match(line)
+            if m:
+                tunnel_dict = parsed_dict.setdefault('interface', {}). \
+                    setdefault('tunnel', {})
+                continue
+
+            # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = tunnel_dict. \
+                    setdefault(Common.convert_intf_name(
+                        group['interface']), {})
+                intf_dict['status'] = group['status']
+                intf_dict['ip_address'] = group['ip_address']
+                intf_dict['encap_type'] = group['encap_type']
+                intf_dict['mtu'] = int(group['mtu'])
                 continue
 
         return parsed_dict

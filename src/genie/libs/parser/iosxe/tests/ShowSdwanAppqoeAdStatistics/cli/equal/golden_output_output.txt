@@ -1,0 +1,12 @@
+ Auto-Discovery Option Length Mismatch       : 0
+ Auto-Discovery Option Version Mismatch      : 0
+ Tcp Option Length Mismatch                  : 0
+ AD Role set to NONE                         : 2446380
+ [Edge] AD Negotiation Start                 : 1583895
+ [Edge] AD Negotiation Done                  : 1576350
+ [Edge] Rcvd SYN-ACK w/o AD options          : 7155
+ [Edge] AOIM sync Needed                     : 13
+ [Core] AD Negotiation Start                 : 0
+ [Core] AD Negotiation Done                  : 0
+ [Core] Rcvd ACK w/o AD options              : 0
+ [Core] AOIM sync Needed                     : 0

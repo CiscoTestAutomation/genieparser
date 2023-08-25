@@ -137,6 +137,9 @@ class ShowVrfDetailSchema(MetaParser):
             Optional('interfaces'): list,
             Optional('interface'): {Any(): {'vrf': str}},
             Optional('flags'):  str,
+            Optional('vnid'): str,
+            Optional('vni'): str,
+            Optional('core_vlan'): str,
             Optional('cli_format'): str,
             Optional('support_af'): str,
             Optional('address_family'): {
@@ -214,6 +217,9 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # New CLI format, supports multiple address-families
         p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format,'
                           r' +supports +(?P<support_af>[\s\S]+)$')
+        
+        #vnid: 30022 evpn-instance vni 4096 core-vlan 300
+        p1_2 = re.compile(r'^vnid:\s+(?P<vnid>\d+)(?:\s+evpn-instance vni\s+(?P<vni>\w+)(?:\s+core-vlan\s+(?P<core_vlan>\d+))?)?$')
 
         # Flags: 0x180C
         p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
@@ -282,6 +288,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # Description: desc
         p12 = re.compile(r'^Description: +(?P<desc>[\S\s]+)$')
 
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -321,6 +328,15 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 vrf_dict.update({'cli_format':groups['cli_format']})
                 vrf_dict.update({'support_af':groups['support_af']})
+                continue
+
+            #vnid: 30022 evpn-instance vni 4096 core-vlan 300
+            m = p1_2.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf_dict.update({'vnid': groups['vnid']})
+                vrf_dict.update({'vni': groups['vni']})
+                vrf_dict.update({'core_vlan': groups['core_vlan']})
                 continue
 
             # Flags: 0x180C
@@ -515,6 +531,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 vrf_dict.update({'description': groups['desc']})
                 continue
+
         return result_dict
 
 

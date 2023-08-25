@@ -43,6 +43,19 @@ expected_output = {
                         'marking_method': 'Tablemap',
                         'qos_group': 255,
                         'traffic_class': 255,
+                        'default_behavior': 'Copy',
+                        'default_value': 0,
+                        'map': {
+                            'dscp_to_dscp': {
+                                16: 32,
+                                32: 24,
+                                40: 24,
+                                48: 56,
+                                8: 16
+                            }
+                        },
+                        'table_id': '0x3B8D',
+                        'table_name': 't1'
                     },
                 },
                 'child_cgid': '0x0',

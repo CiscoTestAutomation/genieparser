@@ -1,0 +1,4 @@
+{
+    "vrf_id": "WAN-VRF",
+    "interface": "FiveGigabitEthernet1/0/24"
+}

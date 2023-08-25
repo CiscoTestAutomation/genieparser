@@ -13,6 +13,8 @@ IOSXE parsers for the following show commands:
     * show ip nbar classification socket-cache <number_of_sockets>
     * show ip nbar version
     * show ip nat translations
+    * show ip nat translations total
+    * show ip nat translations vrf {vrf} total    
     * show ip nat translations verbose
     * show ip nat statistics
     * show ip dhcp database
@@ -2021,9 +2023,11 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Tunnel0, VXLAN Decap Flags: F
         #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
         #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: F
+        #L2LISP0.699, L2LISP Decap Flags: F NS
         #Null0, LISPv4 Decap Flags: RF F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
                         '(\,\s+LISPv4\s*Decap\s*)?'
+                        '(\,\s+L2LISP\s*Decap\s*)?'
                         '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
 						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
@@ -6114,6 +6118,7 @@ class ShowIpAdmissionCacheSchema(MetaParser):
                 'client_ip': str,
                 'state': str,
                 'method': str,
+                Optional('vrf'): str,
             },
         },
     }
@@ -6133,7 +6138,8 @@ class ShowIpAdmissionCache(ShowIpAdmissionCacheSchema):
         # Total Sessions: 101 Init Sessions: 1
         p1 = re.compile(r"^Total\s+Sessions:\s+(?P<total_session>\d+)\s+Init\s+Sessions:\s+(?P<init_session>\d+)$")
         #  Client Mac 000a.aaaa.0001 Client IP 0.0.0.0 IPv6 , State INIT, Method Webauth
-        p2 = re.compile(r"^\s+Client\s+Mac\s+(?P<client_mac>\S+)\s+Client\s+IP\s+(?P<client_ip>(\d{1,3}\.){3}\d{1,3})\s+IPv6\s+,\s+State\s+(?P<state>\w+),\s+Method\s+(?P<method>\w+)$")
+        #  Client Mac 000c.2911.69b9 Client IP 101.1.0.2 IPv6 ::, State AUTHC_FAIL, Method Webauth, VRF Global
+        p2 = re.compile(r"^\s+Client\s+Mac\s+(?P<client_mac>\S+)\s+Client\s+IP\s+(?P<client_ip>(\d{1,3}\.){3}\d{1,3})\s+IPv6\s+(::)?,\s+State\s+(?P<state>\w+),\s+Method\s+(?P<method>\w+)(,\s+VRF+\s+(\w+))?$")
 
         ret_dict = {}
 
@@ -6162,6 +6168,8 @@ class ShowIpAdmissionCache(ShowIpAdmissionCacheSchema):
                 client_mac_dict['client_ip'] = dict_val['client_ip']
                 client_mac_dict['state'] = dict_val['state']
                 client_mac_dict['method'] = dict_val['method']
+                if 'vrf' in ret_dict:
+                    client_mac_dict['vrf'] = dict_val['vrf']
                 continue
 
 
@@ -7344,3 +7352,46 @@ class ShowIpHttpServerSecureStatus(ShowIpHttpServerAll):
 
     def cli(self, output=None):
         return super().cli(output=output)
+
+class ShowIpNatTranslationsTotalSchema(MetaParser):
+    """ Schema for the commands:
+            * show ip nat translations total
+            * show ip nat translations vrf {vrf} total
+    """
+        
+    schema = {
+        'total_number_of_translations': int
+    }
+ 
+class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
+    """
+        * show ip nat translations total
+        * show ip nat translations vrf {vrf} total
+    """
+
+    cli_command = ['show ip nat translations total', 'show ip nat translations vrf {vrf} total']
+    def cli(self, vrf='', output=None):        
+        cmd = ""
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output        
+
+        # Total number of translations: 0
+        p1 = re.compile(r'^\s*Total\s+number\s+of\s+translations:\s+(?P<number_of_translations>\d+)$')
+ 
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict['total_number_of_translations'] = int(group['number_of_translations'])
+       
+        return ret_dict

@@ -2,7 +2,9 @@
 
 IOSXE parsers for the following show commands:
 
-    * show dhcp lease
+    * 'show dhcp lease'
+    * 'show ipv6 dhcp interface'
+    * 'show ipv6 dhcp interface {interface}'
 
 """
 
@@ -14,7 +16,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 # ==============================================
-# Parser for 'show dhcp lease'
+# Schema Parser for 'show dhcp lease'
 # ==============================================
 
 class ShowDhcpLeaseSchema(MetaParser):
@@ -40,6 +42,9 @@ class ShowDhcpLeaseSchema(MetaParser):
         },
     }
 
+# ==============================================
+# Parser for 'show dhcp lease'
+# ==============================================
 class ShowDhcpLease(ShowDhcpLeaseSchema):
     """Parser for: show dhcp lease"""
 
@@ -182,5 +187,289 @@ class ShowDhcpLease(ShowDhcpLeaseSchema):
                 del default_gw
             else:
                 dhcp_dict[interface]['default_gw'] = 'na'
+
+        return ret_dict
+
+
+# ==============================================================================================
+#  Schema Parser for
+#     'show ipv6 dhcp interface'
+#     'show ipv6 dhcp interface {interface}'
+# ==============================================================================================
+class ShowIpv6DhcpInterfaceSchema(MetaParser):
+    """Schema for 
+        'show ipv6 dhcp interface'
+        'show ipv6 dhcp interface {interface}'
+    """
+
+    schema = {
+        "interfaces" : {
+            Any(): { #interface
+                "mode"                                          : str,
+                Optional("prefix_state")                        : str,
+                Optional("address_state")                       : str,
+                Optional("prefix_name")                         : str,
+                Optional("prefix_rapid_commit")                 : str,
+                Optional("address_rapid_commit")                : str,
+                Optional("pool_name")                           : str,
+                Optional("relay_destination")                   : str,
+                Optional("preference_value")                    : int,
+                Optional("hint_from_client")                    : str,
+                Optional("rapid_commit")                        : str,
+                Optional("known_servers") : {
+                    Any () : { #servers
+                        Optional("duid")                        : str,
+                        Optional("preference")                  : int,
+                        Optional("dns_server")                  : str,
+                        Optional("domain_name")                 : str,
+                        Optional("information_refresh_time")    : int,
+                        Any() : { #address type IAPD or IANA
+                            Optional("iaid")                    : str,
+                            Optional("t1")                      : int,
+                            Optional("t2")                      : int,
+                            Optional("address")                 : str,
+                            Optional("prefix")                  : str,
+                            Optional("preferred_lifetime")      : int,
+                            Optional("valid_lifetime")          : int,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# ==============================================
+# Parser for 
+#     'show ipv6 dhcp interface'
+#     'show ipv6 dhcp interface {interface}'
+# ==============================================
+class ShowIpv6DhcpInterface(ShowIpv6DhcpInterfaceSchema):
+    """Parser for: 
+       'show ipv6 dhcp interface'
+       'show ipv6 dhcp interface {interface}'
+    """
+
+    cli_command = ['show ipv6 dhcp interface', 'show ipv6 dhcp interface {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if not interface:
+                output = self.device.execute(self.cli_command[0])
+            else:
+                output = self.device.execute(self.cli_command[1].format(interface=interface))   
+
+        ret_dict = {}
+
+        #TenGigabitEthernet1/0/2.154 is in client mode
+        p1 = re.compile(r'^(?P<interface>.*)\s+is\s+in\s+(?P<mode>.*)\s+mode\s*$')
+
+        #Prefix State is OPEN
+        p2 = re.compile(r'^Prefix\s+State\s+is\s+(?P<prefix_state>\w+)\s*$')
+
+        #Address State is OPEN
+        p3 = re.compile(r'^Address\s+State\s+is\s+(?P<address_state>\w+)\s*$')
+
+        #Prefix name: TEST123
+        p4 = re.compile(r'^Prefix\s+name:\s+(?P<prefix_name>\w+).*$')
+
+        #Prefix Rapid-Commit: disabled
+        p5 = re.compile(r'^Prefix\s+Rapid-Commit:\s+(?P<prefix_rapid_commit>\w+)\s*$')
+
+        #Address Rapid-Commit: disabled
+        p6 = re.compile(r'^Address\s+Rapid-Commit:\s+(?P<address_rapid_commit>\w+)\s*$')
+
+        #Reachable via address: FE80::20C:29FF:FE22:1DA5
+        p7 = re.compile(r'^Reachable\s+via\s+address:\s+(?P<known_servers>[0-9A-Fa-f:]+)\s*$')
+
+        #DUID: 00030001001EE59BE700
+        p8 = re.compile(r'^DUID:\s+(?P<duid>[0-9A-Fa-f]+)\s*$')
+
+        #Preference: 0
+        p9 = re.compile(r'^Preference:\s+(?P<preference>\d+)\s*$')
+
+        #IA PD: IA ID 0x004C0001, T1 302400, T2 483840
+        #IA NA: IA ID 0x004C0001, T1 43200, T2 69120
+        p10 = re.compile(r'^(?P<type>IA PD|IA NA):\s+IA ID\s+(?P<iaid>[A-F0-9x]+),\s+T1\s+(?P<t1>.*),\s+T2\s+(?P<t2>.*)\s*$')
+
+        #Prefix: 8881::/56
+        #Address: 7772::6DBE:16C6:2F5:A636/128
+        p11 = re.compile(r'^(?P<addr_or_prefix>Address|Prefix):\s+(?P<addr_or_prefix_value>[0-9A-F:\/]+)\s*$')
+
+        #preferred lifetime 604800, valid lifetime 2592000
+        p12 = re.compile(r'^preferred\s+lifetime\s+(?P<preferred_lifetime>\d+),\s+valid\s+lifetime\s+(?P<valid_lifetime>\d+).*$')
+
+        #DNS server: 11::11
+        p13 = re.compile(r'^DNS\s+server:\s+(?P<dns_server>[0-9A-Fa-f:]+)\s*$')
+
+        #Domain name: cisco.com
+        p14 = re.compile(r'^Domain\s+name:\s+(?P<domain_name>.*)\s*$')
+
+        #Information refresh time: 0
+        p15 = re.compile(r'^Information\s+refresh\s+time:\s+(?P<information_refresh_time>\d+)\s*$')
+
+        #Using pool: A
+        p16 = re.compile(r'^Using\s+pool:\s+(?P<pool_name>.*)\s*$')
+       
+        #    1::2
+        p17 = re.compile(r'^(?P<relay_destination>[A-F0-9:]+)\s*$')
+
+        #Preference value: 0
+        p18 = re.compile(r'^Preference\s+value:\s+(?P<preference_value>\d+)\s*$')
+
+        #Hint from client: ignored
+        p19 = re.compile(r'^Hint\s+from\s+client:\s+(?P<hint_from_client>.*)\s*$')
+
+        #Rapid-Commit: disabled
+        p20 = re.compile(r'^Rapid-Commit:\s+(?P<rapid_commit>.*)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+                
+            #TenGigabitEthernet1/0/2.154 is in client mode
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(groups['interface'],{})
+                dhcp_intf_dict["mode"] = groups['mode']
+                continue
+
+            #Prefix State is OPEN
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["prefix_state"] = groups['prefix_state']
+                continue
+            
+            #Address State is OPEN
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["address_state"] = groups['address_state']
+                continue
+
+            #Prefix name: TEST123
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["prefix_name"] = groups['prefix_name']
+                continue
+
+            #Prefix Rapid-Commit: disabled
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["prefix_rapid_commit"] = groups['prefix_rapid_commit']
+                continue
+
+            #Address Rapid-Commit: disabled
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["address_rapid_commit"] = groups['address_rapid_commit']
+                continue
+
+            #Reachable via address: FE80::20C:29FF:FE22:1DA5
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict = dhcp_intf_dict.setdefault('known_servers',{}).setdefault(groups['known_servers'],{})
+                continue
+
+            #DUID: 00030001001EE59BE700
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict["duid"] = groups['duid']
+                continue
+        
+            #Preference: 0
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict["preference"] = int(groups['preference'])
+                continue
+            
+            #IA PD: IA ID 0x004C0001, T1 302400, T2 483840
+            #IA NA: IA ID 0x004C0001, T1 43200, T2 69120
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                addr_dict = server_dict.setdefault(groups['type'],{})
+                addr_dict["iaid"] = groups['iaid']
+                addr_dict["t1"] = int(groups['t1'])
+                addr_dict["t2"] = int(groups['t2'])
+                continue
+            
+            #Prefix: 8881::/56
+            #Address: 7772::6DBE:16C6:2F5:A636/128
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                addr_dict[groups['addr_or_prefix'].lower()] = groups['addr_or_prefix_value']
+                continue
+
+            #preferred lifetime 604800, valid lifetime 2592000
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                addr_dict['preferred_lifetime'] = int(groups['preferred_lifetime'])
+                addr_dict['valid_lifetime'] = int(groups['valid_lifetime'])
+                continue
+        
+            #DNS server: 11::11
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict["dns_server"] = groups['dns_server']
+                continue
+
+            #Domain name: cisco.com
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict["domain_name"] = groups['domain_name']
+                continue
+
+            #Information refresh time: 0
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                server_dict["information_refresh_time"] = int(groups['information_refresh_time'])
+                continue
+
+            #Using pool: A
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["pool_name"] = groups['pool_name']
+                continue
+  
+            #    1::2
+            m = p17.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["relay_destination"] = groups['relay_destination']
+                continue
+
+            #Preference value: 0
+            m = p18.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["preference_value"] = int(groups['preference_value'])
+                continue
+        
+            #Hint from client: ignored
+            m = p19.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["hint_from_client"] = groups['hint_from_client']
+                continue
+        
+            #Rapid-Commit: disabled
+            m = p20.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_intf_dict["rapid_commit"] = groups['rapid_commit']
+                continue
 
         return ret_dict

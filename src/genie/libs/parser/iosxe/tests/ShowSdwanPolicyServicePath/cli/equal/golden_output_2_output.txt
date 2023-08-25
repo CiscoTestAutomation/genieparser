@@ -1,0 +1,8 @@
+Number of possible next hops: 3
+Next Hop: IPsec
+  Source: 40.185.4.1 12366 Destination: 40.185.20.1 12406 Local Color: blue Remote Color: blue Remote System IP: 6.0.0.2
+Next Hop: IPsec
+  Source: 4180::4:4720:cfcc 12366 Destination: 4180::20:0:1 12346 Local Color: biz-internet Remote Color: biz-internet Remote System IP: 6.0.0.2
+Next Hop: IPsec
+  Source: 40.187.4.1 12346 Destination: 40.181.20.1 12366 Local Color: gold Remote Color: gold Remote System IP: 6.0.0.2
+

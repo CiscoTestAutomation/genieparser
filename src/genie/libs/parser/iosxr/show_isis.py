@@ -1,6 +1,5 @@
 """
 show_isis.py
-
 IOSXR parsers for the following show commands:
     * show isis
     * show isis lsp-log
@@ -21,6 +20,7 @@ IOSXR parsers for the following show commands:
     * show isis instance {process_id} neighbors
     * show isis interface brief
     * show isis database
+    * show isis ipv4 topology
 """
 
 # Python
@@ -5631,6 +5631,116 @@ class ShowIsisDatabase(ShowIsisDatabaseSchema):
                 level_dict['total_lsp_count'] = int(group['total_lsp_count'])
                 level_dict['local_level'] = int(group['local_level'])
                 level_dict['local_lsp_count'] = int(group['local_lsp_count'])
+                continue
+
+        return result_dict
+
+class ShowIsisIpv4TopologySchema(MetaParser):
+    """Schema for:
+        * show isis ipv4 topology
+    """
+    schema = {
+        'isis': {
+            Any(): {
+                'process_id': str,
+                'routes_found': bool,
+                Optional('level'): {
+                    Any(): {
+                        'level': str,
+                        'system_id': {
+                            Any(): {
+                                Optional('system_id'): str,
+                                Optional('metric'): str,
+                                Optional(Any()): {
+                                    'interface_name': str,
+                                    'system_id': str,
+                                    'metric': str,
+                                    'next_hop': str,
+                                    'snpa': str
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ==============================================
+# Parser for 'show isis ipv4 topology'
+# ==============================================
+
+class ShowIsisIpv4Topology(ShowIsisIpv4TopologySchema):
+    """Parser for:
+    * show isis ipv4 topology
+    """
+    cli_command = ['show isis ipv4 topology']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        result_dict = {}
+
+        # No IS-IS 1 IPv4 Unicast levels found
+        p1 = re.compile(r'^No\s+IS-IS\s+(?P<process_id>\d+)\s+IPv4\s+Unicast\s+levels\s+found$')
+
+        # IS-IS 99 paths to IPv4 Unicast (Level-1) routers
+        # IS-IS CORE paths to IPv4 Unicast (Level-1) routers
+        p2 = re.compile(r'^IS-IS\s+(?P<process_id>\w+)\s+paths\s+to\s+IPv4\s+Unicast\s+\(Level-(?P<level>\d+)\)\s+routers$')
+
+        # PE-9001-1 10 PE-9001-1 Gi0/0/0/1.19 28c7.cebd.7c23
+        # XRv9k-PE1       --
+        # AGG-PE-A        10      AGG-PE-A        Gi0/0/0/0       5001.0002.0001
+        p3 = re.compile(r'^(?P<system_id>[\w-]+)\s+(?P<metric>[\d-]+)'
+                        r'(?:\s+(?P<next_hop>[\w-]+)\s+(?P<interface_name>[\w.\/]+)\s+(?P<snpa>[\w.]+))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # No IS-IS 1 IPv4 Unicast levels found
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('isis', {}). \
+                    setdefault(group['process_id'], {})
+                process_id_dict['process_id'] = group['process_id']
+                process_id_dict['routes_found'] = False
+                continue
+
+            # IS-IS 99 paths to IPv4 Unicast (Level-1) routers
+            # IS-IS CORE paths to IPv4 Unicast (Level-1) routers
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('isis', {}). \
+                    setdefault(group['process_id'], {})                    
+                process_id_dict['process_id'] = group['process_id']
+                process_id_dict['routes_found'] = True
+                level_id_dict = process_id_dict.setdefault('level', {}).setdefault(group['level'], {})
+                level_id_dict['level'] = group['level']
+                continue
+
+            # PE-9001-1 10 PE-9001-1 Gi0/0/0/1.19 28c7.cebd.7c23
+            # XRv9k-PE1       --
+            # AGG-PE-A        10      AGG-PE-A        Gi0/0/0/0       5001.0002.0001
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['interface_name']:
+                    system_id_dict = level_id_dict.setdefault('system_id', {}). \
+                        setdefault(group['system_id'], {}).setdefault(group['interface_name'], {})
+                    system_id_dict['interface_name'] = group['interface_name']
+                else:
+                    system_id_dict = level_id_dict.setdefault('system_id', {}). \
+                        setdefault(group['system_id'], {})
+                system_id_dict['system_id'] = group['system_id']
+                system_id_dict['metric'] = group['metric']
+                if group['next_hop']:
+                    system_id_dict['next_hop'] = group['next_hop']
+                if group['snpa']:
+                    system_id_dict['snpa'] = group['snpa']
                 continue
 
         return result_dict

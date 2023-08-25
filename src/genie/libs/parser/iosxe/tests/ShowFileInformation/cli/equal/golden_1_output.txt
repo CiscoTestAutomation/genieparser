@@ -1,0 +1,2 @@
+bootflash:c8000aep-universalk9.17.09.04.0.5115.SSA.bin:
+  type is IOSXE_PACKAGE []

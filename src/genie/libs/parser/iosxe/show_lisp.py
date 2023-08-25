@@ -10458,7 +10458,7 @@ class ShowLispEthernetMapCacheSchema(MetaParser):
                                 'expiry_time': str,
                                 'via': str,
                                 'map_reply_state': str,
-                                'site': str,
+                                Optional('site'): str,
                                 Optional('locators'): {
                                     str: {
                                         'uptime': str,
@@ -10514,8 +10514,14 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
         # aabb.cc00.cb00/48, uptime: 00:00:03, expires: never, via pub-sub, complete, local-to-site
         p3 = re.compile(r"^(?P<eid_prefix>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2}),"
                         r"\s+uptime:\s+(?P<uptime>\S+),\s+expires:\s+"
-                        r"(?P<expiry_time>\d{1,2}:\d{1,2}:\d{1,2}|\S+),\s+via\s+(?P<via>\S+),\s+"
-                        r"(?P<map_reply_state>\S+),\s+(?P<site>\S+)$")
+                        r"(?P<expiry_time>\d{1,2}:\d{1,2}:\d{1,2}|\S+),\s+via\s+(?P<via>\w+\-+\w+),\s+"
+                        r"(?P<map_reply_state>\w+),\s+(?P<site>\S+)$")
+
+        # 0000.58bb.6f48/48, uptime: 1d05h, expires: 5d18h, via map-reply, complete
+        p3_1 = re.compile(r"(?P<eid_prefix>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2}),"
+                          r"\s+uptime:\s+(?P<uptime>\S+),\s+expires:\s+"
+                          r"(?P<expiry_time>\d{1,2}:\d{1,2}:\d{1,2}|\S+),\s+via\s+"
+                          r"(?P<via>(\w+\-+\w+)|\S+\s+\w+\-+\w+),\s+(?P<map_reply_state>\w+)$")
 
         #  1.1.1.10  18:33:39  up      10/10        -
         #  1:1:1:10::  18:33:39  up      10/10        -
@@ -10578,6 +10584,24 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
                     'map_reply_state':map_reply_state,
                     'site':site
                 })
+
+            # 0000.58bb.6f48/48, uptime: 1d05h, expires: 5d18h, via map-reply, complete
+            m = p3_1.match(line)
+            if m:
+                groups = m.groupdict()
+                eid_prefix = groups['eid_prefix']
+                uptime = groups['uptime']
+                expiry_time = groups['expiry_time']
+                via = groups['via']
+                map_reply_state = groups['map_reply_state']
+                eid_prefix_dict = instance_id_dict.setdefault('eid_prefix',{})\
+                                                  .setdefault(eid_prefix,{})
+                eid_prefix_dict.update({
+                    'uptime':uptime,
+                    'expiry_time':expiry_time,
+                    'via':via,
+                    'map_reply_state':map_reply_state
+                    })
 
             #  1.1.1.10  18:33:39  up      10/10        -
             #  1:1:1:10::  18:33:39  up      10/10        -
