@@ -1,0 +1,131 @@
+
+sh performance-measurement summary private
+
+Total interfaces                              : 5
+Total SR Policies                             : 3
+Total endpoints                               : 2
+Maximum PPS                                   : 2000 pkts/sec
+Dual-color gre bit-position                   : 9 - Failed, last success 0
+
+Interface Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 516
+      Total received                          : 0
+    Errors:
+      Total sent errors                       : 14
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 54
+      Total completed                         : 0
+      Total incomplete                        : 52
+      Total advertisements                    : 0
+
+SR Policy Delay-Measurement:
+  Total sessions                              : 7
+  Counters:
+    Packets:
+      Total sent                              : 5344
+      Total received                          : 5344
+    Errors:
+      Total sent errors                       : 0
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 175
+      Total completed                         : 175
+      Total incomplete                        : 0
+      Total advertisements                    : 21
+
+Endpoint Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 516
+      Total received                          : 516
+    Errors:
+      Total sent errors                       : 14
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 54
+      Total completed                         : 50
+      Total incomplete                        : 2
+      Total advertisements                    : 2
+
+Interface Loss-Measurement:
+  Total sessions                              : 1
+  Counters:
+    Packets:
+      Total sent                              : 7229
+      Total received                          : 7228
+    Errors:
+      Total sent errors                       : 0
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 3615
+      Total completed                         : 3614
+      Total incomplete                        : 0
+      Total advertisements                    : 1
+
+Global Counters:
+  Total packets sent                          : 6376
+  Total query packets received                : 5860
+  Total invalid session id                    : 0
+  Total no session                            : 0
+
+HW Support for MPLS-GAL [RFC6374] timestamp   : Yes
+HW Support for IPv4 TWAMP [RF5357] timestamp  : Yes
+HW Support for IPv6 TWAMP [RF5357] timestamp  : No
+HW Support for 64 bit timestamp               : Yes
+HW Support for IPv4 UDP Cheksum               : Yes
+
+Max packets per burst                         : 2000
+Querier RX queue:
+  Size                                   : 0
+  Enqueues                               : 5860
+  High water mark                        : 7
+  High water mark time                   : 19 1970 09:42:09.484
+Responder RX queue:
+  Size                                   : 0
+  Enqueues                               : 0
+  High water mark                        : 0
+  High water mark time                   : N/A
+Querier IM queue:
+  Size                                   : 0
+  Enqueues                               : 1
+  High water mark                        : 1
+  High water mark time                   : 19 1970 09:42:09.038
+Querier CFG queue:
+  Size                                   : 0
+  Enqueues                               : 1793
+  High water mark                        : 58
+  High water mark time                   : 19 1970 09:42:09.039
+Querier CHKPT queue:
+  Size                                   : 0
+  Enqueues                               : 0
+  High water mark                        : 0
+  High water mark time                   : N/A
+UDP Port GAL OOB IPV4                         : 63426
+UDP Port GAL OOB IPV6                         : 59792
+UDP Port TWAMP QUERY IPV4                     : 862
+UDP Port TWAMP QUERY IPV6                     : 862
+UDP Port TWAMP REPLY IPV4                     : 49963
+UDP Port TWAMP REPLY IPV6                     : 65299
+UDP Port SDLM QUERY IPV4                      : 6634
+UDP Port SDLM QUERY IPV6                      : 6634
+UDP Port SDLM REPLY IPV4                      : 50119
+UDP Port SDLM REPLY IPV6                      : 57446
+Last Error [Querier]:
+  Unknown destination address type 0.
+  Timestamp: 06:30:28  20 2021
+  Session ID: 2
+Last Error [Receive]:
+  Failed to enqueue CFG 
+  Timestamp: 06:30:10  20 2021
+
+PM RUNTIME
+ NAME                LAST        AVG         TOTAL               CNT         WRAPPED     
+ CP PROBE START      34000       341861      44442000            130         0           
+ CP BURST TIMER      263000      307949      1150808000          3737        0           
+ CFG GET INFO        23000       51676       302825000           5860        0           
+ FIB_FWD             12000       46990       275367000           5860        0

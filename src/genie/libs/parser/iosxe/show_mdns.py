@@ -982,10 +982,10 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
         # Total Number of Location Groups: 0
         p2 = re.compile(r"^Total +Number +of +Location +Groups: +(?P<total_loc_grps>([0-9]+))$")
         
-        # 2801                         1          0  	Twe1/0/1, Twe1/0/24, 
+        # 2801                         1          0     Twe1/0/1, Twe1/0/24, 
         p3 = re.compile(r"^(?P<vlans>\d+)\s+(?P<no_of_lg>\d+)\s+(?P<lg_id>\d+)\s+(?P<ports>.*),?$")
         
-        # 2802                         1          0  	Twe1/0/7, 
+        # 2802                         1          0     Twe1/0/7, 
         p4 = re.compile(r"^(?P<lg_id>\d+)\s+(?P<ports>.*),?$")
 
         for line in out.splitlines():
@@ -1009,7 +1009,7 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
                 ret_dict['total_loc_grps'] =  m.groupdict()['total_loc_grps']
                 continue
             
-            #2801                         1          0  	Twe1/0/1, Twe1/0/24, 
+            #2801                         1          0      Twe1/0/1, Twe1/0/24, 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1022,7 +1022,7 @@ class ShowMdnsSdLocationGroupDetail(ShowMdnsSdLocationGroupDetailSchema):
                 lg_id.update({'ports': ",".join(list(map(Common.convert_intf_name,m.groupdict()['ports'].split(',')))), })
                 continue
                 
-            # 2802                         1          0  	Twe1/0/7,  
+            # 2802                         1          0     Twe1/0/7,  
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -1585,7 +1585,10 @@ class ShowMdnsSdSummarySchema(MetaParser):
             Optional('next_query_to_sdg'): str,
             Optional('query_response_mode'): str,
             Optional('service_receiver_purge_timer'): str,
-            'sso': str
+            'sso': str,
+            Optional('remote_cache'): str,
+            Optional('remote_cache_max_limit'): str,
+            Optional('remote_cache_purge_timer'): str,
         }           
     }
 
@@ -1677,6 +1680,15 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
         # Service Receiver Purge Timer: 60 Seconds
         p23 = re.compile(r'^Service +Receiver +Purge +Timer +: +(?P<servc_purge_timer>(.*))$')
         
+        # Remote cache : Enabled (default)
+        p24 = re.compile(r'^Remote +cache +: +(?P<rmt_cache>(.*))$')
+
+        # Remote cache max limit : 1000 (default)
+        p25 = re.compile(r'^Remote +cache +max +limit +: +(?P<rmt_cache_max_lmt>(.*))$')
+
+        # Remote cache purge timer : 300 Seconds (default) 
+        p26 = re.compile(r'^Remote +cache +purge +timer +: +(?P<rmt_cache_prg_tmr>(.*))$')
+
         for line in output.splitlines():
             line = line.strip()
             
@@ -1797,7 +1809,6 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
                 group = m.groupdict()
                 global_mdns_gateway["sso"] = group["sso"]   
                 continue
-                
             # Service Record TTL               : original
             m = p17.match(line)
             if m:
@@ -1846,9 +1857,29 @@ class ShowMdnsSdSummary(ShowMdnsSdSummarySchema):
                 group = m.groupdict()
                 global_mdns_gateway["service_receiver_purge_timer"] = group["servc_purge_timer"]
                 continue
-                                   
-        return ret_dict
+            
+            # Remote cache : Enabled (default)
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["remote_cache"] = group["rmt_cache"]
+                continue
 
+            # Remote cache max limit : 1000 (default)
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["remote_cache_max_limit"] = group["rmt_cache_max_lmt"]
+                continue
+            
+            # Remote cache purge timer : 300 Seconds (default)
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                global_mdns_gateway["remote_cache_purge_timer"] = group["rmt_cache_prg_tmr"]
+                continue
+        return ret_dict
+        
 class ShowMdnsSdSummaryInterfaceVlanSchema(MetaParser):
     """ Schema for
         * show mdns-sd summary interface vlan 300
@@ -2537,5 +2568,60 @@ class ShowMdnsSdCacheInvalid(ShowMdnsSdCacheInvalidSchema):
                 invalid_mdns_services_dict['a_aaaa'] = group['A_AAAA']
                 invalid_mdns_services_dict['txt'] = group['TXT']
                 continue    
-                                    
+                                   
         return ret_dict
+
+######
+class ShowMdnsSdCacheSchema(MetaParser):
+    """ Schema for
+    
+        * show mdns-sd cache 
+    """
+    schema = {
+        'mdns_cache_services': {
+            Any(): {
+                'name': str, 
+                'type': str,
+                'ttl_remaining': str, 
+                'vlan_id':  int,
+                'mac_address': str, 
+                'rr_record_data':  str,
+            },
+        },
+    }
+                        
+class ShowMdnsSdCache(ShowMdnsSdCacheSchema):
+    """ Parser for
+    
+        * show mdns-sd cache
+           
+    """
+    
+    cli_command = 'show mdns-sd cache'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        #[<NAME>]   [<TYPE>]    [<TTL>/Remaining]   [Vlan-Id/If-name] [Mac Address] [<RR Record Data>]        
+        p1 = re.compile(r'^\s*(?P<NAME>[\w._]+)\s+(?P<TYPE>\w+)\s+(?P<TTL_Remaining>\d+/\d+)\s+(?P<vlan>\d+)\s+(?P<Mac_Address>[\w\.\:]+)\s+(?P<RR>.*)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            #[<NAME>]   [<TYPE>]    [<TTL>/Remaining]   [Vlan-Id/If-name] [Mac Address] [<RR Record Data>]                     
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mdns_cache_services = group['NAME']
+                mdns_cache_dict = ret_dict.setdefault('mdns_cache_services', {}).setdefault(mdns_cache_services, {})
+                mdns_cache_dict['mac_address'] = group['Mac_Address']
+                mdns_cache_dict['name'] = group['NAME']
+                mdns_cache_dict['vlan_id'] = int(group['vlan'])
+                mdns_cache_dict['type'] = group['TYPE']
+                mdns_cache_dict['ttl_remaining'] = group['TTL_Remaining']                
+                mdns_cache_dict['rr_record_data'] = group['RR']
+                continue    
+        return ret_dict
+        

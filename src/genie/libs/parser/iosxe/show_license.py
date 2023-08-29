@@ -2631,6 +2631,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'sapluginmgmtinterfacemutex':str,
             'sapluginmgmtipdomainname':str,
             Optional('smarttransportvrfsupport'):str,
+            Optional('smartagentcompliancestatus'):str,
             'smartagentclientwaitforserver':int,
             'smartagentcmretrysend':str,
             'smartagentclientisunified':str,

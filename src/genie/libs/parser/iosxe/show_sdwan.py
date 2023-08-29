@@ -26,7 +26,7 @@
 * 'show sdwan policy access-list-associations'
 * 'show sdwan policy access-list-counters'
 * 'show sdwan policy ipv6 access-list-counters'
-* 'show sdwan policy app-route-policy-filter' 
+* 'show sdwan policy app-route-policy-filter'
 * 'show sdwan policy from-vsmart'
 * 'show sdwan reboot history'
 * 'show sdwan software'
@@ -65,6 +65,11 @@
 * 'show platform hardware qfp active feature sdwan client interface <interface name>'
 * 'show sdwan omp multicast-routes'
 * 'show sdwan omp multicast-auto-discover'
+* 'show sdwan policy service-path vpn {vpn} interface {interface name} source-ip {source ip} dest-ip {destination ip} protocol {protocol}'
+* 'show sdwan policy service-path vpn {vpn} interface {interface name} source-ip {source ip} dest-ip {destination ip} protocol {protocol} {all}'
+* 'show sdwan appqoe dreopt statistics'
+* 'show sdwan appqoe ad-statistics'
+* 'show sdwan appqoe rm-statistics'
 '''
 
 # Python
@@ -129,7 +134,7 @@ class ShowSdwanAppqoeAoimStatisticsSchema(MetaParser):
 class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
 
     """ Parser for "show sdwan appqoe aoim-statistics" """
-    
+
     cli_command = "show sdwan appqoe aoim-statistics"
 
     def cli(self, output=None):
@@ -163,7 +168,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
         #AO             Version   InCompatible
         p8=re.compile(r'\s*AO+\s+Version+\s+\w+')
 
-        #SSL             1.2        N 
+        #SSL             1.2        N
         p9=re.compile(r'\s*(?P<ao_name>\w+)+\s+(?P<ao_version>[\d.]+)+\s+(?P<ao_status>\w+)')
 
         #PEER Statistics
@@ -230,7 +235,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
             #AO             Version   InCompatible
             m8=p8.match(line)
 
-            #SSL             1.2        N 
+            #SSL             1.2        N
             m9=p9.match(line)
             if m9 and not m8:
                 #{'ao_name':'SSL','ao_version':'1.2','ao_status':'N'}
@@ -265,7 +270,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
                 cur_dict=temp_dict
                 cur_dict[groups['peer_id']]={}
                 cur_dict=cur_dict[groups['peer_id']]
-                
+
 
             m13=p13.match(line)
             if m13:
@@ -274,7 +279,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
                 cur_dict['number_of_peer_aos'] = int(groups['peer_ao_num'])
                 cur_dict['ao_name']={}
                 cur_dict=cur_dict['ao_name']
-        
+
         return parsed_dict
 
 
@@ -670,7 +675,7 @@ class ShowSdwanAppqoeServiceControllers(ShowSdwanAppqoeServiceControllersSchema)
                 svc_type_dict = ret_dict.setdefault('service_health_status', {}).setdefault(service, {})
                 svc_type_dict.update({'color':color})
                 svc_type_dict.update({'percentage':percentage})
-                continue 
+                continue
             # 193.0.2.2        192.168.13.1            105  193.0.2.3
             m = p2.match(line)
             if m:
@@ -688,7 +693,7 @@ class ShowSdwanAppqoeServiceControllers(ShowSdwanAppqoeServiceControllersSchema)
         return ret_dict
 
 class ShowSdwanBfdHistorySchema(MetaParser):
-    
+
     """schema for show sdwan bfd history"""
 
     schema={
@@ -715,16 +720,16 @@ class ShowSdwanBfdHistorySchema(MetaParser):
                                         'rx_pkts': str,
                                         'tx_pkts' : str,
                                         'del': str
-                                    },   
+                                    },
                                 }
                             },
                         }
-                    },               
+                    },
                 }
             },
         }
     }
-            
+
 class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
     """parser for show sdwan bfd history"""
 
@@ -735,7 +740,7 @@ class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         #Removing unneccessary header
         try:
             strout= re.findall(r'\s+[DST PUBLIC \s]+RX+\s+TX+\s',out)
@@ -745,9 +750,9 @@ class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
 
 
         #parsed output using parsergen
-        parsed_out = pg.oper_fill_tabular(device_output=out,  
+        parsed_out = pg.oper_fill_tabular(device_output=out,
                                     header_fields=["SYSTEM IP", "SITE ID", "COLOR", "STATE", "IP", "PORT", "ENCAP","TIME","PKTS","PKTS","DEL"],
-                                    label_fields=["system_ip", "site_id", "color", "state", "dst_public_ip", "dst_public_port","encap","time","rx_pkts","tx_pkts","del"], 
+                                    label_fields=["system_ip", "site_id", "color", "state", "dst_public_ip", "dst_public_port","encap","time","rx_pkts","tx_pkts","del"],
                                     index= [1,0,4,7]
                                     )
 
@@ -792,7 +797,7 @@ class ShowSdwanBfdSessions(ShowBfdSessions_viptela):
             show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
-    
+
         return super().cli(output = show_output)
 
 # ===============================================
@@ -808,7 +813,7 @@ class ShowSdwanBfdSummary(ShowBfdSummary_viptela):
             show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
-    
+
         return super().cli(output = show_output)
 
 # ===========================================
@@ -891,7 +896,7 @@ class ShowSdwanControlLocalProperties(ShowControlLocalProperties_viptela):
             show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
-    
+
         return super().cli(output = show_output)
 
 # =================================================
@@ -986,7 +991,7 @@ class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
     def cli(self, output=''):
         if not output:
             output = self.device.execute(self.cli_command)
-        
+
         parsed_dict = {}
 
         #10.106.2.2 12346   10.106.8.2 12406   10.111.0.6 biz-internet     10.111.0.9 biz-internet     AES-GCM-256           8
@@ -1149,7 +1154,7 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
                         "spi", "source_port"
                     ] else groups[k]
         return parsed_dict
-    
+
 # ===============================================
 # Parser for 'show sdwan omp summary'
 # ===============================================
@@ -1161,7 +1166,7 @@ class ShowSdwanOmpSummary(ShowOmpSummary_viptela):
     def cli(self, output = None):
         if not output:
             show_output = self.device.execute(self.cli_command)
-    
+
         return super().cli(output = show_output)
 
 # ===============================================
@@ -1175,7 +1180,7 @@ class ShowSdwanOmpPeers(ShowOmpPeers_viptela):
     def cli(self, output = None):
         if not output:
             show_output = self.device.execute(self.cli_command)
-    
+
         return super().cli(output = show_output)
 
 # ===============================================
@@ -1189,7 +1194,7 @@ class ShowSdwanOmpTlocs(ShowOmpTlocs_viptela):
     def cli(self, output = None):
         if not output:
             show_output = self.device.execute(self.cli_command)
-    
+
         return super().cli(output = show_output)
 
 # ===============================================
@@ -1203,7 +1208,7 @@ class ShowSdwanOmpTlocPath(ShowOmpTlocPath_viptela):
     def cli(self, output = None):
         if not output:
             show_output = self.device.execute(self.cli_command)
-    
+
         return super().cli(output = show_output)
 
 
@@ -1256,7 +1261,7 @@ class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
 class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAssociationsSchema):
 
     """ Parser for "show sdwan policy ipv6 access list associations" """
-    
+
     cli_command = "show sdwan policy ipv6 access-list-associations"
 
     def cli(self, output=None):
@@ -1363,7 +1368,7 @@ class ShowSdwanPolicyAccessListCountersSchema(MetaParser):
 class ShowSdwanPolicyAccessListCounters(ShowSdwanPolicyAccessListCountersSchema):
 
     """ Parser for "show sdwan policy access-list-counters" """
-    
+
     cli_command = "show sdwan policy access-list-counters" or "show sdwan policy ipv6 access-list-counters"
 
     def cli(self, output=None):
@@ -1504,7 +1509,7 @@ class ShowSdwanSoftware(ShowSoftwaretab_viptela):
         if re.search('Total Space:',show_output):
             fin=re.search('Total Space:.*',show_output)
             show_output=show_output.replace(fin.group(0),' ')
-            
+
         return super().cli(output = show_output)
 
 # =====================================
@@ -1577,7 +1582,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
             out = output
 
 
-        #18005202  open    10.76.0.7  172.16.186.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394                   
+        #18005202  open    10.76.0.7  172.16.186.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394
         p1 = re.compile(r'^(?P<sess_id>\d+)\s+(?P<state>\w+)\s+(?P<src_ip>\S+)\s+(?P<dst_ip>\S+)\s+(?P<src_port>\d+)\s+(?P<dst_port>\d+)\s+(?P<proto>\S+)\s+(?P<src_vrf>\d+)\s+(?P<dst_vrf>\d+)\s+(?P<src_vpn_id>\d+)\s+(?P<dst_vpn_id>\d+)\s+(?P<zp_name>\S+)\s+(?P<classmap_name>\S+)\s+(?P<nat_flags>\S+)\s+(?P<internal_flags>\d+)\s+(?P<tot_init_bytes>\d+)\s+(?P<tot_resp_bytes>\d+)$')
 
         #4583 open 10.225.18.63 10.196.18.63 1024 1024 PROTO_L4_UDP 3 3 20 20 ZP_LAN_ZONE_vpn20_LAN__968352866 ZBFW-seq-1-cm_ - 0 2435061651 2435062756 /statistical-p2p
@@ -1588,10 +1593,10 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
         sess_num = 0
         for line in out.splitlines():
             line = line.strip()
-            
-            ##18005202  open    10.76.0.7  172.16.186.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394                   
 
-            m = p1.match(line)      
+            ##18005202  open    10.76.0.7  172.16.186.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394
+
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 sess_dict = ret_dict.setdefault('session_db', {})
@@ -1613,12 +1618,12 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'internal_flags': int(groups['internal_flags'])}))
                 feature_dict.update(({'total_initiator_bytes': int(groups['tot_init_bytes'])}))
                 feature_dict.update(({'total_responder_bytes': int(groups['tot_resp_bytes'])}))
-                sess_num = sess_num + 1 
+                sess_num = sess_num + 1
                 last_dict_ptr = feature_dict
                 continue
 
             #4583 open 10.225.18.63 10.196.18.63 1024 1024 PROTO_L4_UDP 3 3 20 20 ZP_LAN_ZONE_vpn20_LAN__968352866 ZBFW-seq-1-cm_ - 0 2435061651 2435062756 /statistical-p2p
-            m = p2.match(line)      
+            m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 sess_dict = ret_dict.setdefault('session_db', {})
@@ -1641,10 +1646,10 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'total_initiator_bytes': int(groups['tot_init_bytes'])}))
                 feature_dict.update(({'total_responder_bytes': int(groups['tot_resp_bytes'])}))
                 feature_dict.update(({'application_type': (groups['app_type'])}))
-                sess_num = sess_num + 1 
+                sess_num = sess_num + 1
                 last_dict_ptr = feature_dict
                 continue
-        
+
         return(ret_dict)
 
 class ShowSdwanZbfwStatisticsSchema(MetaParser):
@@ -1682,9 +1687,9 @@ class ShowSdwanZbfwStatisticsSchema(MetaParser):
                                 'pkt_counters': int
                             }
                         },
-                        'l7_policy_name': str      
+                        'l7_policy_name': str
                     }
-                },   
+                },
                 Optional('l7_class_entry'): {
                     Any(): {
                         'parent_class_name': str,
@@ -1706,10 +1711,10 @@ class ShowSdwanZbfwStatisticsSchema(MetaParser):
                             }
                         }
                     }
-                }          
+                }
             }
         }
-    }        
+    }
 
 class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
     """Parser for show sdwan zbfw zonepair-statistics
@@ -1730,7 +1735,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
 
         #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
         p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry)) (?P<class_entry>\S+)$')
-                        
+
         #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
         #p3 = re.compile(r'^fw-tc-match-entry "(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s(?P<tc_num>\S+)$')
         p3 = re.compile(r'^fw-tc-match-entry\s+"(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s+(?P<tc_num>\S+)$')
@@ -1757,7 +1762,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             line = line.strip()
 
             #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
-            m = p1.match(line)      
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 feature_dict = ret_dict.setdefault('zonepair_name', {}).setdefault(groups['zp_name'], {})
@@ -1765,7 +1770,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
                 continue
 
             #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
-            m = p2.match(line)      
+            m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 if(groups['class_name'] == 'fw-l7-traffic-class-entry'):
@@ -1778,7 +1783,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
             m = p3.match(line)
             if m:
-                groups = m.groupdict()                
+                groups = m.groupdict()
                 tc_dict = class_dict.setdefault('match_entry', {}).setdefault(groups['tc_entry'], {})
                 tc_dict.update({'seq_num': int(groups['tc_num'])})
                 tc_dict.update({'match_crit': (groups['match_crit'])})
@@ -1822,7 +1827,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
                     last_dict_ptr.update({groups['key'].replace('-', '_'): int(groups['value'])})
                     continue
 
-        return(ret_dict) 
+        return(ret_dict)
 
 # ========================================================
 # Schema for "show sdwan tunnel sla index 0"
@@ -1836,7 +1841,7 @@ class ShowSdwanTunnelSlaIndex0Schema(MetaParser):
                 "latency": str,
                 "jitter": str,
                 "slaclass": str
-            }            
+            }
         }
     }
 
@@ -1909,19 +1914,19 @@ class ShowSdwanSystemOnDemandSchema(MetaParser):
                 'system-ip': str,
                 'on-demand': str,
                 Optional('status'): str,
-                Optional('timeout'): int          
+                Optional('timeout'): int
             }
         }
     }
 
 class ShowSdwanSystemOnDemand(ShowSdwanSystemOnDemandSchema):
-    """Parser for 
+    """Parser for
                   'show sdwan system on-demand'
                   'show sdwan system on-demand remote-system'
-                  'show sdwan system on-demand remote-system system-ip <ip>' 
+                  'show sdwan system on-demand remote-system system-ip <ip>'
     """
 
-    cli_command = ['show sdwan system on-demand', 
+    cli_command = ['show sdwan system on-demand',
                   'show sdwan system on-demand {remote_system}',
                   'show sdwan system on-demand {remote_system} system-ip {system_ip}']
 
@@ -1942,10 +1947,10 @@ class ShowSdwanSystemOnDemand(ShowSdwanSystemOnDemandSchema):
         # 21       21.0.0.21          yes          active              6
         # 23       21.0.0.23          no             -                 -
         p1 = re.compile(r'^(?P<site_id>[\d]+)\s+(?P<system_ip>[0-9\.]+)\s+(?P<on_demand>[A-Za-z]+)\s+(?P<status>[\S]+)\s+(?P<timeout>[\S]+)')
-        
+
         for line in output.splitlines():
-            # ret_dict_ptr = ret_dict.setdefault('on_demand_tunnel',{})  
-            line = line.strip() 
+            # ret_dict_ptr = ret_dict.setdefault('on_demand_tunnel',{})
+            line = line.strip()
             # 21       21.0.0.21          yes          active              6
             # 23       21.0.0.23          no             -                 -
             m = p1.match(line)
@@ -2058,7 +2063,7 @@ class ShowSdwanTunnelStatisticsSchema(MetaParser):
 # 'show sdwan tunnel statistics table'                                  #
 # =======================================================================
 class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
-    """Parser for 
+    """Parser for
           'show sdwan tunnel statistics'
           'show sdwan tunnel statistics bfd'
           'show sdwan tunnel statistics fec'
@@ -2089,7 +2094,7 @@ class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
         # fec-dynamic          false
         p2 = re.compile(r'^(?P<key>[a-zA-Z0-9\-\_]+)\s+(?P<value>[a-zA-Z0-9\-\_]+)$')
 
-        # # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0                     
+        # # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0
         # # ipsec     150.0.5.1  151.0.2.1   12346   12346  22.0.0.22    public-internet  private2        1438    324964     28472293     324963     39521236      1358    0             0               0             0               0                   0                     0                   0
         p3 = re.compile(r'^(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dest_ip>[a-zA-Z0-9\.\:]+)\s+'
                         r'(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)\s+'
@@ -2173,8 +2178,8 @@ class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
                     dest_dict.update({key.replace(' ','_').replace('-','_').lower():value})
                 continue
 
-            # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0                     
-            # ipsec     150.0.5.1  151.0.2.1   12346   12346  22.0.0.22    public-internet  private2        1438    324964     28472293     324963     39521236      1358    0             0               0             0               0                   0                     0                   0 
+            # ipsec     150.0.5.1  151.0.1.1   12346   12346  21.0.0.21    public-internet  lte             1438    4303977    494629034    8004520    8312606388    1358    0             0               0             0               0                   0                     0                   0
+            # ipsec     150.0.5.1  151.0.2.1   12346   12346  22.0.0.22    public-internet  private2        1438    324964     28472293     324963     39521236      1358    0             0               0             0               0                   0                     0                   0
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -2267,7 +2272,7 @@ class ShowSdwanTunnelSlaSchema(MetaParser):
                             Optional("sla_class_index") : str,
                             "sla_class_name" : str,
                             Optional("fallback_sla_class_index") : str
-                        }  
+                        }
                     }
                 }
             }
@@ -2282,15 +2287,15 @@ class ShowSdwanTunnelSlaSchema(MetaParser):
 # 'show sdwan tunnel remote-system-ip <ip> sla                          #
 # =======================================================================
 class ShowSdwanTunnelSla(ShowSdwanTunnelSlaSchema):
-    """Parser for 
+    """Parser for
            'show sdwan tunnel sla'
            'show sdwan tunnel sla index <index>'
            'show sdwan tunnel sla name <name>'
            'show sdwan tunnel remote-system-ip <ip> sla'
     """
-    cli_command = ['show sdwan tunnel sla', 
-                'show sdwan tunnel sla index {index}', 
-                'show sdwan tunnel sla name {name}', 
+    cli_command = ['show sdwan tunnel sla',
+                'show sdwan tunnel sla index {index}',
+                'show sdwan tunnel sla name {name}',
                 'show sdwan tunnel remote-system-ip {system_ip} sla']
     def cli(self, index='', name="", system_ip= "", output=None):
         # if the user does not provide output to the parser
@@ -2322,7 +2327,7 @@ class ShowSdwanTunnelSla(ShowSdwanTunnelSlaSchema):
         '(?P<dst_port>[\d]+)\s+(?P<remote_system_ip>[\S]+)\s+(?P<t_local_color>[0-9a-zA-Z\-\_]+)\s+(?P<t_remote_color>[0-9a-zA-Z\-\_]+)'
         '\s+(?P<mean_loss>[\d]+)\s+(?P<mean_latency>[\d]+)\s+(?P<mean_jitter>[\d]+)\s+(?P<sla_class_index>[\S]+)\s+(?P<sla_class_name>[\S\s]+)'
         '\s+(?P<fallback_sla_class_index>[\S]+)$')
-        # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla  
+        # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla
         p4_1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dst_ip>[a-zA-Z0-9\.\:]+)\s+'
         '(?P<local_color>[0-9a-zA-Z\-\_]+)\s+(?P<remote_color>[0-9a-zA-Z\-\_]+)\s+(?P<sla_class_name>[\S\s]+)$')
 
@@ -2378,7 +2383,7 @@ class ShowSdwanTunnelSla(ShowSdwanTunnelSlaSchema):
                     sla_index_dst_dict.update({key:value})
                 continue
 
-            # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla  
+            # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla
             m = p4_1.match(line)
             if m:
                 groups = m.groupdict()
@@ -2433,7 +2438,7 @@ class ShowSdwanAppRouteStatisticsSchema(MetaParser):
                             }
                         }
                     }
-                }          
+                }
             }
         }
     }
@@ -2445,14 +2450,14 @@ class ShowSdwanAppRouteStatisticsSchema(MetaParser):
 # 'show sdwan app-route stats remote-system-ip <ip>',                   #
 # =======================================================================
 class ShowSdwanAppRouteStatistics(ShowSdwanAppRouteStatisticsSchema):
-    """Parser for 
+    """Parser for
         'show sdwan app-route stats local-color <color>'
         'show sdwan app-route stats remote-color <color>'
         'show sdwan app-route stats remote-system-ip <ip>'
     """
-    cli_command = ['show sdwan app-route stats {color_type} {color}', 
-            'show sdwan app-route stats remote-system-ip {system_ip}', 
-            'show sdwan app-route stats'] 
+    cli_command = ['show sdwan app-route stats {color_type} {color}',
+            'show sdwan app-route stats remote-system-ip {system_ip}',
+            'show sdwan app-route stats']
     def cli(self, color_type = "", color= "", system_ip= "", output=None):
         # if the user does not provide output to the parser
         # we need to get it from the device
@@ -2512,13 +2517,13 @@ class ShowSdwanAppRouteStatistics(ShowSdwanAppRouteStatisticsSchema):
                 groups = m.groupdict()
                 dest_dict = ret_dict.setdefault("approute",{}).\
                     setdefault(groups['source'],{}).\
-                    setdefault(groups['destination'],{})                        
+                    setdefault(groups['destination'],{})
                 last_dict_ptr = dest_dict
                 last_dict_ptr.update({"protocol":groups['protocol'],
                     "src_port":int(groups['src_port']),
                     "dst_port":int(groups['dst_port'])})
                 continue
-            
+
             # app-probe-class-list None
             m = p1_1.match(line)
             if m:
@@ -2621,7 +2626,7 @@ class ShowSdwanAppRouteSlaClassSchema(MetaParser):
                 Optional("app_probe_class"): str,
                 Optional("app_probe_class_id"): int,
                 Optional("app_probe_class"): str,
-                "fallback_best_tunnel": str         
+                "fallback_best_tunnel": str
             }
         }
     }
@@ -2633,7 +2638,7 @@ class ShowSdwanAppRouteSlaClassSchema(MetaParser):
 # both CLI commands as listed above.                                    #
 # =======================================================================
 class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
-    """Parser for 
+    """Parser for
         'show sdwan app-route sla-class'
         'show sdwan app-route sla-class name <name>'
     """
@@ -2646,8 +2651,8 @@ class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
                 output = self.device.execute(self.cli_command[1].format(name=name))
             else:
                 output = self.device.execute(self.cli_command[0])
-    
-        # 0       __all_tunnels__       0     0        0        0          None                  None          
+
+        # 0       __all_tunnels__       0     0        0        0          None                  None
         p1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<name>[\S]+)\s+(?P<loss>[\d]+)\s+(?P<latency>[\d]+)\s+(?P<jitter>[\d]+)'
         '\s+(?P<class_id>[\d]+)\s+(?P<app_probe_class>[\S]+)\s+(?P<fallback_best_tunnel>[\S]+)$')
 
@@ -2667,7 +2672,7 @@ class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # 0       __all_tunnels__       0     0        0        0          None                  None          
+            # 0       __all_tunnels__       0     0        0        0          None                  None
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -2945,7 +2950,7 @@ class ShowSdwanAppfwdCflowdFlowCount(ShowSdwanAppfwdCflowdFlowCountSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # *    2
             m = p1.match(line)
             if m:
@@ -3746,7 +3751,7 @@ class ShowSdwanAppHostingOperData(ShowSdwanAppHostingOperDataSchema):
                 resource = "app_hosting_oper_data_app_resources_global"
                 app_resources_global_dict = oper_data_dict.setdefault("app_hosting_oper_data_app_resources_global", {})
                 continue
-                
+
             # available   255382
             if p57.match(line):
                 m = p57.match(line)
@@ -4062,7 +4067,7 @@ class ShowSdwanPolicyAppRoutePolicyFilter(ShowSdwanPolicyAppRoutePolicyFilterSch
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # VPN_AAR_Policy  VPN1  default_action_count              0             0
             m1 = p1.match(line)
             if m1:
@@ -4290,8 +4295,8 @@ class ShowSdwanPolicyFromVsmartSchema(MetaParser):
         },
         Optional("policer"): {
             Any(): {
-                "rate": int, 
-                "burst": int, 
+                "rate": int,
+                "burst": int,
                 "exceed": str
             }
         },
@@ -4316,7 +4321,7 @@ class ShowSdwanPolicyFromVsmartSchema(MetaParser):
                 Any(): {
                     "tloc": {
                         Any(): {
-                            "color": str, 
+                            "color": str,
                             "encap": str
                         }
                     }
@@ -5624,7 +5629,7 @@ class ShowSdwanAppqoeStatusSchema(MetaParser):
         "sslproxy_status": str,
         "tcpproxy_status": str,
         "service_chain_status": str,
-        "resource_mgr_status": str        
+        "resource_mgr_status": str
     }
 
 # ==============================================
@@ -5708,7 +5713,7 @@ class ShowSdwanAppqoeServiceChainStatusSchema(MetaParser):
     schema = {
         "snort_state": str,
         "dre_state": str,
-        "httpopt_state": str       
+        "httpopt_state": str
     }
 
 # ==============================================
@@ -5818,7 +5823,7 @@ class ShowSdwanAppqoeDreoptStatus(ShowSdwanAppqoeDreoptStatusSchema):
 
         # Last health status notification sent time        : 1 second
         p6 = re.compile(r"^Last\s+health\s+status\s+notification\s+sent\s+time\s+:\s+(?P<send_time>\d+\s+\S+)$")
-        
+
         # DRE cache status                                 : Active
         p7 = re.compile(r"^DRE\s+cache\s+status\s+:\s+(?P<cache_st>\S+)$")
 
@@ -5830,7 +5835,7 @@ class ShowSdwanAppqoeDreoptStatus(ShowSdwanAppqoeDreoptStatusSchema):
 
         # Profile type                               : S
         p10 = re.compile(r"^Profile type\s+:\s+(?P<type>\S+)$")
-        
+
         # Maximum connections                        : 750
         p11 = re.compile(r"^Maximum\s+connections\s+:\s+(?P<connection>\d+)$")
 
@@ -6011,13 +6016,13 @@ class ShowSdwanServiceChainDatabase(ShowSdwanServiceChainDatabaseSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # Chain-Name: SC3, VRF: 101, Label: 0x800409, State: Up
         p1 = re.compile(
             r"^Chain-Name:\s+(?P<sc>\S+),\s+VRF:\s+(?P<vrf>\d+),\s+"
             r"Label:\s+(?P<label>\S+),\s+State:\s+(?P<sc_status>\w+)$"
         )
-        
+
         # Services:
         p2 = re.compile(r"^Services:$")
 
@@ -6052,9 +6057,9 @@ class ShowSdwanServiceChainDatabase(ShowSdwanServiceChainDatabaseSchema):
                 sc_dict = chain_dict.setdefault(sc_name, {})
                 sc_dict.update({"vrf": int(m.groupdict()["vrf"])})
                 sc_dict.update({"label": m.groupdict()["label"]})
-                sc_dict.update({"state": m.groupdict()["sc_status"]})              
+                sc_dict.update({"state": m.groupdict()["sc_status"]})
                 continue
-            
+
             # Services:
             m = p2.match(line)
             if m:
@@ -6067,7 +6072,7 @@ class ShowSdwanServiceChainDatabase(ShowSdwanServiceChainDatabaseSchema):
                 type_dict = ser_dict.setdefault(service_type, {})
                 type_dict.update({"service_state": m.groupdict()["ser_state"]})
                 continue
-            
+
             # Sequence   1
             m = p4.match(line)
             if m:
@@ -6133,10 +6138,10 @@ class ShowSdwanServiceChainStats(ShowSdwanServiceChainStatsSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # Service-Chain ID: 4
         p1 = re.compile(r"^Service-Chain ID:\s+(?P<sc_id>\S+)$")
-        
+
         # Global stats: 110167
         p2 = re.compile(r"^Global stats:\s+(?P<gbl_stats>\S+)$")
 
@@ -6158,9 +6163,9 @@ class ShowSdwanServiceChainStats(ShowSdwanServiceChainStatsSchema):
             if m:
                 services_stats = services_tr_stats.setdefault("service_chain_stats", {})
                 sc = m.groupdict()["sc_id"]
-                sc_dict = services_stats.setdefault("SC" + sc, {})            
+                sc_dict = services_stats.setdefault("SC" + sc, {})
                 continue
-            
+
             # Global stats: 110167
             m = p2.match(line)
             if m:
@@ -6173,7 +6178,7 @@ class ShowSdwanServiceChainStats(ShowSdwanServiceChainStatsSchema):
                 srv_name = m.groupdict()["srv_name"]
                 svr_dict = sc_dict.setdefault(srv_name, {})
                 continue
-            
+
             # Tx pkt: 110167
             m = p4.match(line)
             if m:
@@ -6207,17 +6212,17 @@ class ShowSdwanPolicyDataPolicyFilterSchema(MetaParser):
                 }
             }
         }
-    }    
+    }
 # =======================================================================
 # Parser for 'show sdwan policy data-policy-filter',                    #
 # 'show sdwan policy data-policy-filter <policy>'                       #
 # =======================================================================
 class ShowSdwanPolicyDataPolicyFilter(ShowSdwanPolicyDataPolicyFilterSchema):
-    """Parser for 
+    """Parser for
            'show sdwan policy data-policy-filter'
            'show sdwan policy data-policy-filter <policy>'
     """
-    cli_command = ['show sdwan policy data-policy-filter', 
+    cli_command = ['show sdwan policy data-policy-filter',
                 'show sdwan policy data-policy-filter {policy}']
 
     def cli(self, policy="", output=None):
@@ -6233,7 +6238,7 @@ class ShowSdwanPolicyDataPolicyFilter(ShowSdwanPolicyDataPolicyFilterSchema):
 
         # data-policy-vpnlist VPN1
         p2 = re.compile(r'^data-policy-vpnlist\s+(?P<vpn_name>\S+)$')
-        
+
         # data-policy-counter default_action_count
         p3 = re.compile(r'^data-policy-counter\s+(?P<counter_name>\S+)$')
 
@@ -6282,7 +6287,7 @@ class ShowSdwanPolicyDataPolicyFilter(ShowSdwanPolicyDataPolicyFilterSchema):
                 groups = m.groupdict()
                 counter_dict.update({"bytes": int(m.groupdict()["bytes_count"])})
                 continue
-            
+
         return(ret_dict)
 
 
@@ -6300,8 +6305,8 @@ class ShowSdwanTenantSumarySchema(MetaParser):
                     Any() :{
                         Optional("global_id"): int,
                         Optional("uuid"): str,
-                    },    
-                },    
+                    },
+                },
             }
 
 class ShowSdwanTenantSumary(ShowSdwanTenantSumarySchema):
@@ -6325,7 +6330,7 @@ class ShowSdwanTenantSumary(ShowSdwanTenantSumarySchema):
         #tenants-summary num-active-tenants 20
         p2 = re.compile(r'^\s*tenants\-summary num\-active\-tenants\s*(?P<active_tenants>\d+)')
 
-        #mttedge-Tenant42   45187   0bf871da-c63c-4043-8f85-386c1f0db2b8 
+        #mttedge-Tenant42   45187   0bf871da-c63c-4043-8f85-386c1f0db2b8
         p3 = re.compile(r'^\s*(?P<org_name>[\w\d\-]+)\s*(?P<global_id>\d+)\s*(?P<uuid>[\w\d\-]+)')
 
         for line in out.splitlines():
@@ -6337,7 +6342,7 @@ class ShowSdwanTenantSumary(ShowSdwanTenantSumarySchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict['max_tenants'] = int(groups['max_tenants']) 
+                ret_dict['max_tenants'] = int(groups['max_tenants'])
                 continue
 
             #tenants-summary num-active-tenants 20
@@ -6378,8 +6383,8 @@ class ShowSdwanTenantOmpPeersSchema(MetaParser):
                         "state": str,
                         "uptime": str,
                         "r_i_s": str,
-                    },    
-                },    
+                    },
+                },
             }
 
 class ShowSdwanTenantOmpPeers(ShowSdwanTenantOmpPeersSchema):
@@ -6452,10 +6457,10 @@ class ShowSdwanTenantOmpRoutesSchema(MetaParser):
                                         "region_path": str,
                                     },
                                 },
-                             }, 
+                             },
                         },
-                     },   
-                },    
+                     },
+                },
             }
 
 class ShowSdwanTenantOmpRoutes(ShowSdwanTenantOmpRoutesSchema):
@@ -6474,11 +6479,11 @@ class ShowSdwanTenantOmpRoutes(ShowSdwanTenantOmpRoutesSchema):
         ret_dict ['vpn'] = {}
         vpn1 = "x"
 
-        #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+        #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -
         p1 = re.compile(r'^\s*(?P<tenant>\d+)\s+(?P<vpn>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<from_peer>[\d\.]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>[\w\,]+)\s+(?P<attribute_type>\w+)\s+(?P<tloc_ip>[\d\.]+)\s+(?P<color>\w+)\s+(?P<encap>\w+)\s+(?P<preference>\S+)\s+(?P<affinity_group_number>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S)')
 
 
-        #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+        #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -
         p2 = re.compile(r'^\s*(?P<from_peer>[\d\.]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>[\w\,]+)\s+(?P<attribute_type>\w+)\s+(?P<tloc_ip>[\d\.]+)\s+(?P<color>\w+)\s+(?P<encap>\w+)\s+(?P<preference>\S+)\s+(?P<affinity_group_number>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S)')
 
         for line in out.splitlines():
@@ -6486,7 +6491,7 @@ class ShowSdwanTenantOmpRoutes(ShowSdwanTenantOmpRoutesSchema):
             if not line:
                 continue
 
-            #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -                
+            #17890     2      115.1.90.0/24       0.0.0.0          66     1091     C,Red,R   installed  2.0.150.6        mpls             ipsec  -           None        None        -
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -6514,7 +6519,7 @@ class ShowSdwanTenantOmpRoutes(ShowSdwanTenantOmpRoutesSchema):
                 ret_dict['vpn'][vpn]['prefix'][prefix]['path_id'][path_id]['region_path'] = (groups['region_path'])
                 continue
 
-            #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -                
+            #0.0.0.0          70     1091     C,Red,R   installed  2.0.150.6        lte              ipsec  -           None        None        -
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -6566,10 +6571,10 @@ class ShowSdwanMulticastRemoteNodes(ShowSdwanMulticastRemoteNodesSchema):
             output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
         else:
             output = output
-        
+
         ret_dict = {}
         mcast_dict = {}
-        
+
         # 5.0.0.2         No       No     1004        0/0        0/0        0/0        0/0
         #*6.0.0.2         No       No     1006        0/0        0/0        0/0        0/0
         p1 = re.compile(r'^\s*(?P<system_ip>[\*\d\.]+)\s+(?P<spt_mode>\w+)\s+(?P<msdp>\w+)\s+(?P<label>\d+)\s+'
@@ -6632,10 +6637,10 @@ class ShowSdwanMulticastReplicators(ShowSdwanMulticastReplicatorsSchema):
             output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
         else:
             output = output
-        
+
         ret_dict = {}
         mcast_dict = {}
-        
+
         #  6.0.0.2                       0            1         500             489
         # >7.0.0.1                       0            2         100               0
         p1 = re.compile(r'^\s*(?P<system_ip>[\>\d\.]+)\s+(?P<preference>\d+)\s+(?P<route_count>\d+)\s+(?P<threshold>\d+)\s+(?P<distance>\d+)$')
@@ -6682,7 +6687,7 @@ class ShowSdwanSecurityInfoSchema(MetaParser):
         "pwk_sym_rekey"        : str,
         "extended_ar_window"   : str,
         "integrity_type"       : str,
-    } 
+    }
 
 # ============================================================================
 # Parser for 'show sdwan security-info'
@@ -6697,7 +6702,7 @@ class ShowSdwanSecurityInfo(ShowSdwanSecurityInfoSchema):
             output = self.device.execute(self.cli_command)
         else:
             output = output
-        
+
         ret_dict = {}
 
         #security-info authentication-type deprecated
@@ -6719,7 +6724,7 @@ class ShowSdwanSecurityInfo(ShowSdwanSecurityInfoSchema):
         p6 = re.compile(r'^\s*security-info\s+pairwise-keying\s+(?P<pairwise_keying>\w+)$')
 
         #security-info pwk-sym-rekey Enabled
-        p7 = re.compile(r'^\s*security-info\s+pwk-sym-rekey\s+(?P<pwk_sym_rekey>\w+)$')        
+        p7 = re.compile(r'^\s*security-info\s+pwk-sym-rekey\s+(?P<pwk_sym_rekey>\w+)$')
 
         #security-info extended-ar-window Disabled
         p8 = re.compile(r'^\s*security-info\s+extended-ar-window\s+(?P<extended_ar_window>\w+)$')
@@ -6840,7 +6845,7 @@ class ShowSdwanClientInterface(ShowSdwanClientInterfaceSchema):
             output = self.device.execute(self.cli_command.format(interface_name=interface_name))
         else:
             output = output
-        
+
         ret_dict = {}
         srv_dict = {}
 
@@ -7071,23 +7076,23 @@ class ShowSdwanOmpMulticastRoutes(ShowSdwanOmpMulticastRoutesSchema):
             output = self.device.execute(self.cli_command)
         else:
             output = output
-        
+
         ret_dict = {}
 
-        #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R      
-        #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R  
+        #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R
+        #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R
         p1 = re.compile(r'^\s*(?P<af>\s+|\S+)\s+(?P<tenant>\d+)\s+(?P<type>\S+)\s+(?P<vpn>\d+)\s+(?P<src_orig>[\d\.]+)\s+(?P<dst>[\d\.]+)\s+'
                         r'(?P<group>[\d\.]+)\s+(?P<src_mcast>[\d\.]+)\s+(?P<peer>[\d\.]+)\s+(?P<rp>[\d\.]+|-)\s+(?P<status>[\w,]+)\s*$')
 
-        #                                                                                1.0.0.18  100.200.2.1  C,R      
-        #                                                                                1.0.0.19  100.200.2.1  C,R      
+        #                                                                                1.0.0.18  100.200.2.1  C,R
+        #                                                                                1.0.0.19  100.200.2.1  C,R
         #                                                                                1.0.0.20  100.200.2.1  C,I,R
         p2 = re.compile(r'^\s*(?P<peer>[\d\.]+)\s+(?P<rp>[\d\.]+|-)\s+(?P<status>[\w,]+)\s*$')
 
         for line in output.splitlines():
 
-            #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R      
-            #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R 
+            #ipv4     0         (*,G)  2    7.0.0.4     5.0.0.6      225.0.0.1  100.200.2.1  1.0.0.17  100.200.2.1  C,R
+            #         0         (*,G)  2    5.0.0.6     6.0.0.2      225.0.0.1  100.200.2.1  0.0.0.0   100.200.2.1  C,Red,R
             m = p1.match(line)
             if m:
                 index = 1
@@ -7113,8 +7118,8 @@ class ShowSdwanOmpMulticastRoutes(ShowSdwanOmpMulticastRoutesSchema):
                 path_dict[str(index)]['status'] = group['status']
                 index += 1
 
-            #                                                                                1.0.0.18  100.200.2.1  C,R      
-            #                                                                                1.0.0.19  100.200.2.1  C,R      
+            #                                                                                1.0.0.18  100.200.2.1  C,R
+            #                                                                                1.0.0.19  100.200.2.1  C,R
             #                                                                                1.0.0.20  100.200.2.1  C,I,R
             m = p2.match(line)
             if m:
@@ -7174,18 +7179,18 @@ class ShowSdwanOmpMulticastAutoDiscover(ShowSdwanOmpMulticastAutoDiscoverSchema)
             output = self.device.execute(self.cli_command)
         else:
             output = output
-        
+
         ret_dict = {}
 
-        #ipv4     0         2    5.0.0.2     1.0.0.17  C,R      
+        #ipv4     0         2    5.0.0.2     1.0.0.17  C,R
         p1 = re.compile(r'^\s*(?P<af>\s+|\S+)\s+(?P<tenant>\d+)\s+(?P<vpn>\d+)\s+(?P<src_orig>[\d\.]+)\s+(?P<peer>[\d\.]+)\s+(?P<status>[\w,]+)\s*$')
 
-        #                                    1.0.0.18  C,R           
+        #                                    1.0.0.18  C,R
         p2 = re.compile(r'^\s*(?P<peer>[\d\.]+)\s+(?P<status>[\w,]+)\s*$')
 
         for line in output.splitlines():
 
-            #ipv4     0         2    5.0.0.2     1.0.0.17  C,R      
+            #ipv4     0         2    5.0.0.2     1.0.0.17  C,R
             m = p1.match(line)
             if m:
                 index = 1
@@ -7205,7 +7210,7 @@ class ShowSdwanOmpMulticastAutoDiscover(ShowSdwanOmpMulticastAutoDiscoverSchema)
                 path_dict[str(index)]['status'] = group['status']
                 index += 1
 
-            #                                    1.0.0.18  C,R           
+            #                                    1.0.0.18  C,R
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -7215,3 +7220,697 @@ class ShowSdwanOmpMulticastAutoDiscover(ShowSdwanOmpMulticastAutoDiscoverSchema)
                 index += 1
 
         return ret_dict
+
+
+# ==============================================================================================
+#  Schema Parser for
+# 'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol}'
+# 'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol} {all}'
+# ==============================================================================================
+class ShowSdwanPolicyServicePathSchema(MetaParser):
+    """Schema for
+        'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol}'
+        'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol} {all}'
+   """
+
+    schema = {
+        "paths" : {
+            Any(): { #index
+                "next_hop_type"                   : str,
+                Optional("source")                : str,
+                Optional("source_port")           : int,
+                Optional("destination")           : str,
+                Optional("destination_port")      : int,
+                Optional("local_color")           : str,
+                Optional("remote_color")          : str,
+                Optional("remote_system_ip")      : str,
+                Optional("remote_ip")             : str,
+                Optional("interface")             : str,
+                Optional("index")                 : int,
+            },
+        },
+        Optional("number_of_paths")               : int,
+    }
+
+# ==============================================================================================
+# Parser for
+# 'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol}'
+# 'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol} {all}'
+# ==============================================================================================
+class ShowSdwanPolicyServicePath(ShowSdwanPolicyServicePathSchema):
+
+    """Parser for
+        'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol}'
+        'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol} {all}'
+    """
+
+    cli_command = ['show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol}',
+                   'show sdwan policy service-path vpn {vpn} interface {interface} source-ip {source_ip} dest-ip {destination_ip} protocol {protocol} {all}']
+
+    def cli(self, vpn=None, interface=None, source_ip=None, destination_ip=None, protocol=None, all=None, output=None):
+        if output is None:
+            if not all:
+                output = self.device.execute(self.cli_command[0].format(vpn=vpn,
+                                                                        interface=interface,
+                                                                        source_ip=source_ip,
+                                                                        destination_ip=destination_ip,
+                                                                        protocol=protocol))
+            else:
+                output = self.device.execute(self.cli_command[1].format(vpn=vpn,
+                                                                        interface=interface,
+                                                                        source_ip=source_ip,
+                                                                        destination_ip=destination_ip,
+                                                                        protocol=protocol,
+                                                                        all=all))
+        else:
+            output = output
+
+        ret_dict = {}
+        index = 0
+
+        #Number of possible next hops: 3
+        p1 = re.compile(r'^\s*Number\s+of\s+possible\s+next\s+hops\s*:\s+(?P<number_of_paths>\d+)+$')
+
+        #Next Hop: Remote
+        p2 = re.compile(r'^\s*Next\s+Hop\s*:\s+(?P<next_hop_type>\w+)$')
+
+        #Remote IP: 40.187.4.2, Interface TenGigabitEthernet1/0/6 Index: 14
+        p3 = re.compile(r'^\s*Remote\s+IP\s*:\s+(?P<remote_ip>.*),\s+Interface\s+(?P<interface>.*)\s+Index\s*:\s+(?P<index>\d+)$')
+
+        #Source: 40.185.4.1 12366 Destination: 40.185.20.1 12406 Local Color: blue Remote Color: blue Remote System IP: 6.0.0.2
+        p4 = re.compile(r'^\s*Source\s*:\s+(?P<source>.*)\s+(?P<source_port>\d+)\s+Destination\s*:\s+(?P<destination>.*)\s+(?P<destination_port>\d+)\s+Local\s+Color\s*:\s+(?P<local_color>.*)\s+Remote\s+Color\s*:\s+(?P<remote_color>.*)\s+Remote\s+System\s+IP\s*:\s+(?P<remote_system_ip>.*)$')
+
+        for line in output.splitlines():
+            if not line:
+                continue
+
+            #Number of possible next hops: 3
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['number_of_paths'] = int(groups['number_of_paths'])
+                continue
+
+            #Next Hop: Remote
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                index += 1
+                path_dict = ret_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict['next_hop_type'] = groups['next_hop_type']
+                continue
+
+            #Remote IP: 40.187.4.2, Interface TenGigabitEthernet1/0/6 Index: 14
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                path_dict['remote_ip'] = groups['remote_ip']
+                path_dict['interface'] = groups['interface']
+                path_dict['index'] = int(groups['index'])
+                continue
+
+            #Source: 40.185.4.1 12366 Destination: 40.185.20.1 12406 Local Color: blue Remote Color: blue Remote System IP: 6.0.0.2
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                path_dict['source'] = groups['source']
+                path_dict['source_port'] = int(groups['source_port'])
+                path_dict['destination'] = groups['destination']
+                path_dict['destination_port'] = int(groups['destination_port'])
+                path_dict['local_color'] = groups['local_color']
+                path_dict['remote_color'] = groups['remote_color']
+                path_dict['remote_system_ip'] = groups['remote_system_ip']
+                continue
+
+        return ret_dict
+
+
+    # =======================================================================
+# Parser Schema for 'show sdwan appqoe dreopt statistics'
+# =======================================================================
+
+
+class ShowSdwanAppqoeDreoptStatisticsSchema(MetaParser):
+
+    """Schema for "show sdwan appqoe dreopt statistics" """
+
+    schema = {
+        'total_connections': int,
+        'max_concurrent_connections': int,
+        'current_active_connections': int,
+        'total_connection_resets': int,
+        'total_original_bytes': str,
+        'total_optimized_bytes': str,
+        'overall_reduction_ratio': str,
+        'disk_size_used': str,
+        'cache_status': str,
+        'cache_size': str,
+        'cache_used': str,
+        'oldest_data_in_cache': str,
+        'replaced_last_hour_size': str,
+        }
+
+# ==============================================
+# Parser for 'show sdwan appqoe dreopt statistics'
+# ==============================================
+
+
+class ShowSdwanAppqoeDreoptStatistics(ShowSdwanAppqoeDreoptStatisticsSchema):
+
+    """ Parser for "show sdwan appqoe dreopt statistics" """
+
+    cli_command = "show sdwan appqoe dreopt statistics"
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # Dreopt Statistics
+
+        #Total connections                  : 15297
+        p1 = re.compile(r"^Total\s+connections\s+:\s+(?P<total_connections>\S+)$")
+
+        #Max concurrent connections         : 61
+        p2 = re.compile(r"^Max\s+concurrent\s+connections\s+:\s+(?P<max_concurrent_connections>\S+)$")
+
+        #Current active connections         : 36
+        p3 = re.compile(r"^Current\s+active\s+connections\s+:\s+(?P<current_active_connections>\S+)$")
+
+        #Total connection resets            : 0
+        p4 = re.compile(r"^Total\s+connection\s+resets\s+:\s+(?P<total_connection_resets>\S+)$")
+
+        #Total original bytes               : 56291 MB
+        p5 = re.compile(r"^Total\s+original\s+bytes\s+:\s+(?P<total_original_bytes>\d+\s\S+)$")
+
+        #Total optimized bytes              : 338 MB
+        p6 = re.compile(r"^Total\s+optimized\s+bytes\s+:\s+(?P<total_optimized_bytes>\d+\s\S+)$")
+
+        #Overall reduction ratio            : 99%
+        p7 = re.compile(r"^Overall\s+reduction\s+ratio\s+:\s+(?P<overall_reduction_ratio>\S+)$")
+
+        #Disk size used                     : 0%
+        p8 = re.compile(r"^Disk\s+size\s+used\s+:\s+(?P<disk_size_used>\S+)$")
+
+        #Cache status                       : Active
+        p9 = re.compile(r"^Cache\s+status\s+:\s+(?P<cache_status>\S+)$")
+
+        #Cache Size                         : 1191047 MB
+        p10 = re.compile(r"^Cache\s+Size\s+:\s+(?P<cache_size>\d+\s\S+)$")
+
+        #Cache used                         : 0%
+        p11 = re.compile(r"^Cache\s+used\s+:\s+(?P<cache_used>\S+)$")
+
+        #Oldest data in cache               : 86:08:46:46
+        p12 = re.compile(r"^Oldest\s+data\s+in\s+cache\s+:\s+(?P<oldest_data_in_cache>\S+)$")
+
+        #Replaced(last hour): size          : 0 MB
+        p13 = re.compile(r"^Replaced\(last\s+hour\):\s+size\s+:\s+(?P<replaced_last_hour_size>\d+\s\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Total connections                  : 15297
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"total_connections": int(groups["total_connections"])})
+                continue
+
+            # Max concurrent connections         : 61
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"max_concurrent_connections": int(groups["max_concurrent_connections"])})
+                continue
+
+            # Current active connections         : 36
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"current_active_connections": int(groups["current_active_connections"])})
+                continue
+
+            # Total connection resets            : 0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"total_connection_resets": int(groups["total_connection_resets"])})
+                continue
+
+            # Total original bytes               : 56291 MB
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"total_original_bytes": groups["total_original_bytes"]})
+                continue
+
+            # Total optimized bytes              : 338 MB
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"total_optimized_bytes": groups["total_optimized_bytes"]})
+                continue
+
+            # Overall reduction ratio            : 99%
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"overall_reduction_ratio": groups["overall_reduction_ratio"]})
+                continue
+
+            # Disk size used                     : 0%
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"disk_size_used": groups["disk_size_used"]})
+                continue
+
+            # Cache status                       : Active
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"cache_status": groups["cache_status"]})
+                continue
+
+            # Cache Size                         : 1191047 MB
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"cache_size": groups["cache_size"]})
+                continue
+
+            # Cache used                         : 78%
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"cache_used": groups["cache_used"]})
+                continue
+
+            # Oldest data in cache               : 86:08:46:46
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"oldest_data_in_cache": groups["oldest_data_in_cache"]})
+                continue
+
+            # Replaced(last hour): size          : 0 MB
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"replaced_last_hour_size": groups["replaced_last_hour_size"]})
+                continue
+        return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'sh sdwan appqoe ad-statistics'
+# =======================================================================
+
+class ShSdwanAppqoeAdStatisticsSchema(MetaParser):
+
+    """Schema for "sh sdwan appqoe ad-statistics" """
+
+    schema = {
+        'auto_discovery_option_length_mismatch': int,
+        'auto_discovery_option_version_mismatch': int,
+        'tcp_option_length_mismatch': int,
+        'ad_role_set_to_none': int,
+        'edge_ad_negotiation_start': int,
+        'edge_ad_negotiation_done': int,
+        'edge_rcvd_syn_ack_wo_ad_options': int,
+        'edge_aoim_sync_needed': int,
+        'core_ad_negotiation_start': int,
+        'core_ad_negotiation_done': int,
+        'core_rcvd_ack_wo_ad_options': int,
+        'core_aoim_sync_needed': int,
+        }
+
+# ==============================================
+# Parser for 'show sdwan appqoe dreopt statistics'
+# ==============================================
+
+
+class ShowSdwanAppqoeAdStatistics(ShSdwanAppqoeAdStatisticsSchema):
+
+    """ Parser for "show sdwan appqoe ad-statistics" """
+
+    cli_command = "show sdwan appqoe ad-statistics"
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # ad-statistics
+
+        #Auto-Discovery Option Length Mismatch       : 0
+        p1 = re.compile(r"^Auto-Discovery\s+Option\s+Length\s+Mismatch\s+:\s+(?P<auto_discovery_option_length>\S+)$")
+
+        #Auto-Discovery Option Version Mismatch      : 0
+        p2 = re.compile(r"^Auto-Discovery\s+Option\s+Version\s+Mismatch\s+:\s+(?P<auto_discovery_option_version>\S+)$")
+
+        #Tcp Option Length Mismatch                  : 0
+        p3 = re.compile(r"^Tcp\s+Option\s+Length\s+Mismatch\s+:\s+(?P<tcp_option_length_mismatch>\S+)$")
+
+        #AD Role set to NONE                         : 0
+        p4 = re.compile(r"^AD\s+Role\s+set\s+to\s+NONE\s+:\s+(?P<ad_role_set_to_none>\S+)$")
+
+        #[Edge] AD Negotiation Start                 : 0
+        p5 = re.compile(r"^.Edge.\s+AD\s+Negotiation\s+Start\s+:\s+(?P<edge_ad_negotiation_start>\S+)$")
+
+        #[Edge] AD Negotiation Done                  : 0
+        p6 = re.compile(r"^.Edge.\s+AD\s+Negotiation\s+Done\s+:\s+(?P<edge_ad_negotiation_done>\S+)$")
+
+        #[Edge] Rcvd SYN-ACK w/o AD options          : 0
+        p7 = re.compile(r"^.Edge.\s+Rcvd\s+SYN-ACK\s+w.o\s+AD\s+options\s+:\s+(?P<edge_rcvd_syn_ack_wo_ad_options>\S+)$")
+
+        #[Edge] AOIM sync Needed                     : 0
+        p8 = re.compile(r"^.Edge.\s+AOIM\s+sync\s+Needed\s+:\s+(?P<edge_aoim_sync_needed>\S+)$")
+
+        #[Core] AD Negotiation Start                 : 0
+        p9 = re.compile(r"^.Core.\s+AD\s+Negotiation\s+Start\s+:\s+(?P<core_ad_negotiation_start>\S+)$")
+
+        #[Core] AD Negotiation Done                  : 0
+        p10 = re.compile(r"^.Core.\s+AD\s+Negotiation\s+Done\s+:\s+(?P<core_ad_negotiation_done>\S+)$")
+
+        #[Core] Rcvd ACK w/o AD options              : 0
+        p11 = re.compile(r"^.Core.\s+Rcvd\s+ACK\s+w.o\s+AD\s+options\s+:\s+(?P<core_rcvd_ack_wo_ad_options>\S+)$")
+
+        #[Core] AOIM sync Needed                     : 0
+        p12 = re.compile(r"^.Core.\s+AOIM\s+sync\s+Needed\s+:\s+(?P<core_aoim_sync_needed>\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Auto-Discovery Option Length Mismatch       : 0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"auto_discovery_option_length_mismatch": int(groups["auto_discovery_option_length"])})
+                continue
+
+            #Auto-Discovery Option Version Mismatch      : 0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"auto_discovery_option_version_mismatch": int(groups["auto_discovery_option_version"])})
+                continue
+
+            #Tcp Option Length Mismatch                  : 0
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"tcp_option_length_mismatch": int(groups["tcp_option_length_mismatch"])})
+                continue
+
+            #AD Role set to NONE                         : 0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"ad_role_set_to_none": int(groups["ad_role_set_to_none"])})
+                continue
+
+            #[Edge] AD Negotiation Start                 : 0
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"edge_ad_negotiation_start": int(groups["edge_ad_negotiation_start"])})
+                continue
+
+            #[Edge] AD Negotiation Done                  : 0
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"edge_ad_negotiation_done": int(groups["edge_ad_negotiation_done"])})
+                continue
+
+            #[Edge] Rcvd SYN-ACK w/o AD options          : 0
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"edge_rcvd_syn_ack_wo_ad_options": int(groups["edge_rcvd_syn_ack_wo_ad_options"])})
+                continue
+
+            #[Edge] AOIM sync Needed                     : 0
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"edge_aoim_sync_needed": int(groups["edge_aoim_sync_needed"])})
+                continue
+
+            #[Core] AD Negotiation Start                 : 0
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"core_ad_negotiation_start": int(groups["core_ad_negotiation_start"])})
+                continue
+
+            #[Core] AD Negotiation Done                  : 0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"core_ad_negotiation_done": int(groups["core_ad_negotiation_done"])})
+                continue
+
+            #[Core] Rcvd ACK w/o AD options              : 0
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"core_rcvd_ack_wo_ad_options": int(groups["core_rcvd_ack_wo_ad_options"])})
+                continue
+
+            #[Core] AOIM sync Needed                     : 0
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"core_aoim_sync_needed": int(groups["core_aoim_sync_needed"])})
+                continue
+
+        return parsed_dict
+
+
+# =======================================================================
+# Parser Schema for 'show sdwan appqoe rm-statistics'
+# =======================================================================
+
+class ShowSdwanAppqoeRmStatisticsSchema(MetaParser):
+
+    """Schema for "show sdwan appqoe rm-statistics" """
+
+    schema = {
+        'times_sessions_health_changed_yellow': int,
+        'times_sessions_health_changed_green': int,
+        'times_service_mem_health_changed_yellow': int,
+        'times_service_mem_health_changed_green': int,
+        'overall_health_changed_yellow': int,
+        'overall_health_changed_green': int,
+        'dre_reserve_failures_due_to_health_status': int,
+        'client': {
+            Any(): {
+                'tcp_session_alloc': int,
+                'tcp_session_free': int,
+                'ssl_session_alloc': int,
+                'ssl_session_free': int,
+                'dre_session_alloc': int,
+                'dre_session_free': int,
+                'http_session_alloc': int,
+                'http_session_free': int,
+                },
+            },
+        }
+
+# ==============================================
+# Parser for 'show sdwan appqoe rm-statistics'
+# ==============================================
+
+
+class ShowSdwanAppqoeRmStatistics(ShowSdwanAppqoeRmStatisticsSchema):
+
+    """ Parser for "show sdwan appqoe rm-statistics" """
+
+    cli_command = "show sdwan appqoe rm-statistics"
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # rm-statistics
+
+        #Times Sessions Health Changed Yellow      : 0
+        p1 = re.compile(r"^Times\s+Sessions\s+Health\s+Changed\s+Yellow\s+:\s+(?P<session_yellow>\S+)$")
+
+        #Times Sessions Health Changed Green       : 0
+        p2 = re.compile(r"^Times\s+Sessions\s+Health\s+Changed\s+Green\s+:\s+(?P<session_green>\S+)$")
+
+        #Times Service mem Health Changed Yellow   : 0
+        p3 = re.compile(r"^Times\s+Service\s+mem\s+Health\s+Changed\s+Yellow\s+:\s+(?P<service_yellow>\S+)$")
+
+        #Times Service mem Health Changed Green    : 0
+        p4 = re.compile(r"^Times\s+Service\s+mem\s+Health\s+Changed\s+Green\s+:\s+(?P<service_green>\S+)$")
+
+        #Overall Health Changed Yellow             : 0
+        p5 = re.compile(r"^Overall\s+Health\s+Changed\s+Yellow\s+:\s+(?P<overall_health_changed_yellow>\S+)$")
+
+        #Overall Health Changed Green              : 0
+        p6 = re.compile(r"^Overall\s+Health\s+Changed\s+Green\s+:\s+(?P<overall_health_changed_green>\S+)$")
+
+        #DRE Reserve Failures Due to Health Status : 34
+        p7 = re.compile(r"^DRE\s+Reserve\s+Failures\s+Due\s+to\s+Health\s+Status\s+:\s+(?P<overall_health_yellow>\S+)$")
+
+        #Client: TCP
+        p8 = re.compile(r"^\s*Client:\s+(?P<client>\w+)\s*$")
+
+        #TCP Session Alloc  : 8220905
+        p9 = re.compile(r"^TCP\s+Session\s+Alloc\s+:\s+(?P<tcp_session_alloc>\S+)$")
+
+        #TCP Session Free   : 8220552
+        p10 = re.compile(r"^TCP\s+Session\s+Free\s+:\s+(?P<tcp_session_free>\S+)$")
+
+        #SSL Session Alloc  : 0
+        p11 = re.compile(r"^SSL\s+Session\s+Alloc\s+:\s+(?P<ssl_session_alloc>\S+)$")
+
+        #SSL Session Free   : 0
+        p12 = re.compile(r"^SSL\s+Session\s+Free\s+:\s+(?P<ssl_session_free>\S+)$")
+
+        #DRE Session Alloc  : 0
+        p13 = re.compile(r"^DRE\s+Session\s+Alloc\s+:\s+(?P<dre_session_alloc>\S+)$")
+
+        #DRE Session Free   : 0
+        p14 = re.compile(r"^DRE\s+Session\s+Free\s+:\s+(?P<dre_session_free>\S+)$")
+
+        #HTTP Session Alloc  : 0
+        p15 = re.compile(r"^HTTP\s+Session\s+Alloc\s+:\s+(?P<http_session_alloc>\S+)$")
+
+        #HTTP Session Free   : 0
+        p16 = re.compile(r"^HTTP\s+Session\s+Free\s+:\s+(?P<http_session_free>\S+)$")
+
+        parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Times Sessions Health Changed Yellow      : 0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"times_sessions_health_changed_yellow": int(groups["session_yellow"])})
+                continue
+
+            #Times Sessions Health Changed Green       : 0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"times_sessions_health_changed_green": int(groups["session_green"])})
+                continue
+
+            #Times Service mem Health Changed Yellow   : 0
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"times_service_mem_health_changed_yellow": int(groups["service_yellow"])})
+                continue
+
+            #Times Service mem Health Changed Green    : 0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"times_service_mem_health_changed_green": int(groups["service_green"])})
+                continue
+
+            #Overall Health Changed Yellow             : 0
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"overall_health_changed_yellow": int(groups["overall_health_changed_yellow"])})
+                continue
+
+            #Overall Health Changed Green              : 0
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"overall_health_changed_green": int(groups["overall_health_changed_green"])})
+                continue
+
+            #DRE Reserve Failures Due to Health Status : 34
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict.update({"dre_reserve_failures_due_to_health_status": int(groups["overall_health_yellow"])})
+                continue
+
+            #Client: TCP
+            m = p8.match(line)
+            if m:
+                overall_client_dict= parsed_dict.setdefault("client", {})
+                groups = m.groupdict()
+                client_dict = overall_client_dict.setdefault(groups['client'], {})
+                continue
+
+            #TCP Session Alloc  : 8220905
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"tcp_session_alloc": int(groups["tcp_session_alloc"])})
+                continue
+
+            #TCP Session Free   : 8220552
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"tcp_session_free": int(groups["tcp_session_free"])})
+                continue
+
+            #SSL Session Alloc  : 0
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"ssl_session_alloc": int(groups["ssl_session_alloc"])})
+                continue
+
+            #SSL Session Free   : 0
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"ssl_session_free": int(groups["ssl_session_free"])})
+                continue
+
+            #DRE Session Alloc  : 0
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"dre_session_alloc": int(groups["dre_session_alloc"])})
+                continue
+
+            #DRE Session Free   : 0
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"dre_session_free": int(groups["dre_session_free"])})
+                continue
+
+            #HTTP Session Alloc  : 0
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"http_session_alloc": int(groups["http_session_alloc"])})
+                continue
+
+            #HTTP Session Free   : 0
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                client_dict.update({"http_session_free": int(groups["http_session_free"])})
+                continue
+
+        return parsed_dict

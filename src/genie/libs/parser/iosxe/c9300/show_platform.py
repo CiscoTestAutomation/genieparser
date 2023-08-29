@@ -320,9 +320,11 @@ class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
         'switch': {
             int: {
                    'mainboard_authentication': str,
-                   'fru_authentication': str,
+                   Optional('fru_authentication'): str,
                    'stack_cable_a_authentication': str,
                    'stack_cable_b_authentication': str,
+                    Optional('stack_adapter_a_authentication'):str,
+                    Optional('stack_adapter_b_authentication'):str,
              },
     },
     }
@@ -354,6 +356,11 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
         p4 = re.compile(r'^Stack Cable A Authentication:\s+(?P<stack_cable_a_authentication>\w+(\s\w+)?)$')
         #    Stack Cable B Authentication: Passed
         p5 = re.compile(r'^Stack Cable B Authentication:\s+(?P<stack_cable_b_authentication>\w+(\s\w+)?)$')
+        # Stack Adapter A Authentication Passed
+        p6 = re.compile(r'^Stack Adapter A (Authentication:|Authenticatio)\s+(?P<stack_adapter_a_authentication>[\s\w]+)$')
+        # Stack Adapter B Authentication Passed
+        p7 = re.compile(r'^Stack Adapter B (Authentication:|Authenticatio)\s+(?P<stack_adapter_b_authentication>[\s\w]+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -364,30 +371,50 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
                 switch = group['switch']
                 switch_dict = result_dict.setdefault('switch', {})
                 switch_id_dict = switch_dict.setdefault(int(switch), {})
+                continue
 
             #Mainboard Authentication:     Passed
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 switch_id_dict['mainboard_authentication'] = group['mainboard_authentication']
+                continue
 
             #FRU Authentication:           Not Available
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 switch_id_dict['fru_authentication'] = group['fru_authentication']
+                continue
 
             #Stack Cable A Authentication: Passed
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 switch_id_dict['stack_cable_a_authentication'] = group['stack_cable_a_authentication']
+                continue
 
             #Stack Cable B Authentication: Passed
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 switch_id_dict['stack_cable_b_authentication'] = group['stack_cable_b_authentication']
+                continue
+
+            # Stack Adapter A Authentication Passed
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['stack_adapter_a_authentication'] = group['stack_adapter_a_authentication']
+                continue
+
+            # Stack Adapter B Authentication Passed
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                switch_id_dict['stack_adapter_b_authentication'] = group['stack_adapter_b_authentication']
+                continue
+        
         return result_dict
 
 class ShowLicenseAuthorizationSchema(MetaParser):

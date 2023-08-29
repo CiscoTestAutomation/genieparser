@@ -1,0 +1,73 @@
+fw09# show version
+
+Cisco Adaptive Security Appliance Software Version 9.14(2)14
+SSP Operating System Version 2.8(1.148)
+Device Manager Version 7.16(1)150
+
+Compiled on Wed 14-Apr-21 05:25 GMT by builders
+System image file is "disk0:/asa9-14-2-14-smp-k8.bin"
+Config file at boot was "startup-config"
+
+fw09 up 16 days 14 hours
+
+Hardware:   ASA5555, 16384 MB RAM, CPU Lynnfield 2800 MHz, 1 CPU (8 cores)
+            ASA: 8575 MB RAM, 1 CPU (2 cores)
+Internal ATA Compact Flash, 8192MB
+BIOS Flash MX25L6445E @ 0xffbb0000, 8192KB
+
+Encryption hardware device : Cisco ASA Crypto on-board accelerator (revision 0x1)
+                             Boot microcode        : CNPx-MC-BOOT-2.00
+                             SSL/IKE microcode     : CNPx-MC-SSL-SB-PLUS-0005
+                             IPSec microcode       : CNPx-MC-IPSEC-MAIN-0026
+                             Number of accelerators: 1
+Baseboard Management Controller (revision 0x1) Firmware Version: 2.4
+
+
+ 0: Int: Internal-Data0/0    : address is d8b1.9041.5c41, irq 11
+ 1: Ext: GigabitEthernet0/0  : address is d8b1.9041.5c46, irq 5
+ 2: Ext: GigabitEthernet0/1  : address is d8b1.9041.5c42, irq 5
+ 3: Ext: GigabitEthernet0/2  : address is d8b1.9041.5c47, irq 10
+ 4: Ext: GigabitEthernet0/3  : address is d8b1.9041.5c43, irq 10
+ 5: Ext: GigabitEthernet0/4  : address is d8b1.9041.5c48, irq 5
+ 6: Ext: GigabitEthernet0/5  : address is d8b1.9041.5c44, irq 5
+ 7: Ext: GigabitEthernet0/6  : address is d8b1.9041.5c49, irq 10
+ 8: Ext: GigabitEthernet0/7  : address is d8b1.9041.5c45, irq 10
+ 9: Int: Internal-Data0/1    : address is 0000.0001.0002, irq 0
+10: Int: Internal-Control0/0 : address is 0000.0001.0001, irq 0
+11: Int: Internal-Data0/2    : address is 0000.0001.0003, irq 0
+12: Ext: Management0/0       : address is d8b1.9041.5c41, irq 0
+13: Int: Internal-Data0/3    : address is 0000.0100.0001, irq 0
+
+Licensed features for this platform:
+Maximum Physical Interfaces       : Unlimited      perpetual
+Maximum VLANs                     : 500            perpetual
+Inside Hosts                      : Unlimited      perpetual
+Failover                          : Active/Active  perpetual
+Encryption-DES                    : Enabled        perpetual
+Encryption-3DES-AES               : Enabled        perpetual
+Security Contexts                 : 2              perpetual
+Carrier                           : Disabled       perpetual
+AnyConnect Premium Peers          : 2              perpetual
+AnyConnect Essentials             : Disabled       perpetual
+Other VPN Peers                   : 5000           perpetual
+Total VPN Peers                   : 5000           perpetual
+AnyConnect for Mobile             : Disabled       perpetual
+AnyConnect for Cisco VPN Phone    : Disabled       perpetual
+Advanced Endpoint Assessment      : Disabled       perpetual
+Shared License                    : Disabled       perpetual
+Total TLS Proxy Sessions          : 2              perpetual
+Botnet Traffic Filter             : Disabled       perpetual
+IPS Module                        : Disabled       perpetual
+Cluster                           : Enabled        perpetual
+Cluster Members                   : 2              perpetual
+
+This platform has an ASA5555 VPN Premium license.
+
+Serial Number: A0000000000
+Running Permanent Activation Key: 0x00000000 0x00000000 0x00000000 0x00000000 0x00000000
+Configuration register is 0x1
+
+Image type          : Release
+Key version         : A
+
+Configuration last modified by cisco at 08:09:56.229 UTC Sat Jun 3 2023

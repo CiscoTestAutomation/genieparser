@@ -168,8 +168,9 @@ class ShowOspfv3vrfNeighbor(ShowOspfv3vrfNeighborSchema):
             output = self.device.execute(self.cli_command.format(vrf_id=vrf_id))
         ret_dict = {}
         # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+        # OSPFv3 100 address-family ipv4 vrf WAN-VRF (router-id 10.0.2.38)
         p1 = re.compile(
-            r"^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>\w+)"
+            r"^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>[\w\-]+)"
             r"\s+\(router-id\s+(?P<router_id>[\d\.\/]+)\)$"
         )
 
@@ -219,7 +220,97 @@ class ShowOspfv3vrfNeighbor(ShowOspfv3vrfNeighborSchema):
 
         return ret_dict
 
+# ===============================================
+# schema for:
+#   * show ospfv3 vrf {vrf_id} neighbor interface
+# ======================================================
+class ShowOspfv3vrfNeighborInterfaceSchema(MetaParser):
+    """Schema detail for:
+    * show ospfv3 vrf {vrf_id} neighbor interface
+    """
 
+    schema = {
+        'address_family': {
+            Any(): {
+                'process_id': int,
+                'vrf_id': str,
+                'router_id': str,
+                Any(): {
+                    'neighbor_id': str,
+                    'priority': int,
+                    'state': str,
+                    'dead_time': str,
+                    'int_id': int,
+                },
+            },
+        },
+    }
+
+
+# ======================================================
+# parser for:
+#   * show ospfv3 vrf {vrf_id} neighbor interface
+# ======================================================
+class ShowOspfv3vrfNeighborInterface(ShowOspfv3vrfNeighborInterfaceSchema):
+    """parser details for:
+    * show ospfv3 vrf {vrf_id} neighbor
+    """
+
+    cli_command = "show ospfv3 vrf {vrf_id} neighbor {interface}"
+
+    def cli(self, vrf_id, interface, output=None):
+        if not output:
+            cmd = self.cli_command.format(vrf_id=vrf_id, interface=interface)
+            output = self.device.execute(cmd)
+        ret_dict = {}
+        # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+        p1 = re.compile(
+            r"^OSPFv3\s+(?P<process_id>\d+)+\s+address-family\s(?P<address_family>\w+)\s+vrf\s(?P<vrf_id>[\w\-]+)"
+            r"\s+\(router-id\s+(?P<router_id>[\d\.\/]+)\)$"
+        )
+
+        # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+        # 101.1.1.2         1   FULL/DR         00:00:38    56              TenGigabitEthernet1/0/47
+
+        # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+        # 101.1.1.2         1   FULL/DR         00:00:33    56              TenGigabitEthernet1/0/47
+
+        p2 = re.compile(
+            r"^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[0-9A-Z]+/\s*[A-Z-]*)"
+            r" +(?P<dead_time>(\d+:){2}\d+) +(?P<int_id>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                add_family = group['address_family']
+                address_type_dict = ret_dict.setdefault('address_family', {}).setdefault(add_family,
+                                                                                         {})
+                address_type_dict['process_id'] = int(group['process_id'])
+                address_type_dict['vrf_id'] = group['vrf_id']
+                address_type_dict['router_id'] = str(group['router_id'])
+
+            # Neighbor ID     Pri   State           Dead Time   Address         Interface
+            # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+            # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+            # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface_dict = address_type_dict.setdefault(interface, {})
+                interface_dict['neighbor_id'] = str(group['neighbor_id'])
+                interface_dict['priority'] = int(group['priority'])
+                interface_dict['state'] = str(group['state'])
+                interface_dict['dead_time'] = str(group['dead_time'])
+                interface_dict['int_id'] = int(group['int_id'])
+                continue
+
+        return ret_dict
 class ShowOspfv3NeighborSchema(MetaParser):
 
     """Schema for show ospfv3 {pid} neighbor"""

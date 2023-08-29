@@ -1,0 +1,11 @@
+show route vrf VRF_1 ipv6 2000:90:11:1::1
+Fri Jan 13 19:15:54.702 UTC
+
+Routing entry for 2000:90:11:1::/64
+  Known via "bgp 100", distance 200, metric 0, type internal
+  Installed Jan 13 11:31:20.102 for 07:44:34
+  Routing Descriptor Blocks
+    ::ffff:50.1.1.1, from ::ffff:50.1.1.8
+      Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+      Route metric is 0
+  No advertising protos. 

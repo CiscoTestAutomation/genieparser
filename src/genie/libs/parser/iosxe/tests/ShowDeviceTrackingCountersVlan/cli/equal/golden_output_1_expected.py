@@ -79,7 +79,11 @@ expected_output = {
                     "protocol":"ndp",
                     "message":"ra",
                     "dropped":5,
-                    "reason":"Message unauthorized on port"
+                    "reason": {
+                        1: {
+                            "reason": "Message unauthorized on port"
+                        }
+                    }
                 }
             },
             "faults":[

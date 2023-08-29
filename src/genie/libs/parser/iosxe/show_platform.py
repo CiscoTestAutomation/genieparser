@@ -167,6 +167,10 @@ IOSXE parsers for the following show commands:
     * 'show platform software fed active qos policy target status'
     * 'show platform software fed switch {switch} qos policy target status'
     * 'show platform software fed switch {switch} vp key {if_id} {vlan_id}'
+    * 'show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow_num}'
+    * 'show platform software fed switch {switch} punt cpuq brief'
+    * 'show platform software fed active punt cpuq brief'
+    * 'show file information {file}'
     '''
 
 # Python
@@ -6643,6 +6647,271 @@ class ShowPlatformHardwareQfpStatisticsDropClear(ShowPlatformHardwareQfpStatisti
         return ret_dict
 
 
+class ShowPlatformHardwareQfpStatisticsDropHistorySchema(MetaParser):
+    """Schema for show platform hardware qfp {status} statistics drop history"""
+
+    schema = {
+        'stats_cleared': bool,
+        Optional('last_clear_time'): {
+            'year': int,
+            'month': str,
+            'day': int,
+            'hour': int,
+            'minute': int,
+            'second': int
+        },
+        Optional('last_clear_lapsed_time'): {
+            Optional('weeks'): int,
+            Optional('days'): int,
+            Optional('hours'): int,
+            Optional('minutes'): int,
+            'seconds': int
+        },
+        'drops_seen': bool,
+        Optional('drop_history'): {
+            Any(): {
+                '1m': {
+                    'packets': int,
+                },
+                '5m': {
+                    'packets': int,
+                },
+                '30m': {
+                    'packets': int,
+                },
+                'all': {
+                    'packets': int,
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpStatisticsDropHistory(ShowPlatformHardwareQfpStatisticsDropHistorySchema):
+    """
+    Parser for
+        show platform hardware qfp {status} statistics drop history
+    """
+
+    cli_command = 'show platform hardware qfp {status} statistics drop history'
+
+    def cli(self, status, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Last clearing of QFP drops statistics : never
+        p1_1 = re.compile(r'^Last clearing of QFP drops statistics : never$')
+
+        # Last clearing of QFP drops statistics : Fri Jun  9 04:04:39 2023
+        p1_2 = re.compile(r'^Last clearing of QFP drops statistics : \w+\s+(?P<month>\w+)'
+                          r'\s+(?P<day>\d+)\s+(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+)'
+                          r'\s+(?P<year>\d+)$')
+
+        # (3w 2d 5h 10m 42s ago)
+        # (2d 5h 10m 42s ago)
+        # (5h 10m 42s ago)
+        # (10m 42s ago)
+        # (42s ago)
+        p1_3 = re.compile(r'^\(((?P<weeks>\d+)w\s+)?((?P<days>\d+)d\s+)?((?P<hours>\d+)h\s+)?'
+                          r'((?P<minutes>\d+)m\s+)?(?P<seconds>\d+)s\s+ago\)$')
+
+        # The Global drop stats were all zero
+        p2_1 = re.compile(r'^The Global drop stats were all zero$')
+
+        # Ipv4NoAdj     0      199935      299897    299897
+        p2_2 = re.compile(r'^(?P<reason>\w+)\s+(?P<packets_1m>\d+)\s+(?P<packets_5m>\d+)'
+                          r'\s+(?P<packets_30m>\d+)\s+(?P<packets_all>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Last clearing of QFP drops statistics : never
+            m = p1_1.match(line)
+            if m:
+                ret_dict['stats_cleared'] = False
+                continue
+
+            # Last clearing of QFP drops statistics : Fri Jun  9 04:04:39 2023
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                last_clear_time = {
+                    'year'   : int(group['year']),
+                    'month'  : group['month'],
+                    'day'    : int(group['day']),
+                    'hour'   : int(group['hour']),
+                    'minute' : int(group['minute']),
+                    'second' : int(group['second'])
+                }
+                ret_dict.update({
+                    'stats_cleared'   : True,
+                    'last_clear_time' : last_clear_time
+                })
+                continue
+
+            # (3w 2d 5h 10m 42s ago)
+            # (2d 5h 10m 42s ago)
+            # (5h 10m 42s ago)
+            # (10m 42s ago)
+            # (42s ago)
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict()
+                lapsed_time = {}
+                if group['weeks'] is not None:
+                    lapsed_time['weeks'] = int(group['weeks'])
+                if group['days'] is not None:
+                    lapsed_time['days'] = int(group['days'])
+                if group['hours'] is not None:
+                    lapsed_time['hours'] = int(group['hours'])
+                if group['minutes'] is not None:
+                    lapsed_time['minutes'] = int(group['minutes'])
+                lapsed_time['seconds'] = int(group['seconds'])
+                ret_dict['last_clear_lapsed_time'] = lapsed_time
+                continue
+
+            # The Global drop stats were all zero
+            m = p2_1.match(line)
+            if m:
+                ret_dict['drops_seen'] = False
+                continue
+
+            # Ipv4NoAdj     0      199935      299897    299897
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['drops_seen'] = True
+                reason = group['reason']
+                reason_dict = {
+                    '1m'  : {'packets': int(group['packets_1m'])},
+                    '5m'  : {'packets': int(group['packets_5m'])},
+                    '30m' : {'packets': int(group['packets_30m'])},
+                    'all' : {'packets': int(group['packets_all'])}
+                }
+                drop_history_dict = ret_dict.setdefault('drop_history', {})
+                drop_history_dict[reason] = reason_dict
+                continue
+                
+        return ret_dict
+
+
+
+class ShowPlatformHardwareQfpStatisticsDropHistoryClear(ShowPlatformHardwareQfpStatisticsDropHistorySchema):
+    """
+    Parser for
+        show platform hardware qfp {status} statistics drop history clear
+    """
+
+    cli_command = 'show platform hardware qfp {status} statistics drop history clear'
+
+    def cli(self, status, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Last clearing of QFP drops statistics : never
+        p1_1 = re.compile(r'^Last clearing of QFP drops statistics : never$')
+
+        # Last clearing of QFP drops statistics : Fri Jun  9 04:04:39 2023
+        p1_2 = re.compile(r'^Last clearing of QFP drops statistics : \w+\s+(?P<month>\w+)'
+                          r'\s+(?P<day>\d+)\s+(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+)'
+                          r'\s+(?P<year>\d+)$')
+
+        # (3w 2d 5h 10m 42s ago)
+        # (2d 5h 10m 42s ago)
+        # (5h 10m 42s ago)
+        # (10m 42s ago)
+        # (42s ago)
+        p1_3 = re.compile(r'^\(((?P<weeks>\d+)w\s+)?((?P<days>\d+)d\s+)?((?P<hours>\d+)h\s+)?'
+                          r'((?P<minutes>\d+)m\s+)?(?P<seconds>\d+)s\s+ago\)$')
+
+        # The Global drop stats were all zero
+        p2_1 = re.compile(r'^The Global drop stats were all zero$')
+
+        # Ipv4NoAdj     0      199935      299897    299897
+        p2_2 = re.compile(r'^(?P<reason>\w+)\s+(?P<packets_1m>\d+)\s+(?P<packets_5m>\d+)'
+                          r'\s+(?P<packets_30m>\d+)\s+(?P<packets_all>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Last clearing of QFP drops statistics : never
+            m = p1_1.match(line)
+            if m:
+                ret_dict['stats_cleared'] = False
+                continue
+
+            # Last clearing of QFP drops statistics : Fri Jun  9 04:04:39 2023
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                last_clear_time = {
+                    'year'   : int(group['year']),
+                    'month'  : group['month'],
+                    'day'    : int(group['day']),
+                    'hour'   : int(group['hour']),
+                    'minute' : int(group['minute']),
+                    'second' : int(group['second'])
+                }
+                ret_dict.update({
+                    'stats_cleared'   : True,
+                    'last_clear_time' : last_clear_time
+                })
+                continue
+
+            # (3w 2d 5h 10m 42s ago)
+            # (2d 5h 10m 42s ago)
+            # (5h 10m 42s ago)
+            # (10m 42s ago)
+            # (42s ago)
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict()
+                lapsed_time = {}
+                if group['weeks'] is not None:
+                    lapsed_time['weeks'] = int(group['weeks'])
+                if group['days'] is not None:
+                    lapsed_time['days'] = int(group['days'])
+                if group['hours'] is not None:
+                    lapsed_time['hours'] = int(group['hours'])
+                if group['minutes'] is not None:
+                    lapsed_time['minutes'] = int(group['minutes'])
+                lapsed_time['seconds'] = int(group['seconds'])
+                ret_dict['last_clear_lapsed_time'] = lapsed_time
+                continue
+
+            # The Global drop stats were all zero
+            m = p2_1.match(line)
+            if m:
+                ret_dict['drops_seen'] = False
+                continue
+
+            # Ipv4NoAdj     0      199935      299897    299897
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['drops_seen'] = True
+                reason = group['reason']
+                reason_dict = {
+                    '1m'  : {'packets': int(group['packets_1m'])},
+                    '5m'  : {'packets': int(group['packets_5m'])},
+                    '30m' : {'packets': int(group['packets_30m'])},
+                    'all' : {'packets': int(group['packets_all'])}
+                }
+                drop_history_dict = ret_dict.setdefault('drop_history', {})
+                drop_history_dict[reason] = reason_dict
+                continue
+
+        return ret_dict
+
+
 class ShowProcessesCpuHistorySchema(MetaParser):
     """Schema for show processes cpu history"""
 
@@ -7801,12 +8070,12 @@ class ShowPlatformTcamUtilizationSchema(MetaParser):
 class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
     """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
 
-    cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam utilization','show platform hardware fed active fwd-asic resource tcam utilization']
+    cli_command = ['show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization', 'show platform hardware fed active fwd-asic resource tcam utilization']
 
-    def cli(self, output=None, switch=''):
+    def cli(self, output=None, switch='', mode=None):
         if output is None:
-            if switch:
-                cmd = self.cli_command[0].format(switch=switch)
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
             else:
                 cmd = self.cli_command[1]
             output = self.device.execute(cmd)
@@ -13676,13 +13945,21 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicDropsExceptionsSchema(MetaParser
 
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicDropsExceptions(ShowPlatformHardwareFedSwitchActiveFwdAsicDropsExceptionsSchema):
-    """Parser for show platform hardware fed switch active fwd-asic drops exceptions in svl """
+    """Parser for show platform hardware fed switch active fwd-asic drops exceptions in svl 
+                  and show platform hardware fed active fwd-asic drops exceptions"""
 
-    cli_command = 'show platform hardware fed switch active fwd-asic drops exceptions'
 
-    def cli(self, output=None):
+    cli_command = ['show platform hardware fed {switch} active fwd-asic drops exceptions',
+                    'show platform hardware fed active fwd-asic drops exceptions']
+
+    def cli(self, switch="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -18556,19 +18833,21 @@ class ShowPlatformSoftwareFedIfmSchema(MetaParser):
 
 class ShowPlatformSoftwareFedIfm(ShowPlatformSoftwareFedIfmSchema):
 
-    cli_command = 'show platform software fed switch active ifm interfaces tunnel'
+    cli_command = ['show platform software fed {switch} active ifm interfaces tunnel',
+                   'show platform software fed active ifm interfaces tunnel']
 
-    def cli(self, output=None):
+    def cli(self,switch=None,output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if switch is None:
+                cmd = self.cli_command[1]
+            else:
+                cmd = self.cli_command[0].format(switch=switch)
 
+            output = self.device.execute(cmd)
         parsed_dict = {}
-
         # Tunnel1 0x0000005d READY
-        p1=re.compile(r'^(?P<interface>(^[a-zA-Z]+[0-9])) +(?P<if_id>\w+) +(?P<state>[\w\s]+)$')
-        for line in out.splitlines():
+        p1=re.compile(r'^(?P<interface>(^[a-zA-Z]+[0-9]+)) +(?P<if_id>\w+) +(?P<state>[\w\s]+)$')
+        for line in output.splitlines():
             line = line.strip()
 
             # Tunnel1 0x0000005d READY
@@ -28991,7 +29270,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(ShowPlatformSoftwareFedQosI
             else:
                 cmd = self.cli_command[1].format(mode=mode, interface=interface)
 
-            output = self.device.execute(cmd)
+            output = self.device.execute(cmd, timeout=600)
 
         # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
         # [HundredGigE1/0/1.1, map1, Ingress]: CGID = 0x738310
@@ -29359,10 +29638,11 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(ShowPlatformSoftwareFedQosI
             if m:
                 values = m.groupdict()
                 acl_name = values["acl_version"].lower().replace(' ', '_')
+                if acl_name not in ret_dict.keys():
+                    ace_count = 0
                 acl_dict = ret_dict.setdefault(acl_name, {})
                 acl_dict['oid'] = values['oid']
                 acl_dict['number_of_aces'] = int(values['number_of_aces'])
-                ace_count = 0
 
             # IPV4 ACE Key/Mask
             # IPV6 ACE Key/Mask
@@ -30356,7 +30636,16 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailedSchema(MetaParser):
                             Optional('mark_type'): str,
                             'qos_group': int,
                             'traffic_class': int,
-                            'discard_class': int
+                            'discard_class': int,
+                            Optional('table_id'): str,
+                            Optional('table_name'): str,
+                            Optional('map'): {
+                                Any(): {
+                                    Any(): int
+                                }
+                            },
+                            Optional('default_value'): int,
+                            Optional('default_behavior'): str
                         }
                     }
                 }
@@ -30382,7 +30671,7 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailed(
 
         # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
         # [HundredGigE1/0/5.100, map1, Ingress]: CGID = 0x738310
-        p1 = re.compile(r'^\[(?P<interface>[\w\/\.]+),.+$')
+        p1 = re.compile(r'^\[(?P<interface>[\w\/\.\-]+),.+$')
 
         # cgid: 0x738310
         p1_1 = re.compile(r'^cgid:\s+(?P<cgid>\w+)$')
@@ -30483,6 +30772,27 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailed(
 
         # Discard Class: 255
         p4_11 = re.compile(r'^Discard Class: (?P<discard_class>\d+)$')
+
+        # Table id: 0x3B8D
+        p4_12 = re.compile(r'^Table id: (?P<table_id>\w+)$')
+
+        # Table Name: t1
+        p4_13 = re.compile(r'^Table Name: (?P<table_name>\w+)$')
+        
+        # Map: L2 COS -> L2 COS
+        # Map: DSCP -> DSCP
+        # Map: L2 COS -> Traffic Class
+        p4_14 = re.compile(r'^Map: (?P<map>.+\->.+)$')
+        
+        # 1 -> 7
+        # 2 -> 6
+        p4_15 = re.compile(r'^(?P<key>\d+)\s+\->\s+(?P<value>\d+)$')
+        
+        # Default value: 0
+        p4_16 = re.compile(r'^Default value: (?P<default_value>\d+)$')
+
+        # Default Behavior: Copy
+        p4_17 = re.compile(r'^Default Behavior: (?P<default_behavior>.+)$')
 
         ret_dict = {}
 
@@ -30698,6 +31008,46 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailed(
             m = p4_11.match(line)
             if m:
                 action_dict['discard_class'] = int(m.groupdict()['discard_class'])
+                continue
+
+            # Table id: 0x3B8D
+            m = p4_12.match(line)
+            if m:
+                action_dict['table_id'] = m.groupdict()['table_id']
+                continue
+
+            # Table Name: t1
+            m = p4_13.match(line)
+            if m:
+                action_dict['table_name'] = m.groupdict()['table_name']
+                continue
+            
+            # Map: L2 COS -> L2 COS
+            # Map: DSCP -> DSCP
+            # L2 COS -> Traffic Class
+            m = p4_14.match(line)
+            if m:
+                map = m.groupdict()['map'].strip().replace('->', 'to').replace(' ', '_').lower()
+                map_dict = action_dict.setdefault('map', {}).setdefault(map, {})
+                continue
+
+            # 1 -> 7
+            # 2 -> 6
+            m = p4_15.match(line)
+            if m:
+                map_dict[int(m.groupdict()['key'])] = int(m.groupdict()['value'])
+                continue
+
+            # Default value: 0
+            m = p4_16.match(line)
+            if m:
+                action_dict['default_value'] = int(m.groupdict()['default_value'])
+                continue
+
+            # Default Behavior: Copy
+            m = p4_17.match(line)
+            if m:
+                action_dict['default_behavior'] = m.groupdict()['default_behavior']
                 continue
 
         return ret_dict
@@ -31866,8 +32216,8 @@ class ShowPlatformHardwareQfpActiveClassificationFeatureTcamUsage(ShowPlatformHa
                 continue
 
         return ret_dict
-
-
+    
+    
 class ShowPlatformHardwareFedQosQueueStatsOqMulticastSchema(MetaParser):
     """
     Schema for
@@ -31971,3 +32321,477 @@ class ShowPlatformHardwareFedQosQueueStatsOqMulticastOqId(ShowPlatformHardwareFe
 
     def cli(self, mode, interface, oq_id, switch=None, output=None):
         return super().cli(mode=mode, interface=interface, oq_id=oq_id, switch=switch, output=output)
+    
+
+# =======================================================================================================================
+# Schema for 'show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow} '
+# =======================================================================================================================
+
+class ShowPlatformSoftwareFedSwitchSwitchFnfFlowRecordAsicAsicStartIndexIndexNumFlowsFlowSchema(MetaParser):
+    """Schema for show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow}"""
+
+    schema = {
+        'num_flows': int,
+        'index_num': int,
+        'asic_num': int,
+        'id_details': {
+                Any(): {
+                'id': int,
+                'first_seen': str,
+                'last_seen': str,
+                'sys_uptime': str,
+                'pkt_count': str,
+                'byte_count': str,
+                'lookup_details': {
+                    Any(): {
+                            'lookup_num': int,
+                            'lookup_type': str,
+                            'lookup_value': str,
+                    },
+                },
+            },
+        },
+    }
+        
+
+# =======================================================================================================================
+# Parser for 'show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow} '
+# =======================================================================================================================
+class ShowPlatformSoftwareFedSwitchSwitchFnfFlowRecordAsicAsicStartIndexIndexNumFlowsFlow(ShowPlatformSoftwareFedSwitchSwitchFnfFlowRecordAsicAsicStartIndexIndexNumFlowsFlowSchema):
+    """Parser for show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow}"""
+
+    cli_command = 'show platform software fed switch {switch} fnf flow-record asic {asic} start-index {index} num-flows {flow}'
+
+    def cli(self, switch, asic, index, flow, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+                        
+        # 11 flows starting at 0 for asic 0:
+        p1 = re.compile(r"^(?P<num_flows>\d+)\s+flows\s+starting\s+at\s+(?P<index_num>\d+)\s+for\s+asic\s+(?P<asic_num>\d+):$")
+        # FirstSeen = 0x7647c, LastSeen = 0x76a55, sysUptime = 0x76aa8
+        p2 = re.compile(r"^FirstSeen\s+=\s+(?P<first_seen>\S+),\s+LastSeen\s+=\s+(?P<last_seen>\S+),\s+sysUptime\s+=\s+(?P<sys_uptime>\S+)$")
+        # PKT Count = 0x0000000003c515d5, L2ByteCount = 0x00000001e28aea80
+        p2_1 = re.compile(r"^PKT\s+Count\s+=\s+(?P<pkt_count>\S+),\s+L2ByteCount\s+=\s+(?P<byte_count>\S+)$")
+        # Idx 8256 :
+        p2_2 = re.compile(r"^Idx\s+(?P<id>\d+)\s+:$")
+        # {231, ALR_EGRESS_NET_FLOW_ACL_LOOKUP_TYPE1 = 0x01}
+        p2_3 = re.compile(r"^\{(?P<lookup_num>\d+),\s+(?P<lookup_type>\S+)\s+=\s+(?P<lookup_value>\S+)\}$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # 11 flows starting at 0 for asic 0:
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['num_flows'] = int(dict_val['num_flows'])
+                ret_dict['index_num'] = int(dict_val['index_num'])
+                ret_dict['asic_num'] = int(dict_val['asic_num'])
+                continue
+
+            # FirstSeen = 0x7647c, LastSeen = 0x76a55, sysUptime = 0x76aa8
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                id_dict['first_seen'] = dict_val['first_seen']
+                id_dict['last_seen'] = dict_val['last_seen']
+                id_dict['sys_uptime'] = dict_val['sys_uptime']
+                continue
+
+            # PKT Count = 0x0000000003c515d5, L2ByteCount = 0x00000001e28aea80
+            m = p2_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                id_dict['pkt_count'] = dict_val['pkt_count']
+                id_dict['byte_count'] = dict_val['byte_count']
+                continue
+
+            # Idx 8256 :
+            m = p2_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                id_var = dict_val['id']
+                id_details = ret_dict.setdefault('id_details', {})
+                id_dict = ret_dict['id_details'].setdefault(id_var, {})
+                id_dict['id'] = int(dict_val['id'])
+                continue
+
+            # {231, ALR_EGRESS_NET_FLOW_ACL_LOOKUP_TYPE1 = 0x01}
+            m = p2_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                lookup_id = dict_val['lookup_num']
+                lookup = ret_dict['id_details'][id_var].setdefault('lookup_details', {})
+                lookup_dict = ret_dict['id_details'][id_var]['lookup_details'].setdefault(lookup_id, {})
+                lookup_dict['lookup_type'] = dict_val['lookup_type']
+                lookup_dict['lookup_value'] = dict_val['lookup_value']
+                lookup_dict['lookup_num'] = int(dict_val['lookup_num'])
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMacSchema(MetaParser):
+    """
+    Schema for
+        * 'show platform software fed {switch} {active} matm macTable vlan {vlan} mac {mac}'
+    """
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'mac': str,
+                'type': str,
+                'seq': int,
+                'ec_bi': int,
+                'flags': int,
+                'machandle': str,
+                'siHandle': str,
+                'riHandle': str,
+                'diHandle': str,
+                'a_time': int,
+                'e_time': int,
+                'port': str,
+                'con': str
+            }
+        },
+        'platform_details': {
+            'asic': {
+                Any(): {
+                    Optional('htmhandle'): str,
+                    Optional('mvid'): int,
+                    Optional('gpn'): int,
+                    Optional('si'): str,
+                    Optional('ri'): str,
+                    Optional('di'): str,
+                    Optional('pmap'): str,
+                    Optional('pmap_intf'): str
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMac(ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMacSchema):
+    """
+    Parser for
+        * 'show platform software fed {switch} {active} matm macTable vlan {vlan} mac {mac}'
+    """
+
+    cli_command = ['show platform software fed {state} matm macTable vlan {vlan} mac {mac}',
+        'show platform software fed {switch} {state} matm macTable vlan {vlan} mac {mac}']
+
+    def cli(self, vlan, mac, state, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, state=state, vlan=vlan, mac=mac)
+            else:
+                cmd = self.cli_command[0].format(state=state, vlan=vlan, mac=mac)
+            output = self.device.execute(cmd)
+
+        # VLAN   MAC                  Type  Seq#    EC_Bi  Flags  machandle           siHandle            riHandle            diHandle              *a_time  *e_time  ports                                                         Con
+        # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # 1      2200.0000.0001        0x1  125648      0      0  0x7429b62dc7c8      0x742904fc2428      0x0                 0x7429b53219d8            300       90  TwoGigabitEthernet1/0/13                                      Yes
+        p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<mac>\S+)\s+(?P<type>\S+)\s+(?P<seq>\d+)\s+(?P<ec_bi>\d+)\s+(?P<flags>\d+)\s+(?P<machandle>\S+)\s+(?P<siHandle>\S+)\s+(?P<riHandle>\S+)\s+(?P<diHandle>\S+)\s+(?P<a_time>\d+)\s+(?P<e_time>\d+)\s+(?P<port>\S+)\s+(?P<con>\w+)$')
+
+        #Asic: 0
+        p2 = re.compile(r'^Asic\:\s+(?P<asic>\S+)$')
+
+        #htm-handle = 0x7429b56aaa48 MVID = 4 gpn = 1
+        p3 = re.compile(r"^htm-handle\s+=\s+(?P<htmhandle>\S+)\s+MVID\s+=\s+(?P<mvid>\d+)\s+gpn\s+=\s+(?P<gpn>\d+)$")
+
+        #SI = 0xad RI = 0x2 DI = 0x5415
+        p4 = re.compile(r'^SI\s+=\s+(?P<si>\S+)\s+RI\s+=\s+(?P<ri>\S+)\s+DI\s+=\s+(?P<di>\S+)$')
+
+        # DI = 0x5415 pmap = 0x00000000 0x00000000 pmap_intf : [TwoGigabitEthernet1/0/13]
+        p5 =  re.compile(r"^DI\s+=\s+(?P<di>\S+)\s+pmap\s+=\s+(?P<pmap>\S+\s+\S+)(\s+pmap_intf\s+:\s+\[(?P<pmap_intf>\S+)\])?$")
+
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # VLAN   MAC                  Type  Seq#    EC_Bi  Flags  machandle           siHandle            riHandle            diHandle              *a_time  *e_time  ports                                                         Con
+            # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            # 1      2200.0000.0001        0x1  125648      0      0  0x7429b62dc7c8      0x742904fc2428      0x0                 0x7429b53219d8            300       90  TwoGigabitEthernet1/0/13                                      Yes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_id = group['vlan']
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(vlan_id, {})
+                vlan_dict.update({
+                    'mac': group['mac'],
+                    'type': group['type'],
+                    'seq': int(group['seq']),
+                    'ec_bi': int(group['ec_bi']),
+                    'flags': int(group['flags']),
+                    'machandle': group['machandle'],
+                    'siHandle': group['siHandle'],
+                    'riHandle': group['riHandle'],
+                    'diHandle': group['diHandle'],
+                    'a_time': int(group['a_time']),
+                    'e_time': int(group['e_time']),
+                    'port': Common.convert_intf_name(group['port']),
+                    'con': group['con']
+                })
+                continue
+
+            # Asic: 0        
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('platform_details', {}).setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            # htm-handle = 0x7429b56aaa48 MVID = 4 gpn = 1    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                asic_dict['htmhandle'] = group['htmhandle']
+                asic_dict['mvid'] = int(group['mvid'])
+                asic_dict['gpn'] = int(group['gpn'])
+                continue
+
+            # SI = 0xad RI = 0x2 DI    
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()               
+                asic_dict['si'] = group['si']               
+                asic_dict['ri'] = group['ri']
+                continue
+
+            # DI = 0x5415 pmap = 0x00000000 0x00000000 pmap_intf : [TwoGigabitEthernet1/0/13]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                asic_dict['di'] = group['di']
+                asic_dict['pmap'] = group['pmap']
+                if group['pmap_intf']:
+                    asic_dict['pmap_intf'] = Common.convert_intf_name(group['pmap_intf'])
+                continue           
+
+        return ret_dict    
+class ShowPlatformSoftwareFedSwitchActivePuntCpuqBriefSchema(MetaParser):
+    """Schema for show platform software fed switch active punt cpuq brief schema"""
+    schema = {
+        'queue_number': {
+            Any(): {
+                'queue_name': {
+                    Any(): {
+                            'rx_prev': int,
+                            'rx_cur': int,
+                            'rx_delta': int,
+                            'drop_prev': int,
+                            'drop_cur': int,
+                            'drop_delta': int,
+                            }
+                        }
+                    }
+                }
+            }
+
+class ShowPlatformSoftwareFedSwitchActivePuntCpuqBrief(ShowPlatformSoftwareFedSwitchActivePuntCpuqBriefSchema):
+    """Parser for show platform software fed switch active punt cpuq brief
+                  show platform software fed active punt cpuq brief"""
+
+    cli_command = ['show platform software fed {switch} active punt cpuq brief',
+                    'show platform software fed active punt cpuq brief']
+
+    def cli(self, switch="", output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Punt CPU Q Statistics
+        p0 = re.compile(r'Punt CPU Q Statistics$')
+
+        # 2  CPU_Q_FORUS_TRAFFIC             44325    44328    3        0        0        0
+        p1=re.compile(r'^(?P<queue_number>\d+) +(?P<queue_name>\w+) +(?P<rx_prev>\d+) +(?P<rx_cur>\d+) +(?P<rx_delta>\d+) +(?P<drop_prev>\d+) +(?P<drop_cur>\d+) +(?P<drop_delta>\d+)$')
+   
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                queue_number_ = group.pop('queue_number')
+                queue_name_ = group.pop('queue_name')
+                dir_dict = ret_dict.setdefault('queue_number', {}).setdefault(queue_number_, {}).\
+                                    setdefault('queue_name', {}).setdefault(queue_name_, {})
+                dir_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+
+class ShowFileInformationSchema(MetaParser):
+    """
+    Schema for show file information {file}
+    """
+    schema = {
+            Any(): {
+                    'file_type': str,
+            },
+    }
+
+
+class ShowFileInformation(ShowFileInformationSchema):
+    """
+    Parser for show file Information {file}
+    """
+
+    cli_command = 'show file information {file}'
+
+    def cli(self, file, output=None):
+
+        if output is None:
+            cli_cmd = self.cli_command.format(file=file)
+            output = self.device.execute(cli_cmd)
+
+        # initialze return dictionary
+        ret_dict = {}
+ 
+        #type is IOSXE_PACKAGE []
+        p1 = re.compile(r'^type\s+is\s+(?P<file_type>\S+).*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                file_system_dict = ret_dict.setdefault('file_system', {})
+                file_system_dict.update({'file_type': group['file_type']})
+
+        return ret_dict
+    
+
+# ======================================================
+# Parser for 'show time-range {time_range_name}'
+# ======================================================
+
+class ShowTimeRangeSchema(MetaParser):
+    """Schema for show time-range {time_range_name}"""
+
+    schema = {
+	    'time_range_entry': str,
+	    'status': str,
+	    'periodicity': str,
+	    'start_time': str,
+	    'end_time': str,
+	    'used_in': str,
+	}
+
+class ShowTimeRange(ShowTimeRangeSchema):
+    """Parser for show time-range {time_range_name}"""
+
+    cli_command = 'show time-range {time_range_name}'
+
+    def cli(self, time_range_name, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(time_range_name=time_range_name))
+
+	    # time-range entry: time1 (active)
+        p1 = re.compile(r"^time-range\s+entry:\s+(?P<time_range_entry>\S+)\s+\((?P<status>\w+)\)$")
+	    #    periodic daily 22:40 to 22:41
+        p2 = re.compile(r"^\s+periodic\s+(?P<periodicity>\w+)\s+(?P<start_time>\S+)\s+to\s+(?P<end_time>\S+)$")
+	    #    used in: IPv6 ACL entry
+        p3 = re.compile(r"^\s+used\s+in:\s+(?P<used_in>\S+\s+\S+\s+\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+		    # time-range entry: time1 (active)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['time_range_entry'] = dict_val['time_range_entry']
+                ret_dict['status'] = dict_val['status']
+                continue
+
+			#    periodic daily 22:40 to 22:41
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['periodicity'] = dict_val['periodicity']
+                ret_dict['start_time'] = dict_val['start_time']
+                ret_dict['end_time'] = dict_val['end_time']
+                continue
+
+			#    used in: IPv6 ACL entry
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['used_in'] = dict_val['used_in']
+                continue
+
+        return ret_dict
+    
+
+# ======================================================
+# Parser for 'show platform software fed switch active acl info db summary '
+# ======================================================
+
+class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummarySchema(MetaParser):
+    """Schema for show platform software fed switch active acl info db summary"""
+
+    schema = {
+        'acl_summary': {
+            Any(): {
+                'acl_name': str,
+                'feature': str,
+                'no_of_aces': int,
+                'protocol': str,
+                'ingress': str,
+                'egress': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummary(ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummarySchema):
+    """Parser for show platform software fed switch active acl info db summary"""
+
+    cli_command = 'show platform software fed switch active acl info db summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # CG id     ACL name                                    Feature    No of ACEs     Protocol    Ingress    Egress
+        # --------------------------------------------------------------------------------------------------------------
+        # 13        acl-2                                       Racl       4              IPv4        N          Y
+        # 17        acl-1                                       Racl       5              IPv4        Y          N
+        p1 = re.compile(r"^(?P<cg_id>\d+)\s+(?P<acl_name>\S+)\s+(?P<feature>\w+)\s+(?P<no_of_aces>\d+)\s+(?P<protocol>\S+)\s+(?P<ingress>\w+)\s+(?P<egress>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            # CG id     ACL name                                    Feature    No of ACEs     Protocol    Ingress    Egress
+            # --------------------------------------------------------------------------------------------------------------
+            # 13        acl-2                                       Racl       4              IPv4        N          Y
+            # 17        acl-1                                       Racl       5              IPv4        Y          N
+            m = p1.match(line)
+            if m:
+                group = m.groupdict() 
+                cg_id = group['cg_id']
+                int_dict = ret_dict.setdefault('acl_summary', {}).setdefault(cg_id, {})
+                int_dict['acl_name'] = group['acl_name']
+                int_dict['feature'] = group['feature']
+                int_dict['no_of_aces'] = int(group['no_of_aces'])
+                int_dict['protocol'] = group['protocol']
+                int_dict['ingress'] = group['ingress']
+                int_dict['egress'] = group['egress']
+                continue
+
+        return ret_dict
+

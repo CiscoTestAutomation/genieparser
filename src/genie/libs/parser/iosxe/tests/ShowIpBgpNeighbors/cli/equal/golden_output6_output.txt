@@ -1,0 +1,135 @@
+BGP neighbor is 10.37.176.11,  remote AS 4200006053, external link
+ Description: BGP EVPN PEERS
+ Fall over configured for session, route-map FALL-OVER-RM
+ BFD is configured. BFD peer is Down. Using BFD to detect fast fallover (multi-hop) with c-bit check-control-plane-failure.
+ Inherits from template BGP-OVERLAY-PEER-SESSION-4200006053 for session parameters
+  BGP version 4, remote router ID 10.37.176.11
+  BGP state = Established, up for 18:53:19
+  Last read 00:00:34, last write 00:00:37, hold time is 180, keepalive interval is 60 seconds
+  Last update received: 00:02:20
+  Neighbor sessions:
+    1 active, is not multisession capable (disabled)
+  Neighbor capabilities:
+    Route refresh: advertised and received(new)
+    Four-octets ASN Capability: advertised and received
+    Address family L2VPN Evpn: advertised and received
+    Graceful Restart Capability: received
+      Remote Restart timer is 120 seconds
+      Address families advertised by peer:
+        L2VPN Evpn (was not preserved)
+    Enhanced Refresh Capability: advertised and received
+    Multisession Capability: 
+    Stateful switchover support enabled: NO for session 1
+  Message statistics:
+    InQ depth is 0
+    OutQ depth is 0
+    
+                         Sent       Rcvd
+    Opens:                  1          1
+    Notifications:          0          0
+    Updates:              125        121
+    Keepalives:          1216       1207
+    Route Refresh:          0          0
+    Total:               1344       1331
+  Do log neighbor state changes (via neighbor configuration)
+  Default minimum time between advertisement runs is 30 seconds
+
+ For address family: L2VPN E-VPN
+  Session: 10.37.176.11
+  BGP table version 320, neighbor version 320/0
+  Output queue size : 0
+  Index 1, Advertise bit 0
+  1 update-group member
+  Inherits from template BGP-OVERLAY-PEER-POLICY-4200006053
+  Inbound soft reconfiguration allowed
+  My AS number is allowed for 2 number of times
+  Community attribute sent to this neighbor
+  Extended-community attribute sent to this neighbor
+  Slow-peer detection is disabled
+  Slow-peer split-update-group dynamic is disabled
+  Prefers VxLAN if VTEP is UP else MPLS 
+                                 Sent       Rcvd
+  Prefix activity:               ----       ----
+    Prefixes Current:              71         57 (Consumes 15648 bytes)
+    Prefixes Total:               143        115
+    Implicit Withdraw:             14          0
+    Explicit Withdraw:             58         58
+    Used as bestpath:             n/a         24
+    Used as multipath:            n/a          0
+    Used as secondary:            n/a          0
+
+                                   Outbound    Inbound
+  Local Policy Denied Prefixes:    --------    -------
+    MP_REACH NEXT_HOP is us:                     n/a         10
+    AF Permit Check:                     61        n/a
+    Total:                               61         10
+  Number of NLRIs in the update sent: max 4, min 0
+  Current session network count peaked at 57 entries at 10:15:05 Jun 19 2023 UTC (18:46:36.659 ago)
+  Highest network count observed at 57 entries at 10:15:05 Jun 19 2023 UTC (18:46:36.659 ago)
+  Last detected as dynamic slow peer: never
+  Dynamic slow peer recovered: never
+  Refresh Epoch: 2
+  Last Sent Refresh Start-of-rib: 18:53:19
+  Last Sent Refresh End-of-rib: 18:52:54
+  Refresh-Out took 25 seconds
+  Last Received Refresh Start-of-rib: 18:53:19
+  Last Received Refresh End-of-rib: 18:53:19
+  Refresh-In took 0 seconds
+				       Sent	  Rcvd
+	Refresh activity:	       ----	  ----
+	  Refresh Start-of-RIB          1          1
+	  Refresh End-of-RIB            1          1
+
+  Address tracking is enabled, the RIB does have a route to 10.37.176.11
+  Route to peer address reachability Up: 2; Down: 0
+    Last notification 18:53:25
+  Connections established 1; dropped 0
+  Last reset never
+  External BGP neighbor may be up to 4 hops away.
+  External BGP neighbor NOT configured for connected checks (multi-hop disable-connected-check)
+  Interface associated: (none) (peering address NOT in same link)
+  Transport(tcp) path-mtu-discovery is enabled
+  Graceful-Restart is disabled
+  SSO is disabled
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0            
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 4
+Local host: 10.37.176.10, Local port: 49807
+Foreign host: 10.37.176.11, Foreign port: 179
+Connection tableid (VRF): 0
+Maximum output segment queue size: 50
+
+Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+
+Event Timers (current time is 0x4110577):
+Timer          Starts    Wakeups            Next
+Retrans          1310          0             0x0
+TimeWait            0          0             0x0
+AckHold          1299       1208             0x0
+SendWnd             0          0             0x0
+KeepAlive           0          0             0x0
+GiveUp              0          0             0x0
+PmtuAger        67038      67037       0x41107F0
+DeadWait            0          0             0x0
+Linger              0          0             0x0
+ProcessQ            0          0             0x0
+
+iss:   31738988  snduna:   31778372  sndnxt:   31778372
+irs: 3387932665  rcvnxt: 3387971105
+
+sndwnd:  16152  scale:      0  maxrcvwnd:  16384
+rcvwnd:  15947  scale:      0  delrcvwnd:    437
+
+SRTT: 1000 ms, RTTO: 1003 ms, RTV: 3 ms, KRTT: 0 ms
+minRTT: 0 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+uptime: 67999934 ms, Sent idletime: 34588 ms, Receive idletime: 34788 ms 
+Status Flags: active open
+Option Flags: nagle, path mtu capable
+IP Precedence value : 6
+
+Datagrams (max data segment is 1460 bytes):
+Rcvd: 2599 (out of order: 0), with data: 1302, total data bytes: 38439
+Sent: 2551 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 1312, total data bytes: 39383
+
+ Packets received in fast path: 0, fast processed: 0, slow path: 0
+ fast lock acquisition failures: 0, slow path: 0
+TCP Semaphore      0x7F30D2340458  FREE 

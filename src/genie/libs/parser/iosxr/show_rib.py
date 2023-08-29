@@ -2,6 +2,7 @@
     supports commands:
         * show rib tables
         * show rib tables summary
+        * show rib ipv6 iid all
 """
 
 # Python
@@ -198,4 +199,58 @@ class ShowRibTablesSummary(ShowRibTablesSummarySchema):
         
         if result_dict == {'rib_table': {}}:
             result_dict = dict()
-        return result_dict           
+        return result_dict
+
+# =============================================
+# Parser for 'show rib ipv6 iid all'
+# =============================================
+
+class ShowRibIpv6IidSchema(MetaParser):
+    schema = {
+        'prefixes': {
+            Any(): {
+                'iid': str,
+                'prefix': str,
+                'context': str,
+                'owner': str,
+                'state': str,
+                'read_write': str
+            }
+        }
+    }
+
+class ShowRibIpv6Iid(ShowRibIpv6IidSchema):
+    """ Parser for show rib ipv6 iid all"""
+    
+    cli_command = 'show rib ipv6 iid all'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+
+        # 0xa000001   ::ffff:10.0.0.1       [EVPN-VPWS:evi=1001:eth_tag=10001:type=0]          l2vpn_iid          InUse      Y 
+        # 0xa000002   ::ffff:10.0.0.2       [EVPN-ELAN:evi=1002:esi=0194.aef0.f99c.dd00.2400:nh=:::eth_tag=0:type=0] l2vpn_iid          InUse      Y
+        p1 = re.compile(r'^(?P<iid>\w+)\s+(?P<prefix>[\w:.]+)\s+(?P<context>[\w\[:.=\]-]+)\s+(?P<owner>[\w_]+)\s+(?P<state>\S+)\s+(?P<read_write>[Y|N])$')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 0xa000001   ::ffff:10.0.0.1       [EVPN-VPWS:evi=1001:eth_tag=10001:type=0]          l2vpn_iid          InUse      Y 
+            # 0xa000002   ::ffff:10.0.0.2       [EVPN-ELAN:evi=1002:esi=0194.aef0.f99c.dd00.2400:nh=:::eth_tag=0:type=0] l2vpn_iid          InUse      Y
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                rib_dict = ret_dict.setdefault('prefixes', {}). \
+                                    setdefault(group['prefix'], {})
+                rib_dict['iid'] = group['iid']
+                rib_dict['prefix'] = group['prefix']
+                rib_dict['context'] = group['context']
+                rib_dict['owner'] = group['owner']
+                rib_dict['state'] = group['state']
+                rib_dict['read_write'] = group['read_write']
+                continue
+
+        return ret_dict

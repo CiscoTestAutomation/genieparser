@@ -154,7 +154,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Any(): {
                                             Any(): {
                                                 Optional('packets_marked'): int,
-                                                Optional('marker_statistics'): str,  
+                                                Optional('marker_statistics'): str,
                                             },
                                         },
                                     },
@@ -453,7 +453,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                                             Any(): {
                                                                                 Optional('packets_marked'): int,
                                                                                 Optional('marker_statistics'): str,
-                                                                            }, 
+                                                                            },
                                                                         },
                                                                     },
                                                                     Optional('police'): {
@@ -545,7 +545,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                 },
                                             },
                                         },
-                                    },   
+                                    },
                                 },
                             },
                             Optional('queue_stats_for_all_priority_classes'): {
@@ -615,11 +615,11 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p1 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*))$')
-        
+                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*|Port-channel\d+))$')
+
         # GigabitEthernet0/1/5 : Service Group 1
         p1_0 = re.compile(r'^(?P<top_level>(Giga.*)): +Service Group +(?P<service_group>(\d+))$')
-        
+
         # Port-channel1: Service Group 1
         p1_1 = re.compile(r'^(?P<top_level>([Pp]ort.*)): +Service Group +(?P<service_group>(\d+))$')
 
@@ -629,7 +629,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p2 = re.compile(r'^[Ss]ervice-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+).*)')
 
         # service-policy : child
-        p2_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>(.*))$')    
+        p2_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>(.*))$')
 
         # Class-map: Ping_Class (match-all)
         # Class-map:TEST (match-all)
@@ -746,7 +746,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # qos-group 20
         # dscp dscp table t1
         # traffic-class dscp table t1
-        p14_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp|traffic-class)) +(?P<value>(\w+|dscp table \w+))$')
+        # cos cos table t1
+        # traffic-class cos table t1
+        p14_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp|cos|traffic-class)) +(?P<value>(\w+|(dscp table|cos table) \w+))$')
 
         # Marker statistics: Disabled
         p14_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
@@ -829,7 +831,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         #   1           328/78720          38/9120            0/0      22000    40000  1/10
         #   2             0/0               0/0               0/0      24000    40000  1/10
         #   3             0/0               0/0               0/0      26000    40000  1/10
-        #   4             0/0               0/0               0/0      28000    40000  1/10     
+        #   4             0/0               0/0               0/0      28000    40000  1/10
         # Class         Random             Tail            Minimum    Maximum   Mark   Output
         #   0             0                 0                 0        0        1/10   0
         p27 = re.compile(r'^(?P<class>(\w+)) +(?P<value1_pkts>(\d+))/+(?P<value1_bytes>(\d+)) +'
@@ -931,12 +933,12 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             line = line.strip()
             if not line:
                 continue
-            
-            # Control Plane 
+
+            # Control Plane
             # GigabitEthernet9/5: Service Group 1
             m = p1_0.match(line) or p1.match(line)
             if m:
-                
+
                 top_level = m.groupdict()['top_level']
                 # check if previous dict on stack is more deeply nested than the current item
                 while dict_stack[-1][0] >= len_white:
@@ -975,7 +977,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
                 service_policy = m.groupdict()['service_policy']
                 policy_name = m.groupdict()['policy_name']
-                
+
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
 
@@ -992,25 +994,25 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 child_policy = m.groupdict()['policy_name']
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
-                
+
                 class_map_dict = dict_stack[-1][1]
                 child_dict = class_map_dict.setdefault('child_policy_name', {}).setdefault(child_policy, {})
                 dict_stack.append((len_white, child_dict,))
                 continue
-            
+
             # Class-map: Ping_Class (match-all)
             # Class-map:TEST (match-all)
             # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
             m = p3.match(line)
             if m:
-                
+
                 match_list = []
                 class_line_type = None
                 queue_stats = 0
                 class_map = m.groupdict()['class_map']
                 class_match = m.groupdict()['match_all'].replace('(', '').replace(')', '')
 
-                
+
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
 
@@ -1019,7 +1021,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 dict_stack.append((len_white, class_dict,))
                 class_dict['match_evaluation'] = class_match
                 continue
-            
+
             # queue stats for all priority classes:
             m = p3_1.match(line)
             if m:
@@ -1048,7 +1050,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # 8 packets, 800 bytes
             m = p4.match(line)
             if m:
-                
+
                 pkts = m.groupdict()['packets']
                 byte = m.groupdict()['bytes']
                 class_dict.setdefault('packets', int(pkts))
@@ -1109,7 +1111,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 match_list.append(m.groupdict()['match'])
                 class_dict.setdefault('match', match_list)
                 continue
-            
+
             # police:
             m = p7.match(line)
             if m:
@@ -1143,7 +1145,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 police_dict['police_limit'] = int(m.groupdict()['police_limit'])
                 police_dict['extended_limit'] = int(m.groupdict()['extended_limit'])
                 continue
-            
+
             # cir 10000000 bps, be 312500 bytes
             m = p8_2.match(line)
             if m:
@@ -1164,7 +1166,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 police_dict['pir_bps'] = int(m.groupdict()['pir_bps'])
                 police_dict['pir_bc_bytes'] = int(m.groupdict()['pir_bc_bytes'])
                 continue
-            
+
             # cir 10000000000 bps, bc 30000000 bytes, be 60000000 bytes
             m = p8_5.match(line)
             if m:
@@ -1232,7 +1234,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # exceeded 0 packets, 0 bytes; actions:
             m = p10.match(line)
             if m:
-            
+
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
 
@@ -1347,13 +1349,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
                 continue
-            
+
             # mpls experimental imposition 1
             m = p14_4.match(line)
             if m:
                 qos_dict['mpls_experimental_imposition'] = int(m.groupdict()['value'])
                 continue
-            
+
             # drop
             # transmit
             # start
@@ -1727,7 +1729,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 afd_wred_dict['total_drops_packets'] = int(m.groupdict()['total_drops_packets'])
                 continue
-            
+
             # (total drops) 0
             m = p47.match(line)
             if m:
@@ -1736,7 +1738,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 else:
                     class_dict['total_drops'] = int(m.groupdict()['total_drops'])
                 continue
-            
+
             # (bytes output) 0
             m = p48.match(line)
             if m:
@@ -1750,7 +1752,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             m = p49.match(line)
             if m:
                 class_dict['overhead_accounting'] = m.groupdict()['enabled']
-            
+
             # Fair-queue: per-flow queue limit 128 packets
             m = p50.match(line)
             if m:
@@ -1764,7 +1766,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 #   * 'show policy-map control-plane'
 # ===================================
 class ShowPolicyMapControlPlane(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map control-plane'
     '''
@@ -1791,7 +1793,7 @@ class ShowPolicyMapControlPlane(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeS
 #   * 'show policy-map interface'
 # ===========================================
 class ShowPolicyMapInterface(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map interface {interface}'
         * 'show policy-map interface'
@@ -1824,7 +1826,7 @@ class ShowPolicyMapInterface(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSche
 #   * 'show policy-map interface {interface} input'
 # =====================================================================
 class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map interface {interface} input class {class_name}'
         * 'show policy-map interface {interface} input'
@@ -1856,7 +1858,7 @@ class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
 #   * 'show policy-map interface {interface} output'
 # =====================================================================
 class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map interface {interface} output class {class_name}'
         * 'show policy-map interface {interface} output'
@@ -1888,7 +1890,7 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
 #   * 'show policy-map interface class {class_name}'
 # ================================================================
 class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map interface class {class_name}'
     '''
@@ -1900,7 +1902,7 @@ class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
 
         if output is None:
             # Build command
-            
+
             cmd = self.cli_command[0].format(class_name=class_name)
             # Execute command
             show_output = self.device.execute(cmd)
@@ -1947,7 +1949,7 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
         * 'show policy-map control-plane | section {class_map}'
     '''
 
-    schema = {               
+    schema = {
         'class_map': {
             Any(): {
                 'match_evaluation': str,
@@ -1963,7 +1965,7 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
                     Any(): {
                         Any(): {
                             Optional('packets_marked'): int,
-                            Optional('marker_statistics'): str,  
+                            Optional('marker_statistics'): str,
                         },
                     },
                 },
@@ -2000,7 +2002,7 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
                     },
                 },
             },
-        }, 
+        },
     }
 
 # =====================================================================
@@ -2011,7 +2013,7 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
     ''' Super Parser for
         * 'show policy-map control-plane | section {class_map}'
     '''
-    
+
     BOOL_ACTION_LIST = ['drop', 'transmit', 'set_clp_transmit']
 
     cli_command = 'show policy-map control-plane | section {class_map}'
@@ -2101,7 +2103,7 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # Class-map: Ping_Class (match-all)
             # Class-map:TEST (match-all)
             # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
@@ -2148,7 +2150,7 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
                 match_list.append(m.groupdict()['match'])
                 class_dict.setdefault('match', match_list)
                 continue
-            
+
             # police:
             m = p5.match(line)
             if m:
@@ -2177,14 +2179,14 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
                 police_dict['police_limit'] = int(m.groupdict()['police_limit'])
                 police_dict['extended_limit'] = int(m.groupdict()['extended_limit'])
                 continue
-            
+
             # cir 10000000 bps, be 312500 bytes
             m = p6_2.match(line)
             if m:
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
                 continue
-            
+
             # conformed 8 packets, 800 bytes; actions:
             # conformed 15 packets, 6210 bytes; action:transmit
             # conformed 800 bytes; actions:
@@ -2265,7 +2267,7 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
             if m:
                 qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
-            
+
             # drop
             # transmit
             # start
@@ -2383,7 +2385,7 @@ class ShowPolicyMapSchema(MetaParser):
 #   * 'show policy-map {name}'
 # ===================================
 class ShowPolicyMap(ShowPolicyMapSchema):
-    
+
     ''' Parser for
         * "show policy-map"
         * "show policy-map {name}"
@@ -2420,7 +2422,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Policy Map policy_4-6-3~6
         # Policy-map egress policy
         p1 = re.compile(r'^Policy(\-map| Map) +(?P<policy_map>([\S\s]+))$')
-        
+
         # Class class-default
         # Class class c1
         # Class class_4-6-3
@@ -2932,16 +2934,16 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
         return ret_dict
-        
+
 
 #================================================================================
 #Schema for :
-#   * "show policy-map type control subscriber binding <policymap name>" 
+#   * "show policy-map type control subscriber binding <policymap name>"
 #================================================================================
 class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
     '''Schema for :
-    * "show policy-map type control subscriber binding <policymap name>" '''  
-    
+    * "show policy-map type control subscriber binding <policymap name>" '''
+
     schema = {
         "policy_map_name" : str,
         "interfaces_list" : list,
@@ -2950,19 +2952,19 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
 
 #=================================================================================
 #Parser for:
-#   * "show policy-map type control subscriber binding <policymap name>" 
+#   * "show policy-map type control subscriber binding <policymap name>"
 # ================================================================================
 class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
     '''Parser for :
     *"show policy-map type control subscriber binding <policymap name>" '''
-      
-    cli_command = ['show policy-map type control subscriber binding {policy_map_name}']           
 
-    def cli(self,policy_map_name="",output=None):      
+    cli_command = ['show policy-map type control subscriber binding {policy_map_name}']
+
+    def cli(self,policy_map_name="",output=None):
         if output is None:
             cmd = self.cli_command[0].format(policy_map_name=policy_map_name)
-            output = self.device.execute(cmd)          
-        
+            output = self.device.execute(cmd)
+
         ret_dict = {}
 
         #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
@@ -2973,7 +2975,7 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeContr
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # PMAP_DefaultWiredDot1xClosedAuth_1X_MAB         Gi1/0/1
             # dot1x_group                                     Gi1/0/1
             m = p1.match(line)
@@ -2982,7 +2984,7 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeContr
                 ret_dict['policy_map_name'] = group['pname']
                 ret_dict.setdefault('interfaces_list', []).append(group['int'])
                 continue
-        
+
             # Gi1/1/1
             m = p2.match(line)
             if m:
@@ -2993,7 +2995,7 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeContr
 
 
 #=====================================================
-# Schema for 
+# Schema for
 #         show policy-map {} class {}
 #====================================================
 
@@ -3074,7 +3076,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
     ''' Super Parser for
         * 'show policy-map type queueing interface {interface} output class {class_name}',
         * 'show policy-map type queueing interface {interface} output',
-    '''    
+    '''
 
     def cli(self, interface='', class_name='', output=None):
 
@@ -3131,13 +3133,13 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 
         # queue limit 62500 bytes
         p8 = re.compile(r'^queue +limit +(?P<queue_limit_bytes>(\d+)) bytes$')
-        
+
         # (total drops) 0
         p9 = re.compile(r'^\(total +drops\) +(?P<total_drops>(\d+))$')
 
         # (bytes output) 0
         p10 = re.compile(r'^\(bytes +output\) +(?P<bytes_output>(\d+))$')
-        
+
         # shape (average) cir 474656, bc 1899, be 1899
         p11 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
                             'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
@@ -3154,7 +3156,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 
         # Priority Level: 1
         p15 = re.compile(r'^Priority +Level: +(?P<priority_level>(\d+))$')
-        
+
         # Priority: Strict, b/w exceed drops: 0
         p16 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
@@ -3163,7 +3165,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # Control Plane 
+            # Control Plane
             m = p0.match(line)
             if m:
                 top_level = m.groupdict()['top_level']
@@ -3183,7 +3185,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
             # Service-policy output: Control_Plane_Out
             m = p1.match(line)
             if m:
-                 
+
                 top_level_dict = ret_dict.setdefault(interface, {})
                 group = m.groupdict()
                 if group['service_policy'] == '':
@@ -3272,7 +3274,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 if queue_stats == 1:
                     queueing_val = True
-                    
+
                 else:
                     class_map_dict['queueing'] = True
                 continue
@@ -3302,19 +3304,19 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 common_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
                 continue
-                
+
             # (total drops) 0
             m = p9.match(line)
             if m:
                 common_dict['total_drops'] = int(m.groupdict()['total_drops'])
                 continue
-            
+
             # (bytes output) 0
             m = p10.match(line)
             if m:
                 common_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
                 continue
-                
+
             # shape (average) cir 474656, bc 1899, be 1899
             m = p11.match(line)
             if m:
@@ -3359,7 +3361,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
                 pri_dict['type'] = m.groupdict()['type']
                 pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
                 continue
-      
+
         return ret_dict
 
 
@@ -3370,7 +3372,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 #   * 'show policy-map type queueing interface {interface} output'
 # =====================================================================
 class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperParser, ShowPolicyMapTypeSchema):
-    
+
     ''' Parser for:
         * 'show policy-map type queueing interface {interface} output class {class_name}'
         * 'show policy-map type queueing interface {interface} output'
@@ -3378,7 +3380,7 @@ class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperPar
     cli_command = ['show policy-map type queueing interface {interface} output class {class_name}',
                    'show policy-map type queueing interface {interface} output'
                    ]
-    
+
     def cli(self, interface, class_name='', output=None):
 
         if output is None:
@@ -3390,18 +3392,18 @@ class ShowPolicyMapTypeQueueingInterfaceOutput(ShowPolicyMapTypeQueueingSuperPar
 
             # Execute command
             output = self.device.execute(cmd)
-        
-        # Call super      
+
+        # Call super
         return super().cli(output=output, interface=interface, class_name=class_name)
 
 #================================================================================
 #Schema for :
-#   * "show policy-map type queueing {policy_name}" 
+#   * "show policy-map type queueing {policy_name}"
 #================================================================================
 class ShowPolicyMapTypeQueueingPolicynameSchema(MetaParser) :
     '''Schema for :
-    * "show policy-map type queueing {policy_name}" '''  
-    
+    * "show policy-map type queueing {policy_name}" '''
+
     schema = {
         'policy_name': {
             Any(): {
@@ -3430,15 +3432,15 @@ class ShowPolicyMapTypeQueueingPolicynameSchema(MetaParser) :
 
 #=================================================================================
 #Parser for:
-#   * "show policy-map type queueing {policy_name}" 
+#   * "show policy-map type queueing {policy_name}"
 # ================================================================================
 class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSchema) :
     '''Parser for :
     *"show policy-map type queueing {policy_name}" '''
-      
-    cli_command = 'show policy-map type queueing {policy_name}'        
 
-    def cli(self,policy_name="",output=None):      
+    cli_command = 'show policy-map type queueing {policy_name}'
+
+    def cli(self,policy_name="",output=None):
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
             # Execute command
@@ -3454,7 +3456,7 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
 
         # Average Rate Traffic Shaping
         p3 = re.compile(r'^Average +Rate +Traffic +Shaping$')
-   
+
         # cir 10%
         p4 = re.compile(r'^cir +(?P<cir_percent>(\d+))%$')
 
@@ -3487,19 +3489,19 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
             if m:
                 key_chain_dict = ret_dict.setdefault('policy_name', {}).setdefault(m.groupdict()['policy_name'], {})
                 continue
-        
+
             # Class class-default
             m = p2.match(line)
             if m:
                 class_map_dict = key_chain_dict.setdefault('class_map', {}).setdefault(m.groupdict()['class_map'], {})
                 continue
 
-            # Average Rate Traffic Shaping  
+            # Average Rate Traffic Shaping
             m = p3.match(line)
             if m:
                 class_map_dict['average_rate_traffic_shaping'] = True
                 continue
-        
+
             # cir 10%
             m = p4.match(line)
             if m:
@@ -3517,7 +3519,7 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
             if m:
                 class_map_dict['queue_limit_bytes']=int(m.groupdict()['queue_limit_bytes'])
                 continue
-        
+
             # percent-based wred, exponential weight 1
             m = p6.match(line)
             if m:
@@ -3536,7 +3538,7 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
                 class_val['max_threshold']=m.groupdict()['max_threshold']
                 class_val['mark_probability']=m.groupdict()['mark_probability']
                 continue
-        
+
             # bandwidth remaining ratio 10
             m = p8.match(line)
             if m:

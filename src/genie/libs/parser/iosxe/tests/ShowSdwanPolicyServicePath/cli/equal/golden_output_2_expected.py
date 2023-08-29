@@ -1,0 +1,35 @@
+expected_output = {
+    "number_of_paths": 3,
+    "paths": {
+        1: {
+            "next_hop_type": "IPsec",
+            "source": "40.185.4.1",
+            "source_port": 12366,
+            "destination": "40.185.20.1",
+            "destination_port": 12406,
+            "local_color": "blue",
+            "remote_color": "blue",
+            "remote_system_ip": "6.0.0.2",
+        },
+        2: {
+            "next_hop_type": "IPsec",
+            "source": "4180::4:4720:cfcc",
+            "source_port": 12366,
+            "destination": "4180::20:0:1",
+            "destination_port": 12346,
+            "local_color": "biz-internet",
+            "remote_color": "biz-internet",
+            "remote_system_ip": "6.0.0.2",
+        },
+        3: {
+            "next_hop_type": "IPsec",
+            "source": "40.187.4.1",
+            "source_port": 12346,
+            "destination": "40.181.20.1",
+            "destination_port": 12366,
+            "local_color": "gold",
+            "remote_color": "gold",
+            "remote_system_ip": "6.0.0.2",
+        },
+    },
+}

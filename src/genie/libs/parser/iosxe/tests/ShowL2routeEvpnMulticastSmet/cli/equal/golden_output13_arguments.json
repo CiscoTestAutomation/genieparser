@@ -1,0 +1,7 @@
+{
+    "evi": "101",
+    "group": "239.1.101.1",    
+    "locality": "local",
+    "interface": "Ethernet 0/0",
+    "serviceInstance": "1"
+}

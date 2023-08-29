@@ -1,0 +1,4 @@
+CG id     ACL name                                    Feature    No of ACEs     Protocol    Ingress    Egress
+--------------------------------------------------------------------------------------------------------------
+13        acl-2                                       Racl       4              IPv4        N          Y
+17        acl-1                                       Racl       5              IPv4        Y          N

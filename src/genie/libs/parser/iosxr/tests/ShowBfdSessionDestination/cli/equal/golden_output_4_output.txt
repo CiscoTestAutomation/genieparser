@@ -1,0 +1,11 @@
+show bfd session destination 1.1.1.1
+Wed Dec 21 11:36:36.617 UTC
+Interface           Dest Addr           Local det time(int*mult)      State     
+                                    Echo             Async   H/W   NPU     
+------------------- --------------- ---------------- ---------------- ----------
+Gi0/0/0/6           1.1.1.1         0s(0s*0)         1200ms(300ms*4)  UP        
+                                                             No    n/a            
+Gi0/0/0/10          1.1.1.1         0s(0s*0)         1200ms(300ms*4)  UP        
+                                                             No    n/a            
+BE10                1.1.1.1         n/a              n/a              UP        
+                                                             No    n/a

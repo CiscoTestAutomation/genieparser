@@ -1,0 +1,6 @@
+show ip admission cache
+Authentication Proxy Cache
+Legend:
+  ^ - Sleeping Client
+Total Sessions: 1 Init Sessions: 0
+ Client Mac 000c.2911.69b9 Client IP 101.1.0.2 IPv6 ::, State AUTHC_FAIL, Method Webauth, VRF Global

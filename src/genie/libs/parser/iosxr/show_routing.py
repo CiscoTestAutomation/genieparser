@@ -1214,8 +1214,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
-        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))?, '
-                         r'+via +(?P<interface>\S+)$')
+        # ::ffff:50.1.1.1, from ::ffff:50.1.1.8
+        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))(?:, '
+                         r'+via +(?P<interface>\S+))?$')
 
         # R2_xrv#show route ipv6
         p13 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
@@ -1455,6 +1456,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
             # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+            # ::ffff:50.1.1.1, from ::ffff:50.1.1.8
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1467,7 +1469,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     setdefault('next_hop_list', {}). \
                     setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
-                outgoing_interface_dict.update({'outgoing_interface': interface})
+                if interface:
+                    outgoing_interface_dict.update({'outgoing_interface': interface})
                 if _from:
                     outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})

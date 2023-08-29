@@ -4495,7 +4495,7 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
     def cli(self, neighbor='', address_family='', output=None):
 
         # Restricted address families
-        restricted_list = ['ipv4 unicast', 'ipv6 unicast']
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast','l2vpn evpn']
 
         # Init vars
         ret_dict = {}
@@ -4700,7 +4700,7 @@ class ShowIpBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
     def cli(self, neighbor='', address_family='', vrf='', output=None):
 
         # Restricted address families
-        restricted_list = ['ipv4 unicast', 'ipv6 unicast', 'link-state link-state']
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast', 'link-state link-state','l2vpn evpn']
 
         # Init vars
         ret_dict = {}
