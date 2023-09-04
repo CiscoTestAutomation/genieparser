@@ -184,5 +184,4 @@ class ShowRunIpRoute(ShowRunIpRouteSchema):
             except UnboundLocalError as e:
                 logger.info(f"{e} on static route: {line}")
                 continue
-        print(ip_routes_dict)
         return ip_routes_dict
