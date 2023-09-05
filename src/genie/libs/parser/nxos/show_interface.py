@@ -2837,6 +2837,14 @@ class ShowInterfaceBriefSchema(MetaParser):
                     Optional('reason'): str,
                 },
             },
+            Optional('tunnel'): {
+                Any(): {
+                    'status': str,
+                    'ip_address': str,
+                    'encap_type': str,
+                    'mtu': int,
+                },
+            },
         }
     }
 
@@ -2921,6 +2929,15 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # nve1           up     none            9216
         p12 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+) +(?P<status>[a-z]+)'
                          r' +(?P<reason>[a-zA-Z\s\-]+) +(?P<mtu>[0-9]+)$')
+
+        # Interface                Status     IP Address                                   Encap type       MTU
+        p13 = re.compile(
+            r'^Interface\s+Status\s+IP\sAddress\s+Encap\stype\s+MTU$')
+
+        # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+        p14 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+)'
+                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>\S+)'
+                         r' +(?P<encap_type>\S+) +(?P<mtu>[0-9]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -3039,6 +3056,26 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['status'] = group['status']
                 intf_dict['reason'] = group['reason'].strip()
                 intf_dict['mtu'] = group['mtu']
+                continue
+
+            # Interface                Status     IP Address                                   Encap type       MTU
+            m = p13.match(line)
+            if m:
+                tunnel_dict = parsed_dict.setdefault('interface', {}). \
+                    setdefault('tunnel', {})
+                continue
+
+            # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = tunnel_dict. \
+                    setdefault(Common.convert_intf_name(
+                        group['interface']), {})
+                intf_dict['status'] = group['status']
+                intf_dict['ip_address'] = group['ip_address']
+                intf_dict['encap_type'] = group['encap_type']
+                intf_dict['mtu'] = int(group['mtu'])
                 continue
 
         return parsed_dict
@@ -3620,7 +3657,7 @@ class ShowInterfaceStatusSchema(MetaParser):
         'interfaces': {
             Any(): {
                 Optional('name'): str,
-                'status': str,
+                Optional('status'): str,
                 Optional('vlan'): str,
                 Optional('duplex_code'): str,
                 Optional('port_speed'): str,
@@ -3669,21 +3706,11 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
         # Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
-        p1 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>(\S+))?\s'
-                        r'+(?P<status>(\S+))?\s+(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+))\s'
-                        r'+(?P<port_speed>(\S+))(\s*(?P<type>(\S*)))?$')
-
+        p1 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<name>(\w+\s\w+\s\d|[\w-]+|[\w\s\(\)\[\]_,]+))\s+(?P<status>(\w+\s\d|\w+))\s+(?P<vlan>(\w+))\s+(?P<duplex_code>(\w+))\s+(?P<port_speed>([\w-]+))(\s*(?P<type>([\w-]+)))?$')
+        
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        p1_1 = re.compile(r'(?P<interface>(\S+))\s+'
-                          r'(?P<name>([\S\s]+))(?<! )\s+'
-                          r'(?P<status>(\S+))\s+'
-                          r'(?P<vlan>(\S+))\s+'
-                          r'(?P<duplex_code>([a-z]+))\s+'
-                          r'(?P<port_speed>(\S+))\s*'
-                          r'(?P<type>([\S\s]*))$')
-
+        
         # Tunnel7       --                  up        no-reason 
         p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
@@ -3694,34 +3721,39 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             if m:
                 flag = True
                 continue
-
-            m = p1.match(line) or p1_1.match(line)
-            if m and m.groupdict()['name'] != 'Name' and not flag:
+            m = p1.match(line) 
+            if m :
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-
-                keys = ['name', 'status', 'vlan', 'duplex_code', 'port_speed', 'type']
-
-                for k in keys:
-                    if group[k] and group[k] != '--':
-                        intf_dict[k] = group[k]
+                if group['name'] is not None:
+                    intf_dict['name'] =(group['name'])
+                if group['status'] is not None:
+                    intf_dict['status'] =(group['status'])
+                if group['vlan'] is not None:
+                    intf_dict['vlan'] = (group['vlan'])  
+                if group['duplex_code'] is not None:
+                    intf_dict['duplex_code'] =(group['duplex_code'])  
+                if group['port_speed'] is not None:
+                    intf_dict['port_speed'] =(group['port_speed'])
+                if group['type'] is not None:
+                    intf_dict['type'] =(group['type'])                   
                 continue
-
             m = p2.match(line)
             if m and flag:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-
-                keys = ['name', 'status', 'reason']
-
-                for k in keys:
-                    if group[k] and group[k] != '--':
-                        intf_dict[k] = group[k]
+                if group['name'] is not None:
+                    intf_dict['name'] =(group['name'])
+                if group['status'] is not None:
+                    intf_dict['status'] =(group['status'])
+                if group['reason'] is not None:
+                    intf_dict['reason'] =(group['reason'])
                 continue
 
         return result_dict
+
 
 
 # ========================================

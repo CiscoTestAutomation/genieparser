@@ -684,22 +684,26 @@ class ShowBfdSessionDestinationSchema(MetaParser):
     schema = {
         'dest':{
             Any():{
-                'interface': str,
-                Optional('session'):{
-                    'state': str,
-                },
-                Optional('hardware'): str,
-                Optional('npu'): str,
-                'timer_vals':{
-                    'async_detection_time': str,
-                    'async_detection_time_ms': int,
-                    Optional('async_detection_interval_ms'): int,
-                    Optional('async_detection_multiplier'): int,
-                    'echo_detection_time': str,
-                    'echo_detection_time_ms': int,
-                    Optional('echo_detection_interval_ms'): int,
-                    Optional('echo_detection_multiplier'): int,
-                },
+                'interfaces':{
+                    Any():{
+                        'interface': str,
+                        Optional('session'):{
+                            'state': str,
+                        },
+                        Optional('hardware'): str,
+                        Optional('npu'): str,
+                        'timer_vals':{
+                            'async_detection_time': str,
+                            Optional('async_detection_time_ms'): int,
+                            Optional('async_detection_interval_ms'): int,
+                            Optional('async_detection_multiplier'): int,
+                            'echo_detection_time': str,
+                            Optional('echo_detection_time_ms'): int,
+                            Optional('echo_detection_interval_ms'): int,
+                            Optional('echo_detection_multiplier'): int,
+                        },
+                    }
+                }
             }       
         }
     }
@@ -738,6 +742,12 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
             r'(?P<async_detection_time>(?P<async_time>\d+) *(?P<async_time_unit>\w+)(\((?P<async_detection_interval_ms>\d+)[\w ]+\*(?P<async_detection_multiplier>\d+)\))?) +'
             r'(?P<state>\S+)$')
 
+        # No                  n/a             n/a              n/a              UP
+        p3 = re.compile(r'(?P<hardware>(No|Yes))\s+(?P<npu>[n\/a]+)\s+(?P<echo_detection_time>[n\/a]+)\s+(?P<async_detection_time>[n\/a]+)\s+(?P<state>\S+)')
+
+        # BE10                1.1.1.1         n/a              n/a              DOWN
+        p4 = re.compile(r'^(?P<interface>\S+)\s+(?P<dest>\S+)\s+(?P<echo_detection_time>[n\/a]+)\s+(?P<async_detection_time>[n\/a]+)\s+(?P<state>\S+)$')
+
 
         for line in out.splitlines():
             line = line.strip()
@@ -751,13 +761,15 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                 if intf and ip_address:
                     dest_dict = ret_dict.setdefault('dest', {}). \
                         setdefault(ip_address, {})
-                    dest_dict.update({'interface': intf})
+                    int_dict = dest_dict.setdefault('interfaces', {}). \
+                        setdefault(intf, {})
+                    int_dict.update({'interface': intf})
 
                 hardware = group.get('hardware', None)
                 npu = group.get('npu', None)
                 if hardware and npu:
-                    dest_dict.update({'hardware': hardware})
-                    dest_dict.update({'npu': npu})
+                    int_dict.update({'hardware': hardware})
+                    int_dict.update({'npu': npu})
 
                 continue
             
@@ -779,15 +791,17 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                 if intf and ip_address:
                     dest_dict = ret_dict.setdefault('dest', {}). \
                         setdefault(ip_address, {})
-                    dest_dict.update({'interface': intf})
-                
+                    int_dict = dest_dict.setdefault('interfaces', {}). \
+                        setdefault(intf, {})
+                    int_dict.update({'interface': intf})
+
                 hardware = group.get('hardware', None)
                 npu = group.get('npu', None)
                 if hardware and npu:
-                    dest_dict.update({'hardware': hardware})
-                    dest_dict.update({'npu': npu})
+                    int_dict.update({'hardware': hardware})
+                    int_dict.update({'npu': npu})
 
-                timer_vals_dict = dest_dict.setdefault('timer_vals', {})
+                timer_vals_dict = int_dict.setdefault('timer_vals', {})
                 timer_vals_dict.update({'echo_detection_time': echo_detection_time})
                 if echo_detection_interval_ms:
                     timer_vals_dict.update({'echo_detection_interval_ms': int(echo_detection_interval_ms)})
@@ -800,7 +814,7 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                 if async_detection_multiplier:
                     timer_vals_dict.update({'async_detection_multiplier': int(async_detection_multiplier)})
 
-                session_dict = dest_dict.setdefault('session', {})
+                session_dict = int_dict.setdefault('session', {})
                 session_dict.update({'state': state})
 
                 echo_time = int(group['echo_time'])
@@ -813,5 +827,52 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                 timer_vals_dict.update({'echo_detection_time_ms': echo_time,
                                    'async_detection_time_ms': async_time})
                 continue
-        
+
+            # No                  n/a             n/a              n/a              UP
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                echo_detection_time = group['echo_detection_time']
+                async_detection_time = group['async_detection_time']                
+                state = group['state']
+                
+                hardware = group.get('hardware', None)
+                npu = group.get('npu', None)
+                if hardware and npu:
+                    int_dict.update({'hardware': hardware})
+                    int_dict.update({'npu': npu})
+
+                timer_vals_dict = int_dict.setdefault('timer_vals', {})
+                timer_vals_dict.update({'echo_detection_time': echo_detection_time})
+                timer_vals_dict.update({'async_detection_time': async_detection_time})
+
+                session_dict = int_dict.setdefault('session', {})
+                session_dict.update({'state': state})
+                continue
+
+            # BE10                1.1.1.1         n/a              n/a              DOWN
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                echo_detection_time = group['echo_detection_time']
+                async_detection_time = group['async_detection_time']                
+                state = group['state']
+
+                intf = group.get('interface', None)
+                ip_address = group.get('dest', None)
+                if intf and ip_address:
+                    dest_dict = ret_dict.setdefault('dest', {}). \
+                        setdefault(ip_address, {})
+                    int_dict = dest_dict.setdefault('interfaces', {}). \
+                        setdefault(intf, {})
+                    int_dict.update({'interface': intf})
+
+                timer_vals_dict = int_dict.setdefault('timer_vals', {})
+                timer_vals_dict.update({'echo_detection_time': echo_detection_time})
+                timer_vals_dict.update({'async_detection_time': async_detection_time})
+
+                session_dict = int_dict.setdefault('session', {})
+                session_dict.update({'state': state})
+                continue
+
         return ret_dict

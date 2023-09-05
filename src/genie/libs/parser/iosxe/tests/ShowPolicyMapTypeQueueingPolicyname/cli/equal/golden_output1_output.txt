@@ -1,0 +1,6 @@
+  Policy Map type queueing subq
+    Class tc7
+      Average Rate Traffic Shaping
+      cir 3%
+    Class class-default
+      bandwidth remaining ratio 10

@@ -36,8 +36,9 @@ class ShowSwitchStackMode(ShowSwitchStackModeSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        # *1      Active   4cbc.4897.ec80    V00     N+1     None       Ready               
-        p1 = re.compile(r"\s*\**(?P<switch_id>\d+)\s+(?P<role>\w+)\s+(?P<mac_address>\S+)\s+(?P<version>\S+)\s+(?P<mode>\S+)\s+(?P<configured>\w+)\s+(?P<state>\w+)\s+$")
+        # *1      Active   4cbc.4897.ec80    V00     N+1     None       Ready
+        # *1      Active   00a5.bf53.d400    V02     N+1'    Active'    Ready               
+        p1 = re.compile(r"\s*\**(?P<switch_id>\d+)\s+(?P<role>\w+)\s+(?P<mac_address>\S+)\s+(?P<version>\S+)\s+(?P<mode>\S+)\s+(?P<configured>\w+)\'?\s+(?P<state>\w+)\s+$")
 
         ret_dict = {}
 

@@ -37,17 +37,24 @@ expected_output = {
                 }
             },
             "limited_broadcast_to_local": {},
-            "dropped": {
-                "Device-tracking": {
-                    "protocol": "ndp",
-                    "message": "ns",
-                    "dropped": 15,
-                    "reason": "Silent drop"
+            "dropped":{
+                "Device-tracking":{
+                    "protocol":"ndp",
+                    "message":"ns",
+                    "dropped":15,
+                    "reason":{
+                        1:{
+                            "reason":"Silent drop"
+                        },
+                        2:{
+                            "reason":"Silent drop"
+                        }
+                    }
                 },
-                "ACD&DAD": {
-                    "protocol": "--",
-                    "message": "--",
-                    "dropped": 15
+                "ACD&DAD":{
+                    "protocol":"--",
+                    "message":"--",
+                    "dropped":15
                 }
             },
             "faults": []

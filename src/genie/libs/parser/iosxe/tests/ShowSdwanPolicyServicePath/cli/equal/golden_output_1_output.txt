@@ -1,0 +1,4 @@
+Next Hop: IPsec
+  Source: 40.185.4.1 12366 Destination: 40.185.20.1 12406 Local Color: blue Remote Color: blue Remote System IP: 6.0.0.2
+
+  

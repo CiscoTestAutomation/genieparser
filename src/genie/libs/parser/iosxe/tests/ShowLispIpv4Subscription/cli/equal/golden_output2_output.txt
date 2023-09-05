@@ -1,0 +1,1 @@
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 0 entries

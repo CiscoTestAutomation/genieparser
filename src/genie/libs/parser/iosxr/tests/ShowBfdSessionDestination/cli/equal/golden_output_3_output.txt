@@ -1,0 +1,12 @@
+show bfd ipv6 session destination 2001:506::1:1:1:1
+Wed Nov  9 14:30:05.643 UTC
+Interface           Dest Addr      
+                                        Local det time(int*mult)      State     
+H/W                 NPU             Echo             Async           
+------------------- --------------- ---------------- ---------------- ----------
+Gi0/0/0/6           2001:506::1:1:1:1                             
+No                  n/a             0s(0s*0)         36s(12s*3)       UP        
+Gi0/0/0/10          2001:506::1:1:1:1                             
+No                  n/a             0s(0s*0)         36s(12s*3)       UP        
+BE10                2001:506::1:1:1:1                             
+No                  n/a             n/a              n/a              UP  

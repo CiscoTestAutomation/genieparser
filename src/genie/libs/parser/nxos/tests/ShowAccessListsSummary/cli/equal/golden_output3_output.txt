@@ -1,0 +1,38 @@
+# show access-lists summary
+
+IPV4 ACL ALLOW-MGT
+        Total ACEs Configured: 14
+        Configured on interfaces:
+                VTY         - ingress
+        Active on interfaces:
+                VTY         - ingress
+IPV4 ACL CORP-CCRPRIV-INOUT
+        Total ACEs Configured: 8
+        Configured on interfaces:
+                Vlan2007 - ingress (Router ACL)
+                Vlan2007 - egress (Router ACL)
+                Vlan2102 - ingress (Router ACL)
+                Vlan2102 - egress (Router ACL)
+        Active on interfaces:
+                Vlan2007 - ingress (Router ACL)
+                Vlan2007 - egress (Router ACL)
+                Vlan2102 - ingress (Router ACL)
+                Vlan2102 - egress (Router ACL)
+IPV4 ACL L3-UPG-MEDIUM-TRUST        Statistics enabled
+        fragments permit-all
+        Total ACEs Configured: 10
+        Configured on interfaces:
+                Vlan2471 - egress (Router ACL)
+                Vlan2473 - egress (Router ACL)
+        Active on interfaces:
+                Vlan2471 - egress (Router ACL)
+                Vlan2473 - egress (Router ACL)
+IPV4 ACL L3-UPG-UPG-HIGH-TRUST        Statistics enabled
+        fragments permit-all
+        Total ACEs Configured: 10
+        Configured on interfaces:
+                Vlan2472 - egress (Router ACL)
+                Vlan2474 - egress (Router ACL)
+        Active on interfaces:
+                Vlan2472 - egress (Router ACL)
+                Vlan2474 - egress (Router ACL)

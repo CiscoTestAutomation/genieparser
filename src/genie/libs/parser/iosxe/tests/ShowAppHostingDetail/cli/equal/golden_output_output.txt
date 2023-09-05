@@ -1,0 +1,38 @@
+App id                 : guestshell
+Owner                  : iox
+State                  : RUNNING
+Application
+  Type                 : lxc
+  Name                 : GuestShell
+  Version              : 3.3.0
+  Description          : Cisco Systems Guest Shell XE for x86_64
+  Author               : Cisco Systems
+  Path                 : /guestshell/:guestshell.tar
+  URL Path             :
+Activated profile name : custom
+
+Resource reservation
+  Memory               : 256 MB
+  Disk                 : 1 MB
+  CPU                  : 800 units
+  CPU-percent          : 100 %
+  VCPU                 : 1
+
+Platform resource profiles
+  Profile Name                  CPU(unit) CPU(percent)  Memory(MB)  Disk(MB)
+  ---------------------------------------------------------------------------
+
+Attached devices
+  Type              Name               Alias
+  ---------------------------------------------
+  serial/shell     iox_console_shell   serial0
+  serial/aux       iox_console_aux     serial1
+  serial/syslog    iox_syslog          serial2
+  serial/trace     iox_trace           serial3
+
+Network interfaces
+   ---------------------------------------
+
+Port forwarding
+  Table-entry  Service  Source-port  Destination-port
+  ---------------------------------------------------

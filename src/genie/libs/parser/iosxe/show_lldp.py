@@ -929,7 +929,7 @@ class ShowLldpNeighborsInterfaceDetailSchema(MetaParser):
                             'time_remaining_sec': int,
                             'system_capabilities': str,
                             'enabled_capabilities': str,
-                            'management_addresses': {
+                            Optional('management_addresses'): {
                                 'ip': str,
                             },
                             'auto_negotiation': str,

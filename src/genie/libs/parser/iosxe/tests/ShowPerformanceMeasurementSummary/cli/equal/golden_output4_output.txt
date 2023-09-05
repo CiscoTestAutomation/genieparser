@@ -1,0 +1,172 @@
+
+sh performance-measurement summary detail private
+
+Total interfaces                              : 1
+Total SR Policies                             : 0
+Total endpoints                               : 0
+Maximum PPS                                   : 2000 pkts/sec
+Dual-color gre bit-position                   : 9 - Failed, last success 0
+
+Interface Delay-Measurement:
+  Total sessions                              : 0
+  Counters:
+    Packets:
+      Total sent                              : 0
+      Total received                          : 0
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 0
+      Total completed                         : 0
+      Total incomplete                        : 0
+      Total advertisements                    : 0
+
+SR Policy Delay-Measurement:
+  Total sessions                              : 0
+  Counters:
+    Packets:
+      Total sent                              : 0
+      Total received                          : 0
+    Errors:
+        TX:
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 0
+      Total completed                         : 0
+      Total incomplete                        : 0
+      Total advertisements                    : 0
+
+Endpoint Delay-Measurement:
+  Total sessions                              : 0
+  Counters:
+    Packets:
+      Total sent                              : 0
+      Total received                          : 0
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 0
+      Total completed                         : 0
+      Total incomplete                        : 0
+      Total advertisements                    : 0
+
+Interface Loss-Measurement:
+  Total sessions                              : 1
+  Counters:
+    Packets:
+      Total sent                              : 7327
+      Total received                          : 7326
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 3664
+      Total completed                         : 3663
+      Total incomplete                        : 0
+      Total advertisements                    : 1
+
+Global Counters:
+  Total packets sent                          : 7327
+  Total query packets received                : 7326
+  Total invalid session id                    : 0
+  Total no session                            : 0
+
+HW Support for MPLS-GAL [RFC6374] timestamp   : Yes
+HW Support for IPv4 TWAMP [RF5357] timestamp  : Yes
+HW Support for IPv6 TWAMP [RF5357] timestamp  : No
+HW Support for 64 bit timestamp               : Yes
+HW Support for IPv4 UDP Cheksum               : Yes
+
+Max packets per burst                         : 6000
+Querier RX queue:
+  Size                                   : 0
+  Enqueues                               : 7326
+  High water mark                        : 1
+  High water mark time                   : 19 1970 21:59:42.806
+Responder RX queue:
+  Size                                   : 0
+  Enqueues                               : 0
+  High water mark                        : 0
+  High water mark time                   : N/A
+Querier IM queue:
+  Size                                   : 0
+  Enqueues                               : 0
+  High water mark                        : 0
+  High water mark time                   : N/A
+Querier CFG queue:
+  Size                                   : 0
+  Enqueues                               : 4
+  High water mark                        : 2
+  High water mark time                   : 19 1970 21:59:42.782
+Querier CHKPT queue:
+  Size                                   : 0
+  Enqueues                               : 1
+  High water mark                        : 1
+  High water mark time                   : 19 1970 21:59:38.672
+UDP Port GAL OOB IPV4                         : 62489
+UDP Port GAL OOB IPV6                         : 53712
+UDP Port TWAMP QUERY IPV4                     : 862
+UDP Port TWAMP QUERY IPV6                     : 862
+UDP Port TWAMP REPLY IPV4                     : 49796
+UDP Port TWAMP REPLY IPV6                     : 61289
+UDP Port SDLM QUERY IPV4                      : 6634
+UDP Port SDLM QUERY IPV6                      : 6634
+UDP Port SDLM REPLY IPV4                      : 50119
+UDP Port SDLM REPLY IPV6                      : 57446
+Last Error [Receive]:
+  Failed to enqueue CFG 
+  Timestamp: 13:03:26 05-12 2022
+
+PM RUNTIME
+ NAME                LAST        AVG         TOTAL               CNT         WRAPPED     
+ CP PATHS CLEANUP    5000        5879        7584000             1290        0           
+ CFG GET INFO        56000       75093       550213000           7327        0           
+

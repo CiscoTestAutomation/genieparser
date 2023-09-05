@@ -1,0 +1,57 @@
+show device-tracking counters vlan 101
+Received messages on vlan 101  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             REQ[357478] REP[937] 
+DHCPv4          
+ACD&DAD         
+
+Received Broadcast/Multicast messages on vlan 101  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             REQ[19] 
+DHCPv4          
+
+Bridged messages from vlan 101  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             REQ[1017] 
+DHCPv4          
+ACD&DAD         
+
+Broadcast/Multicast converted to unicast messages from vlan 101  :
+Protocol        Protocol message
+NDP             
+DHCPv6          
+ARP             REQ[19] 
+DHCPv4          
+ACD&DAD         
+
+Probe message on vlan 101  :
+Type            Protocol message
+PROBE_SEND      REQ[1017] 
+PROBE_REPLY     REP[901] 
+
+Limited Broadcast to Local message on vlan 101  :
+Type            Protocol message
+NDP             
+DHCPv6          
+ARP             
+DHCPv4          
+
+Dropped messages on vlan 101  :
+Feature             Protocol Msg [Total dropped]
+Device-tracking:    ARP      REQ [346176]
+                    reason:  Address Family limit per mac reached [202268]
+                    reason:  Packet accepted but not forwarded [21577]
+                    reason:  Packet is throttled [122331]
+
+                             REP [914]
+                    reason:  Silent drop [901]
+                    reason:  Packet accepted but not forwarded [13]
+
+
+Faults on vlan 101 :

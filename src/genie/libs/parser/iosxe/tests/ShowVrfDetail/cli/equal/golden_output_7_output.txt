@@ -1,0 +1,12 @@
+
+VRF TESTINGVNI (VRF Id = 4); default RD <not set>; default VPNID <not set>
+  New CLI format, supports multiple address-families
+  vnid: 30022 evpn-instance vni 4096 core-vlan 300
+  Flags: 0x1808
+  Interfaces:
+    Vl300                   
+Address family ipv4 unicast not active
+Address family ipv6 unicast not active
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
+    

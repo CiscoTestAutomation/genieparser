@@ -1,0 +1,3 @@
+time-range entry: time1 (active)
+   periodic daily 22:40 to 22:41
+   used in: IPv6 ACL entry

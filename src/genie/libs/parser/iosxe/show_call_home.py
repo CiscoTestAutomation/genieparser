@@ -236,7 +236,7 @@ class ShowCallHomeProfileAll(ShowCallHomeProfileAllSchema):
         p6 = re.compile(r'^Message Size Limit: (?P<size_limit>[\d]+) Bytes+$')
 
         # Transport Method: http
-        p7 = re.compile(r'^Transport Method: (?P<method>\S+)$')
+        p7 = re.compile(r'^Transport Method: (?P<method>.+)$')
 
         # HTTP  address: https://tools.cisco.com/its/service/oddce/services/DDCEService
         p8 = re.compile(r'^HTTP  address: (?P<http_address>\S+)$')

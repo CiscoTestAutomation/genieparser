@@ -367,6 +367,12 @@ class ShowRunInterfaceSchema(MetaParser):
                 },
                 Optional('load_interval'): str,
                 Optional('mab'): bool,
+                Optional('macsec_enabled'): bool,
+                Optional('macsec_access_control'): str,
+                Optional('mtu'): int,
+                Optional('mka_policy'): str,
+                Optional('mka_primary_keychain'): str,
+                Optional('mka_fallback_keychain'): str,
                 Optional('negotiation_auto'): bool,
                 Optional('cdp'): str,
                 Optional('snmp_trap_link_status'): bool,
@@ -413,6 +419,10 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('flow_monitor_output'): str,
                 Optional('flow_monitor_input_v6'): str,
                 Optional('flow_monitor_output_v6'): str,
+                Optional('flow_monitor_in_sampler'): str,
+                Optional('flow_monitor_out_sampler'): str,
+                Optional('input_sampler'): str,
+                Optional('output_sampler'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -805,6 +815,30 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # dot1x supplicant eap profile Self
         p102 = re.compile(r'^dot1x supplicant eap profile (?P<dot1x_supplicant_eap_profile>.+)$')
+
+        # macsec
+        p103 = re.compile(r'^\s*macsec$')
+
+        # macsec access-control should-secure
+        p104 = re.compile(r'^\s*macsec access-control +(?P<macsec_access_control>[\w\-]+)')
+
+        #  mka policy MKAPolicy
+        p105 = re.compile(r'^\s*mka policy +(?P<mka_policy>\S+)')
+        
+        # mka pre-shared-key key-chain KCP256
+        p106 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+)$')
+
+        # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+        p107 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+) fallback-key-chain +(?P<mka_fallback_keychain>\S+)')
+
+        # ip mtu 1468
+        p108 = re.compile(r'^\s*ip mtu (?P<mtu>\d+)')
+        
+        # ip flow monitor m4in sampler fnf_sampler input
+        p109 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_in_sampler>[\w]+) +sampler +(?P<input_sampler>[\w]+) +input$')
+
+        #  ip flow monitor m4out sampler fnf_sampler output
+        p110 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_out_sampler>[\w]+) +sampler +(?P<output_sampler>[\w]+) +output$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1616,6 +1650,65 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict['dot1x_supplicant_eap_profile'] = m.groupdict()['dot1x_supplicant_eap_profile']
                 continue
 
+            # macsec
+            m = p103.match(line)
+            if m:
+                intf_dict.update({'macsec_enabled': True})
+                continue
+
+            # macsec access-control should-secure
+            m = p104.match(line)
+            if m:
+                intf_dict['macsec_access_control'] = m.groupdict()['macsec_access_control']
+                continue
+    
+            # mka policy MKAPolicy
+            m = p105.match(line)
+            if m:
+                intf_dict['mka_policy'] = m.groupdict()['mka_policy']
+                continue
+
+            # mka pre-shared-key key-chain KCP256
+            m = p106.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                continue
+
+            # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+            m = p107.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                intf_dict['mka_fallback_keychain'] = m.groupdict()['mka_fallback_keychain']
+                continue
+
+            # ip mtu 1468
+            m = p108.match(line)
+            if m:
+                intf_dict['mtu'] = int(m.groupdict()['mtu'])
+                continue
+            
+            # ip flow monitor m4in sampler fnf_sampler input
+            m = p109.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'flow_monitor_in_sampler':
+                        group['flow_monitor_in_sampler']})
+                intf_dict.update(
+                    {'input_sampler': group['input_sampler']})
+                continue
+
+            # ip flow monitor m4out sampler fnf_sampler output
+            m = p110.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                        {'flow_monitor_out_sampler':
+                            group['flow_monitor_out_sampler']})
+                intf_dict.update(
+                        {'output_sampler': group['output_sampler']})
+                continue
+
         return config_dict
 
 
@@ -2047,6 +2140,12 @@ class ShowRunAllSectionInterfaceSchema(MetaParser):
                 Optional('load_interval'): int,
                 Optional('negotiation_auto'): bool,
                 Optional('macsec_replay_protection'): bool,
+                Optional('macsec_enabled'): bool,
+                Optional('macsec_access_control'): str,
+                Optional('mtu'): int,
+                Optional('mka_policy'): str,
+                Optional('mka_primary_keychain'): str,
+                Optional('mka_fallback_keychain'): str,
                 Optional('cdp_log_mismatch_duplex'): bool,
                 Optional('cdp_tlv_location'): bool,
                 Optional('cdp_tlv_server_location'): bool,
@@ -2209,6 +2308,24 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
         
         # no ip dhcp snooping information option allow-untrusted
         p40 = re.compile(r'^no +ip +dhcp +snooping +information +option +allow-untrusted$')
+
+        # macsec
+        p41 = re.compile(r'^\s*macsec$')
+
+        # macsec access-control should-secure
+        p42 = re.compile(r'^\s*macsec access-control +(?P<macsec_access_control>[\w\-]+)')
+
+        #  mka policy MKAPolicy
+        p43 = re.compile(r'^\s*mka policy +(?P<mka_policy>\S+)')
+        
+        # mka pre-shared-key key-chain KCP256
+        p44 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+)$')
+
+        # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+        p45 = re.compile(r'^\s*mka pre-shared-key key-chain +(?P<mka_primary_keychain>\S+) fallback-key-chain +(?P<mka_fallback_keychain>\S+)')
+
+        # ip mtu 1468
+        p46 = re.compile(r'^\s*ip mtu (?P<mtu>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2491,6 +2608,43 @@ class ShowRunAllSectionInterface(ShowRunAllSectionInterfaceSchema):
             if m:
                 group = m.groupdict()
                 intf_dict.update({'ip_dhcp_snooping_information_option_allow_untrusted': False})
+                continue
+
+            # macsec
+            m = p41.match(line)
+            if m:
+                intf_dict.update({'macsec_enabled': True})
+                continue
+
+            # macsec access-control should-secure
+            m = p42.match(line)
+            if m:
+                intf_dict['macsec_access_control'] = m.groupdict()['macsec_access_control']
+                continue
+    
+            # mka policy MKAPolicy
+            m = p43.match(line)
+            if m:
+                intf_dict['mka_policy'] = m.groupdict()['mka_policy']
+                continue
+
+            # mka pre-shared-key key-chain KCP256
+            m = p44.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                continue
+
+            # mka pre-shared-key key-chain KCP256 fallback-key-chain KCF256
+            m = p45.match(line)
+            if m:
+                intf_dict['mka_primary_keychain'] = m.groupdict()['mka_primary_keychain']
+                intf_dict['mka_fallback_keychain'] = m.groupdict()['mka_fallback_keychain']
+                continue
+
+            # ip mtu 1468
+            m = p46.match(line)
+            if m:
+                intf_dict['mtu'] = int(m.groupdict()['mtu'])
                 continue
 
         return config_dict
@@ -3095,6 +3249,8 @@ class ShowRunningConfigNveSchema(MetaParser):
                 'time_limit': int,
             },
             Optional('id_auto_rt'): str,
+            Optional('learn_ip_addr'): bool,
+            Optional('arp_ndp_suppression'): bool,
         },
         Optional('l2vpn_evi'): {
             Any(): {
@@ -3311,6 +3467,9 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         # route-target both 65000:100
         # route-target export 100:1 stitching
         p1_13 = re.compile(r'^route\-target +(?P<type>import|export|both) +(?P<rt>[\d:]+)(\s+(?P<stitch>stitching))?$')
+
+        # flooding-suppression address-resolution disable
+        p1_14 = re.compile(r'^flooding\-suppression address\-resolution disable$')
 
         # vlan configuration 200
         p2_0 = re.compile(r'^vlan configuration +(?P<vlan_id>\d+)$')
@@ -3570,15 +3729,27 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     group = m.groupdict()
                     if group['learn_ip_addr'] =='enable':
-                        l2vpn_evi_dict.update({'learn_ip_addr': True})
+                        value = True
                     elif group['learn_ip_addr'] =='disable':
-                        l2vpn_evi_dict.update({'learn_ip_addr': False})
+                        value = False
+
+                    if l2vpn_global_flag:
+                        l2vpn_global_dict.update({'learn_ip_addr': value})
+                    elif l2vpn_evi_flag:
+                        l2vpn_evi_dict.update({'learn_ip_addr': value})
+                        
                     continue
 
                 # no auto-route-target
                 m = p1_11.match(line)
                 if m:
                     l2vpn_evi_dict.update({'autogenerate_route_target': False})
+                    continue
+                
+                # flooding-suppression address-resolution disable
+                m = p1_14.match(line)
+                if m:
+                    l2vpn_global_dict.update({'arp_ndp_suppression': False})
                     continue
 
             # vlan configuration 200
@@ -4035,6 +4206,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 # route-target export 1:201
                 # route-target both 65000:100
                 # route-target export 100:1 stitching
+
                 m = p1_13.match(line)
                 if m:
                     if l2vpn:

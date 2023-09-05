@@ -1,0 +1,52 @@
+
+show bgp vrf default all neighbors
+
+BGP neighbor is 11.5.1.1, remote AS 100, ebgp link, Peer index 11
+  BGP version 4, remote router ID 0.0.0.0
+  Neighbor previous state = None
+  BGP state = Idle (Update-source i/f down/unresolved), down for 00:01:39
+  Neighbor vrf: default, retry in 0.000000
+  Using Tunnel5 as update source for this peer
+  Enable logging neighbor events
+  External BGP peer might be up to 5 hops away
+  Last read never, hold time = 180, keepalive interval is 60 seconds
+  Last written never, keepalive timer not running
+  Received 0 messages, 0 notifications, 0 bytes in queue
+  Sent 0 messages, 0 notifications, 0(0) bytes in queue
+  Enhanced error processing: On
+    0 discarded attributes
+  Connections established 0, dropped 0
+  Connection attempts 0
+  Last update recd never, Last update sent  = never
+   Last reset by us never, due to No error
+  Last error length sent: 0
+  Reset error value sent: 0
+  Reset error sent major: 0 minor: 0
+  Notification data sent:
+  Last reset by peer never, due to No error
+  Last error length received: 0
+  Reset error value received 0
+  Reset error received major: 0 minor: 0
+  Notification data received:
+
+  Message statistics:
+                              Sent               Rcvd
+  Opens:                         0                  0
+  Notifications:                 0                  0
+  Updates:                       0                  0
+  Keepalives:                    0                  0
+  Route Refresh:                 0                  0
+  Capability:                    0                  0
+  Total:                         0                  0
+  Total bytes:                   0                  0
+  Bytes in queue:                0                  0
+
+  For address family: IPv4 Unicast
+  BGP table version 1002, neighbor version 0
+  0 accepted prefixes (0 paths), consuming 0 bytes of memory
+  0 received prefixes treated as withdrawn
+  0 sent prefixes (0 paths)
+  Last End-of-RIB sent 0.000000 after session start
+  First convergence 0.000000 after session start with 0 routes sent
+
+  No established BGP session with peer

@@ -1,0 +1,33 @@
+GigabitEthernet0/0/2 is up, line protocol is up 
+  Link Local Address FE80::727D:B9FF:FE7D:AE84, Interface ID 12 (ios-if-index)
+  Area 0, Process ID 2, Instance ID 0, Router ID 192.0.2.1
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State DR, Priority 1
+  Designated Router (ID) 192.0.2.1, local address FE80::727D:B9FF:FE7D:AE84
+  No backup designated router on this network
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:08
+  Graceful restart helper support enabled
+  Index 1/2/2, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 0, maximum is 0
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 0, Adjacent neighbor count is 0 
+  Suppress hello for 0 neighbor(s)
+GigabitEthernet0/0/0 is up, line protocol is up 
+  Link Local Address FE80::727D:B9FF:FE7D:AE82, Interface ID 10 (ios-if-index)
+  Area 0, Process ID 2, Instance ID 0, Router ID 192.0.2.1
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State BDR, Priority 1
+  Designated Router (ID) 192.0.2.129, local address FE80::727D:B9FF:FE7D:7E82
+  Backup Designated router (ID) 192.0.2.1, local address FE80::727D:B9FF:FE7D:AE82
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:07
+  Graceful restart helper support enabled
+  Index 1/1/1, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 3, maximum is 3
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1 
+    Adjacent with neighbor 192.0.2.129  (Designated Router)
+  Suppress hello for 0 neighbor(s)

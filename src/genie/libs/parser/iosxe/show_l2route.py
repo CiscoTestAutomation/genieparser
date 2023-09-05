@@ -123,13 +123,6 @@ IOS parsers for the following show commands:
     * show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
     * show l2route evpn multicast smet topology <evi> group <group> remote
     * show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
-    * show l2route evpn multicast smet topology <evi:etag>
-    * show l2route evpn multicast smet topology <evi:etag> group <group>
-    * show l2route evpn multicast smet topology <evi:etag> group <group> local
-    * show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface>
-    * show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface> service-instance <serviceInstance>
-    * show l2route evpn multicast smet topology <evi:etag> group <group> remote
-    * show l2route evpn multicast smet topology <evi:etag> group <group> remote originator <originator-addr>
     * show l2route evpn multicast route
     * show l2route evpn multicast route topology <evi>
     * show l2route evpn multicast route topology <evi> group <group>
@@ -2361,13 +2354,6 @@ class ShowL2routeEvpnMulticastSmetSchema(MetaParser):
                    show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
                    show l2route evpn multicast smet topology <evi> group <group> remote
                    show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
-                   show l2route evpn multicast smet topology <evi:etag>
-                   show l2route evpn multicast smet topology <evi:etag> group <group>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface> service-instance <serviceInstance>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote originator <originator-addr>
     """
 
     schema = {
@@ -2408,13 +2394,6 @@ class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
                    show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
                    show l2route evpn multicast smet topology <evi> group <group> remote
                    show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
-                   show l2route evpn multicast smet topology <evi:etag>
-                   show l2route evpn multicast smet topology <evi:etag> group <group>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> local interface <interface> service-instance <serviceInstance>
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote
-                   show l2route evpn multicast smet topology <evi:etag> group <group> remote originator <originator-addr>
     """
 
     cli_command = [
@@ -2424,46 +2403,42 @@ class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
         'show l2route evpn multicast smet topology {evi} group {group} local interface {interface}',
         'show l2route evpn multicast smet topology {evi} group {group} local interface {interface} service-instance {serviceInstance}',
         'show l2route evpn multicast smet topology {evi} group {group} remote originator {originator}',
-        'show l2route evpn multicast smet topology {evi_etag}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} local interface {interface}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} local interface {interface} service-instance {serviceInstance}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} remote originator {originator}',
         'show l2route evpn multicast smet topology {evi} group {group} {locality}',
-        'show l2route evpn multicast smet topology {evi_etag} group {group} {locality}'
     ]
 
     def cli(self, output=None, evi=None, etag=None, group=None, locality=None,
             interface=None, serviceInstance=None, originator=None):
         if not output:
             if evi:
+                if ':' in evi:
+                    evi, etag = evi.split(':', maxsplit=1)
                 if etag:
-                    evi_etag = "{}:{}".format(evi,etag)
+                    evi_etag = "{}:{}".format(evi, etag)
                     if group:
                         if locality == 'local' and interface:
                             if serviceInstance:
-                                cli_cmd = self.cli_command[9].format(
-                                    evi_etag=evi_etag, group=group,
+                                cli_cmd = self.cli_command[4].format(
+                                    evi=evi_etag, group=group,
                                     interface=interface,
                                     serviceInstance=serviceInstance)
                             else:
-                                cli_cmd = self.cli_command[8].format(
-                                    evi_etag=evi_etag, group=group,
+                                cli_cmd = self.cli_command[3].format(
+                                    evi=evi_etag, group=group,
                                     interface=interface)
                         elif locality == 'remote' and originator:
-                            cli_cmd = self.cli_command[10].format(
-                                evi_etag=evi_etag, group=group,
+                            cli_cmd = self.cli_command[5].format(
+                                evi=evi_etag, group=group,
                                 originator=originator)
                         elif locality:
-                            cli_cmd = self.cli_command[12].format(
-                                evi_etag=evi_etag, group=group,
+                            cli_cmd = self.cli_command[6].format(
+                                evi=evi_etag, group=group,
                                 locality=locality)
                         else:
-                            cli_cmd = self.cli_command[7].format(
-                                evi_etag=evi_etag, group=group)
+                            cli_cmd = self.cli_command[2].format(
+                                evi=evi_etag, group=group)
                     else:
-                        cli_cmd = self.cli_command[6].format(
-                            evi_etag=evi_etag)
+                        cli_cmd = self.cli_command[1].format(
+                            evi=evi_etag)
                 else:
                     if group:
                         if locality == 'local' and interface:
@@ -2481,7 +2456,7 @@ class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
                                 evi=evi, group=group,
                                 originator=originator)
                         elif locality:
-                            cli_cmd = self.cli_command[11].format(
+                            cli_cmd = self.cli_command[6].format(
                                 evi=evi, group=group,
                                 locality=locality)
                         else:

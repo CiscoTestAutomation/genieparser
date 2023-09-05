@@ -1,0 +1,45 @@
+how lisp instance-id 101 ethernet map-cache
+LISP MAC Mapping Cache for LISP 0 EID-table Vlan 101 (IID 101), 13 entries
+
+0000.58bb.6f48/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f01/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f03/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f05/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f07/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f09/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f0b/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f0d/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f0f/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f11/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0000.58be.7f13/48, uptime: 1d06h, expires: 5d17h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d06h     up     100/100       -
+0008.32a8.2137/48, uptime: 1d17h, expires: 5d06h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d17h     up     100/100       -
+58bc.2775.7755/48, uptime: 1d07h, expires: 5d16h, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  1d07h     up     100/100       -
+0000.0000.aaaa/48, uptime: 17:47:26, expires: 6d06h, via Mobility Map-Notify, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  7.255.0.4  17:47:26  up     100/100       -

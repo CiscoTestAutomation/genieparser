@@ -122,9 +122,9 @@ class ShowVersion(ShowVersionSchema):
 
         # Hardware:   ASAv, 2048 MB RAM, CPU Xeon E5 series 3491 MHz
         # Hardware:   FPR9K-SM-24, 230696 MB RAM, CPU Xeon E5 series 2200 MHz, 2 CPUs (48 cores)
+        # Hardware:   ASA5555, 16384 MB RAM, CPU Lynnfield 2800 MHz, 1 CPU (8 cores)
         p7 = re.compile(r'^Hardware:\s+(?P<platform>\S+),\s+(?P<mem_size>[\w\s]+) RAM,'
-                        r'\s+CPU (?P<processor_type>[\w\s]+),? ?((?P<cpu_count>\d+)'
-                        r' +CPUs +\((?P<core_count>\d+) cores\))?$')
+                        r'\s+CPU (?P<processor_type>[\s\w]+),? ?(?P<cpu_count>\d+)?\s?(\w+|)? ?\(?(?P<core_count>\d+)?( cores\))?$')
 
         # SSP Slot Number: 1
         p7_1 = re.compile(r'^SSP Slot Number: (?P<ssp_slot_number>\d+)$')

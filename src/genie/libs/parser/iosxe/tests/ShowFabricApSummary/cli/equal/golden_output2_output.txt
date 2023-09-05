@@ -1,0 +1,11 @@
+Number of Fabric AP : 9
+
+AP Name                            Slots    AP Model              Ethernet MAC    Radio MAC       Location               Country    IP Address      State
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+AP-E2-7910                           2      AIR-AP3802I-E-K9      0042.68a0.fb0a  0062.ecf3.7910  default location         CH       10.244.0.73     Registered
+AP-G3-E2C0                           2      AIR-AP1562I-E-K9      0062.ec4a.67d4  00d7.8ffe.e2c0  Global/Ecublens/Buil     CH       10.244.0.69     Registered
+AP-E1-C8A0                           3      C9124AXE-B            488b.0a76.1a64  488b.0a78.c8a0  Global/Ecublens/Buil     US       2001:10b1::9    Registered
+AP-E1-CBA0                           3      C9124AXE-B            488b.0a76.1ac4  488b.0a78.cba0  default location         FR       10.244.0.39     Downloading
+AP-F5-CC00                           2      C9124AXI-B            3c57.31c5.8fd0  4ca6.4d22.cc00  default location         US       2001:10b1::8    Registered
+AP-E6-7000                           3      C9124AXE-A            3c57.31c5.a450  4ca6.4d23.7000  Global/Ecublens/Buil     US       10.244.0.22     Registered
+AP-D5-FC00                           2      AIR-AP1852I-B-K9      80e8.6fd6.6560  80e8.6fd7.fc00  default location         MX       10.244.0.53     Registered

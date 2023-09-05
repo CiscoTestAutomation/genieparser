@@ -1,0 +1,126 @@
+
+sh performance-measurement summary detail
+
+Total interfaces                              : 5
+Total SR Policies                             : 3
+Total endpoints                               : 2
+Maximum PPS                                   : 2000 pkts/sec
+Dual-color gre bit-position                   : 9 - Failed, last success 0
+
+Interface Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 100
+      Total received                          : 0
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 14
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 12
+      Total completed                         : 0
+      Total incomplete                        : 10
+      Total advertisements                    : 0
+
+SR Policy Delay-Measurement:
+  Total sessions                              : 7
+  Counters:
+    Packets:
+      Total sent                              : 980
+      Total received                          : 980
+    Errors:
+        TX:
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 28
+      Total completed                         : 28
+      Total incomplete                        : 0
+      Total advertisements                    : 7
+
+Endpoint Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 100
+      Total received                          : 100
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 14
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 12
+      Total completed                         : 8
+      Total incomplete                        : 2
+      Total advertisements                    : 2
+
+Interface Loss-Measurement:
+  Total sessions                              : 1
+  Counters:
+    Packets:
+      Total sent                              : 7159
+      Total received                          : 7158
+    Errors:
+        TX:
+          Total interface down                : 0
+          Total no MPLS caps                  : 0
+          Total no IP address                 : 0
+          Total other                         : 0
+        RX:
+          Total negative delay                : 0
+          Total delay threshold exceeded      : 0
+          Total missing TX timestamp          : 0
+          Total missing RX timestamp          : 0
+          Total probe full                    : 0
+          Total probe not started             : 0
+          Total control code error            : 0
+          Total control code notif            : 0
+    Probes:
+      Total started                           : 3580
+      Total completed                         : 3579
+      Total incomplete                        : 0
+      Total advertisements                    : 1
+
+Global Counters:
+  Total packets sent                          : 7159
+  Total query packets received                : 7158
+  Total invalid session id                    : 0
+  Total no session                            : 0
+
+HW Support for MPLS-GAL [RFC6374] timestamp   : Yes
+HW Support for IPv4 TWAMP [RF5357] timestamp  : Yes
+HW Support for IPv6 TWAMP [RF5357] timestamp  : No
+HW Support for 64 bit timestamp               : Yes
+HW Support for IPv4 UDP Cheksum               : Yes

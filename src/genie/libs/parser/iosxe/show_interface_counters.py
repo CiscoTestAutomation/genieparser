@@ -4,12 +4,14 @@
      * show interface <intf> counters | begin <field> 
      * show interfaces counters errors
      * show interfaces {interface} counters errors
+     * show interface {interface} counters etherchannel
 """
 
 import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
+from genie.libs.parser.utils.common import Common
 
 
 # =================
@@ -194,3 +196,98 @@ class ShowInterfaceCounterErrors(ShowInterfacesCountersErrors):
             output = self.device.execute(self.cli_command.format(interface=interface))
         
         return super().cli(output=output)
+
+
+class ShowInterfaceCountersEtherchannelSchema(MetaParser):
+    """Schema for show interface {interface} counters etherchannel"""
+
+    schema = {
+        "port_channel": {
+            Any(): {
+                "inoctets": int,
+                "inucastpkts": int,
+                "inmcastpkts": int,
+                "inbcastpkts": int,
+                "outoctets": int,
+                "outucastpkts": int,
+                "outmcastpkts": int,
+                "outbcastpkts": int,
+                "port": {
+                    Any(): {
+                        "inoctets": int,
+                        "inucastpkts": int,
+                        "inmcastpkts": int,
+                        "inbcastpkts": int,
+                        "outoctets": int,
+                        "outucastpkts": int,
+                        "outmcastpkts": int,
+                        "outbcastpkts": int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowInterfaceCountersEtherchannel(ShowInterfaceCountersEtherchannelSchema):
+    """
+        Parser for show interface {interface} counters etherchannel 
+    """
+
+    cli_command = "show interface {interface} counters etherchannel"
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        # Port               InOctets    InUcastPkts    InMcastPkts    InBcastPkts
+        # Port              OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts
+        p0 = re.compile(r"^Port\s+(?P<octets>InOctets|OutOctets)\s+(?P<ucastpkts>InUcastPkts|OutUcastPkts)\s+"
+                        r"(?P<mcastpkts>InMcastPkts|OutMcastPkts)\s+(?P<bcastpkts>InBcastPkts|OutBcastPkts)$")
+
+        # Po10             1988738194         397777              0              0
+        p1 = re.compile(r"^(?P<port_channel>Po\d+)\s+(?P<octets>\d+)\s+(?P<ucastpkts>\d+)\s+(?P<mcastpkts>\d+)\s+(?P<bcastpkts>\d+)$")
+
+        # Hu1/0/25          994365640         198881              0              0
+        # Fou2/0/17         994372554         198896              0              0
+        p2 = re.compile(r"^(?P<port>\S+)\s+(?P<octets>\d+)\s+(?P<ucastpkts>\d+)\s+(?P<mcastpkts>\d+)\s+(?P<bcastpkts>\d+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port               InOctets    InUcastPkts    InMcastPkts    InBcastPkts
+            # Port              OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                octets_name = group['octets'].lower()
+                ucastpkts_name = group['ucastpkts'].lower()
+                mcastpkts_name = group['mcastpkts'].lower()
+                bcastpkts_name = group['bcastpkts'].lower()
+                continue
+
+            # Po10             1988738194         397777              0              0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_channel_dict = ret_dict.setdefault("port_channel", {}).setdefault(Common.convert_intf_name(group['port_channel']), {})
+                port_channel_dict[octets_name] = int(group['octets'])
+                port_channel_dict[ucastpkts_name] = int(group['ucastpkts'])
+                port_channel_dict[mcastpkts_name] = int(group['mcastpkts'])
+                port_channel_dict[bcastpkts_name] = int(group['bcastpkts'])
+                continue
+
+            # Hu1/0/25          994365640         198881              0              0
+            # Fou2/0/17         994372554         198896              0              0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict = port_channel_dict.setdefault("port", {}).setdefault(Common.convert_intf_name(group['port']), {})
+                port_dict[octets_name] = int(group['octets'])
+                port_dict[ucastpkts_name] = int(group['ucastpkts'])
+                port_dict[mcastpkts_name] = int(group['mcastpkts'])
+                port_dict[bcastpkts_name] = int(group['bcastpkts'])
+                continue
+        
+        return ret_dict

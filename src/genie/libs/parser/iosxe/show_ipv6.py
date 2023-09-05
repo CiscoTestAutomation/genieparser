@@ -1191,11 +1191,14 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
+        #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
+                        r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
-                        r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                        r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
                         r'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
+        
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
         p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)$')
@@ -1290,7 +1293,6 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
             if m:
                 group = m.groupdict()
                 outgoing_interface=group['egress_if']
-                
                 if group['egress_rloc']:
                     egress_data['egress_rloc'] = group['egress_rloc']
 

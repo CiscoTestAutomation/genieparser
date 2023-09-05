@@ -5901,3 +5901,60 @@ class ShowL2vpnEvpnVpwsVcPreferredPath(ShowL2vpnEvpnVpwsVcPreferredPathSchema):
                                             device_output=show_output,
                                             device_os='iosxe', index=[1]).entries
         return parsed_dict
+
+
+# ============================================
+# Schema for 'show l2vpn atom vc'
+# ============================================
+class ShowL2vpnAtomVcSchema(MetaParser):
+    """Schema for show l2vpn atom vc"""
+
+    schema = {
+        'name': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'peer_id': str,
+                        'vc_id': int,
+                        'type': str,
+                        'status': str                        
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show l2vpn atom vc '
+# ======================================================
+class ShowL2vpnAtomVc(ShowL2vpnAtomVcSchema):
+    """Parser for show l2vpn atom vc"""
+    
+    cli_command = 'show l2vpn atom vc'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Peer ID        VC ID      Type   Name                     Status
+        p1 = re.compile(r"^(?P<interface>[\w\d]+)\s+(?P<peer_id>[\d\:\.]+)\s+(?P<vc_id>\d+)\s+(?P<type>\w+)\s+(?P<name>[\w\d]+)\s+(?P<status>\w+)$")
+
+        for line in output.splitlines():
+            line = line.rstrip()
+
+            # Interface Peer ID        VC ID      Type   Name                     Status
+            m = p1.match(line)
+            if m:
+                name = m.groupdict()['name']
+                key_chain_dict = ret_dict.setdefault('name', {}).setdefault(name, {})
+                key_name = Common.convert_intf_name(m.groupdict()['interface'])
+                process_dict = key_chain_dict.setdefault('interface', {}).setdefault(key_name, {})
+                process_dict['peer_id']=m.groupdict()['peer_id']
+                process_dict['status']=m.groupdict()['status']
+                process_dict['vc_id']=int(m.groupdict()['vc_id'])
+                process_dict['type']=m.groupdict()['type']
+                continue
+
+        return ret_dict

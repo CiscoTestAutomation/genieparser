@@ -1,0 +1,13 @@
+Mod Ports Module-Type Model Status
+
+1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
+
+Mod Sw Hw World-Wide-Name(s) (WWN)
+
+1 9.4(0)SK(0.135) 1.0 20:01:00:08:31:14:b7:60 to 20:10:00:08:31:14:b7:60
+
+Mod MAC-Address(es) Serial-Num
+
+1 e0-69-ba-60-02-00 to e0-69-ba-60-02-0f JAE26361EB4
+
+.this terminal session

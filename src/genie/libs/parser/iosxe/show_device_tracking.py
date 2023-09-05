@@ -13,9 +13,12 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
     """Schema for show device-tracking database."""
 
     schema = {
-        "binding_table_count": int,
-        "dynamic_entry_count": int,
-        "binding_table_limit": int,
+        Optional("binding_table_count"): int,
+        Optional("dynamic_entry_count"): int,
+        Optional("binding_table_limit"): int,
+        Optional("vlan_db_count"): int,
+        Optional("vlan_dynamic_entry_count"): int,
+        Optional("vlandb_id"): int,
         "device": {
             int: {
                 "dev_code": str,
@@ -39,13 +42,14 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
 class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
     """Parser for show device-tracking database"""
 
-    cli_command = 'show device-tracking database'
+    cli_command = ['show device-tracking database','show device-tracking database vlan {vlan_id}']
 
-    def cli(self, output=None):
+    def cli(self, vlan_id=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if vlan_id:
+                output = self.device.execute(self.cli_command[1].format(vlan_id=vlan_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         device_tracking_database_dict = {}
 
@@ -72,6 +76,9 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
         binding_table_capture = re.compile(
             r"^Binding\s+Table\s+has\s+(?P<binding_table_count>\d+)\s+entries,\s+(?P<dynamic_entry_count>\d+)\s+dynamic\s+\(limit\s+(?P<binding_table_limit>\d+)\)$")
+         # vlanDB has 17 entries for vlan 101, 16 dynamic
+        vlan_db_capture = re.compile(
+            r"^vlanDB\s+has\s+(?P<vlan_db_count>\d+)\s+entries\s+for\s+vlan\s+(?P<vlandb_id>\d+)+,\s+(?P<vlan_dynamic_entry_count>\d+)\s+dynamic$")
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
         codes_capture = re.compile(
             r"^Codes:\s+L\s+-\s+Local,\s+S\s+-\s+Static,\s+ND\s+-\s+Neighbor\s+Discovery,\s+ARP\s+-\s+Address\s+Resolution\s+Protocol,\s+DH4\s+-\s+IPv4\s+DHCP,\s+DH6\s+-\s+IPv6\s+DHCP,\s+PKT\s+-\s+Other\s+Packet,\s+API\s+-\s+API\s+created$")
@@ -99,7 +106,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
 
         device_index = 0
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             # Binding Table has 10 entries, 0 dynamic (limit 200000)
             if binding_table_capture.match(line):
@@ -112,36 +119,55 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 device_tracking_database_dict['dynamic_entry_count'] = dynamic_entry_count
                 device_tracking_database_dict['binding_table_limit'] = binding_table_limit
                 continue
+
+            # vlanDB has 17 entries for vlan 101, 16 dynamic
+            elif vlan_db_capture.match(line):
+                vlan_db_capture_match = vlan_db_capture.match(line)
+                groups = vlan_db_capture_match.groupdict()
+                vlan_db_count = int(groups['vlan_db_count'])
+                vlan_dynamic_entry_count = int(groups['vlan_dynamic_entry_count'])
+                vlandb_id = int(groups['vlandb_id'])
+                device_tracking_database_dict['vlan_db_count'] = vlan_db_count
+                device_tracking_database_dict['vlan_dynamic_entry_count'] = vlan_dynamic_entry_count
+                device_tracking_database_dict['vlandb_id'] = vlandb_id
+                continue
+
             # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
             elif codes_capture.match(line):
                 codes_capture_match = codes_capture.match(line)
                 groups = codes_capture_match.groupdict()
                 continue
+
             # Preflevel flags (prlvl):
             elif pref_level_flag_codes_capture.match(line):
                 pref_level_flag_codes_capture_match = pref_level_flag_codes_capture.match(line)
                 groups = pref_level_flag_codes_capture_match.groupdict()
                 continue
+
             # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
             elif pref_level_flags_2_capture.match(line):
                 pref_level_flags_2_capture_match = pref_level_flags_2_capture.match(line)
                 groups = pref_level_flags_2_capture_match.groupdict()
                 continue
+
             # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
             elif _capture.match(line):
                 _capture_match = _capture.match(line)
                 groups = _capture_match.groupdict()
                 continue
+
             # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
             elif _capture.match(line):
                 _capture_match = _capture.match(line)
                 groups = _capture_match.groupdict()
                 continue
+
             #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
             elif device_info_header_capture.match(line):
                 device_info_header_capture_match = device_info_header_capture.match(line)
                 groups = device_info_header_capture_match.groupdict()
                 continue
+
             # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
             elif device_info_capture_database.match(line):
                 device_index += 1
@@ -169,6 +195,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 device_tracking_database_dict['device'][device_index]['state'] = state
                 device_tracking_database_dict['device'][device_index]['time_left'] = time_left
                 continue
+
             # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
             elif device_info_capture.match(line):
                 device_index = device_index + 1
@@ -423,7 +450,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  DOWN       : 1
         #  INCOMPLETE : 1
         #  CREATING   : 1
-        #  TENTATIVE  : 1 
+        #  TENTATIVE  : 1
         #    total    : 6
         binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
 
@@ -442,7 +469,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
                                          r'\s+(?P<state>(\S+))\s+'
                                          r'(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|'
-                                         r'(\d+\ss)|(\d+\s+s\(\d+\s+s\))|(\d+\s+s\s+try\s+\d+\(\d+\s+s\)))?'         
+                                         r'(\d+\ss)|(\d+\s+s\(\d+\s+s\))|(\d+\s+s\s+try\s+\d+\(\d+\s+s\)))?'
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
                                          r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
 
@@ -1100,7 +1127,11 @@ class ShowDeviceTrackingCountersVlanSchema(MetaParser):
                         "protocol": str,
                         "message": str,
                         "dropped": int,
-                        Optional("reason"): str
+                        Optional("reason"): {
+                            int: {
+                                Optional("reason"): str,
+                            },
+                        },
                     },
                 },
                 "faults": list,
@@ -1129,6 +1160,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             out = output
 
         device_tracking_counters_vlanid_dict = {}
+        device_index=0
         message_key = ''
 
         # Received messages on vlan 39   :
@@ -1174,8 +1206,10 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
 
         # Device-tracking:    NDP      NS  [10]
         # Flooding Suppress:  NDP      NS  [36]
+        # Routing Proxy:      NDP      REDIR[1]
+        # Routing Proxy:      NDP      REDIR[1]
         dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
-                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+                                          r'\s+(?P<message>(\S+))\s*\[(?P<dropped>(\d+))\]$')
 
         #   DHCPv6_REQUEST_NAK[1]
         fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
@@ -1287,7 +1321,10 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             # reason:  Message unauthorized on port [3]
             match = reason_info.match(line)
             if match:
-                dropped_dict_feature['reason'] = match.groupdict()['reason']
+                device_index = device_index+1
+                reason = match.groupdict()['reason']
+                dropped_dict_feature_reason = dropped_dict_feature.setdefault('reason', {})
+                dropped_dict_feature_reason[device_index] = {'reason': reason}
                 continue
 
         return device_tracking_counters_vlanid_dict
@@ -1332,11 +1369,11 @@ class ShowDeviceTrackingDatabaseMac(ShowDeviceTrackingDatabaseMacSchema):
         device_tracking_database_mac_dict = {}
 
         # MAC                    Interface  vlan       prlvl      state            Time left        Policy           Input_index
-        # dead.beef.0001         Twe1/0/42  39         NO TRUST   MAC-STALE        N/A              49      
-        # 5c5a.c791.d69f         Vl39       39         TRUSTED    MAC-REACHABLE    N/A              dna_policy       108     
-        # 0050.56b0.babc         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    41 s             test1            49      
-        # 0050.56b0.afed         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    21 s             test1            49      
-        # 000a.000b.000c         Twe1/0/1   100        NO TRUST   MAC-DOWN         N/A              8       
+        # dead.beef.0001         Twe1/0/42  39         NO TRUST   MAC-STALE        N/A              49
+        # 5c5a.c791.d69f         Vl39       39         TRUSTED    MAC-REACHABLE    N/A              dna_policy       108
+        # 0050.56b0.babc         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    41 s             test1            49
+        # 0050.56b0.afed         Twe1/0/42  39         NO TRUST   MAC-REACHABLE    21 s             test1            49
+        # 000a.000b.000c         Twe1/0/1   100        NO TRUST   MAC-DOWN         N/A              8
 
         # dead.beef.0001         Twe1/0/42  39         NO TRUST   MAC-STALE        N/A              49
         entry_capture = re.compile(
@@ -1430,15 +1467,15 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
         device_tracking_database_mac_dict = {}
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
         # Preflevel flags (prlvl):
-        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
-        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
-        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
 
 
-        #     Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left       
-        # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic 
-        # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s           
-        # S   10.10.10.10                              dead.beef.0001         Twe1/0/41  38         0100       77s        REACHABLE  226 s   
+        #     Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left
+        # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic
+        # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s
+        # S   10.10.10.10                              dead.beef.0001         Twe1/0/41  38         0100       77s        REACHABLE  226 s
 
         # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic
         table_info_capture = re.compile(
@@ -1596,15 +1633,15 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
 
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
         # Preflevel flags (prlvl):
-        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
-        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
-        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
         #
         #
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
-        # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic 
-        # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000    
-        # S   10.10.10.10                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       136s       REACHABLE  167 s            no         yes          0000.0000.0000    
+        # macDB has 2 entries for mac dead.beef.0001,vlan 38, 0 dynamic
+        # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
+        # S   10.10.10.10                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       136s       REACHABLE  167 s            no         yes          0000.0000.0000
 
         # Binding table configuration:
         binding_table_config_capture = re.compile(r"^Binding table configuration:")
@@ -2205,15 +2242,15 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
         device_tracking_database_mac_details_dict = {}
 
         #     MAC                    Interface  vlan       prlvl      state            Time left        Policy           Input_index
-        # S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47      
-        #     Attached IP: 10.10.10.11     
-        #     Attached IP: 10.10.10.10     
-        # L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60      
+        # S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47
+        #     Attached IP: 10.10.10.11
+        #     Attached IP: 10.10.10.10
+        # L    c4b2.39ae.51df         Vl1        1          TRUSTED    MAC-DOWN                          default          60
 
         # S    dead.beef.0001         Twe1/0/41  38         TRUSTED    MAC-STALE        93013 s          47               60
         # L2F  0001.0002.0001         Gi1/0/23   110        NO TRUST   MAC-REACHABLE    231 s            LISP-DT-GLEAN-VLAN-MULTI-IP 31
         # L    ba25.cdf4.ad38         Vl110      110        TRUSTED    MAC-REACHABLE    N/A              LISP-DT-GLEAN-VLAN-MULTI-IP 60
-        
+
         device_capture = re.compile(
             r"^(?P<dev_code>\S+)"
             r"\s+(?P<link_layer_address>(\S+\.\S+\.\S+))"
@@ -2321,8 +2358,8 @@ class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
 
         device_tracking_messages_dict = {}
 
-        # [Wed Jul 21 20:31:23.000] VLAN 1, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, 
-        # [Wed Jul 21 20:31:25.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, Packet ignored. 
+        # [Wed Jul 21 20:31:23.000] VLAN 1, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3,
+        # [Wed Jul 21 20:31:25.000] VLAN 1006, From Et0/1 MAC aabb.cc00.0300: ARP::REP, 192.168.23.3, Packet ignored.
         # [Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet accepted but not forwarded
 
         message_capture = re.compile(

@@ -1,0 +1,9 @@
+interface nve1
+ source-interface Loopback0
+ host-reachability protocol bgp
+ vxlan encapsulation dual-stack prefer-ipv6 
+ member vni 20010 mcast-group FF0E::A
+ member vni 2000201 ingress-replication
+ member vni 2000401 mcast-group 239.4.0.145 FF1E::91
+ member vni 30010 vrf GETCONFIG
+end

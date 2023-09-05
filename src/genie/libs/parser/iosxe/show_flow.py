@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show flow exporter {exporter} statistics
     * show flow monitor {flow_monitor_name} statistics
     * show flow monitor
+    * show flow monitor sdwan_flow_monitor cache filter interface input <> ipv4 source address <>
 '''
 
 # Python
@@ -220,6 +221,7 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('counter_pkts_long'): int,
                 Optional('timestamp_abs_first'): str,
                 Optional('timestamp_abs_last'): str,
+                Optional('fw_fw_event'): int,
             },
         },
         Optional('proto_entries'): {
@@ -358,6 +360,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # IP TOS:                     0x14
         p32 = re.compile(r'^IP TOS:\s+(?P<ip_tos>\S+)$')
 
+        #fw fw event:                 1
+        p33 = re.compile(r'^fw fw event: +(?P<fw_fw_event>\S+)$')
+ 
         # entry_dict intializes on p8 or p9 condition
         # but some output doesn't match these conditions.
         # this variable checks the entry_dict created
@@ -634,6 +639,13 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 group = m.groupdict()
                 entry_dict.update({'ip_tos': group['ip_tos']})
                 continue
+
+            #fw fw event:                 1
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'fw_fw_event': int(group['fw_fw_event'])})
+            
 
         return ret_dict
 
@@ -2036,4 +2048,397 @@ class ShowFlowMonitorCacheFilterInterface(ShowFlowMonitorCacheFilterInterfaceSch
                 ipv6_dest_address.append(group['ipv6_dest_address'])
                 continue
             
+        return ret_dict
+
+
+# ====================================================================================================================================
+# Schema for 'show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}'
+# ====================================================================================================================================
+class ShowFlowMonitorCacheFilterInterfaceIPv4Schema(MetaParser):
+    ''' Schema for "show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}" '''
+
+    schema = {
+    	'cache_type': str,
+    	'cache_size': str,
+    	'current_entries':str,
+    	'high_watermark': str,
+    	'flows_added': str,
+    	'flows_not_added': str,
+    	'flows_aged': str,
+    	'flows' : {
+    		Any() : { # index
+				'ipv4_source_address': str,
+				'ipv4_destination_address': str,
+				'source_port': str,
+				'destination_port': str,
+				'vpn_id': str,
+				'ip_protocol': str,
+				'tcp_flags': str,
+				'interface_input': str,
+				'interface_output': str,
+				'counter_bytes_long': str,
+				'counter_packets_long': str,
+				'timestamp_abs_first': str,
+				'timestamp_abs_last': str,
+				'flow_end_reason': str,
+				'connection_initiator': str,
+				'interface_overlay_session_id_input': str,
+				'interface_overlay_session_id_output': str,
+				'connection_connection_id_long': str,
+				'drop_cause_id': str,
+				'counter_bytes_drop_long': str,
+				'sdwan_sla_not_met': str,
+				'sdwan_preferred_color_not_met': str,
+				'sdwan_queue_id': str,
+				'counter_packets_drop_long': str,
+				'ip_tos': str,
+				'ip_dscp': str,
+				'ip_dscp_output': str,
+				'application_name': str,
+			}
+    	}
+	}
+
+# ====================================================================================================================================
+# Parser for 'show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}'
+# ====================================================================================================================================
+class ShowFlowMonitorCacheFilterInterfaceIPv4(ShowFlowMonitorCacheFilterInterfaceIPv4Schema):
+    ''' Parser for
+      "show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}"
+    '''
+
+    cli_command = 'show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}'
+
+    def cli(self, name='', direction='', interface_name='', address_direction='', address='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name, direction=direction, interface_name=interface_name, address_direction=address_direction, address=address)
+            output = self.device.execute(cmd)
+            out = output
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        index = 0
+
+        #  Cache type:                               Normal (Platform cache)
+        p1_1 = re.compile(r'^\s*Cache\s+type:\s+(?P<cache_type>.*)$')
+
+        #  Cache size:                              1000000
+        p1_2 = re.compile(r'^\s*Cache\s+size:\s+(?P<cache_size>\d+)$')
+        
+        #  Current entries:                               5
+        p1_3 = re.compile(r'^\s*Current\s+entries:\s+(?P<current_entries>\d+)$')
+
+        #  High Watermark:                          1003094
+        p1_4 = re.compile(r'^\s*High\s+Watermark:\s+(?P<high_watermark>\d+)$')
+
+        #  Flows added:                          2470340673
+        p1_5 = re.compile(r'^\s*Flows\s+added:\s+(?P<flows_added>\d+)$')
+
+        #  Flows not added:                      26936258373
+        p1_6 = re.compile(r'^\s*Flows\s+not\s+added:\s+(?P<flows_not_added>\d+)$')
+
+        #  Flows aged:                           2470340668
+        p1_7 = re.compile(r'^\s*Flows\s+aged:\s+(?P<flows_aged>\d+)$')
+
+        #IPV4 SOURCE ADDRESS:                  121.0.5.2
+        p2_1 = re.compile(r'^\s*IPV4\s+SOURCE\s+ADDRESS\s*:\s+(?P<ipv4_source_address>[\d\.]+)$')
+
+        #IPV4 DESTINATION ADDRESS:             106.0.5.2
+        p2_2 = re.compile(r'^\s*IPV4\s+DESTINATION\s+ADDRESS\s*:\s+(?P<ipv4_destination_address>[\d\.]+)$')
+
+        #TRNS SOURCE PORT:                     1025
+        p2_3 = re.compile(r'^\s*TRNS\s+SOURCE\s+PORT\s*:\s+(?P<source_port>\d+)$')
+
+        #TRNS DESTINATION PORT:                63
+        p2_4 = re.compile(r'^\s*TRNS\s+DESTINATION\s+PORT\s*:\s+(?P<destination_port>\d+)$')
+
+        #IP VPN ID:                            5
+        p2_5 = re.compile(r'^\s*IP\s+VPN\s+ID\s*:\s+(?P<vpn_id>\d+)$')
+
+        #IP PROTOCOL:                          17
+        p2_6 = re.compile(r'^\s*IP\s+PROTOCOL\s*:\s+(?P<ip_protocol>\d+)$')
+
+        #tcp flags:                            0x18
+        p2_7 = re.compile(r'^\s*tcp\s+flags\s*:\s+(?P<tcp_flags>.*)$')
+
+        #interface input:                      Hu0/1/2.5
+        p2_8 = re.compile(r'^\s*interface\s+input\s*:\s+(?P<interface_input>.*)$')
+
+        #interface output:                     Hu0/1/0.3
+        p2_9 = re.compile(r'^\s*interface\s+output\s*:\s+(?P<interface_output>.*)$')
+
+        #counter bytes long:                   24686856
+        p2_10 = re.compile(r'^\s*counter\s+bytes\s+long\s*:\s+(?P<counter_bytes_long>\d+)$')
+
+        #counter packets long:                 62620
+        p2_11 = re.compile(r'^\s*counter\s+packets\s+long\s*:\s+(?P<counter_packets_long>\d+)$')
+
+        #timestamp abs first:                  15:53:01.433
+        p2_12 = re.compile(r'^\s*timestamp\s+abs\s+first\s*:\s+(?P<timestamp_abs_first>[\d\:\.]+)$')
+
+        #timestamp abs last:                   15:53:05.612
+        p2_13 = re.compile(r'^\s*timestamp\s+abs\s+last\s*:\s+(?P<timestamp_abs_last>[\d\:\.]+)$')
+
+        #flow end reason:                      Not determined
+        p2_14 = re.compile(r'^\s*flow\s+end\s+reason\s*:\s+(?P<flow_end_reason>.*)$')
+
+        #connection initiator:                 Initiator
+        p2_15 = re.compile(r'^\s*connection\s+initiator\s*:\s+(?P<connection_initiator>.*)$')
+
+        #interface overlay session id input:   0
+        p2_16 = re.compile(r'^\s*interface\s+overlay\s+session\s+id\s+input\s*:\s+(?P<interface_overlay_session_id_input>\d+)$')
+
+        #interface overlay session id output:  42
+        p2_17 = re.compile(r'^\s*interface\s+overlay\s+session\s+id\s+output\s*:\s+(?P<interface_overlay_session_id_output>\d+)$')
+
+        #connection connection id long:        0x9288A0F00018F2AD
+        p2_18 = re.compile(r'^\s*connection\s+connection\s+id\s+long\s*:\s+(?P<connection_connection_id_long>.*)$')
+
+        #drop cause id:                        0
+        p2_19 = re.compile(r'^\s*drop\s+cause\s+id\s*:\s+(?P<drop_cause_id>\d+)$')
+
+        #counter bytes drop long:              0
+        p2_20 = re.compile(r'^\s*counter\s+bytes\s+drop\s+long\s*:\s+(?P<counter_bytes_drop_long>\d+)$')
+
+        #sdwan sla not met :                   0
+        p2_21 = re.compile(r'^\s*sdwan\s+sla\s+not\s+met\s*:\s+(?P<sdwan_sla_not_met>\d+)$')
+
+        #sdwan preferred color not met :       0
+        p2_22 = re.compile(r'^\s*sdwan\s+preferred\s+color\s+not\s+met\s*:\s+(?P<sdwan_preferred_color_not_met>\d+)$')
+
+        #sdwan queue id :                      2
+        p2_23 = re.compile(r'^\s*sdwan\s+queue\s+id\s*:\s+(?P<sdwan_queue_id>\d+)$')
+
+        #counter packets drop long:            0
+        p2_24 = re.compile(r'^\s*counter\s+packets\s+drop\s+long\s*:\s+(?P<counter_packets_drop_long>\d+)$')
+
+        #ip tos:                               0x00
+        p2_25 = re.compile(r'^\s*ip\s+tos\s*:\s+(?P<ip_tos>.*)$')
+
+        #ip dscp:                              0x00
+        p2_26 = re.compile(r'^\s*ip\s+dscp\s*:\s+(?P<ip_dscp>.*)$')
+
+        #ip dscp output:                       0x00
+        p2_27 = re.compile(r'^\s*ip\s+dscp\s+output\s*:\s+(?P<ip_dscp_output>.*)$')
+
+        #application name:                     layer7 unknown
+        p2_28 = re.compile(r'^\s*application\s+name\s*:\s+(?P<application_name>.*)$')
+
+
+        for line in output.splitlines():
+
+            #  Cache type:                               Normal (Platform cache)
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['cache_type'] = group['cache_type']
+
+            #  Cache size:                              1000000
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['cache_size'] = group['cache_size']
+
+            #  Current entries:                               5
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['current_entries'] = group['current_entries']
+
+            #  High Watermark:                          1003094
+            m = p1_4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['high_watermark'] = group['high_watermark']
+
+            #  Flows added:                          2470340673
+            m = p1_5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_added'] = group['flows_added']
+
+            #  Flows not added:                      26936258373
+            m = p1_6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_not_added'] = group['flows_not_added']
+
+            #  Flows aged:                           2470340668
+            m = p1_7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'] = group['flows_aged']
+
+            #IPV4 SOURCE ADDRESS:                  121.0.5.2
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                flow_dict = ret_dict.setdefault('flows', {}).setdefault(index, {})
+                flow_dict['ipv4_source_address'] = group['ipv4_source_address']
+
+            #IPV4 DESTINATION ADDRESS:             106.0.5.2
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ipv4_destination_address'] = group['ipv4_destination_address']
+
+            #TRNS SOURCE PORT:                     1025
+            m = p2_3.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['source_port'] = group['source_port']
+
+            #TRNS DESTINATION PORT:                63
+            m = p2_4.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['destination_port'] = group['destination_port']
+
+            #IP VPN ID:                            5
+            m = p2_5.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['vpn_id'] = group['vpn_id']
+
+            #IP PROTOCOL:                          17
+            m = p2_6.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ip_protocol'] = group['ip_protocol']
+                
+            #tcp flags:                            0x18
+            m = p2_7.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['tcp_flags'] = group['tcp_flags']
+
+            #interface input:                      Hu0/1/2.5
+            m = p2_8.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['interface_input'] = group['interface_input']
+
+            #interface output:                     Hu0/1/0.3
+            m = p2_9.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['interface_output'] = group['interface_output']
+
+            #counter bytes long:                   24686856
+            m = p2_10.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['counter_bytes_long'] = group['counter_bytes_long']
+
+            #counter packets long:                 62620
+            m = p2_11.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['counter_packets_long'] = group['counter_packets_long']
+
+            #timestamp abs first:                  15:53:01.433
+            m = p2_12.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['timestamp_abs_first'] = group['timestamp_abs_first']
+
+            #timestamp abs last:                   15:53:05.612
+            m = p2_13.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['timestamp_abs_last'] = group['timestamp_abs_last']
+
+            #flow end reason:                      Not determined
+            m = p2_14.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['flow_end_reason'] = group['flow_end_reason']
+
+            #connection initiator:                 Initiator
+            m = p2_15.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['connection_initiator'] = group['connection_initiator']
+
+            #interface overlay session id input:   0
+            m = p2_16.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['interface_overlay_session_id_input'] = group['interface_overlay_session_id_input']
+
+            #interface overlay session id output:  42
+            m = p2_17.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['interface_overlay_session_id_output'] = group['interface_overlay_session_id_output']
+
+            #connection connection id long:        0x9288A0F00018F2AD
+            m = p2_18.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['connection_connection_id_long'] = group['connection_connection_id_long']
+
+            #drop cause id:                        0
+            m = p2_19.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['drop_cause_id'] = group['drop_cause_id']
+
+            #counter bytes drop long:              0
+            m = p2_20.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['counter_bytes_drop_long'] = group['counter_bytes_drop_long']
+
+            #sdwan sla not met :                   0
+            m = p2_21.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['sdwan_sla_not_met'] = group['sdwan_sla_not_met']
+
+            #sdwan preferred color not met :       0
+            m = p2_22.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['sdwan_preferred_color_not_met'] = group['sdwan_preferred_color_not_met']
+
+            #sdwan queue id :                      2
+            m = p2_23.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['sdwan_queue_id'] = group['sdwan_queue_id']
+
+            #counter packets drop long:            0
+            m = p2_24.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['counter_packets_drop_long'] = group['counter_packets_drop_long']
+
+            #ip tos:                               0x00
+            m = p2_25.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ip_tos'] = group['ip_tos']
+
+            #ip dscp:                              0x00
+            m = p2_26.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ip_dscp'] = group['ip_dscp']
+
+            #ip dscp output:                       0x00
+            m = p2_27.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['ip_dscp_output'] = group['ip_dscp_output']
+
+            #application name:                     layer7 unknown
+            m = p2_28.match(line)
+            if m:
+                group = m.groupdict()
+                flow_dict['application_name'] = group['application_name']
+
         return ret_dict

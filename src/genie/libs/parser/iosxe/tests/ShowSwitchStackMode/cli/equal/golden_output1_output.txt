@@ -1,0 +1,5 @@
+Switch#  Role    Mac Address     Version   Mode  Configured  State 
+--------------------------------------------------------------------------------------------------------------------
+*1      Active   00a5.bf53.d400    V02     N+1'    Active'    Ready               
+ 2      Standby  0c75.bd3a.7000    V00     N+1'    Standby'   Ready               
+ 3      Member   b090.7e1b.cb80    V02     N+1'    Member'    Ready 

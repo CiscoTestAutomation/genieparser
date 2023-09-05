@@ -305,7 +305,7 @@ class ShowLogging(ShowLoggingSchema):
         logging_dict = {}
         outer_logging_dict = {}
         outer_logging_sources_dict = {}
-        
+        trap_dict = {}
         for line in out.splitlines():
 
             line = line.strip()
@@ -451,7 +451,6 @@ class ShowLogging(ShowLoggingSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                trap_dict = {}
                 current_tag = group['tag'].lower()
 
                 trap_dict['level'] = group['level']

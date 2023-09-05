@@ -4033,6 +4033,7 @@ class ShowInterfacesTransceiverSchema(MetaParser):
                 Optional('current'): str,
                 Optional('opticaltx'): str,
                 Optional('opticalrx'): str,
+                Optional('max_power'): str
             }
         }
     }
@@ -4060,7 +4061,7 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
         # Gi1/1      40.6       5.09       0.4     -25.2      N/A
         p = re.compile(r'^(?P<port>([\d\/A-Za-z]+)) +(?P<temp>([\d\.-]+)) '
                        r'+(?P<voltage>([\d\.-]+)) +(?P<current>([\d\.-]+)) '
-                       r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))$')
+                       r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))(\s+(?P<max_power>\S+)\s+W)?$')
 
         result_dict = {}
         for line in out.splitlines():
@@ -4075,6 +4076,8 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
                 intf_dict['current'] = group['current']
                 intf_dict['opticaltx'] = group['opticaltx']
                 intf_dict['opticalrx'] = group['opticalrx']
+                if group['max_power']:
+                    intf_dict['max_power'] = group['max_power']
                 continue
 
         return result_dict

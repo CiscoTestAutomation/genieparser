@@ -1,0 +1,18 @@
+Building configuration...
+Derived configuration : 445 bytes
+!
+interface GigabitEthernet2/0/1
+switchport mode access
+switchport block unicast
+switchport port-security maximum 5
+switchport port-security aging time 5
+switchport port-security aging type inactivity
+switchport port-security
+load-interval 60
+storm-control broadcast level pps 5k
+storm-control multicast level pps 5k
+storm-control action trap
+spanning-tree portfast
+spanning-tree bpduguard enable
+ip dhcp snooping limit rate 5
+end

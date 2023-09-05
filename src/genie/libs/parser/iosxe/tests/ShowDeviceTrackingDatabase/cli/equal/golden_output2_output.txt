@@ -1,0 +1,12 @@
+vlanDB has 3 entries for vlan 101, 2 dynamic 
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left       
+L   10.230.62.1                              6c41.0e2c.0101         Vl101      101        0100       781mn      REACHABLE                  
+ARP 10.230.62.80                             0000.adbb.8d06         Po2        101        0005       116s       REACHABLE  135 s try 0     
+ARP 10.230.62.2                              0000.84d8.414d         Po2        101        0005       101s       REACHABLE  146 s try 0     

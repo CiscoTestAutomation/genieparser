@@ -1,0 +1,20 @@
+show ipv6 cef vrf red 2001:192:168:1::2 internal
+2001:192:168:1::2/128, epoch 0, flags [att, sc], RIB[D], refcnt 4, per-destination sharing
+  sources: RIB, Adj, IPL
+  feature space:
+    IPRM: 0x00058000
+  subblocks:
+    SC owned,sourced: LISP local EID -
+    SC inherited: LISP cfg dyn-EID - LISP configured dynamic-EID
+    LISP EID attributes: localEID Yes, c-dynEID Yes, d-dynEID Yes, a-dynEID No
+    SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F80D5B1C370 locks: 1]
+    Adj source: IPV6 adj out of Vlan101, addr 2001:192:168:1::2 7F80D5EF0960
+      Dependent covered prefix type adjfib, cover 2001:192:168:1::/64
+    2 IPL sources [no flags]
+  ifnums:
+    Vlan101(14): 2001:192:168:1::2
+  path list 7F80D5A40B80, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7F80D59EFE88, share 1/1, type attached nexthop, for IPv6
+      nexthop 2001:192:168:1::2 Vlan101, IPV6 adj out of Vlan101, addr 2001:192:168:1::2 7F80D5EF0960
+  output chain:
+    IPV6 adj out of Vlan101, addr 2001:192:168:1::2 7F80D5EF0960

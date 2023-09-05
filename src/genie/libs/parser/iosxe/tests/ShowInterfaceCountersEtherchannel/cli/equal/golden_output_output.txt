@@ -1,0 +1,9 @@
+Port               InOctets    InUcastPkts    InMcastPkts    InBcastPkts
+Po10             1988738194         397777              0              0
+Hu1/0/25          994365640         198881              0              0
+Fou2/0/17         994372554         198896              0              0
+
+Port              OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts
+Po10             1579453053         315919              0              0
+Hu1/0/25          789727012         157965              0              0
+Fou2/0/17         789726041         157954              0              0
