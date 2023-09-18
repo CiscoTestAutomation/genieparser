@@ -4348,10 +4348,6 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                 for line in ospfint_out.splitlines():
                     line = line.rstrip()
-
-                    # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
-                    # p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
-                    #                 ' +(?P<router_id>(\S+)) +(.*)', line)
                     
                     p = re.search('^(?P<interface>(\S+)) +is( +administratively)?'
                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
@@ -4364,6 +4360,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                             flag = True
 
                     if (flag == True):
+                        # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
                         p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID +(?P<router_id>(\S+)) +(.*)', line)
                         if p:
                             flag = False
