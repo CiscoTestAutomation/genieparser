@@ -1,0 +1,27 @@
+show etherchannel auto
+Flags:  D - down        P - bundled in port-channel
+        I - stand-alone s - suspended
+        H - Hot-standby (LACP only)
+        R - Layer3      S - Layer2
+        U - in use      f - failed to allocate aggregator
+
+        M - not in use, minimum links not met
+        u - unsuitable for bundling
+        w - waiting to be aggregated
+        d - default port
+
+        A - formed by Auto LAG
+
+
+Number of channel-groups in use: 5
+Number of aggregators:           5
+
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1      Po1(SD)          -
+2      Po2(SD)          -
+3      Po3(SU)        LACP        Te2/0/1(P)      Te2/0/2(D)
+                                  Te2/0/3(s)      Te3/0/1(s)
+                                  Te3/0/2(D)      Te3/0/3(P)
+4      Po4(RD)        LACP        Fi1/0/5(D)      Gi4/0/5(D)
+5      Po5(RD)        LACP        Te2/0/4(D)      Te3/0/4(D)

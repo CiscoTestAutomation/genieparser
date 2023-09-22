@@ -1111,6 +1111,10 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                         }
                                                     }
                                                 },
+                                                Optional('flow_label_flags'): {
+                                                    'configured': str,
+                                                    'negotiated': str
+                                                },
                                                 Optional('status_code'): str,
                                                 'create_time': str,
                                                 'last_time_status_changed': str,
@@ -1633,6 +1637,9 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
         # Status code: 0x0 (Up) in Notification message
         p86 = re.compile(r'^Status code: +(?P<code>.+) in [\w ]+$')
+
+        # Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+        p87 = re.compile(r'Flow Label flags \w+ (?P<configured>[\(\w=\,\)]+),\s+\w+\s+(?P<negotiated>[\(\w=\,\)]+)')
 
         for line in out.splitlines():
             original_line = line
@@ -2559,6 +2566,17 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 lsp = group['lsp']
                 label_dict = pw_id_dict.setdefault('lsp', {})
                 label_dict.update({'state': lsp})
+                continue
+
+            # Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+            m = p87.match(line)
+            if m:
+                group = m.groupdict()
+                configured = group['configured']
+                negotiated = group['negotiated']
+                flag_dict = pw_id_dict.setdefault('flow_label_flags', {})
+                flag_dict.update({'configured': configured})
+                flag_dict.update({'negotiated': negotiated})
                 continue
 
             # Forward-class: 0

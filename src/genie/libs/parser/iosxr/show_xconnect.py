@@ -285,17 +285,20 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                 Any(): {
                                     'id': {
                                         Any(): {
-                                            'state': str,
-                                            'ac_id': int,
-                                            'xc_id': str,
-                                            'encapsulation': str,
-                                            'source_address': str,
-                                            'encap_type': str,
-                                            'control_word': str,
-                                            'lsp': str,
+                                            Optional('state'): str,
+                                            Optional('ac_id'): int,
+                                            Optional('xc_id'): str,
+                                            Optional('encapsulation'): str,
+                                            Optional('source_address'): str,
+                                            Optional('encap_type'): str,
+                                            Optional('control_word'): str,
+                                            Optional('ignore_mtu_mismatch'): str,
+                                            Optional('transmit_mtu_zero'): str,
+                                            Optional('reachability'): str,
+                                            Optional('lsp'): str,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
-                                            'evpn': {
+                                            Optional('evpn'): {
                                                 Any(): {
                                                     'local': str,
                                                     'remote': str,
@@ -303,7 +306,15 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                                     Optional('remote_type'): list,
                                                 }
                                             },
-                                            'create_time': str,
+                                            Optional('srv6'): {
+                                                Any(): {
+                                                    'local': str,
+                                                    'remote': str,
+                                                    Optional('local_type'): list,
+                                                    Optional('remote_type'): list,
+                                                }
+                                            },
+                                            Optional('create_time'): str,
                                             Optional('last_time_status_changed'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
@@ -458,7 +469,8 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # MPLS         Local                          Remote
         # EVPN         Local                          Remote
-        p14 = re.compile(r'^(?P<label_name>MPLS|EVPN) +Local +Remote$')
+        # SRv6         Local                          Remote
+        p14 = re.compile(r'^(?P<label_name>MPLS|EVPN|SRv6) +Local +Remote$')
 
         # Label        30005                          unknown
         # Group ID     0x5000300                      0x0
@@ -554,11 +566,21 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p42 = re.compile(r'^Source +address +(?P<source_address>\S+)$')
 
         # Encap type Ethernet, control word enabled
-        p43 = re.compile(r'^Encap +type +(?P<encap_type>\S+), +control +'
-                            'word +(?P<control_word>\S+)$')
+        # Encap type Ethernet
+        p43 = re.compile(r'^Encap +type +(?P<encap_type>\S+)(?:, +control +'
+                            'word +(?P<control_word>\S+))?$')
 
         # LSP : Up
         p44 = re.compile(r'^LSP +: +(?P<lsp>\S+)$')
+
+        # Ignore MTU mismatch: Enabled
+        p45 = re.compile(r'^Ignore\s+MTU\s+mismatch:\s+(?P<ignore_mtu_mismatch>\S+)$')
+
+        # Transmit MTU zero: Enabled
+        p46 = re.compile(r'^Transmit\s+MTU\s+zero:\s+(?P<transmit_mtu_zero>\S+)$')
+
+        # Reachability: Up
+        p47 = re.compile(r'^Reachability:\s+(?P<reachability>\S+)$')
 
         for line in out.splitlines():
             original_line = line
@@ -842,6 +864,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
             # MPLS         Local                          Remote
             # EVPN         Local                          Remote
+            # SRv6         Local                          Remote
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -1022,11 +1045,13 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # Encap type Ethernet, control word enabled
+            # Encap type Ethernet
             m = p43.match(line)
             if m:
                 group = m.groupdict()
                 current_dict.update({'encap_type': group['encap_type']})
-                current_dict.update({'control_word': group['control_word']})
+                if group['control_word']:
+                    current_dict.update({'control_word': group['control_word']})
                 continue
 
             # LSP : Up
@@ -1035,7 +1060,28 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 current_dict.update({'lsp': group['lsp']})
                 continue
-            
+
+            # Ignore MTU mismatch: Enabled
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'ignore_mtu_mismatch': group['ignore_mtu_mismatch']})
+                continue
+
+            # Transmit MTU zero: Enabled
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'transmit_mtu_zero': group['transmit_mtu_zero']})
+                continue
+
+            # Reachability: Up
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'reachability': group['reachability']})
+                continue
+
             #              (LSP ping verification)               
             #                                             (none)
             #              (control word)                 (control word)
@@ -1075,7 +1121,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                                     replace(')', ''). \
                                     strip()
                     # Any thing between () brackets will be added to Local or Remote based on position
-                    if ')' not in line:
+                    if ')' not in line and mpls_value != '':
                         if mpls_value == 'interface':
                             mpls_dict = current_dict.setdefault(label_name, {}). \
                                     setdefault('monitor_interface' if interface_found else mpls_value, {})

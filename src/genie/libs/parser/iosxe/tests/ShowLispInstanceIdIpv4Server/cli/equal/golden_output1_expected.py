@@ -22,7 +22,8 @@ expected_output = {
                                     },
                                 '192.168.1.71/32': {
                                     'last_registered': '7w0d',
-                                    'who_last_registered': '11.11.11.11:65042',
+                                    'who_last_registered': '11.11.11.11',
+                                    'port': 65042,
                                     'up': 'yes'
                                     },
                                 '194.168.1.0/24': {
@@ -32,7 +33,8 @@ expected_output = {
                                     },
                                 '194.168.1.72/32': {
                                     'last_registered': '7w0d',
-                                    'who_last_registered': '22.22.22.22:41998',
+                                    'who_last_registered': '22.22.22.22',
+                                    'port': 41998,
                                     'up': 'yes'
                                     }
                                 }

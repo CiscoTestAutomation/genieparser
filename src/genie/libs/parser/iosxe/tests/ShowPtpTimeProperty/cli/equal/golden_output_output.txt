@@ -1,0 +1,10 @@
+ PTP CLOCK TIME PROPERTY
+  Current UTC offset valid: FALSE
+  Current UTC offset: 0
+  Leap 59: FALSE
+  Leap 61: FALSE
+  Time Traceable: FALSE
+  Frequency Traceable: FALSE
+  PTP Timescale: FALSE
+  Time Source: GPS
+  Time Property Persistence: 300 seconds

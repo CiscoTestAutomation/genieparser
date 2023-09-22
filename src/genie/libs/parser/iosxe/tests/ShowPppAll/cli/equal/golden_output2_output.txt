@@ -1,0 +1,3 @@
+Interface/ID OPEN+ Nego* Fail-     Stage    Peer Address    Peer Name
+------------ --------------------- -------- --------------- --------------------
+Vi2.1        LCP+ PAP+ IPCP+       LocalT   192.2.0.90      username1       

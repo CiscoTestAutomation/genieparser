@@ -59,3 +59,7 @@ nve1       200067   L2CP 30.0.107.78      4              200067     UP   N/A  6d
 nve1       200068   L2CP 20.0.101.2       1              200068     UP   N/A  2d02h
 nve1       200068   L2CP 20.0.101.3       1              200068     UP   N/A  6d20h
 nve1       200068   L2CP 30.0.107.78      4              200068     UP   N/A  6d20h
+nve1       3000102  L3CP 20.2.101.2       aaaa.bbbb.0002 3000102    DN  A/M/4 1w0d
+nve1       3000103  L3CP 20.2.101.3       aaaa.bbbb.0003 3000103    LP  A/M/4 1w0d
+nve1       3000104  L3CP 20.2.101.4       aaaa.bbbb.0004 3000104    NA  A/M/4 1w0d
+nve1       3000105  L3CP 20.2.101.5       aaaa.bbbb.0005 3000105    --  A/M/4 1w0d

@@ -41,10 +41,12 @@ expected_output = {
                                         "via_address": "1.3.2.1/32",
                                         "dependencies": 0,
                                         "via_flags": "recursive",
-                                        "path": {"path_idx": 0, "nhid": "0x0"},
+                                        "path": {"path_idx": 0, "nhid": "0x0", "nhid_hex": "0x781b57c8 0x0"},
                                     }
                                 },
                                 "load_distribution": {
+                                    "distribution": '0',
+                                    "refcount": 1,
                                     "0": {
                                         "hash": 0,
                                         "ok": "Y",

@@ -2959,3 +2959,194 @@ class ShowApBleSummary(ShowApBleSummarySchema):
                 ap_name_dict.update({key: value.strip() for key, value in rgx_dict.items()})
                 continue
         return ret_dict
+
+# ========================================
+# Schema for:
+#  * 'show ap image'
+# ========================================
+
+
+class ShowApImageSchema(MetaParser):
+    """Schema for show ap image."""
+
+    schema = {
+        "total_number_of_aps": int,
+        "number_of_aps": {
+            "initiated":int,
+            "downloading": int,
+            "predownloading": int,
+            "completed_downloading": int,
+            "completed_predownloading": int,
+            "not_supported": int,
+            "failed_to_predownload": int,
+            "predownload_in_progress": str,
+        },
+        Optional("ap_name"): {
+            str: {
+                "primary_image": str,
+                "backup_image": str,
+                "predownload_status": str,
+                "predownload_version": str,
+                "next_retry_time": str,
+                "retry_count": int,
+                "method": str
+            }
+        }
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show ap image'
+# ========================================
+
+class ShowApImage(ShowApImageSchema):
+    """Parser for show ap image"""
+
+    cli_command = 'show ap image'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ap_image_dict = dict()
+        if "Number of APs" in out:
+            ap_image_dict['number_of_aps'] = {}
+        """Total number of APs  : 5
+
+
+            Number of APs 
+                    Initiated                  : 0
+                    Downloading                : 0
+                    Predownloading             : 0
+                    Completed downloading      : 4
+                    Completed predownloading   : 0
+                    Not Supported              : 0
+                    Failed to Predownload      : 0
+                    Predownload in progress    : No
+            AP Name                           Primary Image          Backup Image            Predownload Status   Predownload Version  Next Retry Time   Retry Count   Method
+            ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            AP002a.106d.2e10                  17.13.0.44             0.0.0.0                    None                  0.0.0.0             N/A                 0           N/A
+            wsimap-0001                       17.13.0.44             8.3.15.109                 None                  0.0.0.0             N/A                 0           N/A
+            AP501C.B0BC.1448                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            AP4001.7AB2.C1B6                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            APF4DB.E651.2280                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A"""
+        total_number_of_aps = re.compile(r"^Total\s+number\sof\s+APs\s+:\s+(?P<total_number_of_ap>\d+)")
+
+        ap_image_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<primary_image>\d+\.\d+\.\d+\.\d+)\s+(?P<backup_image>\d+\.\d+\.\d+\.\d+)\s+"
+            "(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
+            "(?P<retry_count>\d+)\s+(?P<method>.*)")
+
+        remove_lines = ('AP Name', '----')
+
+        initiated_aps = re.compile(r"^Initiated\s+:\s+(?P<initiated>\d+)")
+        downloading_aps = re.compile(r"^Downloading\s+:\s+(?P<downloading>\d+)")
+        predownloading_aps = re.compile(r"^Predownloading\s+:\s+(?P<predownloading>\d+)")
+        completed_downloading_aps = re.compile(r"^Completed\s+downloading\s+:\s+(?P<completed_downloading>\d+)")
+        completed_predownloading_aps = re.compile(
+            r"^Completed\s+predownloading\s+:\s+(?P<completed_predownloading>\d+)")
+        not_supported_aps = re.compile(r"^Not\s+Supported\s+:\s+(?P<not_supported>\d+)")
+        failed_to_predownload_aps = re.compile(r"^Failed\s+to\s+Predownload\s+:\s+(?P<failed_to_predownload>\d+)")
+        predownload_in_progress = re.compile(r"^Predownload\s+in\s+progress\s+:\s+(?P<predownload_in_progress>\S+)")
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        ap_image_data = {}
+
+        for line in out_filter:
+            # Total number of APs  : 5
+            if total_number_of_aps.match(line):
+                total_number_of_aps_match = total_number_of_aps.match(line)
+                groups = total_number_of_aps_match.groupdict()
+                ap_image_count = int(groups['total_number_of_ap'])
+                ap_image_dict['total_number_of_aps'] = ap_image_count
+
+            elif initiated_aps.match(line):
+                # Initiated                  : 0
+                initiated_aps_match = initiated_aps.match(line)
+                groups = initiated_aps_match.groupdict()
+                initiated_aps_count = int(groups['initiated'])
+                ap_image_dict['number_of_aps']['initiated'] = initiated_aps_count
+            elif downloading_aps.match(line):
+                #Downloading                : 0
+                downloading_aps_match = downloading_aps.match(line)
+                groups = downloading_aps_match.groupdict()
+                downloading_aps_count = int(groups['downloading'])
+                ap_image_dict['number_of_aps']['downloading'] = downloading_aps_count
+            elif predownloading_aps.match(line):
+                #Predownloading             : 0
+                predownloading_aps_match = predownloading_aps.match(line)
+                groups = predownloading_aps_match.groupdict()
+                predownloading_aps_count = int(groups['predownloading'])
+                ap_image_dict['number_of_aps']['predownloading'] = predownloading_aps_count
+            elif completed_downloading_aps.match(line):
+                #Completed downloading      : 4
+                completed_downloading_aps_match = completed_downloading_aps.match(line)
+                groups = completed_downloading_aps_match.groupdict()
+                completed_downloading_aps_count = int(groups['completed_downloading'])
+                ap_image_dict['number_of_aps']['completed_downloading'] = completed_downloading_aps_count
+            elif completed_predownloading_aps.match(line):
+                #Completed predownloading   : 0
+                completed_predownloading_aps_match = completed_predownloading_aps.match(line)
+                groups = completed_predownloading_aps_match.groupdict()
+                completed_predownloading_aps_count = int(groups['completed_predownloading'])
+                ap_image_dict['number_of_aps']['completed_predownloading'] = completed_predownloading_aps_count
+            elif not_supported_aps.match(line):
+                #Not Supported              : 0
+                not_supported_aps_match = not_supported_aps.match(line)
+                groups = not_supported_aps_match.groupdict()
+                not_supported_aps_count = int(groups['not_supported'])
+                ap_image_dict['number_of_aps']['not_supported'] = not_supported_aps_count
+            elif failed_to_predownload_aps.match(line):
+                #Failed to Predownload      : 0
+                failed_to_predownload_aps_match = failed_to_predownload_aps.match(line)
+                groups = failed_to_predownload_aps_match.groupdict()
+                failed_to_predownload_aps_count = int(groups['failed_to_predownload'])
+                ap_image_dict['number_of_aps']['failed_to_predownload'] = failed_to_predownload_aps_count
+            elif predownload_in_progress.match(line):
+                #Predownload in progress    : No
+                predownload_in_progress_aps_match = predownload_in_progress.match(line)
+                groups = predownload_in_progress_aps_match.groupdict()
+                predownload_in_progress_aps = str(groups['predownload_in_progress'])
+                ap_image_dict['number_of_aps']['predownload_in_progress'] = predownload_in_progress_aps
+
+            # AP4001.7AB2.C1B6                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            elif ap_image_info_capture.match(line):
+                ap_image_info_match = ap_image_info_capture.match(line)
+                groups = ap_image_info_match.groupdict()
+                # ap name is the key to place all the ap neighbor info
+                ap_name = ''
+                # Loop over all regex matches found
+                for k, v in groups.items():
+                    # If the key value is ap_name, update the outer ap_name variable with the ap_name regex match
+                    if k == 'ap_name':
+                        ap_name = v
+                    else:
+                        if v.isdigit():
+                            v = int(v)
+                        else:
+                            v = v.strip()
+                        if not ap_image_dict.get("ap_name", {}):
+                            ap_image_dict["ap_name"] = {}
+                        ap_image_dict['ap_name'][ap_name] = {}
+                        ap_image_data.update({k: v})
+                ap_image_dict['ap_name'][ap_name].update(ap_image_data)
+                ap_image_data = {}
+                continue
+
+        return ap_image_dict

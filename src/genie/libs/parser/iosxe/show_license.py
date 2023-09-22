@@ -2420,7 +2420,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 Optional('url'):str,
                 Optional('proxy'):{
                     Optional('address'):str,
-                    Optional('port'):str,
+                    Optional('port'):Or(int, str),
                     Optional('username'):str,
                     Optional('password'):str,
                 },
@@ -3379,7 +3379,6 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict.update({key: int(group['value'])}) 
                         continue
                     else:
-                        #ForkedPdb().set_trace()
                         current_dict.update({key: group['value']})
                         continue                   
 

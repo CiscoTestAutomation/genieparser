@@ -13,37 +13,44 @@ expected_output = {
                         },
                         '2001:51:51:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:88:88:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:172:168:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:173:168:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:182:168:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:192:168:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         },
                         '2001:193:168:1::/64':{
                            'last_registered':'1d00h',
-                           'who_last_registered':'100.88.88.88:21791',
+                           'who_last_registered':'100.88.88.88',
+                           'port': 21791,
                            'up':'yes'
                         }
                      }

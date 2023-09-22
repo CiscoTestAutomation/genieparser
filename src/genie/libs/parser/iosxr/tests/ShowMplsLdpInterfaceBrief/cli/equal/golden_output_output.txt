@@ -1,0 +1,6 @@
+show mpls ldp interface brief
+Tue Feb  7 12:06:53.149 UTC
+Interface       VRF Name            Config Enabled IGP-Auto-Cfg TE-Mesh-Grp cfg
+--------------- ------------------- ------ ------- ------------ ---------------
+BE10            default             Y      Y       1            N/A
+Gi0/0/0/1       default             Y      Y       1            N/A

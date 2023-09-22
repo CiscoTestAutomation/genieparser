@@ -9,6 +9,7 @@ expected_output = {
                         "total": 3,
                         "no_route": 0,
                         "inactive": 0,
+                        'do_not_register': 1,
                         "eids": {
                             "0.0.0.0/0": {
                                 "eid": "0.0.0.0",
@@ -26,7 +27,7 @@ expected_output = {
                                         "location": "site-self",
                                         "state": "reachable",
                                     }
-                                },
+                                }
                             },
                             "100.64.250.4/32": {
                                 "eid": "100.64.250.4",
@@ -45,7 +46,7 @@ expected_output = {
                                         "location": "site-self",
                                         "state": "reachable",
                                     }
-                                },
+                                }
                             },
                             "100.65.0.1/32": {
                                 "eid": "100.65.0.1",
@@ -57,6 +58,7 @@ expected_output = {
                                 "last_change": "18w0d",
                                 "domain_id": "unset",
                                 "service_insertion": "N/A (0)",
+                                'do_not_register': True,
                                 "locators": {
                                     "100.64.254.5": {
                                         "priority": 10,
@@ -65,10 +67,10 @@ expected_output = {
                                         "location": "site-self",
                                         "state": "reachable",
                                     }
-                                },
-                            },
-                        },
-                    },
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

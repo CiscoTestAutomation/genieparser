@@ -1,3 +1,8 @@
+# show_nve.py
+#
+# Copyright (c) 2023 by Cisco Systems, Inc.
+# All rights reserved.
+# ===========================================
 ''' show_nve.py
 
 IOSXE parsers for the following show commands:
@@ -39,7 +44,7 @@ class ShowNvePeersSchema(MetaParser):
                 Optional('vni'): {
                     Any(): {
                         Optional('peer_ip'): {
-                            Any (): {
+                            Any(): {
                                 'type': str,
                                 'rmac_num_rt': str,
                                 'evni': str,
@@ -103,8 +108,8 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1       200052   L2CP 30.0.107.78      6              200052     UP   N/A  4d17h
 
         p1 = re.compile(r'^\s*(?P<nve_interface>[\w\/]+)\s+(?P<vni>[\d]+)\s+'
-                            r'(?P<type>(L3CP|L2CP))\s+(?P<peer_ip>[\w\.\:]+)\s+(?P<rmac_num_rt>[\S]+)\s+'
-                            r'(?P<evni>[\d]+)\s+(?P<state>(UP|DOWN))\s+(?P<flags>[\S]+)\s+(?P<uptime>[\S]+)$')
+                        r'(?P<type>(L3CP|L2CP))\s+(?P<peer_ip>[\w\.\:]+)\s+(?P<rmac_num_rt>[\S]+)\s+'
+                        r'(?P<evni>[\d]+)\s+(?P<state>(UP|DN|LP|NA|--|DOWN))\s+(?P<flags>[\S]+)\s+(?P<uptime>[\S]+)$')
 
         for line in out.splitlines():
             if line:
@@ -177,7 +182,9 @@ class ShowNveInterfaceDetailSchema(MetaParser):
                  'bytes_out': int
                 }
             }
-        }
+        },
+        Optional('tunnel_primary'): str,
+        Optional('tunnel_secondary'): str
     }
 
 
@@ -198,7 +205,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
     def cli(self, nve_intf=None, nve_num=None, output=None):
 
         if output is None:
-            if nve_num and nve_intf == None:
+            if nve_num and nve_intf is None:
                 nve_intf = 'nve {nve_num}'.format(nve_num=nve_num)
 
             if nve_intf:
@@ -250,6 +257,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         # 1          11          0          0
         p8 = re.compile(r'^(?P<pkts_in>[\d]+)\s+(?P<bytes_in>[\d]+)\s'
                         r'+(?P<pkts_out>[\d]+)\s+(?P<bytes_out>[\d]+)$')
+
+        # Tunnel0 Tunnel4
+        p9 = re.compile(r'^(?P<tunnel_primary>[a-zA-Z0-9]+)\s+(?P<tunnel_secondary>[a-zA-Z0-9]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -306,7 +316,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             if m:
                 group = m.groupdict()
                 src_intf = parsed_dict.setdefault('src_intf', {})
-                src_intf.update({group['src_intf'] : {
+                src_intf.update({group['src_intf']: {
                                         'primary_ip': group['primary_ip'],
                                         'vrf': group['vrf']
                                     }
@@ -318,10 +328,10 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             if m:
                 group = m.groupdict()
                 src_intf = parsed_dict.setdefault('src_intf', {})
-                src_intf.update({group['src_intf'] : {
-                                        'primary_ip': group['primary_ip'],
-                                        'secondary_ip': group['secondary_ip'],
-                                        'vrf': group['vrf']
+                src_intf.update({group['src_intf']: {
+                                       'primary_ip': group['primary_ip'],
+                                       'secondary_ip': group['secondary_ip'],
+                                       'vrf': group['vrf']
                                     }
                                  })
                 continue
@@ -333,7 +343,17 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 group = m.groupdict()
                 tunnel_intf_dict = parsed_dict.setdefault('tunnel_intf', {})
                 tunnel_intf = group['tunnel_intf']
-                tunnel_intf_dict.update({tunnel_intf : {}})
+                tunnel_intf_dict.update({tunnel_intf: {}})
+
+                # if there are 2 tunnel interfaces, creating 2 additional keys in main dict:
+                m_nested = p9.match(tunnel_intf)
+                if m_nested:
+                    group_nested = m_nested.groupdict()
+                    parsed_dict.update({'tunnel_primary': group_nested['tunnel_primary'],
+                                        'tunnel_secondary': group_nested['tunnel_secondary']})
+                else:
+                    parsed_dict.update({'tunnel_primary': tunnel_intf})
+
                 continue
 
             #          1          11          0          0
@@ -348,7 +368,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                                                 'bytes_out': int(group['bytes_out'])
                                                 }
                                             }
-                                        })
+                                         })
                 continue
 
         return parsed_dict
@@ -362,7 +382,7 @@ class ShowNveVniSchema(MetaParser):
         show nve vni
         show nve vni {vni}"""
 
-    schema ={
+    schema = {
         Any(): {
             Any(): {
                 'interface': str,
@@ -398,7 +418,6 @@ class ShowNveVni(ShowNveVniSchema):
                 cmd = self.cli_command[1].format(vni=vni)
             output = self.device.execute(cmd)
 
-
         parsed_dict_vlan = oper_fill_tabular(
             header_fields=["Interface", "VNI", "Multicast-group",
                            "VNI state", "Mode", "VLAN", "cfg", "vrf"],
@@ -407,7 +426,7 @@ class ShowNveVni(ShowNveVniSchema):
             index=[0, 1], device_output=output, device_os='iosxe'
         ).entries
 
-        if parsed_dict_vlan :
+        if parsed_dict_vlan:
             return parsed_dict_vlan
 
         parsed_dict_bd = oper_fill_tabular(
@@ -419,3 +438,305 @@ class ShowNveVni(ShowNveVniSchema):
         ).entries
 
         return parsed_dict_bd
+
+
+# ====================================================
+#  schema for show nve vni {vni} detail
+# ====================================================
+class ShowNveVniDetailSchema(MetaParser):
+    '''Schema for:
+
+    * 'show nve vni {vni} detail'
+    '''
+
+    schema = {
+        'nve_interface': str,
+        'vni_id': int,
+        Optional('mcast_ip'): str,
+        Optional('mcast_ipv6'): str,
+        'vni_state': str,
+        'vni_type': str,
+        'vlan_id': str,
+        Optional('l3_vlan_id'): str,
+        'vni_origin': str,
+        'vni_vrf': str,
+        'svi_if_handler': str,
+        'vtep_ip': str,
+        Optional('vtep_ip_secondary'): str,
+        Optional('local_routing'): str,
+        Optional('l3_vni'): str,
+        Optional('trm_ipv4'): str,
+        Optional('trm_ipv6'): str,
+        Optional('v4_topo_id'): str,
+        Optional('v6_topo_id'): str,
+        Optional('svi_mac'): str,
+        'uc_input_packets': int,
+        'uc_input_bytes': int,
+        'uc_output_packets': int,
+        'uc_output_bytes': int,
+        Optional('mc_input_packets'): int,
+        Optional('mc_input_bytes'): int,
+        Optional('mc_output_packets'): int,
+        Optional('mc_output_bytes'): int
+    }
+
+
+# ============================================
+# Parser for show nve vni {vni} detail
+# ============================================
+class ShowNveVniDetail(ShowNveVniDetailSchema):
+    ''' Parser for the following show commands:
+
+    * 'show nve vni {vni} detail'
+    '''
+
+    cli_command = 'show nve vni {vni} detail'
+
+    def cli(self, vni, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vni=vni))
+
+        # nve1      20011      227.0.0.11       Down       L2CP  11    CLI red
+        p1 = re.compile(r'^(?P<nve_if>nve[0-9]+)\s*(?P<vni_id>[0-9]*)\s*'
+                        r'(?P<mcast_ip>(([0-9]{1,3}\.){3}[0-9]{1,3})|(N\/A))?\s(?P<mcast_ipv6>\S+)?\s+'
+                        r'(?P<vni_state>\S+\s*\S*)\s+(?P<vni_type>L\S+)'
+                        r'\s+(?P<vlan_id>\S+)\s+(?P<vni_origin>\S+)'
+                        r'\s+(?P<vni_vrf>\S+)$')
+
+        # nve1       1000420    239.0.4.120 FF04::4:120 \
+        #                               BD Down/Re L2CP  N/A   CLI N/A
+        # nve1       1000101    239.0.0.101 FF04::1:120 \
+        #                               Up         L2CP  101   CLI VRF-101
+        p1_1 = re.compile(r'^(?P<nve_if>nve[0-9]+)\s*(?P<vni_id>[0-9]*)\s*'
+                          r'(?P<mcast_ip>\S+)\s(?P<mcast_ipv6>\S+)?\s+\\$')
+
+        p1_2 = re.compile(r'^(?P<vni_state>\S+\s*\S*)\s+(?P<vni_type>L\S+)'
+                          r'\s+(?P<vlan_id>\S+)\s+(?P<vni_origin>\S+)'
+                          r'\s+(?P<vni_vrf>\S+)$')
+
+        # SVI if handler: 0x2F
+        p2 = re.compile(r'^(SVI|BDI) if handler:\s+(?P<svi_if>\S+)$')
+
+        # Local VTEP: 1.1.1.2
+        p3 = re.compile(r'^Local VTEP:\s+(?P<vtep_ip>\S+)$')
+
+        # Local VTEP: 172.16.255.7 2000:172:16:255::7
+        p3_1 = re.compile(r'^Local VTEP:\s+(?P<vtep_ip>\S+)\s+(?P<vtep_ip_secondary>\S+)$')
+
+        # Local routing: Disabled
+        p4 = re.compile(r'^Local routing:\s+(?P<local_routing>\S+)$')
+
+        # L3VNI: 30000
+        p5 = re.compile(r'^L3VNI:\s+(?P<l3_vni>\d+)$')
+
+        # IPv4 TRM mdt group: N/A
+        p6 = re.compile(r'^IPv4 TRM mdt group:\s+(?P<trm_ipv4>\S+)$')
+
+        # IPv6 TRM mdt group: N/A
+        p7 = re.compile(r'^IPv6 TRM mdt group:\s+(?P<trm_ipv6>\S+)$')
+
+        # V4TopoID: 0x2
+        p8 = re.compile(r'^V4TopoID:\s+(?P<v4_topo_id>\S+)$')
+
+        # V6TopoID: 0x1E000002
+        p9 = re.compile(r'^V6TopoID:\s+(?P<v6_topo_id>\S+)$')
+
+        # SVI MAC: 6C8B.D36D.471F
+        p10 = re.compile(r'^SVI MAC:\s+(?P<svi_mac>\S+)$')
+
+        # Pkts In   Bytes In   Pkts Out  Bytes Out
+        # 0          0          0          0
+        p11 = re.compile(r'^(?P<uc_input_packets>\d+)\s+(?P<uc_input_bytes>\d+)'
+                         r'\s+(?P<uc_output_packets>\d+)\s+'
+                         r'(?P<uc_output_bytes>\d+)$')
+        # UcastPkts  UcastBytes McastPkts McastBytes"
+        # RX 0          0          0          0
+        p12 = re.compile(r'^RX\s*(?P<uc_input_packets>\d+)\s+'
+                         r'(?P<uc_input_bytes>\d+)\s+(?P<mc_input_packets>\d+)'
+                         r'\s+(?P<mc_input_bytes>\d+)$')
+        # TX 0          0          0          0
+        p13 = re.compile(r'^TX\s*(?P<uc_output_packets>\d+)\s+'
+                         r'(?P<uc_output_bytes>\d+)\s+(?P<mc_output_packets>'
+                         r'\d+)\s+(?P<mc_output_bytes>\d+)$')
+
+        # VLAN: 1000
+        # BD: 1000
+        p14 = re.compile(r'^(VLAN|BD):\s+(?P<vlan_id>\S+)$')
+
+        parsed_dict = {}
+        l3vni_found = False
+        nve_line_splitted_nextline = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if line == 'Core IRB info:' or line == 'L3CP VNI local VTEP info:':
+                l3vni_found = True
+
+            # nve1    20011    227.0.0.11      Down       L2CP  11    CLI red
+            m = p1.match(line)
+            if m:
+                group = m.groupdict(default='')
+                parsed_dict.update({'nve_interface': group['nve_if'],
+                                    'vni_id': int(group['vni_id']),
+                                    'mcast_ip': group['mcast_ip'],
+                                    'vni_state': group['vni_state'].strip(),
+                                    'vni_type': group['vni_type'],
+                                    'vlan_id': group['vlan_id'],
+                                    'vni_origin': group['vni_origin'],
+                                    'vni_vrf': group['vni_vrf']})
+
+                # if group['mcast_ipv6']:
+                if group.get('mcast_ipv6'):
+                    parsed_dict.update({'mcast_ipv6': group['mcast_ipv6']})
+                continue
+
+            # nve1       1000420    239.0.4.120 FF04::4:120 \
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'nve_interface': group['nve_if'],
+                                    'vni_id': int(group['vni_id']),
+                                    'mcast_ip': group['mcast_ip']})
+                if group['mcast_ipv6']:
+                    parsed_dict.update({'mcast_ipv6': group['mcast_ipv6']})
+                nve_line_splitted_nextline = True
+                continue
+
+            # in case nve line is splitted (p1_1 matches), we need to parse remaining line
+            #                               BD Down/Re L2CP  N/A   CLI N/A
+            # or
+            #                               Up         L2CP  101   CLI VRF-101
+            if nve_line_splitted_nextline:
+                m = p1_2.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'vni_state': group['vni_state'].strip(),
+                                        'vni_type': group['vni_type'],
+                                        'vlan_id': group['vlan_id'],
+                                        'vni_origin': group['vni_origin'],
+                                        'vni_vrf': group['vni_vrf']})
+
+                    # to avoid matching other lines
+                    nve_line_splitted_nextline = False
+                    continue
+
+            # SVI if handler: 0x2F
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'svi_if_handler': group['svi_if']})
+                continue
+
+            # Local VTEP: 1.1.1.2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'vtep_ip': group['vtep_ip']})
+                continue
+
+            # Local VTEP: 172.16.255.7 2000:172:16:255::7
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'vtep_ip': group['vtep_ip'], 'vtep_ip_secondary': group['vtep_ip_secondary']})
+                continue
+
+            # Local routing: Disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'local_routing': group['local_routing']})
+                continue
+
+            if l3vni_found:
+                # L3VNI: 30000
+                p5 = re.compile(r'^L3VNI:\s+(?P<l3_vni>\S+)$')
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'l3_vni': group['l3_vni']})
+                    continue
+
+                # IPv4 TRM mdt group: N/A
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'trm_ipv4': group['trm_ipv4']})
+                    continue
+
+                # IPv6 TRM mdt group: N/A
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'trm_ipv6': group['trm_ipv6']})
+                    continue
+
+                # V4TopoID: 0x2
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'v4_topo_id': group['v4_topo_id']})
+                    continue
+
+                # V6TopoID: 0x1E000002
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'v6_topo_id': group['v6_topo_id']})
+                    continue
+
+                # SVI MAC: 6C8B.D36D.471F
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'svi_mac': group['svi_mac']})
+                    continue
+
+                # VLAN: 1000
+                # BD: 1000
+                m = p14.match(line)
+                if m:
+                    group = m.groupdict()
+                    parsed_dict.update({'l3_vlan_id': group['vlan_id']})
+                    continue
+
+            # Pkts In   Bytes In   Pkts Out  Bytes Out
+            # 0          0          0          0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'uc_input_packets': int(group['uc_input_packets']),
+                                    'uc_input_bytes': int(group['uc_input_bytes']),
+                                    'uc_output_packets': int(group['uc_output_packets']),
+                                    'uc_output_bytes': int(group['uc_output_bytes']),
+                                    'mc_input_packets': 0,
+                                    'mc_input_bytes': 0,
+                                    'mc_output_packets': 0,
+                                    'mc_output_bytes': 0})
+                continue
+            # UcastPkts  UcastBytes McastPkts McastBytes"
+            # RX 0          0          0          0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'uc_input_packets': int(group['uc_input_packets']),
+                                    'uc_input_bytes': int(group['uc_input_bytes']),
+                                    'mc_input_packets': int(group['mc_input_packets']),
+                                    'mc_input_bytes': int(group['mc_input_bytes'])})
+                continue
+
+            # TX 0          0          0          0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.update({'uc_output_packets': int(group['uc_output_bytes']),
+                                    'uc_output_bytes': int(group['uc_output_bytes']),
+                                    'mc_output_packets': int(group['mc_output_packets']),
+                                    'mc_output_bytes': int(group['mc_output_bytes'])})
+                continue
+        return parsed_dict

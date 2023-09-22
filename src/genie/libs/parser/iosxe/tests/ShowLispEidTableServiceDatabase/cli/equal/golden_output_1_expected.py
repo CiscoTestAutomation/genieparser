@@ -9,6 +9,7 @@ expected_output = {
                         'total': 2,
                         'no_route': 0,
                         'inactive': 0,
+                        'do_not_register': 1,
                         'eids': {
                             '2001:192:168:1::1/128': {
                                 'eid': '2001:192:168:1::1',
@@ -19,6 +20,7 @@ expected_output = {
                                 'last_change': '8w1d',
                                 'domain_id': 'local',
                                 'service_insertion': 'N/A (0)',
+                                'do_not_register': True,
                                 'locators': {
                                     '11.11.11.11': {
                                         'priority': 10,
@@ -26,9 +28,9 @@ expected_output = {
                                         'source': 'cfg-intf',
                                         'location': 'site-self',
                                         'state': 'reachable'
-                                        }
                                     }
-                                },
+                                }
+                            },
                             '2001:192:168:1::71/128': {
                                 'eid': '2001:192:168:1::71',
                                 'mask': 128,
@@ -45,7 +47,6 @@ expected_output = {
                                         'source': 'cfg-intf',
                                         'location': 'site-self',
                                         'state': 'reachable'
-                                        }
                                     }
                                 }
                             }
@@ -55,3 +56,4 @@ expected_output = {
             }
         }
     }
+}

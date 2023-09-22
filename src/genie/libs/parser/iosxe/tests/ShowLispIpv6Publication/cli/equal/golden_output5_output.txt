@@ -1,0 +1,6 @@
+Publication Information for LISP 0 EID-table vrf red (IID 102)
+Entries total 2
+EID Prefix                              Last        Publisher      Encap-IID
+                                        Published                  
+2001:192:168:1:1001:1001:1001:0/112     00:00:41    22:22:22::22   -
+2001:192:168:1:1001:1001:1001:1001/128  00:00:17    22:22:22::22   -

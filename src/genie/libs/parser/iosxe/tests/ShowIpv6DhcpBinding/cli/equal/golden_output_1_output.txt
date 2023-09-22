@@ -1,0 +1,18 @@
+Client: FE80::8715:A9FF:FEBE:B6FA
+	DUID: 00030001A85E45C5D933
+	Username : unassigned
+	VRF : OPER_VRF
+	Interface : relayed
+	IA PD: IA ID 0x00000001, T1 302400, T2 483840
+        Prefix: 2001:DB8::/48
+                preferred lifetime 604800, valid lifetime 2592000
+                expires at Oct 11 2023 03:26 AM (2506862 seconds)
+	IA NA: IA ID 0x00000000, T1 43200, T2 69120
+        Address: 2001::514B:882E:78AF:9593
+                preferred lifetime 86400, valid lifetime 172800
+                expires at Sep 13 2023 03:26 AM (87662 seconds)
+        Address: 2002::24A4:79EA:58FB:6A6D
+                preferred lifetime 86400, valid lifetime 172800
+                expires at Sep 13 2023 03:26 AM (87662 seconds)
+        Address: 2003::B987:FD2C:CB89:9583
+                preferred lifetime INFINITY, , valid lifetime INFINITY,

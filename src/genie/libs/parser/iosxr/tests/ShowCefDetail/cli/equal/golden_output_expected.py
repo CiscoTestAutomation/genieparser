@@ -43,6 +43,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 0,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4cbf8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.0.2/32",
                                                 "path_idx_via": "10.55.0.2/32",
@@ -62,6 +63,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 1,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4fbf8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.1.2/32",
                                                 "path_idx_via": "10.55.1.2/32",
@@ -81,6 +83,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 2,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4fcb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.2.2/32",
                                                 "path_idx_via": "10.55.2.2/32",
@@ -100,6 +103,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 3,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4dbb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.3.2/32",
                                                 "path_idx_via": "10.55.3.2/32",
@@ -119,6 +123,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 4,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4fe38 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.4.2/32",
                                                 "path_idx_via": "10.55.4.2/32",
@@ -138,6 +143,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 5,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b691b8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.5.2/32",
                                                 "path_idx_via": "10.55.5.2/32",
@@ -157,6 +163,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 6,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4cb38 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.6.2/32",
                                                 "path_idx_via": "10.55.6.2/32",
@@ -176,6 +183,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 7,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4d4f8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.7.2/32",
                                                 "path_idx_via": "10.55.7.2/32",
@@ -195,6 +203,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 8,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4ccb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.8.2/32",
                                                 "path_idx_via": "10.55.8.2/32",
@@ -214,6 +223,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 9,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4cd78 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.9.2/32",
                                                 "path_idx_via": "10.55.9.2/32",
@@ -233,6 +243,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 10,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b44c78 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.10.2/32",
                                                 "path_idx_via": "10.55.10.2/32",
@@ -252,6 +263,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 11,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b448b8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.11.2/32",
                                                 "path_idx_via": "10.55.11.2/32",
@@ -271,6 +283,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 12,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4deb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.12.2/32",
                                                 "path_idx_via": "10.55.12.2/32",
@@ -290,6 +303,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 13,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b44bb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.13.2/32",
                                                 "path_idx_via": "10.55.13.2/32",
@@ -309,6 +323,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 14,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b43bf8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.14.2/32",
                                                 "path_idx_via": "10.55.14.2/32",
@@ -328,6 +343,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 15,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4ca78 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.55.15.2/32",
                                                 "path_idx_via": "10.55.15.2/32",
@@ -347,6 +363,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 16,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b504f8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.0.2/32",
                                                 "path_idx_via": "10.1.0.2/32",
@@ -366,6 +383,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 17,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50138 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.1.2/32",
                                                 "path_idx_via": "10.1.1.2/32",
@@ -385,6 +403,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 18,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b55bf8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.2.2/32",
                                                 "path_idx_via": "10.1.2.2/32",
@@ -404,6 +423,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 19,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50678 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.3.2/32",
                                                 "path_idx_via": "10.1.3.2/32",
@@ -423,6 +443,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 20,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50738 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.4.2/32",
                                                 "path_idx_via": "10.1.4.2/32",
@@ -442,6 +463,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 21,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50378 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.5.2/32",
                                                 "path_idx_via": "10.1.5.2/32",
@@ -461,6 +483,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 22,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b55b38 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.6.2/32",
                                                 "path_idx_via": "10.1.6.2/32",
@@ -480,6 +503,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 23,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b508b8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.7.2/32",
                                                 "path_idx_via": "10.1.7.2/32",
@@ -499,6 +523,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 24,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50978 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.8.2/32",
                                                 "path_idx_via": "10.1.8.2/32",
@@ -518,6 +543,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 25,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b505b8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.9.2/32",
                                                 "path_idx_via": "10.1.9.2/32",
@@ -537,6 +563,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 26,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b55ef8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.10.2/32",
                                                 "path_idx_via": "10.1.10.2/32",
@@ -556,6 +583,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 27,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b69878 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.11.2/32",
                                                 "path_idx_via": "10.1.11.2/32",
@@ -575,6 +603,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 28,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b50bb8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.12.2/32",
                                                 "path_idx_via": "10.1.12.2/32",
@@ -594,6 +623,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 29,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b507f8 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.13.2/32",
                                                 "path_idx_via": "10.1.13.2/32",
@@ -613,6 +643,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 30,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b55e38 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.14.2/32",
                                                 "path_idx_via": "10.1.14.2/32",
@@ -632,6 +663,7 @@ expected_output = {
                                         "path": {
                                             "path_idx": 31,
                                             "nhid": "0x0",
+                                            "nhid_hex": "0x78b4e938 0x0",
                                             "path_idx_nh": {
                                                 "path_idx_address": "10.1.15.2/32",
                                                 "path_idx_via": "10.1.15.2/32",
@@ -840,6 +872,8 @@ expected_output = {
                                     }
                                 },
                                 "load_distribution": {
+                                    "distribution": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31",
+                                    "refcount": 3,
                                     "0": {
                                         "hash": 0,
                                         "ok": "Y",

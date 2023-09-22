@@ -1,6 +1,6 @@
 # golden_output_expected.py
 #
-# Copyright (c) 2022 by Cisco Systems, Inc.
+# Copyright (c) 2023 by Cisco Systems, Inc.
 # All rights reserved.
 
 expected_output = {
@@ -30,5 +30,7 @@ expected_output = {
             },
         },
     },
+    'tunnel_primary': 'Tunnel1',
+    'tunnel_secondary': 'Tunnel4',
     'vxlan_dport': 4789,
 }

@@ -1,0 +1,239 @@
+--------------------------------------------------------------------------------
+ERROR MESSAGE SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS Facility-Sev-Name | Count | Persistence Flag
+--------------------------------------------------------------------------------
+03/15/2023 14:25:19 %Unrecognized message ID 2504
+03/15/2023 14:27:41 %IOSXE-2-DIAGNOSTICS_PASSED :  12   : LAST :  Diagnostics Fantray passed
+05/25/2023 10:23:37 %IOSXE-2-SPA_INSERTED :   83   : LAST :  SPA inserted in subslot 5/0
+05/25/2023 10:23:44 %IOSXE-2-SPA_REMOVED :    43   : LAST :  SPA removed from subslot 4/0
+03/15/2023 17:24:06 %Unrecognized message ID 2507
+03/15/2023 17:05:38 %IOSXE-2-TRANSCEIVER_INSERTED :  8    : LAST :  Transceiver module inserted in TenGigabitEthernet3/0/2
+03/10/2023 13:22:14 %Unrecognized message ID 2508
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+ERROR MESSAGE CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+MM/DD/YYYY HH:MM:SS Facility-Sev-Name
+--------------------------------------------------------------------------------
+03/06/2023 18:51:42 %Unrecognized message ID 2504
+03/06/2023 23:00:40 %Unrecognized message ID 2504
+03/07/2023 17:05:27 %Unrecognized message ID 2504
+03/07/2023 19:31:33 %Unrecognized message ID 2504
+03/07/2023 22:13:04 %Unrecognized message ID 2504
+03/08/2023 06:03:02 %Unrecognized message ID 2504
+03/08/2023 08:31:57 %Unrecognized message ID 2504
+03/08/2023 10:39:39 %Unrecognized message ID 2504
+03/08/2023 15:52:16 %Unrecognized message ID 2504
+03/08/2023 16:52:20 %Unrecognized message ID 2504
+03/08/2023 17:09:34 %Unrecognized message ID 2504
+03/08/2023 17:26:45 %Unrecognized message ID 2504
+03/08/2023 19:32:25 %Unrecognized message ID 2504
+03/08/2023 22:43:06 %Unrecognized message ID 2504
+03/09/2023 04:28:11 %Unrecognized message ID 2504
+03/09/2023 06:35:53 %Unrecognized message ID 2504
+03/09/2023 08:49:20 %Unrecognized message ID 2504
+03/10/2023 06:41:13 %Unrecognized message ID 2504
+03/10/2023 08:46:45 %Unrecognized message ID 2504
+03/10/2023 13:15:04 %Unrecognized message ID 2504
+03/10/2023 13:22:18 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+03/10/2023 13:22:25 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+03/10/2023 15:42:09 %Unrecognized message ID 2504
+03/10/2023 17:48:56 %Unrecognized message ID 2504
+03/10/2023 20:16:28 %Unrecognized message ID 2504
+03/11/2023 02:49:52 %Unrecognized message ID 2504
+03/11/2023 12:44:09 %Unrecognized message ID 2504
+03/11/2023 15:35:15 %Unrecognized message ID 2504
+03/14/2023 08:51:26 %Unrecognized message ID 2504
+03/14/2023 20:11:30 %Unrecognized message ID 2504
+03/15/2023 14:25:19 %Unrecognized message ID 2504
+03/15/2023 14:27:32 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+03/15/2023 14:27:41 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+03/16/2023 04:26:46 %Unrecognized message ID 2504
+03/30/2023 01:57:00 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+03/30/2023 01:57:09 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/02/2023 09:53:59 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/02/2023 09:54:08 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/02/2023 11:04:04 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/02/2023 11:04:13 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/02/2023 12:40:47 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/02/2023 12:40:56 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/03/2023 01:56:32 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/03/2023 01:56:41 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/03/2023 03:31:57 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/03/2023 03:32:06 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/04/2023 01:52:31 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/04/2023 01:52:41 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/04/2023 03:26:14 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/04/2023 03:26:24 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/19/2023 10:50:08 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/19/2023 10:50:17 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/27/2023 12:44:50 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/27/2023 12:45:00 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/28/2023 03:26:52 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+04/28/2023 03:27:02 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/28/2023 10:29:23 %Unrecognized message ID 2504
+05/01/2023 12:11:51 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/01/2023 12:12:01 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/08/2023 07:03:29 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/08/2023 07:03:39 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/23/2023 17:09:21 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/23/2023 17:09:31 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/24/2023 04:48:12 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/24/2023 04:48:22 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/24/2023 11:45:14 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/24/2023 11:45:24 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/25/2023 07:23:18 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/25/2023 07:23:28 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+05/25/2023 10:25:25 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
+05/25/2023 10:25:34 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed
+04/28/2023 03:25:04 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+04/28/2023 03:25:10 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+04/28/2023 03:25:10 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+04/28/2023 03:25:10 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+04/28/2023 03:25:10 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+04/28/2023 03:25:55 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+04/28/2023 03:25:55 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+04/28/2023 03:25:55 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+04/28/2023 03:28:56 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/08/2023 07:01:51 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/08/2023 07:01:51 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/08/2023 07:01:51 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/08/2023 07:01:51 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/08/2023 07:01:56 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+05/08/2023 07:01:56 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+05/08/2023 07:01:56 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+05/08/2023 07:01:56 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+05/08/2023 07:02:04 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/08/2023 07:02:04 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/08/2023 07:02:04 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/24/2023 04:46:24 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/24/2023 04:46:24 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/24/2023 04:46:24 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/24/2023 04:46:24 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/24/2023 04:46:31 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+05/24/2023 04:46:31 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+05/24/2023 04:46:31 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+05/24/2023 04:46:31 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+05/24/2023 04:47:10 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/24/2023 04:47:10 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/24/2023 04:47:10 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/24/2023 04:47:10 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/24/2023 11:43:25 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/24/2023 11:43:25 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/24/2023 11:43:26 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/24/2023 11:43:26 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/24/2023 11:43:32 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+05/24/2023 11:43:32 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+05/24/2023 11:43:32 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+05/24/2023 11:43:32 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+05/24/2023 11:44:11 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/24/2023 11:44:11 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/24/2023 11:44:11 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/24/2023 11:44:12 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/25/2023 07:21:35 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/25/2023 07:21:35 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/25/2023 07:21:35 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/25/2023 07:21:35 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/25/2023 07:21:41 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+05/25/2023 07:21:41 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+05/25/2023 07:21:41 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+05/25/2023 07:21:42 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+05/25/2023 07:22:16 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/25/2023 07:22:16 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/25/2023 07:22:16 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/25/2023 08:39:27 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/25/2023 10:23:36 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/25/2023 10:23:37 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/25/2023 10:23:37 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/25/2023 10:23:37 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+05/25/2023 10:23:44 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0
+05/25/2023 10:23:44 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0
+05/25/2023 10:23:44 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0
+05/25/2023 10:23:44 %IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0
+05/25/2023 10:24:19 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0
+05/25/2023 10:24:19 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0
+05/25/2023 10:24:19 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0
+05/25/2023 10:24:20 %IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0
+03/15/2023 17:23:22 %Unrecognized message ID 2507
+03/15/2023 17:23:23 %Unrecognized message ID 2507
+03/15/2023 17:23:24 %Unrecognized message ID 2507
+03/15/2023 17:23:25 %Unrecognized message ID 2507
+03/15/2023 17:23:26 %Unrecognized message ID 2507
+03/15/2023 17:23:27 %Unrecognized message ID 2507
+03/15/2023 17:23:28 %Unrecognized message ID 2507
+03/15/2023 17:23:29 %Unrecognized message ID 2507
+03/15/2023 17:23:30 %Unrecognized message ID 2507
+03/15/2023 17:23:31 %Unrecognized message ID 2507
+03/15/2023 17:23:32 %Unrecognized message ID 2507
+03/15/2023 17:23:33 %Unrecognized message ID 2507
+03/15/2023 17:23:34 %Unrecognized message ID 2507
+03/15/2023 17:23:35 %Unrecognized message ID 2507
+03/15/2023 17:23:36 %Unrecognized message ID 2507
+03/15/2023 17:23:37 %Unrecognized message ID 2507
+03/15/2023 17:23:38 %Unrecognized message ID 2507
+03/15/2023 17:23:39 %Unrecognized message ID 2507
+03/15/2023 17:23:40 %Unrecognized message ID 2507
+03/15/2023 17:23:41 %Unrecognized message ID 2507
+03/15/2023 17:23:42 %Unrecognized message ID 2507
+03/15/2023 17:23:43 %Unrecognized message ID 2507
+03/15/2023 17:23:44 %Unrecognized message ID 2507
+03/15/2023 17:23:45 %Unrecognized message ID 2507
+03/15/2023 17:23:46 %Unrecognized message ID 2507
+03/15/2023 17:23:47 %Unrecognized message ID 2507
+03/15/2023 17:23:48 %Unrecognized message ID 2507
+03/15/2023 17:23:49 %Unrecognized message ID 2507
+03/15/2023 17:23:50 %Unrecognized message ID 2507
+03/15/2023 17:23:51 %Unrecognized message ID 2507
+03/15/2023 17:23:52 %Unrecognized message ID 2507
+03/15/2023 17:23:53 %Unrecognized message ID 2507
+03/15/2023 17:23:54 %Unrecognized message ID 2507
+03/15/2023 17:23:55 %Unrecognized message ID 2507
+03/15/2023 17:23:56 %Unrecognized message ID 2507
+03/15/2023 17:23:57 %Unrecognized message ID 2507
+03/15/2023 17:23:58 %Unrecognized message ID 2507
+03/15/2023 17:23:59 %Unrecognized message ID 2507
+03/15/2023 17:24:00 %Unrecognized message ID 2507
+03/15/2023 17:24:01 %Unrecognized message ID 2507
+03/15/2023 17:24:02 %Unrecognized message ID 2507
+03/15/2023 17:24:03 %Unrecognized message ID 2507
+03/15/2023 17:24:04 %Unrecognized message ID 2507
+03/15/2023 17:24:05 %Unrecognized message ID 2507
+03/15/2023 17:24:06 %Unrecognized message ID 2507
+03/15/2023 17:24:07 %Unrecognized message ID 2507
+03/15/2023 17:24:08 %Unrecognized message ID 2507
+03/15/2023 17:24:09 %Unrecognized message ID 2507
+03/15/2023 17:24:10 %Unrecognized message ID 2507
+03/15/2023 17:24:11 %Unrecognized message ID 2507
+03/15/2023 17:24:12 %Unrecognized message ID 2507
+03/15/2023 17:24:13 %Unrecognized message ID 2507
+03/15/2023 17:24:14 %Unrecognized message ID 2507
+03/15/2023 17:24:15 %Unrecognized message ID 2507
+03/15/2023 17:24:16 %Unrecognized message ID 2507
+03/15/2023 17:24:17 %Unrecognized message ID 2507
+03/15/2023 17:24:18 %Unrecognized message ID 2507
+03/15/2023 17:24:19 %Unrecognized message ID 2507
+03/15/2023 17:24:20 %Unrecognized message ID 2507
+03/15/2023 17:24:21 %Unrecognized message ID 2507
+03/15/2023 17:24:22 %Unrecognized message ID 2507
+03/15/2023 17:24:23 %Unrecognized message ID 2507
+03/15/2023 17:24:24 %Unrecognized message ID 2507
+03/15/2023 17:24:25 %Unrecognized message ID 2507
+03/15/2023 17:24:26 %Unrecognized message ID 2507
+03/15/2023 17:24:27 %Unrecognized message ID 2507
+03/15/2023 17:24:28 %Unrecognized message ID 2507
+04/27/2023 12:44:04 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+04/27/2023 12:44:04 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+04/28/2023 03:29:32 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+04/28/2023 03:29:32 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+05/08/2023 07:02:39 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+05/08/2023 07:02:39 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+05/24/2023 04:47:45 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+05/24/2023 04:47:45 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+05/24/2023 11:44:48 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+05/24/2023 11:44:48 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+05/25/2023 08:40:02 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+05/25/2023 08:40:02 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+05/25/2023 10:24:53 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1
+05/25/2023 10:24:53 %IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2
+--------------------------------------------------------------------------------

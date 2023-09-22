@@ -880,6 +880,7 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
             m = p16.match(line)
             if m:
                 group = m.groupdict()
+                sr_dict = lsp_dict.setdefault("segment_routing", {})
                 sr_dict["srlb_base"] = int(group["srlb_base"])
                 sr_dict["srlb_range"] = int(group["srlb_range"]) 
                 continue     
@@ -888,6 +889,7 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
+                sr_dict = lsp_dict.setdefault("segment_routing", {})
                 sr_dict["spf"] = True if group["spf"] else False
                 sr_dict["strict_spf"] = True if group["strict_spf"] else False
                 sr_dict["algorithms"] = set()
@@ -898,6 +900,7 @@ class ShowIsisDatabaseSuperParser(ShowIsisDatabaseSchema):
             m = p18.match(line)
             if m:
                 group = m.groupdict()
+                sr_dict = lsp_dict.setdefault("segment_routing", {})
                 sr_dict["algorithms"].add(int(group["flex_id_1"]))
                 if group["flex_id_2"]:
                     sr_dict["algorithms"].add(int(group["flex_id_2"]))

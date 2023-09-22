@@ -22,7 +22,8 @@ expected_output = {
                                     },
                                 'aabb.cc00.c901/48': {
                                     'last_registered': '7w0d',
-                                    'who_last_registered': '11.11.11.11:65042',
+                                    'who_last_registered': '11.11.11.11',
+                                    'port': 65042,
                                     'up': 'yes'
                                 }
                             }
