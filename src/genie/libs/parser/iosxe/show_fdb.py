@@ -65,12 +65,15 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
 
     cli_command = ['show mac address-table',
                    'show mac address-table vlan {vlan}',
-                   'show mac address-table interface {interface}']
+                   'show mac address-table interface {interface}',
+                   'show mac address-table interface {interface} vlan {vlan}']
 
     def cli(self, vlan='', interface='', output=None):
         if output is None:
             # get output from device
-            if vlan:
+            if interface and vlan:
+                out = self.device.execute(self.cli_command[3].format(interface=interface,vlan=vlan))
+            elif vlan:
                 out = self.device.execute(self.cli_command[1].format(vlan=vlan))
             elif interface:
                 out = self.device.execute(self.cli_command[2].format(interface=interface))

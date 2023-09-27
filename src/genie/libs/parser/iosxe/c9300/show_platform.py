@@ -110,7 +110,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                 },
                 'power_supply': {
                     Any(): {
-                        'state': str,
+                        Optional('state'): str,
                         Optional('pid'): str,
                         Optional('serial_number'): str,
                         'status': str,
@@ -119,7 +119,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                         Optional('watts'): str
                     }
                 },
-                'system_temperature_state': str,
+                Optional('system_temperature_state'): str,
                 Optional('inlet_temperature'): {
                     'value': str,
                     'state': str,
@@ -173,7 +173,12 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # Switch   FAN     Speed   State
         # ----------------------------------
         # 1        1       14240     OK
-        p1_2 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>[\w\s]+)$')
+        p1_2 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>[\w]+)$')
+        
+        # Switch     FAN     Speed     State     Airflow direction
+        # ---------------------------------------------------
+        # 1        1    5440       OK     Front to Back
+        p1_2_3 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>[\w]+)\s+(?P<direction>[\w\s]+)$')
 
         # FAN PS-1 is OK
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
@@ -233,7 +238,13 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             # Switch   FAN     Speed   State
             # ----------------------------------
             #   1       1      14240     OK
-            m = p1_2.match(line)
+
+            # Switch     FAN     Speed     State     Airflow direction
+            # ---------------------------------------------------
+            # 1        1    5440       OK     Front to Back
+            m1 = p1_2.match(line)
+            m2 = p1_2_3.match(line)
+            m = m1 if m1 else m2
             if m:
                 group = m.groupdict()
                 switch = group['switch']
@@ -245,6 +256,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 fan_dict = root_dict.setdefault('fan', {}).setdefault(fan, {})
                 fan_dict.update({'speed': speed,
                                  'state': state})
+                if 'direction' in group:
+                    fan_dict.update({'direction':group['direction']})
                 continue
 
             # FAN PS-1 is OK

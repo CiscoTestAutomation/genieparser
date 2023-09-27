@@ -238,7 +238,7 @@ class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
             "entries": int,
             Optional("limit"): int
         },
-        "network_layer_address": {
+        Optional("network_layer_address"): {
             Any(): {
                 "age": str,
                 "code": str,
@@ -356,7 +356,7 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
                 continue
 
         return device_info_obj
-
+    
 # ========================
 # Schema for:
 #   * 'show device-tracking database details'

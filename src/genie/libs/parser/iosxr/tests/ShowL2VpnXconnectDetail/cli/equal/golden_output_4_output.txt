@@ -1,0 +1,33 @@
+show l2vpn xconnect detail
+Wed Jun 14 09:56:45.965 UTC
+
+Group SRv6_VPWS, XC SRv6_VPWS_Dual_Homing_AA, state is up; Interworking none
+  AC: Bundle-Ether36.1001, state is up
+    Type VLAN; Num Ranges: 1
+    Rewrite Tags: []
+    VLAN ranges: [1001, 1001]
+    MTU 1500; XC ID 0xa0000001; interworking none
+    Statistics:
+      packets: received 2358, sent 2359
+      bytes: received 273372, sent 273772
+      drops: illegal VLAN 0, illegal length 0
+  EVPN: neighbor ::ffff:10.0.0.1, PW ID: evi 1001, ac-id 10001, state is up ( established )
+    XC ID 0xc0000001
+    Encapsulation SRv6
+    Encap type Ethernet
+    Ignore MTU mismatch: Enabled
+    Transmit MTU zero: Enabled
+    Reachability: Up
+
+      SRv6              Local                        Remote                      
+      ----------------  ---------------------------- --------------------------
+      uDX2              fc00:c000:2003:e005::        fc00:c000:1001:e006::
+                                                     fc00:c000:1002:e006::
+      AC ID             10001                        10001                       
+      MTU               1514                         0                           
+      Locator           MAIN                         N/A                         
+      Locator Resolved  Yes                          N/A                         
+      SRv6 Headend      H.Encaps.L2.Red              N/A                         
+    Statistics:
+      packets: received 2359, sent 2358
+      bytes: received 273772, sent 273372

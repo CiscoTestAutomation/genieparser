@@ -142,7 +142,6 @@ from genie.metaparser.util.schemaengine import (Any,
 from genie.libs.parser.utils.common import Common
 
 
-
 # ==============================
 # Schema for 'show lisp session'
 # ==============================
@@ -2498,10 +2497,12 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                             'total': int,
                             'no_route': int,
                             'inactive': int,
+                            Optional('do_not_register'): int,
                             'eids': {
                                 str: {
                                     'eid': str,
                                     'mask': int,
+                                    Optional('do_not_register'): bool,
                                     Optional('dynamic_eid'): str,
                                     Optional('locator_set'): str,
                                     Optional('no_route_to_prefix'): bool,
@@ -2549,14 +2550,14 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         # Entries total 2, no-route 0, inactive 0, do-not-register 1
         p2 = re.compile(r'^Entries\s+total\s+(?P<total>\d+),\s+no-route\s+'
                         r'(?P<no_route>\d),\s+inactive\s+(?P<inactive>\d+),'
-                        r'\s+do-not-register\s+\d+$')
+                        r'\s+do-not-register\s+(?P<do_not_register>\d+)$')
 
         # aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
         p3 = re.compile(r'^(?P<eid>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}|'
                         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)(\/)?'
                         r'(?P<mask>\d{1,3})(,\s)?(route-import)?'
                         r'(dynamic-eid\s+(?P<dynamic_eid>\S+))?'
-                        r'(,\sdo\snot\sregister)?(,\sinherited\sfrom\sdefault\s+)?'
+                        r'(,\s(?P<do_not_register>do\snot\sregister))?(,\sinherited\sfrom\sdefault\s+)?'
                         r'((,\s)?locator-set\s(?P<locator_set>\S+))?'
                         r'(,\s(?P<auto_discover_rlocs>auto-discover-rlocs))?'
                         r'(\s\*\*\*\s(?P<no_route_to_prefix>NO ROUTE TO EID PREFIX)\s\*\*\*)?'
@@ -2610,10 +2611,12 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 total = int(group['total'])
                 no_route = int(group['no_route'])
                 inactive = int(group['inactive'])
+                do_not_reg_count = int(group['do_not_register'])
                 entries_dict = lisp_id_dict.setdefault('entries',{})
                 entries_dict.update({'total':total,
                                      'no_route':no_route,
-                                     'inactive':inactive})
+                                     'inactive':inactive,
+                                     'do_not_register':do_not_reg_count})
                 continue
 
             #  aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
@@ -2639,6 +2642,8 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                     eid_dict.update({'proxy':True})
                 if group['auto_discover_rlocs']:
                     eid_dict.update({'auto_discover_rlocs':True})
+                if group['do_not_register']:
+                    eid_dict.update({'do_not_register':True})
                 continue
 
             # Uptime: 1w3d, Last-change: 1w3d
@@ -4780,6 +4785,7 @@ class ShowLispSiteSuperParserSchema(MetaParser):
                                     str: {
                                         'last_registered': str,
                                         'who_last_registered': str,
+                                        Optional('port'): int,
                                         'up': str
                                         }
                                     }
@@ -4851,6 +4857,13 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                 last_registered = group['last_registered']
                 up = group['up']
                 who_last_registered = group['who_last_registered']
+                flag = 0
+                if group['who_last_registered'].count(":") > 1:
+                    (who_last_registered, port) = group['who_last_registered'].split(".")
+                    flag = 1
+                elif group['who_last_registered'].count(".") > 1:
+                    (who_last_registered, port) = group['who_last_registered'].split(":")
+                    flag = 1
                 instance_id = int(group['instance_id'])
                 eid_prefix = group['eid_prefix']
                 if site_name:
@@ -4860,14 +4873,20 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                                      .setdefault(instance_id, {}) \
                                      .setdefault('eid_prefix', {}) \
                                      .setdefault(eid_prefix, {})
-                site_info.update({'last_registered':last_registered,
-                                  'who_last_registered':who_last_registered,
-                                  'up':up})
+                if flag:
+                    site_info.update({'last_registered':last_registered,
+                                      'who_last_registered':who_last_registered,
+                                      'port':int(port),
+                                      'up':up})
+                else:
+                    site_info.update({'last_registered':last_registered,
+                                      'who_last_registered':who_last_registered,
+                                      'up':up})
                 continue
 
             # Site Name      Last      Up     Who Last             Inst     EID Prefix
             #                Register         Registered           ID
-            # Shire          00:00:06  yes*#  1000:1000:1000:1000:1000:1000:1000:1000
+            # Shire          00:00:06  yes*#  1000:1000:1000:1000:1000:1000:1000:1000.27643
             #                                                      10       2001:DB8::2/128
             m = p3_1.match(line)
             if m:
@@ -4881,8 +4900,22 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                 if site_name:
                     site_dict = lisp_id_dict.setdefault('site_name', {}) \
                                             .setdefault(site_name, {})
-                current_prefix_dict.update({'last_registered':group['last_registered'],
-                                            'who_last_registered':group['who_last_registered'],
+                who_last_registered=group['who_last_registered']
+                port_flag=0
+                if group['who_last_registered'].count(":") > 1:
+                    (who_last_registered, port) = group['who_last_registered'].split(".")
+                    port_flag=1
+                elif group['who_last_registered'].count(".") > 1:
+                    (who_last_registered, port) = group['who_last_registered'].split(":")
+                    port_flag=1
+                if port_flag:
+                    current_prefix_dict.update({'last_registered':group['last_registered'],
+                                            'who_last_registered':who_last_registered,
+                                            'port':int(port),
+                                            'up':group['up']})
+                else:
+                    current_prefix_dict.update({'last_registered':group['last_registered'],
+                                            'who_last_registered':who_last_registered,
                                             'up':group['up']})
                 continue
 
@@ -4896,12 +4929,18 @@ class ShowLispSiteSuperParser(ShowLispSiteSuperParserSchema):
                                      .setdefault(instance_id, {}) \
                                      .setdefault('eid_prefix', {}) \
                                      .setdefault(eid_prefix, {})
-                site_info.update({'last_registered':current_prefix_dict['last_registered'],
-                                  'who_last_registered':current_prefix_dict['who_last_registered'],
-                                  'up':current_prefix_dict['up']})
+                if port_flag:
+                    site_info.update({'last_registered':current_prefix_dict['last_registered'],
+                                      'who_last_registered':current_prefix_dict['who_last_registered'],
+                                      'port':current_prefix_dict['port'],
+                                      'up':current_prefix_dict['up']})
+                else:
+                    site_info.update({'last_registered':current_prefix_dict['last_registered'],
+                                      'who_last_registered':current_prefix_dict['who_last_registered'],
+                                      'up':current_prefix_dict['up']})
+
                 current_prefix_dict = {}
                 continue
-
         return ret_dict
 
 
@@ -5717,97 +5756,87 @@ class ShowLispIpv4Publication(ShowLispIpv4PublicationSchema):
             else:
                 cmd = self.cli_command[3].format(vrf=vrf)
             output = self.device.execute(cmd)
-        lisp_v4_pub_dict = {}
-        lisp_id_dict = {}
-        instance_id_dict = {}
-        publications_dict = {}
-        #Publication Information for LISP 0 EID-table vrf red (IID 4100)
+
+        ret_dict = {}
+
+        # Publication Information for LISP 0 EID-table vrf red (IID 4100)
         p1 = re.compile(r"^Publication\s+Information\s+for\s+LISP\s+"
                         r"(?P<lisp_id>\d+)\s+EID-table\s+vrf\s+\S+\s+"
                         r"\(IID\s+(?P<instance_id>\d+)\)$")
 
-        #Entries total 2
+        # Entries total 2
         p2 = re.compile(r"^Entries\s+total\s+(?P<total_entries>\d+)")
 
-        #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-        p3 = re.compile(r"^\S+\s+\S+\s+(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}))")
+        # 44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
+        # 44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
+        p3 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
+                        r"(?P<last_published>\S+)\s+(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})\s+"
+                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
 
-        #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-        #44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
-        p4 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+")
+        # New format (Locators are no longer displayed in the output)
 
-        #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-        #44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
-        p5 = re.compile(r"^((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<last_published>\S+)")
-
-        #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-        #44:44:44:44::   1d21h       192.168.1.71/32          11:11:11:11::   -
-        p6 = re.compile(r"^((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+\S+\s+\d{1,3}\."
-                        r"\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,3}\s+(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))")
-
-        #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-        #44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
-        p7 = re.compile(r"^((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+\S+\s+\S+\s+\S+\s+(?P<encap_iid>\S+)")
+        # 192.168.1.71/32     1d21h   44.44.44.44   -
+        p4 = re.compile(r"^(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})\s+"
+                        r"(?P<last_published>\S+)\s+(?P<publisher_ip>(\d{1,3}\.\d{1,3}\."
+                        r"\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
 
         for line in output.splitlines():
 
-            #Publication Information for LISP 0 EID-table vrf red (IID 4100)
-            m=p1.match(line)
+            # Publication Information for LISP 0 EID-table vrf red (IID 4100)
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 lisp_id = int(groups['lisp_id'])
                 instance_id = int(groups['instance_id'])
-                lisp_id_dict.setdefault(lisp_id,{})
-                lisp_v4_pub_dict['lisp_id'] = lisp_id_dict
-                instance_id_dict.setdefault(instance_id,{})
-                lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'] = instance_id_dict
+                lisp_id_dict = ret_dict.setdefault('lisp_id',{})\
+                    .setdefault(lisp_id,{})
+                instance_id_dict = lisp_id_dict.setdefault('instance_id',{})\
+                    .setdefault(instance_id,{})
                 continue
 
-            #Entries total 2
-            m=p2.match(line)
+            # Entries total 2
+            m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 entries = int(groups['total_entries'])
-                lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]['total_entries'] = entries
+                instance_id_dict.update({'total_entries':entries})
                 continue
 
-            #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11
-            #44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
-            m=p3.match(line)
+            # 44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11
+            # 44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
+            m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 publications = groups['eid_prefix']
-                publications_dict.setdefault(publications,{})
-                lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]['eid_prefix'] = publications_dict
-                #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-                m=p4.match(line)
-                if m:
-                    groups = m.groupdict()
-                    publisher_ip = groups['publisher_ip']
-                    lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['publisher_ip'] = publisher_ip
-                #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-                m=p5.match(line)
-                if m:
-                    groups = m.groupdict()
-                    last_published = groups['last_published']
-                    lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['last_published'] = last_published
-                #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-                m=p6.match(line)
-                if m:
-                    groups = m.groupdict()
-                    rloc = groups['rloc']
-                    lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['rloc'] = rloc
-                #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-                m=p7.match(line)
-                if m:
-                    groups = m.groupdict()
-                    encap_iid = groups['encap_iid']
-                    lisp_v4_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['encap_iid'] = encap_iid
-        return lisp_v4_pub_dict
+                publisher_ip = groups['publisher_ip']
+                last_published = groups['last_published']
+                rloc = groups['rloc']
+                encap_iid = groups['encap_iid']
+                eid_prefix = instance_id_dict.setdefault('eid_prefix',{})\
+                    .setdefault(publications,{})
+                eid_prefix.update({'publisher_ip':publisher_ip})
+                eid_prefix.update({'last_published':last_published})
+                eid_prefix.update({'rloc':rloc})
+                eid_prefix.update({'encap_iid':encap_iid})
+                continue
+
+            # New format (Locators are no longer displayed in the output)
+
+            # 192.168.1.71/32     1d21h   44.44.44.44   -
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                publications = groups['eid_prefix']
+                publisher_ip = groups['publisher_ip']
+                last_published = groups['last_published']
+                encap_iid = groups['encap_iid']
+                eid_prefix = instance_id_dict.setdefault('eid_prefix',{})\
+                    .setdefault(publications,{})
+                eid_prefix.update({'publisher_ip':publisher_ip})
+                eid_prefix.update({'last_published':last_published})
+                eid_prefix.update({'encap_iid':encap_iid})
+                continue
+        return ret_dict
 
 
 # ==========================================
@@ -5839,97 +5868,84 @@ class ShowLispIpv6Publication(ShowLispIpv4PublicationSchema):
             else:
                 cmd = self.cli_command[3].format(vrf=vrf)
             output = self.device.execute(cmd)
-        lisp_v6_pub_dict = {}
-        lisp_id_dict = {}
-        instance_id_dict = {}
-        publications_dict = {}
 
-        #Publication Information for LISP 0 EID-table vrf red (IID 4100)
+        ret_dict = {}
+
+        # Publication Information for LISP 0 EID-table vrf red (IID 4100)
         p1 = re.compile(r"^Publication\s+Information\s+for\s+LISP\s+"
                         r"(?P<lisp_id>\d+)\s+EID-table\s+vrf\s+\S+\s+"
                         r"\(IID\s+(?P<instance_id>\d+)\)$")
 
-        #Entries total 2
+        # Entries total 2
         p2 = re.compile(r"^Entries\s+total\s+(?P<total_entries>\d+)")
 
-        #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p3 = re.compile(r"^\S+\s+\S+\s+(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3})")
+        # 100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
+        p3 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
+                        r"(?P<last_published>\S+)\s+(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3})\s+"
+                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
 
-        #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p4 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+))\s+")
+        # New format (Locators are no longer displayed in the output)
 
-        #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p5 = re.compile(r"^((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))"
-                        r"\s+(?P<last_published>\S+)")
-
-        #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p6 = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)\s+"
-                        r"\S+\s+[a-fA-F\d\:]+\/\d{1,3}\s+"
-                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|[a-fA-F\d\:]+)")
-
-        #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-        p7 = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|"
-                        r"[a-fA-F\d\:]+)\s+\S+\s+\S+\s+\S+\s+(?P<encap_iid>\S+)")
+        # 2001:192:168:1::2/128   01:11:02   100.14.14.14   -
+        p4 = re.compile(r"^(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3})\s+(?P<last_published>\S+)\s+"
+                        r"(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
 
         for line in output.splitlines():
 
-            #Publication Information for LISP 0 EID-table vrf red (IID 4100)
-            m=p1.match(line)
+            # Publication Information for LISP 0 EID-table vrf red (IID 4100)
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 lisp_id = int(groups['lisp_id'])
                 instance_id = int(groups['instance_id'])
-                lisp_id_dict.setdefault(lisp_id,{})
-                lisp_v6_pub_dict['lisp_id'] = lisp_id_dict
-                instance_id_dict.setdefault(instance_id,{})
-                lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'] = instance_id_dict
+                lisp_id_dict = ret_dict.setdefault('lisp_id',{})\
+                    .setdefault(lisp_id,{})
+                instance_id_dict = lisp_id_dict.setdefault('instance_id',{})\
+                    .setdefault(instance_id,{})
                 continue
 
-            #Entries total 2
+            # Entries total 2
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 entries = int(groups['total_entries'])
-                lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]['total_entries'] = entries
+                instance_id_dict.update({'total_entries':entries})
                 continue
 
-            #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-            m=p3.match(line)
+            # 100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
+            m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 publications = groups['eid_prefix']
-                publications_dict.setdefault(publications,{})
-                lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]['eid_prefix'] = publications_dict
+                publisher_ip = groups['publisher_ip']
+                last_published = groups['last_published']
+                rloc = groups['rloc']
+                encap_iid = groups['encap_iid']
+                eid_prefix = instance_id_dict.setdefault('eid_prefix',{})\
+                    .setdefault(publications,{})
+                eid_prefix.update({'publisher_ip':publisher_ip})
+                eid_prefix.update({'last_published':last_published})
+                eid_prefix.update({'rloc':rloc})
+                eid_prefix.update({'encap_iid':encap_iid})
+                continue
 
-                #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-                m=p4.match(line)
-                if m:
-                    groups = m.groupdict()
-                    publisher_ip = groups['publisher_ip']
-                    lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['publisher_ip'] = publisher_ip
-                #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-                m=p5.match(line)
-                if m:
-                    groups = m.groupdict()
-                    last_published = groups['last_published']
-                    lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['last_published'] = last_published
-                #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-                m=p6.match(line)
-                if m:
-                    groups = m.groupdict()
-                    rloc = groups['rloc']
-                    lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['rloc'] = rloc
-                #100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
-                m=p7.match(line)
-                if m:
-                    groups = m.groupdict()
-                    encap_iid = groups['encap_iid']
-                    lisp_v6_pub_dict['lisp_id'][lisp_id]['instance_id'][instance_id]\
-                        ['eid_prefix'][publications]['encap_iid'] = encap_iid
-        return lisp_v6_pub_dict
+            # New format (Locators are no longer displayed in the output)
+
+            # 2001:192:168:1::2/128   01:11:02   100.14.14.14   -
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                publications = groups['eid_prefix']
+                publisher_ip = groups['publisher_ip']
+                last_published = groups['last_published']
+                encap_iid = groups['encap_iid']
+                eid_prefix = instance_id_dict.setdefault('eid_prefix',{})\
+                    .setdefault(publications,{})
+                eid_prefix.update({'publisher_ip':publisher_ip})
+                eid_prefix.update({'last_published':last_published})
+                eid_prefix.update({'encap_iid':encap_iid})
+                continue
+        return ret_dict
 
 
 class ShowLispPrefixListSchema(MetaParser):
@@ -7130,6 +7146,7 @@ class ShowLispPublicationPrefixSchema(MetaParser):
                                         'xtr_id': str,
                                         Optional('site_id'): str,
                                         Optional('domain_id'): str,
+                                        Optional('sgt'): int,
                                         Optional('multihoming_id'): str,
                                         Optional('extranet_iid'): int,
                                         Optional('locators'): {
@@ -7174,55 +7191,55 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         lisp_v4_pub_pre = {}
         count = 0
 
-        #Publication Information for LISP 0 EID-table vrf red (IID 4100)
+        # Publication Information for LISP 0 EID-table vrf red (IID 4100)
         p1 = re.compile(r"^Publication\s+Information\s+for\s+LISP\s+"
                         r"(?P<lisp_id>\d+)\s+EID-table\s+vrf\s+\S+\s+"
                         r"\(IID\s+(?P<instance_id>\d+)\)$")
 
-        #EID-prefix: 192.168.1.71/32
+        # EID-prefix: 192.168.1.71/32
         # EID-prefix: 2001:172:168:1::/64
         p2 = re.compile(r"^EID-prefix:\s+(?P<eid_prefixes>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}"
                         r"|[a-fA-F\d\:]+\/\d{1,3})|([a-fA-F\d\:]+\/\d{1,3}))$")
 
-        #First published:      03:05:56
+        # First published:      03:05:56
         p3 = re.compile(r"^First\s+published:\s+(?P<first_published>\S+)$")
 
-        #Last published:      03:05:56
+        # Last published:      03:05:56
         p4 = re.compile(r"^Last\s+published:\s+(?P<last_published>\S+)$")
 
-        #State:                complete
+        # State:                complete
         p5 = re.compile(r"^State:\s+(?P<state>\S+)$")
 
-        #Exported to:          map-cache
-        #Exported to:          local-eid, map-cache
+        # Exported to:          map-cache
+        # Exported to:          local-eid, map-cache
         p6 = re.compile(r"^Exported\s+to:\s+(?P<exported_to>[\s\S]+)$")
 
-        #Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
-        #Publisher 2001:13:13:13::13.4342, last published 00:03:35, TTL never, Expires: never
+        # Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
+        # Publisher 2001:13:13:13::13.4342, last published 00:03:35, TTL never, Expires: never
         p7 = re.compile(r"^Publisher\s+(?P<publishers>((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?"
                         r"|([a-fA-F\d\:]+)))?\.?\:?(?P<port>\d+),\s+last\s+published\s+"
                         r"(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\w+)")
 
-        #publisher epoch 1, entry epoch 1
+        # publisher epoch 1, entry epoch 1
         p8 = re.compile(r"^publisher\s+epoch\s+(?P<publisher_epoch>\d+),"
                         r"\s+entry\s+epoch\s+(?P<entry_epoch>\d+)")
 
-        #entry-state complete
+        # entry-state complete
         p9 = re.compile(r"^entry-state\s+(?P<entry_state>\S+)")
 
-        #routing table tag 101
+        # routing table tag 101
         p10 = re.compile(r"^routing\s+table\s+tag\s+(?P<routing_tag>\d+)")
 
-        #xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
+        # xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
         p11 = re.compile(r"^xTR-ID\s+(?P<xtr_id>\S+)")
 
-        #site-ID unspecified
+        # site-ID unspecified
         p12 = re.compile(r"^site-ID\s+(?P<site_id>\S+)")
 
-        #Domain-ID unset
+        # Domain-ID unset
         p13 = re.compile(r"^Domain-ID\s+(?P<domain_id>\S+)")
 
-        #Multihoming-ID unspecified
+        # Multihoming-ID unspecified
         p14 = re.compile(r"^Multihoming-ID\s+(?P<multihoming_id>\S+)")
 
         # Merge Locator Information
@@ -7232,13 +7249,13 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)\s+"
                          r"(?P<rdp_len>\d+)\s+(?P<src_add>\S+)$")
 
-        #100.88.88.88  100/50   up        -                   [-]
+        # 100.88.88.88  100/50   up        -                   [-]
         p16 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
                          r"\s+(?P<rdp>\S+)")
 
-        #100.88.88.88  100/50   up        -                   1/1       44
-        #2001:2:2:2::2   50/50   up        -                  1/1       44
+        # 100.88.88.88  100/50   up        -                   1/1       44
+        # 2001:2:2:2::2   50/50   up        -                  1/1       44
         p17 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)"
                          r"|\s+(?P<domain_id>\d+)\/(?P<multihoming_id>\d+)\s+(?P<metric>\d+)")
@@ -7246,24 +7263,27 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         # Affinity-id: 20 , 20
         p18 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
 
-        #  Instance ID:                              4100
+        # Instance ID:                              4100
         p19 = re.compile(r"^\s+Instance\s+ID:\s+(?P<inst_id>\S+)")
 
-        #Publisher 100.100.100.100:4342
+        # Publisher 100.100.100.100:4342
         p20 = re.compile(r"^Publisher\s+(?P<publishers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
                         r":(?P<port>\d+)$")
 
-        #Publisher 100::100:100:100.4342
+        # Publisher 100::100:100:100.4342
         p21 = re.compile(r"^Publisher\s+(?P<publishers>[a-fA-F\d\:]+)\.(?P<port>\d+)$")
 
-        #last published 16:02:47, TTL never
+        # last published 16:02:47, TTL never
         p22 = re.compile(r"^last\s+published\s+(?P<last_published>\S+),\s+TTL\s+(?P<ttl>\w+)")
+
+        # SGT 100
+        p23 = re.compile(r"^SGT\s+(?P<sgt>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
             count += 1
 
-            #Publication Information for LISP 0 EID-table vrf red (IID 4100)
+            # Publication Information for LISP 0 EID-table vrf red (IID 4100)
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -7275,8 +7295,8 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                                                .setdefault(prefix_id,{})
                 continue
 
-            #EID-prefix: 192.168.1.71/3
-            #EID-prefix: 2001:172:168:1::/64
+            # EID-prefix: 192.168.1.71/3
+            # EID-prefix: 2001:172:168:1::/64
             m = p2.match(line)
             if m:
                 if not lisp_id and instance_id != "*":
@@ -7292,7 +7312,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                                                   .setdefault(eid_prefixes,{})
                 continue
 
-            #First published:      03:05:56
+            # First published:      03:05:56
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -7300,7 +7320,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 eid_prefix_dict.update({'first_published':first_published})
                 continue
 
-            #Last published:      03:05:56
+            # Last published:      03:05:56
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
@@ -7308,7 +7328,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 eid_prefix_dict.update({'last_published':last_published})
                 continue
 
-            #State:                complete
+            # State:                complete
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
@@ -7316,7 +7336,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 eid_prefix_dict.update({'state':state})
                 continue
 
-            #Exported to:          map-cache
+            # Exported to:          map-cache
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
@@ -7326,8 +7346,8 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 eid_prefix_dict.update({'exported_to':exported_list})
                 continue
 
-            #Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
-            #Publisher 2001:4:4:4::4.4342, last published 00:00:52, TTL never, Expires: never'
+            # Publisher 100.100.100.100:4342, last published 16:02:47, TTL never
+            # Publisher 2001:4:4:4::4.4342, last published 00:00:52, TTL never, Expires: never'
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
@@ -7343,7 +7363,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'ttl':ttl})
                 continue
 
-            #publisher epoch 0,entry epoch 0
+            # publisher epoch 0,entry epoch 0
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
@@ -7353,7 +7373,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'entry_epoch':entry_epoch})
                 continue
 
-            #entry-state complete
+            # entry-state complete
             m = p9.match(line)
             if m:
                 groups = m.groupdict()
@@ -7361,7 +7381,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'entry_state':entry_state})
                 continue
 
-            #routing table tag 101
+            # routing table tag 101
             m = p10.match(line)
             if m:
                 groups = m.groupdict()
@@ -7369,7 +7389,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'routing_tag':routing_tag})
                 continue
 
-            #xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
+            # xTR-ID 0x790800FF-0x426D6D8E-0xC6C5F60C-0xB4386D22
             m = p11.match(line)
             if m:
                 groups = m.groupdict()
@@ -7377,7 +7397,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'xtr_id':xtr_id})
                 continue
 
-            #site-ID unspecified
+            # site-ID unspecified
             m = p12.match(line)
             if m:
                 groups = m.groupdict()
@@ -7385,7 +7405,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'site_id':site_id})
                 continue
 
-            #Domain-ID unset
+            # Domain-ID unset
             m = p13.match(line)
             if m:
                 groups = m.groupdict()
@@ -7393,7 +7413,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'domain_id':domain_id})
                 continue
 
-            #Multihoming-ID unspecified
+            # Multihoming-ID unspecified
             m = p14.match(line)
             if m:
                 groups = m.groupdict()
@@ -7424,7 +7444,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 merged_dict.update({'src_add':src_add})
                 continue
 
-            #22.22.22.22   10/10   up        -      [-]
+            # 22.22.22.22   10/10   up        -      [-]
             m = p16.match(line)
             if m:
                 groups = m.groupdict()
@@ -7444,7 +7464,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                     locator_dict.update({'rdp':rdp})
                 continue
 
-            #100.88.88.88  100/50   up        -                   1/1       44
+            # 100.88.88.88  100/50   up        -                   1/1       44
             m = p17.match(line)
             if m:
                 groups = m.groupdict()
@@ -7483,7 +7503,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                     locator_dict.update({'affinity_id_x':affinity_id_x})
                 continue
 
-            #Publisher 100.100.100.100:4342
+            # Publisher 100.100.100.100:4342
             m = p20.match(line)
             if m:
                 groups = m.groupdict()
@@ -7495,7 +7515,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'port':port})
                 continue
 
-            #Publisher 100::100:100:100:100:100.4342
+            # Publisher 100::100:100:100:100:100.4342
             m = p21.match(line)
             if m:
                 groups = m.groupdict()
@@ -7507,7 +7527,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'port':port})
                 continue
 
-	    #last published 16:02:47, TTL never
+	    # last published 16:02:47, TTL never
             m = p22.match(line)
             if m:
                 groups = m.groupdict()
@@ -7515,6 +7535,14 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 ttl = groups['ttl']
                 publish_dict.update({'last_published':last_published})
                 publish_dict.update({'ttl':ttl})
+                continue
+
+            # SGT 100
+            m = p23.match(line)
+            if m:
+                groups = m.groupdict()
+                sgt = int(groups['sgt'])
+                publish_dict.update({'sgt':sgt})
                 continue
 
         return lisp_v4_pub_pre
@@ -8128,28 +8156,32 @@ class ShowLispEthernetPublication(ShowLispIpv4PublicationSchema):
                 cmd = self.cli_command[0].format(instance_id=instance_id)
             output = self.device.execute(cmd)
         ret_dict = {}
-        #Output for router lisp 0 instance-id 101
+        # Output for router lisp 0 instance-id 101
         p1 = re.compile(r"^Output\s+for\s+router\s+lisp\s+(?P<lisp_id>\d+)\s+"
                         r"instance-id\s+(?P<instance_id>\d+)$")
 
-        #Entries total 2
+        # Entries total 2
         p2 = re.compile(r"^Entries\s+total\s+(?P<total_entries>\d+)$")
 
-        #100.100.100.100 15:52:51    aabb.cc00.c901/48        11.11.11.11     -
-        #100:100:100:100:: 15:52:51    aabb.cc00.c901/48        11:11:11:11::   -
+        # 100.100.100.100 15:52:51    aabb.cc00.c901/48        11.11.11.11     -
+        # 100:100:100:100:: 15:52:51    aabb.cc00.c901/48        11:11:11:11::   -
         p3 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                         r"(?P<last_published>\S+)\s+(?P<eid_prefix>([a-fA-F\d]{4}\.){2}"
                         r"[a-fA-F\d]{4}\/\d{1,3})\s+(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\."
                         r"\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
 
-        #  Instance ID:                              4100
-        p4 = re.compile(r"^\s+Instance\s+ID:\s+(?P<inst_id>\d+)")
+        # New format (Locators are no longer displayed in the output)
+
+        # aabb.cc00.c901/48   15:52:51   100.100.100.100   -
+        p4 = re.compile(r"^(?P<eid_prefix>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,3})\s+"
+                        r"(?P<last_published>\S+)\s+(?P<publisher_ip>(\d{1,3}\.\d{1,3}\."
+                        r"\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
         count = 0
 
         for line in output.splitlines():
             line = line.strip()
             count += 1
-            #Output for router lisp 0
+            # Output for router lisp 0
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -8179,17 +8211,17 @@ class ShowLispEthernetPublication(ShowLispIpv4PublicationSchema):
                     count += 1
                     continue
 
-            #Entries total 2
-            m=p2.match(line)
+            # Entries total 2
+            m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 entries = int(groups['total_entries'])
                 instance_id_dict.update({'total_entries':entries})
                 continue
 
-            #44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
-            #100:100:100:100:: 15:52:51    aabb.cc00.c901/48        11.11.11.11     -
-            m=p3.match(line)
+            # 44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
+            # 100:100:100:100:: 15:52:51    aabb.cc00.c901/48        11.11.11.11     -
+            m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 publications = groups['eid_prefix']
@@ -8203,6 +8235,24 @@ class ShowLispEthernetPublication(ShowLispIpv4PublicationSchema):
                 eid_prefix.update({'last_published':last_published})
                 eid_prefix.update({'rloc':rloc})
                 eid_prefix.update({'encap_iid':encap_iid})
+                continue
+
+            # New format (Locators are no longer displayed in the output)
+
+            # aabb.cc00.c901/48   15:52:51   100.100.100.100   -
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                publications = groups['eid_prefix']
+                publisher_ip = groups['publisher_ip']
+                last_published = groups['last_published']
+                encap_iid = groups['encap_iid']
+                eid_prefix = instance_id_dict.setdefault('eid_prefix',{})\
+                    .setdefault(publications,{})
+                eid_prefix.update({'publisher_ip':publisher_ip})
+                eid_prefix.update({'last_published':last_published})
+                eid_prefix.update({'encap_iid':encap_iid})
+                continue
         return ret_dict
 
 

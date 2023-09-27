@@ -1,0 +1,30 @@
+Register Addr           FPGA Reg Description    Value
+-------------           --------------------    -----
+0x00000000                         Board ID     0x00007059 
+0x00000004                     FPGA Version     0x00000108 
+0x00000008                       Reset Reg1     0x00800000 
+0x0000000c                       Reset Reg2     0x00000000 
+0x00000028                FRU LED DATA Reg1     0x00000000 
+0x0000002c                FRU LED DATA Reg2     0x00000000 
+0x00000030                  FRU Control Reg     0x0000cf12 
+0x00000034                 Doppler Misc Reg     0x00000001 
+0x00000010                       SBC Enable     0x0000000f 
+0x00000020              System LED Data Reg     0x00008102 
+0x00000038              SBC I2C Control Reg     0x00000902 
+0x00000090              SBC I2C Error Count     0x00006d00 
+0x0000007c           SEM Controller Command     0x00000000 
+0x00000080      SEM Controller Cntrl/Status     0x00000000 
+0x000000c4        Stack Power I2C Cntrl Reg     0x00000378 
+0x000000cc      Stack Power I2C Error Count     0x00000000 
+0x000000d0          CPU SUP I2C Control Reg     0x00000320 
+0x000000d8          CPU SUP I2C Error Count     0x0000ff00 
+0x000000e8         USB Control / Status Reg     0xc1009c00 
+0x000000f4      CPU Boot Status and Control     0x0027abcd 
+0x000000f0         Common Platform Board ID     0x02705919 
+0x0000001c                      LED Control     0x0000304d 
+0x000000a0           Mgig Phy LED Data Reg0     0x00003000 
+0x000000a4           Mgig Phy LED Data Reg1     0x00000000 
+0x000000a8           Mgig Phy LED Data Reg2     0x00000000 
+0x000000ac           Mgig Phy LED Data Reg3     0x00000000 
+0x000000b0           Mgig Phy LED Data Reg4     0x00004300 
+0x000000b4           Mgig Phy LED Data Reg5     0x00000000 

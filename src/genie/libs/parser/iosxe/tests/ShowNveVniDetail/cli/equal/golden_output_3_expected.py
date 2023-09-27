@@ -1,0 +1,22 @@
+expected_output = {
+    'nve_interface': 'nve1',
+    'vni_id': 22222,
+    'mcast_ip': '239.0.4.120',
+    'mcast_ipv6': 'FF04::4:120',
+    'vni_state': 'BD Down/Re',
+    'vni_type': 'L2CP',
+    'vlan_id': 'N/A',
+    'vni_origin': 'CLI',
+    'vni_vrf': 'N/A',
+    'svi_if_handler': '0x0',
+    'vtep_ip': '1.1.1.2',
+    'local_routing': 'Disabled',
+    'uc_input_packets': 0,
+    'uc_input_bytes': 0,
+    'uc_output_packets': 0,
+    'uc_output_bytes': 0,
+    'mc_input_packets': 0,
+    'mc_input_bytes': 0,
+    'mc_output_packets': 0,
+    'mc_output_bytes': 0
+}

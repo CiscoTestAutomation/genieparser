@@ -525,6 +525,54 @@ expected_output = {
                             "uptime": "6d20h"
                         }
                     }
+                },
+                "3000102": {
+                    "peer_ip": {
+                        "20.2.101.2": {
+                            "type": "L3CP",
+                            "rmac_num_rt": "aaaa.bbbb.0002",
+                            "evni": "3000102",
+                            "state": "DN",
+                            "flags": "A/M/4",
+                            "uptime": "1w0d"
+                        }
+                    }
+                },
+                "3000103": {
+                    "peer_ip": {
+                        "20.2.101.3": {
+                            "type": "L3CP",
+                            "rmac_num_rt": "aaaa.bbbb.0003",
+                            "evni": "3000103",
+                            "state": "LP",
+                            "flags": "A/M/4",
+                            "uptime": "1w0d"
+                        }
+                    }
+                },
+                "3000104": {
+                    "peer_ip": {
+                        "20.2.101.4": {
+                            "type": "L3CP",
+                            "rmac_num_rt": "aaaa.bbbb.0004",
+                            "evni": "3000104",
+                            "state": "NA",
+                            "flags": "A/M/4",
+                            "uptime": "1w0d"
+                        }
+                    }
+                },
+                "3000105": {
+                    "peer_ip": {
+                        "20.2.101.5": {
+                            "type": "L3CP",
+                            "rmac_num_rt": "aaaa.bbbb.0005",
+                            "evni": "3000105",
+                            "state": "--",
+                            "flags": "A/M/4",
+                            "uptime": "1w0d"
+                        }
+                    }
                 }
             }
         }

@@ -1,0 +1,17 @@
+ID MAC Address Fwd Open Access Status
+
+------------------------------------------------------------------
+
+0x105e6628 14a2.a0d4.0200 Yes Yes Done
+
+0x10ab50b0 e8d3.225d.c380 Yes Yes Done
+
+0x10e2badd 44b6.beb4.21d0 Yes Yes Done
+
+0x1348fba0 44b6.bec6.fb00 Yes Yes Done
+
+0x14597f9b 00a3.d144.49f6 Yes Yes Done
+
+0x145aa536 000c.29e0.3ea6 Yes Yes Done
+
+0x14a5b221 0cd0.f8e7.9b00 Yes Yes Done

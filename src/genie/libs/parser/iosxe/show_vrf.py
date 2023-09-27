@@ -97,11 +97,13 @@ class ShowVrf(ShowVrfSchema):
                 if groups['protocols']:
                     protocols = groups['protocols'].split(',')
                     vrf_dict.update({'protocols': protocols})
+                    vrf_dict['protocols'].sort()
 
                 if groups['intf']:
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
+                    vrf_dict['interfaces'].sort()
 
                 if groups['being_deleted']:
                     vrf_dict.update({'being_deleted': True})
@@ -116,6 +118,7 @@ class ShowVrf(ShowVrfSchema):
                 groups = m.groupdict()
                 intf = Common.convert_intf_name(groups['intf'])
                 vrf_dict.get('interfaces').append(intf)
+                vrf_dict['interfaces'].sort()
 
         return res_dict
 

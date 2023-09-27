@@ -82,7 +82,13 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
                     Optional('input'): str,
                     Optional('output'): str
                 },
-                Optional('ip_dhcp_snooping_limit_rate'): int
+                Optional('ip_dhcp_snooping_limit_rate'): int,
+
+                Optional('vrf'): str,
+                Optional('ipv4_unnumbered_intf'): str,
+                Optional('ipv6_unnumbered_intf'): str,
+                Optional('autostate'): bool,
+
             }
         }
     }
@@ -244,6 +250,18 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
 
         #ip pim sparse-mode
         p44 = re.compile(r"ip pim (?P<pim_operation>\S+)$")
+
+        # vrf forwarding VRF1
+        p45 = re.compile(r"^vrf forwarding\s+(?P<vrf>\S+)$")
+
+        # ip unnumbered Loopback0
+        p46 = re.compile(r"^ip unnumbered\s+(?P<ipv4_unnumbered_intf>\S+)$")
+
+        # ipv6 unnumbered Loopback0
+        p47 = re.compile(r"^ipv6 unnumbered\s+(?P<ipv6_unnumbered_intf>\S+)$")
+
+        # no autostate
+        p48 = re.compile(r"^no autostate$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -540,6 +558,30 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
             m = p44.match(line)
             if m:
                 intf_dict['pim_operation'] = m.groupdict()['pim_operation']
+                continue
+
+            # vrf forwarding VRF1
+            m = p45.match(line)
+            if m:
+                intf_dict['vrf'] = m.groupdict()['vrf']
+                continue
+
+            # ip unnumbered Loopback0
+            m = p46.match(line)
+            if m:
+                intf_dict['ipv4_unnumbered_intf'] = m.groupdict()['ipv4_unnumbered_intf']
+                continue
+
+            # ipv6 unnumbered Loopback0
+            m = p47.match(line)
+            if m:
+                intf_dict['ipv6_unnumbered_intf'] = m.groupdict()['ipv6_unnumbered_intf']
+                continue
+
+            # no autostate
+            m = p48.match(line)
+            if m:
+                intf_dict['autostate'] = False
                 continue
 
         return ret_dict

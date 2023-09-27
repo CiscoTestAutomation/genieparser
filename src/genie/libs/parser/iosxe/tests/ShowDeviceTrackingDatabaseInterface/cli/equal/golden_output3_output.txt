@@ -1,0 +1,12 @@
+portDB has 3 entries for interface Gi2/0/9, 3 dynamic
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left
+ARP 20.4.7.19                                00da.5516.1909         Gi2/0/9    2047       0005       11mn       STALE     try 0 90227 s
+ND  FE80::2DA:55FF:FE16:1909                 00da.5516.1909         Gi2/0/9    2047       0005       10mn       STALE     try 0 90334 s
+ND  20:47::19                                00da.5516.1909         Gi2/0/9    2047       0005       10mn       STALE     try 0 86107 s

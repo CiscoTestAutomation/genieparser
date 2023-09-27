@@ -1,0 +1,34 @@
+ILP Port Configuration for interface Gi1/0/14
+    Initialization Done:   Yes
+    ILP Supported:         Yes
+    ILP Enabled:           Yes
+    POST:                  Yes
+    Detect On:             No
+    PD Detected            Yes
+    PD Class Done          No
+    Cisco PD:              No
+    Power is On:           Yes
+    Power Denied:          No
+    PD Type:               IEEE
+    PD Class:              IEEE3
+    Power State:           OK
+    Current State:         NGWC_ILP_LINK_UP_S
+    Previous State:        NGWC_ILP_LINK_UP_S
+    Requested Power:       10250
+    Short:                 0
+    Short Cnt:             0
+    Cisco PD Detect Count: 0
+    Spare Pair mode:       0
+    Spare Pair Arch:       1
+    Signal Pair Pwr alloc: 0
+    Spare Pair Power On:   0
+    PD power state:        0
+    Timer:
+        Bad Power:        Stopped
+        Power Good:        Stopped
+        Power Denied:      Stopped
+        Cisco PD Detect:   Stopped
+        IEEE Detect:       Stopped
+        IEEE Short:        Stopped
+        Link Down:         Stopped
+        Vsense:            Stopped

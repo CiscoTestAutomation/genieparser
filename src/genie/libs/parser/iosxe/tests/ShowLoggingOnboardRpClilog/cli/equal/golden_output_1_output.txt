@@ -1,0 +1,22 @@
+--------------------------------------------------------------------------------
+CLI LOGGING SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+COUNT COMMAND
+--------------------------------------------------------------------------------
+ 1    show logging onboard RP active uptime detail
+ 1    show logging onboard RP active uptime detail
+ 1    show logging onboard RP active uptime detail
+ 1    show logging onboard RP active clilog
+ 1    show logging onboard RP active message detail
+ 1    show logging onboard RP active message detail
+ 1    show logging onboard RP active clilog
+ 1    show logging onboard RP active environment continuous
+ 1    show logging onboard RP active environment continuous
+ 1    show logging onboard RP active clilog
+ 1    clear logging onboard RP active
+ 1    show logging onboard RP active clilog
+ 1    show logging onboard RP active clilog
+ 1    clear logging onboard RP active
+ 1    show logging onboard RP active clilog
+ 1    show logging onboard RP active clilog
+--------------------------------------------------------------------------------

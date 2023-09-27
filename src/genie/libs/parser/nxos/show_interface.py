@@ -3201,7 +3201,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
 
         # channel-group 1 mode active
-        p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
+        # channel-group 147
+        p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+)( +mode +(?P<mode>\S+))?$')
 
         # speed 1000
         p12 = re.compile(r'^speed +(?P<speed>\d+)$')
@@ -3325,7 +3326,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 group = m.groupdict()
                 port_channel_dict = interface_dict.setdefault('port_channel', {})
                 port_channel_dict.update({'port_channel_int': group['port_channel_int']})
-                port_channel_dict.update({'port_channel_mode': group['mode']})
+                if 'port_channel_mode' in group:
+                    port_channel_dict.update({'port_channel_mode': group['mode']})
                 continue
 
             m = p12.match(line)

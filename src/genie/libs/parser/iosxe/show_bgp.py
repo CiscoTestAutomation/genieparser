@@ -2809,7 +2809,8 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    ]
     exclude = ['msg_sent', 'msg_rcvd', 'activity_paths', 'activity_prefixes',
         'bgp_table_version', 'routing_table_version', 'tbl_ver', 'up_down',
-        'attribute_entries', 'dropped', 'established']
+        'attribute_entries', 'dropped', 'established', 'input_queue',
+        'output_queue']
 
 
     def cli(self, address_family='', vrf='',output=None):

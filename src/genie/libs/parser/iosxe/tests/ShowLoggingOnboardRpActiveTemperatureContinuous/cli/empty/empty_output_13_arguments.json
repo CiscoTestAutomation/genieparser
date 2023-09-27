@@ -1,0 +1,4 @@
+{
+	"rp_standby" : "standby",
+	"include" : "temperature"
+}

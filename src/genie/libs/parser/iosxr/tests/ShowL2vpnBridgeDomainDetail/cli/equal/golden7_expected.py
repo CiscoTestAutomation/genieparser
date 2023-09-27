@@ -555,6 +555,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "22/05/2020 03:04:51 (1y03w ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
@@ -671,6 +675,10 @@ expected_output = {
                                                         "remote": "trap",
                                                     },
                                                 },
+                                            },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
                                             },
                                             "status_code": "0x20 (Standby)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
@@ -942,6 +950,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
@@ -1058,6 +1070,10 @@ expected_output = {
                                                         "remote": "trap",
                                                     },
                                                 },
+                                            },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
                                             },
                                             "status_code": "0x20 (Standby)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
@@ -1331,6 +1347,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
                                             "last_time_status_changed": "10/06/2021 10:37:03 (3d12h ago)",
@@ -1438,6 +1458,10 @@ expected_output = {
                                                         "remote": "ago)",
                                                     },
                                                 },
+                                            },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
                                             },
                                             "create_time": "01/10/2019 14:18:18 (1y36w ago)",
                                             "last_time_status_changed": "21/10/2020 13:24:35 (33w4d ago)",
@@ -1773,6 +1797,10 @@ expected_output = {
                                                         "remote": "ago)",
                                                     },
                                                 },
+                                            },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
                                             },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "22/11/2019 11:48:50 (1y29w ago)",

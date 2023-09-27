@@ -2,9 +2,12 @@
 IOSXE parsers for the following show commands:
     
     * 'show logging onboard switch <switch_num> clilog'  
+    * 'show logging onboard rp <rp> clilog'  
     * 'show logging onboard Switch <switch_num> status'
     * 'show logging onboard switch <switch_num> uptime detail'
+    * 'show logging onboard rp <rp> message detail'
     * 'show logging onboard switch <switch_num> <include> continuous'
+    * 'show logging onboard switch rp <rp> environment continuous'
 '''
 
 # Python
@@ -41,6 +44,7 @@ class ShowLoggingOnboardSwitchClilogSchema(MetaParser):
             },
         }, 
     }
+
 
 class ShowLoggingOnboardSwitchClilog(ShowLoggingOnboardSwitchClilogSchema):
     """
@@ -448,7 +452,10 @@ class ShowLoggingOnboardSwitchContinuous(ShowLoggingOnboardSwitchContinuousSchem
         return ret_dict
 
 class ShowLoggingOnboardSwitchEnvironmentContinuousSchema(MetaParser):
-    ''' Schema for: 'show logging onboard switch <switch_num> environment continuous' '''
+    ''' Schema for: 'show logging onboard switch <switch_num> environment continuous'
+                    'show logging onboard rp active environment continuous'
+                    'show logging onboard rp {rp_standby} environment continuous' 
+                    '''
 
     schema={
         "event":{
@@ -470,15 +477,24 @@ class ShowLoggingOnboardSwitchEnvironmentContinuous(ShowLoggingOnboardSwitchEnvi
     """
     Parser for :
         'show logging onboard switch <switch_num> environment continuous'
+        'show logging onboard rp active environment continuous'
+        'show logging onboard rp {rp_standby} environment continuous'
     """
 
-    cli_command = 'show logging onboard switch {switch_num} environment continuous'
+    cli_command = ['show logging onboard switch {switch_num} environment continuous',
+                   'show logging onboard rp active environment continuous',
+                   'show logging onboard rp {rp_standby} environment continuous']
 
-    def cli(self, switch_num="", output=None): 
+    def cli(self, switch_num="", rp_standby="", output=None): 
 
         if output is None: 
             # Build and Execute the command 
-            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+            if switch_num:
+                output = self.device.execute(self.cli_command[0].format(switch_num=switch_num))
+            elif rp_standby:
+                output = self.device.execute(self.cli_command[2].format(rp_standby=rp_standby))
+            else:
+                output = self.device.execute(self.cli_command[1])
 
         ret_dict = {}
 
@@ -595,6 +611,7 @@ class ShowLoggingOnboardSwitch(ShowLoggingOnboardSwitchDetail):
 class ShowLoggingOnboardSwitchMessageDetailSchema(MetaParser):
     '''Schema for:
         'show logging onboard switch 1 message detail'
+        'show logging onboard rp {rp} message detail'
     '''   
     schema={
         'message_summary':{
@@ -605,15 +622,20 @@ class ShowLoggingOnboardSwitchMessageDetailSchema(MetaParser):
 class ShowLoggingOnboardSwitchMessageDetail(ShowLoggingOnboardSwitchMessageDetailSchema):
     '''Schema for:
         'show logging onboard switch 1 message detail'
+        'show logging onboard rp {rp} message detail'
     ''' 
-    cli_command = 'show logging onboard switch {switch_num} message detail'
+    cli_command = ['show logging onboard switch {switch_num} message detail',
+                   'show logging onboard rp {rp} message detail']
 				   
-    def cli(self,switch_num="", output=None): 
+    def cli(self,switch_num="", rp="", output=None): 
 
         if output is None: 
             # Build and Execute the command
-            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
-        
+            if switch_num:
+                output = self.device.execute(self.cli_command[0].format(switch_num=switch_num))
+            else:
+                output = self.device.execute(self.cli_command[1].format(rp=rp))
+                
         ret_dict = {}
 
         #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_NOT_PRESENT :  >254 LAST  OBFL PS-FAN NOT PRESENT : FEP fan PS-2
@@ -789,3 +811,50 @@ class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
 
         return ret_dict
 
+
+class ShowLoggingOnboardRpClilogSchema(MetaParser):
+    '''Schema for:
+        Show logging onboard rp active clilog
+        Show logging onboard rp standby clilog
+    '''
+    schema={
+        'command_count':{
+            Any():{
+                'count': int,            
+            },
+        }, 
+    }
+
+class ShowLoggingOnboardRpClilog(ShowLoggingOnboardSwitchClilogSchema):
+    """
+    Parser for :
+        'Show logging onboard rp active clilog'
+        'Show logging onboard rp standby clilog'
+    """
+    cli_command = 'show logging onboard rp {rp} clilog'
+    
+    def cli(self,rp="",output=None): 
+
+        if output is None:
+        
+            if rp:
+                output = self.device.execute(self.cli_command)
+                
+        ret_dict = {}
+
+        # 1    clear obfl RP active
+        p1 = re.compile(r'(?P<count>\d)\s+(?P<command>clear\s+logging\s+onboard\s+RP\s+.*)')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            #1    clear obfl RP active
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                command_count = group["command"]
+                sub_dict = ret_dict.setdefault('command_count', {}).setdefault(command_count, {})
+                count = group['count']
+                sub_dict['count'] = int(count)
+                continue
+        
+        return ret_dict

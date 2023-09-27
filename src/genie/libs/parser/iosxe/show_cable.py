@@ -70,7 +70,7 @@ class ShowCableTdrInterface(ShowCableTdrIntSchema):
         p1 = re.compile(r'^TDR +test +last +run +on: +(?P<date>\w+ \d+) +(?P<time>\d+:\d+:\d+)$')
 
         # Gi1/0/1   auto  Pair A     0    +/- 1  meters N/A         Open
-        p2 = re.compile(r'^(?P<interface>\w\w\d\/\d\/\d+)\s+(?P<speed>auto|100M|1000M)'
+        p2 = re.compile(r'^(?P<interface>\w\w\d\/\d\/\d+)\s+(?P<speed>auto|100M|1000M|2500M)'
                 '\s+Pair (?P<local_pair>A)     (?P<pair_length>\d+)\s+\+\/\- (?P<pair_tolerance>\d+)\s+meters '
                 '(?P<pair_remote>N\/A|Pair A|Pair B|Pair C|Pair D)\s+(?P<pair_status>.*$)')
 

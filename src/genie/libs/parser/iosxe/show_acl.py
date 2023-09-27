@@ -245,8 +245,9 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
+        # Extended IP access list Gi2/0/24#v4#33476254
         p_ip = re.compile(r'^(?P<acl_type>Extended|Standard|Role-based) +IP +access +list[s]? '
-                          r'+(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
+                          r'+(?P<name>[\w\-\.#\/]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-'
                             r'\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ipv6 = re.compile(r'^(?P<acl_type>IPv6 ?(Role-based)?) +access +list +(?P<name>[\w\-\.#]+)'

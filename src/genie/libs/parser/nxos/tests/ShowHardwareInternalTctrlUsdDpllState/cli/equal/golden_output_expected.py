@@ -16,7 +16,7 @@ expected_output = {
                                 "refId": "INVALID"
                             }
                         },
-                        "nco_assist_pair_hw_lock_status": " Ref Failed(4)",
+                        "nco_assist_pair_hw_lock_status": "Ref Failed(4)",
                         "psl": {
                             885: {
                                 "bandwidth": 7,

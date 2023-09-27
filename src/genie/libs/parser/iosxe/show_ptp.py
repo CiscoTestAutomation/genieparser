@@ -374,7 +374,8 @@ class ShowPtpParent(ShowPtpParentSchema):
         p6 = re.compile(r'^Class\:\s(?P<gd_class>\d+)$')
         
         #Accuracy: Unknown
-        p7 = re.compile(r'^Accuracy\:\s(?P<accuracy>\S+)$')
+        #Accuracy: Within 1s
+        p7 = re.compile(r'^Accuracy\:\s(?P<accuracy>[\w\s]+)$')
         
         #Offset (log variance): N/A
         p8 = re.compile(r'^Offset\s\(log\svariance\)\:\s(?P<offset>\S+)$')
@@ -732,6 +733,135 @@ class ShowRunIncludePtp(ShowRunIncludePtpSchema):
                 ptp = ret_dict.setdefault('ptp',{})
                 ptp_mode = m.groupdict()['ptp_mode']
                 ptp['ptp_mode'] = str(ptp_mode)
+                continue
+
+        return ret_dict
+
+# ==============================
+#  Schema for 'show ptp time-property'
+# ==============================
+class ShowPtpTimePropertySchema(MetaParser):
+    """Schema for 'show ptp time-property' """
+    schema = {
+        'ptp_clock_time_property': {
+            'current_utc_offset_valid': str,
+            'current_utc_offset': int,
+            'time_traceable': str,
+            'frequency_traceable': str,
+            'ptp_timescale': str,
+            'time_source': str,
+            'time_persistence': str,
+            'leap_number': {
+                Any(): {
+                    'value': str
+                },
+            },
+        },
+    }
+
+# =============================
+#  Parser for 'show ptp time-property'
+# =============================
+class ShowPtpTimeProperty(ShowPtpTimePropertySchema):
+    """
+    Parser for :
+        * show ptp time-property
+    """
+
+    cli_command = 'show ptp time-property'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # PTP CLOCK TIME PROPERTY
+        p0 = re.compile(r'^PTP CLOCK TIME PROPERTY$')
+        
+        # Current UTC offset valid: FALSE
+        p1 = re.compile(r'^Current\sUTC\soffset\svalid\:\s(?P<current_utc_offset_valid>[\w\s]+)$')
+
+        # Current UTC offset: 0
+        p2 = re.compile(r'^Current\sUTC\soffset\:\s(?P<current_utc_offset>[\d]+)$')
+
+        # Leap 59: FALSE
+        p3 = re.compile(r'^Leap\s(?P<leap_number>[\d]+)\:\s(?P<value>[\w\s]+)$')
+
+        # Time Traceable: FALSE
+        p4 = re.compile(r'^Time\sTraceable\:\s(?P<time_traceable>[\w\s]+)$')
+
+        # Frequency Traceable: FALSE
+        p5 = re.compile(r'^Frequency\sTraceable\:\s(?P<frequency_traceable>[\w\s]+)$')
+
+        # PTP Timescale: FALSE
+        p6 = re.compile(r'^PTP\sTimescale\:\s(?P<ptp_timescale>[\w\s]+)$')
+
+        # Time Source: GPS
+        p7 = re.compile(r'^Time\sSource\:\s(?P<time_source>[\w\s]+)$')
+
+        # Time Property Persistence: 300 seconds
+        p8 = re.compile(r'^Time\sProperty\sPersistence\:\s(?P<time_persistence>[\w\s]+)$')
+
+        # initial return dictionary
+        ret_dict ={}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PTP CLOCK TIME PROPERTY
+            m = p0.match(line)
+            if m:
+                if 'ptp_clock_time_property' not in ret_dict:
+                    ret_dict['ptp_clock_time_property']={}
+                    ptp_time_info = ret_dict['ptp_clock_time_property']
+                continue
+
+            # Current UTC offset valid: FALSE
+            m = p1.match(line)
+            if m:
+                ptp_time_info['current_utc_offset_valid'] = m.groupdict()['current_utc_offset_valid']
+                continue
+
+            # Current UTC offset: 0
+            m = p2.match(line)
+            if m:
+                ptp_time_info['current_utc_offset'] = int(m.groupdict()['current_utc_offset'])
+                continue
+            
+            # Leap 59: FALSE
+            m = p3.match(line)
+            if m:
+                sub_dict = ptp_time_info.setdefault('leap_number', {}).setdefault(int(m.groupdict()['leap_number']), {})
+                sub_dict['value']=m.groupdict()['value']
+            
+            # Time Traceable: FALSE
+            m = p4.match(line)
+            if m:
+                ptp_time_info['time_traceable'] = m.groupdict()['time_traceable']
+                continue
+
+            # Frequency Traceable: FALSE
+            m = p5.match(line)
+            if m:
+                ptp_time_info['frequency_traceable'] = m.groupdict()['frequency_traceable']
+                continue
+
+            # PTP Timescale: FALSE
+            m = p6.match(line)
+            if m:
+                ptp_time_info['ptp_timescale'] = m.groupdict()['ptp_timescale']
+                continue
+
+            # Time Source: GPS
+            m = p7.match(line)
+            if m:
+                ptp_time_info['time_source'] = m.groupdict()['time_source']
+                continue
+
+            # Time Property Persistence: 300 seconds
+            m = p8.match(line)
+            if m:
+                ptp_time_info['time_persistence'] = m.groupdict()['time_persistence']
                 continue
 
         return ret_dict

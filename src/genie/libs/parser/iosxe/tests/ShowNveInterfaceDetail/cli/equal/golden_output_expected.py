@@ -23,5 +23,6 @@ expected_output = {
             },
         }
     },
+    'tunnel_primary': 'Tunnel0',
     'vxlan_dport': 4789,
 }
