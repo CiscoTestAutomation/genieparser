@@ -2669,7 +2669,7 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                service_insertion = group['service_insertion']
+                service_insertion = group['service_insertion'].strip()
                 instance_id = int(group['service_insertion_id'])
                 eid_dict.update({'service_insertion':service_insertion,
                                  'service_insertion_id':instance_id})
