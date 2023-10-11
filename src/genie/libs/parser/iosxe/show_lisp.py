@@ -2510,7 +2510,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                     Optional('sgt'): int,
                                     Optional('domain_id'): str,
                                     Optional('service_insertion'): str,
-                                    Optional('service_insertion_id'): str,
+                                    Optional('service_insertion_id'): int,
                                     Optional('auto_discover_rlocs'): bool,
                                     Optional('uptime'): str,
                                     Optional('last_change'): str,
