@@ -2485,7 +2485,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
 # =======================================================================
 class ShowLispDatabaseSuperParserSchema(MetaParser):
 
-    '''Schema for "show lisp {lisp_id} instance-id <instance_id> <service> dabatase" '''
+    '''Schema for "show lisp <lisp_id> instance-id <instance_id> <service> dabatase" '''
     schema = {
         'lisp_id': {
             Any(): {
@@ -2510,6 +2510,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                     Optional('sgt'): int,
                                     Optional('domain_id'): str,
                                     Optional('service_insertion'): str,
+                                    Optional('service_insertion_id'): int,
                                     Optional('auto_discover_rlocs'): bool,
                                     Optional('uptime'): str,
                                     Optional('last_change'): str,
@@ -2570,7 +2571,7 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         p5 = re.compile(r'^Domain-ID:\s+(?P<domain_id>\S+)$')
 
         # Service-Insertion: N/A (0)
-        p6 = re.compile(r'^Service-Insertion:\s+(?P<service_insertion>[\S\s]+)$')
+        p6 = re.compile(r'^Service-Insertion: (?P<service_insertion>[\S\s]+)+\((?P<service_insertion_id>\d+)\)$')
 
         # SGT: 10
         p7 = re.compile(r'^SGT:\s+(?P<sgt>\d+)$')
@@ -2664,12 +2665,14 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 eid_dict.update({'domain_id':domain_id})
                 continue
 
-            # Service-Insertion: N/A
+            # Service-Insertion: N/A (0)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                service_insertion = group['service_insertion']
-                eid_dict.update({'service_insertion':service_insertion})
+                service_insertion = group['service_insertion'].strip()
+                instance_id = int(group['service_insertion_id'])
+                eid_dict.update({'service_insertion':service_insertion,
+                                 'service_insertion_id':instance_id})
                 continue
 
             # SGT: 10
@@ -10674,201 +10677,6 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
                     'encap_iid':encap_iid
                 })
         return ret_dict
-
-
-class ShowLispEthernetDatabaseSchema(MetaParser):
-
-    ''' Schema for
-        * show lisp instance-id <instance_id> ethernet database
-        * show lisp <lisp_id> instance-id <instance_id> ethernet database
-        * show lisp eid-table vlan <vlan> ethernet database
-        * show lisp locator-table <locator_table> instance_id <instance_id> ethernet database
-    '''
-
-    schema = {
-        'lisp_id': {
-            int: {
-                'instance_id': {
-                    int: {
-                        'eid_table': str,
-                        'lsb': str,
-                        'entries': int,
-                        'no_route': int,
-                        'inactive': int,
-                        'do_not_reg': int,
-                        'eid_prefix': {
-                            str: {
-                                Optional('dyn_eid_name') : str,
-                                Optional('do_not_reg_flag'): bool,
-                                'loc_set': str,
-                                'uptime': str,
-                                'last_change_time': str,
-                                'domain_id': str,
-                                Optional('serv_ins_type'): str,
-                                Optional('serv_ins_id'): int,
-                                Optional('locators'): {
-                                    str: {
-                                        'priority': int,
-                                        'weight': int,
-                                        'src': str,
-                                        'state': str
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-class ShowLispEthernetDatabase(ShowLispEthernetDatabaseSchema):
-    ''' Parser for
-        * show lisp instance-id <instance_id> ethernet database
-        * show lisp <lisp_id> instance-id <instance_id> ethernet database
-        * show lisp eid-table vlan <vlan> ethernet database
-        * show lisp locator-table <locator_table> instance_id <instance_id> ethernet database
-    '''
-    cli_command = ['show lisp instance-id {instance_id} ethernet database',
-                   'show lisp {lisp_id} instance-id {instance_id} ethernet database',
-                   'show lisp locator-table {locator_table} instance-id {instance_id} ethernet database'
-                   # this will be uncommented after command's output is enhanced for instance-id
-                   #'show lisp eid-table vlan <vlan> ethernet database'
-                   ]
-
-    def cli(self, output=None, lisp_id=None, instance_id=None, vlan=None, vrf=None, locator_table=None):
-        if output is None:
-            if lisp_id and instance_id:
-                output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id, instance_id=instance_id))
-            elif locator_table and instance_id:
-                output = self.device.execute(self.cli_command[2].format(locator_table=locator_table, instance_id=instance_id))
-            else:
-                output = self.device.execute(self.cli_command[0].format(instance_id=instance_id))
-        ret_dict = {}
-
-        #LISP ETR MAC Mapping Database for LISP 0 EID-table Vlan 101 (IID 101), LSBs: 0x1
-        p1 = re.compile(r"^LISP\s+ETR\s+MAC\s+Mapping\s+Database\s+for\s+LISP\s+"
-                        r"(?P<lisp_id>\d+)\s+EID-table\s+(?P<eid_table>Vlan\s+\d+)"
-                        r"\s+\(IID\s+(?P<instance_id>\d+)\),\s+LSBs:\s+(?P<lsb>\S+)$")
-
-        #Entries total 3, no-route 0, inactive 0, do-not-register 1
-        p2 = re.compile(r"^Entries\s+total\s+(?P<entries>\d+),\s+no-route\s+(?P<no_route>\d+),"
-                        r"\s+inactive\s+(?P<inactive>\d+),\s+do-not-register (?P<do_not_reg>\d+)$")
-
-        #0000.0c9f.f98b/48, dynamic-eid Auto-L2-group-8188, do not register, inherited from default locator-set rloc_71d5dfee-bf02-4e45-9e5e-079ef3c09407
-        p3 = re.compile(r"^(?P<eid_prefix>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d+),\s+dynamic-eid\s+"
-                        r"(?P<dyn_eid_name>\S+),(?P<do_not_reg_flag>.*)\s+inherited\s+from\s+default"
-                        r"\s+locator-set\s+(?P<loc_set>\S+)$")
-
-        #Uptime: 1d21h, Last-change: 1d21h
-        p4 = re.compile(r"^Uptime:\s+(?P<uptime>\S+),\s+Last-change:\s+(?P<last_change_time>\S+)$")
-
-        #Domain-ID: unset
-        p5 = re.compile(r"^Domain-ID:\s+(?P<domain_id>\S+)$")
-
-        #Service-Insertion: N/A (0)
-        p6 = re.compile(r"^Service-Insertion:\s+(?P<serv_ins_type>\S+)"
-                        r"\s+\((?P<serv_ins_id>\d+)\)$")
-
-        #1.1.1.10   10/10   cfg-intf   site-self, reachable
-        #1:1:1:10:: 10/10   cfg-intf   site-self, reachable
-        p7 = re.compile(r"^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
-                        r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<src>\S+)\s+"
-                        r"(?P<state>\S+\W+\S+)")
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            # LISP ETR MAC Mapping Database for LISP 0 EID-table Vlan 101 (IID 101), LSBs: 0x1
-            m = p1.match(line)
-            if m:
-                groups = m.groupdict()
-                lisp_id = int(groups['lisp_id'])
-                instance_id = int(groups['instance_id'])
-                lisp_id_dict = ret_dict.setdefault('lisp_id',{})\
-                                       .setdefault(lisp_id,{})
-                instance_id_dict = lisp_id_dict.setdefault('instance_id',{})\
-                                               .setdefault(instance_id,{})
-                eid_table = groups['eid_table']
-                lsb = groups['lsb']
-                instance_id_dict.update({'eid_table':eid_table,'lsb':lsb})
-
-            #Entries total 3, no-route 0, inactive 0, do-not-register 1
-            m = p2.match(line)
-            if m:
-                groups = m.groupdict()
-                instance_id_dict.update({
-                    'entries':int(groups['entries']),
-                    'no_route':int(groups['no_route']),
-                    'inactive':int(groups['inactive']),
-                    'do_not_reg':int(groups['do_not_reg'])
-                    })
-
-            #0000.0c9f.f98b/48, dynamic-eid Auto-L2-group-8188, do not register, inherited from default locator-set rloc_71d5dfee-bf02-4e45-9e5e-079ef3c09407
-            m = p3.match(line)
-            if m:
-                groups = m.groupdict()
-                eid_prefix = groups['eid_prefix']
-                dyn_eid_name = groups['dyn_eid_name']
-                do_not_reg = groups['do_not_reg_flag']
-                do_not_reg_flag = bool(re.search("do not register",do_not_reg))
-                loc_set = groups['loc_set']
-                eid_prefix_dict = instance_id_dict.setdefault('eid_prefix',{})\
-                                                  .setdefault(eid_prefix,{})
-                eid_prefix_dict.update({
-                    'dyn_eid_name':dyn_eid_name,
-                    'do_not_reg_flag':do_not_reg_flag,
-                    'loc_set':loc_set
-                    })
-
-            #Uptime: 1d21h, Last-change: 1d21h
-            m = p4.match(line)
-            if m:
-                groups = m.groupdict()
-                uptime = groups['uptime']
-                last_change_time = groups['last_change_time']
-                eid_prefix_dict.update({
-                    'uptime':uptime,
-                    'last_change_time':last_change_time
-                })
-
-            #Domain-ID: unset
-            m = p5.match(line)
-            if m:
-                groups = m.groupdict()
-                domain_id = groups['domain_id']
-                eid_prefix_dict.update({'domain_id':domain_id})
-
-            #Service-Insertion: N/A (0)
-            m = p6.match(line)
-            if m:
-                groups = m.groupdict()
-                serv_ins_type = groups['serv_ins_type']
-                serv_ins_id = int(groups['serv_ins_id'])
-                eid_prefix_dict.update({'serv_ins_type':serv_ins_type,
-                                        'serv_ins_id':serv_ins_id})
-
-            #1.1.1.10   10/10   cfg-intf   site-self, reachable
-            #1:1:1:10:: 10/10   cfg-intf   site-self, reachable
-            m = p7.match(line)
-            if m:
-                groups = m.groupdict()
-                locators = groups['locators']
-                priority = int(groups['priority'])
-                weight = int(groups['weight'])
-                src = groups['src']
-                state = groups['state']
-                rloc_set_dict = eid_prefix_dict.setdefault('locators',{})\
-                                           .setdefault(locators,{})
-                rloc_set_dict.update({
-                    'priority':priority,
-                    'weight':weight,
-                    'src':src,
-                    'state':state
-                    })
-        return ret_dict
-
 
 # ==========================================
 # Parser for: show lisp {lisp_id} instance-id

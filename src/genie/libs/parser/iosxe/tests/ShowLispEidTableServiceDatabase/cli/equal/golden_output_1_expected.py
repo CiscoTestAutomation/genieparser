@@ -16,11 +16,12 @@ expected_output = {
                                 'mask': 128,
                                 'dynamic_eid': '2001_192_168_1',
                                 'locator_set': 'RLOC',
+                                'do_not_register': True,
                                 'uptime': '8w1d',
                                 'last_change': '8w1d',
                                 'domain_id': 'local',
-                                'service_insertion': 'N/A (0)',
-                                'do_not_register': True,
+                                'service_insertion': 'N/A',
+                                'service_insertion_id': 0,
                                 'locators': {
                                     '11.11.11.11': {
                                         'priority': 10,
@@ -39,7 +40,8 @@ expected_output = {
                                 'uptime': '8w1d',
                                 'last_change': '8w1d',
                                 'domain_id': 'local',
-                                'service_insertion': 'N/A (0)',
+                                'service_insertion': 'N/A',
+                                'service_insertion_id': 0,
                                 'locators': {
                                     '11.11.11.11': {
                                         'priority': 10,
