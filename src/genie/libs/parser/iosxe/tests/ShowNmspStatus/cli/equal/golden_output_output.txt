@@ -1,0 +1,7 @@
+NMSP Status
+-----------
+
+DNA Spaces/CMX IP Address               Active    Tx Echo Resp  Rx Echo Req   Tx Data     Rx Data     Transport
+--------------------------------------------------------------------------------------------------------------------------
+1.1.1.1                           Active    14             14             1595        300           HTTPS
+2001:bebe::1                           Inactive  0             0             1           0           TLS

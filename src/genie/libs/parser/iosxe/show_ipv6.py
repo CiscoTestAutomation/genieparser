@@ -1191,11 +1191,14 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
+        #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
+                        r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
-                        r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+                        r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
                         r'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
+        
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
         p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)$')
@@ -1290,7 +1293,6 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
             if m:
                 group = m.groupdict()
                 outgoing_interface=group['egress_if']
-                
                 if group['egress_rloc']:
                     egress_data['egress_rloc'] = group['egress_rloc']
 
@@ -1558,9 +1560,9 @@ class ShowIpv6DhcpBindingSchema(MetaParser):
                         't2': int,
                         'address': {
                             Any(): { # 3001::B151:2E66:32A4:65E9
-                                'preferred_lifetime': int,
-                                'valid_lifetime': int,
-                                'expires': {
+                                'preferred_lifetime': Or(int, str),
+                                'valid_lifetime': Or(int, str),
+                                Optional('expires'): {
                                     'month': str,
                                     'day': int,
                                     'year': int,
@@ -1578,8 +1580,8 @@ class ShowIpv6DhcpBindingSchema(MetaParser):
                         't2': int,
                         'prefix': {
                             Any(): { # 2001:4::/48
-                                'preferred_lifetime': int,
-                                'valid_lifetime': int,
+                                'preferred_lifetime': Or(int, str),
+                                'valid_lifetime': Or(int, str),
                                 'expires': {
                                     'month': str,
                                     'day': int,
@@ -1636,8 +1638,8 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
         p72 = re.compile(r'^Prefix:\s+(?P<ipv6_prefix>\S+)$')
 
         # preferred lifetime 86400, valid lifetime 172800
-        p8 = re.compile(r'^preferred lifetime\s+(?P<preferred_lifetime>\d+),\s+valid lifetime\s+(?P<valid_lifetime>\S+)$')
-
+        # preferred lifetime INFINITY, , valid lifetime INFINITY,
+        p8 = re.compile(r'^preferred lifetime\s+(?P<preferred_lifetime>\w+)(, ,|,)\s+valid lifetime\s+(?P<valid_lifetime>\w+)(,|)$')
         # expires at Feb 17 2022 08:58 AM (172782 seconds)
         p9 = re.compile(r'^(?P<expires>\w+) +at\s+(?P<month>\S+)\s+(?P<day>\d+)\s+(?P<year>\d+)\s+(?P<time>[0-9A-Z :]+)\s+\((?P<remaining_seconds>\d+) +seconds\)$')
 
@@ -1717,9 +1719,13 @@ class ShowIpv6DhcpBinding(ShowIpv6DhcpBindingSchema):
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
+                if (groups['preferred_lifetime']).isdigit():
+                    groups['preferred_lifetime'] = int(groups['preferred_lifetime'])
+                if (groups['valid_lifetime']).isdigit():
+                    groups['valid_lifetime'] = int(groups['valid_lifetime'])
                 address_dict.update({
-                    'preferred_lifetime' : int(groups['preferred_lifetime']),
-                    'valid_lifetime' : int(groups['valid_lifetime'])})
+                    'preferred_lifetime': groups['preferred_lifetime'],
+                    'valid_lifetime': groups['valid_lifetime']})
                 continue
 
             # expires at Feb 17 2022 08:58 AM (172782 seconds)

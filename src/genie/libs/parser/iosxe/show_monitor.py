@@ -685,11 +685,14 @@ class ShowMonitorCaptureBufferSchema(MetaParser):
 
 class ShowMonitorCaptureBuffer(ShowMonitorCaptureBufferSchema):
 
-    cli_command = 'show monitor capture {capture_name} buffer'
+    cli_command = ['show monitor capture {capture_name} buffer', 'show monitor capture file {path}']
 
-    def cli(self, capture_name="", output=None):
+    def cli(self, capture_name="", path="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(capture_name=capture_name),timeout=180)
+            if capture_name:
+                output = self.device.execute(self.cli_command[0].format(capture_name=capture_name),timeout=180)
+            else:
+                output = self.device.execute(self.cli_command[1].format(path=path),timeout=180)
 
         # 1   0.000000 f4:db:e6:5b:97:04 -> 01:80:c2:00:00:00 STP 60 RST. Root = 32768/805/6c:b2:ae:49:6a:40  Cost = 0  Port = 0x8185
         # 2   2.999988     10.1.1.2 -> 233.252.252.127 IPv4 96 Fragmented IP protocol (proto=UDP 17, off=1480, ID=93f1)
@@ -792,7 +795,10 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('dscp_value'): int,
                 Optional('packet_identifier'): str,
                 Optional('authenticator'): str,
-                Optional('vendor_id'): str
+                Optional('vendor_id'): str,
+                Optional('code'): str,
+                Optional('destination_address'): str,
+                Optional('source_address'): str
             }
         }
     }
@@ -803,13 +809,16 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
 class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
     """Parser for 'show monitor capture buffer detailed"""
     cli_command = ['show monitor capture {capture_name} buffer detailed',
-                    'show monitor capture {capture_name} buffer display-filter "{filter_criteria}" detailed']
+                    'show monitor capture {capture_name} buffer display-filter "{filter_criteria}" detailed',
+                    'show monitor capture file {path} packet-number {number} detailed']
     
-    def cli(self, capture_name="", filter_criteria="", output=None):
+    def cli(self, capture_name="", filter_criteria="",path="", number="", output=None):
         if output is None:
             # Build the command
             if filter_criteria:
                 cmd = self.cli_command[1].format(capture_name=capture_name, filter_criteria=filter_criteria)
+            elif path and number:
+                cmd = self.cli_command[2].format(path=path, number=number)                
             else:
                 cmd = self.cli_command[0].format(capture_name=capture_name)
             # Execute the command

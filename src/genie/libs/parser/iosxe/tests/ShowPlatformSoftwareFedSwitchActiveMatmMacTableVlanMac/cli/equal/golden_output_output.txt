@@ -1,0 +1,25 @@
+VLAN   MAC                  Type  Seq#    EC_Bi  Flags  machandle           siHandle            riHandle            diHandle              *a_time  *e_time  ports                                                         Con
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1      2200.0000.0001        0x1  125648      0      0  0x7429b62dc7c8      0x742904fc2428      0x0                 0x7429b53219d8            300       90  TwoGigabitEthernet1/0/13                                      Yes
+
+======platform hardware details ======
+
+Asic: 0
+
+ htm-handle = 0x7429b56aaa48 MVID = 4 gpn = 1
+ SI = 0xad RI = 0x2 DI = 0x5415
+ DI = 0x5415 pmap = 0x00000000 0x00000000
+
+Asic: 1
+
+ htm-handle = 0x7429b52c3fb8 MVID = 4 gpn = 1
+ SI = 0xad RI = 0x2 DI = 0x5415
+ DI = 0x5415 pmap = 0x00000000 0x00000000
+
+Asic: 2
+ SI = 0xad RI = 0x2 DI = 0x5415
+ DI = 0x5415 pmap = 0x00000000 0x00001000 pmap_intf : [TwoGigabitEthernet1/0/13]
+
+Asic: 3
+ SI = 0xad RI = 0x2 DI = 0x5415
+ DI = 0x5415 pmap = 0x00000000 0x00000000

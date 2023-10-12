@@ -1,0 +1,56 @@
+ Times Sessions Health Changed Yellow      : 0
+ Times Sessions Health Changed Green       : 0
+ Times Service mem Health Changed Yellow   : 0
+ Times Service mem Health Changed Green    : 0
+ Overall Health Changed Yellow             : 0
+ Overall Health Changed Green              : 0
+ DRE Reserve Failures Due to Health Status : 2444848
+Client: TCP
+ TCP Session Alloc  : 4042094
+ TCP Session Free   : 4040165
+ SSL Session Alloc  : 0
+ SSL Session Free   : 0
+ DRE Session Alloc  : 0
+ DRE Session Free   : 0
+ HTTP Session Alloc  : 0
+ HTTP Session Free   : 0
+
+Client: SSL
+ TCP Session Alloc  : 0
+ TCP Session Free   : 0
+ SSL Session Alloc  : 6485189
+ SSL Session Free   : 6490830
+ DRE Session Alloc  : 0
+ DRE Session Free   : 0
+ HTTP Session Alloc  : 0
+ HTTP Session Free   : 0
+
+Client: DRE
+ TCP Session Alloc  : 0
+ TCP Session Free   : 0
+ SSL Session Alloc  : 0
+ SSL Session Free   : 0
+ DRE Session Alloc  : 1588688
+ DRE Session Free   : 1594329
+ HTTP Session Alloc  : 0
+ HTTP Session Free   : 0
+
+Client: HTTP
+ TCP Session Alloc  : 0
+ TCP Session Free   : 0
+ SSL Session Alloc  : 0
+ SSL Session Free   : 0
+ DRE Session Alloc  : 0
+ DRE Session Free   : 0
+ HTTP Session Alloc  : 0
+ HTTP Session Free   : 0
+
+Client: AD
+ TCP Session Alloc  : 0
+ TCP Session Free   : 0
+ SSL Session Alloc  : 0
+ SSL Session Free   : 0
+ DRE Session Alloc  : 0
+ DRE Session Free   : 0
+ HTTP Session Alloc  : 0
+ HTTP Session Free   : 0

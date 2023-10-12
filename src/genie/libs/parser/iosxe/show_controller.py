@@ -848,8 +848,6 @@ class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
                 int_dict.setdefault('last_updated', m.groupdict()['last_updated'])
         
         return ret_dict
-
-
 class ShowControllersEthernetControllerSchema(MetaParser):
     """
         Schema for show controllers ethernet-controller {interface}
@@ -942,3 +940,147 @@ class ShowControllersEthernetController(ShowControllersEthernetControllerSchema)
                 int_dict['last_update_msecs'] = int(m.groupdict()['last_update_msecs'])
 
         return ret_dict
+
+
+# =============================================
+# Parser for 'show controller vdsl {interface} local'
+# =============================================
+
+class ShowControllerVDSLlocalSchema(MetaParser):
+    """Schema for show controller VDSL {interface} local"""
+
+    schema = {
+        'sfp_vendor_pid': str,
+        'sfp_vendor_sn': str,
+        'firmware_embedded_in_ios-xe': str,
+        'running_firmware_version': str,
+        'management_link': str,
+        'dsl_status': str,
+        'dumping_internal_info': str,
+        'dying_gasp': str,
+        'dumping_delt_info': str,
+        
+    }
+
+class ShowControllerVDSLlocal(ShowControllerVDSLlocalSchema):
+    """
+    Parser for show controller VDSL {interface} local
+    """
+
+    cli_command = 'show controller VDSL {interface} local'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        
+        
+        #SFP Vendor PID:                 SFPV5311TR
+        p1 = re.compile(r'^(?P<param>\w*\s*\w*\s*PID):\s+(?P<vl>.+)')
+        
+        #SFP Vendor SN:                  MET211611AC
+        p2 = re.compile(r'^(?P<param>\w*\s*\w*\s*SN):\s+(?P<vl>.+)')
+        
+        #Firmware embedded in IOS-XE:    1_62_8463
+        p3 = re.compile(r'^(?P<param>\w*\s*\w*\s*\w*\s*IOS-XE):\s+(?P<vl>.+)')
+        
+        #Running Firmware Version:       1_62_8463
+        p4 = re.compile(r'^(?P<param>\w*\s*\w*\s*Version\s*):\s+(?P<vl>.+)')
+        
+        #Management Link:                up
+        p5 = re.compile(r'^(?P<param>\w*\s*Link\s*):\s+(?P<state>.+)')
+        
+        #DSL Status:                     showtime
+        p6 = re.compile(r'^(?P<param>DSL\s*\w*):\s+(?P<state>\w+)')
+        
+        #Dumping internal info:          idle
+        p7 = re.compile(r'^(?P<param>\w*\s*internal\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        #Dying Gasp:                     disarmed
+        p8 = re.compile(r'^(?P<param>\w*\s*Gasp):\s+(?P<state>\w+)')
+        
+        #Dumping DELT info:              idle
+        p9 = re.compile(r'^(?P<param>\w*\s*DELT\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        ctrl_dict = {}
+       
+        for lines in out.splitlines():
+            line = lines.strip()
+
+            #SFP Vendor PID:                 SFPV5311TR
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #SFP Vendor SN:                  MET211611AC
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #Firmware embedded in IOS-XE:    1_62_8463
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+            
+            # Running Firmware Version:       1_62_8463
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+
+            #Management Link:                up
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+            # DSL Status:                     showtime
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+                
+            #Dumping internal info:          idle    
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+            #Dying Gasp:                     disarmed
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+               
+            #Dumping DELT info:              idle
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+        return ctrl_dict
+

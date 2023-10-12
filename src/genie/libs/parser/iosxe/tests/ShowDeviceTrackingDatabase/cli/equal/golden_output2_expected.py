@@ -1,0 +1,39 @@
+expected_output = {
+    "vlan_db_count":3,
+    "vlan_dynamic_entry_count":2,
+    "vlandb_id":101,
+    "device":{
+        1:{
+            "dev_code":"L",
+            "network_layer_address":"10.230.62.1",
+            "link_layer_address":"6c41.0e2c.0101",
+            "interface":"Vl101",
+            "vlan_id":101,
+            "pref_level_code":100,
+            "age":"781mn",
+            "state":"REACHABLE"
+        },
+        2:{
+            "dev_code":"ARP",
+            "network_layer_address":"10.230.62.80",
+            "link_layer_address":"0000.adbb.8d06",
+            "interface":"Po2",
+            "vlan_id":101,
+            "pref_level_code":5,
+            "age":"116s",
+            "state":"REACHABLE",
+            "time_left":"135 s try 0"
+        },
+        3:{
+            "dev_code":"ARP",
+            "network_layer_address":"10.230.62.2",
+            "link_layer_address":"0000.84d8.414d",
+            "interface":"Po2",
+            "vlan_id":101,
+            "pref_level_code":5,
+            "age":"101s",
+            "state":"REACHABLE",
+            "time_left":"146 s try 0"
+        }
+    }
+}

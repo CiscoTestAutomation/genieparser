@@ -1,54 +1,96 @@
 expected_output = {
-        'interfaces': {'Ethernet1/1': {'duplex_code': 'full',
-                                        'name': 'KeepAlive',
-                                        'port_speed': '10G',
-                                        'status': 'connected',
-                                        'type': '10g',
-                                        'vlan': 'routed'},
-                        'Ethernet1/19': {'duplex_code': 'full',
-                                         'port_speed': '10G',
-                                         'status': 'connected',
-                                         'type': 'SFP-H10GB-C',
-                                         'vlan': '105'},
-                        'Ethernet1/2': {'duplex_code': 'full',
-                                        'name': 'AOTLXPRISS10004',
-                                        'port_speed': '10G',
-                                        'status': 'connected',
-                                        'type': '10g',
-                                        'vlan': 'trunk'},
-                        'Ethernet101/1/10': {'duplex_code': 'full',
-                                             'name': 'DO-HYPER-03',
-                                             'port_speed': 'a-1000',
-                                             'status': 'connected',
-                                             'vlan': '101'},
-                        'Ethernet102/1/1': {'duplex_code': 'full',
-                                            'name': 'xxx (Gb1) [test_s]',
-                                            'port_speed': 'a-1000',
-                                            'status': 'connected',
-                                            'vlan': '110'},
-                        'Ethernet102/1/2': {'duplex_code': 'full',
-                                            'name': 'yyy (Gb1) [test_s]',
-                                            'port_speed': 'a-1000',
-                                            'status': 'connected',
-                                            'vlan': 'trunk'},
-                        'Ethernet102/1/3': {'duplex_code': 'full',
-                                            'name': 'zzz (Eth1, test_st',
-                                            'port_speed': 'a-1000',
-                                            'status': 'connected',
-                                            'vlan': '205'},
-                        'Loopback0': {'duplex_code': 'auto', 'status': 'connected', 'vlan': 'routed'},
-                        'Port-channel1': {'duplex_code': 'full',
-                                          'name': 'VPC_PeerLink',
-                                          'port_speed': '40G',
-                                          'status': 'connected',
-                                          'vlan': 'trunk'},
-                        'Vlan366': {'duplex_code': 'auto',
-                                    'name': 'BigData',
-                                    'port_speed': 'auto',
-                                    'status': 'connected',
-                                    'vlan': 'routed'},
-                        'mgmt0': {'duplex_code': 'full',
-                                  'port_speed': '1000',
-                                  'status': 'connected',
-                                  'vlan': 'routed'}}}
-
+   "interfaces":{
+      "Port":{
+         "name":"Name",
+         "status":"Status",
+         "vlan":"Vlan",
+         "duplex_code":"Duplex",
+         "port_speed":"Speed",
+         "type":"Type"
+      },
+      "Ethernet1/1":{
+         "name":"KeepAlive",
+         "status":"connected",
+         "vlan":"routed",
+         "duplex_code":"full",
+         "port_speed":"10G",
+         "type":"10g"
+      },
+      "Ethernet1/2":{
+         "name":"AOTLXPRISS10004",
+         "status":"connected",
+         "vlan":"trunk",
+         "duplex_code":"full",
+         "port_speed":"10G",
+         "type":"10g"
+      },
+      "mgmt0":{
+         "name":"--",
+         "status":"connected",
+         "vlan":"routed",
+         "duplex_code":"full",
+         "port_speed":"1000",
+         "type":"--"
+      },
+      "Port-channel1":{
+         "name":"VPC_PeerLink",
+         "status":"connected",
+         "vlan":"trunk",
+         "duplex_code":"full",
+         "port_speed":"40G",
+         "type":"--"
+      },
+      "Vlan366":{
+         "name":"BigData",
+         "status":"connected",
+         "vlan":"routed",
+         "duplex_code":"auto",
+         "port_speed":"auto",
+         "type":"--"
+      },
+      "Ethernet101/1/10":{
+         "name":"DO-HYPER-03",
+         "status":"connected",
+         "vlan":"101",
+         "duplex_code":"full",
+         "port_speed":"a-1000"
+      },
+      "Loopback0":{
+         "name":"--",
+         "status":"connected",
+         "vlan":"routed",
+         "duplex_code":"auto",
+         "port_speed":"--",
+         "type":"--"
+      },
+      "Ethernet1/19":{
+         "name":"--",
+         "status":"connected",
+         "vlan":"105",
+         "duplex_code":"full",
+         "port_speed":"10G",
+         "type":"SFP-H10GB-C"
+      },
+      "Ethernet102/1/1":{
+         "name":"xxx (Gb1) [test_s]",
+         "status":"connected",
+         "vlan":"110",
+         "duplex_code":"full",
+         "port_speed":"a-1000"
+      },
+      "Ethernet102/1/2":{
+         "name":"yyy (Gb1) [test_s]",
+         "status":"connected",
+         "vlan":"trunk",
+         "duplex_code":"full",
+         "port_speed":"a-1000"
+      },
+      "Ethernet102/1/3":{
+         "name":"zzz (Eth1, test_st",
+         "status":"connected",
+         "vlan":"205",
+         "duplex_code":"full",
+         "port_speed":"a-1000"
+      }
+   }
+}

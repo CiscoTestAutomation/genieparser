@@ -1,0 +1,38 @@
+TenGigabitEthernet1/0/2.154 is in client mode
+  Prefix State is OPEN
+  Renew will be sent in 3d07h
+  Address State is OPEN
+  Renew for address will be sent in 07:38:02
+  List of known servers:
+    Reachable via address: FE80::20C:29FF:FE22:1DA5
+    DUID: 00030001001EE59BE700
+    Preference: 0
+    Configuration parameters:
+      IA PD: IA ID 0x00200001, T1 302400, T2 483840
+        Prefix: 8882:0:0:100::/56
+                preferred lifetime 604800, valid lifetime 2592000
+                expires at Aug 31 2023 05:56 PM (2576282 seconds)
+      IA NA: IA ID 0x00200001, T1 43200, T2 69120
+        Address: 7772::41EF:B5D6:B50:38B7/128
+                preferred lifetime 86400, valid lifetime 172800
+                expires at Aug 03 2023 05:56 PM (157082 seconds)
+      DNS server: 11::11
+      Domain name: cisco.com
+      Information refresh time: 0
+  Prefix name: TEST123
+    Reachable via address: FE80::20C:29FF:FEF7:D6A4
+    DUID: 00030001001EBD9A6800
+    Preference: 0
+    Configuration parameters:
+      IA PD: IA ID 0x00200001, T1 302400, T2 483840
+        Prefix: 8881:0:0:100::/56
+                preferred lifetime 604800, valid lifetime 2592000, expired
+      IA NA: IA ID 0x00200001, T1 43200, T2 69120
+        Address: 7771::399D:20AD:29FB:771B/128
+                preferred lifetime 86400, valid lifetime 172800, expired
+      DNS server: 11::11
+      Domain name: cisco.com
+      Information refresh time: 0
+  Prefix name: TEST123
+  Prefix Rapid-Commit: disabled
+  Address Rapid-Commit: disabled

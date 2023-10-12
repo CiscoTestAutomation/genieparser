@@ -2809,7 +2809,8 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    ]
     exclude = ['msg_sent', 'msg_rcvd', 'activity_paths', 'activity_prefixes',
         'bgp_table_version', 'routing_table_version', 'tbl_ver', 'up_down',
-        'attribute_entries', 'dropped', 'established']
+        'attribute_entries', 'dropped', 'established', 'input_queue',
+        'output_queue']
 
 
     def cli(self, address_family='', vrf='',output=None):
@@ -4495,7 +4496,7 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
     def cli(self, neighbor='', address_family='', output=None):
 
         # Restricted address families
-        restricted_list = ['ipv4 unicast', 'ipv6 unicast']
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast','l2vpn evpn']
 
         # Init vars
         ret_dict = {}
@@ -4700,7 +4701,7 @@ class ShowIpBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
     def cli(self, neighbor='', address_family='', vrf='', output=None):
 
         # Restricted address families
-        restricted_list = ['ipv4 unicast', 'ipv6 unicast', 'link-state link-state']
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast', 'link-state link-state','l2vpn evpn']
 
         # Init vars
         ret_dict = {}

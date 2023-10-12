@@ -1,0 +1,94 @@
+interface TenGigabitEthernet0/1/3
+ no ip address
+ no ip clear-dont-fragment
+ ip redirects
+ ip unreachables
+ ip proxy-arp
+ ip mtu 1468
+ ip mfib forwarding input
+ ip mfib forwarding output
+ ip mfib cef input
+ ip mfib cef output
+ ip pim join-prune-interval 60
+ ip pim dr-priority 1
+ ip pim query-interval 30
+ no ip flowspec
+ ip cef accounting non-recursive internal
+ ip load-sharing per-destination
+ ip route-cache cef
+ ip route-cache
+ ip split-horizon
+ ip igmp last-member-query-interval 1000
+ ip igmp last-member-query-count 2
+ ip igmp query-max-response-time 10
+ ip igmp v3-query-max-response-time 10
+ ip igmp version 2
+ ip igmp query-interval 60
+ ip igmp tcn query count 2
+ ip igmp tcn query interval 10
+ logging event link-status
+ load-interval 30
+ no shutdown
+ no medium p2p
+ ipv6 nd reachable-time 0
+ ipv6 nd ns-interval 0
+ ipv6 nd dad attempts 1
+ ipv6 nd dad loopback detect
+ ipv6 nd prefix framed-ipv6-prefix
+ ipv6 nd nud igp
+ no ipv6 nd ra solicited unicast
+ ipv6 nd ra lifetime 1800
+ ipv6 nd ra interval 200
+ ipv6 mfib forwarding input
+ ipv6 mfib forwarding output
+ ipv6 mfib cef input
+ ipv6 mfib cef output
+ ipv6 mld query-max-response-time 10
+ ipv6 mld query-timeout 255
+ ipv6 mld query-interval 125
+ ipv6 mld router
+ ipv6 pim hello-interval 30
+ ipv6 pim dr-priority 1
+ ipv6 pim join-prune-interval 60
+ ipv6 pim
+ no ipv6 flowspec
+ ipv6 redirects
+ ipv6 unreachables
+ snmp trap link-status
+ mpls mldp
+ mpls mtu 1500
+ no flowspec group
+ mka policy MKAPolicy
+ mka pre-shared-key key-chain KCP256
+ network-clock wait-to-restore 300
+ network-clock hold-off 300
+ network-clock source quality-level - tx
+ network-clock source quality-level - rx
+ no synchronous mode
+ macsec access-control should-secure
+ macsec
+ arp arpa
+ arp timeout 14400
+ lldp transmit
+ lldp receive
+ lldp tlv-select power-management
+ lldp tlv-select 4-wire-power-management
+ bfd enable
+ clns route-cache
+ spanning-tree port-priority 128
+ spanning-tree cost 0
+ no h323-gateway voip interface
+ ethernet oam max-rate 10
+ ethernet oam min-rate 1 
+ ethernet oam timeout 5 
+ channel-group 1 mode active
+ hold-queue 375 in
+ hold-queue 40 out
+ no bgp-policy accounting input
+ no bgp-policy accounting output
+ no bgp-policy accounting input source
+ no bgp-policy accounting output source
+ no bgp-policy source ip-prec-map
+ no bgp-policy source ip-qos-map
+ no bgp-policy destination ip-prec-map
+ no bgp-policy destination ip-qos-map

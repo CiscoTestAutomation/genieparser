@@ -1,0 +1,11 @@
+show ospfv3 vrf WAN-VRF neighbor fiveGigabitEthernet 1/0/24
+
+          OSPFv3 100 address-family ipv4 vrf WAN-VRF (router-id 10.0.2.38)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+101.1.1.2         1   FULL/BDR        00:00:38    167             FiveGigabitEthernet1/0/24
+
+          OSPFv3 100 address-family ipv6 vrf WAN-VRF (router-id 10.0.2.38)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+101.1.1.2         1   FULL/BDR        00:00:33    167             FiveGigabitEthernet1/0/24

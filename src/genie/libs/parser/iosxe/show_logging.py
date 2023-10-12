@@ -5,8 +5,11 @@ IOSXE parsers for the following show commands:
     * show logging | include {include}
     * show logging | exclude {exclude}
     * show logging onboard rp active uptime
+    * show logging onboard rp {rp_standby} uptime
     * show logging onboard rp active status
+    * show logging onboard rp {rp_standby} status
     * show logging onboard rp active {include}
+    * show logging onboard rp {rp_standby} {include}
     * show logging onboard rp {rp} {feature} detail
     * show logging process smd reverse
     * show logging process smd {switch} {mode} reverse
@@ -305,7 +308,7 @@ class ShowLogging(ShowLoggingSchema):
         logging_dict = {}
         outer_logging_dict = {}
         outer_logging_sources_dict = {}
-        
+        trap_dict = {}
         for line in out.splitlines():
 
             line = line.strip()
@@ -451,7 +454,6 @@ class ShowLogging(ShowLoggingSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                trap_dict = {}
                 current_tag = group['tag'].lower()
 
                 trap_dict['level'] = group['level']
@@ -615,6 +617,7 @@ class ShowLoggingOnboardRpActiveUptimeSchema(MetaParser):
 
     '''Schema for:
         'show logging onboard Rp active uptime'
+        'show logging onboard Rp {rp_standby} uptime'
         'show logging onboard switch {switch_num} {rp_active} uptime'
         'show logging onboard switch {switch_num} uptime'
     '''
@@ -642,27 +645,33 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
     """
     Parser for :
         'show logging onboard Rp active uptime'
+        'show logging onboard Rp {rp_standby} uptime'
         'show logging onboard switch {switch_num} {rp_active} uptime'
         'show logging onboard switch {switch_num} uptime'
 
     """
 
-    cli_command = ['show logging onboard rp active uptime',
-                   'show logging onboard switch {switch_num} {rp_active} uptime',
-                   'show logging onboard switch {switch_num} uptime']
+    cli_command = ['show logging onboard switch {switch_num} {rp_active} uptime',
+                   'show logging onboard switch {switch_num} uptime',
+                   'show logging onboard Rp active uptime',
+                   'show logging onboard rp {rp_standby} uptime']
 
 				   
-    def cli(self,switch_num="",rp_active="",output=None): 
+    def cli(self,switch_num="",rp_active="",output=None,rp_standby=""): 
 
         if output is None: 
             # Build the command
-            if switch_num and rp_active:
-                cmd = self.cli_command[1].format(switch_num=switch_num,rp_active=rp_active)
+            if rp_standby:
+                cmd = self.cli_command[3].format(rp_standby=rp_standby)
+                
+            elif switch_num and rp_active:
+                cmd = self.cli_command[0].format(switch_num=switch_num,rp_active=rp_active)
 
             elif switch_num:
-                cmd = self.cli_command[2].format(switch_num=switch_num)
-            else:           
-                cmd = self.cli_command[0]   
+                cmd = self.cli_command[1].format(switch_num=switch_num)
+                
+            else:
+                cmd = self.cli_command[2]
 
             # Execute the command
             output = self.device.execute(cmd)
@@ -796,6 +805,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
 class ShowLoggingOnboardRpActiveStatusSchema(MetaParser):
     '''Schema for:
         show logging onboard rp active status
+        show logging onboard rp {rp_standby} status
     '''
     schema={
         'application':{
@@ -811,15 +821,20 @@ class ShowLoggingOnboardRpActiveStatus(ShowLoggingOnboardRpActiveStatusSchema):
     """
     Parser for :
         'show logging onboard rp active status'
+        'show logging onboard rp {rp_standby} status'
     """
     
-    cli_command = 'show logging onboard rp active status'
+    cli_command = ['show logging onboard rp active status',
+                   'show logging onboard rp {rp_standby} status']
     
-    def cli(self, output=None): 
+    def cli(self, output=None, rp_standby=""): 
 
         if output is None:
             # Build the command
-            output = self.device.execute(self.cli_command)
+            if rp_standby:
+                output = self.device.execute(self.cli_command[1].format(rp_standby=rp_standby))
+            else:
+                output = self.device.execute(self.cli_command[0])
             
         ret_dict ={}
         #Application Clilog:
@@ -862,9 +877,12 @@ class ShowLoggingOnboardRpActiveStatus(ShowLoggingOnboardRpActiveStatusSchema):
         
 class ShowLoggingOnboardRpActiveTemperatureContinuousSchema(MetaParser):
     '''Schema for:
-        show logging onboard rp active temperature continuous 
+        show logging onboard rp active {include} continuous 
+        show logging onboard rp {rp_standby} {include} continuous
+        show logging onboard rp active temperature continuous
+        show logging onboard rp {rp_standby} temperature continuous
         show logging onboard rp active voltage continuous
-        show logging onboard rp active message continuous
+        show logging onboard rp {rp_standby} voltage continuou
     '''
 
     schema={
@@ -894,22 +912,28 @@ class ShowLoggingOnboardRpActiveTemperatureContinuousSchema(MetaParser):
 class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActiveTemperatureContinuousSchema):
     """
     Parser for :
-        'show logging onboard rp active temperature continuous'
-        'show logging onboard rp active voltage continuous'
-        'show logging onboard rp active message continuous'
+        show logging onboard rp active {include} continuous 
+        show logging onboard rp {rp_standby} {include} continuous
+        show logging onboard rp active temperature continuous
+        show logging onboard rp {rp_standby} temperature continuous
+        show logging onboard rp active voltage continuous
+        show logging onboard rp {rp_standby} voltage continuous
     """
    
-    cli_command = ['show logging onboard rp active {include} continuous',
-                   'show logging onboard switch {switch_num} rp active {include} continuous']
+    cli_command = ['show logging onboard switch {switch_num} rp active {include} continuous',
+                   'show logging onboard rp active {include} continuous',
+                   'show logging onboard rp {rp_standby} {include} continuous']
 				   
-    def cli(self, include="", switch_num="", output=None): 
+    def cli(self, include="", switch_num="", output=None, rp_standby="",): 
 
         if output is None:
             # Build the command
             if switch_num:
-                cmd = self.cli_command[1].format(switch_num=switch_num,include=include)
-            else:           
-                cmd = self.cli_command[0].format(include=include)   
+                cmd = self.cli_command[0].format(switch_num=switch_num,include=include)
+            elif rp_standby:           
+                cmd = self.cli_command[2].format(rp_standby=rp_standby,include=include)   
+            else:
+                cmd = self.cli_command[1]  
 
             # Execute the command
             output = self.device.execute(cmd)

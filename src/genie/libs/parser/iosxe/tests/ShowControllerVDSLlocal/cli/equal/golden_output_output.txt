@@ -1,0 +1,9 @@
+SFP Vendor PID:                 SFPV5311TR
+SFP Vendor SN:                  MET211611AC
+Firmware embedded in IOS-XE:    1_62_8463
+Running Firmware Version:       1_62_8463
+Management Link:                up
+DSL Status:                     showtime
+Dumping internal info:          idle
+Dying Gasp:                     disarmed
+Dumping DELT info:              idle

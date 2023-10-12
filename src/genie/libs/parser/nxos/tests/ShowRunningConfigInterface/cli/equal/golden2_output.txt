@@ -1,0 +1,4 @@
+interface Ethernet104/1/23
+description TEOFWP02 PAN-ESXi MGT
+switchport access vlan 114
+channel-group 147

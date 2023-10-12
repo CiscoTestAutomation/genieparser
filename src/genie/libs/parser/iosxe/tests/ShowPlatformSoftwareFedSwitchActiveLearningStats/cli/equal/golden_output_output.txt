@@ -1,0 +1,13 @@
+Learning Statistics
+
+Learning cache parameter error: 0
+IOSd notification message count: 10174837
+IOSd notification cache count: 59113603
+
+Accumulated counts:
+L2 validation error: 0
+L2 matm add error: 0
+L2 learning cache: 59113603
+L3 validation error: 0
+L3 process error: 0
+L3 learning cache: 0

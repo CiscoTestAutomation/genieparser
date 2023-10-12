@@ -1,0 +1,31 @@
+expected_output = {
+	'message_summary': {
+		'05/24/2023 18:42:22': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed'],
+		'05/24/2023 18:42:32': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed'],
+		'05/25/2023 10:33:38': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed'],
+		'05/25/2023 10:33:47': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed'],
+		'05/25/2023 12:42:28': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed'],
+		'05/25/2023 12:42:38': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed'],
+		'05/25/2023 13:04:45': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed'],
+		'05/25/2023 13:04:55': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed'],
+		'05/25/2023 13:20:23': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed'],
+		'05/25/2023 13:20:33': ['IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Fantray passed'],
+		'05/24/2023 18:40:23': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0'],
+		'05/24/2023 18:40:49': ['IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0'],
+		'05/24/2023 18:41:11': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0'],
+		'05/25/2023 12:40:48': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0'],
+		'05/25/2023 12:40:54': ['IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0'],
+		'05/25/2023 12:41:41': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0'],
+		'05/25/2023 13:03:05': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0'],
+		'05/25/2023 13:03:12': ['IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0'],
+		'05/25/2023 13:04:08': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0'],
+		'05/25/2023 13:04:09': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0'],
+		'05/25/2023 13:18:44': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0'],
+		'05/25/2023 13:18:50': ['IOSXE-2-SPA_REMOVED : SPA removed from subslot 1/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 3/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 4/0', 'IOSXE-2-SPA_REMOVED : SPA removed from subslot 5/0'],
+		'05/25/2023 13:19:00': ['IOSXE-2-SPA_INSERTED : SPA inserted in subslot 1/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 3/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 4/0', 'IOSXE-2-SPA_INSERTED : SPA inserted in subslot 5/0'],
+		'05/25/2023 12:42:16': ['IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1', 'IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2'],
+		'05/25/2023 13:04:43': ['IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1', 'IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2'],
+		'05/25/2023 13:19:34': ['IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/1'],
+		'05/25/2023 13:19:35': ['IOSXE-2-TRANSCEIVER_INSERTED : Transceiver module inserted in TenGigabitEthernet3/0/2']
+	}
+}

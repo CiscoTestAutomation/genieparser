@@ -22,6 +22,22 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
     schema = {
         'derived_config': {
             Any(): {
+                Optional('host_reachability_protocol'): str,
+                Optional('source_interface'): str,
+                Optional('dual_stack_ip'): str,
+                Optional('pim_operation'): str,
+                Optional('member_vni'): {
+                    Any(): {
+                        Optional('vrf'): str,
+                        Optional('ingress_replication'): {
+                            'ir_enabled': bool,
+                            Optional('remote_peer_ip'): str,
+                        },
+                        Optional('mcast_group_ip'): str,
+                        Optional('mcast_group_ipv6'): str,
+                        Optional('local_routing'): bool
+                    }
+                },
                 Optional('ip_address'): str,
                 Optional('ipv6_address'): str,
                 Optional('ip_access_group_in'): str,
@@ -39,14 +55,18 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
                 Optional('switchport_block'): str,
                 Optional('switchport_port_security'): {
                     'switchport_port_security': bool,
-                    'violation': str,
-                    'aging_time': int,
-                    'aging_type': str,
-                    'maximum': {
+                    Optional('violation'): str,
+                    Optional('aging_time'): int,
+                    Optional('aging_type'): str,
+                    Optional('maximum'): {
                         Any(): {
                             Optional('vlan'): str
                         }
                     }
+                },
+                Optional('vxlan_encapsulation'): {
+                    Optional('encapsulation_type'): str,
+                    Optional('dual_stack_ip'): str,
                 },
                 Optional('load_interval'): int,
                 Optional('storm_control'): {
@@ -62,7 +82,13 @@ class ShowDerivedConfigInterfaceSchema(MetaParser):
                     Optional('input'): str,
                     Optional('output'): str
                 },
-                Optional('ip_dhcp_snooping_limit_rate'): int
+                Optional('ip_dhcp_snooping_limit_rate'): int,
+
+                Optional('vrf'): str,
+                Optional('ipv4_unnumbered_intf'): str,
+                Optional('ipv6_unnumbered_intf'): str,
+                Optional('autostate'): bool,
+
             }
         }
     }
@@ -182,6 +208,60 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
 
         # ip dhcp snooping limit rate 15
         p31 = re.compile(r"^ip dhcp snooping limit rate\s+(?P<ip_dhcp_snooping_limit_rate>\d+)$")
+
+        # host-reachability protocol bgp
+        p32 = re.compile(r'^host-reachability protocol (?P<protocol>[a-zA-Z]+)$')
+
+        # source-interface loopback1
+        p33 = re.compile(r'^source-interface (?P<src_intf>[a-zA-Z0-9\-]+)$')
+
+        # member vni 20011 ingress-replication
+        p34 = re.compile(r'^member vni (?P<vni>[0-9]+) ingress-replication$')
+
+        # member vni 20012 mcast-group 224.1.1.1
+        p35 = re.compile(r'^member vni (?P<vni>[0-9]+) mcast-group (?P<ip>[0-9\.]+)$')
+
+        # member vni 20010 mcast-group FF0E::A
+        p36 = re.compile(r'^member vni (?P<vni>[0-9]+) mcast-group (?P<ipv6>[a-fA-F\d\:]+)$')
+
+        # member vni 20011 ingress-replication local-routing
+        p37 = re.compile(r'^member vni (?P<vni>[0-9]+) ingress-replication '
+                        r'local-routing$')
+
+        # member vni 20011
+        p38 = re.compile(r'^member vni (?P<vni>[0-9]+)$')
+
+        # ingress-replication 1.1.1.1
+        p39 = re.compile(r'^ingress-replication (?P<ip>[0-9\.]+)$')
+
+        # member vni 20012 mcast-group 224.1.1.1 local-routing
+        p40 = re.compile(r'^member vni (?P<vni>[0-9]+) mcast-group (?P<ip>[0-9\.]+) '
+                        r'local-routing$')
+
+        # member vni 30000 vrf red
+        p41 = re.compile(r'^member vni (?P<vni>[0-9]+) vrf (?P<vrf>\S+)$')
+
+        #member vni 2000401 mcast-group 239.4.0.145 FF1E::91
+        p42 = re.compile(r"member vni (?P<vni>[0-9]+) mcast-group (?P<ipv4_group>\S+) (?P<ipv6_group>\S+)$")
+
+        # vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+        # vxlan encapsulation ipv6
+        p43 = re.compile(r'^vxlan encapsulation +(?P<type>dual-stack|ipv6|ipv4)\s+(?P<dual_stack_ip>\S+)$')
+
+        #ip pim sparse-mode
+        p44 = re.compile(r"ip pim (?P<pim_operation>\S+)$")
+
+        # vrf forwarding VRF1
+        p45 = re.compile(r"^vrf forwarding\s+(?P<vrf>\S+)$")
+
+        # ip unnumbered Loopback0
+        p46 = re.compile(r"^ip unnumbered\s+(?P<ipv4_unnumbered_intf>\S+)$")
+
+        # ipv6 unnumbered Loopback0
+        p47 = re.compile(r"^ipv6 unnumbered\s+(?P<ipv6_unnumbered_intf>\S+)$")
+
+        # no autostate
+        p48 = re.compile(r"^no autostate$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -373,5 +453,135 @@ class ShowDerivedConfigInterface(ShowDerivedConfigInterfaceSchema):
             if m:
                 intf_dict['ip_dhcp_snooping_limit_rate'] = int(m.groupdict()['ip_dhcp_snooping_limit_rate'])
                 continue
-        
+            
+            # host-reachability protocol bgp
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'host_reachability_protocol': group['protocol']})
+                continue
+
+            # source-interface loopback1
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'source_interface': group['src_intf']})
+                continue
+
+            # member vni 20011 ingress-replication
+            m = p34.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'ingress_replication': {
+                                                    'ir_enabled': True}}})
+                continue
+
+            # member vni 20012 mcast-group 224.1.1.1
+            m = p35.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group_ip': group['ip']}})
+                continue
+            
+            # member vni 20012 mcast-group FF0E::C
+            m = p36.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group_ipv6': group['ipv6']}})
+                continue
+            # member vni 20011 ingress-replication local-routing
+            m = p37.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'ingress_replication': {
+                                                    'ir_enabled': True
+                                                  },
+                                                  'local_routing': True}})
+                continue
+
+            # member vni 20011
+            m = p38.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                vni = group['vni']
+                continue
+
+            # ingress-replication 1.1.1.1
+            m = p39.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({vni: {'ingress_replication': {
+                                            'ir_enabled': True,
+                                            'remote_peer_ip': group['ip']}}})
+                continue
+
+            # member vni 20012 mcast-group 224.1.1.1 local-routing
+            m = p40.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group': group['ip'],
+                                                  'local_routing': True}})
+                continue
+
+            # member vni 30000 vrf red
+            m = p41.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'vrf': group['vrf']}})
+                continue
+
+            # member vni 20012 mcast-group 224.1.1.1 local-routing
+            m = p42.match(line)
+            if m:
+                member_vni = intf_dict.setdefault('member_vni', {})
+                group = m.groupdict()
+                member_vni.update({group['vni']: {'mcast_group_ip': group['ipv4_group'],'mcast_group_ipv6': group['ipv6_group']}})
+                continue
+
+            # vxlan encapsulation dual-stack prefer-ipv6 underlay-mcast ipv4
+            # vxlan encapsulation ipv6
+            m = p43.match(line)
+            if m:
+                intf_dict.setdefault('vxlan_encapsulation', {}).setdefault('encapsulation_type', m.groupdict()['type'])
+                intf_dict.setdefault('vxlan_encapsulation', {}).setdefault('dual_stack_ip', m.groupdict()['dual_stack_ip'])
+                continue
+
+            #ip pim sparse-mode
+            m = p44.match(line)
+            if m:
+                intf_dict['pim_operation'] = m.groupdict()['pim_operation']
+                continue
+
+            # vrf forwarding VRF1
+            m = p45.match(line)
+            if m:
+                intf_dict['vrf'] = m.groupdict()['vrf']
+                continue
+
+            # ip unnumbered Loopback0
+            m = p46.match(line)
+            if m:
+                intf_dict['ipv4_unnumbered_intf'] = m.groupdict()['ipv4_unnumbered_intf']
+                continue
+
+            # ipv6 unnumbered Loopback0
+            m = p47.match(line)
+            if m:
+                intf_dict['ipv6_unnumbered_intf'] = m.groupdict()['ipv6_unnumbered_intf']
+                continue
+
+            # no autostate
+            m = p48.match(line)
+            if m:
+                intf_dict['autostate'] = False
+                continue
+
         return ret_dict

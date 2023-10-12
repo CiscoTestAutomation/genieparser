@@ -1,0 +1,34 @@
+Tag 1:
+IS-IS Level-1 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+iolR1.00-00         * 0x00000028   0xEE4D                1184/*         0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Router ID:    1.1.1.1
+  Router CAP:   1.1.1.1, D:0, S:0
+    Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+    Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
+    Segment Routing Algorithms: Flex-algo 132, Flex-algo 133, Flex-algo 134
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    Segment Routing Local Block: SRLB Base: 12000 Range: 2001
+    Node-MSD
+      MSD: 16
+    Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+      Flex-algo Include-all Ext Admin Group:
+       0x00000000 0x00000000 0x00000000 0x00000010
+       0x00000000 0x00000000 0x00000100
+    Flex algorithm: 129 Metric-Type: Min-delay Alg-type: SPF Priority: 128
+    Flex algorithm: 130 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 131 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 132 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 133 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 134 Metric-Type: IGP Alg-type: SPF Priority: 128
+  Hostname: iolR1
+  IP Address:   1.1.1.1
+  IPv6 Address: 111::111
+  Metric: 10         IPv6 12:12::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 13:13::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 111::111/128
+    Prefix-attr: X:0 R:0 N:1

@@ -43,11 +43,15 @@ expected_output = {
                                         'path': {
                                             'path_idx': 0,
                                             'nhid': '0x0',
+                                            'nhid_hex': '0xeb502b0 0x0',
                                             'path_idx_nh': {
                                                 'path_idx_address': 'fc00:c000:2003::/128',
                                                 'path_idx_via': 'fc00:c000:2003::/48'
                                             }
-                                        }
+                                        },
+                                        'next_hop_vrf': 'default',
+                                        'next_hop_table': '0xe0800000',
+                                        'sid_list': 'fc00:c000:2003:e003::'
                                     }
                                 },
                                 'level': {
@@ -64,6 +68,8 @@ expected_output = {
                                     }
                                 },
                                 'load_distribution': {
+                                    'distribution': '0',
+                                    'refcount': 4,
                                     '0': {
                                         'hash': 0,
                                         'ok': 'Y',

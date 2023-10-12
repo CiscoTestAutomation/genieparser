@@ -1,0 +1,4 @@
+show lisp eid-table vrf red ipv4 subscription
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 1 entries
+Prefix                                  Source                         Created     Last Update
+2.2.2.2/32                              remote-eid,eid-watch          00:13:06    00:01:41     

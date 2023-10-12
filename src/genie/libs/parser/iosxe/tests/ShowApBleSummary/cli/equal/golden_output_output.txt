@@ -1,0 +1,10 @@
+AP Name                           AP Model         AP Ethernet MAC       BLE Interface State   BLE Admin State     BLE mode              BLE MAC               BLE Profile       Scan State
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AP3-01                            AIR-AP2802E-E-K  1111.aaaa.1a1a        Unknown               Not Configured      Unknown               Unknown               Not Configured    Not Configured
+AP2-01                            C9130AXI-E       2222.aaaa.2a2a        IOx Zigbee            Up                  Advanced (Native)     2222.bbbb.2b2b        No Advertisement  Enabled
+AP3-03                            C9130AXI-E       3333.aaaa.3a3a        Close                 Down                Base (Native)         3333.bbbb.3b3b        SpecialProfle123  Enabled
+AP2-04                            C9130AXI-E       4444.aaaa.4a4a        Close                 Down                Base (Native)         4444.bbbb.4b4b        No Advertisement  Enabled
+AP2-02                            C9130AXI-E       5555.aaaa.5a5a        Close                 Down                Base (Native)         5555.bbbb.5b5b        My Profile        Enabled
+AP2-03                            AIR-AP1852I-E-K  6666.aaaa.6a6a        Unknown               Not Configured      Unknown               Unknown               Not Configured    Not Configured
+AP3-02                            AIR-AP4800-B-K9  7777.aaaa.7a7a        Open                  Up                  Base (Native)         7777.bbbb.7b7b        No Advertisement  Disabled
+AP3-04                            AIR-AP3802I-E-K  8888.aaaa.8a8a        Unknown               Not Configured      Unknown               Unknown               Not Configured    Not Configured

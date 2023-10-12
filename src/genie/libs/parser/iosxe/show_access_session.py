@@ -356,19 +356,19 @@ class ShowAccessSessionMacDetailsSchema(MetaParser):
                 'domain': str,
                 'oper_host_mode': str,
                 'oper_control_dir': str,
-                'session_timeout': {
+                Optional('session_timeout'): {
                     'server': int,
                     'remaining': int
                 },
-                'timeout_action': str,
+                Optional('timeout_action'): str,
                 'common_session_id': str,
                 'acct_session_id': str,
                 'handle': str,
                 'current_policy': str,
                 'server_policies': {
-                    'session_timeout': int,
-                    'vlan_group': int,
-                    'acs_acl': str
+                    Optional('session_timeout'): int,
+                    Optional('vlan_group'): int,
+                    Optional('acs_acl'): str
                 },
                 'method_status_list': {
                     'method': str,

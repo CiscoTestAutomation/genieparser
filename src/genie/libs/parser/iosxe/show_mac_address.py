@@ -317,3 +317,40 @@ class ShowMacAddressTableCount(ShowMacAddressTableCountSchema):
                 continue
 
         return ret_dict
+
+# ======================================================
+# Parser for 'show mac address-table dynamic vlan <vlan_number> | count <count>'
+# ======================================================
+class ShowMacAddresstableDynamicVlanCountSchema(MetaParser):
+    """Schema for show mac address-table dynamic vlan <vlan_number> | count <count>"""
+
+    schema = {
+        'number_of_lines': int,
+    }
+
+class ShowMacAddresstableDynamicVlanCount(ShowMacAddresstableDynamicVlanCountSchema):
+    """Parser for show mac address-table dynamic vlan <vlan_number> | count <count>"""
+
+    cli_command = 'show mac address-table dynamic vlan {vlan_number} | count {count}'
+
+    def cli(self, vlan_number, count, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vlan_number=vlan_number,count=count))
+
+        # Number of lines which match regexp = 6500
+        # Number of lines which match regexp = 10
+        p1 = re.compile(r"^Number of lines which match regexp\s+= (?P<number_of_lines>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 6500
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['number_of_lines'] = int(dict_val['number_of_lines'])
+                continue
+
+        return ret_dict

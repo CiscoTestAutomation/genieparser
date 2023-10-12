@@ -13,12 +13,14 @@ expected_output = {
                                 },
                                 '192.168.1.71/32': {
                                     'last_registered': '00:50:10',
-                                    'who_last_registered': '11.11.11.11:33079',
+                                    'who_last_registered': '11.11.11.11',
+                                    'port': 33079,
                                     'up': 'yes'
                                 },
                                 '2001:192:168:1::/64': {
                                     'last_registered': '00:50:06',
-                                    'who_last_registered': '2222:2222:2222:2222::.27643',
+                                    'who_last_registered': '2222:2222:2222:2222::',
+                                    'port': 27643,
                                     'up': 'yes'
                                 }
                             }
@@ -27,7 +29,8 @@ expected_output = {
                             'eid_prefix': {
                                 '2001:192:168:2::/64': {
                                     'last_registered': '00:50:05',
-                                    'who_last_registered': '2333:2333:2333:2333::.27643',
+                                    'who_last_registered': '2333:2333:2333:2333::',
+                                    'port': 27643,
                                     'up': 'yes'
                                 }
                             }

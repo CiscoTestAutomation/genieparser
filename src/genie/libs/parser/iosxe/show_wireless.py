@@ -5389,3 +5389,272 @@ class ShowWirelessMulticast(ShowWirelessMulticastSchema):
                 ret_dict['ipv6_mcast_group_address'] = ipv6
 
         return ret_dict
+
+
+# ========================================
+# Schema for:
+#  * 'show wireless profile flex summary'
+# ========================================
+class ShowWirelessProfileFlexSummarySchema(MetaParser):
+    """ Schema for :
+        show wireless profile flex summary"""
+
+    schema = {
+        "count": int,
+        "flex_profiles": {
+            Any(): {
+                'description': Optional(str)
+            }
+        }
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show wireless profile flex summary'
+# ========================================
+class ShowWirelessProfileFlexSummary(ShowWirelessProfileFlexSummarySchema):
+    """Parser for :
+        show wireless profile flex summary"""
+
+    cli_command = 'show wireless profile flex summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # Number of Flex Profiles: 4
+        p_count = re.compile(r'Number\sof\sFlex\sProfiles:\s(?P<count>\d+)')
+        # ------------------------------------------------------------------------
+        p_line = re.compile(r'-+$')
+        # Flex Profile Name                 Description
+        p_header = re.compile(r'Flex\sProfile\sName\s+Description')
+        # myflexp1                          My first profile
+        # myflexp2
+        # myflexp3                          2023 profile
+        p_line_double = re.compile(r'^(?P<flexp_name>[\w\.-]+)\s+(?P<desc>(\w+\s?)+)$|(?P<flexp_name_single>[\w\.-]+)')
+        for line in output.splitlines():
+            line = line.strip()
+            flex_dict = ret_dict.setdefault('flex_profiles', {})
+            # Flex Profile Name                 Description
+            m = re.match(p_header, line)
+            if m:
+                continue
+            # ------------------------------------------------------------------------
+            m = re.match(p_line, line)
+            if m:
+                continue
+            # Number of Flex Profiles: 4
+            m = re.match(p_count, line)
+            if m:
+                ret_dict.update({'count': int(m.groupdict().get('count'))})
+                continue
+            # myflexp1                          My first profile
+            # myflexp2
+            # myflexp3                          2023 profile
+            m = re.match(p_line_double, line)
+            if m:
+                m_dict = m.groupdict()
+                flexp_name_single = m_dict.get('flexp_name_single')
+                flexp_name = m_dict.get('flexp_name')
+                flex_dict.update({flexp_name or flexp_name_single:{
+                   'description': "" if flexp_name_single else m_dict['desc'].strip()
+                   }})
+                continue
+            continue
+
+        return ret_dict
+
+
+# ========================================
+# Schema for:
+#  * 'show wireless tag site summary'
+# ========================================
+class ShowWirelessTagSiteSummarySchema(MetaParser):
+    """ Schema for :
+        show wireless tag site summary"""
+
+    schema = {
+        "count": int,
+        "site_tags": {
+            Any(): {
+                'description': str
+            }
+        }
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show wireless tag site summary'
+# ========================================
+class ShowWirelessTagSiteSummary(ShowWirelessTagSiteSummarySchema):
+    """Parser for :
+        show wireless tag site summary"""
+
+    cli_command = 'show wireless tag site summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+        # Number of Site Tags: 7
+        p_count = re.compile(r'Number\sof\sSite\sTags:\s(?P<count>\d+)')
+        # ------------------------------------------------------------------------
+        p_line = re.compile(r'-+$')
+        # Site Tag Name                     Description
+        p_header = re.compile(r'Site\sTag\sName\s+Description')
+        # sometag                           Some description
+        # sometagwithnodescription
+        p_line_double = re.compile(r'^(?P<site_name>[\w\.-]+)\s+(?P<desc>(\w+\s?)+)$|(?P<site_name_single>[\w\.-]+)')
+        for line in output.splitlines():
+            line = line.strip()
+            site_dict = ret_dict.setdefault('site_tags', {})
+            # Site Tag Name                     Description
+            m = re.match(p_header, line)
+            if m:
+                continue
+            # ------------------------------------------------------------------------
+            m = re.match(p_line, line)
+            if m:
+                continue
+            # Number of Site Tags: 7
+            m = re.match(p_count, line)
+            if m:
+                ret_dict.update({'count': int(m.groupdict().get('count'))})
+                continue
+            # sometag                           Some description
+            # sometagwithnodescription
+            m = re.match(p_line_double, line)
+            if m:
+                m_dict = m.groupdict()
+                site_name_single = m_dict.get('site_name_single')
+                site_name = m_dict.get('site_name')
+                site_dict.update({site_name or site_name_single:{
+                   'description': "" if site_name_single else m_dict['desc'].strip()
+                   }})
+                continue
+
+        return ret_dict
+
+
+# ========================================
+# Schema for:
+#  * 'show wireless mesh ap backhaul'
+# ========================================
+class ShowWirelessMeshApBackhaulSchema(MetaParser):
+    """ Schema for :
+        show wireless mesh ap backhaul"""
+
+    schema = {
+        Any(): {'backhaul_slot': str,
+                'radio_type': str,
+                'radio_subband': str,
+                'mesh_radio_role': str,
+                'admin_state': str,
+                'oper_state': str,
+                'current_channel': str,
+                'antenna_type': str,
+                'antenna_gain': str}
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show wireless mesh ap backhaul'
+# ========================================
+class ShowWirelessMeshApBackhaul(ShowWirelessMeshApBackhaulSchema):
+    """Parser for :
+        show wireless mesh ap backhaul"""
+
+    cli_command = 'show wireless mesh ap backhaul'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # MAC Address : 488b.0a78.c8a0
+        p_mac_addr = re.compile(r"MAC\sAddress\s:\s+(?P<mac_add>(([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}))")
+        # Current Backhaul Slot: 1
+        p_backhaul_slot = re.compile(r"^Current\sBackhaul\sSlot:\s+(?P<backhaul_slot>(\d))$")
+        # Radio Type: Main
+        p_radio_type = re.compile(r"^Radio\sType:\s+(?P<radio_type>(\w+))$")
+        # Radio Subband: All
+        p_radio_subband = re.compile(r"^Radio\sSubband:\s+(?P<radio_subband>(\w+))$")
+        # Mesh Radio Role: Downlink
+        p_mesh_radio_role = re.compile(r"^Mesh\sRadio\sRole:\s+(?P<mesh_radio_role>(\w+))$")
+        # Administrative State: Disabled
+        p_admin_state = re.compile(r"^Administrative\sState:\s+(?P<admin_state>(\w+))$")
+        # Operation State: Down
+        p_oper_state = re.compile(r"^Operation\sState:\s+(?P<oper_state>(\w+))$")
+        # Current Tx Power Level: *4
+        p_current_tx_power = re.compile(r"^CurrentsTx\sPower\sLevel:\s+(?P<current_tx_power>(\*?\d+))$")
+        # Current Channel: (157,161)*
+        p_current_channel = re.compile(r"^Current\sChannel:\s+(?P<current_channel>(\(\d+[,\d]+?\)\*?))$")
+        # Antenna Type: C-ANT-DART-RPTNC
+        p_antenna_type = re.compile(r"^Antenna\sType:\s?(?P<antenna_type>(N\/A|[\w-]+|$))")
+        # Internal Antenna Gain (in .5 dBm units): 1
+        p_antenna_gain = re.compile(r".* Gain \(.*\):\s(?P<antenna_gain>(\d+))$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            # MAC Address : 488b.0a78.c8a0
+            m = re.match(p_mac_addr, line)
+            if m:
+                curr_mac = m.groupdict().get('mac_add').strip()
+                mac_dict = ret_dict.setdefault(curr_mac, {})
+                continue
+            # Current Backhaul Slot: 1
+            m = re.match(p_backhaul_slot, line)
+            if m:
+                mac_dict['backhaul_slot'] = m.groupdict().get('backhaul_slot')
+                continue
+            # Radio Type: Main
+            m = re.match(p_radio_type, line)
+            if m:
+                mac_dict['radio_type'] = m.groupdict().get('radio_type')
+                continue
+            # Radio Subband: All
+            m = re.match(p_radio_subband, line)
+            if m:
+                mac_dict['radio_subband'] = m.groupdict().get('radio_subband')
+                continue
+            # Mesh Radio Role: Downlink
+            m = re.match(p_mesh_radio_role, line)
+            if m:
+                mac_dict['mesh_radio_role'] = m.groupdict().get('mesh_radio_role')
+                continue
+            # Administrative State: Disabled
+            m = re.match(p_admin_state, line)
+            if m:
+                mac_dict['admin_state'] = m.groupdict().get('admin_state')
+                continue
+            # Operation State: Down
+            m = re.match(p_oper_state, line)
+            if m:
+                mac_dict['oper_state'] = m.groupdict().get('oper_state')
+                continue
+            # Current Tx Power Level: *4
+            m = re.match(p_current_tx_power, line)
+            if m:
+                mac_dict['current_tx_power'] = m.groupdict().get('current_tx_power')
+                continue
+            # Current Channel: (157,161)*
+            m = re.match(p_current_channel, line)
+            if m:
+                mac_dict['current_channel'] = m.groupdict().get('current_channel')
+                continue
+            # Antenna Type: C-ANT-DART-RPTNC|N/A
+            m = re.match(p_antenna_type, line)
+            if m:
+                mac_dict['antenna_type'] = m.groupdict().get('antenna_type')
+                continue
+            # Internal Antenna Gain (in .5 dBm units): 1
+            m = re.match(p_antenna_gain, line)
+            if m:
+                mac_dict['antenna_gain'] = m.groupdict().get('antenna_gain')
+                continue
+
+        return ret_dict

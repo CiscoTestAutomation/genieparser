@@ -1,0 +1,7 @@
+EtherChannel Load-Balancing Configuration:
+        src-mac
+
+EtherChannel Load-Balancing Addresses Used Per-Protocol:
+Non-IP: Source MAC address
+  IPv4: Source MAC address
+  IPv6: Source MAC address

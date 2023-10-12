@@ -1,0 +1,40 @@
+router6#sh ip ospf rib redistribution 
+
+
+          OSPF Router with ID (192.168.3.2) (Process ID 100)
+
+
+		Base Topology (MTID 0)
+
+OSPF Redistribution
+10.20.0.0/24, type 2, metric 20, tag 0, from connected
+   via GigabitEthernet0/0/1
+
+            OSPF Router with ID (2.2.2.2) (Process ID 1)
+
+		Base Topology (MTID 0)
+
+OSPF Redistribution
+1.1.1.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.2.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.3.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.4.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.5.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.6.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.7.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.8.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.9.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.10.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0
+1.1.11.0/24, type 1, metric 16777214, tag 0, from static
+   via Null0 
+  

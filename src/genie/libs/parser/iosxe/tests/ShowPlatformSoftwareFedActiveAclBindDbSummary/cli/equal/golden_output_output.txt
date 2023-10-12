@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------
+If-Name     Feature     Protocol     Direction    CG-ID         Status
+--------------------------------------------------------------------------
+Gi1/0/26.11  Racl          IPv4          Egress      13           Success
+Gi1/0/25    Racl          IPv4          Ingress     17           Success
+Gi1/0/26.11  acl          IPv4          Egress      13           Success

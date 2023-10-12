@@ -45,8 +45,10 @@ class ShowCefDetailSchema(MetaParser):
                                             'dependencies': int,
                                             'path': {
                                                 'nhid': str,
+                                                Optional('nhid_hex'): str,
                                                 'path_idx': int,
-                                                'path_idx_nh': {
+                                                Optional('idx_internal'): str,
+                                                Optional('path_idx_nh'): {
                                                     Optional('local_label_nh'): {
                                                         'local_label': int,
                                                         'local_label_nh_address': str,
@@ -57,11 +59,16 @@ class ShowCefDetailSchema(MetaParser):
                                                     'path_idx_via': str,
                                                 },
                                             },
+                                            Optional('next_hop_vrf'): str,
+                                            Optional('next_hop_table'): str,
+                                            Optional('sid_list'): str,
                                             'via_address': str,
                                             'via_flags': str,
                                         },
                                     },
                                     'load_distribution': {
+                                        Optional('distribution'): str,
+                                        Optional('refcount'): int,
                                         Any(): {
                                             'address': str,
                                             'hash': int,
@@ -100,6 +107,7 @@ class ShowCefDetailSchema(MetaParser):
                                     }
                                 },
                                 'internal': str,
+                                Optional('iid'): str,
                                 'ldi_update_time': str,
                                 'length': int,
                                 'precedence': str,
@@ -107,6 +115,7 @@ class ShowCefDetailSchema(MetaParser):
                                 'traffic_index': int,
                                 'updated': str,
                                 'version': int,
+                                Optional('drop'): str,
                             }
                         }
                     }
@@ -114,7 +123,6 @@ class ShowCefDetailSchema(MetaParser):
             }
         }
     }
-
 
 class ShowCefDetail(ShowCefDetailSchema):
     """ Parser for:
@@ -145,7 +153,10 @@ class ShowCefDetail(ShowCefDetailSchema):
 
         # 10.4.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
         # fd00::3/128, version 103, SRv6 Headend, internal 0x5000001 0x30 (ptr 0xeb4f580) [1], 0x400 (0xda89410), 0x0 (0xf580648)
-        p1 = re.compile(r'^(?P<ip>[a-zA-Z0-9:.\/]+), +version +(?P<version>[\d]+),(?: SRv6 Headend,*)?(?: internal +(?P<internal>.+)+)?$')
+        # 10.255.255.224/32, version 2, drop adjacency, internal 0x1000001 0x30 (ptr 0x79125568) [1], 0x0 (0x0), 0x0 (0x0)
+        # ::ffff:10.0.0.1/128, version 32, SRv6 Headend, IID (EVPN-MH), internal 0x1000001 0x0 (ptr 0x78d3fe50) [1], 0x0 (0x0), 0x0 (0x7a0cfaf8)
+        p1 = re.compile(r'^(?P<ip>[a-zA-Z0-9:.\/]+), +version +(?P<version>[\d]+),( +drop +(?P<drop>[\w]+),)?(?: SRv6 Headend,*)?' \
+                        r'(?: +IID +\((?P<iid>[\w-]+)\),)?(?: internal +(?P<internal>.+)+)?$')
 
         # Updated Oct 13 18:18:19.680
         p2 = re.compile(r'^Updated +(?P<updated>[\w\s:.]+)$')
@@ -176,26 +187,25 @@ class ShowCefDetail(ShowCefDetailSchema):
                         ' +(?P<type_time>[\d]+) +(?P<updated_at>[\w\s:.]+)$')
 
         # LDI Update time Oct 13 18:18:19.691
-        p8 = re.compile(r'^LDI +Update +time +(?P<ldi_update_time>[\w\s:.]+)$')
-
         # LW-LDI-TS Oct 13 18:18:19.691
-        p9 = re.compile(r'^LW-LDI-TS +(?P<datetime>[\w\s:.]+)$')
+        p9 = re.compile(r'^(LDI Update time|LW-LDI-TS) (?P<datetime>[\w\s:.]+)$')
 
         # via 10.55.0.2/32, 4 dependencies, recursive [flags 0x0]
         # via 10.1.15.2/32, 4 dependencies, recursive [flags 0x0]
         p10 = re.compile(r'^via +(?P<via>[\S]+), +(?P<dependencies>[\w]{1,})'
-                         ' +dependencies, +(?P<via_flags>[\w]+)'
-                         ' +\[([\S\s]+)\]$')
+                         r' +dependencies, +(?P<via_flags>[\w]+)'
+                         r' +\[([\S\s]+)\]$')
 
         # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
         # path-idx 1 NHID 0x0 [0x78b4fbf8 0x0]
+        # path-idx 0 NHID 0x0 [0x8b001f38 0x0], Internal 0x89d70af0
         p11 = re.compile(r'^path-idx +(?P<idx>[\w]+) +NHID +(?P<nhid>[\S]+)'
-                         ' +\[(?P<nhid_hex>[\w\s]+)\]$')
+                         r' +\[(?P<nhid_hex>[\w\s]+)\](?:, +Internal +(?P<idx_internal>\w+))?$')
 
         # next hop 10.55.0.2/32 via 10.55.0.2/32
         # next hop 10.1.15.2/32 via 10.1.15.2/32
         p12 = re.compile(r'^next +hop +(?P<path_idx_address>[\S]+)'
-                         ' +via +(?P<path_idx_via>[\S]+)$')
+                         r' +via +(?P<path_idx_via>[\S]+)$')
 
         # local label 24006
         p13 = re.compile(r'^local +label +(?P<local_label>[\d]+)$')
@@ -224,7 +234,8 @@ class ShowCefDetail(ShowCefDetailSchema):
         # Hash  OK  Interface                 Address
         # 0     Y   recursive                 10.55.0.2
         # 31    Y   recursive                 10.1.15.2
-        p18 = re.compile(r'^(?P<hash>[\d]+)\s+(?P<ok>[Y|N])\s+(?P<interface>[\w\/]+)\s+(?P<address>[\S]+)$')
+        # 0     Y   Bundle-Ether313           fe80::96ae:f0ff:fe72:6cda
+        p18 = re.compile(r'^(?P<hash>[\d]+)\s+(?P<ok>[Y|N])\s+(?P<interface>[\w\/-]+)\s+(?P<address>[\S]+)$')
 
         # Level 1 - Load distribution: 0 1 2 3
         # Level 1 - Load distribution: 0
@@ -233,6 +244,12 @@ class ShowCefDetail(ShowCefDetailSchema):
         # [0] via 10.20.240.49, recursive
         # [0] via fc00:c000:2003::/128, recursive
         p20 = re.compile(r'^\[(?P<load>\d+)\]\s+via\s+(?P<via_address>[a-zA-Z0-9.:\/]+),\s+(?P<via_flags>\w+)$')
+
+        # next hop VRF - 'default', table - 0xe0800000
+        p21 = re.compile(r"^next\s+hop\s+VRF\s+-\s+'(?P<next_hop_vrf>\w+)',\s+table\s+-\s+(?P<next_hop_table>\w+)$")
+
+        # SRv6 H.Encaps.L2.Red SID-list {fc00:c000:1001:e006::}
+        p22 = re.compile(r'^SRv6 +H.Encaps(?:.L2)?.Red +SID-list +{(?P<sid_list>[\w.:]+)}')
 
         result_dict = {}
 
@@ -255,6 +272,10 @@ class ShowCefDetail(ShowCefDetailSchema):
                     'version': int(group['version']),
                     'internal': group['internal'],
                 })
+                if group['drop'] != None:
+                    prefix_dict.update({
+                        'drop': str(group['drop']),
+                    })
                 continue
 
             # Updated Oct 13 18:18:19.680
@@ -334,18 +355,13 @@ class ShowCefDetail(ShowCefDetailSchema):
                 continue
 
             # LDI Update time Oct 13 18:18:19.691
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                prefix_dict.update({
-                    'ldi_update_time': group['ldi_update_time']
-                })
-                continue
-
             # LW-LDI-TS Oct 13 18:18:19.691
             m = p9.match(line)
             if m:
                 group = m.groupdict()
+                prefix_dict.update({
+                    'ldi_update_time': group['datetime']
+                })
                 lw_ldi_ts_dict = prefix_dict.\
                     setdefault('LW-LDI-TS', {})
                 lw_ldi_ts_dict.update({
@@ -370,14 +386,18 @@ class ShowCefDetail(ShowCefDetailSchema):
                 continue
 
             # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
+            # path-idx 0 NHID 0x0 [0x8b001f38 0x0], Internal 0x89d70af0
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 path_dict = {
                     'path_idx': int(group['idx']),
-                    'nhid': group['nhid']
+                    'nhid': group['nhid'],
+                    'nhid_hex': group['nhid_hex']
                 }
                 via_dict.update({'path': path_dict})
+                if group['idx_internal']:
+                    via_dict['path']['idx_internal'] = group['idx_internal']
                 continue
 
             # next hop 10.55.0.2/32 via 10.55.0.2/32
@@ -426,8 +446,11 @@ class ShowCefDetail(ShowCefDetailSchema):
             # Load distribution: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 (refcount 3)
             m = p17.match(line)
             if m:
+                group = m.groupdict()
                 load_dict = lw_ldi_ts_dict.\
                     setdefault('load_distribution', {})
+                load_dict['distribution'] = group['distribution']
+                load_dict['refcount'] = int(group['refcount'])
                 continue
 
             m = p18.match(line)
@@ -471,6 +494,20 @@ class ShowCefDetail(ShowCefDetailSchema):
                 load_dict['via_flags'] = group['via_flags']
                 continue
 
+            # next hop VRF - 'default', table - 0xe0800000
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                via_dict['next_hop_vrf'] = group['next_hop_vrf']
+                via_dict['next_hop_table'] = group['next_hop_table']
+                continue
+
+            # SRv6 H.Encaps.L2.Red SID-list {fc00:c000:1001:e006::}
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                via_dict['sid_list'] = group['sid_list']
+                continue
         return result_dict
 
 
@@ -1214,8 +1251,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
-        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))?, '
-                         r'+via +(?P<interface>\S+)$')
+        # ::ffff:50.1.1.1, from ::ffff:50.1.1.8
+        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))(?:, '
+                         r'+via +(?P<interface>\S+))?$')
 
         # R2_xrv#show route ipv6
         p13 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
@@ -1455,6 +1493,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
             # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+            # ::ffff:50.1.1.1, from ::ffff:50.1.1.8
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1467,7 +1506,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     setdefault('next_hop_list', {}). \
                     setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
-                outgoing_interface_dict.update({'outgoing_interface': interface})
+                if interface:
+                    outgoing_interface_dict.update({'outgoing_interface': interface})
                 if _from:
                     outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})

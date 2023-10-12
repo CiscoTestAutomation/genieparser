@@ -1,0 +1,18 @@
+show isis ipv4 topology
+Thu May 11 05:40:01.043 UTC
+
+IS-IS CORE paths to IPv4 Unicast (Level-1) routers
+System Id       Metric  Next-Hop        Interface       SNPA          
+XRv9k-PE1       --    
+
+IS-IS CORE paths to IPv4 Unicast (Level-2) routers
+System Id       Metric  Next-Hop        Interface       SNPA          
+XRv9k-PE1       --    
+
+IS-IS ACCESS paths to IPv4 Unicast (Level-2) routers
+System Id       Metric  Next-Hop        Interface       SNPA          
+XRv9k-PE1       --    
+AGG-PE-A        10      AGG-PE-A        Gi0/0/0/0       5001.0002.0001
+XRv9k-PE2       20      AGG-PE-B        Gi0/0/0/1       5001.0006.0003
+XRv9k-PE2       20      AGG-PE-A        Gi0/0/0/0       5001.0002.0001
+AGG-PE-B        10      AGG-PE-B        Gi0/0/0/1       5001.0006.0003

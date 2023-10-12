@@ -1,0 +1,16 @@
+HundredGigE1/0/3
+
+Service-policy input: map1_table
+
+    Class-map: class-default (match-any)  
+    24657219 packets
+    Match: any
+    police:
+        rate 1000000000 bps, burst 1024000 bytes
+        conformed 3706836000 bytes; actions:
+        transmit
+        exceeded 33278992500 bytes; actions:
+        drop
+        conformed 94916000 bps, exceeded 852131000 bps
+    QoS Set
+        cos cos table t1

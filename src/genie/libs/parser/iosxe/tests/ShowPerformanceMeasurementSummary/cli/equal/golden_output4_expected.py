@@ -1,0 +1,215 @@
+
+expected_output = {
+    'total_interfaces': 1,
+    'total_sr_policies': 0,
+    'total_endpoints': 0,
+    'maximum_pps': 2000,
+    'dual_color_gre': {
+        'bit_pos': 9,
+        'info': 'Failed, last success 0',
+    },
+    'interface_delay_measurement': {
+        'total_sessions': 0,
+        'counters': {
+            'packets': {
+                'sent': 0,
+                'received': 0,
+            },
+            'errors': {
+                    'tx': {
+                        'interface_down': 0,
+                        'no_mpls_caps': 0,
+                        'no_ip_address': 0,
+                        'other': 0,
+                    },
+                    'rx': {
+                        'negative_delay': 0,
+                        'delay_threshold_exceeded': 0,
+                        'missing_tx_timestamp': 0,
+                        'missing_rx_timestamp': 0,
+                        'probe_full': 0,
+                        'probe_not_started': 0,
+                        'control_code_error': 0,
+                        'control_code_notif': 0,
+                    },
+            },
+            'probes': {
+                'started': 0,
+                'completed': 0,
+                'incomplete': 0,
+                'advertisements': 0,
+            },
+        },
+    },
+    'sr_policy_delay_measurement': {
+        'total_sessions': 0,
+        'counters': {
+            'packets': {
+                'sent': 0,
+                'received': 0,
+            },
+            'errors': {
+                    'tx': {
+                        'no_ip_address': 0,
+                        'other': 0,
+                    },
+                    'rx': {
+                        'negative_delay': 0,
+                        'delay_threshold_exceeded': 0,
+                        'missing_tx_timestamp': 0,
+                        'missing_rx_timestamp': 0,
+                        'probe_full': 0,
+                        'probe_not_started': 0,
+                        'control_code_error': 0,
+                        'control_code_notif': 0,
+                    },
+            },
+            'probes': {
+                'started': 0,
+                'completed': 0,
+                'incomplete': 0,
+                'advertisements': 0,
+            },
+        },
+    },
+    'endpoint_delay_measurement': {
+        'total_sessions': 0,
+        'counters': {
+            'packets': {
+                'sent': 0,
+                'received': 0,
+            },
+            'errors': {
+                    'tx': {
+                        'interface_down': 0,
+                        'no_mpls_caps': 0,
+                        'no_ip_address': 0,
+                        'other': 0,
+                    },
+                    'rx': {
+                        'negative_delay': 0,
+                        'delay_threshold_exceeded': 0,
+                        'missing_tx_timestamp': 0,
+                        'missing_rx_timestamp': 0,
+                        'probe_full': 0,
+                        'probe_not_started': 0,
+                        'control_code_error': 0,
+                        'control_code_notif': 0,
+                    },
+            },
+            'probes': {
+                'started': 0,
+                'completed': 0,
+                'incomplete': 0,
+                'advertisements': 0,
+            },
+        },
+    },
+    'interface_loss_measurement': {
+        'total_sessions': 1,
+        'counters': {
+            'packets': {
+                'sent': 7327,
+                'received': 7326,
+            },
+            'errors': {
+                    'tx': {
+                        'interface_down': 0,
+                        'no_mpls_caps': 0,
+                        'no_ip_address': 0,
+                        'other': 0,
+                    },
+                    'rx': {
+                        'negative_delay': 0,
+                        'delay_threshold_exceeded': 0,
+                        'missing_tx_timestamp': 0,
+                        'missing_rx_timestamp': 0,
+                        'probe_full': 0,
+                        'probe_not_started': 0,
+                        'control_code_error': 0,
+                        'control_code_notif': 0,
+                    },
+            },
+            'probes': {
+                'started': 3664,
+                'completed': 3663,
+                'incomplete': 0,
+                'advertisements': 1,
+            },
+        },
+    },
+    'global_counters': {
+        'packets_sent': 7327,
+        'query_packets_received': 7326,
+        'invalid_session_id': 0,
+        'no_session': 0,
+    },
+    'hw_support_mpls_gal_timestamp': 'Yes',
+    'hw_support_ipv4_twamp_timestamp': 'Yes',
+    'hw_support_ipv6_twamp_timestamp': 'No',
+    'hw_support_64_bit_timestamp': 'Yes',
+    'hw_support_ipv4_udp_checksum': 'Yes',
+    'max_packets_per_burst': 6000,
+    'querier_rx_queue': {
+        'size': 0,
+        'enqueues': 7326,
+        'high_water_mark': 1,
+        'high_water_mark_time': '19 1970 21:59:42.806',
+    },
+    'responder_rx_queue': {
+        'size': 0,
+        'enqueues': 0,
+        'high_water_mark': 0,
+        'high_water_mark_time': 'N/A',
+    },
+    'querier_im_queue': {
+        'size': 0,
+        'enqueues': 0,
+        'high_water_mark': 0,
+        'high_water_mark_time': 'N/A',
+    },
+    'querier_cfg_queue': {
+        'size': 0,
+        'enqueues': 4,
+        'high_water_mark': 2,
+        'high_water_mark_time': '19 1970 21:59:42.782',
+    },
+    'querier_chkpt_queue': {
+        'size': 0,
+        'enqueues': 1,
+        'high_water_mark': 1,
+        'high_water_mark_time': '19 1970 21:59:38.672',
+    },
+    'udp_port_gal_oob_ipv4': 62489,
+    'udp_port_gal_oob_ipv6': 53712,
+    'udp_port_twamp_query_ipv4': 862,
+    'udp_port_twamp_query_ipv6': 862,
+    'udp_port_twamp_reply_ipv4': 49796,
+    'udp_port_twamp_reply_ipv6': 61289,
+    'udp_port_sdlm_query_ipv4': 6634,
+    'udp_port_sdlm_query_ipv6': 6634,
+    'udp_port_sdlm_reply_ipv4': 50119,
+    'udp_port_sdlm_reply_ipv6': 57446,
+    'last_error_receive': {
+        'info': 'Failed to enqueue CFG',
+        'timestamp': '13:03:26 05-12 2022',
+    },
+    'pm_runtime': {
+        0: {
+            'name': 'CP PATHS CLEANUP',
+            'last': 5000,
+            'avg': 5879,
+            'total': 7584000,
+            'cnt': 1290,
+            'wrapped': 0,
+        },
+        1: {
+            'name': 'CFG GET INFO',
+            'last': 56000,
+            'avg': 75093,
+            'total': 550213000,
+            'cnt': 7327,
+            'wrapped': 0,
+        },
+    },
+}
