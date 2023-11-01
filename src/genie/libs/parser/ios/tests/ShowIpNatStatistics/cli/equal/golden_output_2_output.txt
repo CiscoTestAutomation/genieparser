@@ -1,0 +1,21 @@
+Total active translations: 0 (0 static, 0 dynamic; 0 extended)
+Outside interfaces:
+Inside interfaces:
+Hits: 0  Misses: 11000
+Reserved port setting disabled provisioned no
+Dynamic overload mapping configured: 0
+Reserved portblock stats
+total tcp ports rcvd from tpm lo:0 hi:0
+total udp ports rcvd from tpm lo:0 hi:0
+total tcp ports available lo:0 hi:0
+total udp ports available lo:0 hi:0
+tcp ports reserved flag 0 udp ports reserved flag 0
+Expired translations: 1000
+Dynamic mappings:
+nat-limit statistics:
+max entry: max allowed 0, used 0, missed 0
+In-to-out drops: 0  Out-to-in drops: 0
+Pool stats drop: 0  Mapping stats drop: 0
+Port block alloc fail: 0
+IP alias add fail: 0
+Limit entry add fail: 0

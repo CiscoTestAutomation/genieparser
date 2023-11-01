@@ -748,10 +748,14 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         mld_dict = {}
         
         # FF1E::         Vlan10         00:00:27  not used
-        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[not used]+)$')
+        # FF1E::1        Te1/0/3        00:01:49  00:01:46
+        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\d\:]+) +(?P<expires>(?:[\d\:]+)|(?:[\w\s]+)|(?:not used))$')
 
         for line in output.splitlines():
             line = line.strip()
+
+            # FF1E::         Vlan10         00:00:27  not used
+            # FF1E::1        Te1/0/3        00:01:49  00:01:46
             m = p1.match(line)
             if m:
                 group = m.groupdict()

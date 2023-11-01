@@ -1,0 +1,4 @@
+{
+    "vrf": "VRF_1",
+    "address_family": "ipv6 unicast"
+}

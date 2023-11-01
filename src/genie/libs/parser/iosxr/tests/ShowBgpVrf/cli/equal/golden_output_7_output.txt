@@ -1,0 +1,33 @@
+show bgp vrf SRV6_L3VPN_BE ipv4 unicast local-sids
+Mon Mar 20 17:43:03.662 UTC
+BGP VRF SRV6_L3VPN_BE, state: Active
+BGP Route Distinguisher: 100:1
+VRF ID: 0x60000002
+BGP router identifier 10.0.0.1, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000002   RD version: 89
+BGP main routing table version 89
+BGP NSR Initial initsync version 4 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Local Sid                                   Alloc mode   Locator
+Route Distinguisher: 100:1 (default for vrf SRV6_L3VPN_BE)
+*> 1.1.1.1/32         fc00:c000:1001:e000::                       per-vrf      MAIN
+*>i3.3.3.3/32         NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*> 100.0.0.1/32       fc00:c000:1001:e000::                       per-vrf      MAIN
+*>i100.0.0.2/32       NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*> 192.168.111.0/24   fc00:c000:1001:e000::                       per-vrf      MAIN
+*>i192.168.112.0/24   NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*>i192.168.213.0/24   NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*>i200.0.0.3/32       NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+
+Processed 8 prefixes, 13 paths

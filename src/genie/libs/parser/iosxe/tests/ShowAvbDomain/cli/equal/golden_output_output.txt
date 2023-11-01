@@ -1,0 +1,120 @@
+AVB Class-A
+    Priority Code Point     : 3
+    VLAN                    : 2
+    Core ports              : 0
+    Boundary ports          : 52
+
+AVB Class-B
+    Priority Code Point     : 2
+    VLAN                    : 2
+    Core ports              : 0
+    Boundary ports          : 52
+
+--------------------------------------------------------------------------------
+Interface    State       Delay    PCP  VID  Information
+--------------------------------------------------------------------------------
+    Twe1/0/1        down      N/A                        Oper state not up
+----
+    Twe1/0/2        down      N/A                        Oper state not up
+----
+    Twe1/0/3        down      N/A                        Oper state not up
+----
+    Twe1/0/4        down      N/A                        Oper state not up
+----
+    Twe1/0/5        down      N/A                        Oper state not up
+----
+    Twe1/0/6        down      N/A                        Oper state not up
+----
+    Twe1/0/7        down      N/A                        Oper state not up
+----
+    Twe1/0/8        down      N/A                        Oper state not up
+----
+    Twe1/0/9        down      N/A                        Oper state not up
+----
+   Twe1/0/10        down      N/A                        Oper state not up
+----
+   Twe1/0/11        down      N/A                        Oper state not up
+----
+   Twe1/0/12        down      N/A                        Oper state not up
+----
+   Twe1/0/13        down      N/A                        Oper state not up
+----
+   Twe1/0/14          up      N/A            Port MTU is greater than 1500
+----
+   Twe1/0/15        down      N/A                        Oper state not up
+----
+   Twe1/0/16        down      N/A                        Oper state not up
+----
+   Twe1/0/17        down      N/A                        Oper state not up
+----
+   Twe1/0/18        down      N/A                        Oper state not up
+----
+   Twe1/0/19        down      N/A                        Oper state not up
+----
+   Twe1/0/20        down      N/A                        Oper state not up
+----
+   Twe1/0/21        down      N/A                        Oper state not up
+----
+   Twe1/0/22        down      N/A                        Oper state not up
+----
+   Twe1/0/23        down      N/A                        Oper state not up
+----
+   Twe1/0/24        down      N/A                        Oper state not up
+----
+   Twe1/0/25          up      N/A            Port MTU is greater than 1500
+----
+   Twe1/0/26        down      N/A                        Oper state not up
+----
+   Twe1/0/27        down      N/A                        Oper state not up
+----
+   Twe1/0/28        down      N/A                        Oper state not up
+----
+   Twe1/0/29        down      N/A                        Oper state not up
+----
+   Twe1/0/30        down      N/A                        Oper state not up
+----
+   Twe1/0/31        down      N/A                        Oper state not up
+----
+   Twe1/0/32        down      N/A                        Oper state not up
+----
+   Twe1/0/33        down      N/A                        Oper state not up
+----
+   Twe1/0/34        down      N/A                        Oper state not up
+----
+   Twe1/0/35        down      N/A                        Oper state not up
+----
+   Twe1/0/36        down      N/A                        Oper state not up
+----
+   Twe1/0/37        down      N/A                        Oper state not up
+----
+   Twe1/0/38        down      N/A                        Oper state not up
+----
+   Twe1/0/39        down      N/A                        Oper state not up
+----
+   Twe1/0/40        down      N/A                        Oper state not up
+----
+   Twe1/0/41        down      N/A                        Oper state not up
+----
+   Twe1/0/42        down      N/A                        Oper state not up
+----
+   Twe1/0/43        down      N/A                        Oper state not up
+----
+   Twe1/0/44        down      N/A                        Oper state not up
+----
+   Twe1/0/45        down      N/A                        Oper state not up
+----
+   Twe1/0/46        down      N/A                        Oper state not up
+----
+   Twe1/0/47        down      N/A                        Oper state not up
+----
+   Twe1/0/48        down      N/A                        Oper state not up
+----
+    Hu1/0/49          up      N/A            Port MTU is greater than 1500
+----
+    Hu1/0/50          up      N/A            Port MTU is greater than 1500
+----
+    Hu1/0/51        down      N/A                        Oper state not up
+----
+    Hu1/0/52          up      N/A            Port MTU is greater than 1500
+----
+

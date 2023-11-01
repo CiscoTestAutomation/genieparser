@@ -93,8 +93,8 @@ class ShowPtpClockSchema(MetaParser):
             'clock_identity': str,
             'clock_domain': int,
             'network_transport_protocol': str,
-            'message_general_ip_dscp': int,
-            'message_event_ip_dscp': int,
+            Optional('message_general_ip_dscp'): int,
+            Optional('message_event_ip_dscp'): int,
             'number_of_ptp_ports': int,
             Optional('priority1'): int,
             Optional('priority2'): int,
@@ -170,7 +170,8 @@ class ShowPtpClock(ShowPtpClockSchema):
         p14 = re.compile(r'^Offset\sFrom\sMaster\(ns\)\:\s(?P<offset_from_master>\S+)$')
 
         # Mean Path Delay(ns): 83
-        p15 = re.compile(r'^Mean\sPath\sDelay\(ns\)\:\s(?P<mean_path_delay_ns>\d+)$')
+        # Mean Path Delay(ns): -265
+        p15 = re.compile(r'^Mean\sPath\sDelay\(ns\)\:\s(?P<mean_path_delay_ns>\S+)$')
 
         # Steps Removed: 2
         p16 = re.compile(r'^Steps\sRemoved\:\s(?P<steps_removed>\d+)$')

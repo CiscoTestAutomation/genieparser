@@ -3,7 +3,10 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 class ShowFirmwareVersionAllSchema(MetaParser):
-    """Schema for show firmware version all"""
+    """Schema for:
+       show firmware version switch {switch} all
+        show firmware version all
+         """
     
     schema = {
         'index': {
@@ -15,16 +18,23 @@ class ShowFirmwareVersionAllSchema(MetaParser):
     }
 
 class ShowFirmwareVersionAll(ShowFirmwareVersionAllSchema):
-    """Parser for show firmware version all"""
+    """Parser for:
+        show firmware version switch {switch} all
+        show firmware version all
+         """
 
     cli_command = [
+        'show firmware version switch {switch} all',
         'show firmware version all'
     ]
 
-    def cli(self, output=None):
+    def cli(self, switch='', output=None):
         
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch))
+            else:
+                output = self.device.execute(self.cli_command[1])
 
         ret_dict = {}
         index = 0

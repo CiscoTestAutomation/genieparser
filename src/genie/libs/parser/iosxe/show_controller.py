@@ -22,16 +22,18 @@ class ShowControllerVDSLSchema(MetaParser):
         'daemon_status': str,
         Any(): {
             'chip_vendor': {
-                'chip_vendor_id': str,
-                'chip_vendor_specific': str,
-                'chip_vendor_country': str,
+                Optional('chip_vendor_id'): str,
+                Optional('chip_vendor_specific'): str,
+                Optional('chip_vendor_country'): str,
             },
             'modem_vendor': {
-                'modem_vendor_id': str,
-                'modem_vendor_specific': str,
-                'modem_vendor_country': str,
+                Optional('modem_vendor_id'): str,
+                Optional('modem_vendor_specific'): str,
+                Optional('modem_vendor_country'): str,
+                Optional('modem_version_near'): str,
             },
             Optional('trellis'): str,
+            Optional('serial_number_far'): str,
             Optional('sra'): str,
             Optional('sra_count'): int,
             Optional('bit_swap'): str,
@@ -64,25 +66,24 @@ class ShowControllerVDSLSchema(MetaParser):
             Optional('total_lprs'): int,
             Optional('total_lofs'): int,
             Optional('total_lols'): int,
+            Optional('modem_fw__version'): str,
+            Optional('modem_phy_version'): str,
         },
-        'serial_number_near': str,
-        'modem_version_near': str,
-        'modem_version_far': str,
-        'modem_status': str,
-        'dsl_config_mode': str,
-        'tc_mode': str,
-        'selftest_result': str,
-        'delt_configuration': str,
-        'delt_state': str,
-        'failed_full_inits': int,
-        'short_inits': int,
-        'failed_short_inits': int,
-        'modem_fw__version': str,
-        'modem_phy_version': str,
-        'modem_phy_source': str,
-        'training_log': str,
-        'training_log_filename': str,
-        Optional('trained_mode'): str
+        Optional('serial_number_near'): str,
+        Optional('modem_version_far'): str,        
+        Optional('modem_status'): str,
+        Optional('dsl_config_mode'): str,
+        Optional('tc_mode'): str,
+        Optional('selftest_result'): str,
+        Optional('delt_configuration'): str,
+        Optional('delt_state'): str,
+        Optional('failed_full_inits'): int,
+        Optional('short_inits'): int,
+        Optional('failed_short_inits'): int,
+        Optional('modem_phy_source'): str,
+        Optional('training_log'): str,
+        Optional('training_log_filename'): str,
+        Optional('trained_mode'): str,
     }
 
 class ShowControllerVDSL(ShowControllerVDSLSchema):
@@ -92,7 +93,7 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
 
     cli_command = 'show controller VDSL {interface}'
 
-    def cli(self, interface, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
@@ -101,52 +102,51 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         ctrl_dict = {}
 
         # Controller VDSL 0/2/0 is UP
-        p1 = re.compile(r'^[Cc]on\w+\s(?P<ctrl>\w+\s\S+)\s+\w+\s+(?P<state>\w+)')
+        p1 = re.compile(r'^[Cc]on\w+\s(?P<ctrl>\w+\s\S+)\s+\w+\s+(?P<state>\w+)$')
 
         # Daemon Status: UP
-        p2 = re.compile(r'^(?P<param>Dae\w+\s+\w+):\s+(?P<vl>\w+)')
+        p2 = re.compile(r'^(?P<param>Dae\w+\s+\w+):\s+(?P<vl>\w+)$')
 
         # Serial Number Near: FGL223491WW C1127X-8 17.7.20210
         # Modem Version Near: 17.7.2021 0524: 03251
-        p2_1 = re.compile(r'^(?P<param>Serial\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_1 = re.compile(r'^(?P<param>Serial\s+Number\s+Near):\s+(?P<vl>.+)$')
 
         # Modem Version Near: 17.7.20210524: 03251
         # Modem Version Far: 0x544d
-        p2_2 = re.compile(r'^(?P<param>Modem\s+Version\s+\w+):\s+(?P<vl>.+)')
+        p2_2 = re.compile(r'^(?P<param>Modem\s+Version\s+Far):\s+(?P<vl>.+)$')
 
         # Modem Status: TC Sync(Showtime!)
-        p2_3 = re.compile(r'^(?P<param>Modem\s+\w+):\s+(?P<vl>.+)')
-
+        p2_3 = re.compile(r'^(?P<param>Modem\s+Status):\s+(?P<vl>.+)$')
+        
         # DSL Config Mode: ADSL2 +
-        p2_4 = re.compile(r'^(?P<param>DSL\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_4 = re.compile(r'^(?P<param>DSL\s+\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Trained Mode: G.992.5 (ADSL2 +) Annex A
-        p2_5 = re.compile(r'^(?P<param>Tr\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_5 = re.compile(r'^(?P<param>Tr\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # TC Mode: ATM
-        p2_6 = re.compile(r'^(?P<param>TC\s+\w+):\s+(?P<vl>.+)')
+        p2_6 = re.compile(r'^(?P<param>TC\s+\w+):\s+(?P<vl>.+)$')
 
         # Selftest Result: 0x00
-        p2_7 = re.compile(r'^(?P<param>Se\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_7 = re.compile(r'^(?P<param>Se\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Short inits: 0
-        p2_8 = re.compile(r'^(?P<param>Sh\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_8 = re.compile(r'^(?P<param>Sh\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # DELT configuration: disabled
         # DELT state: not running
-        p2_9 = re.compile(r'^(?P<param>DELT\s+\w+):\s+(?P<vl>.+)')
+        p2_9 = re.compile(r'^(?P<param>DELT\s+\w+):\s+(?P<vl>.+)$')
 
         # Failed full inits: 0
         # Failed short inits: 0
-        p2_10 = re.compile(r'^(?P<param>Failed\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_10 = re.compile(r'^(?P<param>Failed\s+\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Modem FW Version: 4.14L.04
-        p2_11 = re.compile(r'^(?P<param>Modem\s+FW+\s+\w+):\s+(?P<vl>.+)')
+        p2_11 = re.compile(r'^(?P<param>Modem\s+FW+\s+\w+):\s+(?P<vl>.+)$')
 
         # Modem PHY Version: A2pv6F039x8.d26d
         # Modem PHY Source: System
-        p2_12 = re.compile(r'^(?P<param>Modem\s+PHY+\s+\w+):\s+(?P<vl>.+)')
-
+        p2_12 = re.compile(r'^(?P<param>Modem\s+PHY+\s+\w+):\s+(?P<vl>.+)$')
 
         # SRA count: 0    0
         # Total FECC: 799014    23383
@@ -157,28 +157,28 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # Total LPRS: 0     0
         # Total LOFS: 0     0
         # Total LOLS: 0     0
-        p3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)')
+        p3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)$')
 
         # Bit swap: enabled     enabled
-        p3_1 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>[enabled|disable]+)\s+(?P<xtc>\w+)')
+        p3_1 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>[enabled|disable]+)\s+(?P<xtc>\w+)$')
 
         # Bit swap count: 18    3
-        p3_2 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)')
+        p3_2 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)$')
 
         # Line Attenuation: 4.0 dB      2.2 dB
         # Signal Attenuation: 2.9 dB     0.0 dB
         # Noise Margin: 9.4 dB    5.8 dB
-        p3_3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dB)\s+(?P<xtc>\d+.\d\s+dB)')
+        p3_3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dB)\s+(?P<xtc>\d+.\d\s+dB)$')
 
         # Actual Power: 19.1 dBm     12.1 dBm
-        p3_4 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dBm)\s+(?P<xtc>.+)')
+        p3_4 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dBm)\s+(?P<xtc>.+)$')
 
         # Trellis: ON     ON
         # SRA: enabled    enabled
-        p3_5 = re.compile(r'^(?P<param>\w+):\s+(?P<xtr>\w+)\s+(?P<xtc>\w+)')
+        p3_5 = re.compile(r'^(?P<param>\w+):\s+(?P<xtr>\w+)\s+(?P<xtc>\w+)$')
 
         # Attainable Rate: 23708 kbits/s       1351 kbits/s
-        p3_6 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+\s+\S+)\s+(?P<xtc>\d+\s+\S+)')
+        p3_6 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+\s+\S+)\s+(?P<xtc>\d+\s+\S+)$')
 
         # Chip Vendor ID: 'BDCM'                   'BDCM'
         # Chip Vendor Specific: 0x0000        0x544D
@@ -187,21 +187,19 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # Modem Vendor Specific: 0x4602       0x544D
         # Modem Vendor Country: 0xB500        0xB500
         # Serial Number Near: FGL223491WW C1127X - 8 17.7.20210
-        p3_7 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\S+)\s+(?P<xtc>\S+.+)')
-
+        p3_7 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\S+)\s+(?P<xtc>\S+.+)$')
 
         # Per Band Status: D1  D2  D3  U0  U1  U2  U3
         # Line Attenuation(dB): 0.9    2.4 2.4 N / A   2.0 1.1 N / A
         # Signal  Attenuation(dB): 0.9    2.4 2.4  N / A   1.5 0.6 N / A
         # Noise Margin(dB): 19.1    18.6    18.6    N / A   5.7 5.6 N / A
-        p4 = re.compile(r'^(?P<param>\w+\s+\w+\(dB\)):\s+(?P<d1>\d+.\d+)\s+(?P<d2>\d+.\d+)\s+(?P<d3>\d+.\d+)\s+\S+\s+(?P<u1>\d+.\d+)\s+(?P<u2>\d+.\d+)\s+(?P<u3>\S+)')
-
+        p4 = re.compile(r'^(?P<param>\w+\s+\w+\(dB\)):\s+(?P<d1>\d+.\d+)\s+(?P<d2>\d+.\d+)\s+(?P<d3>\d+.\d+)\s+\S+\s+(?P<u1>\d+.\d+)\s+(?P<u2>\d+.\d+)\s+(?P<u3>\S+)$')
 
         # Training Log: Stopped
-        p5 = re.compile(r'^(?P<param>\w+\s+\w+)\s+:\s+(?P<state>\S+)')
+        p5 = re.compile(r'^(?P<param>\w+\s+\w+)\s+:\s+(?P<state>\S+)$')
 
         # Training Log Filename: flash:vdsllog.bin
-        p6 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+)\s+:\s+(?P<state>\S+)')
+        p6 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+)\s+:\s+(?P<state>\S+)$')
 
         # DS Channel1    DS Channel0    US Channel1    US Channel0
         # Previous Speed: NA   0   NA  0
@@ -210,17 +208,17 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # CRC Errors: NA  0   NA  3
         # Header Errors: NA  0   NA  1
         # Actual INP: NA 0.00    NA  0.00
-        p7 = re.compile(r'^(?P<param>\w+\s\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7 = re.compile(r'^(?P<param>\w+\s\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # Speed (kbps): NA 23756   NA  1283
         # Interleave (ms): NA  0.08    NA  0.49
-        p7_1 = re.compile(r'^(?P<param>\w+\s\(\w+\)):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_1 = re.compile(r'^(?P<param>\w+\s\(\w+\)):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # SRA Previous Speed: NA   0   NA  0
-        p7_2 = re.compile(r'^(?P<param>\w+\s\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_2 = re.compile(r'^(?P<param>\w+\s\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # Reed - Solomon EC: NA  0   NA  0
-        p7_3 = re.compile(r'^(?P<param>\w+-\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_3 = re.compile(r'^(?P<param>\w+-\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         for lines in out.splitlines():
             line = lines.strip()
@@ -239,15 +237,14 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
                 ctrl_dict[param] = group['vl']
 
             # Serial Number Near: FGL223491WW C1127X-8 17.7.20210
-            # Modem Version Near: 17.7.2021 0524: 03251
+            # Modem Version Near: 17.7.2021 0524: 03251\
+            
             m = p2_1.match(line)
             if m:
                 group = m.groupdict()
                 param = group['param'].lower().replace(" ", "_")
                 ctrl_dict[param] = group['vl']
 
-            # Modem Version Near: 17.7.20210524: 03251
-            # Modem Version Far: 0x544d
             m = p2_2.match(line)
             if m:
                 group = m.groupdict()

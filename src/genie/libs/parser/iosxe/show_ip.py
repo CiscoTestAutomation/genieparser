@@ -1027,7 +1027,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         p4 = re.compile(r'^(?P<name_1>[\w|\s|\-]+)\: +(?P<number_1>\w+)'
                         r'(?:[\,|\s*]+(?P<name_2>[\w|\s|\-]+)(?:\:|\s*)? '
                         r'+(?P<number_2>\S+)(?: +ago)?)?$')
-
+        
         # Dynamic mappings:
         p5 = re.compile(r'^(?P<dynamic>\w+) +mappings\:$')
 
@@ -1176,22 +1176,26 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
+                
                 if group['name_1']:
                     if self.INT_MAPPING.get(group['name_1']):
                         name_1 = self.INT_MAPPING.get(group['name_1'])
-                        parsed_dict[name_1] = int(group['number_1'])
+                        if name_1:
+                            parsed_dict[name_1] = int(group['number_1'])
                     else:
                         name_1 = self.STR_MAPPING.get(group['name_1'])
-                        parsed_dict[name_1] = int(group['number_1'])
+                        if name_1:
+                            parsed_dict[name_1] = int(group['number_1'])
 
                 if group['name_2']:
                     if self.INT_MAPPING.get(group['name_2']):
                         name_2 = self.INT_MAPPING.get(group['name_2'])
-                        parsed_dict[name_2] = int(group['number_2'])
+                        if name_2:
+                            parsed_dict[name_2] = int(group['number_2'])
                     else:
                         name_2 = self.STR_MAPPING.get(group['name_2'])
-                        parsed_dict[name_2] = group['number_2']
-
+                        if name_2:
+                            parsed_dict[name_2] = group['number_2']
                 continue
 
             # Dynamic mappings:
@@ -1296,7 +1300,6 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m11 = p11.match(line)
             if m11:
                 group = m11.groupdict()
-
                 max_dict = parsed_dict.setdefault('nat_limit_statistics', {})
                 nat_limit_dict = max_dict.setdefault('max_entry', {})
                 nat_limit_dict.update({'max_allowed': int(group['max_allowed'])})
@@ -1314,7 +1317,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 mypool_dict.update({'addr_hash': int(group['addr_hash'])})
                 mypool_dict.update({'average_len': int(group['average_len'])})
                 mypool_dict.update({'chains': group['chains']})
-
+                
                 continue
 
         return parsed_dict

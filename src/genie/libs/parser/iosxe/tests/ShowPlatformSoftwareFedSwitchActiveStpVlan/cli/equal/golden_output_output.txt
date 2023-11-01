@@ -1,0 +1,15 @@
+                   Interface   pvlan_mode   stp_state  vtp pruned          Untagged          Ingress           Egress  
+---------------------------------------------------------------------------------------------------------------------
+     AppGigabitEthernet2/0/1         none  forwarding          No               Yes       forwarding       forwarding  
+    TenGigabitEthernet2/0/24         none  forwarding          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/23         none    disabled          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/21         none    disabled          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/20         none    blocking          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/19         none  forwarding          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/16         none    blocking          No               Yes         blocking         blocking  
+    TenGigabitEthernet2/0/13        trunk    blocking          No               Yes         blocking         blocking  
+     TenGigabitEthernet2/0/9         none    blocking          No               Yes         blocking         blocking  
+     TenGigabitEthernet2/0/5         none    blocking          No               Yes         blocking         blocking  
+     TenGigabitEthernet2/0/3         none    blocking          No               Yes         blocking         blocking  
+
+HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1

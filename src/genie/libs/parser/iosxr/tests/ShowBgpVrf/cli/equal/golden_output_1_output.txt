@@ -1,0 +1,83 @@
+show bgp vrf all
+Thu Jan 26 17:47:49.149 UTC
+
+VRF: 2HUB
+---------
+BGP VRF 2HUB, state: Active
+BGP Route Distinguisher: 50.1.1.4:1
+VRF ID: 0x60000003
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000012   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 50.1.1.4:1 (default for vrf 2HUB)
+*> 90.11.1.0/30       90.33.1.2                              0 7000 100 ?
+*> 90.12.1.0/30       90.33.1.2                              0 7000 100 ?
+*> 90.22.1.0/30       90.33.1.2                              0 7000 100 ?
+*> 90.33.1.0/30       0.0.0.0                  0         32768 ?
+*> 90.33.1.4/30       90.33.1.2                              0 7000 100 ?
+
+Processed 5 prefixes, 5 paths
+
+VRF: 2SPK
+---------
+BGP VRF 2SPK, state: Active
+BGP Route Distinguisher: 50.1.1.4:2
+VRF ID: 0x60000004
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000013   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 50.1.1.4:2 (default for vrf 2SPK)
+*>i90.11.1.0/30       50.1.1.1                 0    100      0 ?
+*>i90.12.1.0/30       50.1.1.1                 0    100      0 ?
+*>i90.22.1.0/30       50.1.1.5                 0    100      0 ?
+*> 90.33.1.4/30       0.0.0.0                  0         32768 ?
+
+Processed 4 prefixes, 4 paths
+
+VRF: VRF_1
+----------
+BGP VRF VRF_1, state: Active
+BGP Route Distinguisher: 50.1.1.4:0
+VRF ID: 0x60000002
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000011   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 50.1.1.4:0 (default for vrf VRF_1)
+*>i50.0.0.1/32        50.1.1.1                 0    100      0 ?
+*> 70.3.3.3/32        90.33.1.2                0             0 7000 i
+*>i90.11.1.0/30       50.1.1.1                 0    100      0 ?
+*>i90.12.1.0/30       50.1.1.1                 0    100      0 ?
+*>i90.21.1.0/30       50.1.1.5                 0    100      0 ?
+*>i90.22.1.0/30       50.1.1.5                 0    100      0 ?
+*> 90.33.1.0/30       0.0.0.0                  0         32768 ?
+*>i200.1.1.0/24       50.1.1.1                 0    100      0 ?
+* i                   50.1.1.5                 0    100      0 ?
+
+Processed 8 prefixes, 9 paths

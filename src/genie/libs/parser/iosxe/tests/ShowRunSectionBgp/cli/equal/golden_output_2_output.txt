@@ -1,0 +1,65 @@
+host-reachability protocol bgp
+router bgp 65001
+ template peer-policy LEAF-EVPN-PEER-POLICY
+  send-community both
+ exit-peer-policy
+ !
+ template peer-policy SPINE-EVPN-PEER-POLICY
+  route-reflector-client
+  send-community both
+ exit-peer-policy
+ !
+ template peer-session EVPN-PEER-SESSION
+  remote-as 65001
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp router-id 172.16.255.4
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 172.16.255.1 inherit peer-session EVPN-PEER-SESSION
+ neighbor 172.16.255.2 inherit peer-session EVPN-PEER-SESSION
+ neighbor FD00:172:16:255::1 inherit peer-session EVPN-PEER-SESSION
+ neighbor FD00:172:16:255::2 inherit peer-session EVPN-PEER-SESSION
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor 172.16.255.1 activate
+  neighbor 172.16.255.1 send-community extended
+  neighbor 172.16.255.1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor FD00:172:16:255::1 activate
+  neighbor FD00:172:16:255::1 send-community extended
+  neighbor FD00:172:16:255::1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor FD00:172:16:255::2 activate
+  neighbor FD00:172:16:255::2 send-community extended
+  neighbor FD00:172:16:255::2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+ exit-address-family
+ !
+ address-family ipv4 vrf blue
+  advertise l2vpn evpn
+  redistribute static
+  redistribute connected
+ exit-address-family
+ !
+ address-family ipv6 vrf blue
+  redistribute connected
+  redistribute static
+  advertise l2vpn evpn
+ exit-address-family
+ !
+ address-family ipv4 vrf green
+  advertise l2vpn evpn
+  redistribute static
+  redistribute connected
+ exit-address-family
+ !
+ address-family ipv6 vrf green
+  redistribute connected
+  redistribute static
+  advertise l2vpn evpn
+ exit-address-family

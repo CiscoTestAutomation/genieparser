@@ -17,6 +17,8 @@ IOSXR parsers for the following show commands:
     * show ospf {process_id} database router
     * show ospf all-inclusive database router
     * show ospf interface brief
+    * show ospf {process_name} summary
+    * show ospf {process_name} vrf {vrf_name} summary
 """
 
 # Python
@@ -6468,3 +6470,123 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 continue
 
         return ret_dict
+
+# ======================================================
+# parser schema for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummarySchema(MetaParser):
+    """Schema details for:
+          * show ospf {process_name} summary
+          * show ospf {process_name} vrf {vrf_name} summary
+    """
+    schema = {
+        'routing_process': {
+            Any(): {
+                'routing_process': int,
+                'vrf_name': str,
+                'ospf_interfaces': int,
+                'ospf_interfaces_up': int,
+                'ospf_virtual_interfaces_up': int,
+                'ospf_sham_link_interfaces_up': int,
+                'neighbors': int,
+                'neighbors_adjacent': int,
+                'areas': int,
+                'lsa_type': {
+                    'router': int,
+                    'network': int,
+                    'summary_net': int,
+                    'summary_asbr': int,
+                    'type_7_ext': int,
+                    'opaque_link': int,
+                    'opaque_area': int,
+                    'type_5_ext': int,
+                    'opaque_as': int
+                }
+            }
+        }
+    }
+
+# ======================================================
+# parser for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummary(ShowOspfSummarySchema):
+    """parser details for:
+         * show ospf {process_name} summary
+         * show ospf {process_name} vrf {vrf_name} summary
+    """
+
+    cli_command = ['show ospf {process_name} summary',
+                   'show ospf {process_name} vrf {vrf_name} summary']
+
+    def cli(self, process_name, vrf_name=None, output=None):
+        if output is None:
+            if vrf_name:
+                out = self.device.execute(
+                    self.cli_command[1].format(process_name=process_name, \
+                                               vrf_name=vrf_name))
+            else:
+                out = self.device.execute(
+                    self.cli_command[0].format(process_name=process_name))
+        else:
+            out = output
+
+        result_dict = {}
+
+        if vrf_name == None:
+            vrf_name = 'default'
+
+        # Routing process "ospf 1"
+        # Routing process "ospf 1000 VRF v5000"
+        p1 = re.compile(r'^Routing\s+process\s+"ospf\s+(?P<routing_process>\d+)(?:\s+VRF\s+(?P<vrf_name>\w+))?"$')
+
+        # Number of OSPF interfaces 4
+        # Number of OSPF interfaces up 4
+        p2 = re.compile(r'^Number\s+of\s+(?P<key_name>[A-Za-z -]+)\s+(?P<value_name>\d+)$')
+
+        # Summary ASBR : 0
+        # Type-7 Ext : 0
+        # Opaque Link : 0
+        p3 = re.compile(r'^(?P<key_name>[\w\- ]+)\s+:\s+(?P<value_name>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing process "ospf 1"
+            # Routing process "ospf 1000 VRF v5000"
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('routing_process', {}). \
+                    setdefault(group['routing_process'], {})
+                process_id_dict['routing_process'] = int(group['routing_process'])
+                process_id_dict['vrf_name'] = vrf_name
+                continue
+
+            # Number of OSPF interfaces 4
+            # Number of OSPF interfaces up 4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                process_id_dict[key_name] = value_name
+                continue
+
+            # Summary ASBR : 0
+            # Type-7 Ext : 0
+            # Opaque Link : 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().strip()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                lsa_dict = process_id_dict.setdefault('lsa_type', {})
+                lsa_dict[key_name] = value_name
+
+        return result_dict

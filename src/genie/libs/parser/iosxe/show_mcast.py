@@ -225,17 +225,19 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Outgoing interface list: Null
         # Outgoing interface list:
         p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
+                         '|^Inherited +Outgoing +interface +list:'
                          '( *(?P<intf>\w+))?$')       
         # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
         # Vlan5, Forward/Dense, 00:04:35/00:02:30
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
         # POS4/0, Forward, 00:02:06/00:03:27
         # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+        # LISP0.101, NH 100:44:44::44, Forward, 04:54:20/00:03:09
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
         # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
                             '(VCD +(?P<vcd>\d+))?(\,\s+)?'
-                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
                             '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
                             '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
                             '(?P<uptime>[a-zA-Z0-9\:]+)\/'

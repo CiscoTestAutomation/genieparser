@@ -57,11 +57,17 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
             output = self.device.execute(self.cli_command)
 
         # Powerstack-6 SP-PS Stndaln 1100 0 505 595 1 1
-        p1 = re.compile(r"^(?P<power_name>\S+)\s+(?P<stack_mode>\S+)\s+(?P<stack_topology>\w+)\s+(?P<stack_pwr>\d+)\s+(?P<total_pwr>\d+)\s+(?P<rsvd_pwr>\d+)\s+(?P<alloc_pwr>\d+)\s+(?P<sw_avail_num>\d+)\s+(?P<num_ps>\d+)$")
+        p1 = re.compile(r"^(?P<power_name>\S+)\s+(?P<stack_mode>\S+)\s+(?P<stack_topology>\w+)\s+(?P<stack_pwr>\d+)"
+                        r"\s+(?P<total_pwr>\d+)\s+(?P<rsvd_pwr>\d+)\s+(?P<alloc_pwr>\d+)\s+(?P<sw_avail_num>\d+)\s+(?P<num_ps>\d+)$")
+        
         # 1 Powerstack-1 2-11-20 108 0.0 0.0 0.0 0.0
-        p2 = re.compile(r"^(?P<sw>\d+)\s+(?P<power_name>\S+)\s+(?P<stack_priority>\d+\s*-\s*\d+\s*-\s*\d+)\s+(?P<consumd_sw>\d+)\s+(?P<consumd_hi>\S+)\s+(?P<consumd_lo>\S+)\s+(?P<alloc_hi>\S+)\s+(?P<alloc_lo>\S+)$")
+        # 1   Powerstack-2           1-12-21  173.8    0.0      8.8      0.0      22.3
+        p2 = re.compile(r"^(?P<sw>\d+)\s+(?P<power_name>\S+)\s+(?P<stack_priority>\d+\s*-\s*\d+\s*-\s*\d+)\s+(?P<consumd_sw>\S+)"
+                        r"\s+(?P<consumd_hi>\S+)\s+(?P<consumd_lo>\S+)\s+(?P<alloc_hi>\S+)\s+(?P<alloc_lo>\S+)$")
+        
         # 1109 0.0 0.0 0.0 0.0
-        p3 = re.compile(r"^Totals:\s+(?P<consumd_sw>\d+)\s+(?P<consumd_hi>\S+)\s+(?P<consumd_lo>\S+)\s+(?P<alloc_hi>\S+)\s+(?P<alloc_lo>\S+)$")
+        # Totals:                             529.1    0.0      54.9     0.0      107.8
+        p3 = re.compile(r"^Totals:\s+(?P<consumd_sw>\S+)\s+(?P<consumd_hi>\S+)\s+(?P<consumd_lo>\S+)\s+(?P<alloc_hi>\S+)\s+(?P<alloc_lo>\S+)$")
         
         ret_dict = {}
 
@@ -96,7 +102,7 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
                 sw_dict['sw'] = int(dict_val['sw'])
                 sw_dict['power_name'] = dict_val['power_name']
                 sw_dict['stack_priority'] = dict_val['stack_priority']
-                sw_dict['consumd_sw'] = int(dict_val['consumd_sw'])
+                sw_dict['consumd_sw'] = int(float(dict_val['consumd_sw']))
                 sw_dict['consumd_hi'] = float(dict_val['consumd_hi'])
                 sw_dict['consumd_lo'] = float(dict_val['consumd_lo'])
                 sw_dict['alloc_hi'] = float(dict_val['alloc_hi'])
@@ -108,7 +114,7 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
             if m:
                 dict_val = m.groupdict()
                 totals_dict = ret_dict.setdefault('totals', {})
-                totals_dict['consumd_sw'] = int(dict_val['consumd_sw'])
+                totals_dict['consumd_sw'] = int(float(dict_val['consumd_sw']))
                 totals_dict['consumd_hi'] = float(dict_val['consumd_hi'])
                 totals_dict['consumd_lo'] = float(dict_val['consumd_lo'])
                 totals_dict['alloc_hi'] = float(dict_val['alloc_hi'])

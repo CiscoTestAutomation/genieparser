@@ -2520,7 +2520,9 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                             'weight': int,
                                             'source': str,
                                             'location': str,
-                                            'state': str
+                                            'state': str,
+                                            Optional('affinity_id_x'): int,
+                                            Optional('affinity_id_y'): int
                                             }
                                         }
                                     }
@@ -2581,6 +2583,9 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         p8 = re.compile(r'^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))'
                         r'\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<source>\S+)'
                         r'\s+(?P<location>\S+),\s(?P<state>\S+)$')
+
+        # Affinity-id: 20 , 20
+        p9 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
 
         lisp_id = "default"
 
@@ -2701,6 +2706,15 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                                      'source':source,
                                      'location':location,
                                      'state':state})
+                continue
+            
+            # Affinity-id: 20 , 20
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['affinity_id_y']:
+                    locator_dict.update({'affinity_id_y':int(groups['affinity_id_y'])})
+                locator_dict.update({'affinity_id_x':int(groups['affinity_id_x'])})
                 continue
         return ret_dict
 
@@ -8864,11 +8878,11 @@ class ShowLispDatabaseEidSchema(MetaParser):
                                 Optional('weight'): int,
                                 Optional('source'): str,
                                 Optional('state'): str,
-                                'config_missing': bool
+                                'config_missing': bool,
+                                Optional('affinity_id_x'): int,
+                                Optional('affinity_id_y'): int
                             }
                         },
-                        Optional('affinity_id_x'): int,
-                        Optional('affinity_id_y'): int,
                         Optional('map_servers'): {
                             str: { # map-server address
                                 'uptime': str,
@@ -9092,10 +9106,9 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
             m = p12_1.match(line)
             if m:
                 group = m.groupdict()
-                affinity_id_x = int(group['affinity_id_x'])
-                instance_id_dict.update({'affinity_id_x':affinity_id_x})
                 if group['affinity_id_y']:
-                    instance_id_dict.update({'affinity_id_y':int(group['affinity_id_y'])})
+                    locator_dict.update({'affinity_id_y':int(group['affinity_id_y'])})
+                locator_dict.update({'affinity_id_x':int(group['affinity_id_x'])})
                 continue
 
             #  Map-server       Uptime         ACK  Domain-ID
@@ -12116,7 +12129,9 @@ class ShowLispIpMapCachePrefixSchema(MetaParser):
                                 Optional('reject_reason'): str,
                                 Optional('rloc_probe_sent'): str,
                                 Optional('rloc_probe_in'): str,
-                                Optional('itr_rloc'): str
+                                Optional('itr_rloc'): str,
+                                Optional('affinity_id_x'): int,
+                                Optional('affinity_id_y'): int
                                 }
                             }
                         }
@@ -12223,6 +12238,9 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
         p16 = re.compile(r"^Latched\s+to\s+ITR-RLOC:\s+"
                          r"(?P<itr_rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))$")
 
+        # Affinity-id: 20 , 20
+        p17 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -12413,6 +12431,15 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
                 groups = m.groupdict()
                 itr_rloc = groups['itr_rloc']
                 locators_dict.update({'itr_rloc':itr_rloc})
+                continue
+            
+            # Affinity-id: 20 , 20
+            m = p17.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['affinity_id_y']:
+                    locators_dict.update({'affinity_id_y':int(groups['affinity_id_y'])})
+                locators_dict.update({'affinity_id_x':int(groups['affinity_id_x'])})
                 continue
         return ret_dict
 
@@ -15277,11 +15304,12 @@ class ShowLispInstanceIdServiceSchema(MetaParser):
                                 },
                             },
                         'encapsulation_type': str,
-                        }
+                        Optional('ethernet_fast_detection'): bool
                     }
                 }
             }
         }
+    }
 
 
 class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
@@ -15534,6 +15562,10 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
 
         # Encapsulation type:                       vxlan
         p63 = re.compile(r'Encapsulation type:\s+(?P<encapsulation_type>\S+)$')
+
+        # Ethernet Fast Detection:                  enabled
+        # Ethernet Fast Detection:                  disabled
+        p64 = re.compile(r'^Ethernet Fast Detection:\s+(?P<eth_fast_detect>enabled|disabled)$')
 
         count = 0
         for line in out.splitlines():
@@ -16138,6 +16170,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                                 setdefault(vlans,{})
                 source_dict.update({'address':address,
                                     'interface':interface})
+                continue
 
             # Encapsulation type:                       vxlan
             m = p63.match(line)
@@ -16146,6 +16179,16 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 encapsulation_type = group['encapsulation_type']
                 instance_dict.update({'encapsulation_type':encapsulation_type})
                 continue
+
+            # Ethernet Fast Detection:                  enabled
+            # Ethernet Fast Detection:                  disabled
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                fast_detect = group['eth_fast_detect'] == 'enabled'
+                instance_dict.update({'ethernet_fast_detection': fast_detect})
+                continue
+
         return ret_dict
 
 

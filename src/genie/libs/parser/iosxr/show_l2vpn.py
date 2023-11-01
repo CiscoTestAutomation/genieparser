@@ -5,6 +5,7 @@ show l2vpn bridge-domain
 show l2vpn bridge-domain summary
 show l2vpn bridge-domain brief
 show l2vpn bridge-domain detail
+show l2vpn forwarding xconnect {xconnect_name} detail location {location_name}
 """
 # Python
 import re
@@ -1285,7 +1286,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('evpn'): {
                             Any(): {
                                 'state': str,
-                                'evi': str,
+                                Optional('evi'): str,
                                 'xc_id': str,
                                 Optional('statistics'): {
                                     'packet_totals': {
@@ -2683,5 +2684,130 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 if label_found and interface_found:
                     mpls_dict.update({'local': m.groupdict()['local']})
                     mpls_dict.update({'remote': m.groupdict()['remote']})
+
+        return ret_dict
+
+# ================================================================================
+# Parser for 'show l2vpn forwarding xconnect {xconnect_name} detail location {location_name}'
+# ================================================================================
+
+
+class ShowL2vpnForwardingXconnectDetailLocationSchema(MetaParser):
+    """Schema for:
+        show l2vpn forwarding xconnect {xconnect_name} detail location {location_name}
+    """
+
+    schema = {
+        'local_interface': str,
+        'xconnect_id': str,
+        'status': str,
+        'segment': {
+            Any(): {
+                'segment_type': str,
+                Optional('ac_interface'): str,
+                Optional('internal_id'): str,
+                Optional('evi'): int,
+                Optional('ac_id'): int,
+                'status': str,
+                Optional('control_word'): str,
+                'statistics': {
+                    Any(): {
+                        'received': int,
+                        'sent': int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowL2vpnForwardingXconnectDetailLocation(
+    ShowL2vpnForwardingXconnectDetailLocationSchema):
+    """Parser for:
+        show l2vpn forwarding xconnect {xconnect_name} detail location {location_name}
+    """
+
+    cli_command = [
+        'show l2vpn forwarding xconnect {xconnect_name} detail location {location_name}']
+
+    def cli(self, xconnect_name, location_name, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(xconnect_name=xconnect_name,location_name=location_name)
+            output = self.device.execute(cmd)
+
+        # Local interface: Bundle-Ether5.1001, Xconnect id: 0xc0000002, Status: up
+        p1 = re.compile(r'^Local\s+interface:\s+(?P<local_interface>[\w.-]+),\s+Xconnect\s+id:\s+(?P<xconnect_id>\w+),\s+Status:\s+(?P<status>\S+)$')
+
+        # Segment 1
+        p2 = re.compile(r'^Segment\s+(?P<segment>\d+)$')
+
+        # AC, Bundle-Ether5.1001, status: Bound
+        # SRv6 EVPN, Internal ID: ::ffff:10.0.0.1, evi: 1001, ac-id: 10001, status: Bound
+        p3 = re.compile(r'^(?P<segment_type>[\w\s]+),\s+(?:(?P<ac_interface>[\w.-]+),)?(?:Internal\s+ID:\s+(?P<internal_id>[\w:.]+),)?'
+                        r'(?:\s+evi:\s+(?P<evi>\d+),)?(?:\s+ac-id:\s+(?P<ac_id>\d+),)?\s+status:\s+(?P<status>\S+)$')
+        
+        # Control word disabled
+        p4 = re.compile(r'^Control\s+word\s+(?P<control_word>\S+)$')
+
+        # packets: received 2426, sent 2461
+        # bytes: received 275480, sent 280300
+        p5 = re.compile(r'^(?P<packets_bytes>\w+):\s+received\s+(?P<received>\d+),\s+sent\s+(?P<sent>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Local interface: Bundle-Ether5.1001, Xconnect id: 0xc0000002, Status: up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['local_interface'] = group['local_interface']
+                ret_dict['xconnect_id'] = group['xconnect_id']
+                ret_dict['status'] = group['status']
+                continue
+
+            # Segment 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                
+                segment_dict = ret_dict.setdefault('segment', {}). \
+                                    setdefault(group['segment'], {})
+                continue
+
+            # AC, Bundle-Ether5.1001, status: Bound
+            # SRv6 EVPN, Internal ID: ::ffff:10.0.0.1, evi: 1001, ac-id: 10001, status: Bound
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                segment_dict['segment_type'] = group['segment_type']
+                if group['ac_interface']:
+                    segment_dict['ac_interface'] = group['ac_interface']
+                if group['internal_id']:
+                    segment_dict['internal_id'] = group['internal_id']
+                if group['evi']:
+                    segment_dict['evi'] = int(group['evi'])
+                if group['ac_id']:
+                    segment_dict['ac_id'] = int(group['ac_id'])
+                segment_dict['status'] = group['status']
+                continue
+
+            # Control word disabled
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                segment_dict['control_word'] = group['control_word']
+                continue
+
+            # packets: received 2426, sent 2461
+            # bytes: received 275480, sent 280300
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                packets_bytes_dict = segment_dict.setdefault('statistics', {}). \
+                                                setdefault(group['packets_bytes'], {})
+                packets_bytes_dict['received'] = int(group['received'])
+                packets_bytes_dict['sent'] = int(group['sent'])
+                continue
 
         return ret_dict

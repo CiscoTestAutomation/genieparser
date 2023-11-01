@@ -549,7 +549,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {
-                                            'outgoing_interface': str,
+                                            Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
                                             Optional('metric'): int,
                                         }
@@ -566,6 +566,14 @@ class ShowRouteIpv4Schema(MetaParser):
                                             Optional('address_family'): str,
                                             Optional('table_id'): str,
                                             Optional('nexthop_in_vrf'): str,
+                                            Optional('label'): str,
+                                            Optional('tunnel_id'): str,
+                                            Optional('binding_label'): str,
+                                            Optional('extended_communites_count'): int,
+                                            Optional('nhid'): str,
+                                            Optional('path_grouping_id'): int,
+                                            Optional('srv6_headend'): str,
+                                            Optional('sid_list'): str
                                         }
                                     }
                                 }
@@ -736,7 +744,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # 2001:10::1, via GigabitEthernet0/0/0/0
         # 100.72.21.206, from 116.119.10.251, via Bundle-Ether104, Protected
         # 100.72.21.209, from 116.119.10.251, via Bundle-Ether105, Backup (Local-LFA)
-        p11 = re.compile(r'^(?P<nexthop>\S+)(,\s+from\s+(?P<from>\S+))?(, '
+        p11 = re.compile(r'^(?P<nexthop>[\w.:]+)(,\s+from\s+(?P<from>\S+))?(, '
                          r'+via\s+(?P<interface>\S+))?'
                          r'(, +(BGP external|Protected|Backup \(Local-LFA\)))?$')
         
@@ -759,6 +767,27 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         p15 = re.compile(r'^Gateway +of +last +resort +is '
                          r'+(?P<gateway>(not +set)|\S+)( +to +network '
                          r'+(?P<to_network>\S+))?$')
+
+        # Label: None
+        p16 = re.compile(r'^Label:\s+(?P<label>\S+)$')
+
+        # Tunnel ID: None
+        p17 = re.compile(r'^Tunnel\s+ID:\s+(?P<tunnel_id>\S+)$')
+
+        # Binding Label: None
+        p18 = re.compile(r'^Binding\s+Label:\s+(?P<binding_label>\S+)$')
+
+        # Extended communities count: 0
+        p19 = re.compile(r'^Extended\s+communities\s+count:\s+(?P<extended_communites_count>\d+)$')
+
+        # NHID:0x0(Ref:0)
+        p20 = re.compile(r'^NHID:(?P<nhid>\S+)$')
+
+        # Path Grouping ID: 100
+        p21 = re.compile(r'^Path\s+Grouping\s+ID:\s+(?P<path_grouping_id>\d+)$')
+
+        # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e002::}
+        p22 = re.compile(R'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
 
         # initial variables
         ret_dict = {}
@@ -1099,6 +1128,56 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 if group['to_network']:
                     gw_dict.update({'to_network': group['to_network']})
 
+            # Label: None
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'label': group['label']})
+                continue
+
+            # Tunnel ID: None
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'tunnel_id': group['tunnel_id']})
+                continue
+
+            # Binding Label: None
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'binding_label': group['binding_label']})
+                continue
+
+            # Extended communities count: 0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'extended_communites_count': int(group['extended_communites_count'])})
+                continue
+
+            # NHID:0x0(Ref:0)
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'nhid': group['nhid']})
+                continue
+
+            # Path Grouping ID: 100
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'path_grouping_id': int(group['path_grouping_id'])})
+                continue
+
+            # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e002::}
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'srv6_headend': group['srv6_headend']})
+                outgoing_interface_dict.update({'sid_list': group['sid_list']})
+                continue
+
         return ret_dict
 
 
@@ -1265,6 +1344,27 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p14 = re.compile(r'^Gateway +of +last +resort +is '
                          r'+(?P<gateway>(not +set)|\S+)( +to +network '
                          r'+(?P<to_network>\S+))?$')
+
+        # Label: None
+        p15 = re.compile(r'^Label:\s+(?P<label>\S+)$')
+
+        # Tunnel ID: None
+        p16 = re.compile(r'^Tunnel\s+ID:\s+(?P<tunnel_id>\S+)$')
+
+        # Binding Label: None
+        p17 = re.compile(r'^Binding\s+Label:\s+(?P<binding_label>\S+)$')
+
+        # Extended communities count: 0
+        p18 = re.compile(r'^Extended\s+communities\s+count:\s+(?P<extended_communites_count>\d+)$')
+
+        # NHID:0x0(Ref:0)
+        p19 = re.compile(r'^NHID:(?P<nhid>\S+)$')
+
+        # Path Grouping ID: 100
+        p20 = re.compile(r'^Path\s+Grouping\s+ID:\s+(?P<path_grouping_id>\d+)$')
+
+        # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e003::}
+        p21 = re.compile(R'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
 
         ret_dict = {}
         address_family = 'ipv6'
@@ -1499,14 +1599,14 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 group = m.groupdict()
                 nexthop = group['nexthop']
                 _from = group['from']
-                interface = group['interface']
 
                 index += 1
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
                     setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
-                if interface:
+                if group['interface']:
+                    interface = group['interface']
                     outgoing_interface_dict.update({'outgoing_interface': interface})
                 if _from:
                     outgoing_interface_dict.update({'from': _from})
@@ -1527,6 +1627,56 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 if group['to_network']:
                     gw_dict.update({'to_network' : group['to_network']})
 
+                continue
+
+            # Label: None
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'label': group['label']})
+                continue
+
+            # Tunnel ID: None
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'tunnel_id': group['tunnel_id']})
+                continue
+
+            # Binding Label: None
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'binding_label': group['binding_label']})
+                continue
+
+            # Extended communities count: 0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'extended_communites_count': int(group['extended_communites_count'])})
+                continue
+
+            # NHID:0x0(Ref:0)
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'nhid': group['nhid']})
+                continue
+
+            # Path Grouping ID: 100
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'path_grouping_id': int(group['path_grouping_id'])})
+                continue
+
+            # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e002::}
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface_dict.update({'srv6_headend': group['srv6_headend']})
+                outgoing_interface_dict.update({'sid_list': group['sid_list']})
                 continue
 
         return ret_dict

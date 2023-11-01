@@ -1,0 +1,25 @@
+Slot      Device Name / Model                     Firmware Version              
+--------- --------------------------------------- ----------------------------- 
+ 4         Supervisor Rommon (Active)              17.8.0.15                     
+ 4         Supervisor CPLD                         20121005                      
+ 4         Supervisor SBFPGA                       b                             
+ -         Eth Lan Spi                             0x80000756                    
+ PS17      Fantray                                 17050302                      
+ 1         Line Card / C9400-LC-24XY               0x4e (220621)                 
+ 2         Line Card / C9400-LC-48HX               0x42 (210728)                 
+ 5         Line Card / C9400-LC-12QC               0x48 (220208)                 
+ 6         Line Card / C9400-LC-48T                0x0d (170503)                 
+ 7         Line Card / C9400-LC-48U                0x0d (170503)                 
+ PS2       Power Supply (PS PRI, PS_SEC, PS_I2C)   (7.3, 7.0, 6.0)               
+ PS5       Power Supply (PS PRI, PS_SEC, PS_I2C)   (7.3, 7.0, 6.0)               
+ 1         Line Card / C9400-LC-24XY               0x014e095b                    
+ 2         Line Card / C9400-LC-48HX               0x0000e102                    
+ 4         SUP / C9400X-SUP-2XL                    0x014e095b                    
+ 5         Line Card / C9400-LC-12QC               0x014e095b                    
+ 6         Line Card / C9400-LC-48T                0xae025011                    
+ 7         Line Card / C9400-LC-48U                0xae025011                    
+ 1         Line Card / C9400-LC-24XY               0x52,0x52,0x52,0x52 
+ 2         Line Card / C9400-LC-48HX               0x8f60x8f60x8f60x8f 
+ 5         Line Card / C9400-LC-12QC               0x52,0x52,0x52,0x52 
+ 6         Line Card / C9400-LC-48T                0x32                
+ 7         Line Card / C9400-LC-48U                0x32    

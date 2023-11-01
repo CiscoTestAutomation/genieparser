@@ -1,0 +1,22 @@
+show ipv6 mroute vrf red 192:168:3::1 ff45::1
+Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, 
+       C - Connected, L - Local, I - Received Source Specific Host Report,
+       P - Pruned, R - RP-bit set, F - Register flag, T - SPT-bit set,
+       J - Join SPT, Y - Joined MDT-data group,
+       y - Sending to MDT-data group
+       g - BGP signal originated, G - BGP Signal received,
+       N - BGP Shared-Tree Prune received, n - BGP C-Mroute suppressed,
+       q - BGP Src-Active originated, Q - BGP Src-Active received
+       E - Extranet
+Timers: Uptime/Expires
+Interface state: Interface, State
+
+(192:168:3::1, FF45::1), 00:08:00/00:02:37, flags: ST
+  Incoming interface: LISP0.101
+  RPF nbr: 100:11:11::11
+  Immediate Outgoing interface list:
+    Ethernet0/0, Forward, 00:08:00/00:02:37
+  Inherited Outgoing interface list:
+    LISP0.101, NH 100:44:44::44, Forward, 01:38:26/00:03:08
+    LISP0.101, NH 100:55:55::55, Forward, 01:38:26/00:03:10
