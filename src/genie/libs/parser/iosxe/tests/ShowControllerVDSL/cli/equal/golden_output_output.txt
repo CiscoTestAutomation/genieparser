@@ -1,0 +1,72 @@
+Controller VDSL 0/0/0 is UP
+
+Daemon Status:		UP 
+
+			XTU-R (DS)		XTU-C (US)
+Chip Vendor ID:		'META'			 'BDCM'
+Chip Vendor Specific:   0x0000			 0x1FB1
+Chip Vendor Country:    0xB500			 0xB500
+Modem Vendor ID:	'META'			 '    '
+Modem Vendor Specific:  0x0000			 0x0000
+Modem Vendor Country:   0xB500			 0x0000
+Serial Number Near:     MET21160FE7 V5311TR 1_62_8548
+Serial Number Far:      
+Modem Version Near:     1_62_8548 MT5311
+Modem Version Far:      
+
+Modem Status:		TC Sync (Showtime!) 
+DSL Config Mode:	AUTO 
+Trained Mode:		G.993.2 (VDSL2) Profile 17a
+
+TC Mode:		PTM 
+Selftest Result:	0x00 
+DELT configuration:	disabled 
+DELT state:		not running 
+
+Failed full inits:	0
+Short inits:		0
+Failed short inits:	0
+
+Modem FW  Version:	
+Modem PHY Version:	
+Modem PHY Source:	System
+
+Line 0:
+
+			XTU-R (DS)		XTU-C (US)
+Trellis:		 ON			 ON
+SRA: 			 disabled		 disabled
+SRA count: 		 0			 0
+Bit swap: 		 enabled		 enabled
+Bit swap count:		 0			 0
+Line Attenuation:	  9.7 dB		 dB
+Signal Attenuation:	 12.6 dB		 dB
+Noise Margin:		  6.2 dB		14.3 dB
+Attainable Rate:	95020 kbits/s		 77322 kbits/s
+Actual Power:		14.2 dBm		 8.8 dBm
+Per Band Status:       	D1 	D2 	D3 	U0 	U1 	U2 	U3
+Line Attenuation(dB):   16.4	7.8	8.6	N/A	8.4	3.1	2.5	
+Signal Attenuation(dB): 17.9	8.9	9.6	N/A	8.7	3.1	2.6	
+Noise Margin(dB):       6.2	6.2	6.1	N/A	12.5	14.3	15.6	
+Total FECC:		1335			 962
+Total ES:		7			 635
+Total SES:		4			 9
+Total LOSS:		0			 0
+Total UAS:		39			 2299304
+Total LPRS:		0			 0
+Total LOFS:		0			 0
+Total LOLS:		0			 0
+
+
+ 		  DS Channel1	  DS Channel0	US Channel1	  US Channel0
+Speed (kbps):		  NA	       95020		NA	       55434
+SRA Previous Speed:	  NA	           0		NA	           0
+Previous Speed:		  NA	           0		NA	           0
+Reed-Solomon EC:	  NA	           0		NA	           0
+CRC Errors:		  NA	         388		NA	       27157
+Header Errors:		  NA	           0		NA	           0
+Interleave (ms):	  NA	        7.00		NA	        3.00
+Actual INP:		  NA	        2.00		NA	        1.00
+
+Training Log :	Stopped
+Training Log Filename :	flash:vdsllog.bin

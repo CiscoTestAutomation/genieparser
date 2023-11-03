@@ -1,0 +1,279 @@
+MRP ring 1 not configured
+MRP ring 2 not configured
+
+MRP ring 3
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 36864
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:05
+ Priority       : 36864
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:05          MAC Address    :04:A7:41:4D:20:06
+ Interface      :Gi1/0/5                    Interface      :Gi1/0/6
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 131
+Domain Name : RING3
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFC
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 4
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:07
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : OPEN
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:07          MAC Address    :04:A7:41:4D:20:08
+ Interface      :Gi1/0/7                    Interface      :Gi1/0/8
+ Status         :Forwarding                 Status         :Forwarding
+
+VLAN ID     : 141
+Domain Name : RING4
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-AAAAAAAAAAAE
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 5
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:09
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:09          MAC Address    :04:A7:41:4D:20:0A
+ Interface      :Gi1/0/9                    Interface      :Gi1/0/10
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 151
+Domain Name : RING5
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFA
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 6
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:0B
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:0B          MAC Address    :04:A7:41:4D:20:0C
+ Interface      :Gi1/0/11                   Interface      :Gi1/0/12
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 161
+Domain Name : RING6
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFF9
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 7
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:0D
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:0D          MAC Address    :04:A7:41:4D:20:0E
+ Interface      :Gi1/0/13                   Interface      :Gi1/0/14
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 171
+Domain Name : RING7
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFF8
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 8
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:0F
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:0F          MAC Address    :04:A7:41:4D:20:10
+ Interface      :Gi1/0/15                   Interface      :Gi1/0/16
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 181
+Domain Name : RING8
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFF7
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+
+MRP ring 9
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:11
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:12          MAC Address    :04:A7:41:4D:20:11
+ Interface      :Gi1/0/18                   Interface      :Gi1/0/17
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 191
+Domain Name : RING9
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFF6
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+MRP ring 10 not configured
+MRP ring 11 not configured
+
+MRP ring 12
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:17
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : CLOSED
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:17          MAC Address    :04:A7:41:4D:20:18
+ Interface      :Gi1/0/23                   Interface      :Gi1/0/24
+ Status         :Forwarding                 Status         :Blocked
+
+VLAN ID     : 221
+Domain Name : RING12
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFF3
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+MRP ring 13 not configured
+MRP ring 14 not configured
+MRP ring 15 not configured
+MRP ring 16 not configured
+MRP ring 17 not configured
+MRP ring 18 not configured
+MRP ring 19 not configured
+MRP ring 20 not configured
+MRP ring 21 not configured
+MRP ring 22 not configured
+

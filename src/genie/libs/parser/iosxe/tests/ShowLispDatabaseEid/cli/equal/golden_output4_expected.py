@@ -3,7 +3,6 @@ expected_output = {
         0: {
             'instance_id': {
                 101: {
-                    'affinity_id_x': 20,
                     'address_family': 'IPv4',
                     'eid_table': 'vrf red',
                     'lsb': '0x1',
@@ -21,7 +20,8 @@ expected_output = {
                             'weight': 50,
                             'source': 'cfg-addr',
                             'state': 'site-self, reachable',
-                            'config_missing': False
+                            'config_missing': False,
+                            'affinity_id_x': 20
                             }
                         },
                     'map_servers': {

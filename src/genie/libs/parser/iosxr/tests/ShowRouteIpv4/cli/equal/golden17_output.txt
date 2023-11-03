@@ -1,0 +1,26 @@
+show route ipv4 101.0.0.2/32 detail
+Wed Jun 21 16:47:48.059 UTC
+
+Routing entry for 101.0.0.2/32
+  Known via "bgp 100", distance 200, metric 0, type internal
+  Installed May 31 13:26:22.013 for 3w0d
+  Routing Descriptor Blocks
+    fc00:a000:1000::2, from fc00:a000:1000::11
+      Nexthop in Vrf: "default", Table: "default", IPv6 Unicast, Table Id: 0xe0800000
+      Route metric is 0
+      Label: None
+      Tunnel ID: None
+      Binding Label: None
+      Extended communities count: 0
+      NHID:0x0(Ref:0)
+      Path Grouping ID: 100
+      SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e002::}
+  Route version is 0x1 (1)
+  No local label
+  IP Precedence: Not Set
+  QoS Group ID: Not Set
+  Flow-tag: Not Set
+  Fwd-class: Not Set
+  Route Priority: RIB_PRIORITY_RECURSIVE (12) SVD Type RIB_SVD_TYPE_LOCAL
+  Download Priority 4, Download Version 872
+  No advertising protos.

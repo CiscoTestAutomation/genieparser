@@ -4490,7 +4490,7 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
         'opens', 'route_refresh', 'total', 'updates', 'up_time', 'rtto', 'rtv', 'srtt',
         'pmtuager', 'min_rtt', 'irs', 'iss', 'tcp_semaphore', 'foreign_port', 'local_port',
         'reset_reason', 'status_flags', 'dropped', 'established', 'out_of_order',
-        'keepalive', 'retransmit_packet', 'max_rtt', 'mss', 'rcv_scale']
+        'keepalive', 'retransmit_packet', 'max_rtt', 'mss', 'rcv_scale', 'ack_hold', 'fastretransmit']
 
 
     def cli(self, neighbor='', address_family='', output=None):

@@ -1,0 +1,7 @@
+NAT66 Statistics
+
+Global Stats: enable count 4
+   Packets translated (In -> Out)
+      : 25
+   Packets translated (Out -> In)
+      : 20

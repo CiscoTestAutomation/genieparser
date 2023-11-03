@@ -1,0 +1,110 @@
+-------------------------
+Device ID: gsgsw-labswitch20
+Entry address(es):
+  IP address: 172.25.59.99
+Platform: cisco WS-C4948,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet1/36
+Holdtime : 121 sec
+
+Version :
+Cisco Internetwork Operating System Software
+IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(20)EWA4, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2006 by cisco Systems, Inc.
+Compiled Fri 13-Oct-06 11:14 by kellythw
+
+advertisement version: 2
+Protocol Hello:  OUI=0x00000C, Protocol ID=0x0112; payload len=27, value=00000000FFFFFFFF010221FF000000000000001DA2E56FBFFF0000
+VTP Management Domain: 'gsgsw-labswitch'
+Native VLAN: 59
+Duplex: full
+
+-------------------------
+Device ID: ROUTER-VCG4
+Entry address(es):
+  IP address: 10.1.102.22
+  IPv6 address: 2001:102::22  (global unicast)
+  IPv6 address: FE80::259:DCFF:FE50:B84D  (link-local)
+Platform: cisco WS-C3850-24XU,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/5,  Port ID (outgoing port): TenGigabitEthernet1/0/5
+Holdtime : 155 sec
+
+Version :
+Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.07.04E RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2016 by Cisco Systems, Inc.
+Compiled Thu 19-May-16 11:48 by prod_rel_team
+
+advertisement version: 2
+VTP Management Domain: 'healthcare'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 10.1.102.22
+Spare Pair PoE: Yes, Spare Pair Detection Required: No
+Spare Pair PD Config: Disable, Spare Pair PSE Operational: No
+
+-------------------------
+Device ID: Spine-01
+Entry address(es):
+  IP address: 172.16.13.1
+  IPv6 address: FD00:172:16:13::1  (global unicast)
+  IPv6 address: FE80::2A3:D1FF:FE5A:366  (link-local)
+Platform: cisco C9500-40X,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/33,  Port ID (outgoing port): TenGigabitEthernet1/0/33
+Holdtime : 133 sec
+
+Version :
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20230417:213126 [BLD_POLARIS_DEV_S2C_20230417_210704:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Mon 17-Apr-23 14:32 by mcpre
+
+advertisement version: 2
+VTP Management Domain: 'lab_network'
+Duplex: full
+Management address(es):
+  IP address: 172.16.13.1
+
+-------------------------
+Device ID: Spine-01
+Entry address(es):
+  IP address: 172.16.23.2
+  IPv6 address: FD00:172:16:23::2  (global unicast)
+  IPv6 address: FE80::2A3:D1FF:FE44:4854  (link-local)
+Platform: cisco C9500-40X,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/34,  Port ID (outgoing port): TenGigabitEthernet1/0/34
+Holdtime : 128 sec
+
+advertisement version: 2
+VTP Management Domain: ''
+Duplex: full
+Management address(es):
+  IP address: 172.16.23.2
+
+-------------------------
+Device ID: DVTEP1-HOST1
+Entry address(es):
+  IP address: 10.1.201.11
+  IPv6 address: 2001:101::11  (global unicast)
+  IPv6 address: FE80::259:DCFF:FE50:AE41  (link-local)
+Platform: cisco WS-C3850-24XU,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/1,  Port ID (outgoing port): TenGigabitEthernet1/0/1
+Holdtime : 138 sec
+
+Version :
+Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.07.04E RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2016 by Cisco Systems, Inc.
+Compiled Thu 19-May-16 11:48 by prod_rel_team
+
+advertisement version: 2
+VTP Management Domain: 'healthcare'
+Native VLAN: 1
+Duplex: full
+Management address(es):
+  IP address: 10.1.201.11
+Spare Pair PoE: Yes, Spare Pair Detection Required: No
+Spare Pair PD Config: Disable, Spare Pair PSE Operational: No
+
+
+Total cdp entries displayed : 5

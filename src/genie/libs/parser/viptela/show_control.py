@@ -73,7 +73,8 @@ class ShowControlConnections(ShowControlConnectionsSchema):
         m = p1.search(out)
         if m:
             # cEdge starting 17.04 onward
-            p1 = re.compile(r"(?P<peer_type>\w+)\s+(?P<peer_protocol>\w+)\s+(?P<peer_system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\S+)\s+(?P<peer_private_port>\S+)\s+(?P<peer_public_ip>\S+)\s+(?P<peer_public_port>\d+)\s+(?P<peer_organization>(.*?)[ ]{2,})\s+(?P<local_color>\S+)\s+(?P<proxy_state>\S+)\s+(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<controller_group_id>\S+)")
+            # vsmart  dtls 1.1.1.5         4294950463 1      10.0.5.64                               12346 34.250.253.50                           12346 SDWAN-VIPTELA - 249781  custom1         No    up     24:22:07:45 0 
+            p1 = re.compile(r"(?P<peer_type>\w+)\s+(?P<peer_protocol>\w+)\s+(?P<peer_system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\S+)\s+(?P<peer_private_port>\S+)\s+(?P<peer_public_ip>\S+)\s+(?P<peer_public_port>\d+)\s+(?P<peer_organization>(.*?)(?=\s{2}))\s+(?P<local_color>\S+)\s+(?P<proxy_state>\S+)\s+(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<controller_group_id>\S+)")
             keys.insert(8, "peer_organization")
         else:
             # vEdge & cEdge prior to 17.04

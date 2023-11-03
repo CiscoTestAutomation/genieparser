@@ -1,0 +1,15 @@
+show l2vpn forwarding xconnect 0xc0000002 detail location 0/RSP0/CPU0
+Thu Jul  6 05:56:15.672 UTC
+Local interface: Bundle-Ether5.1001, Xconnect id: 0xc0000002, Status: up
+  Segment 1
+    AC, Bundle-Ether5.1001, status: Bound
+    Statistics:
+      packets: received 2497, sent 2462
+      bytes: received 282604, sent 277640
+  Segment 2
+    SRv6 EVPN, Internal ID: ::ffff:10.0.0.1, evi: 1001, ac-id: 10001, status: Bound
+    Control word disabled
+    Statistics:
+      packets: received 2462, sent 2497
+      bytes: received 277640, sent 282604
+RP/0/RSP0/CPU0:A-AN1#

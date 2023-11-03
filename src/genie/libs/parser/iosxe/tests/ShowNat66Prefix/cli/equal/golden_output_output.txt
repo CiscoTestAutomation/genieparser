@@ -1,0 +1,8 @@
+Prefixes configured: 3
+RA Prefixes configured: 0
+
+NAT66 Prefixes
+
+Id: 1          Inside FD62:1B53:AFFB:1201::/112 Outside 2001:4888:AFFB:1201::/112
+Id: 2          Inside FD62:1B53:AFFB:1202::/112 Outside 2001:4888:AFFB:1202::/112 vrf MPN1202
+Id: 3          Inside FD62:1B53:AFFB:1203::/112 Outside 2001:4888:AFFB:1203::/112 vrf MPN1203

@@ -1375,11 +1375,11 @@ class ShowPlatformTcamUtilizationswitchActiveSchema(MetaParser):
 class ShowPlatformSwitchActiveTcamUtilization(ShowPlatformTcamUtilizationswitchActiveSchema):
     """Parser for show platform hardware fed {switch} active fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed {switch} active fwd-asic resource tcam utilization'
+    cli_command = 'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization'
 
-    def cli(self, switch='switch', output=None):
+    def cli(self, switch='switch', mode='active', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch=switch))
+            output = self.device.execute(self.cli_command.format(switch=switch, mode=mode))
 
         # initial return dictionary
         ret_dict = {}

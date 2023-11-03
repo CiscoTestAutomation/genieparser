@@ -194,7 +194,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                 'local_interface': str,
                 Optional('port_id'): str,
                 'hold_time': int,
-                'software_version': str,
+                Optional('software_version'): str,
                 'entry_addresses': {
                     Any(): {
                         Optional('type'): str,

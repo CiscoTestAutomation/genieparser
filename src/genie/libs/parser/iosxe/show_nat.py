@@ -29,7 +29,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 class ShowNat64TranslationsSchema(MetaParser):
     """Schema for show nat64 translations"""
@@ -1543,4 +1543,211 @@ class ShowIpNatRedundancy(ShowIpNatRedundancySchema):
                 ip_info['use_count'] = groups['use_count']
                 continue
 
+        return ret_dict
+
+class ShowNat66StatisticsSchema(MetaParser):
+    """ Schema for 'show nat66 statistics' """
+
+    schema = {
+        "nat66_statistics": {
+            "global_stats": {
+                "enable_count": int,
+                "packets_translated": {
+                    "in_to_out": int,
+                    "out_to_in": int,
+                },
+            },
+        },
+    }
+
+
+class ShowNat66Statistics(ShowNat66StatisticsSchema):
+    """ parser for 'show nat66 statistics' """
+    cli_command = "show nat66 statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = dict()
+        global_stats_dict = dict()
+
+        # Global Stats: enable count 4
+        p1 = re.compile(r'^Global +Stats: +enable +count +(?P<enable_count>\d+)$')
+        # Packets translated (In -> Out)
+        #     : 25
+        # Packets translated (Out -> In)
+        #     : 20
+        p2_1 = re.compile(r'^Packets +translated +\(In +\-\> +Out\)$')
+        p2_2 = re.compile(r'^Packets +translated +\(Out +\-\> +In\)$')
+        p2_3 = re.compile(r'^: +(?P<nat66_pkt_count>\d+)$')
+        for line in output.splitlines():
+            line = line.strip()
+            # Global Stats: enable count 4
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                global_stats_dict = ret_dict.setdefault('nat66_statistics', {}).setdefault('global_stats', {})
+                global_stats_dict['enable_count'] = int(groups['enable_count'])
+                continue
+            #    Packets translated (In -> Out)
+            #        : 25
+            m = p2_1.match(line)
+            if m:
+                packets_translated_dict = global_stats_dict.setdefault('packets_translated', {})
+                in_to_out_flag = True
+                continue
+            # Packets translated (Out -> In)
+            #     : 20
+            m = p2_2.match(line)
+            if m:
+                in_to_out_flag = False
+                continue
+
+            m = p2_3.match(line)
+            if m:
+                groups = m.groupdict()
+                if in_to_out_flag:
+                    packets_translated_dict['in_to_out'] = int(groups['nat66_pkt_count'])
+                else:
+                    packets_translated_dict['out_to_in'] = int(groups['nat66_pkt_count'])
+                continue
+        return ret_dict
+
+
+class ShowNat66PrefixSchema(MetaParser):
+    """ Schema for 'show nat66 prefix' """
+
+    schema = {
+        "nat66_prefix": {
+            "prefixes_configured": int,
+            "ra_prefixes_configured": int,
+            "nat66_prefixes": {
+                Any(): {
+                    "id": int,
+                    "inside": str,
+                    "outside": str,
+                    Optional("vrf"): str,
+                },
+            },
+        },
+    }
+
+
+class ShowNat66Prefix(ShowNat66PrefixSchema):
+    """ parser for 'show nat66 prefix' """
+    cli_command = "show nat66 prefix"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = dict()
+        nat66_prefixes_dict = dict()
+        # Prefixes configured: 3
+        p1 = re.compile(r'^Prefixes +configured: +(?P<prefixes_configured>\d+)$')
+        # RA Prefixes configured: 0
+        p2 = re.compile(r'^RA +Prefixes +configured: +(?P<ra_prefixes_configured>\d+)$')
+        # Id: 1          Inside FD62:1B53:AFFB:1201::/112 Outside 2001:4888:AFFB:1201::/112
+        p3_1 = re.compile(r'^Id: +(?P<id>\d+) +Inside +(?P<inside>[\w\:\/]+) +Outside +(?P<outside>[\w\:\/]+)$')
+        # Id: 1          Inside FD62:1B53:AFFB:1201::/112 Outside 2001:4888:AFFB:1201::/112 vrf MPN1201
+        p3_2 = re.compile(r'^Id: +(?P<id>\d+) +Inside +(?P<inside>[\w\:\/]+) +Outside +(?P<outside>[\w\:\/]+)( +vrf +(?P<vrf>\S+))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Prefixes configured: 3
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                nat66_prefixes_dict = ret_dict.setdefault('nat66_prefix', {})
+                nat66_prefixes_dict['prefixes_configured'] = int(groups['prefixes_configured'])
+                continue
+            # RA Prefixes configured: 0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                nat66_prefixes_dict['ra_prefixes_configured'] = int(groups['ra_prefixes_configured'])
+                continue
+            # Id: 1          Inside FD62:1B53:AFFB:1201::/112 Outside 2001:4888:AFFB:1201::/112
+            m = p3_1.match(line)
+            if m:
+                groups = m.groupdict()
+                nat66_prefix_dict = nat66_prefixes_dict.setdefault('nat66_prefixes', {}).setdefault(groups['id'], {})
+                nat66_prefix_dict['id'] = int(groups['id'])
+                nat66_prefix_dict['inside'] = groups['inside']
+                nat66_prefix_dict['outside'] = groups['outside']
+                continue
+            # Id: 1          Inside FD62:1B53:AFFB:1201::/112 Outside 2001:4888:AFFB:1201::/112 vrf MPN1201
+            m = p3_2.match(line)
+            if m:
+                groups = m.groupdict()
+                nat66_prefix_dict = nat66_prefixes_dict.setdefault('nat66_prefixes', {}).setdefault(groups['id'], {})
+                nat66_prefix_dict['id'] = int(groups['id'])
+                nat66_prefix_dict['inside'] = groups['inside']
+                nat66_prefix_dict['outside'] = groups['outside']
+                nat66_prefix_dict['vrf'] = groups['vrf']
+                continue
+        return ret_dict
+
+
+class ShowNat66NdSchema(MetaParser):
+    """ Schema for 'show nat66 nd' """
+
+    schema = {
+        "nat66_nd": {
+            Optional("nd_prefix_db"): ListOf(str),
+            Optional("ipv6_nd_entries"): ListOf(str),
+            Optional("nat66_nd_disabled"): bool,
+        },
+    }
+
+
+class ShowNat66Nd(ShowNat66NdSchema):
+    """ parser for 'show nat66 nd' """
+    cli_command = "show nat66 nd"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = dict()
+        nd_prefix_db_list = []
+        ipv6_nd_entries_list = []
+        disable_flag = False
+        # ND Prefix DB:
+        # 2001:4888:AFFB:1201::/112
+        p1 = re.compile(r'^(?P<nd_prefix_db>[\w\:\/]+)$')
+        # IPv6 ND Entries:
+        # 2001:4888:AFFB:1201::1
+        p2 = re.compile(r'^(?P<ipv6_nd_entries>[\w\:]+)$')
+        # NAT66 neighbor discovery is not enabled.
+        p3 = re.compile(r'^NAT66 +neighbor +discovery +is +not +enabled.$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            # IPv6 ND Entries:
+            # 2001:4888:AFFB:1201::1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv6_nd_entries_list.append(groups['ipv6_nd_entries'])
+                continue
+            # ND Prefix DB:
+            # 2001:4888:AFFB:1201::/112
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                nd_prefix_db_list.append(groups['nd_prefix_db'])
+                continue
+            # NAT66 neighbor discovery is not enabled.
+            m = p3.match(line)
+            if m:
+                disable_flag = True
+        if nd_prefix_db_list:
+            ret_dict.setdefault('nat66_nd', {}).setdefault('nd_prefix_db', nd_prefix_db_list)
+        if ipv6_nd_entries_list:
+            ret_dict.setdefault('nat66_nd', {}).setdefault('ipv6_nd_entries', ipv6_nd_entries_list)
+        if disable_flag:
+            ret_dict.setdefault('nat66_nd', {}).setdefault('nat66_nd_disabled', disable_flag)
         return ret_dict

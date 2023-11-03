@@ -1,0 +1,9 @@
+show pppoe session
+     1 session  in LOCALLY_TERMINATED (PTA) State
+     1 session  total
+
+Uniq ID  PPPoE  RemMAC          Port                    VT  VA         State
+           SID  LocMAC                                      VA-st      Type
+     72     72  c884.a1f5.fb00  Gi0/0/0.555              1  Vi2.1      PTA  
+                c884.a1f5.f700  VLAN: 555                   UP              
+

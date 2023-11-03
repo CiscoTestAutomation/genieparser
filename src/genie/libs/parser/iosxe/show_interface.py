@@ -5530,3 +5530,58 @@ class ShowInterfacesVlanMapping(ShowInterfacesVlanMappingSchema):
                 continue
 
         return ret_dict
+
+# ======================================================
+# Parser for 'show interface <interface> human-readable | i drops'
+# ======================================================
+class ShowInterfaceHumanReadableIncludeDropsSchema(MetaParser):
+    """Schema for show interface human-readable include drops"""
+
+    schema = {
+        'unknown_protocol_drops': int,
+        'size': int,
+        'max': int,
+        'drops': int,
+        'flushes': int,
+        'total_output_drops': int
+    }
+
+class ShowInterfaceHumanReadableIncludeDrops(ShowInterfaceHumanReadableIncludeDropsSchema):
+    """Parser for show interface human-readable include drops"""
+
+    cli_command = 'show interface {interface} human-readable | i drops'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        #   Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+
+        p1 = re.compile(r"^Input queue: (?P<size>\d+)/(?P<max>\d+)/(?P<drops>\d+)/(?P<flushes>\d+)\s+\(size/max/drops/flushes\); Total output drops:\s+(?P<total_output_drops>\d+)$")
+
+        # 0 unknown protocol drops
+        p2 = re.compile(r"^(?P<unknown_protocol_drops>\d+)\s+unknown protocol drops$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #   Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['size'] = int(dict_val['size'])
+                ret_dict['max'] = int(dict_val['max'])
+                ret_dict['drops'] = int(dict_val['drops'])
+                ret_dict['flushes'] = int(dict_val['flushes'])
+                ret_dict['total_output_drops'] = int(dict_val['total_output_drops'])
+                continue
+
+            # 0 unknown protocol drops
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['unknown_protocol_drops'] = int(dict_val['unknown_protocol_drops'])
+
+        return ret_dict

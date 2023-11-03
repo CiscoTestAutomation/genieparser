@@ -834,7 +834,9 @@ class ShowIpIgmpSnoopingQuerier(ShowIpIgmpSnoopingQuerierSchema):
             line = line.strip()
 
             #327       27.1.1.2                 v2          Router
-            p1 = re.compile(r'^(?P<vlan>\d+) +(?P<ip_address>[\d.]+) +(?P<igmp_version>\w+) +(?P<port>\w+)$')
+            #1         193.1.1.1                v2            Switch
+            #10        192.1.1.1                v2            Fou1/0/31
+            p1 = re.compile(r'^(?P<vlan>\d+) +(?P<ip_address>[\d.]+) +(?P<igmp_version>\w+) +(?P<port>\S+)$')
 
             m = p1.match(line)
             if m:
@@ -1207,6 +1209,55 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
         return igmp_dict
 
+# ========================================================
+# Parser for 'show ip igmp snooping mrouter vlan {vlan}'
+# ========================================================
+class ShowIpIgmpSnoopingMrouterVlanSchema(MetaParser):
+    """
+    Schema for 'show ip igmp snooping mrouter vlan {vlan}'
+    """
+
+    schema = {
+        'vlan':
+            {
+                Any():
+                {
+                    'port': str
+                },
+            }
+        }
+
+class ShowIpIgmpSnoopingMrouterVlan(ShowIpIgmpSnoopingMrouterVlanSchema):
+    """
+    Parser for 'show ip igmp snooping mrouter vlan {vlan}'
+    """
+    cli_command = 'show ip igmp snooping mrouter vlan {vlan}'
+
+    def cli(self, vlan=None, output=None):
+        cmd = self.cli_command.format(vlan = vlan)
+        if not output:
+            out = self.device.execute(cmd)
+
+        # initial variables
+        vlan_dict = {}
+
+        #  777    Po10(dynamic), Router
+        p1 = re.compile(r'(?P<vlan_id>\d+)\s+(?P<port>.+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+        
+            #  777    Po10(dynamic), Router
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict = vlan_dict.setdefault('vlan',{})
+                vlan_id = group['vlan_id']
+                port = group['port']
+                ret_dict[vlan_id] = {}
+                ret_dict[vlan_id]['port'] = port
+        return vlan_dict
+
 class ShowPlatformSoftwareIgmpSnoopingGroupsCountSchema(MetaParser):
     schema = {
              'ip_igmp_snooping_entries': int
@@ -1242,3 +1293,229 @@ class ShowPlatformSoftwareIgmpSnoopingGroupsCount(ShowPlatformSoftwareIgmpSnoopi
 
         return (dict_count)
 
+
+# ===============================================================
+# Parser for 'show ip igmp snooping querier vlan {vlan_id} detail '
+# ===============================================================
+
+class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
+    """Schema for show ip igmp snooping querier vlan {vlan_id} detail"""
+
+    schema = {
+        'ip_address': str,
+        'igmp_version': str,
+        'port': str,
+        'max_response_time': str,
+        'global_igmp': {
+            'admin_state': str,           
+            'admin_version': int,
+            'source_ip_address': str,
+            'query_interval': int,
+            'max_response_time': int,
+            'querier_timeout': int,
+            'tcn_query_count': int,
+            'tcn_query_interval': int,
+        },
+        'vlan': {     
+            Any(): {       
+                'admin_state': str,                             
+                'admin_version': int,
+                'source_ip_address': str,
+                'query_interval': int,
+                'max_response_time': int,
+                'querier_timeout': int,
+                'tcn_query_count': int,
+                'tcn_query_interval': int,
+                'operational_state': str,
+                'operational_version': int,
+                'tcn_query_pending_count': int,
+            }
+        }
+    }
+
+class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSchema):
+    """Parser for show ip igmp snooping querier vlan {vlan_id} detail"""
+
+    cli_command = 'show ip igmp snooping querier vlan {vlan_id} detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # IP address               : 1.1.1.1
+        p1 = re.compile(r"^IP\s+address\s+:\s+(?P<ip_address>\S+)$")
+
+        # IGMP version             : v2
+        p2 = re.compile(r"^IGMP\s+version\s+:\s+(?P<igmp_version>\S+)$")
+
+        # Port                     : Switch
+        p3 = re.compile(r"^Port\s+:\s+(?P<port>\w+)$")
+
+        # Max response time        : 10s
+        p4 = re.compile(r"^Max\s+response\s+time\s+:\s+(?P<max_response_time>\S+)$")
+
+        # Global IGMP switch querier status
+        p5 = re.compile(r"^Global\s+IGMP\s+switch\s+querier\s+status$")
+
+        # Vlan 100:   IGMP switch querier status
+        p6 = re.compile(r"^Vlan\s+(?P<vlan>\d+):\s+IGMP\s+switch\s+querier\s+status$")
+
+        # admin state                    : Enabled
+        # admin state                    : Enabled (state inherited)
+        p7 = re.compile(r"^admin\s+state\s+:\s+(?P<admin_state>\w+)(?:\s+\((?P<state>[\w\s]+)\))?")
+       
+        # admin version                  : 2
+        p8 = re.compile(r"^admin\s+version\s+:\s+(?P<admin_version>\d+)$")
+
+        # source IP address              : 1.1.1.1
+        p9 = re.compile(r"^source\s+IP\s+address\s+:\s+(?P<source_ip_address>\S+)$")
+
+        # query-interval (sec)           : 100
+        p10 = re.compile(r"^query-interval\s+\(sec\)\s+:\s+(?P<query_interval>\d+)$")
+
+        # max-response-time (sec)        : 10
+        p11 = re.compile(r"^max-response-time\s+\(sec\)\s+:\s+(?P<max_response_time>\d+)$")
+
+        # querier-timeout (sec)          : 120
+        p12 = re.compile(r"^querier-timeout\s+\(sec\)\s+:\s+(?P<querier_timeout>\d+)$")
+
+        # tcn query count                : 10
+        p13 = re.compile(r"^tcn\s+query\s+count\s+:\s+(?P<tcn_query_count>\d+)$")
+
+        # tcn query interval (sec)       : 10
+        p14 = re.compile(r"^tcn\s+query\s+interval\s+\(sec\)\s+:\s+(?P<tcn_query_interval>\d+)$")
+
+        # operational state              : Querier
+        p15 = re.compile(r"^operational\s+state\s+:\s+(?P<operational_state>\w+)$")
+
+        # operational version            : 2
+        p16 = re.compile(r"^operational\s+version\s+:\s+(?P<operational_version>\d+)$")
+
+        # tcn query pending count        : 0
+        p17 = re.compile(r"^tcn\s+query\s+pending\s+count\s+:\s+(?P<tcn_query_pending_count>\d+)$")
+        
+        ret_dict = {}
+        global_dict = {}       
+       
+        for line in output.splitlines():
+            line = line.strip()           
+
+            # IP address               : 1.1.1.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ip_address'] = group['ip_address']
+                continue
+
+            # IGMP version             : v2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['igmp_version'] = group['igmp_version']
+                continue
+
+            # Port                     : Switch
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = group['port']
+                continue
+                            
+           # Max response time        : 10s
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['max_response_time'] = group['max_response_time']
+                continue
+
+            # Vlan 100:   IGMP switch querier status
+            m = p6.match(line)
+            if m:                
+                vlan_dict = ret_dict.setdefault("vlan", {}).setdefault(m.groupdict()["vlan"], {})
+                continue
+                
+            # Global IGMP switch querier status
+            m = p5.match(line)
+            if m:                
+                global_dict = ret_dict.setdefault("global_igmp", {}) 
+                vlan_dict = global_dict               
+                continue           
+          
+            # admin state                    : Enabled (state inherited)
+            m = p7.match(line)        
+            if m:         
+                group = m.groupdict()                 
+                vlan_dict["admin_state"] = group["admin_state"]
+                continue
+                 
+            # admin version                  : 2
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["admin_version"] = int(group["admin_version"])                
+                continue
+
+            # source IP address              : 1.1.1.1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["source_ip_address"] = group["source_ip_address"]
+                continue
+
+            # query-interval (sec)           : 100
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["query_interval"] = int(group["query_interval"])             
+                continue
+
+            # max-response-time (sec)        : 10
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["max_response_time"] = int(group["max_response_time"])
+                continue
+
+            # querier-timeout (sec)          : 120
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["querier_timeout"] = int(group["querier_timeout"])
+                continue
+
+            # tcn query count                : 10
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["tcn_query_count"] = int(group["tcn_query_count"])                
+                continue
+
+            # tcn query interval (sec)       : 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict["tcn_query_interval"] = int(group["tcn_query_interval"])
+                continue
+
+            # operational state              : Querier
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict['operational_state'] = group['operational_state']
+                continue
+
+            # operational version            : 2
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict['operational_version'] = int(group['operational_version'])
+                continue
+
+            # tcn query pending count        : 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict['tcn_query_pending_count'] = int(group['tcn_query_pending_count'])
+                continue
+
+        return ret_dict

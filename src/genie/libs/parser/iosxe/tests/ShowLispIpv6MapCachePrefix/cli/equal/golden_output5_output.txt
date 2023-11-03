@@ -1,0 +1,21 @@
+LISP IPv6 Mapping Cache for LISP 0 EID-table vrf red (IID 4100), 3 entries
+
+2001:194:168:1::72/128, uptime: 00:34:10, expires: 23:25:50, via map-reply, complete
+  Sources: map-reply
+  State: complete, last modified: 00:34:10, map-source: 11.1.2.2
+  Idle, Packets out: 57553(5755300 bytes) (~ 00:23:41 ago)
+  Locator      Uptime    State  Pri/Wgt     Encap-IID
+  22.22.22.22  00:34:10  up      10/10        -
+    Last up-down state change:         00:34:10, state change count: 1
+    Last route reachability change:    00:34:10, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            00:34:10 (rtt 2ms)
+    Affinity-id: 20 , 20
+  100.22.22.22  00:34:10  up      10/10        -
+    Last up-down state change:         00:34:10, state change count: 1
+    Last route reachability change:    00:34:10, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            00:34:10 (rtt 2ms)
+    Affinity-id: 101

@@ -423,6 +423,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('flow_monitor_out_sampler'): str,
                 Optional('input_sampler'): str,
                 Optional('output_sampler'): str,
+                Optional('pim_mode'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -839,6 +840,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         #  ip flow monitor m4out sampler fnf_sampler output
         p110 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_out_sampler>[\w]+) +sampler +(?P<output_sampler>[\w]+) +output$')
+        
+        # ip pim sparse-dense-mode
+        p111 = re.compile(r'^ip +pim +(?P<pim_mode>[\S]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1707,6 +1711,14 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                             group['flow_monitor_out_sampler']})
                 intf_dict.update(
                         {'output_sampler': group['output_sampler']})
+                continue
+            
+            # ip pim sparse-dense-mode
+            m = p111.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                        {'pim_mode': group['pim_mode']})
                 continue
 
         return config_dict
@@ -4336,7 +4348,8 @@ class ShowRunSectionBgp(ShowRunSectionBgpSchema):
         p0 = re.compile(r'^router +bgp +(?P<asn>[\d.]+)$')
 
         #   bgp router-id interface Loopback0
-        p1 = re.compile(r'^bgp +router\-id +interface +(?P<if_name>\S+)$')
+        #   bgp router-id 172.16.255.4
+        p1 = re.compile(r'^bgp\s+router-id(?:\s+interface\s+(?P<if_name>\S+))?$|^bgp\s+router-id\s+(?P<ip_address>\S+)\s*$')
 
         #   bgp log-neighbor-changes
         p2 = re.compile(r'^bgp +log\-neighbor\-changes$')
@@ -4411,10 +4424,15 @@ class ShowRunSectionBgp(ShowRunSectionBgpSchema):
 
             if bgp_asn:
                 #   bgp router-id interface Loopback0
+                #   bgp router-id 172.16.255.4
                 m = p1.match(line)
                 if m:
-                    bgp_dict.update({'router_id': m.groupdict()['if_name']})
-                    continue
+                    if m.groupdict()['if_name'] is not None:
+                        bgp_dict.update({'router_id': m.groupdict()['if_name']})
+                        continue
+                    elif m.groupdict()['ip_address'] is not None:
+                        bgp_dict.update({'router_id': m.groupdict()['ip_address']})
+                        continue
 
                 #   bgp log-neighbor-changes
                 m = p2.match(line)
