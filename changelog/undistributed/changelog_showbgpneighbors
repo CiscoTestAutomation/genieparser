@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                Update
+--------------------------------------------------------------------------------
+* IOSXE
+    * Modified ShowBgpNeighborsReceivedRoutesSuperParser() parser
+        * Updated regex to make the CIDR notation optional
+
